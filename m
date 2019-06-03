@@ -2,156 +2,330 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4507C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173E927D60
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0A825C15
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDN/25Of"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tCByvdYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfFCIQ1 (ORCPT
+        id S1727675AbfFCIRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:16:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36639 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfFCIQ0 (ORCPT
+        Mon, 3 Jun 2019 04:17:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5572 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725856AbfFCIRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:16:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so7935967wrs.3;
-        Mon, 03 Jun 2019 01:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:openpgp:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4bw+bduVoO24yS9/ugPSh679fDtpvt1k54ZmtZYvvDY=;
-        b=dDN/25OfphVpFdmx2Jm0doKnu8+atN05cNm6KEHVU78DF2cfkZvcbDm9vuIOBTJsMV
-         /k4tPgB8YVdkX1TWlDmIxkriGJarPJy13VBkSL/KFkNLTowFfrejB5hoSQ0P6nYasBwg
-         vmowOIYLourtfEbWaaUvSg3cfGd4Z7qdaw204JicI/2YqtVeF9hPfNRWX4EjVESLP5D7
-         8gIn5taxacoMd/mKQ3A40WMYCS5N62j9EzS21F4CPVO5u/wBjQD9gIPYeTwgVZXjphoV
-         wZXcsnTq3pS0QP0Ued7mPZR3fCAqtLrUNheK089/2WOIWYB3Rf9HL9zXIwJ3i43PrAOb
-         LyUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:openpgp
-         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4bw+bduVoO24yS9/ugPSh679fDtpvt1k54ZmtZYvvDY=;
-        b=UCn+vh6YUacOOU6ns53sAkE7iV/DB1lbvR7YG2vxoKMDV2FMdvNFJRqYmoAgT/akPW
-         z3x1zNFJhpvCRP7N3FmlZ8Ao4NHsfEHJKEhB3njVN2h5ofquhrA93+RHKWmmZky7gjJU
-         KhNm1AG5oOnECIM1eHQSuoRwtz0lxqXmiYoe2ceZhc8NAisBYCFLI7cPPaCl9+pk5Hsk
-         YTxURZ551Mx7WVU+G1iSFKUwg39n/5f8rk+BH6A1WwQOepEXOWuFWg6HhnaObLHphwPQ
-         nb/Ze6utmszoiYOSi47M3Loqppd6jiPPQK3poI6f7mDNCLEqrLU+OKuiY/CcQ8jMz/er
-         +ctw==
-X-Gm-Message-State: APjAAAXO7TcKd4GbJ87Csq+342K6I6smyscYJ6qBwikTnLtPR0ocOr3J
-        81usIA8y/i2I5ki8PjmrWHw=
-X-Google-Smtp-Source: APXvYqz1mIfncUFD4WkzhzvNqvFWG3IHO5+AQwqsNIw7Lhez2mHZByWsr3JPaEZGbUmZlefL2cPJ7g==
-X-Received: by 2002:adf:e2c8:: with SMTP id d8mr1435179wrj.14.1559549783866;
-        Mon, 03 Jun 2019 01:16:23 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d43d:6da3:9364:a775? ([2001:b07:6468:f312:d43d:6da3:9364:a775])
-        by smtp.googlemail.com with ESMTPSA id 197sm13547920wma.36.2019.06.03.01.16.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 01:16:22 -0700 (PDT)
-Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM General <kvm@vger.kernel.org>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <20190530112811.3066-1-pbonzini@redhat.com>
- <20190530112811.3066-2-pbonzini@redhat.com>
- <CACVXFVP-B7uKUGn75rZdu0e4QxUOsSqv8FL0vY2ubmuucvxqjQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <bd7fa062-6c71-13a2-5bbf-0dea859ae75f@redhat.com>
-Date:   Mon, 3 Jun 2019 10:16:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 04:17:35 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x538GSkA019279;
+        Mon, 3 Jun 2019 10:16:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=nJJR92I5ibVaH2yVpxa8sBGMNjPbjpb7V7G3xIRyUhE=;
+ b=tCByvdYsqRDPa8blOzVu31JMEuWi4EHrVKY8o2bNne9PsClKlfMiwa3c1Xt2cKV6elMm
+ QwBRJWCoOYUnxB6solkDSEFRTsKW+ipZGIp0ReYQBbxoSL6IbLdEgIUhUGvaUc2H4uFo
+ nIzM5Xkf/AXz+R7hFSYmMU03Grirw26kTSfq6NT2S7ZSiK5X2nLA+jBhBhC4INtB16Zb
+ Doodo/qISSSjJ4atFgjyjWfRIfgX5VDpoNF+3/zk/FUmAkRz9KD/yoNHlLcaJ0+mSYHk
+ Y0Y1rWdmoc2eI0IcWwujNp+AjZwYGEf6KTBQj29eNO68yiyNY7vanjUQDb1Edjh6GL7i qw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sunme9150-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 03 Jun 2019 10:16:39 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D937A34;
+        Mon,  3 Jun 2019 08:16:37 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6BB7E2489;
+        Mon,  3 Jun 2019 08:16:37 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019
+ 10:16:37 +0200
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019 10:16:36
+ +0200
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>
+CC:     <benjamin.gaignard@st.com>
+Subject: [PATCH] ASoC: stm32: sai: manage identification registers
+Date:   Mon, 3 Jun 2019 10:16:34 +0200
+Message-ID: <1559549794-7246-1-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <CACVXFVP-B7uKUGn75rZdu0e4QxUOsSqv8FL0vY2ubmuucvxqjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/05/19 05:27, Ming Lei wrote:
-> It should be fine to implement scsi_commit_rqs() as:
-> 
->  if (shost->hostt->commit_rqs)
->        shost->hostt->commit_rqs(shost, hctx->queue_num);
-> 
-> then scsi_mq_ops_no_commit can be saved.
-> 
-> Because .commit_rqs() is only called when BLK_STS_*_RESOURCE is
-> returned from scsi_queue_rq(), at that time shost->hostt->commit_rqs should
-> have been hit from cache given .queuecommand is called via
-> host->hostt->queuecommand.
+Add support of identification registers in STM32 SAI.
 
-This is not about d-cache, it's about preserving the heuristics that
-blk-mq applies depending on whether commit_rqs is there or not.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ sound/soc/stm/stm32_sai.c     | 44 +++++++++++++++++++++++++++++++----
+ sound/soc/stm/stm32_sai.h     | 54 ++++++++++++++++++++++++++++++++-----------
+ sound/soc/stm/stm32_sai_sub.c | 14 ++++++-----
+ 3 files changed, 88 insertions(+), 24 deletions(-)
 
-Paolo
+diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
+index 7550d5f08be3..98b29f712831 100644
+--- a/sound/soc/stm/stm32_sai.c
++++ b/sound/soc/stm/stm32_sai.c
+@@ -30,13 +30,20 @@
+ #include "stm32_sai.h"
+ 
+ static const struct stm32_sai_conf stm32_sai_conf_f4 = {
+-	.version = SAI_STM32F4,
+-	.has_spdif = false,
++	.version = STM_SAI_STM32F4,
++	.fifo_size = 8,
++	.has_spdif_pdm = false,
+ };
+ 
++/*
++ * Default settings for stm32 H7 socs and next.
++ * These default settings will be overridden if the soc provides
++ * support of hardware configuration registers.
++ */
+ static const struct stm32_sai_conf stm32_sai_conf_h7 = {
+-	.version = SAI_STM32H7,
+-	.has_spdif = true,
++	.version = STM_SAI_STM32H7,
++	.fifo_size = 8,
++	.has_spdif_pdm = true,
+ };
+ 
+ static const struct of_device_id stm32_sai_ids[] = {
+@@ -157,6 +164,8 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 	struct reset_control *rst;
+ 	struct resource *res;
+ 	const struct of_device_id *of_id;
++	u32 val;
++	int ret;
+ 
+ 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
+ 	if (!sai)
+@@ -169,7 +178,8 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 
+ 	of_id = of_match_device(stm32_sai_ids, &pdev->dev);
+ 	if (of_id)
+-		sai->conf = (struct stm32_sai_conf *)of_id->data;
++		memcpy(&sai->conf, (const struct stm32_sai_conf *)of_id->data,
++		       sizeof(struct stm32_sai_conf));
+ 	else
+ 		return -EINVAL;
+ 
+@@ -208,6 +218,30 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 		reset_control_deassert(rst);
+ 	}
+ 
++	/* Enable peripheral clock to allow register access */
++	ret = clk_prepare_enable(sai->pclk);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to enable clock: %d\n", ret);
++		return ret;
++	}
++
++	val = FIELD_GET(SAI_IDR_ID_MASK,
++			readl_relaxed(sai->base + STM_SAI_IDR));
++	if (val == SAI_IPIDR_NUMBER) {
++		val = readl_relaxed(sai->base + STM_SAI_HWCFGR);
++		sai->conf.fifo_size = FIELD_GET(SAI_HWCFGR_FIFO_SIZE, val);
++		sai->conf.has_spdif_pdm = !!FIELD_GET(SAI_HWCFGR_SPDIF_PDM,
++						      val);
++
++		val = readl_relaxed(sai->base + STM_SAI_VERR);
++		sai->conf.version = val;
++
++		dev_dbg(&pdev->dev, "SAI version: %lu.%lu registered\n",
++			FIELD_GET(SAI_VERR_MAJ_MASK, val),
++			FIELD_GET(SAI_VERR_MIN_MASK, val));
++	}
++	clk_disable_unprepare(sai->pclk);
++
+ 	sai->pdev = pdev;
+ 	sai->set_sync = &stm32_sai_set_sync;
+ 	platform_set_drvdata(pdev, sai);
+diff --git a/sound/soc/stm/stm32_sai.h b/sound/soc/stm/stm32_sai.h
+index 9c36a393ab7b..158c73f557f7 100644
+--- a/sound/soc/stm/stm32_sai.h
++++ b/sound/soc/stm/stm32_sai.h
+@@ -37,6 +37,12 @@
+ #define STM_SAI_PDMCR_REGX	0x40
+ #define STM_SAI_PDMLY_REGX	0x44
+ 
++/* Hardware configuration registers */
++#define STM_SAI_HWCFGR		0x3F0
++#define STM_SAI_VERR		0x3F4
++#define STM_SAI_IDR		0x3F8
++#define STM_SAI_SIDR		0x3FC
++
+ /******************** Bit definition for SAI_GCR register *******************/
+ #define SAI_GCR_SYNCIN_SHIFT	0
+ #define SAI_GCR_SYNCIN_WDTH	2
+@@ -82,7 +88,7 @@
+ #define SAI_XCR1_NODIV		BIT(SAI_XCR1_NODIV_SHIFT)
+ 
+ #define SAI_XCR1_MCKDIV_SHIFT	20
+-#define SAI_XCR1_MCKDIV_WIDTH(x)	(((x) == SAI_STM32F4) ? 4 : 6)
++#define SAI_XCR1_MCKDIV_WIDTH(x)	(((x) == STM_SAI_STM32F4) ? 4 : 6)
+ #define SAI_XCR1_MCKDIV_MASK(x) GENMASK((SAI_XCR1_MCKDIV_SHIFT + (x) - 1),\
+ 				SAI_XCR1_MCKDIV_SHIFT)
+ #define SAI_XCR1_MCKDIV_SET(x)	((x) << SAI_XCR1_MCKDIV_SHIFT)
+@@ -234,8 +240,33 @@
+ #define SAI_PDMDLY_4R_MASK	GENMASK(30, SAI_PDMDLY_4R_SHIFT)
+ #define SAI_PDMDLY_4R_WIDTH	3
+ 
+-#define STM_SAI_IS_F4(ip)	((ip)->conf->version == SAI_STM32F4)
+-#define STM_SAI_IS_H7(ip)	((ip)->conf->version == SAI_STM32H7)
++/* Registers below apply to SAI version 2.1 and more */
++
++/* Bit definition for SAI_HWCFGR register */
++#define SAI_HWCFGR_FIFO_SIZE	GENMASK(7, 0)
++#define SAI_HWCFGR_SPDIF_PDM	GENMASK(11, 8)
++#define SAI_HWCFGR_REGOUT	GENMASK(19, 12)
++
++/* Bit definition for SAI_VERR register */
++#define SAI_VERR_MIN_MASK	GENMASK(3, 0)
++#define SAI_VERR_MAJ_MASK	GENMASK(7, 4)
++
++/* Bit definition for SAI_IDR register */
++#define SAI_IDR_ID_MASK		GENMASK(31, 0)
++
++/* Bit definition for SAI_SIDR register */
++#define SAI_SIDR_ID_MASK	GENMASK(31, 0)
++
++#define SAI_IPIDR_NUMBER	0x00130031
++
++/* SAI version numbers are 1.x for F4. Major version number set to 1 for F4 */
++#define STM_SAI_STM32F4		BIT(4)
++/* Dummy version number for H7 socs and next */
++#define STM_SAI_STM32H7		0x0
++
++#define STM_SAI_IS_F4(ip)	((ip)->conf.version == STM_SAI_STM32F4)
++#define STM_SAI_HAS_SPDIF_PDM(ip)\
++				((ip)->pdata->conf.has_spdif_pdm)
+ 
+ enum stm32_sai_syncout {
+ 	STM_SAI_SYNC_OUT_NONE,
+@@ -243,19 +274,16 @@ enum stm32_sai_syncout {
+ 	STM_SAI_SYNC_OUT_B,
+ };
+ 
+-enum stm32_sai_version {
+-	SAI_STM32F4,
+-	SAI_STM32H7
+-};
+-
+ /**
+  * struct stm32_sai_conf - SAI configuration
+  * @version: SAI version
+- * @has_spdif: SAI S/PDIF support flag
++ * @fifo_size: SAI fifo size as words number
++ * @has_spdif_pdm: SAI S/PDIF and PDM features support flag
+  */
+ struct stm32_sai_conf {
+-	int version;
+-	bool has_spdif;
++	u32 version;
++	u32 fifo_size;
++	bool has_spdif_pdm;
+ };
+ 
+ /**
+@@ -265,7 +293,7 @@ struct stm32_sai_conf {
+  * @pclk: SAI bus clock
+  * @clk_x8k: SAI parent clock for sampling frequencies multiple of 8kHz
+  * @clk_x11k: SAI parent clock for sampling frequencies multiple of 11kHz
+- * @version: SOC version
++ * @conf: SAI hardware capabitilites
+  * @irq: SAI interrupt line
+  * @set_sync: pointer to synchro mode configuration callback
+  * @gcr: SAI Global Configuration Register
+@@ -276,7 +304,7 @@ struct stm32_sai_data {
+ 	struct clk *pclk;
+ 	struct clk *clk_x8k;
+ 	struct clk *clk_x11k;
+-	struct stm32_sai_conf *conf;
++	struct stm32_sai_conf conf;
+ 	int irq;
+ 	int (*set_sync)(struct stm32_sai_data *sai,
+ 			struct device_node *np_provider, int synco, int synci);
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 2a74ce7c9440..7d27efb19380 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -45,7 +45,6 @@
+ #define SAI_DATASIZE_24		0x6
+ #define SAI_DATASIZE_32		0x7
+ 
+-#define STM_SAI_FIFO_SIZE	8
+ #define STM_SAI_DAI_NAME_SIZE	15
+ 
+ #define STM_SAI_IS_PLAYBACK(ip)	((ip)->dir == SNDRV_PCM_STREAM_PLAYBACK)
+@@ -63,7 +62,8 @@
+ #define SAI_SYNC_EXTERNAL	0x2
+ 
+ #define STM_SAI_PROTOCOL_IS_SPDIF(ip)	((ip)->spdif)
+-#define STM_SAI_HAS_SPDIF(x)	((x)->pdata->conf->has_spdif)
++#define STM_SAI_HAS_SPDIF(x)	((x)->pdata->conf.has_spdif_pdm)
++#define STM_SAI_HAS_PDM(x)	((x)->pdata->conf.has_spdif_pdm)
+ #define STM_SAI_HAS_EXT_SYNC(x) (!STM_SAI_IS_F4(sai->pdata))
+ 
+ #define SAI_IEC60958_BLOCK_FRAMES	192
+@@ -274,7 +274,7 @@ static int stm32_sai_get_clk_div(struct stm32_sai_sub_data *sai,
+ 				 unsigned long input_rate,
+ 				 unsigned long output_rate)
+ {
+-	int version = sai->pdata->conf->version;
++	int version = sai->pdata->conf.version;
+ 	int div;
+ 
+ 	div = DIV_ROUND_CLOSEST(input_rate, output_rate);
+@@ -295,7 +295,7 @@ static int stm32_sai_get_clk_div(struct stm32_sai_sub_data *sai,
+ static int stm32_sai_set_clk_div(struct stm32_sai_sub_data *sai,
+ 				 unsigned int div)
+ {
+-	int version = sai->pdata->conf->version;
++	int version = sai->pdata->conf.version;
+ 	int ret, cr1, mask;
+ 
+ 	if (div > SAI_XCR1_MCKDIV_MAX(version)) {
+@@ -1148,6 +1148,8 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
+ 	 * constraints).
+ 	 */
+ 	sai->dma_params.maxburst = 4;
++	if (sai->pdata->conf.fifo_size < 8)
++		sai->dma_params.maxburst = 1;
+ 	/* Buswidth will be set by framework at runtime */
+ 	sai->dma_params.addr_width = DMA_SLAVE_BUSWIDTH_UNDEFINED;
+ 
+@@ -1315,8 +1317,8 @@ static int stm32_sai_sub_parse_of(struct platform_device *pdev,
+ 	sai->phys_addr = res->start;
+ 
+ 	sai->regmap_config = &stm32_sai_sub_regmap_config_f4;
+-	/* Note: PDM registers not available for H7 sub-block B */
+-	if (STM_SAI_IS_H7(sai->pdata) && STM_SAI_IS_SUB_A(sai))
++	/* Note: PDM registers not available for sub-block B */
++	if (STM_SAI_HAS_PDM(sai) && STM_SAI_IS_SUB_A(sai))
+ 		sai->regmap_config = &stm32_sai_sub_regmap_config_h7;
+ 
+ 	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "sai_ck",
+-- 
+2.7.4
+
