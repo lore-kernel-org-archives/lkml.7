@@ -2,113 +2,153 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B60C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B64D24367
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C57825353
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:24:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lpDfhW7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbfFCOXc (ORCPT
+        id S1729045AbfFCOYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:23:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:31791 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbfFCOXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:23:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 07:23:32 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jun 2019 07:23:31 -0700
-Date:   Mon, 3 Jun 2019 07:23:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Jiri Kosina <jikos@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-Message-ID: <20190603142330.GA13384@linux.intel.com>
-References: <20190531051456.fzkvn62qlkf6wqra@treble>
- <nycvar.YFH.7.76.1905311045240.1962@cbobk.fhfr.pm>
- <5564116.e9OFvgDRbB@kreacher>
- <CALCETrUpseta+NrhVwzzVFTe-BkBHtDUJBO22ci3mAsVR+XOog@mail.gmail.com>
- <nycvar.YFH.7.76.1905311628330.1962@cbobk.fhfr.pm>
- <B7AC83ED-3F11-42B9-8506-C842A5937B50@amacapital.net>
- <nycvar.YFH.7.76.1905311651450.1962@cbobk.fhfr.pm>
- <CALCETrUQzZTRnvmOS09UvRM9UCGEDvSdbJtkeeEa2foMf+hF2w@mail.gmail.com>
- <nycvar.YFH.7.76.1905312251350.1962@cbobk.fhfr.pm>
- <98E57C7E-24E2-4EB8-A14E-FCA80316F812@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98E57C7E-24E2-4EB8-A14E-FCA80316F812@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 3 Jun 2019 10:24:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37028 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbfFCOYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:24:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53EOKe1153232;
+        Mon, 3 Jun 2019 14:24:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=f/3shJw30h+WPErENrMOOkyLDOALkiWq64WdWc2LbQk=;
+ b=lpDfhW7vcM3NqgOU20G8JwmRYda5o7+JCmgmlR1EiI3PUxdJ9OVVc3oQRzEGVqgk43ee
+ Oj+SvO7mPkDoXfLtWF5vdMomW6QQjyClLKY2KXKM+RXHuSH7wB2b4Ef9hIzQjwRta7vZ
+ TC+pssiOGIrHvb4n/+nGSWNuHHnSjCHNS82tYfxDPscbn/L8Lwn8nP/YmxxTgyFgb3Z3
+ 8RK9nvoH5S3BllsWzAnMFZtzIdQ+uSUNBQk1u1WqS46fi3dQJx+BfJS2thYhDnmDj3gr
+ nMs1yp3sE6KBEFM58xl7YkixKe5qSgtbjyYvP3jL3tLXM1kMEp0ys5QAM/cM2RUiueHA Qw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2suj0q78em-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Jun 2019 14:24:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53EOZKb010822;
+        Mon, 3 Jun 2019 14:24:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2sv36s8d9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Jun 2019 14:24:36 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x53EOTPb026124;
+        Mon, 3 Jun 2019 14:24:30 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Jun 2019 07:24:29 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <1559569401.5052.17.camel@HansenPartnership.com>
+Date:   Mon, 3 Jun 2019 10:24:27 -0400
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, dmitry.kasatkin@huawei.com,
+        Matthew Garrett <mjg59@google.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        silviu.vlasceanu@huawei.com, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8658CD39-B977-41A7-841B-D209AE05D9C0@oracle.com>
+References: <20190529133035.28724-1-roberto.sassu@huawei.com>
+ <20190529133035.28724-3-roberto.sassu@huawei.com>
+ <1559217621.4008.7.camel@linux.ibm.com>
+ <e6b31aa9-0319-1805-bdfc-3ddde5884494@huawei.com>
+ <1559569401.5052.17.camel@HansenPartnership.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9276 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906030102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9276 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906030102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 02:22:27PM -0700, Andy Lutomirski wrote:
-> 
-> > On May 31, 2019, at 2:05 PM, Jiri Kosina <jikos@kernel.org> wrote:
-> > 
-> >> On Fri, 31 May 2019, Andy Lutomirski wrote:
-> >> 
-> >> The Intel SDM Vol 3 34.10 says:
-> >> 
-> >> If the HLT instruction is restarted, the processor will generate a
-> >> memory access to fetch the HLT instruction (if it is
-> >> not in the internal cache), and execute a HLT bus transaction. This
-> >> behavior results in multiple HLT bus transactions
-> >> for the same HLT instruction.
-> > 
-> > Which basically means that both hibernation and kexec have been broken in 
-> > this respect for gazillions of years, and seems like noone noticed. Makes 
-> > one wonder what the reason for that might be.
-> > 
-> > Either SDM is not precise and the refetch actually never happens for real 
-> > (or is always in these cases satisfied from I$ perhaps?), or ... ?
-> > 
-> > So my patch basically puts things back where they have been for ages 
-> > (while mwait is obviously much worse, as that gets woken up by the write 
-> > to the monitored address, which inevitably does happen during resume), but 
-> > seems like SDM is suggesting that we've been in a grey zone wrt RSM at 
-> > least for all those ages.
-> > 
-> > So perhaps we really should ditch resume_play_dead() altogether 
-> > eventually, and replace it with sending INIT IPI around instead (and then 
-> > waking the CPUs properly via INIT INIT START). I'd still like to do that 
-> > for 5.3 though, as that'd be slightly bigger surgery, and conservatively 
-> > put things basically back to state they have been up to now for 5.2.
-> > 
-> 
-> 
-> Seems reasonable to me.  I would guess that it mostly works because SMI isn’t
-> all that common and the window where it matters is short.  Or maybe the SDM
-> is misleading.
 
-For P6 and later, i.e. all modern CPUs, Intel processors go straight to
-halted state and don't fetch/decode the HLT instruction.
 
-P5 actually did a fetch, but from what I can tell that behavior wasn't
-carried forward to KNC, unlike other legacy interrupt crud from P5:
+> On Jun 3, 2019, at 9:43 AM, James Bottomley =
+<James.Bottomley@HansenPartnership.com> wrote:
+>=20
+> On Mon, 2019-06-03 at 11:25 +0200, Roberto Sassu wrote:
+>> On 5/30/2019 2:00 PM, Mimi Zohar wrote:
+>>> On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
+>>>> Currently, ima_appraise_measurement() ignores the EVM status when
+>>>> evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a
+>>>> valid security.ima xattr with type IMA_XATTR_DIGEST or
+>>>> IMA_XATTR_DIGEST_NG, ima_appraise_measurement() returns
+>>>> INTEGRITY_PASS regardless of the EVM status. The problem is that
+>>>> the EVM status is overwritten with the appraisal statu
+>>>=20
+>>> Roberto, your framing of this problem is harsh and misleading.  IMA
+>>> and EVM are intentionally independent of each other and can be
+>>> configured independently of each other.  The intersection of the
+>>> two is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is
+>>> returned for a number of reasons - when EVM is not configured, the
+>>> EVM hmac key has not yet been loaded, the protected security
+>>> attribute is unknown, or the file is not in policy.
+>>>=20
+>>> This patch does not differentiate between any of the above cases,
+>>> requiring mutable files to always be protected by EVM, when
+>>> specified as an "ima_appraise=3D" option on the boot command line.
+>>>=20
+>>> IMA could be extended to require EVM on a per IMA policy rule
+>>> basis. Instead of framing allowing IMA file hashes without EVM as a
+>>> bug that has existed from the very beginning, now that IMA/EVM have
+>>> matured and is being used, you could frame it as extending IMA
+>>> or hardening.
+>>=20
+>> I'm seeing it from the perspective of an administrator that manages
+>> an already hardened system, and expects that the system only grants
+>> access to files with a valid signature/HMAC. That system would not
+>> enforce this behavior if EVM keys are removed and the digest in
+>> security.ima is set to the actual file digest.
+>>=20
+>> Framing it as a bug rather than an extension would in my opinion help
+>> to convince people about the necessity to switch to the safe mode, if
+>> their system is already hardened.
+>=20
+> I have a use case for IMA where I use it to enforce immutability of
+> containers.  In this use case, the cluster admin places hashes on
+> executables as the image is unpacked so that if an executable file is
+> changed, IMA will cause an execution failure.  For this use case, I
+> don't care about the EVM, in fact we don't use it, because the only
+> object is to fail execution if a binary is mutated.
+>=20
+> So I can see your use case requires IMA+EVM, but requiring it would
+> cause more complexity for my use case.
 
-[1] https://lkml.kernel.org/r/20190430004504.GH31379@linux.intel.com
+... and would not work at all for the current NFS IMA implementation.
+
+
+--
+Chuck Lever
+
+
+
