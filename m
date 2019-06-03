@@ -2,97 +2,119 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295EAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717B7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF7C23D65
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZP/HtbcP"
+	by mail.kernel.org (Postfix) with ESMTP id 4EEC326FDA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfFCQow (ORCPT
+        id S1727406AbfFCQpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:44:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37329 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfFCQow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:44:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h1so12826406wro.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=NJGdLM5jNQqVh/tXtUBikivLLdLINsdst7u6+yswu0c=;
-        b=ZP/HtbcPUvZxB9Q0MbegeMtqPRO7+j1kGAVRul2PKgNJR6K921Hz7fTUyGFQbUj77L
-         LwQd6qjhY837VcYfgp2KubDgIVH9s7Lzg3PFVLcjprFfEjheLcTiAeSkw/zXX5yCNfcd
-         prn3n7KEGkH+eMcgRukviovUmE4ltZgvgcocQktqHOuD/2zdBC5Kk1Qg8vAXQ9T2WuGX
-         FFmn2MZ+x6+emZ+QZNoo58rGewJGTWISPv69bMByWXdYPspwjGwdsvYhUwkgc03+qMwc
-         +Yga41sHdylt3zlve6g/YCUygSivY7IEvuy3y/MK8RFpf0bzVLKUI9ukPMhhksnSfhvH
-         yUWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=NJGdLM5jNQqVh/tXtUBikivLLdLINsdst7u6+yswu0c=;
-        b=QcCOuZ2GxA0/X6fSwmYI+5GV+1vRI0GtzpFn1wIl5xXWoKMJIksOLe9Qjz7NUVgSZC
-         hn/2IvSNEj9wCtmwRKCvcGfcHUw6c398KWm2FPlRCFbVSxepU/U8P/U1oWvPF0Nj+6Qt
-         eCkBzc7K4CkGHRnJqn9/m+xNoyZPC84p9WPXp8H79ACmlx39ds9dA1OJk8YNzIVr4a1B
-         js7qqsh2CfjI1se9c6ryxgUjOkHSx3KxwcdOJF5+Qt/18K99Bo7lWQT+kK49vRJ0awv7
-         q4al9ivYyS63LPM6UnFlGBsc0WjW0P/478FAm5qJIAlJQbo4U7nFIEIFxHynhcnr4jWH
-         dDrg==
-X-Gm-Message-State: APjAAAUbIhZ8J3Au8CS7N6dM368yXMFL9TTFUUElS+wjugyY7N66Ma6C
-        JJIU2isss4gZvV1KxrtF5F4UuA==
-X-Google-Smtp-Source: APXvYqylUdDthXrcelrczQuGZiYd5FlDHM36e3ws0O66EvAYivxEwAu7vFW5tazmo1WoiSWybHvoqA==
-X-Received: by 2002:a5d:4089:: with SMTP id o9mr11501355wrp.6.1559580290951;
-        Mon, 03 Jun 2019 09:44:50 -0700 (PDT)
-Received: from localhost ([213.208.157.39])
-        by smtp.gmail.com with ESMTPSA id n4sm13252749wrp.61.2019.06.03.09.44.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 09:44:50 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 09:44:44 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup.Patel@wdc.com
-cc:     schwab@suse.de, Palmer Dabbelt <palmer@sifive.com>,
-        anup@brainfault.org, aou@eecs.berkeley.edu,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: defconfig: Enable NO_HZ_IDLE and
- HIGH_RES_TIMERS
-In-Reply-To: <mhng-faba08ec-69a7-43b1-b2d7-c2e996751506@palmer-si-x1c4>
-Message-ID: <alpine.DEB.2.21.9999.1906030944170.9338@viisi.sifive.com>
-References: <mhng-faba08ec-69a7-43b1-b2d7-c2e996751506@palmer-si-x1c4>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Mon, 3 Jun 2019 12:45:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55358 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfFCQpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:45:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BBAE80D;
+        Mon,  3 Jun 2019 09:45:30 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8127F3F5AF;
+        Mon,  3 Jun 2019 09:45:29 -0700 (PDT)
+Subject: Re: [RFC PATCH 39/57] drivers: mux: Use class_find_device_by_of_node
+ helper
+To:     peda@axentia.se, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-40-git-send-email-suzuki.poulose@arm.com>
+ <bdfa93d6-a45f-cc26-bc95-42ef21c7e8c6@axentia.se>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <0c98e540-ae82-4cf8-0936-0d61ae04eac7@arm.com>
+Date:   Mon, 3 Jun 2019 17:45:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <bdfa93d6-a45f-cc26-bc95-42ef21c7e8c6@axentia.se>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019, Palmer Dabbelt wrote:
+Hi Peter,
 
-> On Wed, 29 May 2019 01:00:35 PDT (-0700), schwab@suse.de wrote:
-> > On Mai 28 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
-> > 
-> > > My only issue here is testing: IIRC last time we tried this it ended up
-> > > causing
-> > > trouble.
-> > 
-> > I've been running kernels with these settings since the beginning, and
-> > never seen any trouble.
+Thanks for your comments, please see my response inline.
+
+On 03/06/2019 17:22, Peter Rosin wrote:
+> Hi!
 > 
-> OK, I'm happy with it.
+> This all sounds like nice changes. First a couple of nitpicks:
 > 
-> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+>  From the cover letter, included here to spare most of the others...
+> 
+>> subsystems. This series is an attempt to consolidate the and cleanup
+> 
+> s/the and/and/
 
-Thanks, queued for v5.3.
+Thanks for spotting.
 
-- Paul
+> 
+> On 2019-06-03 17:50, Suzuki K Poulose wrote:
+>> Use the generic helper to find a device matching the of_node.
+>>
+>> Cc: Peter Rosin <peda@axentia.se>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/mux/core.c | 8 +-------
+>>   1 file changed, 1 insertion(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+>> index d1271c1..3591e40 100644
+>> --- a/drivers/mux/core.c
+>> +++ b/drivers/mux/core.c
+>> @@ -405,18 +405,12 @@ int mux_control_deselect(struct mux_control *mux)
+>>   }
+>>   EXPORT_SYMBOL_GPL(mux_control_deselect);
+>>   
+>> -static int of_dev_node_match(struct device *dev, const void *data)
+>> -{
+>> -	return dev->of_node == data;
+>> -}
+>> -
+>>   /* Note this function returns a reference to the mux_chip dev. */
+>>   static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+>>   {
+>>   	struct device *dev;
+>>   
+>> -	dev = class_find_device(&mux_class, NULL, np, of_dev_node_match);
+>> -
+> 
+> Nitpick #2. Please leave the blank line where it belongs.
+
+Agreed !
+
+> 
+> However, how can I review this if I do not get to see the patch that
+> adds the class_find_device_by_of_node function? Please provide a
+> little bit more context!
+
+Sorry about that. The routine is a wrapper to class_find_device()
+which uses a generic routine to match the of_node, instead of the
+driver specific of_dev_node_match(). The series adds such wrappers for
+{bus/drivers/class}_find_device(). Unfortunately I didn't add
+individual driver maintainers to the patches, which add those wrappers.
+For the moment, please find the link below for the patch :
+
+https://lkml.kernel.org/r/1559577023-558-29-git-send-email-suzuki.poulose@arm.com
+
+
+I will try to address it in the next revision.
+
+Kind regards
+Suzuki
