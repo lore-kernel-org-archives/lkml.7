@@ -2,117 +2,208 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7D3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F42AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6196A25E3D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3625F25ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="aE8seyUS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="InOlRsv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfFCVn1 (ORCPT
+        id S1726349AbfFCVol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:43:27 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:55560 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbfFCVn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:43:27 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x53LWMvZ008943;
-        Tue, 4 Jun 2019 00:32:22 +0300
-Date:   Tue, 4 Jun 2019 00:32:22 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     syzbot <syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com>
-cc:     coreteam@netfilter.org, "David S. Miller" <davem@davemloft.net>,
-        fw@strlen.de, kadlec@blackhole.kfki.hu,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        lvs-devel@vger.kernel.org
-Subject: Re: memory leak in nf_hook_entries_grow
-In-Reply-To: <0000000000002b2262058a70001d@google.com>
-Message-ID: <alpine.LFD.2.21.1906040021510.3876@ja.home.ssi.bg>
-References: <0000000000002b2262058a70001d@google.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 3 Jun 2019 17:44:41 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37153 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfFCVok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 17:44:40 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id E0B35220DB;
+        Mon,  3 Jun 2019 17:44:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 03 Jun 2019 17:44:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        pedrovanzella.com; h=date:from:to:cc:subject:message-id
+        :references:mime-version:content-type:in-reply-to; s=fm3; bh=sJt
+        vpQ8YjOpkGpI3jG3o8DzEDik537U+60zTVFQ+ys0=; b=aE8seyUSGyaHXH3+i4L
+        oV35I4W9JYM+W1eF+mv30VZxIbltvL8Bd1MMmdR0J17aoNg+dELpu+K7AIbqQBcI
+        P97vLuAeP1TrVzmuTTtik6yh+ebSJZxHOv5DvKAlcY3J4DeF20d44lKVYZES1s1s
+        Ju0hhhHTh9pDa7aplJy8v06CItpsmSKX67H4Dcr2Od00UUdChG0lJl6kz5X/FwD5
+        ONbKePcxq8sxEZMileIH2iOGx0J3Cfb5I2gU3WnBrEm/EK7jATs2HXDIpGVVy3rz
+        6ukwL+dY4LTLpqHkrRmJOzPT1MbAQfYmrz4scDzGgdPUUyuhfvMsT3Dd90tL9vk8
+        Q3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sJtvpQ
+        8YjOpkGpI3jG3o8DzEDik537U+60zTVFQ+ys0=; b=InOlRsv+DslFkm9areGgJf
+        VXxVP2+GZcPGLv5m6FarnjJIHyDY8B2A+szwE1JEqaBPzRzv04BYtKnEjOOutZgk
+        nUebQ7zmG6XVuNpA7RdcihRt0OtmtkrLUVjpiSOv24yd2v8JZ3F/7ODc2YvPVgfU
+        41iA/qc3coFeuO+Z0NfhnJPArNfLWn2UX5Zuqy16E8Eo6NPr2fc/T5YLl8PT8t5u
+        g/xSvQkzf7HQ7RbQ7R6KhI5wbyGAf/YqluuS1vH0/SG1xbot0O+gvAWFmTF8ZKVf
+        J8x5k3ysTCg5lHPTBVPs+VSGkQs+rBiL9Sew0JyHKv7SzFu6+fRS7bqMsggWkf4A
+        ==
+X-ME-Sender: <xms:x5T1XIJopwmdDhzQPLrmkPfN7n4i4ltRPERpqqztpuQfiihxe4UqUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefkedgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomheprfgvughr
+    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
+    eqnecuffhomhgrihhnpehpvggurhhovhgrnhiivghllhgrrdgtohhmpdhkvghrnhgvlhdr
+    ohhrghenucfkphepjedtrddvjedrvdejrddugeelnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehpvggurhhosehpvggurhhovhgrnhiivghllhgrrdgtohhmnecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:x5T1XFhChO6a-kokg4xZnKUdMTkTmFYDgYvLusqtRJ2xWK_llnScIA>
+    <xmx:x5T1XEtE7a9G2Botqh4H1VeDtSlyfNh2v4wmtIdijdPSwWQZT5KfpA>
+    <xmx:x5T1XJH4T7Q2vuNMYuKTN7jt3bKxYpxGqxeIDJq3leXqvNujlJML1Q>
+    <xmx:x5T1XBKF6ydfyU_2sJe3x1YdwaZWKYeTn5BvO7S8YJazSMVGer7QQQ>
+Received: from localhost (toroon020aw-lp130-02-70-27-27-149.dsl.bell.ca [70.27.27.149])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 50875380084;
+        Mon,  3 Jun 2019 17:44:39 -0400 (EDT)
+Date:   Mon, 3 Jun 2019 17:44:38 -0400
+From:   Pedro Vanzella <pedro@pedrovanzella.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] HID: hid-logitech-hidpp: detect wireless lightspeed
+ devices
+Message-ID: <20190603214438.2cnmrx7g2sakjdr4@Fenrir>
+References: <20190528162924.32754-1-pedro@pedrovanzella.com>
+ <CAO-hwJ+zAvDizJRpykky+D3pf1M1NhFGWztwyA4mJEv8C+nO-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="il23bg2tbeerivkt"
+Content-Disposition: inline
+In-Reply-To: <CAO-hwJ+zAvDizJRpykky+D3pf1M1NhFGWztwyA4mJEv8C+nO-w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-	Hello,
+--il23bg2tbeerivkt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 3 Jun 2019, syzbot wrote:
+On 05/28, Benjamin Tissoires wrote:
+> On Tue, May 28, 2019 at 6:30 PM Pedro Vanzella <pedro@pedrovanzella.com> =
+wrote:
+> >
+> > Send a low device index when the device is connected via the lightspeed
+> > receiver so that the receiver will pass the message along to the device
+> > instead of responding. If we don't do that, we end up thinking it's a
+> > hidpp10 device and miss out on all new features available to newer devi=
+ces.
+> >
+> > This will enable correct detection of the following models:
+> > G603, GPro, G305, G613, G900 and G903, and possibly others.
+>=20
+> Thanks for the patch.
+Thanks for reviewing it :)
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    3ab4436f Merge tag 'nfsd-5.2-1' of git://linux-nfs.org/~bf..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15feaf82a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=50393f7bfe444ff6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=722da59ccb264bc19910
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f02772a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1657b80ea00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com
-> 
-> 035][ T7273] IPVS: ftp: loaded support on port[0] = 21
-> BUG: memory leak
-> unreferenced object 0xffff88810acd8a80 (size 96):
->  comm "syz-executor073", pid 7254, jiffies 4294950560 (age 22.250s)
->  hex dump (first 32 bytes):
->    02 00 00 00 00 00 00 00 50 8b bb 82 ff ff ff ff  ........P.......
->    00 00 00 00 00 00 00 00 00 77 bb 82 ff ff ff ff  .........w......
->  backtrace:
->    [<0000000013db61f1>] kmemleak_alloc_recursive include/linux/kmemleak.h:55
->    [inline]
->    [<0000000013db61f1>] slab_post_alloc_hook mm/slab.h:439 [inline]
->    [<0000000013db61f1>] slab_alloc_node mm/slab.c:3269 [inline]
->    [<0000000013db61f1>] kmem_cache_alloc_node_trace+0x15b/0x2a0 mm/slab.c:3597
->    [<000000001a27307d>] __do_kmalloc_node mm/slab.c:3619 [inline]
->    [<000000001a27307d>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
->    [<0000000025054add>] kmalloc_node include/linux/slab.h:590 [inline]
->    [<0000000025054add>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
->    [<0000000050d1bc00>] kvmalloc include/linux/mm.h:637 [inline]
->    [<0000000050d1bc00>] kvzalloc include/linux/mm.h:645 [inline]
->    [<0000000050d1bc00>] allocate_hook_entries_size+0x3b/0x60
->    net/netfilter/core.c:61
->    [<00000000e8abe142>] nf_hook_entries_grow+0xae/0x270
->    net/netfilter/core.c:128
->    [<000000004b94797c>] __nf_register_net_hook+0x9a/0x170
->    net/netfilter/core.c:337
->    [<00000000d1545cbc>] nf_register_net_hook+0x34/0xc0
->    net/netfilter/core.c:464
->    [<00000000876c9b55>] nf_register_net_hooks+0x53/0xc0
->    net/netfilter/core.c:480
->    [<000000002ea868e0>] __ip_vs_init+0xe8/0x170
->    net/netfilter/ipvs/ip_vs_core.c:2280
+> However, there is already support for this receiver in Linus' tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/drivers/hid/hid-logitech-dj.c?id=3Df5fb57a74e88bd1788f57bf77d587c91d4dc9d57
+>=20
+> With kernel 5.2-rc1, the connected device should already be handled by
+> hid-logitech-hidpp :)
+Why are the wireless receivers handled by hid-logitech-dj and the wired
+mice handled by hid-logitech-hidpp? They are, in the end, all hidpp
+devices, and having them all handled by the -hidpp driver with a quirk
+class would allow us to check for support for the battery voltage
+feature, as it seems to be an either-or scenario here.
 
-	After commit "ipvs: Fix use-after-free in ip_vs_in" we planned
-to call nf_register_net_hooks() only when rule is created but this
-is net-next material and we should not leave leak in the error path.
-I'll post a patch that adds .init handler for ipvs_core_dev_ops, so
-that nf_register_net_hooks() is called there.
+- Pedro
+>=20
+> Cheers,
+> Benjamin
+>=20
+> >
+> > Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
+> > ---
+> >  drivers/hid/hid-logitech-hidpp.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
+h-hidpp.c
+> > index 72fc9c0566db..621fce141d9f 100644
+> > --- a/drivers/hid/hid-logitech-hidpp.c
+> > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > @@ -62,6 +62,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> >  #define HIDPP_QUIRK_CLASS_K400                 BIT(2)
+> >  #define HIDPP_QUIRK_CLASS_G920                 BIT(3)
+> >  #define HIDPP_QUIRK_CLASS_K750                 BIT(4)
+> > +#define HIDPP_QUIRK_CLASS_LIGHTSPEED           BIT(5)
+> >
+> >  /* bits 2..20 are reserved for classes */
+> >  /* #define HIDPP_QUIRK_CONNECT_EVENTS          BIT(21) disabled */
+> > @@ -236,7 +237,11 @@ static int __hidpp_send_report(struct hid_device *=
+hdev,
+> >          * set the device_index as the receiver, it will be overwritten=
+ by
+> >          * hid_hw_request if needed
+> >          */
+> > -       hidpp_report->device_index =3D 0xff;
+> > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_LIGHTSPEED) {
+> > +               hidpp_report->device_index =3D 0x01;
+> > +       } else {
+> > +               hidpp_report->device_index =3D 0xff;
+> > +       }
+> >
+> >         if (hidpp->quirks & HIDPP_QUIRK_FORCE_OUTPUT_REPORTS) {
+> >                 ret =3D hid_hw_output_report(hdev, (u8 *)hidpp_report, =
+fields_count);
+> > @@ -3753,6 +3758,9 @@ static const struct hid_device_id hidpp_devices[]=
+ =3D {
+> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
+> >         { /* Logitech G900 Gaming Mouse over USB */
+> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
+> > +       { /* Logitech Gaming Mice over Lightspeed Receiver */
+> > +         HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC539),
+> > +         .driver_data =3D HIDPP_QUIRK_CLASS_LIGHTSPEED },
+> >         { /* Logitech G920 Wheel over USB */
+> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH=
+_G920_WHEEL),
+> >                 .driver_data =3D HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_F=
+ORCE_OUTPUT_REPORTS},
+> > --
+> > 2.21.0
+> >
 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+--=20
+Pedro Vanzella
+pedrovanzella.com
+#include <paranoia.h>
+Don't Panic
 
-Regards
+--il23bg2tbeerivkt
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Julian Anastasov <ja@ssi.bg>
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEXrNKwhI/eDFBCGo3v5huqi4pBxkFAlz1lLUACgkQv5huqi4p
+Bxk2IRAAhZ/xJZ8uT7NGw8Ix8cOQJ4kqLzZbTv/jr2a9FAs8y4tj22VBKoo1zNwo
+hyQuvToImgP6Tnql+l/SyTWoG14n6GBnmCv2CUy6rNpt7yBlr1w2UuYzIw+bHsN4
+DEwjNg0RjM5o5fNHGDUzRz1+WuZDNVDmGYdWeg4PLw1aK3TXbqTQBXaqq5xHZTLx
+MF1ZxwGD1+Cyp4gCwn/Rns50/hM9iDg1mUg9L2VrlSkuSHWWhD2WEprovd2fe2xD
+ELV/fu88M8Y2SF2HqWD57hQCGnqG0nsRCdcCV7wC7n1mjqvQFIBnPkx5dm2RJYan
+ubarZ3Qt/B0F9bfC3S2b74YNCUxFMtm+iWcg+4SI2g4uDCBA64HfJtsL67mb5IbA
+q4JW7wyJH83stHNFwFNgWio3q4jmrlEaB06xQ7joeT+w/79Gs/Y0zRWiGLBX3PGT
+yZWNojwJU7T3wLwlm/yASFFXmg1HiG2VuQkzJGamsbil1XnEIXxPR1O41zN50cym
+IlS4T4ciBfymVhYNOwPpUwxRVLW1EG3aurBurx9QAssKKc9ho4LbnZP5o9xlPowl
+TflW78Cr9ga4AJUZZzxW0ptxeqM0HHxYAX1eBfn2MsWnQjW4TI3gw9yOXtQk7sA3
+96uiUjrYY3PNzKAhc5x00v4QbtGO7npEnCm9XHedEc/RaVHvilo=
+=fbNq
+-----END PGP SIGNATURE-----
+
+--il23bg2tbeerivkt--
