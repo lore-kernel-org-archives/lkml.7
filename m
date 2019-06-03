@@ -2,69 +2,92 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D85C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85224C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCE726D87
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA1620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbfFCRcR (ORCPT
+        id S1727355AbfFCRdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:32:17 -0400
-Received: from foss.arm.com ([217.140.101.70]:56644 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbfFCRcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:32:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE60980D;
-        Mon,  3 Jun 2019 10:32:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6BF63F5AF;
-        Mon,  3 Jun 2019 10:32:13 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 18:32:11 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 02/14] arm64: Make use of is_compat_task instead of
- hardcoding this test
-Message-ID: <20190603173210.GI63283@arrakis.emea.arm.com>
-References: <20190526134746.9315-1-alex@ghiti.fr>
- <20190526134746.9315-3-alex@ghiti.fr>
+        Mon, 3 Jun 2019 13:33:40 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:44520 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfFCRdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:33:40 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7E733806A0;
+        Mon,  3 Jun 2019 19:33:35 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 19:33:28 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [RFC 1/3] kbuild: add support for ensuring headers are
+ self-contained
+Message-ID: <20190603173328.GA11045@ravnborg.org>
+References: <20190516194818.29230-1-jani.nikula@intel.com>
+ <20190524174011.GA23737@ravnborg.org>
+ <CAK7LNARY_L3Oyi7hhCZXVwNRAsf6ceSarTNDrzdfXQGj1tDFJw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526134746.9315-3-alex@ghiti.fr>
+In-Reply-To: <CAK7LNARY_L3Oyi7hhCZXVwNRAsf6ceSarTNDrzdfXQGj1tDFJw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=xbvA-TkhMh5VV6G_q3AA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 09:47:34AM -0400, Alexandre Ghiti wrote:
-> Each architecture has its own way to determine if a task is a compat task,
-> by using is_compat_task in arch_mmap_rnd, it allows more genericity and
-> then it prepares its moving to mm/.
-> 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Hi Masahiro/Jani.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> Following the obj-y pattern,
+> I want to make header-test-y relative to $(obj).
+
+I also considered this and agree this is better.
+
+Otherwise we end up with a spaghetti of dependencies across the tree.
+
+What I made just fit the purpose I had that day,
+which is no excuse for bad design.
+
+> I prefer this:
+> 
+> quiet_cmd_header_test = HDRTEST $@
+>       cmd_header_test = echo "\#include \"$*.h\"" > $@
+> 
+> $(obj)/%.header_test.c:
+>         $(call cmd,header_test)
+
+Even better - good.
+
+We call it HDRTEST - so why not just go for that name:
+
+    hdrtest-y += headerfile.h
+
+??
+
+The current proposal with "header-test-y" hurts the eye a little with
+two '-', and all other variables uses only one '-' as is today.
+(generic-y, obj-y etc).
+
+This is bikeshedding but is was itcing me a little.
+
+	Sam
