@@ -2,124 +2,120 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3603C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B53276DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFB327ECE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559553212;
+	bh=Yag5q5aS2+NS59gLAB7BzUtRjUWKTMRecEygGQgq704=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C4s0xWkbHQGI492lwLVxVvC/fzriBfX0YNKFhQDcScV28OPqMBCSNF8q3nK/Mh3xw
+	 CSXs+WxgGkoY8kxUtvHCBAiAhER5q6O8K7QJQZxq+iRTPdnX70Z4nr5Um2JLIOBjTf
+	 vxjtQgHylkwf1nzD48KIf8P7M4IMJqFvjYxzSRMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfFCJN3 (ORCPT
+        id S1728867AbfFCJNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:29 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:34382 "EHLO wind.enjellic.com"
+        Mon, 3 Jun 2019 05:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfFCJN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:27 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x539C8O2013972;
-        Mon, 3 Jun 2019 04:12:08 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x539C6Fb013971;
-        Mon, 3 Jun 2019 04:12:06 -0500
-Date:   Mon, 3 Jun 2019 04:12:06 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190603091206.GA13614@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com> <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov> <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com> <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov> <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com> <20190530180110.GB23930@linux.intel.com> <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com> <20190530211645.GB27551@linux.intel.com> <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com> <20190530213601.GC27551@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530213601.GC27551@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 03 Jun 2019 04:12:08 -0500 (CDT)
+        id S1727961AbfFCJNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 120F527EB0;
+        Mon,  3 Jun 2019 09:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559553210;
+        bh=Yag5q5aS2+NS59gLAB7BzUtRjUWKTMRecEygGQgq704=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IzR/gxP9heK5dAlsGHPE5me+POsCCBghX2v9IkHO8o5D3QCZkSGdLoz20jU1UIVNE
+         IQuDVlFsjp8KbLKe5M1kyrb0ilI1bNyI0j7u9Z3U2klFGDVun6xErkd8i0vO3YduT0
+         1ks6Q38e3RmpjzzD1Jajdjql1TgLBXJ3jm72DmNw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.1 24/40] net/mlx5e: Disable rxhash when CQE compress is enabled
+Date:   Mon,  3 Jun 2019 11:09:17 +0200
+Message-Id: <20190603090524.096682349@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
+References: <20190603090522.617635820@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:36:01PM -0700, Sean Christopherson wrote:
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-Good morning, I hope everyone had a pleasant weekend.
+[ Upstream commit c0194e2d0ef0e5ce5e21a35640d23a706827ae28 ]
 
-> Assuming MRENCLAVE generated by Graphene or any other hosting scheme
-> are stable[1], then avoiding EXEC<whatever> means the user can
-> effectively whitelist what enclaves are runnable by Graphene, even
-> if the kernel doesn't implement security_enclave_create/init().
->
-> I agree that it probably isn't all that important, it's more of a
-> "why not" argument, i.e. what is gained by not using sigstruct as a
-> proxy?
->
-> [1] What in the world is being attested if MRENCLAVE isn't stable?
+When CQE compression is enabled (Multi-host systems), compressed CQEs
+might arrive to the driver rx, compressed CQEs don't have a valid hash
+offload and the driver already reports a hash value of 0 and invalid hash
+type on the skb for compressed CQEs, but this is not good enough.
 
-The cryptographic identity of the entity that signed the enclave and
-generated the SIGSTRUCT.
+On a congested PCIe, where CQE compression will kick in aggressively,
+gro will deliver lots of out of order packets due to the invalid hash
+and this might cause a serious performance drop.
 
-At the risk of being the monotone in the choir, any relevant SGX
-security controls require verifying the identity of whoever signed the
-identity characteristics (SIGSTRUCT) of the image that initiates the
-execution of an SGX TEE.  Other then verifying the initial execution
-image, the MRENCLAVE value isn't all that relevant.
+The only valid solution, is to disable rxhash offload at all when CQE
+compression is favorable (Multi-host systems).
 
-This issue is further evidenced by the fact that sealing data to an
-enclave uses the MRSIGNER variant of ENCLU[EGETKEY] key derivation.
+Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-The current work on LSM controls seems to focus on the identity of the
-entity that is requesting the image to be loaded rather then who
-actually signed, and presumably authored, the code.  As I have
-previously noted, with SGX2/EDMM, a platform owner may not even have
-any visibility into the code that an SGX TEE may ultimately load and
-execute.
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3750,6 +3750,12 @@ static netdev_features_t mlx5e_fix_featu
+ 			netdev_warn(netdev, "Disabling LRO, not supported in legacy RQ\n");
+ 	}
+ 
++	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS)) {
++		features &= ~NETIF_F_RXHASH;
++		if (netdev->features & NETIF_F_RXHASH)
++			netdev_warn(netdev, "Disabling rxhash, not supported when CQE compress is active\n");
++	}
++
+ 	mutex_unlock(&priv->state_lock);
+ 
+ 	return features;
+@@ -3875,6 +3881,9 @@ int mlx5e_hwstamp_set(struct mlx5e_priv
+ 	memcpy(&priv->tstamp, &config, sizeof(config));
+ 	mutex_unlock(&priv->state_lock);
+ 
++	/* might need to fix some features */
++	netdev_update_features(priv->netdev);
++
+ 	return copy_to_user(ifr->ifr_data, &config,
+ 			    sizeof(config)) ? -EFAULT : 0;
+ }
+@@ -4734,6 +4743,10 @@ static void mlx5e_build_nic_netdev(struc
+ 	if (!priv->channels.params.scatter_fcs_en)
+ 		netdev->features  &= ~NETIF_F_RXFCS;
+ 
++	/* prefere CQE compression over rxhash */
++	if (MLX5E_GET_PFLAG(&priv->channels.params, MLX5E_PFLAG_RX_CQE_COMPRESS))
++		netdev->features &= ~NETIF_F_RXHASH;
++
+ #define FT_CAP(f) MLX5_CAP_FLOWTABLE(mdev, flow_table_properties_nic_receive.f)
+ 	if (FT_CAP(flow_modify_en) &&
+ 	    FT_CAP(modify_root) &&
 
-Any security relevant LSM control in this space has to focus on
-providing the platform owner the ability to take action based on the
-contents of the SIGSTRUCT of the initiating image.  In addition to the
-identity of who is requesting the image to be loaded.
 
-Have a good week.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Experience is something you don't get until just after you need it."
-                                -- Olivier
