@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD1BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40677C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928C527E4B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5BD27E36
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553061;
-	bh=hj/6jOVdQeEcp98w2HRhEApzSrTWJykIdH1r+KYOYr8=;
+	s=default; t=1559553065;
+	bh=lfpX54i1ME6lCEhNG/tCmCnRWGzVpXWcT0EQVjwNNIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ao2JyIHt0NvVR2z0nSk/F4F0pYrcmtMMR1WWf+H6Dl0xk59e8mGIigeUTHzR9frTa
-	 F7T2nw0EYNSGahPgG0R8pb/tt+UCkra/aoyRHA773vH/5A3Z+tKGJWqkuTpD/KHvvD
-	 ld3iiUC93qJ5m67d9vgINFeACp18RZlc8rMULsu0=
+	b=LCImF67o8q9Kpl8uGO2tFoR4IKXfTUTx4Uu/mLPaYUfMcgt0d3tXldvDwR6yUzb+D
+	 SDtZAI/zVr9hPpYS90BzuX3M+KkdherG5XG8mLWtShhuaxwlWaF0BJVz9LRv1gU4x9
+	 P1+3UtjNEjV+wcKVl/1/wx+8MJXAzo7uV6CxinWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfFCJLB (ORCPT
+        id S1728287AbfFCJLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbfFCJK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:10:57 -0400
+        id S1728255AbfFCJLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF7827E43;
-        Mon,  3 Jun 2019 09:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7DDD27E43;
+        Mon,  3 Jun 2019 09:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553056;
-        bh=hj/6jOVdQeEcp98w2HRhEApzSrTWJykIdH1r+KYOYr8=;
+        s=default; t=1559553061;
+        bh=lfpX54i1ME6lCEhNG/tCmCnRWGzVpXWcT0EQVjwNNIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9JKT+ddIQZYmRGV9ImElvsk7ZG/Qk+aOfXbUE9zMnEsX3NaiTGbuEbaOUqgd9H3L
-         L4GBVQir0ixMYjq2OShCqxnemB5qMlPprg02YL5OunwCOxESmSzSOWiznDJ86HR1NU
-         9IGKxY94lPkh22T2if5STFsBl/kk71aRihMTlcD4=
+        b=dynLvXuEENnUvP8LUrEGAXgBYhp+QWL88THb+2TgQ9BB1LL57E7ze/tFqYMAw70yk
+         tqwoUbLJfHsYUQ9VvzCEXGzCbq5cLHb6xya3Xs0Uk6GVLzzNcIzycEDrS4uDiQizNj
+         mL2cBVmMeZRCuqHLDIkOOgNQWUlteChalbCpGl1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jan=20Kl=C3=B6tzke?= <Jan.Kloetzke@preh.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 15/32] net: sched: dont use tc_action->order during action dump
-Date:   Mon,  3 Jun 2019 11:08:09 +0200
-Message-Id: <20190603090313.391055196@linuxfoundation.org>
+Subject: [PATCH 4.19 17/32] usbnet: fix kernel crash after disconnect
+Date:   Mon,  3 Jun 2019 11:08:11 +0200
+Message-Id: <20190603090313.578874049@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
 References: <20190603090308.472021390@linuxfoundation.org>
@@ -60,55 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-[ Upstream commit 4097e9d250fb17958c1d9b94538386edd3f20144 ]
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-Function tcf_action_dump() relies on tc_action->order field when starting
-nested nla to send action data to userspace. This approach breaks in
-several cases:
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-- When multiple filters point to same shared action, tc_action->order field
-  is overwritten each time it is attached to filter. This causes filter
-  dump to output action with incorrect attribute for all filters that have
-  the action in different position (different order) from the last set
-  tc_action->order value.
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
 
-- When action data is displayed using tc action API (RTM_GETACTION), action
-  order is overwritten by tca_action_gd() according to its position in
-  resulting array of nl attributes, which will break filter dump for all
-  filters attached to that shared action that expect it to have different
-  order value.
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
 
-Don't rely on tc_action->order when dumping actions. Set nla according to
-action position in resulting array of actions instead.
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
 
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/act_api.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/usb/usbnet.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -744,7 +744,7 @@ int tcf_action_dump(struct sk_buff *skb,
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -506,6 +506,7 @@ static int rx_submit (struct usbnet *dev
  
- 	for (i = 0; i < TCA_ACT_MAX_PRIO && actions[i]; i++) {
- 		a = actions[i];
--		nest = nla_nest_start(skb, a->order);
-+		nest = nla_nest_start(skb, i + 1);
- 		if (nest == NULL)
- 			goto nla_put_failure;
- 		err = tcf_action_dump_1(skb, a, bind, ref);
-@@ -1257,7 +1257,6 @@ tca_action_gd(struct net *net, struct nl
- 			ret = PTR_ERR(act);
- 			goto err;
- 		}
--		act->order = i;
- 		attr_size += tcf_action_fill_size(act);
- 		actions[i - 1] = act;
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1431,6 +1432,11 @@ netdev_tx_t usbnet_start_xmit (struct sk
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
  	}
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
++	}
+ 
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 
 
