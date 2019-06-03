@@ -2,195 +2,270 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2E0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DF8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4C127ABC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A137227AC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pkgHp6xW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/tT8++/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfFCOLK (ORCPT
+        id S1728907AbfFCOLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:11:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43769 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbfFCOLJ (ORCPT
+        Mon, 3 Jun 2019 10:11:34 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:52926 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfFCOLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:11:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r18so3237165wrm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:11:07 -0700 (PDT)
+        Mon, 3 Jun 2019 10:11:34 -0400
+Received: by mail-it1-f193.google.com with SMTP id l21so5727889ita.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=66AnuJKIE6eCswxLQ/J3IyokZqKV8slWZjpmmxjw1RQ=;
-        b=pkgHp6xWiK272viodj9nkEwwgWpucEtI+Mu+QznUbZgTv8NL+uB+Cb9l/DBP1rf1wo
-         MBTrTTKVRS5sUoV4AFk8UNw71wjwjtqOwIq/OtIH89gBkBc+couhdqZ7bcTDpwhGzNuL
-         4IO9j8erDie66wW+VbGlfxE6nWeZLNmDs+2hF1o/gSZjdet3JeqXzmp2p2Y8/E7r15ND
-         1QpeCkpseBkveeFwzv1eeFosN7pd1rTtR/4mfpxsWsA/UqtiGXANJKpsevQkIVWKIM8S
-         OW4hkk4stItvESG8nTFX6fxyxi/JQFlcYmTdux8J+6HQAzyQvBwi9VT/w9scr+4c23lv
-         nqjg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ahQ7VoRg99S/6Xj+DanoRYoblw6xRVRqCQUI0HAUIyI=;
+        b=K/tT8++/1Efb+YAtts49FvOfQZD+rmNnrYDw4UqoTwtlU1J/fhDcandBGT984w+C+D
+         DSPFN7TYYMIZktx/KJTBksrZQdqxhSOO/rOkViB3e9jAQpElEHeTP/TNdXVFok5e2oGm
+         xbe+talBRpM791KvKfNxnuQUs0CT9mX/VXP+A7r3LK2yfhrtvLZtnpjFw778WrsLrx1s
+         R6yCr5u3+l4ELF0ic/pVGCf2X/cS7BNRfSsV/d9zo63wqT1gxUgG2Lj3DllxzEQzA4nD
+         GenVdhFZsPa1aP8qfPYWT5F1ZiZiAL0uprJwr1QuK4qXmgE4eGKkBmNc9jLr6yEbfQBV
+         L2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=66AnuJKIE6eCswxLQ/J3IyokZqKV8slWZjpmmxjw1RQ=;
-        b=ofb0wBd8l0hGGdtheChmo4XzA/aMsS/gEGlxXEoZo/KKqILpGu0I7jS17JwUzQNupF
-         hlCBCgdTpYBXXwuJncLi0lXEs8CXstF7OIjO7j/Sf5MfMJ0FJBUYvp7jPXnla0DD8pUc
-         LizEos9bs3f+lJPPG6GKzb66xM9vEbUaBtkdVehNffeIq8ooQbel0g+D50p5Xzqsz3PD
-         Aytub4XoohwRmigPr//PJmWafT1iq8sZ58hTrRQix8cjGH++rxdtSPikIiE0V2/9twmt
-         8yMRXpFnIU8Wnvibspa/7dtDe/Xun72mPeygsvEFNeHHZawFyoeVaDR/M8VgQKcaV8Cj
-         V9dA==
-X-Gm-Message-State: APjAAAVLf0E+2GvzW/1quA+jrnYUChjcL2PCD+Vlb9wvDD28rZAWQ9G2
-        tagKuJQuafeyYmZApus733hfMw==
-X-Google-Smtp-Source: APXvYqzLp+2TvMyVJo3XJdZdVTcx6uU5/Hha7+qVX2LLTt0qUBQModiGLD6N69VjvMWwjEi4cNcAGw==
-X-Received: by 2002:adf:8385:: with SMTP id 5mr2667418wre.194.1559571067116;
-        Mon, 03 Jun 2019 07:11:07 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:8816:b980:b875:4d47])
-        by smtp.gmail.com with ESMTPSA id v11sm7054176wmh.28.2019.06.03.07.11.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 03 Jun 2019 07:11:06 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-X-Google-Original-From: Vincent Guittot <vincent.guitto@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guitto@linaro.org>
-Subject: [PATCH] sched/fair: clean up asym packing
-Date:   Mon,  3 Jun 2019 16:11:04 +0200
-Message-Id: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ahQ7VoRg99S/6Xj+DanoRYoblw6xRVRqCQUI0HAUIyI=;
+        b=lrVlKWCj3Xs2bhrpKXvgPIwSdIJr+R/lPoPmA/wanpVbq7FJMgZCIJuQZk0/lBIuFG
+         I7Nfek71lIPexF2MAjjWsUY15TuUXrYcMvIFui2ZitaBhD7YQd35JsK03odzKXH1ZEcj
+         EF66thgtFEIfGBfJ5NUqmNVsGSjgiBIm2mjyMOppycVIv8iILjWOvXs6gnnsbrN5OHGp
+         HrfY2aKjguTYgOXfqVTyfioaPGbpi7pBgO3pDk2rm9m0IfFESx92TeZ+C32WnTSVR53j
+         mveSAh+QXG7o4Inm83OaqRZZh7wt6RzHGWNWd3Xdf9wuoW4esGgXvTLvJhHfPDMnDwOT
+         amew==
+X-Gm-Message-State: APjAAAXxpsXnv4TAKUpZj8PC6oYbgW6bCACX1P9XQ/pN+wU6KXJSkDdA
+        fPlBrhDbYdO2qQq81EljZppsX6gD7UT+ZTvbsBw=
+X-Google-Smtp-Source: APXvYqzFcJ2ZmwK+aB+bEQ2RTNygZhJGFn/p7+CFUQ/hSJO8saN/oMGgPjOQMI0wmykpNh+ptf3YUK1OSXulWL9tyQs=
+X-Received: by 2002:a24:6294:: with SMTP id d142mr17467565itc.102.1559571093293;
+ Mon, 03 Jun 2019 07:11:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com> <20190601095748.35d1c1aa@collabora.com>
+In-Reply-To: <20190601095748.35d1c1aa@collabora.com>
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Date:   Mon, 3 Jun 2019 10:11:20 -0400
+Message-ID: <CAC=U0a1q2CTZx+btLBJNewK8Rv3WXVE-ZV+j5fFWZPJLoJ94NA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] mtd: nand: raw: brcmnand: Refactored code and
+ introduced inline functions
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up asym packing to follow the default load balance behavior:
-- classify the group by creating a group_asym_capacity field.
-- calculate the imbalance in calculate_imbalance() instead of bypassing it.
+Boris,
 
-We don't need to test twice same conditions anymore to detect asym packing
-and we consolidate the calculation of imbalance in calculate_imbalance().
+On Sat, Jun 1, 2019 at 3:57 AM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+>
+> On Thu, 30 May 2019 17:20:35 -0400
+> Kamal Dasu <kdasu.kdev@gmail.com> wrote:
+>
+> > Refactored NAND ECC and CMD address configuration code to use inline
+> > functions.
+>
+> I'd expect the compiler to be smart enough to decide when inlining is
+> appropriate. Did you check that adding the inline specifier actually
+> makes a difference?
 
-There is no functional changes.
+This was done to make the code more readable. It does not make any
+difference to performance.
 
-Signed-off-by: Vincent Guittot <vincent.guitto@linaro.org>
----
+>
+> >
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 100 +++++++++++++++++++------------
+> >  1 file changed, 62 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > index ce0b8ff..77b7850 100644
+> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > @@ -588,6 +588,54 @@ static inline void brcmnand_write_fc(struct brcmnand_controller *ctrl,
+> >       __raw_writel(val, ctrl->nand_fc + word * 4);
+> >  }
+> >
+> > +static inline void brcmnand_clear_ecc_addr(struct brcmnand_controller *ctrl)
+> > +{
+> > +
+> > +     /* Clear error addresses */
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
+> > +}
+> > +
+> > +static inline u64 brcmnand_get_uncorrecc_addr(struct brcmnand_controller *ctrl)
+> > +{
+> > +     u64 err_addr;
+> > +
+> > +     err_addr = brcmnand_read_reg(ctrl, BRCMNAND_UNCORR_ADDR);
+> > +     err_addr |= ((u64)(brcmnand_read_reg(ctrl,
+> > +                                          BRCMNAND_UNCORR_EXT_ADDR)
+> > +                                          & 0xffff) << 32);
+> > +
+> > +     return err_addr;
+> > +}
+> > +
+> > +static inline u64 brcmnand_get_correcc_addr(struct brcmnand_controller *ctrl)
+> > +{
+> > +     u64 err_addr;
+> > +
+> > +     err_addr = brcmnand_read_reg(ctrl, BRCMNAND_CORR_ADDR);
+> > +     err_addr |= ((u64)(brcmnand_read_reg(ctrl,
+> > +                                          BRCMNAND_CORR_EXT_ADDR)
+> > +                                          & 0xffff) << 32);
+> > +
+> > +     return err_addr;
+> > +}
+> > +
+> > +static inline void brcmnand_set_cmd_addr(struct mtd_info *mtd, u64 addr)
+> > +{
+> > +     struct nand_chip *chip =  mtd_to_nand(mtd);
+> > +     struct brcmnand_host *host = nand_get_controller_data(chip);
+> > +     struct brcmnand_controller *ctrl = host->ctrl;
+> > +
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+> > +                        (host->cs << 16) | ((addr >> 32) & 0xffff));
+> > +     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+> > +     brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
+> > +                        lower_32_bits(addr));
+> > +     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+> > +}
+> > +
+> >  static inline u16 brcmnand_cs_offset(struct brcmnand_controller *ctrl, int cs,
+> >                                    enum brcmnand_cs_reg reg)
+> >  {
+> > @@ -1213,9 +1261,12 @@ static void brcmnand_send_cmd(struct brcmnand_host *host, int cmd)
+> >  {
+> >       struct brcmnand_controller *ctrl = host->ctrl;
+> >       int ret;
+> > +     u64 cmd_addr;
+> > +
+> > +     cmd_addr = brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+> > +
+> > +     dev_dbg(ctrl->dev, "send native cmd %d addr 0x%llx\n", cmd, cmd_addr);
+> >
+> > -     dev_dbg(ctrl->dev, "send native cmd %d addr_lo 0x%x\n", cmd,
+> > -             brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS));
+> >       BUG_ON(ctrl->cmd_pending != 0);
+> >       ctrl->cmd_pending = cmd;
+> >
+> > @@ -1374,12 +1425,7 @@ static void brcmnand_cmdfunc(struct nand_chip *chip, unsigned command,
+> >       if (!native_cmd)
+> >               return;
+> >
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+> > -             (host->cs << 16) | ((addr >> 32) & 0xffff));
+> > -     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS, lower_32_bits(addr));
+> > -     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+> > -
+> > +     brcmnand_set_cmd_addr(mtd, addr);
+> >       brcmnand_send_cmd(host, native_cmd);
+> >       brcmnand_waitfunc(chip);
+> >
+> > @@ -1597,20 +1643,10 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+> >       struct brcmnand_controller *ctrl = host->ctrl;
+> >       int i, j, ret = 0;
+> >
+> > -     /* Clear error addresses */
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
+> > -
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+> > -                     (host->cs << 16) | ((addr >> 32) & 0xffff));
+> > -     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+> > +     brcmnand_clear_ecc_addr(ctrl);
+> >
+> >       for (i = 0; i < trans; i++, addr += FC_BYTES) {
+> > -             brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
+> > -                                lower_32_bits(addr));
+> > -             (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+> > +             brcmnand_set_cmd_addr(mtd, addr);
+> >               /* SPARE_AREA_READ does not use ECC, so just use PAGE_READ */
+> >               brcmnand_send_cmd(host, CMD_PAGE_READ);
+> >               brcmnand_waitfunc(chip);
+> > @@ -1630,21 +1666,15 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+> >                                       host->hwcfg.sector_size_1k);
+> >
+> >               if (!ret) {
+> > -                     *err_addr = brcmnand_read_reg(ctrl,
+> > -                                     BRCMNAND_UNCORR_ADDR) |
+> > -                             ((u64)(brcmnand_read_reg(ctrl,
+> > -                                             BRCMNAND_UNCORR_EXT_ADDR)
+> > -                                     & 0xffff) << 32);
+> > +                     *err_addr = brcmnand_get_uncorrecc_addr(ctrl);
+> > +
+> >                       if (*err_addr)
+> >                               ret = -EBADMSG;
+> >               }
+> >
+> >               if (!ret) {
+> > -                     *err_addr = brcmnand_read_reg(ctrl,
+> > -                                     BRCMNAND_CORR_ADDR) |
+> > -                             ((u64)(brcmnand_read_reg(ctrl,
+> > -                                             BRCMNAND_CORR_EXT_ADDR)
+> > -                                     & 0xffff) << 32);
+> > +                     *err_addr = brcmnand_get_correcc_addr(ctrl);
+> > +
+> >                       if (*err_addr)
+> >                               ret = -EUCLEAN;
+> >               }
+> > @@ -1711,7 +1741,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+> >       dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
+> >
+> >  try_dmaread:
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_COUNT, 0);
+> > +     brcmnand_clear_ecc_addr(ctrl);
+> >
+> >       if (has_flash_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
+> >               err = brcmnand_dma_trans(host, addr, buf, trans * FC_BYTES,
+> > @@ -1858,15 +1888,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
+> >               goto out;
+> >       }
+> >
+> > -     brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+> > -                     (host->cs << 16) | ((addr >> 32) & 0xffff));
+> > -     (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+> > -
+> >       for (i = 0; i < trans; i++, addr += FC_BYTES) {
+> >               /* full address MUST be set before populating FC */
+> > -             brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
+> > -                                lower_32_bits(addr));
+> > -             (void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+> > +             brcmnand_set_cmd_addr(mtd, addr);
+> >
+> >               if (buf) {
+> >                       brcmnand_soc_data_bus_prepare(ctrl->soc, false);
+>
 
-This is a simple cleanup to gather all imbalance calculations in calculate_imbalance()
-before a deeper rework of the load_balance.
-
- kernel/sched/fair.c | 63 ++++++++++++++---------------------------------------
- 1 file changed, 16 insertions(+), 47 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f..93c2447 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7888,6 +7888,7 @@ struct sg_lb_stats {
- 	unsigned int group_weight;
- 	enum group_type group_type;
- 	int group_no_capacity;
-+	int group_asym_capacity;
- 	unsigned long group_misfit_task_load; /* A CPU has a task too big for its capacity */
- #ifdef CONFIG_NUMA_BALANCING
- 	unsigned int nr_numa_running;
-@@ -8382,9 +8383,17 @@ static bool update_sd_pick_busiest(struct lb_env *env,
- 	 * ASYM_PACKING needs to move all the work to the highest
- 	 * prority CPUs in the group, therefore mark all groups
- 	 * of lower priority than ourself as busy.
-+	 *
-+	 * This is primarily intended to used at the sibling level.  Some
-+	 * cores like POWER7 prefer to use lower numbered SMT threads.  In the
-+	 * case of POWER7, it can move to lower SMT modes only when higher
-+	 * threads are idle.  When in lower SMT modes, the threads will
-+	 * perform better since they share less core resources.  Hence when we
-+	 * have idle threads, we want them to be the higher ones.
- 	 */
- 	if (sgs->sum_nr_running &&
- 	    sched_asym_prefer(env->dst_cpu, sg->asym_prefer_cpu)) {
-+		sgs->group_asym_capacity = 1;
- 		if (!sds->busiest)
- 			return true;
- 
-@@ -8522,51 +8531,6 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- }
- 
- /**
-- * check_asym_packing - Check to see if the group is packed into the
-- *			sched domain.
-- *
-- * This is primarily intended to used at the sibling level.  Some
-- * cores like POWER7 prefer to use lower numbered SMT threads.  In the
-- * case of POWER7, it can move to lower SMT modes only when higher
-- * threads are idle.  When in lower SMT modes, the threads will
-- * perform better since they share less core resources.  Hence when we
-- * have idle threads, we want them to be the higher ones.
-- *
-- * This packing function is run on idle threads.  It checks to see if
-- * the busiest CPU in this domain (core in the P7 case) has a higher
-- * CPU number than the packing function is being run on.  Here we are
-- * assuming lower CPU number will be equivalent to lower a SMT thread
-- * number.
-- *
-- * Return: 1 when packing is required and a task should be moved to
-- * this CPU.  The amount of the imbalance is returned in env->imbalance.
-- *
-- * @env: The load balancing environment.
-- * @sds: Statistics of the sched_domain which is to be packed
-- */
--static int check_asym_packing(struct lb_env *env, struct sd_lb_stats *sds)
--{
--	int busiest_cpu;
--
--	if (!(env->sd->flags & SD_ASYM_PACKING))
--		return 0;
--
--	if (env->idle == CPU_NOT_IDLE)
--		return 0;
--
--	if (!sds->busiest)
--		return 0;
--
--	busiest_cpu = sds->busiest->asym_prefer_cpu;
--	if (sched_asym_prefer(busiest_cpu, env->dst_cpu))
--		return 0;
--
--	env->imbalance = sds->busiest_stat.group_load;
--
--	return 1;
--}
--
--/**
-  * fix_small_imbalance - Calculate the minor imbalance that exists
-  *			amongst the groups of a sched_domain, during
-  *			load balancing.
-@@ -8650,6 +8614,11 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 	local = &sds->local_stat;
- 	busiest = &sds->busiest_stat;
- 
-+	if (busiest->group_asym_capacity) {
-+		env->imbalance = busiest->group_load;
-+		return;
-+	}
-+
- 	if (busiest->group_type == group_imbalanced) {
- 		/*
- 		 * In the group_imb case we cannot rely on group-wide averages
-@@ -8754,8 +8723,8 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
- 	busiest = &sds.busiest_stat;
- 
- 	/* ASYM feature bypasses nice load balance check */
--	if (check_asym_packing(env, &sds))
--		return sds.busiest;
-+	if (busiest->group_asym_capacity)
-+		goto force_balance;
- 
- 	/* There is no busy sibling group to pull tasks from */
- 	if (!sds.busiest || busiest->sum_nr_running == 0)
--- 
-2.7.4
-
+Thanks
+Kamal
