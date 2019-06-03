@@ -2,101 +2,147 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982EC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CBDC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA1527EC0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D92927EBE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="Ltb58s6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfFCMnP (ORCPT
+        id S1727629AbfFCMnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:43:15 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30258 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbfFCMnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:43:15 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-6-SDVVZ0DCOw-CfAQMUB-rxA-1;
- Mon, 03 Jun 2019 13:43:09 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 3 Jun 2019 13:43:08 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 3 Jun 2019 13:43:08 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Masahiro Yamada' <yamada.masahiro@socionext.com>
-CC:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "Vineet Gupta" <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        Mon, 3 Jun 2019 08:43:25 -0400
+Received: from mail-eopbgr750051.outbound.protection.outlook.com ([40.107.75.51]:21217
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727030AbfFCMnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:43:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tUUGMk3MkIrw/PhIngnqJp8/r4yLBUJClqPJHGbfysU=;
+ b=Ltb58s6rrL6pZyWiRxY3PSzKbx5rybelOD4D5oQ8JYKZpJ7gQm3+DwPRpR9/XculdMw8gzDmKR9RhR/+GAea4ZrJkyoKmIHxt3kYyxqjp/8JE5kv53tjFWZ1AIKNGTvp5i82S/biteSRnVSealt/fNdzXNB78/G6yWiGqXB6VFs=
+Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
+ MN2PR08MB5872.namprd08.prod.outlook.com (20.179.86.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.18; Mon, 3 Jun 2019 12:43:21 +0000
+Received: from MN2PR08MB5951.namprd08.prod.outlook.com
+ ([fe80::f0f7:f262:a3c6:ce23]) by MN2PR08MB5951.namprd08.prod.outlook.com
+ ([fe80::f0f7:f262:a3c6:ce23%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 12:43:21 +0000
+From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Yixun Lan <yixun.lan@amlogic.com>,
+        Lucas Stach <dev@lynxeye.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] kbuild: use more portable 'command -v' for
- cc-cross-prefix
-Thread-Topic: [PATCH] kbuild: use more portable 'command -v' for
- cc-cross-prefix
-Thread-Index: AQHVGfoc7Nk6FX5Ty02s910sxgLWxaaJxwdw///34ACAAB3mMA==
-Date:   Mon, 3 Jun 2019 12:43:08 +0000
-Message-ID: <1ca8a995328f449fa58f732ebe70e378@AcuMS.aculab.com>
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
- <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
- <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
-In-Reply-To: <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
+Subject: [PATCH v3 00/12] Introduce generic ONFI support
+Thread-Topic: [PATCH v3 00/12] Introduce generic ONFI support
+Thread-Index: AdUaAtp/ATLriW8VSquJuchLDLomcg==
+Date:   Mon, 3 Jun 2019 12:43:20 +0000
+Message-ID: <MN2PR08MB59514E77250C3F0DA76D4801B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sshivamurthy@micron.com; 
+x-originating-ip: [165.225.81.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e97596f8-2c51-45c4-d672-08d6e8210f74
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR08MB5872;
+x-ms-traffictypediagnostic: MN2PR08MB5872:|MN2PR08MB5872:
+x-microsoft-antispam-prvs: <MN2PR08MB5872E557374DAD4810A0F6CDB8140@MN2PR08MB5872.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(76116006)(14454004)(99286004)(7696005)(71200400001)(71190400001)(66446008)(5660300002)(9686003)(52536014)(73956011)(66946007)(66476007)(66066001)(66556008)(64756008)(2201001)(55236004)(6116002)(478600001)(316002)(102836004)(110136005)(2906002)(3846002)(6506007)(86362001)(7416002)(53936002)(486006)(26005)(2501003)(8936002)(476003)(33656002)(14444005)(256004)(8676002)(74316002)(81166006)(81156014)(6436002)(68736007)(7736002)(305945005)(186003)(25786009)(55016002)(41533002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5872;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ro/o3TCaLIO+iKNyLwcyXV12v42Ut+045NvAURHK1X+TeoMHwAhNYlFJTVnT3C+D1z7RZ8C7Seob1kAo5gyhHtt+RF8HNbjqEmdSUwciA0NKFAJMfc/2k+baVpIeZuNbSvDtHvn0dqEt87ApQhVpURIusTND1cZ4z830tj3Pa3Ih+51Q2n0cEHP8PrIphc8rZfVuTkP5EnXMh3q8yneCW9qtK1H7wkm4zo3obXD5z9kKlret+AFFb/LPxB0a44eLmTseefwuRJ022Eiajb470n8A50g4L8l+EnPkFZMmgwayniS98h71tmbAiQ0oKIIxGhxGDr1vVPRE9Q6V2fQcrsUS9fZRYGwxL0o2amCx+BcbdJCoTh4lu2ZT8Xx1pTiAVsmXfzdPg/Ty6MuX9x7sWpoeGtDtARCPWoS33eobcT4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MC-Unique: SDVVZ0DCOw-CfAQMUB-rxA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e97596f8-2c51-45c4-d672-08d6e8210f74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:43:20.8355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sshivamurthy@micron.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5872
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFzYWhpcm8gWWFtYWRhDQo+IFNlbnQ6IDAzIEp1bmUgMjAxOSAxMjo0NQ0KPiBPbiBN
-b24sIEp1biAzLCAyMDE5IGF0IDg6MTYgUE0gRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
-bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBNYXNhaGlybyBZYW1hZGENCj4gPiA+IFNl
-bnQ6IDAzIEp1bmUgMjAxOSAxMTo0OQ0KPiA+ID4NCj4gPiA+IFRvIHByaW50IHRoZSBwYXRobmFt
-ZSB0aGF0IHdpbGwgYmUgdXNlZCBieSBzaGVsbCBpbiB0aGUgY3VycmVudA0KPiA+ID4gZW52aXJv
-bm1lbnQsICdjb21tYW5kIC12JyBpcyBhIHN0YW5kYXJkaXplZCB3YXkuIFsxXQ0KPiA+ID4NCj4g
-PiA+ICd3aGljaCcgaXMgYWxzbyBvZnRlbiB1c2VkIGluIHNjcmlwdGluZywgYnV0IGl0IGlzIG5v
-dCBwb3J0YWJsZS4NCj4gPg0KPiA+IEFsbCB1c2VzIG9mICd3aGljaCcgc2hvdWxkIGJlIGV4cHVu
-Z2VkLg0KPiA+IEl0IGlzIGEgYm91cm5lIHNoZWxsIHNjcmlwdCB0aGF0IGlzIHRyeWluZyB0byBl
-bXVsYXRlIGEgY3NoIGJ1aWx0aW4uDQo+ID4gSXQgaXMgZG9vbWVkIHRvIGZhaWwgaW4gY29ybmVy
-IGNhc2VzLg0KPiA+IElTVFIgaXQgaGFzIHNlcmlvdXMgcHJvYmxlbXMgd2l0aCBzaGVsbCBmdW5j
-dGlvbnMgYW5kIGFsaWFzZXMuDQo+IA0KPiBPSywgSSBkbyBub3QgaGF2ZSB0aW1lIHRvIGNoZWNr
-IGl0IHRyZWV3aWRlLg0KPiBJIGV4cGVjdCBzb21lYm9keSB3aWxsIGNvbnRyaWJ1dGUgdG8gaXQu
-DQo+IA0KPiANCj4gDQo+IEJUVywgSSBzZWUgeWV0IGFub3RoZXIgd2F5IHRvIGdldCB0aGUgY29t
-bWFuZCBwYXRoLg0KPiANCj4gJ3R5cGUgLXBhdGgnIGlzIGJhc2gtc3BlY2lmaWMuDQoNCid0eXBl
-JyBpdHNlbGYgc2hvdWxkIGJlIHN1cHBvcnRlZCBieSBhbGwgc2hlbGxzLCBidXQgdGhlIG91dHB1
-dA0KZm9ybWF0IChlc3AgZm9yIGVycm9ycykgcHJvYmFibHkgdmFyaWVzLg0KDQo+IE1heWJlLCB3
-ZSBzaG91bGQgZG8gdGhpcyB0b286DQo+IA0KPiBkaWZmIC0tZ2l0IGEvc2NyaXB0cy9ta3Vib290
-LnNoIGIvc2NyaXB0cy9ta3Vib290LnNoDQo+IGluZGV4IDRiMWZlMDllOTA0Mi4uNzc4MjllZTQy
-NjhlIDEwMDc1NQ0KPiAtLS0gYS9zY3JpcHRzL21rdWJvb3Quc2gNCj4gKysrIGIvc2NyaXB0cy9t
-a3Vib290LnNoDQo+IEBAIC0xLDE0ICsxLDE0IEBADQo+IC0jIS9iaW4vYmFzaA0KPiArIyEvYmlu
-L3NoDQoNCi9iaW4vc2ggbWlnaHQgYmUgJ2Rhc2gnIC0gd2hpY2ggaXMganVzdCBwbGFpbiBicm9r
-ZW4gaW4gc28gbWFueSB3YXlzLg0KVHJ5IChJSVJDKSAke2ZvbyUke2ZvbyNiYXJ9fQ0KSXQgbWln
-aHQgZXZlbiBiZSB0aGUgb3JpZ2luYWwgU1lTViAvYmluL3NoIHdoaWNoIGRvZXNuJ3Qgc3VwcG9y
-dCAkKChleHByKSkNCm9yICR7Zm9vI2Jhcn0gLSBidXQgdGhhdCBtYXkgYnJlYWsgdG9vIG11Y2gs
-IGJ1dCAkU0hFTEwgbWlnaHQgZml4IGl0Lg0KDQpkYXNoIHByb2JhYmx5IGhhcyB0aGUgcmF0aGVy
-IG9ic2N1cmUgYnVnIGluIHN0cmlwcGluZyAnXG4nIGZyb20gJCguLi4pDQpvdXRwdXQgdGhhdCBJ
-IGZvdW5kIGFuZCBmaXhlZCBpbiBOZXRCU0QncyBhc2ggbWF5IHllYXJzIGFnby4NClRyeTogZm9v
-PSIkKGpvdCAtYiAiIiAxMzApIg0KQWxsIDEzMCAnXG4nIHNob3VsZCBiZSBkZWxldGVkLg0KTW9z
-dGx5IGl0IGZhaWxzIHRvIGRlbGV0ZSBhbGwgdGhlICdcbicsIGJ1dCBpdCBjYW4gcmVtb3ZlIGV4
-dHJhIG9uZXMhDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
-YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
-dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Current support to ONFI parameter page is only for raw NAND, this patch
+series turn ONFI support into generic. So that, other NAND devices like
+SPI NAND can use this.
+
+There are five parts in this series.
+1. Prepare for turning ONFI into generic
+2. Turn ONFI into generic, which can be used by SPI NANDs later
+3. Turn SPI NAND core to use parameter page
+4. Redesign Micron SPI NAND driver implementation
+5. Support for new Micron SPI NAND devices
+
+Changes in V3
+-------------
+
+* Rebased to nand/next
+* Split the patches as per suggestion
+* Addressed the comments
+* Some fixes which I missed in last version
+
+Shivamurthy Shastri (12):
+  mtd: rawnand: turn nand_onfi_detect to use nand_device
+  mtd: rawnand: move ONFI related functions to nand.h
+  mtd: rawnand: move sanitize_strings to nand_onfi.c
+  mtd: rawnand: introduce struct onfi_helper
+  mtd: rawnand: turn ONFI support to generic
+  mtd: nand: Move ONFI code into nand/ directory
+  mtd: spinand: turn SPI NAND to support parameter page detection
+  mtd: spinand: add parameter page fixup function
+  mtd: spinand: micron: prepare for generalizing driver
+  mtd: spinand: micron: Turn driver implementation generic
+  mtd: spinand: micron: Fix read failure in Micron M70A flashes
+  mtd: spinand: micron: Enable micron flashes with multi-die
+
+ drivers/mtd/nand/Makefile        |   2 +-
+ drivers/mtd/nand/onfi.c          | 180 ++++++++++++++++++
+ drivers/mtd/nand/raw/Makefile    |   1 -
+ drivers/mtd/nand/raw/internals.h |   4 -
+ drivers/mtd/nand/raw/nand_base.c | 236 +++++++++++++++++++++--
+ drivers/mtd/nand/raw/nand_onfi.c | 312 -------------------------------
+ drivers/mtd/nand/spi/core.c      | 111 ++++++++++-
+ drivers/mtd/nand/spi/micron.c    | 107 ++++++++---
+ include/linux/mtd/nand.h         |  30 +++
+ include/linux/mtd/rawnand.h      |   5 +
+ include/linux/mtd/spinand.h      |   6 +
+ 11 files changed, 628 insertions(+), 366 deletions(-)
+ create mode 100644 drivers/mtd/nand/onfi.c
+ delete mode 100644 drivers/mtd/nand/raw/nand_onfi.c
+
+--=20
+2.17.1
 
