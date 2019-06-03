@@ -2,68 +2,115 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC4DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6757DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D08926A81
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C9B2763C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ygyUZCOT"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="RAknaK6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfFCQA7 (ORCPT
+        id S1729044AbfFCQBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:00:59 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50956 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfFCQA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:00:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ANiDzWxa7buoHaf14CNM2i5UQsrPPsZjRQGtlUEZ4gk=; b=ygyUZCOT6ZIirjIQmrZO2CuBNJ
-        MYZOBVL4SC+y7Z7PCMwyeJOO4ZUNwwX4e5SflgqtvrPMTZub36/7rVhORqOA7Urql0b62mZ3Ta4P7
-        toxB7poqQX+mIj2Gs1t7bY2HIPEnd7qKcFi8KBlaHi9NW5jsFfOdPT66c18x5HLaKlWE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hXpOK-0006Sg-9f; Mon, 03 Jun 2019 18:00:56 +0200
-Date:   Mon, 3 Jun 2019 18:00:56 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH 11/57] of: mdio: Use bus_find_device_by_of_node helper
-Message-ID: <20190603160056.GK19627@lunn.ch>
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-12-git-send-email-suzuki.poulose@arm.com>
+        Mon, 3 Jun 2019 12:01:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45328 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfFCQBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:01:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so6992968lfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wwAb+fjZakb4SE3XBU2vDo+/FsY9YcZ27a86p6XEaAs=;
+        b=RAknaK6HJEQ5zkQCebN0zIeweiFarG87mqZWgTXpU/mJYEt/DEie3H3GUrpMAkizhf
+         DAjrek0lkfPev895ypNRKOioKwTHoHppJhQCGVAq+NcSFX9QQKad4aQE4NgXUszbotod
+         HpqE5XLtyZaVR5/qdNcdgb7ceGwsUQvR666euqtSsqc3OmniQ2styCZ5A6fa8wFzmYab
+         XQWs/R8Zv9uWMeeBYycMepmlBwpgKHulJsqz5096zetgsMifJSoInjVF+zauJ7Lcd+ZK
+         poQFphqqutbXYOSTji0TJpFkZiZboByLaWGvrwJDqBIG4csRSA2uepIebTq5Rhzk3wDG
+         LSOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wwAb+fjZakb4SE3XBU2vDo+/FsY9YcZ27a86p6XEaAs=;
+        b=bRye44TdGIVbHd+VG8a+ojGVUkEmWT1G7Dva3VFwW9VYITftxY42EOQ+XKRpNocFez
+         0GugkqMB/736EFXKpSoPFhZF01oUl3RDImeQPSCSAYuJK1fVZDk8afWWnkughbfk7zSm
+         5qxpHY7u14v02Cm0/xmh/P67Y/6LBGNWKz0+kAmv+Q1ruRIqtTMwEOpR8drmG5Jpdzpr
+         bBbois5DZInAql5ZEC/NDFKz4EDChT2qESsr9eToDOupzDwKN42CqQrIqEyOTZWChf19
+         eW7JqWgsp3WwTq3k9gCbeFgDh/Q/ccGDALPwQC2hJP2p4dEcid/xw4javSJhQ5KDA9pO
+         fMng==
+X-Gm-Message-State: APjAAAWPhH1UyKexE5LS6efhFrE5O4jkJr24J88C6zcUHF0X+VYh3QEv
+        0t+3LsM78dmAetTD9IBNj7G2tlnhp/rF683vKtOc
+X-Google-Smtp-Source: APXvYqzF84jTm/2bsJE8Z7872PStSoK3LKry51awtLL9AllXtZ9eS6eWxt9+Bys/+Qo1UsfILlV7LgRg51RsyxVhV98=
+X-Received: by 2002:ac2:446b:: with SMTP id y11mr9514878lfl.158.1559577695379;
+ Mon, 03 Jun 2019 09:01:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559577023-558-12-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <fadb320e38a899441fcc693bbbc822a3b57f1a46.1559239558.git.rgb@redhat.com>
+In-Reply-To: <fadb320e38a899441fcc693bbbc822a3b57f1a46.1559239558.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 3 Jun 2019 12:01:24 -0400
+Message-ID: <CAHC9VhQZuOXiK4yj4xeRwGF_qepeg7qDL02GDdYhwTNRLRdmPA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6] fixup! audit: add containerid filtering
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 04:49:37PM +0100, Suzuki K Poulose wrote:
-> Switch to using the bus_find_device_by_of_node helper
-> 
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Fri, May 31, 2019 at 1:54 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> Remove the BUG() call since we will never have an invalid op value as
+> audit_data_to_entry()/audit_to_op() ensure that the op value is a a
+> known good value.
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  kernel/auditfilter.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Thanks for sending this out.  However, in light of the discussion in
+the patchset's cover letter it looks like we need to better support
+nested container orchestrators which is likely going to require some
+non-trivial changes to the kernel/userspace API.  Because of this I'm
+going to hold off pulling these patches into a "working" branch,
+hopefully the next revision of these patches will solve the nested
+orchestrator issue enough that we can continue to move forward with
+testing.
 
-    Andrew
+> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> index 407b5bb3b4c6..385a114a1254 100644
+> --- a/kernel/auditfilter.c
+> +++ b/kernel/auditfilter.c
+> @@ -1244,7 +1244,6 @@ int audit_comparator64(u64 left, u32 op, u64 right)
+>         case Audit_bittest:
+>                 return ((left & right) == right);
+>         default:
+> -               BUG();
+>                 return 0;
+>         }
+>  }
+> --
+> 1.8.3.1
+>
+
+
+-- 
+paul moore
+www.paul-moore.com
