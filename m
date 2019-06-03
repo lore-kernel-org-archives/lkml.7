@@ -2,129 +2,88 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E22DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB19C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619E727A4F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8A927A9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1wKahOO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CPjDhy34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfFCO4q (ORCPT
+        id S1729255AbfFCO5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:56:46 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:37553 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbfFCO4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:56:45 -0400
-Received: by mail-it1-f194.google.com with SMTP id s16so27032102ita.2;
-        Mon, 03 Jun 2019 07:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mDJyinIzAZyFYe2sQ1nvpl8lfVCu1z1DXV2UGQiSxUc=;
-        b=a1wKahOOGnjNUHH39gwKMWenzErmEXnVRogYkXZKiMyndol9pbe5Mjh/SqhbeE/KTP
-         fCgpVR7pWXw2wcjjsfLS99pMCnnxY476MDc9Il2x1dX9l50B3vRkW2lFeJ1OqAmw6LQN
-         S/+8dbRcWLBv5lKHe8YOb83okaxNB2S0HiDpbxspR7hQmr73oe65MqAo9h+3ZRmzAFkv
-         Ha8V57jnONibXaUmNOoSxPSR6J5G1zEPYv9ynfPl6DOh4Ow+GzqKVPJ0XjQXsowSgs8u
-         gz1S8r7YdoPya0Moors6iQjh0Jz+FjxN9AILw3UMxRU2vQOKhtx6URpGC79z4m71j9ML
-         ZyTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mDJyinIzAZyFYe2sQ1nvpl8lfVCu1z1DXV2UGQiSxUc=;
-        b=nUe9iGRIGm4FNyGojHIRKbToX9hhp/W9rLgbZNrqR/+nZHSEXQuy6yuLOk2aj3rUkF
-         cUt32kQeoEnWOzZccxLub1CUlyIc8/q7V1Zq/hfpUMkAgei0uVgDLMzcqjSb3O9neRaK
-         Vm2ycr4ZdzYIqHLIcqmT2cQJYNnF038dQRs87n2IrT5Jpovy5yPkEPMVkqWfmXRW2M0o
-         X3M1CefaJlNmWmZ5LPUX86hLDhdV/uN4l6f4mhJSaePPxyU8IvHSUR6khaydxtt+J9BV
-         jRwN7NAjrtcyLrC/9odKjGbOultcJU4LbfV1RH6KVQqUSlaFhdAqjQhyg78uUYMQtQJP
-         AMag==
-X-Gm-Message-State: APjAAAUtohS0ORpbrLD60JuuRPV/L3vq8QmfdbiqD1coML1VrWzsV2IV
-        EiQ7v6vjQnPmDd8L0MwiDfUsVk9hDlRNT+KUp38=
-X-Google-Smtp-Source: APXvYqyRg0Fg1qPHiU3BgdRlHNJ1G1zap/Jd1HuXxZCcEi4n2e10eRL07pYKaaPwzlSx5gUPRgdv2Ze3bkfZQ+Kxw5I=
-X-Received: by 2002:a02:7121:: with SMTP id n33mr15499842jac.19.1559573804520;
- Mon, 03 Jun 2019 07:56:44 -0700 (PDT)
+        Mon, 3 Jun 2019 10:57:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50710 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728882AbfFCO5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:57:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nMmMLyY2wEe5mWxFYfJb9I4vcVoHvhNf68CYZFM42uk=; b=CPjDhy34HoELRaZtg04tonm0u6
+        EY75gQhD1ZpN35ePf3FdkH0uzZruwLmIZRDl/rBTKB2H900ruQFUEI3/0HJCG0Ghy1AOgOVP0iA2c
+        w5S9Wn5g0fgFgI3l9+GellAYunm6QvJ433kfRXYyQ7p/Aq7mF9lsr0p1c5Kdsi+O6ps0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hXoP9-0005uz-EO; Mon, 03 Jun 2019 16:57:43 +0200
+Date:   Mon, 3 Jun 2019 16:57:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 01/10] net: dsa: mv88e6xxx: add
+ mv88e6250_g1_ieee_pri_map
+Message-ID: <20190603145743.GD19627@lunn.ch>
+References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
+ <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-References: <1559340578-11482-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1559340578-11482-1-git-send-email-jcrouse@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 3 Jun 2019 08:56:33 -0600
-Message-ID: <CAOCk7Nr9r3Spnvh9_CO2rh8vTAP3hHOXjBO=5oGS4CyS4hhNrQ@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH] drm/msm/adreno: Ensure that the zap shader
- region is big enough
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        David Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 4:09 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Before loading the zap shader we should ensure that the reserved memory
-> region is big enough to hold the loaded file.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-
-> ---
->
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 6f7f411..3db8e49 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -67,7 +67,6 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->                 return ret;
->
->         mem_phys = r.start;
-> -       mem_size = resource_size(&r);
->
->         /* Request the MDT file for the firmware */
->         fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> @@ -83,6 +82,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->                 goto out;
->         }
->
-> +       if (mem_size > resource_size(&r)) {
-> +               DRM_DEV_ERROR(dev,
-> +                       "memory region is too small to load the MDT\n");
-> +               ret = -E2BIG;
-> +               goto out;
-> +       }
+On Mon, Jun 03, 2019 at 02:42:12PM +0000, Rasmus Villemoes wrote:
+> diff --git a/drivers/net/dsa/mv88e6xxx/global1.h b/drivers/net/dsa/mv88e6xxx/global1.h
+> index bb92a130cbef..2bcbe7c8b279 100644
+> --- a/drivers/net/dsa/mv88e6xxx/global1.h
+> +++ b/drivers/net/dsa/mv88e6xxx/global1.h
+> @@ -279,6 +279,8 @@ int mv88e6390_g1_mgmt_rsvd2cpu(struct mv88e6xxx_chip *chip);
+>  int mv88e6085_g1_ip_pri_map(struct mv88e6xxx_chip *chip);
+>  int mv88e6085_g1_ieee_pri_map(struct mv88e6xxx_chip *chip);
+>  
+> +int mv88e6250_g1_ieee_pri_map(struct mv88e6xxx_chip *chip);
 > +
->         /* Allocate memory for the firmware image */
->         mem_region = memremap(mem_phys, mem_size,  MEMREMAP_WC);
->         if (!mem_region) {
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+Hi Rasmus
+
+We are not 100% consistent, but we try to put all variants of a method
+together, and then put a blank line afterwards. So could you make
+this:
+
+int mv88e6085_g1_ip_pri_map(struct mv88e6xxx_chip *chip);
+
+int mv88e6085_g1_ieee_pri_map(struct mv88e6xxx_chip *chip);
+int mv88e6250_g1_ieee_pri_map(struct mv88e6xxx_chip *chip);
+
+int mv88e6185_g1_set_cascade_port(struct mv88e6xxx_chip *chip, int port);
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
+
