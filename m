@@ -2,120 +2,118 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBE8C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEB1C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5864E2341E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AE3218BC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559584975;
-	bh=zFhqpF40OX69ykmeN5lYqAzj+m5LRQRLAfHmuMA/aoU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AfUNkgd7mvvXa9G5ER96VlOqm3nQyPUDrJIQ7waTz1Vqodb5qbdtRgG9A0CZIIqtD
-	 rCX54mzpu0UGsAtLFnoeUK5LVvvpbHsZ2xJOnu/iVjCdp+ZwIOcautdV9GMm5MXG6C
-	 hKwIp2XoaxTGmdr9ZkhhxeNRMGO1JJme8P0h3HIo=
+	s=default; t=1559584980;
+	bh=E1ND2nKG/0VMEVLJhyvZL/8aBO7uvsfPiWlFj4RxYFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=frLTrvGRNcjUObdZJ4O8ShZuyqAMYIy7v4+ry2IvUBxi0nk1jxyvd2CUV8rS1Ha6s
+	 Y2L+v3YsVM6QLjhHyuYRtszBwOzmJ3ul7B7YJP9osyYcE1vvdIeLeJEyR2OOERFEML
+	 U7/HwLTv4iY+eMNqJpshJHajxGacIP9NJD5tCgwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfFCSCy (ORCPT
+        id S1726808AbfFCSC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:02:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56568 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFCSCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:02:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ma35thperYGWyb/nkjWyegfRbpj87ZHQlb98QF7Ppqg=; b=MacOEriOZ/v7
-        nuQEgHWOdboZ17Tw2BaNzgeiQmEEvvL93bfSbzUj62TIG00QKGp8rcP1m4hyHfYhVRtSJje45fL9O
-        zpVFui3og9JLXDxmFvYsW8vLkltfLZzo7tZgvrPzBXpiJ9gN9ubQTiFpmBoEinpaBKk7xUef9q0VX
-        2xvAU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hXrIJ-0003ay-6h; Mon, 03 Jun 2019 18:02:51 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 9792D440046; Mon,  3 Jun 2019 19:02:50 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     agross@kernel.org, broonie@kernel.org, david.brown@linaro.org,
-        jorge.ramirez-ortiz@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: qup: remove unnecessary goto" to the spi tree
-In-Reply-To: <20190531144636.27843-1-jorge.ramirez-ortiz@linaro.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190603180250.9792D440046@finisterre.sirena.org.uk>
-Date:   Mon,  3 Jun 2019 19:02:50 +0100 (BST)
+        Mon, 3 Jun 2019 14:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfFCSC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:02:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F8F255A2;
+        Mon,  3 Jun 2019 18:02:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559584977;
+        bh=E1ND2nKG/0VMEVLJhyvZL/8aBO7uvsfPiWlFj4RxYFc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iWvTncjVGKjHn3WHUfUPWelndlKFhcSd142wdYBNYIYvBSeSVxznInWL5ZCDjjOUA
+         Eiy92nj+uzOKPdvPAYQL2d5d6bahdemTwQ7IiFy3N4MbpdrFlJiPalmB22zM1NV2gL
+         7FBkGM9zIgbBvTfaoxsRdME1OT1scCPxDtDLjwNg=
+Date:   Mon, 3 Jun 2019 20:02:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sen.li@intel.com,
+        Richard Gong <richard.gong@intel.com>
+Subject: Re: A potential broken at platform driver?
+Message-ID: <20190603180255.GA18054@kroah.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Jun 03, 2019 at 10:57:18AM -0500, Richard Gong wrote:
+> 
+> Hi Greg,
+> 
+> Following your suggestion, I replaced devm_device_add_groups() with .group =
+> rus_groups in my version #4 submission. But I found out that RSU driver
+> outputs the garbage data if I use .group = rsu_groups.
 
-   spi: qup: remove unnecessary goto
+What is "garbage"?
 
-has been applied to the spi tree at
+> To make RSU driver work properly, I have to revert the change at version #4
+> and use devm_device_add_groups() again. Sorry, I didn't catch this problem
+> early.
+> 
+> I did some debug & below are captured log, you can see priv pointer get
+> messed at current_image_show(). I am not sure if something related to
+> platform driver work properly. I attach my debug patch in this mail.
+> 
+> 1. Using .groups = rsu_groups,
+> 
+> [    1.191115] *** rsu_status_callback:
+> [    1.194782] res->a1=2000000
+> [    1.197588] res->a1=0
+> [    1.199865] res->a2=0
+> [    1.202150] res->a3=0
+> [    1.204433] priv=0xffff80007aa28e80
+> [    1.207933] version=0, state=0, current_image=2000000, fail_image=0,
+> error_location=0, error_details=0
+> [    1.217249] *** stratix10_rsu_probe: priv=0xffff80007aa28e80
+> root@stratix10:/sys/bus/platform/drivers/stratix10-rsu# cat current_image
+> [   38.849341] *** current_image_show: priv=0xffff80007aa28d00
+> ... output garbage data
+> priv pointer got changed
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+I don't understand this, sorry.  Are you sure you are actually using the
+correct pointer to your device?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+>  	.remove = stratix10_rsu_remove,
+>  	.driver = {
+>  		.name = "stratix10-rsu",
+> -		.groups = rsu_groups,
+> +//		.groups = rsu_groups,
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Are you sure this is the correct pointer?  I think that might be
+pointing to the driver's attributes, not the device's attributes.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+If platform drivers do not have a way to register groups properly, then
+that really needs to be fixed, as trying to register it by yourself as
+you are doing, is ripe for racing with userspace.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+thanks,
 
-Thanks,
-Mark
-
-From 3594bfa265da38dcfbab2312ddaff39711b98857 Mon Sep 17 00:00:00 2001
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Date: Fri, 31 May 2019 16:46:36 +0200
-Subject: [PATCH] spi: qup: remove unnecessary goto
-
-Remove unnecessary condition check and associated goto.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-qup.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 974a8ce58b68..314d91b95a16 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -842,10 +842,6 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	else
- 		ret = spi_qup_do_pio(spi, xfer, timeout);
- 
--	if (ret)
--		goto exit;
--
--exit:
- 	spi_qup_set_state(controller, QUP_STATE_RESET);
- 	spin_lock_irqsave(&controller->lock, flags);
- 	if (!ret)
--- 
-2.20.1
-
+greg k-h
