@@ -2,148 +2,80 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B2AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF87C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AACF253C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dg6Wmedk"
+	by mail.kernel.org (Postfix) with ESMTP id 3E84628012
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfFCMMc (ORCPT
+        id S1727603AbfFCMOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:12:32 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53221 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfFCMMb (ORCPT
+        Mon, 3 Jun 2019 08:14:04 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:53789 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfFCMOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:12:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so3593194wms.2;
-        Mon, 03 Jun 2019 05:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gr8uL1ZbiRgi6+lmlL+2AZVHdd6JTOvP+v0Gm0FVkYw=;
-        b=dg6Wmedk9pr6qSmdO2XuCrqUoH6eyfdFDx7E+NxA7XZ1RO6CLFitZCggXFAk/UyLT4
-         E/3zIXRsg09U8AaAMVCHmUgIs+lkZSJIndgcUWLJFJNrHC20gzI7Nvobhao9VKy12jxX
-         /sAzygnbTq6Yj8CtU4TtKpf/5HunfoalfmT57TqXkhnyZQ5IC6sEwrcGdZq6o+gFLsNC
-         GxA+ZruI2gZHgzD3xEHBl92emdXrnHgw/707H+sZ9XErBN2/AWQZ0356cZKTEZtIKNUn
-         Pj6p3tQK9U3fmnDIo5OlC70xXSmy6jIHSgA5SOL9JTTdtkCOkCD696FOW2qUsb/yIf0b
-         Ro2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gr8uL1ZbiRgi6+lmlL+2AZVHdd6JTOvP+v0Gm0FVkYw=;
-        b=VTrVRnMljYiTeLj+4mH7wEztZV5Ao0Ofe6uyI8vAusIqphmC76xF9VpJPqhT+F1rl3
-         OoDKLlXqwOWfS/Z799hb31JmTzMLfSsOK1v3/ErD9h67ntQ+mbUImX87mcndvkHymiAH
-         hC+i0bxndRTO03NAfBJNOnQqnjDabX7Ww9flbN0wO9U7ZRDI7iNsxL8kQHztmLBOr+co
-         t8x4qfGNIfxwVS9Pu1OO8utHwq92z+WsiJdGZSrNv0jgM+nHIvjvL0rEWQnGfLqSN9EB
-         +3Rt8D8mlqT9i64be+QB92WyFZ5BjP1s3uc8DJueNyczSdfqmzNh6RVO6dJ/zjmYQ+ry
-         AsUg==
-X-Gm-Message-State: APjAAAWBX9mZ0FAkrYrOQV9rrRRkHJn5uC8lU2nr4vNV/3WOk08+4CeH
-        l+DWHWtnZUqt+HtzYDY/3t0=
-X-Google-Smtp-Source: APXvYqzxAfb0ik/mZl5P/EWMos7rAeT0GZe6/1qJUsEvS/MSW4qpsHms9ZH2p0VgEmfgyBDT6W2H+w==
-X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr14191078wmf.26.1559563949142;
-        Mon, 03 Jun 2019 05:12:29 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id z6sm3337251wrw.2.2019.06.03.05.12.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 05:12:28 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 14:12:27 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190603121227.GB30132@ulmo>
-References: <20190529145322.20630-1-thierry.reding@gmail.com>
- <20190529145322.20630-2-thierry.reding@gmail.com>
- <CACRpkdb5vB6OwcAxtjsKLzHt9V27juEOEEDqqQczKT-3r+7X-g@mail.gmail.com>
- <20190603075324.GA27753@ulmo>
- <CACRpkda47EX981Dw=jLrU=PHn50+AQhJmpVRWJ9uJEQdcAsrTw@mail.gmail.com>
+        Mon, 3 Jun 2019 08:14:03 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 970BC60004;
+        Mon,  3 Jun 2019 12:13:45 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 14:13:45 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] media: cedrus: Remove dst_bufs from context
+Message-ID: <20190603121345.5uh4xquo64fopqnn@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+ <20190530211516.1891-5-jernej.skrabec@siol.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+        protocol="application/pgp-signature"; boundary="hwwfrxwoaemzsp3p"
 Content-Disposition: inline
-In-Reply-To: <CACRpkda47EX981Dw=jLrU=PHn50+AQhJmpVRWJ9uJEQdcAsrTw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190530211516.1891-5-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---JP+T4n/bALQSJXh8
+--hwwfrxwoaemzsp3p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2019 at 12:58:02PM +0200, Linus Walleij wrote:
-> On Mon, Jun 3, 2019 at 9:53 AM Thierry Reding <thierry.reding@gmail.com> =
-wrote:
-> > Me
->=20
-> > > Please drop this. The default .to_irq() should be good for everyone.
-> > > Also patch 2/2 now contains a identical copy of the gpiolib
-> > > .to_irq() which I suspect you indended to drop, actually.
-> >
-> > It's not actually identical to the gpiolib implementation. There's still
-> > the conversion to the non-linear DT representation for GPIO specifiers
-> > from the linear GPIO number space, which is not taken care of by the
-> > gpiolib variant. That's precisely the point why this patch makes it
-> > possible to let the driver override things.
->=20
-> OK something is off here, because the purpose of the irqdomain
-> is exactly to translate between different number spaces, so it should
-> not happen in the .to_irq() function at all.
->=20
-> Irqdomain uses .map() in the old variant and .translate() in the
-> hierarchical variant to do this, so something is skewed.
->=20
-> All .to_irq() should ever do is just call the irqdomain to do the
-> translation, no other logic (unless I am mistaken) so we should
-> be able to keep the simple .to_irq() logic inside gpiolib.
+On Thu, May 30, 2019 at 11:15:13PM +0200, Jernej Skrabec wrote:
+> This array is just duplicated capture buffer queue. Remove it and adjust
+> code to look into capture buffer queue instead.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Well, that's exactly the problem that I'm trying to solve. The problem
-is that .translate() translates from the DT number space to the GPIO or
-IRQ number space. However, since gpiochip_to_irq() now wants to call the
-irq_create_fwspec_mapping() interface, it must convert from the offset
-(in GPIO space) into the DT number space, which is what that function
-expects.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Thierry
+Maxime
 
---JP+T4n/bALQSJXh8
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--hwwfrxwoaemzsp3p
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz1DqUACgkQ3SOs138+
-s6FVhA/+Ntg+Cx3rozwF01ZERFalnR9/BSEZVnaumyiI7sPBN7oUjVKDz2STSBx9
-afn5lhn/4zkPKoQSJxSOI/r2O7rTURcgI5oxk7tF2yqGeczzAK5vwIcT5G0nSJuT
-TkXRlJ9zfqtPyeB2Yx4GfCWSEH/Vr41qyvSkguXh/i9W6BvLa2P6bswPnlyAxfNT
-Koqvr3s1n8XTAe0I9LgMfOysi4z11rkFzFa+mlYUKZ3AEcugwmaq7YB+Vh/h/3tB
-kGujCh54G7A+pS4btTFMh838a87X1BsK1wmGYEl6IMGtvIgFgjLXH5OsqY6v7w27
-xsy9mSsJvjqkgs3g0ket7A98fJj2cCyPwizWcw7E928I2gsycFTme1eD15Lqc67g
-9bs5u4qYz3XmlQKwpfcJrclWOuf2t4oLz1oOmGSN23BgCaeN0LeC8bNwz3qRQike
-PF3OjFVuT2akYLqdwWulq7QuChpF+MM08gxyGrDzi5r6LeseHW1pCxkkx1232UdW
-zCkLy0sB2REYnGtehK1tPxQsFlgdvpcGkFT/OO8GUs8SlFTi6KMV05obpLyKM5Kr
-M2zy80BLHRqTt92WkFbDpDjJDjPSI5/TDIoLeyfygwHnyHYRQgcFK3Amd3ymEkO+
-I41b2VVXfoJKe+5jvXJaCOe5k4BfwEzhX9se78FozBsPLC7VnIw=
-=9g0c
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPUO+QAKCRDj7w1vZxhR
+xY1uAP9hH5O7WjfeV/BXsKPStm23IM1ZX1gwoL+bHz6M1yQBjwD+NvJ/2aWqWf8f
+R+ArhaQDIa5EhvE33GmymyMWU6/RpQc=
+=Hu9G
 -----END PGP SIGNATURE-----
 
---JP+T4n/bALQSJXh8--
+--hwwfrxwoaemzsp3p--
