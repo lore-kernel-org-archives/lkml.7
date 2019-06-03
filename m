@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F512C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0108FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08912467B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD5B25B23
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553170;
-	bh=NRpokzZLyLR/yQZEVBg7kal4YMzkMj9TScngxOSuYvM=;
+	s=default; t=1559553173;
+	bh=SHGrPKIiVBxyE3Nkt9MzwLW4Z2dC6ZA1S7kLZz5ZUSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yEn3z/0GO+bqCY844wuuAlGg+wydxYYNLm5aN2PkJc3I7RR9YdPyGt3gPuUoMT6c3
-	 wtP/RS1Ky8TxHEa0hsNZMVh6/OplJ68AlAIHGur3l2icWOCAb9TyZuwvbQYMpPhwGF
-	 ahkSC9maUELb/qGqdpgEo3PHYel6YrBHDHbO/jWU=
+	b=Byi+89tiLSCaQelZE7eW4CPRriWpWHxCYt940vjdFLFqMLgZqaj9xO7YqcB4hsWYK
+	 sR8mwH2Bx4r+TlGlBPrgJjzKx48nOka1C6dHilPhX4RVvEQg+J9TfWXOYLtkfgpbqK
+	 t81AOkQux4OBb0CWBImU0xiWamyeOIfHq/OjIviM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbfFCJMt (ORCPT
+        id S1728716AbfFCJMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60912 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728689AbfFCJMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:45 -0400
+        id S1728689AbfFCJMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4CA621923;
-        Mon,  3 Jun 2019 09:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61DC21923;
+        Mon,  3 Jun 2019 09:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553164;
-        bh=NRpokzZLyLR/yQZEVBg7kal4YMzkMj9TScngxOSuYvM=;
+        s=default; t=1559553169;
+        bh=SHGrPKIiVBxyE3Nkt9MzwLW4Z2dC6ZA1S7kLZz5ZUSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flIMo8haOf4NEejg7SQ16lqas2+fXA885346X9r5vOnJ26fsN6UIhyewqm/MHMxsB
-         5YyYhGk8SPYJ286ScTftNf3HLQPyiTP3bmNISQS4lnPRj0g6oR4MtPRiEkvUeLfCwF
-         R1MohyNLQ07lSKw+EYLoVifwfFv5YRbebDsUr/XI=
+        b=MM1jybR5wtXw7su05cAVCabYOEYjAsi9UXOxDFFJBUmMbwcBXj5AM17XMwxZi9lbA
+         aW6Zn749Kp2hhsL/Qhvho+T6JPjTWBj6BqNNiNhXEJ9SGqlJy+Vh54acQIw0/1UVtN
+         UkcHgPmyhsC5fHktqyJKWSeRZ9bD9PIT4nvRBX/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 22/36] net/mlx5: Allocate root ns memory using kzalloc to match kfree
-Date:   Mon,  3 Jun 2019 11:09:10 +0200
-Message-Id: <20190603090522.452998821@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 10/40] mlxsw: spectrum_acl: Avoid warning after identical rules insertion
+Date:   Mon,  3 Jun 2019 11:09:03 +0200
+Message-Id: <20190603090523.269719877@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
-References: <20190603090520.998342694@linuxfoundation.org>
+In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
+References: <20190603090522.617635820@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-[ Upstream commit 25fa506b70cadb580c1e9cbd836d6417276d4bcd ]
+[ Upstream commit ef74422020aa8c224b00a927e3e47faac4d8fae3 ]
 
-root ns is yet another fs core node which is freed using kfree() by
-tree_put_node().
-Rest of the other fs core objects are also allocated using kmalloc
-variants.
+When identical rules are inserted, the latter one goes to C-TCAM. For
+that, a second eRP with the same mask is created. These 2 eRPs by the
+nature cannot be merged and also one cannot be parent of another.
+Teach mlxsw_sp_acl_erp_delta_fill() about this possibility and handle it
+gracefully.
 
-However, root ns memory is allocated using kvzalloc().
-Hence allocate root ns memory using kzalloc().
-
-Fixes: 2530236303d9e ("net/mlx5_core: Flow steering tree initialization")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Fixes: c22291f7cf45 ("mlxsw: spectrum: acl: Implement delta for ERP")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -2247,7 +2247,7 @@ static struct mlx5_flow_root_namespace
- 		cmds = mlx5_fs_cmd_get_default_ipsec_fpga_cmds(table_type);
- 
- 	/* Create the root namespace */
--	root_ns = kvzalloc(sizeof(*root_ns), GFP_KERNEL);
-+	root_ns = kzalloc(sizeof(*root_ns), GFP_KERNEL);
- 	if (!root_ns)
- 		return NULL;
- 
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
+@@ -1171,13 +1171,12 @@ mlxsw_sp_acl_erp_delta_fill(const struct
+ 			return -EINVAL;
+ 	}
+ 	if (si == -1) {
+-		/* The masks are the same, this cannot happen.
+-		 * That means the caller is broken.
++		/* The masks are the same, this can happen in case eRPs with
++		 * the same mask were created in both A-TCAM and C-TCAM.
++		 * The only possible condition under which this can happen
++		 * is identical rule insertion. Delta is not possible here.
+ 		 */
+-		WARN_ON(1);
+-		*delta_start = 0;
+-		*delta_mask = 0;
+-		return 0;
++		return -EINVAL;
+ 	}
+ 	pmask = (unsigned char) parent_key->mask[__MASK_IDX(si)];
+ 	mask = (unsigned char) key->mask[__MASK_IDX(si)];
 
 
