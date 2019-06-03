@@ -2,116 +2,147 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8294C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0C4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA192816A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1452228179
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559562765;
+	bh=zOwpJAPH6M0NmzaCyXh6SaFMtywFoRXb0kiXvELxV+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=peRIW5Bl+C2KL7dropZkXDggXSn+iApVXEim4SIbDC8+l6rDK3zlK5sPAS6tfaJlm
+	 H6uNtotxfl5J321pgym3LT48n1aAo5boriPbJ8PBuyyBwvgSYhyArg50JaJsIvvsSA
+	 lMxkJM3j4dCjPKHAKdKUL44aHGSVKpIRFLlnyEvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfFCLvQ (ORCPT
+        id S1727569AbfFCLwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:51:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55582 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726406AbfFCLvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:51:15 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53Bl6fl082386
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 07:51:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw0tae04h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:51:13 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Mon, 3 Jun 2019 12:51:11 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Jun 2019 12:51:05 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53Bp4TO59768908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 11:51:04 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 398195204E;
-        Mon,  3 Jun 2019 11:51:04 +0000 (GMT)
-Received: from dyn-9-152-212-90.boeblingen.de.ibm.com (unknown [9.152.212.90])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 6A9A252050;
-        Mon,  3 Jun 2019 11:51:03 +0000 (GMT)
-Date:   Mon, 3 Jun 2019 13:51:02 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: Re: [PATCH v8 3/7] s390/pci: add support for IOMMU default DMA mode
- build options
-In-Reply-To: <20190530034831.4184-4-thunder.leizhen@huawei.com>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com> <20190530034831.4184-4-thunder.leizhen@huawei.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
-MIME-Version: 1.0
+        Mon, 3 Jun 2019 07:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbfFCLwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 07:52:43 -0400
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AB428165;
+        Mon,  3 Jun 2019 11:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559562762;
+        bh=zOwpJAPH6M0NmzaCyXh6SaFMtywFoRXb0kiXvELxV+w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b3DqWePoD1RgVvNfoSlMIZVZ0KQCmIwCPn+vPXx93QJVf5FW2oJRJY+zbYJ9HdBcj
+         IS6mwI1sMOggtNsIX4j8Z/xY09HTxD3F9BoV3YDf0Sqt3aMOzzFitWsa7tRdinD21z
+         is9dmJBBgVRSkuSpR+8Vvn5NODCUaz8odjq0tPjA=
+Date:   Mon, 3 Jun 2019 20:52:38 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tracing/kprobe: Add kprobe_event= boot parameter
+Message-Id: <20190603205238.3cef1ef724bda35d11369ea7@kernel.org>
+In-Reply-To: <CADYN=9L2Lz9xgsP7jn3UNMOtAYtg6fAb1hbv=OJ_Xi4dA0Z5NQ@mail.gmail.com>
+References: <155851393823.15728.9489409117921369593.stgit@devnote2>
+        <155851395498.15728.830529496248543583.stgit@devnote2>
+        <CADYN=9KHQPQTgy==TYZ5iD_zViPbHq4hgOUwuX69aQWV6vZOQg@mail.gmail.com>
+        <20190528083629.3c100256@gandalf.local.home>
+        <CADYN=9L2Lz9xgsP7jn3UNMOtAYtg6fAb1hbv=OJ_Xi4dA0Z5NQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19060311-0016-0000-0000-000002832141
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060311-0017-0000-0000-000032E02A71
-Message-Id: <alpine.LFD.2.21.1906031350240.18543@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=635 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030087
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Anders,
 
-On Thu, 30 May 2019, Zhen Lei wrote:
-> The default DMA mode is LAZY on s390, this patch make it can be set to
-> STRICT at build time. It can be overridden by boot option.
-> 
-> There is no functional change.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Sorry for replying later.
 
-Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+On Tue, 28 May 2019 15:39:15 +0200
+Anders Roxell <anders.roxell@linaro.org> wrote:
 
+> On Tue, 28 May 2019 at 14:36, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Tue, 28 May 2019 14:23:43 +0200
+> > Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > > On Wed, 22 May 2019 at 10:32, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > Add kprobe_event= boot parameter to define kprobe events
+> > > > at boot time.
+> > > > The definition syntax is similar to tracefs/kprobe_events
+> > > > interface, but use ',' and ';' instead of ' ' and '\n'
+> > > > respectively. e.g.
+> > > >
+> > > >   kprobe_event=p,vfs_read,$arg1,$arg2
+> > > >
+> > > > This puts a probe on vfs_read with argument1 and 2, and
+> > > > enable the new event.
+> > > >
+> > > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > >
+> > > I built an arm64 kernel from todays linux-next tag next-20190528 and
+> > > ran in to this issue when I booted it up in qemu:
+
+Thank you for reporting!
+
+
+> [    9.020354][    T1] Kprobe smoke test: started
+> [    9.064132][    T1] Internal error: aarch64 BRK: f2000004 [#1] PREEMPT SMP
+> [    9.067084][    T1] Modules linked in:
+> [    9.068772][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 5.2.0-rc2-next-20190528-00019-g9a6008710716 #8
+> [    9.072893][    T1] Hardware name: linux,dummy-virt (DT)
+> [    9.075143][    T1] pstate: 80400005 (Nzcv daif +PAN -UAO)
+> [    9.077528][    T1] pc : kprobe_target+0x0/0x30
+> [    9.079479][    T1] lr : init_test_probes+0x134/0x540
+> [    9.081611][    T1] sp : ffff80003f51fbe0
+> [    9.083331][    T1] x29: ffff80003f51fbe0 x28: ffff200013c17820
+> [    9.085906][    T1] x27: ffff200015d3ab40 x26: ffff2000122bb120
+> [    9.088491][    T1] x25: 0000000000000000 x24: ffff200013c08ae0
+> [    9.091068][    T1] x23: ffff200015d39000 x22: ffff200013a15ac8
+> [    9.093667][    T1] x21: 1ffff00007ea3f86 x20: ffff200015d39420
+> [    9.096214][    T1] x19: ffff2000122bad20 x18: 0000000000001400
+> [    9.098831][    T1] x17: 0000000000000000 x16: ffff80003f510040
+> [    9.101410][    T1] x15: 0000000000001480 x14: 1ffff00007ea3ea2
+> [    9.103963][    T1] x13: 00000000f1f1f1f1 x12: ffff040002782e0d
+> [    9.106549][    T1] x11: 1fffe40002782e0c x10: ffff040002782e0c
+> [    9.109120][    T1] x9 : 1fffe40002782e0c x8 : dfff200000000000
+> [    9.111676][    T1] x7 : ffff040002782e0d x6 : ffff200013c17067
+> [    9.114234][    T1] x5 : ffff80003f510040 x4 : 0000000000000000
+> [    9.116843][    T1] x3 : ffff200010427508 x2 : 0000000000000000
+> [    9.119409][    T1] x1 : ffff200010426e10 x0 : 0000000000a6326b
+> [    9.121980][    T1] Call trace:
+> [    9.123380][    T1]  kprobe_target+0x0/0x30
+> [    9.125205][    T1]  init_kprobes+0x2b8/0x300
+> [    9.127074][    T1]  do_one_initcall+0x4c0/0xa68
+> [    9.129076][    T1]  kernel_init_freeable+0x3c4/0x4e4
+> [    9.131234][    T1]  kernel_init+0x14/0x1fc
+> [    9.133032][    T1]  ret_from_fork+0x10/0x18
+> [    9.134908][    T1] Code: a9446bf9 f9402bfb a8d87bfd d65f03c0 (d4200080)
+> [    9.137845][    T1] ---[ end trace 49243ee03446b072 ]---
+> [    9.140114][    T1] Kernel panic - not syncing: Fatal exception
+> [    9.142684][    T1] ---[ end Kernel panic - not syncing: Fatal exception ]---
+
+Ah, I think you hit this in [1/2], not this change. 
+
+I guess arm64's breakpoint handler is not initialized at postcore_initcall().
+I have to check the arch depend implementation on arm64.
+
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
