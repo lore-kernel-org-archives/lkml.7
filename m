@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D36C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA03C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFCA2709D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1890D270A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GaEfwoE3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S32GbEfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfFCSgc (ORCPT
+        id S1727236AbfFCSgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:36:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40831 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfFCSeZ (ORCPT
+        Mon, 3 Jun 2019 14:36:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42858 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfFCSeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:25 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d30so8762919pgm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:25 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go2so7293461plb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OvZiZSSFkASZ5axf4GdcvO3VA5BWdLsCt0PgYjP2wg8=;
-        b=GaEfwoE3r3zfeWQ4KDC6T9NUpxSoP6jdGq8hH/BjsINnpD03nl2cgu0I8T2F9a9F6c
-         mQW61XXsEsbci5U+4KZHQWSkrFsuH3VY5j5n89f7DdHLRY6mo3AHH2lHzAim0rTq4/i/
-         Ckpp8IYQQYNL+V6jmNmc/Ld4MfHznd6Jhvhz4=
+        bh=GdWwnk0D1xvX0z9ehJ8D832guI1fsNJ1OgHPNL6kdbI=;
+        b=S32GbEfdFu9a2F6nkLiOPQhEEGmf0HXKu1DLRDbYViGWW8KtTKLjYARyICj5v7KOAA
+         OTEb5i0uvhGMWYYEFvq/0V/qXbhVGyFVlYySHjrbDe0L9oQ7FuC+VXsmk7zWMyKnx+HF
+         ls3Fvg+kPPFjpfmzELzv+WeDDa70AJt8PgB8s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OvZiZSSFkASZ5axf4GdcvO3VA5BWdLsCt0PgYjP2wg8=;
-        b=nyYXv0K/QPQGPoLsGp/ryM/Ig9wK7MyNaswk771PYl/c7VZzc2t8gZ5Kl+hLUSWh4p
-         gGHyf1EFlqNJu3y5HxOL5EuviZ3YIruCvfaDfESEsKoUejEhEpFT+lrco0AxThWJYf4H
-         S6U3ZOd2BJ8FP3b4iTyy9oJAkDrpxpA/t0C/KlcX8nERmb8xVGxyePYKYD6zRJc0JI+H
-         K8lxJG72J6F6Iq5Nlg2Q0qIYpFx279rQJsi4ztXTlwUeN/UWQ5v21XfeyW9lPYkXZDIs
-         VfBg/+fU8kK4TntnnZT+bhNtoEE8mUYwGMqHDswlqLbaQ7/i9s56Xz4XPwhtlWa2HTMY
-         EWpw==
-X-Gm-Message-State: APjAAAU7mXpGtXWr6YBLbvBRLVXnTslmahu7W7zD2Fnd66r+VHKPatda
-        7dVFoNT2/zw4aSvueXqjPhN19A==
-X-Google-Smtp-Source: APXvYqxhGSi8FalDs2H+ynSi6npuip07SQ4klfbB8Og2QjsS3T0o8XHpuUCWAcI6eabjmwACtAnkZw==
-X-Received: by 2002:aa7:93ba:: with SMTP id x26mr32460996pff.238.1559586864995;
-        Mon, 03 Jun 2019 11:34:24 -0700 (PDT)
+        bh=GdWwnk0D1xvX0z9ehJ8D832guI1fsNJ1OgHPNL6kdbI=;
+        b=mXywCR1dqrcMsodPe+K5KERcNeGYGyNEYc6hWHjpoGZV7k5cNgDSiHoJtC4XnO8M6P
+         0d9Ova/iUvdTG/zmdOC6PDURL0Hj7vcnR5yDNw2Vl+rTCNz1Z++M0tImBF0OjGJsK9p5
+         jkFFk0gG9oKG/ijLTMdvZ95mXEfbUdyqSPjsRnKbtbU6FzdR+8riLGZg/alAm1a12j9o
+         sCYHRzmMgqCiwBSsIbGpBnSEMC4I/IGeHcyea8KdQw6mdYBNajhlQBf7MaddPsCdO895
+         VcmhI+Dl5OezIHbsLeyR05sm2H89C3MQrPW33WjaB0eiK368HFwlzQ3tQElEHrWkbmhD
+         JskA==
+X-Gm-Message-State: APjAAAWEb3hk4huDNhq+9xC6v3ciIRq/7MevWoPWj7cYi9gUtVfDZkrn
+        idKsX2S4FEFGJ9rWedF2EmULEw==
+X-Google-Smtp-Source: APXvYqx8wINSEbZRpc6zWG2qODfyaAG/ZUkzriUM/juCHkTGIMUQBIMAlpNgNMV3eZr/w+0YeH/Q5g==
+X-Received: by 2002:a17:902:6ac4:: with SMTP id i4mr29894959plt.75.1559586861844;
+        Mon, 03 Jun 2019 11:34:21 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id x128sm17682344pfd.186.2019.06.03.11.34.23
+        by smtp.gmail.com with ESMTPSA id x18sm18606468pfo.8.2019.06.03.11.34.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:24 -0700 (PDT)
+        Mon, 03 Jun 2019 11:34:21 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -61,9 +61,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 12/30] mfd: cros_ec: Add lightbar v2 API
-Date:   Mon,  3 Jun 2019 11:33:43 -0700
-Message-Id: <20190603183401.151408-13-gwendal@chromium.org>
+Subject: [RESEND PATCH v3 10/30] mfd: cros_ec: Add Flash V2 commands API
+Date:   Mon,  3 Jun 2019 11:33:41 -0700
+Message-Id: <20190603183401.151408-11-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
 References: <20190603183401.151408-1-gwendal@chromium.org>
@@ -74,213 +74,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New API split commands, improve EC command latency.
+Added for supporting larger embedded controller flash.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 124 ++++++++++++++++++++++++++-
- 1 file changed, 120 insertions(+), 4 deletions(-)
+ include/linux/mfd/cros_ec_commands.h | 150 ++++++++++++++++++++++++++-
+ 1 file changed, 147 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 2b3a94a4f0f4..0ff1941288cf 100644
+index fabf341af97f..3d1d26f62bd3 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -1658,7 +1658,10 @@ struct lightbar_params_v1 {
- 	int32_t s3_sleep_for;
- 	int32_t s3_ramp_up;
- 	int32_t s3_ramp_down;
-+	int32_t s5_ramp_up;
-+	int32_t s5_ramp_down;
- 	int32_t tap_tick_delay;
-+	int32_t tap_gate_delay;
- 	int32_t tap_display_time;
+@@ -1138,6 +1138,7 @@ struct ec_response_get_features {
  
- 	/* Tap-for-battery params */
-@@ -1686,11 +1689,82 @@ struct lightbar_params_v1 {
- 	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
- 	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
+ /* Get flash info */
+ #define EC_CMD_FLASH_INFO 0x0010
++#define EC_VER_FLASH_INFO 2
  
-+	/* s5: single color pulse on inhibited power-up */
-+	uint8_t s5_idx;
-+
- 	/* Color palette */
- 	struct rgb_s color[8];			/* 0-3 are Google colors */
- } __ec_todo_packed;
+ /**
+  * struct ec_response_flash_info - Response to the flash info command.
+@@ -1164,6 +1165,15 @@ struct ec_response_flash_info {
+  */
+ #define EC_FLASH_INFO_ERASE_TO_0 BIT(0)
  
--/* Lightbar program */
-+/* Lightbar command params v2
-+ * crbug.com/467716
-+ *
-+ * lightbar_parms_v1 was too big for i2c, therefore in v2, we split them up by
-+ * logical groups to make it more manageable ( < 120 bytes).
-+ *
-+ * NOTE: Each of these groups must be less than 120 bytes.
++/*
++ * Flash must be selected for read/write/erase operations to succeed.  This may
++ * be necessary on a chip where write/erase can be corrupted by other board
++ * activity, or where the chip needs to enable some sort of programming voltage,
++ * or where the read/write/erase operations require cleanly suspending other
++ * chip functionality.
 + */
++#define EC_FLASH_INFO_SELECT_REQUIRED BIT(1)
 +
-+struct lightbar_params_v2_timing {
-+	/* Timing */
-+	int32_t google_ramp_up;
-+	int32_t google_ramp_down;
-+	int32_t s3s0_ramp_up;
-+	int32_t s0_tick_delay[2];		/* AC=0/1 */
-+	int32_t s0a_tick_delay[2];		/* AC=0/1 */
-+	int32_t s0s3_ramp_down;
-+	int32_t s3_sleep_for;
-+	int32_t s3_ramp_up;
-+	int32_t s3_ramp_down;
-+	int32_t s5_ramp_up;
-+	int32_t s5_ramp_down;
-+	int32_t tap_tick_delay;
-+	int32_t tap_gate_delay;
-+	int32_t tap_display_time;
-+} __ec_todo_packed;
-+
-+struct lightbar_params_v2_tap {
-+	/* Tap-for-battery params */
-+	uint8_t tap_pct_red;
-+	uint8_t tap_pct_green;
-+	uint8_t tap_seg_min_on;
-+	uint8_t tap_seg_max_on;
-+	uint8_t tap_seg_osc;
-+	uint8_t tap_idx[3];
-+} __ec_todo_packed;
-+
-+struct lightbar_params_v2_oscillation {
-+	/* Oscillation */
-+	uint8_t osc_min[2];			/* AC=0/1 */
-+	uint8_t osc_max[2];			/* AC=0/1 */
-+	uint8_t w_ofs[2];			/* AC=0/1 */
-+} __ec_todo_packed;
-+
-+struct lightbar_params_v2_brightness {
-+	/* Brightness limits based on the backlight and AC. */
-+	uint8_t bright_bl_off_fixed[2];		/* AC=0/1 */
-+	uint8_t bright_bl_on_min[2];		/* AC=0/1 */
-+	uint8_t bright_bl_on_max[2];		/* AC=0/1 */
-+} __ec_todo_packed;
-+
-+struct lightbar_params_v2_thresholds {
-+	/* Battery level thresholds */
-+	uint8_t battery_threshold[LB_BATTERY_LEVELS - 1];
-+} __ec_todo_packed;
-+
-+struct lightbar_params_v2_colors {
-+	/* Map [AC][battery_level] to color index */
-+	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
-+	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
-+
-+	/* s5: single color pulse on inhibited power-up */
-+	uint8_t s5_idx;
-+
-+	/* Color palette */
-+	struct rgb_s color[8];			/* 0-3 are Google colors */
-+} __ec_todo_packed;
-+
-+/* Lightbar program. */
- #define EC_LB_PROG_LEN 192
- struct lightbar_program {
- 	uint8_t size;
-@@ -1704,7 +1778,10 @@ struct ec_params_lightbar {
- 		 * The following commands have no args:
- 		 *
- 		 * dump, off, on, init, get_seq, get_params_v0, get_params_v1,
--		 * version, get_brightness, get_demo, suspend, resume
-+		 * version, get_brightness, get_demo, suspend, resume,
-+		 * get_params_v2_timing, get_params_v2_tap, get_params_v2_osc,
-+		 * get_params_v2_bright, get_params_v2_thlds,
-+		 * get_params_v2_colors
- 		 *
- 		 * Don't use an empty struct, because C++ hates that.
- 		 */
-@@ -1731,6 +1808,14 @@ struct ec_params_lightbar {
+ /**
+  * struct ec_response_flash_info_1 - Response to the flash info v1 command.
+  * @flash_size: Usable flash size in bytes.
+@@ -1186,6 +1196,12 @@ struct ec_response_flash_info {
+  * gcc anonymous structs don't seem to get along with the __packed directive;
+  * if they did we'd define the version 0 structure as a sub-structure of this
+  * one.
++ *
++ * Version 2 supports flash banks of different sizes:
++ * The caller specified the number of banks it has preallocated
++ * (num_banks_desc)
++ * The EC returns the number of banks describing the flash memory.
++ * It adds banks descriptions up to num_banks_desc.
+  */
+ struct ec_response_flash_info_1 {
+ 	/* Version 0 fields; see above for description */
+@@ -1199,6 +1215,42 @@ struct ec_response_flash_info_1 {
+ 	uint32_t flags;
+ } __ec_align4;
  
- 		struct lightbar_params_v0 set_params_v0;
- 		struct lightbar_params_v1 set_params_v1;
++struct ec_params_flash_info_2 {
++	/* Number of banks to describe */
++	uint16_t num_banks_desc;
++	/* Reserved; set 0; ignore on read */
++	uint8_t reserved[2];
++} __ec_align4;
 +
-+		struct lightbar_params_v2_timing set_v2par_timing;
-+		struct lightbar_params_v2_tap set_v2par_tap;
-+		struct lightbar_params_v2_oscillation set_v2par_osc;
-+		struct lightbar_params_v2_brightness set_v2par_bright;
-+		struct lightbar_params_v2_thresholds set_v2par_thlds;
-+		struct lightbar_params_v2_colors set_v2par_colors;
++struct ec_flash_bank {
++	/* Number of sector is in this bank. */
++	uint16_t count;
++	/* Size in power of 2 of each sector (8 --> 256 bytes) */
++	uint8_t size_exp;
++	/* Minimal write size for the sectors in this bank */
++	uint8_t write_size_exp;
++	/* Erase size for the sectors in this bank */
++	uint8_t erase_size_exp;
++	/* Size for write protection, usually identical to erase size. */
++	uint8_t protect_size_exp;
++	/* Reserved; set 0; ignore on read */
++	uint8_t reserved[2];
++};
 +
- 		struct lightbar_program set_program;
- 	};
- } __ec_todo_packed;
-@@ -1752,6 +1837,14 @@ struct ec_response_lightbar {
- 		struct lightbar_params_v0 get_params_v0;
- 		struct lightbar_params_v1 get_params_v1;
++struct ec_response_flash_info_2 {
++	/* Total flash in the EC. */
++	uint32_t flash_size;
++	/* Flags; see EC_FLASH_INFO_* */
++	uint32_t flags;
++	/* Maximum size to use to send data to write to the EC. */
++	uint32_t write_ideal_size;
++	/* Number of banks present in the EC. */
++	uint16_t num_banks_total;
++	/* Number of banks described in banks array. */
++	uint16_t num_banks_desc;
++	struct ec_flash_bank banks[0];
++} __ec_align4;
++
+ /*
+  * Read flash
+  *
+@@ -1238,7 +1290,7 @@ struct ec_params_flash_write {
+ #define EC_CMD_FLASH_ERASE 0x0013
  
+ /**
+- * struct ec_params_flash_erase - Parameters for the flash erase command.
++ * struct ec_params_flash_erase - Parameters for the flash erase command, v0.
+  * @offset: Byte offset to erase.
+  * @size: Size to erase in bytes.
+  */
+@@ -1247,6 +1299,43 @@ struct ec_params_flash_erase {
+ 	uint32_t size;
+ } __ec_align4;
+ 
++/*
++ * v1 add async erase:
++ * subcommands can returns:
++ * EC_RES_SUCCESS : erased (see ERASE_SECTOR_ASYNC case below).
++ * EC_RES_INVALID_PARAM : offset/size are not aligned on a erase boundary.
++ * EC_RES_ERROR : other errors.
++ * EC_RES_BUSY : an existing erase operation is in progress.
++ * EC_RES_ACCESS_DENIED: Trying to erase running image.
++ *
++ * When ERASE_SECTOR_ASYNC returns EC_RES_SUCCESS, the operation is just
++ * properly queued. The user must call ERASE_GET_RESULT subcommand to get
++ * the proper result.
++ * When ERASE_GET_RESULT returns EC_RES_BUSY, the caller must wait and send
++ * ERASE_GET_RESULT again to get the result of ERASE_SECTOR_ASYNC.
++ * ERASE_GET_RESULT command may timeout on EC where flash access is not
++ * permitted while erasing. (For instance, STM32F4).
++ */
++enum ec_flash_erase_cmd {
++	FLASH_ERASE_SECTOR,     /* Erase and wait for result */
++	FLASH_ERASE_SECTOR_ASYNC,  /* Erase and return immediately. */
++	FLASH_ERASE_GET_RESULT,  /* Ask for last erase result */
++};
 +
-+		struct lightbar_params_v2_timing get_params_v2_timing;
-+		struct lightbar_params_v2_tap get_params_v2_tap;
-+		struct lightbar_params_v2_oscillation get_params_v2_osc;
-+		struct lightbar_params_v2_brightness get_params_v2_bright;
-+		struct lightbar_params_v2_thresholds get_params_v2_thlds;
-+		struct lightbar_params_v2_colors get_params_v2_colors;
++/**
++ * struct ec_params_flash_erase_v1 - Parameters for the flash erase command, v1.
++ * @cmd: One of ec_flash_erase_cmd.
++ * @reserved: Pad byte; currently always contains 0.
++ * @flag: No flags defined yet; set to 0.
++ * @params: Same as v0 parameters.
++ */
++struct ec_params_flash_erase_v1 {
++	uint8_t  cmd;
++	uint8_t  reserved;
++	uint16_t flag;
++	struct ec_params_flash_erase params;
++} __ec_align4;
 +
- 		struct __ec_todo_unpacked {
- 			uint32_t num;
- 			uint32_t flags;
-@@ -1764,9 +1857,11 @@ struct ec_response_lightbar {
- 		/*
- 		 * The following commands have no response:
- 		 *
--		 * off, on, init, set_brightness, seq, reg, set_rgb,
-+		 * off, on, init, set_brightness, seq, reg, set_rgb, demo,
- 		 * set_params_v0, set_params_v1, set_program,
--		 * manual_suspend_ctrl, suspend, resume
-+		 * manual_suspend_ctrl, suspend, resume, set_v2par_timing,
-+		 * set_v2par_tap, set_v2par_osc, set_v2par_bright,
-+		 * set_v2par_thlds, set_v2par_colors
- 		 */
- 	};
- } __ec_todo_packed;
-@@ -1795,6 +1890,18 @@ enum lightbar_command {
- 	LIGHTBAR_CMD_MANUAL_SUSPEND_CTRL = 19,
- 	LIGHTBAR_CMD_SUSPEND = 20,
- 	LIGHTBAR_CMD_RESUME = 21,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_TIMING = 22,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_TIMING = 23,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_TAP = 24,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_TAP = 25,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_OSCILLATION = 26,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_OSCILLATION = 27,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_BRIGHTNESS = 28,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_BRIGHTNESS = 29,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_THRESHOLDS = 30,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_THRESHOLDS = 31,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_COLORS = 32,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_COLORS = 33,
- 	LIGHTBAR_NUM_CMDS
+ /*
+  * Get/set flash protection.
+  *
+@@ -1282,6 +1371,15 @@ struct ec_params_flash_erase {
+ #define EC_FLASH_PROTECT_ERROR_INCONSISTENT BIT(5)
+ /* Entire flash code protected when the EC boots */
+ #define EC_FLASH_PROTECT_ALL_AT_BOOT        BIT(6)
++/* RW flash code protected when the EC boots */
++#define EC_FLASH_PROTECT_RW_AT_BOOT         BIT(7)
++/* RW flash code protected now. */
++#define EC_FLASH_PROTECT_RW_NOW             BIT(8)
++/* Rollback information flash region protected when the EC boots */
++#define EC_FLASH_PROTECT_ROLLBACK_AT_BOOT   BIT(9)
++/* Rollback information flash region protected now */
++#define EC_FLASH_PROTECT_ROLLBACK_NOW       BIT(10)
++
+ 
+ /**
+  * struct ec_params_flash_protect - Parameters for the flash protect command.
+@@ -1320,16 +1418,31 @@ struct ec_response_flash_protect {
+ enum ec_flash_region {
+ 	/* Region which holds read-only EC image */
+ 	EC_FLASH_REGION_RO = 0,
+-	/* Region which holds rewritable EC image */
+-	EC_FLASH_REGION_RW,
++	/*
++	 * Region which holds active RW image. 'Active' is different from
++	 * 'running'. Active means 'scheduled-to-run'. Since RO image always
++	 * scheduled to run, active/non-active applies only to RW images (for
++	 * the same reason 'update' applies only to RW images. It's a state of
++	 * an image on a flash. Running image can be RO, RW_A, RW_B but active
++	 * image can only be RW_A or RW_B. In recovery mode, an active RW image
++	 * doesn't enter 'running' state but it's still active on a flash.
++	 */
++	EC_FLASH_REGION_ACTIVE,
+ 	/*
+ 	 * Region which should be write-protected in the factory (a superset of
+ 	 * EC_FLASH_REGION_RO)
+ 	 */
+ 	EC_FLASH_REGION_WP_RO,
++	/* Region which holds updatable (non-active) RW image */
++	EC_FLASH_REGION_UPDATE,
+ 	/* Number of regions */
+ 	EC_FLASH_REGION_COUNT,
  };
++/*
++ * 'RW' is vague if there are multiple RW images; we mean the active one,
++ * so the old constant is deprecated.
++ */
++#define EC_FLASH_REGION_RW EC_FLASH_REGION_ACTIVE
  
-@@ -1813,6 +1920,14 @@ enum ec_led_id {
- 	EC_LED_ID_POWER_LED,
- 	/* LED on power adapter or its plug */
- 	EC_LED_ID_ADAPTER_LED,
-+	/* LED to indicate left side */
-+	EC_LED_ID_LEFT_LED,
-+	/* LED to indicate right side */
-+	EC_LED_ID_RIGHT_LED,
-+	/* LED to indicate recovery mode with HW_REINIT */
-+	EC_LED_ID_RECOVERY_HW_REINIT_LED,
-+	/* LED to indicate sysrq debug mode. */
-+	EC_LED_ID_SYSRQ_DEBUG_LED,
+ /**
+  * struct ec_params_flash_region_info - Parameters for the flash region info
+@@ -1364,6 +1477,37 @@ struct ec_response_vbnvcontext {
+ 	uint8_t block[EC_VBNV_BLOCK_SIZE];
+ } __ec_align4;
  
- 	EC_LED_ID_COUNT
- };
-@@ -1827,6 +1942,7 @@ enum ec_led_colors {
- 	EC_LED_COLOR_BLUE,
- 	EC_LED_COLOR_YELLOW,
- 	EC_LED_COLOR_WHITE,
-+	EC_LED_COLOR_AMBER,
++
++/* Get SPI flash information */
++#define EC_CMD_FLASH_SPI_INFO 0x0018
++
++struct ec_response_flash_spi_info {
++	/* JEDEC info from command 0x9F (manufacturer, memory type, size) */
++	uint8_t jedec[3];
++
++	/* Pad byte; currently always contains 0 */
++	uint8_t reserved0;
++
++	/* Manufacturer / device ID from command 0x90 */
++	uint8_t mfr_dev_id[2];
++
++	/* Status registers from command 0x05 and 0x35 */
++	uint8_t sr1, sr2;
++} __ec_align1;
++
++
++/* Select flash during flash operations */
++#define EC_CMD_FLASH_SELECT 0x0019
++
++/**
++ * struct ec_params_flash_select - Parameters for the flash select command.
++ * @select: 1 to select flash, 0 to deselect flash
++ */
++struct ec_params_flash_select {
++	uint8_t select;
++} __ec_align4;
++
++
+ /*****************************************************************************/
+ /* PWM commands */
  
- 	EC_LED_COLOR_COUNT
- };
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
