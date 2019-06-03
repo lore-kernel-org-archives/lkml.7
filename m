@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D390AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3D527F4B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E1C27F3F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553377;
-	bh=FpGC7zNDZKZlqla5pNTMp1CqYjfpbbybo+aQhWG8avc=;
+	s=default; t=1559553387;
+	bh=famVA7ob8TpRxTb4UrHWZEGJtnZWdrQQBvRwDY8CjhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d62m3lP4ErUFlZyiXaTUNROKGVxR4IQexm8JQEI4CzkEi9O6nAzsD1EUBn23xMJ3i
-	 mnPR7ew/qNUfa64x0nwdx/13yynrQWJJlGoFsSFt/hvN7/KnMZJlFKcvxEQaQRtTGP
-	 BFNsM0a28/aICl9EpWMwvkygTmTCPN0NBc0W0zZk=
+	b=Jgqvq34IorgTyP65Ghfz/Vh6wHRPykSP9LakdsQDjC2KaygxTVg5rIDXTdB8CN6/J
+	 +mrtaGaoZLvVQdMIRnC1uSj2VPz7j/Bqc2OQmcDYluIVT14b4bBEAsqi5J1BjShjyw
+	 eiLKxJIp1fRWoblBGCz7f7r1sDWZ3mPA2pn7z8ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbfFCJQQ (ORCPT
+        id S1728669AbfFCJMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbfFCJMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:53 -0400
+        id S1728202AbfFCJMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543A521923;
-        Mon,  3 Jun 2019 09:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09FE426F51;
+        Mon,  3 Jun 2019 09:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553172;
-        bh=FpGC7zNDZKZlqla5pNTMp1CqYjfpbbybo+aQhWG8avc=;
+        s=default; t=1559553156;
+        bh=famVA7ob8TpRxTb4UrHWZEGJtnZWdrQQBvRwDY8CjhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwdBC+zEGjxX4bVlFei7znwU4+QEHs2DaCE/y30Vy7b0/YSa/Xt1BILc4f8gjwm3N
-         mKvuvUcUAjlLcQWVQ+R3QmBhVIRTEovxF2tBjsB2g5W9rv7RZaF115FphwIk4EH9bK
-         C2Gg1yhVMJQZsCpZHOVOOb9eId6LZAfNYtaC7x40=
+        b=pbG5zpvtN4ZZ+r8si55iV7A2IXSlxEn7E6PWgkC+ZKGhY5Xqx/hNq9DQmIwXKI9fX
+         JPiRRvr4icT0uZrAGHuhNrwM2qSqpCbwtx0xHmVi2uEZ326wOE5b5pNift6vgxOLBR
+         V2/6lrBFZ8WP2db/AHyM0BTwXUemDzG3rHvidA7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 11/40] net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
-Date:   Mon,  3 Jun 2019 11:09:04 +0200
-Message-Id: <20190603090523.327595439@linuxfoundation.org>
+Subject: [PATCH 5.0 29/36] net/tls: fix state removal with feature flags off
+Date:   Mon,  3 Jun 2019 11:09:17 +0200
+Message-Id: <20190603090522.925911024@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
-References: <20190603090522.617635820@linuxfoundation.org>
+In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
+References: <20190603090520.998342694@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,33 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 84b3fd1fc9592d431e23b077e692fa4e3fd0f086 ]
+[ Upstream commit 3686637e507b48525fcea6fb91e1988bdbc14530 ]
 
-Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
-up in bits 47:32 of the return value, instead of bits 31:16 as they
-should.
+TLS offload drivers shouldn't (and currently don't) block
+the TLS offload feature changes based on whether there are
+active offloaded connections or not.
 
-Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+This seems to be a good idea, because we want the admin to
+be able to disable the TLS offload at any time, and there
+is no clean way of disabling it for active connections
+(TX side is quite problematic).  So if features are cleared
+existing connections will stay offloaded until they close,
+and new connections will not attempt offload to a given
+device.
+
+However, the offload state removal handling is currently
+broken if feature flags get cleared while there are
+active TLS offloads.
+
+RX side will completely bail from cleanup, even on normal
+remove path, leaving device state dangling, potentially
+causing issues when the 5-tuple is reused.  It will also
+fail to release the netdev reference.
+
+Remove the RX-side warning message, in next release cycle
+it should be printed when features are disabled, rather
+than when connection dies, but for that we need a more
+efficient method of finding connection of a given netdev
+(a'la BPF offload code).
+
+Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tls/tls_device.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -910,7 +910,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
- 			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
- 			if (err)
- 				return U64_MAX;
--			high = reg;
-+			low |= ((u32)reg) << 16;
- 		}
- 		break;
- 	case STATS_TYPE_BANK1:
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -923,12 +923,6 @@ void tls_device_offload_cleanup_rx(struc
+ 	if (!netdev)
+ 		goto out;
+ 
+-	if (!(netdev->features & NETIF_F_HW_TLS_RX)) {
+-		pr_err_ratelimited("%s: device is missing NETIF_F_HW_TLS_RX cap\n",
+-				   __func__);
+-		goto out;
+-	}
+-
+ 	netdev->tlsdev_ops->tls_dev_del(netdev, tls_ctx,
+ 					TLS_OFFLOAD_CTX_DIR_RX);
+ 
 
 
