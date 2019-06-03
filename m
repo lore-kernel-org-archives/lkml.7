@@ -2,123 +2,163 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F5EC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008CBC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A6F28004
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB6A2800C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfFCNIu (ORCPT
+        id S1728376AbfFCNJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:08:50 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45050 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbfFCNIu (ORCPT
+        Mon, 3 Jun 2019 09:09:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30070 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728055AbfFCNJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:08:50 -0400
-Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXmhf-0000SK-K6; Mon, 03 Jun 2019 15:08:43 +0200
-Received: from [2a02:120b:c3fc:feb0:dda7:bd28:a848:50e2] (helo=linux.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXmhf-0007wD-54; Mon, 03 Jun 2019 15:08:43 +0200
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-To:     Matt Mullins <mmullins@fb.com>, hall@fb.com, ast@kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20190531223735.4998-1-mmullins@fb.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
-Date:   Mon, 3 Jun 2019 15:08:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190531223735.4998-1-mmullins@fb.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 3 Jun 2019 09:09:06 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-144-DmL0yzerNDm5Z6l8YvJ_GQ-1; Mon, 03 Jun 2019 14:09:02 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 3 Jun 2019 14:09:02 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Jun 2019 14:09:02 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Masahiro Yamada' <yamada.masahiro@socionext.com>
+CC:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "Vineet Gupta" <vgupta@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] kbuild: use more portable 'command -v' for
+ cc-cross-prefix
+Thread-Topic: [PATCH] kbuild: use more portable 'command -v' for
+ cc-cross-prefix
+Thread-Index: AQHVGfoc7Nk6FX5Ty02s910sxgLWxaaJxI+g///4bICAACdTsA==
+Date:   Mon, 3 Jun 2019 13:09:02 +0000
+Message-ID: <810dd6ae018b4a31b70d26fb6b29e48d@AcuMS.aculab.com>
+References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
+ <863c29c5f0214c008fbcbb2aac517a5c@AcuMS.aculab.com>
+ <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
+In-Reply-To: <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: DmL0yzerNDm5Z6l8YvJ_GQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/2019 12:37 AM, Matt Mullins wrote:
-> It is possible that a BPF program can be called while another BPF
-> program is executing bpf_perf_event_output.  This has been observed with
-> I/O completion occurring as a result of an interrupt:
-> 
-> 	bpf_prog_247fd1341cddaea4_trace_req_end+0x8d7/0x1000
-> 	? trace_call_bpf+0x82/0x100
-> 	? sch_direct_xmit+0xe2/0x230
-> 	? blk_mq_end_request+0x1/0x100
-> 	? blk_mq_end_request+0x5/0x100
-> 	? kprobe_perf_func+0x19b/0x240
-> 	? __qdisc_run+0x86/0x520
-> 	? blk_mq_end_request+0x1/0x100
-> 	? blk_mq_end_request+0x5/0x100
-> 	? kprobe_ftrace_handler+0x90/0xf0
-> 	? ftrace_ops_assist_func+0x6e/0xe0
-> 	? ip6_input_finish+0xbf/0x460
-> 	? 0xffffffffa01e80bf
-> 	? nbd_dbg_flags_show+0xc0/0xc0 [nbd]
-> 	? blkdev_issue_zeroout+0x200/0x200
-> 	? blk_mq_end_request+0x1/0x100
-> 	? blk_mq_end_request+0x5/0x100
-> 	? flush_smp_call_function_queue+0x6c/0xe0
-> 	? smp_call_function_single_interrupt+0x32/0xc0
-> 	? call_function_single_interrupt+0xf/0x20
-> 	? call_function_single_interrupt+0xa/0x20
-> 	? swiotlb_map_page+0x140/0x140
-> 	? refcount_sub_and_test+0x1a/0x50
-> 	? tcp_wfree+0x20/0xf0
-> 	? skb_release_head_state+0x62/0xc0
-> 	? skb_release_all+0xe/0x30
-> 	? napi_consume_skb+0xb5/0x100
-> 	? mlx5e_poll_tx_cq+0x1df/0x4e0
-> 	? mlx5e_poll_tx_cq+0x38c/0x4e0
-> 	? mlx5e_napi_poll+0x58/0xc30
-> 	? mlx5e_napi_poll+0x232/0xc30
-> 	? net_rx_action+0x128/0x340
-> 	? __do_softirq+0xd4/0x2ad
-> 	? irq_exit+0xa5/0xb0
-> 	? do_IRQ+0x7d/0xc0
-> 	? common_interrupt+0xf/0xf
-> 	</IRQ>
-> 	? __rb_free_aux+0xf0/0xf0
-> 	? perf_output_sample+0x28/0x7b0
-> 	? perf_prepare_sample+0x54/0x4a0
-> 	? perf_event_output+0x43/0x60
-> 	? bpf_perf_event_output_raw_tp+0x15f/0x180
-> 	? blk_mq_start_request+0x1/0x120
-> 	? bpf_prog_411a64a706fc6044_should_trace+0xad4/0x1000
-> 	? bpf_trace_run3+0x2c/0x80
-> 	? nbd_send_cmd+0x4c2/0x690 [nbd]
-> 
-> This also cannot be alleviated by further splitting the per-cpu
-> perf_sample_data structs (as in commit 283ca526a9bd ("bpf: fix
-> corruption on concurrent perf_event_output calls")), as a raw_tp could
-> be attached to the block:block_rq_complete tracepoint and execute during
-> another raw_tp.  Instead, keep a pre-allocated perf_sample_data
-> structure per perf_event_array element and fail a bpf_perf_event_output
-> if that element is concurrently being used.
-> 
-> Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
-> Signed-off-by: Matt Mullins <mmullins@fb.com>
+RnJvbTogTWFzYWhpcm8gWWFtYWRhDQo+IFNlbnQ6IDAzIEp1bmUgMjAxOSAxMjozOA0KPiBIaSBE
+YXZpZCwNCj4gDQo+IE9uIE1vbiwgSnVuIDMsIDIwMTkgYXQgODoxNCBQTSBEYXZpZCBMYWlnaHQg
+PERhdmlkLkxhaWdodEBhY3VsYWIuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IE1hc2FoaXJv
+IFlhbWFkYQ0KPiA+ID4gU2VudDogMDMgSnVuZSAyMDE5IDExOjQ5DQo+ID4gPg0KPiA+ID4gVG8g
+cHJpbnQgdGhlIHBhdGhuYW1lIHRoYXQgd2lsbCBiZSB1c2VkIGJ5IHNoZWxsIGluIHRoZSBjdXJy
+ZW50DQo+ID4gPiBlbnZpcm9ubWVudCwgJ2NvbW1hbmQgLXYnIGlzIGEgc3RhbmRhcmRpemVkIHdh
+eS4gWzFdDQo+ID4gPg0KPiA+ID4gJ3doaWNoJyBpcyBhbHNvIG9mdGVuIHVzZWQgaW4gc2NyaXB0
+aW5nLCBidXQgaXQgaXMgbm90IHBvcnRhYmxlLg0KPiA+ID4NCj4gPiA+IFdoZW4gSSB3b3JrZWQg
+b24gY29tbWl0IGJkNTVmOTZmYTlmYyAoImtidWlsZDogcmVmYWN0b3IgY2MtY3Jvc3MtcHJlZml4
+DQo+ID4gPiBpbXBsZW1lbnRhdGlvbiIpLCBJIHdhcyBlYWdlciB0byB1c2UgJ2NvbW1hbmQgLXYn
+IGJ1dCBpdCBkaWQgbm90IHdvcmsuDQo+ID4gPiAoVGhlIHJlYXNvbiBpcyBleHBsYWluZWQgYmVs
+b3cuKQ0KPiA+ID4NCj4gPiA+IEkga2VwdCAnd2hpY2gnIGFzIGJlZm9yZSBidXQgZ290IHJpZCBv
+ZiAnPiAvZGV2L251bGwgMj4mMScgYXMgSQ0KPiA+ID4gdGhvdWdodCBpdCB3YXMgbm8gbG9uZ2Vy
+IG5lZWRlZC4gU29ycnksIEkgd2FzIHdyb25nLg0KPiA+ID4NCj4gPiA+IEl0IHdvcmtzIHdlbGwg
+b24gbXkgVWJ1bnR1IG1hY2hpbmUsIGJ1dCBBbGV4ZXkgQnJvZGtpbiByZXBvcnRzIGFubm95aW5n
+DQo+ID4gPiB3YXJuaW5ncyBmcm9tIHRoZSAnd2hpY2gnIG9uIENlbnRPUyA3IHdoZW4gdGhlIGdp
+dmVuIGNvbW1hbmQgaXMgbm90DQo+ID4gPiBmb3VuZCBpbiB0aGUgUEFUSCBlbnZpcm9ubWVudC4N
+Cj4gPiA+DQo+ID4gPiAgICQgd2hpY2ggZm9vDQo+ID4gPiAgIHdoaWNoOiBubyBmb28gaW4gKC91
+c3IvbG9jYWwvc2JpbjovdXNyL2xvY2FsL2JpbjovdXNyL3NiaW46L3Vzci9iaW46L3NiaW46L2Jp
+bikNCj4gPiA+DQo+ID4gPiBHaXZlbiB0aGF0IGJlaGF2aW9yIG9mICd3aGljaCcgaXMgZGlmZmVy
+ZW50IG9uIGVudmlyb25tZW50LCBJIHdhbnQNCj4gPiA+IHRvIHRyeSAnY29tbWFuZCAtdicgYWdh
+aW4uDQo+ID4gPg0KPiA+ID4gVGhlIHNwZWNpZmljYXRpb24gWzFdIGNsZWFybHkgZGVzY3JpYmVz
+IHRoZSBiZWhhdmlvciBvZiAnY29tbWFuZCAtdicNCj4gPiA+IHdoZW4gdGhlIGdpdmVuIGNvbW1h
+bmQgaXMgbm90IGZvdW5kOg0KPiA+ID4NCj4gPiA+ICAgT3RoZXJ3aXNlLCBubyBvdXRwdXQgc2hh
+bGwgYmUgd3JpdHRlbiBhbmQgdGhlIGV4aXQgc3RhdHVzIHNoYWxsIHJlZmxlY3QNCj4gPiA+ICAg
+dGhhdCB0aGUgbmFtZSB3YXMgbm90IGZvdW5kLg0KPiA+ID4NCj4gPiA+IEhvd2V2ZXIsIHdlIG5l
+ZWQgYSBsaXR0bGUgbWFnaWMgdG8gdXNlICdjb21tYW5kIC12JyBmcm9tIE1ha2UuDQo+ID4gPg0K
+PiA+ID4gJChzaGVsbCAuLi4pIHBhc3NlcyB0aGUgYXJndW1lbnQgdG8gYSBzdWJzaGVsbCBmb3Ig
+ZXhlY3V0aW9uLCBhbmQNCj4gPiA+IHJldHVybnMgdGhlIHN0YW5kYXJkIG91dHB1dCBvZiB0aGUg
+Y29tbWFuZC4NCj4gPiA+DQo+ID4gPiBIZXJlIGlzIGEgdHJpY2suIEdOVSBNYWtlIG1heSBvcHRp
+bWl6ZSB0aGlzIGJ5IGV4ZWN1dGluZyB0aGUgY29tbWFuZA0KPiA+ID4gZGlyZWN0bHkgaW5zdGVh
+ZCBvZiBmb3JraW5nIGEgc3Vic2hlbGwsIGlmIG5vIHNoZWxsIHNwZWNpYWwgY2hhcmFjdGVycw0K
+PiA+ID4gYXJlIGZvdW5kIGluIHRoZSBjb21tYW5kIGxpbmUgYW5kIG9taXR0aW5nIHRoZSBzdWJz
+aGVsbCB3aWxsIG5vdA0KPiA+ID4gY2hhbmdlIHRoZSBiZWhhdmlvci4NCj4gPiA+DQo+ID4gPiBJ
+biB0aGlzIGNhc2UsIG5vIHNoZWxsIHNwZWNpYWwgY2hhcmFjdGVyIGlzIHVzZWQuIFNvLCBNYWtl
+IHdpbGwgdHJ5DQo+ID4gPiB0byBydW4gdGhlIGNvbW1hbmQgZGlyZWN0bHkuIEhvd2V2ZXIsICdj
+b21tYW5kJyBpcyBhIHNoZWxsLWJ1aWx0aW4NCj4gPiA+IGNvbW1hbmQuIEluIGZhY3QsIE1ha2Ug
+aGFzIGEgdGFibGUgb2Ygc2hlbGwtYnVpbHRpbiBjb21tYW5kcyBiZWNhdXNlDQo+ID4gPiBpdCBt
+dXN0IHNwYXduIGEgc3Vic2hlbGwgdG8gZXhlY3V0ZSB0aGVtLg0KPiA+ID4NCj4gPiA+IFVudGls
+IHJlY2VudGx5LCAnY29tbWFuZCcgd2FzIG1pc3NpbmcgaW4gdGhlIHRhYmxlLg0KPiA+ID4NCj4g
+PiA+IFRoaXMgaXNzdWUgd2FzIGZpeGVkIGJ5IHRoZSBmb2xsb3dpbmcgY29tbWl0Og0KPiA+ID4N
+Cj4gPiA+IHwgY29tbWl0IDFhZjMxNDQ2NWU1ZGZlM2U4YmFhODM5YTMyYTcyZTgzYzA0ZjI2ZWYN
+Cj4gPiA+IHwgQXV0aG9yOiBQYXVsIFNtaXRoIDxwc21pdGhAZ251Lm9yZz4NCj4gPiA+IHwgRGF0
+ZTogICBTdW4gTm92IDEyIDE4OjEwOjI4IDIwMTcgLTA1MDANCj4gPiA+IHwNCj4gPiA+IHwgICAg
+ICogam9iLmM6IEFkZCAiY29tbWFuZCIgYXMgYSBrbm93biBzaGVsbCBidWlsdC1pbi4NCj4gPiA+
+IHwNCj4gPiA+IHwgICAgIFRoaXMgaXMgbm90IGEgUE9TSVggc2hlbGwgYnVpbHQtaW4gYnV0IGl0
+J3MgY29tbW9uIGluIFVOSVggc2hlbGxzLg0KPiA+ID4gfCAgICAgUmVwb3J0ZWQgYnkgTmljayBC
+b3dsZXIgPG5ib3dsZXJAZHJhY29ueC5jYT4uDQo+ID4gPg0KPiA+ID4gVGhpcyBpcyBub3QgaW5j
+bHVkZWQgaW4gYW55IHJlbGVhc2VkIHZlcnNpb25zIG9mIE1ha2UgeWV0Lg0KPiA+ID4gKEJ1dCwg
+c29tZSBkaXN0cmlidXRpb25zIG1heSBoYXZlIGJhY2stcG9ydGVkIHRoZSBmaXgtdXAuKQ0KPiA+
+ID4NCj4gPiA+IFRvIHRyaWNrIE1ha2UgYW5kIGxldCBpdCBmb3JrIHRoZSBzdWJzaGVsbCwgSSBh
+ZGRlZCBhIHNoZWxsIHNwZWNpYWwNCj4gPiA+IGNoYXJhY3RlciAnficuIFdlIG1heSBiZSBhYmxl
+IHRvIGdldCByaWQgb2YgdGhpcyB3b3JrYXJvdW5kIHNvbWVkYXksDQo+ID4gPiBidXQgaXQgaXMg
+dmVyeSBmYXIgaW50byB0aGUgZnV0dXJlLg0KPiA+ID4NCj4gPiA+IFsxXSBodHRwOi8vcHVicy5v
+cGVuZ3JvdXAub3JnL29ubGluZXB1YnMvOTY5OTkxOTc5OS91dGlsaXRpZXMvY29tbWFuZC5odG1s
+DQo+ID4gPg0KPiA+ID4gRml4ZXM6IGJkNTVmOTZmYTlmYyAoImtidWlsZDogcmVmYWN0b3IgY2Mt
+Y3Jvc3MtcHJlZml4IGltcGxlbWVudGF0aW9uIikNCj4gPiA+IENjOiBsaW51eC1zdGFibGUgPHN0
+YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNS4xDQo+ID4gPiBSZXBvcnRlZC1ieTogQWxleGV5IEJy
+b2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hc2Fo
+aXJvIFlhbWFkYSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+ID4gPiAtLS0NCj4g
+PiA+DQo+ID4gPiAgc2NyaXB0cy9LYnVpbGQuaW5jbHVkZSB8IDUgKysrKy0NCj4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPg0KPiA+ID4g
+ZGlmZiAtLWdpdCBhL3NjcmlwdHMvS2J1aWxkLmluY2x1ZGUgYi9zY3JpcHRzL0tidWlsZC5pbmNs
+dWRlDQo+ID4gPiBpbmRleCA4NWQ3NTgyMzM0ODMuLjVhMzJjYTgwYzNmNiAxMDA2NDQNCj4gPiA+
+IC0tLSBhL3NjcmlwdHMvS2J1aWxkLmluY2x1ZGUNCj4gPiA+ICsrKyBiL3NjcmlwdHMvS2J1aWxk
+LmluY2x1ZGUNCj4gPiA+IEBAIC03NCw4ICs3NCwxMSBAQCBlbmRlZg0KPiA+ID4gICMgVXNhZ2U6
+IENST1NTX0NPTVBJTEUgOj0gJChjYWxsIGNjLWNyb3NzLXByZWZpeCwgbTY4ay1saW51eC1nbnUt
+IG02OGstbGludXgtKQ0KPiA+ID4gICMgUmV0dXJuIGZpcnN0IDxwcmVmaXg+IHdoZXJlIGEgPHBy
+ZWZpeD5nY2MgaXMgZm91bmQgaW4gUEFUSC4NCj4gPiA+ICAjIElmIG5vIGdjYyBmb3VuZCBpbiBQ
+QVRIIHdpdGggbGlzdGVkIHByZWZpeGVzIHJldHVybiBub3RoaW5nDQo+ID4gPiArIw0KPiA+ID4g
+KyMgTm90ZTogdGhlIHNwZWNpYWwgY2hhcmFjdGVyICd+JyBmb3JjZXMgTWFrZSB0byBpbnZva2Ug
+YSBzaGVsbC4gVGhpcyB3b3JrYXJvdW5kDQo+ID4gPiArIyBpcyBuZWVkZWQgYmVjYXVzZSB0aGlz
+IGlzc3VlIHdhcyBvbmx5IGZpeGVkIGFmdGVyIEdOVSBNYWtlIDQuMi4xIHJlbGVhc2UuDQo+ID4g
+PiAgY2MtY3Jvc3MtcHJlZml4ID0gJChmaXJzdHdvcmQgJChmb3JlYWNoIGMsICQoZmlsdGVyLW91
+dCAtJSwgJCgxKSksIFwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgJChpZiAkKHNoZWxsIHdoaWNoICQoYylnY2MpLCAkKGMpKSkpDQo+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAkKGlmICQoc2hlbGwgY29tbWFuZCAtdiAkKGMpZ2NjIH4pLCAk
+KGMpKSkpDQo+ID4NCj4gPiBJIHNlZSBhIHByb2JsZW0gaGVyZToNCj4gPiAgICAgICAgIGNvbW1h
+bmQgLXYgZm9vIGJhcg0KPiA+IGNvdWxkIGJlIGRlZW1lZCB0byBiZSBhbiBlcnJvciAoZXh0cmEg
+YXJndW1lbnQpLg0KPiANCj4gT0ssIHRoZSBzcGVjaWZpY2F0aW9uIGRvZXMgbm90IGFsbG93IHRv
+IHBhc3MgYXJndW1lbnRzDQo+IHdpdGggLXYuDQo+IA0KPiANCj4gPiBZb3UgY291bGQgdXNlOg0K
+PiA+ICAgICAgICAgJChzaGVsbCBzaCAtYyAiY29tbWFuZCAtdiAkKGMpZ2NjIikNCj4gPiBvciBt
+YXliZToNCj4gPiAgICAgICAgICQoc2hlbGwgY29tbWFuZCQke3g6K30gLXYgJChjKWdjYykNCj4g
+DQo+IA0KPiBIb3cgYWJvdXQgdGhpcz8NCj4gDQo+ICAgICAgICAgICAkKHNoZWxsIDogfjsgY29t
+bWFuZCAtdiAkKGMpZ2NjKQ0KDQpPdmVyY29tcGxpY2F0ZWQgLi4uLg0KDQpJJ3ZlIG5vdCBsb29r
+ZWQgYXQgdGhlIGxpc3Qgb2YgJ3NwZWNpYWwgY2hhcmFjdGVycycgaW4gbWFrZSwNCmJ1dCBJIHN1
+c3BlY3QgYW55IHZhcmlhYmxlIGV4cGFuc2lvbiBpcyBlbm91Z2guDQpTaW5jZSAke3g6K30gYWx3
+YXlzIGV4cGFuZHMgdG8gdGhlIGVtcHR5IHN0cmluZyAod2hldGhlciBvcg0Kbm90ICd4JyBpcyBk
+ZWZpbmVkKSBpdCBjYW4ndCBoYXZlIGFueSB1bmZvcnR1bmF0ZSBzaWRlIGVmZmVjdHMuDQoNCkkn
+ZCBjb21tZW50IGFzOg0KIyBOb3RlOiAke3g6K30gYWx3YXlzIGV4cGFuZHMgdG8gdGhlIGVtcHR5
+IHN0cmluZyBhbmQgZm9yY2VzIGFsbA0KIyB2ZXJzaW9ucyBvZiBtYWtlIHRvIGFjdHVhbGx5IGV4
+ZWMgJFNIRUxMIHJhdGhlciB0aGFuIHRyeSB0bw0KIyBkaXJlY3RseSBleGVjdXRlIHRoZSBzaGVs
+bCBidWlsdGluICdjb21tYW5kJy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBM
+YWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBU
+LCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-You do not elaborate why is this needed for all the networking programs that
-use this functionality. The bpf_misc_sd should therefore be kept as-is. There
-cannot be nested occurrences there (xdp, tc ingress/egress). Please explain why
-non-tracing should be affected here...
