@@ -2,141 +2,109 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661F3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BE2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A1323BE3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D728627213
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfFCPeB (ORCPT
+        id S1727882AbfFCPeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:34:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47247 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbfFCPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:34:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:34:00 -0700
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:33:59 -0700
-Message-ID: <f510f69ec5744e80fc612ae06a35b49d56cf2c80.camel@linux.intel.com>
-Subject: Re: [RFC PATCH 00/11] mm / virtio: Provide support for paravirtual
- waste page treatment
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
-        kvm@vger.kernel.org, mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Mon, 03 Jun 2019 08:33:59 -0700
-In-Reply-To: <09c42bc7-ddc7-6b34-44d8-ffb5e63c7c6f@redhat.com>
-References: <20190530215223.13974.22445.stgit@localhost.localdomain>
-         <09c42bc7-ddc7-6b34-44d8-ffb5e63c7c6f@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 3 Jun 2019 11:34:09 -0400
+Received: from mailoutvs5.siol.net ([185.57.226.196]:50891 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727647AbfFCPeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:34:09 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 7973A521018;
+        Mon,  3 Jun 2019 17:34:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id I185maW5QRX1; Mon,  3 Jun 2019 17:34:05 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 10534520F7B;
+        Mon,  3 Jun 2019 17:34:05 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id A9764520F69;
+        Mon,  3 Jun 2019 17:34:03 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nicolas@ndufresne.ca,
+        boris.brezillon@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH 2/7] media: cedrus: Fix H264 default reference index count
+Date:   Mon, 03 Jun 2019 17:34:03 +0200
+Message-ID: <8861995.Bqp6Xp4pol@jernej-laptop>
+In-Reply-To: <20190603114620.vsvbxz6gyhg3tn7b@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net> <20190530211516.1891-3-jernej.skrabec@siol.net> <20190603114620.vsvbxz6gyhg3tn7b@flea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-03 at 11:31 +0200, David Hildenbrand wrote:
-> On 30.05.19 23:53, Alexander Duyck wrote:
-> > This series provides an asynchronous means of hinting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as "waste page treatment".
+Dne ponedeljek, 03. junij 2019 ob 13:46:20 CEST je Maxime Ripard napisal(a):
+> On Thu, May 30, 2019 at 11:15:11PM +0200, Jernej Skrabec wrote:
+> > Reference index count in VE_H264_PPS reg should come from PPS control.
+> > However, this is not really important because reference index count is
+> > in our case always overridden by that from slice header.
 > > 
-> > I have based many of the terms and functionality off of waste water
-> > treatment, the idea for the similarity occured to me after I had reached
-> > the point of referring to the hints as "bubbles", as the hints used the
-> > same approach as the balloon functionality but would disappear if they
-> > were touched, as a result I started to think of the virtio device as an
-> > aerator. The general idea with all of this is that the guest should be
-> > treating the unused pages so that when they end up heading "downstream"
-> > to either another guest, or back at the host they will not need to be
-> > written to swap.
+> > Cc: nicolas@ndufresne.ca
+> > Cc: boris.brezillon@collabora.com
+> > Cc: jonas@kwiboo.se
 > > 
-> > So for a bit of background for the treatment process, it is based on a
-> > sequencing batch reactor (SBR)[1]. The treatment process itself has five
-> > stages. The first stage is the fill, with this we take the raw pages and
-> > add them to the reactor. The second stage is react, in this stage we hand
-> > the pages off to the Virtio Balloon driver to have hints attached to them
-> > and for those hints to be sent to the hypervisor. The third stage is
-> > settle, in this stage we are waiting for the hypervisor to process the
-> > pages, and we should receive an interrupt when it is completed. The fourth
-> > stage is to decant, or drain the reactor of pages. Finally we have the
-> > idle stage which we will go into if the reference count for the reactor
-> > gets down to 0 after a drain, or if a fill operation fails to obtain any
-> > pages and the reference count has hit 0. Otherwise we return to the first
-> > state and start the cycle over again.
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
-> While I like this analogy, I don't like the terminology mixed into
-> linux-mm core.
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> mm/aeration.c? Bubble? Treated? whut?
-> 
-> Can you come up with a terminology once can understand without a PHD in
-> biology? (if that is even the right field of study, I have no idea)
+> > ---
+> > We have to decide if we drop pps->num_ref_idx_l0_default_active_minus1
+> > and pps->num_ref_idx_l1_default_active_minus1 fields or add
+> > num_ref_idx_l0_active_override_flag and
+> > num_ref_idx_l0_active_override_flag
+> > to slice control.
 
-I had started with the bubble, as I had mentioned before. From there I got
-to aerator because of the fact that we were filling the memory with holes.
-I figure the first two work pretty well, but I am not really attached to
-any of the other terms. As far as the rest of the terminology most of it
-is actually chemistry if I am not mistaken. I could probably just swap out
-"Treated" with "Aerated" and it would work just as well. I would also need
-to get away from the more complex terms such as "decant", but for the most
-part that is just a matter of finding the synonyms such as "drain".
+Actually only one flag is in bitstream valid for both l0 and l1 ref list.
 
-> ALSO: isn't the analogy partially wrong? Nobody would be using "waste
-> water" just because they are low on "clean water". At least not in my
-> city (I hope so ;) ). But maybe I am not getting the whole concept
-> because we are dealing with pages we want to hint to the hypervisor and
-> not with actual "waste".
-
-Actually the analogy isn't for a low condition. The analogy would be for a
-condition where we have an excess of waste water and don't want to contain
-it. As such we want to treat it and return it to the water cycle.
-
-As far as the "waste" in the analogy I was thinking more of the page data.
-When a page has been used we normally mark it as "Dirty", so I thought it
-would be an apt analogy since those dirty pages would have to be written
-to long term storage if we didn't do something to invalidate the page
-data.
-
-> > This patch set is still far more intrusive then I would really like for
-> > what it has to do. Currently I am splitting the nr_free_pages into two
-> > values and having to add a pointer and an index to track where we area in
-> > the treatment process for a given free_area. I'm also not sure I have
-> > covered all possible corner cases where pages can get into the free_area
-> > or move from one migratetype to another.
-> 
-> Yes, it is quite intrusive. Maybe we can minimize the impact/error
-> proneness.
-
-My hope by submitting this as an RFC was to get input on what directions I
-might need to head in before I went to far down this current path.
-
-> > Also I am still leaving a number of things hard-coded such as limiting the
-> > lowest order processed to PAGEBLOCK_ORDER, and have left it up to the
-> > guest to determine what size of reactor it wants to allocate to process
-> > the hints.
 > > 
-> > Another consideration I am still debating is if I really want to process
-> > the aerator_cycle() function in interrupt context or if I should have it
-> > running in a thread somewhere else.
+> > Current control doesn't have those two flags, so in Cedrus override flag
+> > is
+> > always set and we rely on userspace to set
+> > slice->num_ref_idx_l0_active_minus1 and
+> > slice->num_ref_idx_l1_active_minus1 to correct values. This means that
+> > values stored in PPS are not needed and always ignored by VPU.
+> > 
+> > If I understand correctly, algorithm is very simple:
+> > 
+> > ref_count = PPS->ref_count
+> > if (override_flag)
+> > 
+> > 	ref_count = slice->ref_count
+> > 
+> > It seems that VAAPI provides only final value. In my opinion we should do
+> > the same - get rid of PPS default ref index count fields.
 > 
-> Did you get to test/benchmark the difference?
+> The rationale was to be as conservative as possible and just expose
+> everything that is in the bitstream in those controls to accomodate
+> for as many weird hardware as possible.
 
-I haven't yet.
+Ok, so then we should add that override flag, which would align with h264 specs 
+and you can still do same trick in VAAPI library which it's currently used in 
+Cedrus driver - always set override flag and fill out only slice reflist count. 
+At the end it shouldn't matter for proper decoding in any driver.
+
+Best regards,
+Jernej
+
+
 
