@@ -2,32 +2,32 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5329AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F28C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF1D27D83
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132BB27D83
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfFCI2a (ORCPT
+        id S1727727AbfFCI2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:28:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50576 "EHLO inva020.nxp.com"
+        Mon, 3 Jun 2019 04:28:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50626 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfFCI2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:28:30 -0400
+        id S1727680AbfFCI2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:28:31 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 538DE1A03AD;
-        Mon,  3 Jun 2019 10:28:27 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C1C8B1A03A4;
+        Mon,  3 Jun 2019 10:28:28 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E7BD1A03A5;
-        Mon,  3 Jun 2019 10:28:20 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 200A31A03C4;
+        Mon,  3 Jun 2019 10:28:22 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 70820402D5;
-        Mon,  3 Jun 2019 16:28:12 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DEBEA402DD;
+        Mon,  3 Jun 2019 16:28:13 +0800 (SGT)
 From:   peng.fan@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com,
         sudeep.holla@arm.com, f.fainelli@gmail.com
@@ -36,10 +36,12 @@ Cc:     kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         andre.przywara@arm.com, van.freenix@gmail.com,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 0/2] mailbox: arm: introduce smc triggered mailbox
-Date:   Mon,  3 Jun 2019 16:30:03 +0800
-Message-Id: <20190603083005.4304-1-peng.fan@nxp.com>
+Subject: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC mailbox
+Date:   Mon,  3 Jun 2019 16:30:04 +0800
+Message-Id: <20190603083005.4304-2-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190603083005.4304-1-peng.fan@nxp.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,74 +50,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-This is a modified version from Andre Przywara's patch series
-https://lore.kernel.org/patchwork/cover/812997/.
-The modification are mostly:
-Introduce arm,num-chans
-Introduce arm_smccc_mbox_cmd
-txdone_poll and txdone_irq are both set to false
-arm,func-ids are kept, but as an optional property.
-Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
-Introduce interrupts notification.
+The ARM SMC mailbox binding describes a firmware interface to trigger
+actions in software layers running in the EL2 or EL3 exception levels.
+The term "ARM" here relates to the SMC instruction as part of the ARM
+instruction set, not as a standard endorsed by ARM Ltd.
 
-[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
-use smc as mailbox, power/clk is included, but only part of clk has been
-implemented to work with hardware, power domain only supports get name
-for now.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-The traditional Linux mailbox mechanism uses some kind of dedicated hardware
-IP to signal a condition to some other processing unit, typically a dedicated
-management processor.
-This mailbox feature is used for instance by the SCMI protocol to signal a
-request for some action to be taken by the management processor.
-However some SoCs does not have a dedicated management core to provide
-those services. In order to service TEE and to avoid linux shutdown
-power and clock that used by TEE, need let firmware to handle power
-and clock, the firmware here is ARM Trusted Firmware that could also
-run SCMI service.
+V2:
+Introduce interrupts as a property.
 
-The existing SCMI implementation uses a rather flexible shared memory
-region to communicate commands and their parameters, it still requires a
-mailbox to actually trigger the action.
+V1:
+arm,func-ids is still kept as an optional property, because there is no
+defined SMC funciton id passed from SCMI. So in my test, I still use
+arm,func-ids for ARM SIP service.
 
-This patch series provides a Linux mailbox compatible service which uses
-smc calls to invoke firmware code, for instance taking care of SCMI requests.
-The actual requests are still communicated using the standard SCMI way of
-shared memory regions, but a dedicated mailbox hardware IP can be replaced via
-this new driver.
-
-This simple driver uses the architected SMC calling convention to trigger
-firmware services, also allows for using "HVC" calls to call into hypervisors
-or firmware layers running in the EL2 exception level.
-
-Patch 1 contains the device tree binding documentation, patch 2 introduces
-the actual mailbox driver.
-
-Please note that this driver just provides a generic mailbox mechanism,
-It could support synchronous TX/RX, or synchronous TX with asynchronous
-RX. And while providing SCMI services was the reason for this exercise,
-this driver is in no way bound to this use case, but can be used generically
-where the OS wants to signal a mailbox condition to firmware or a
-hypervisor.
-Also the driver is in no way meant to replace any existing firmware
-interface, but actually to complement existing interfaces.
-
-[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
-
-Peng Fan (2):
-  DT: mailbox: add binding doc for the ARM SMC mailbox
-  mailbox: introduce ARM SMC based mailbox
-
- .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/arm-smc-mailbox.c                  | 190 +++++++++++++++++++++
- include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
- 5 files changed, 310 insertions(+)
+ .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
- create mode 100644 drivers/mailbox/arm-smc-mailbox.c
- create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
 
+diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+new file mode 100644
+index 000000000000..401887118c09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+@@ -0,0 +1,101 @@
++ARM SMC Mailbox Interface
++=========================
++
++This mailbox uses the ARM smc (secure monitor call) instruction to trigger
++a mailbox-connected activity in firmware, executing on the very same core
++as the caller. By nature this operation is synchronous and this mailbox
++provides no way for asynchronous messages to be delivered the other way
++round, from firmware to the OS, but asynchronous notification could also
++be supported. However the value of r0/w0/x0 the firmware returns after
++the smc call is delivered as a received message to the mailbox framework,
++so a synchronous communication can be established, for a asynchronous
++notification, no value will be returned. The exact meaning of both the
++action the mailbox triggers as well as the return value is defined by
++their users and is not subject to this binding.
++
++One use case of this mailbox is the SCMI interface, which uses shared memory
++to transfer commands and parameters, and a mailbox to trigger a function
++call. This allows SoCs without a separate management processor (or when
++such a processor is not available or used) to use this standardized
++interface anyway.
++
++This binding describes no hardware, but establishes a firmware interface.
++Upon receiving an SMC using one of the described SMC function identifiers,
++the firmware is expected to trigger some mailbox connected functionality.
++The communication follows the ARM SMC calling convention[1].
++Firmware expects an SMC function identifier in r0 or w0. The supported
++identifiers are passed from consumers, or listed in the the arm,func-ids
++properties as described below. The firmware can return one value in
++the first SMC result register, it is expected to be an error value,
++which shall be propagated to the mailbox client.
++
++Any core which supports the SMC or HVC instruction can be used, as long as
++a firmware component running in EL3 or EL2 is handling these calls.
++
++Mailbox Device Node:
++====================
++
++This node is expected to be a child of the /firmware node.
++
++Required properties:
++--------------------
++- compatible:		Shall be "arm,smc-mbox"
++- #mbox-cells		Shall be 1 - the index of the channel needed.
++- arm,num-chans		The number of channels supported.
++- method:		A string, either:
++			"hvc": if the driver shall use an HVC call, or
++			"smc": if the driver shall use an SMC call.
++
++Optional properties:
++- arm,func-ids		An array of 32-bit values specifying the function
++			IDs used by each mailbox channel. Those function IDs
++			follow the ARM SMC calling convention standard [1].
++			There is one identifier per channel and the number
++			of supported channels is determined by the length
++			of this array.
++- interrupts		SPI interrupts may be listed for notification,
++			each channel should use a dedicated interrupt
++			line.
++
++Example:
++--------
++
++	sram@910000 {
++		compatible = "mmio-sram";
++		reg = <0x0 0x93f000 0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x0 0x93f000 0x1000>;
++
++		cpu_scp_lpri: scp-shmem@0 {
++			compatible = "arm,scmi-shmem";
++			reg = <0x0 0x200>;
++		};
++
++		cpu_scp_hpri: scp-shmem@200 {
++			compatible = "arm,scmi-shmem";
++			reg = <0x200 0x200>;
++		};
++	};
++
++	smc_mbox: mailbox {
++		#mbox-cells = <1>;
++		compatible = "arm,smc-mbox";
++		method = "smc";
++		arm,num-chans = <0x2>;
++		/* Optional */
++		arm,func-ids = <0xc20000fe>, <0xc20000ff>;
++	};
++
++	firmware {
++		scmi {
++			compatible = "arm,scmi";
++			mboxes = <&mailbox 0 &mailbox 1>;
++			mbox-names = "tx", "rx";
++			shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
++		};
++	};
++
++
++[1]
++http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0028a/index.html
 -- 
 2.16.4
 
