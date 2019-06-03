@@ -2,178 +2,87 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5A8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AA1C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298D9255C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4482825606
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559604722;
+	bh=E9CbAgEs9+d36Gh/v1+Cws4NtjKbU5ADhJ1M4gwvR9E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ljC/Fof/jgqwJfpRhX9gEVUYm0DL4RoRbJHbcwdQyKFh2XKeA+tFL5DweNxZPLtEa
+	 YQTHEpJZS6FRZMi14HWpsMiEZFrHQt7DiVNTue2Uq8IlP0UA8OLIhR32gvG14OzVEr
+	 KAklK26ehpxy7VIqgx6QKZtJTmumREs1dsjFkMYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFCXby (ORCPT
+        id S1726604AbfFCXcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:31:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43624 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfFCXbx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:31:53 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53NM6vv089988;
-        Mon, 3 Jun 2019 19:31:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swcx4gp2v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 19:31:44 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x53NMfpX090962;
-        Mon, 3 Jun 2019 19:31:44 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swcx4gp2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 19:31:44 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x53HYdGb030561;
-        Mon, 3 Jun 2019 17:36:45 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01dal.us.ibm.com with ESMTP id 2suh093trb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 17:36:45 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53NUR7H36110428
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 23:30:27 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EF4DAC060;
-        Mon,  3 Jun 2019 23:30:27 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C153AC05F;
-        Mon,  3 Jun 2019 23:30:26 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.85.191.102])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 23:30:25 +0000 (GMT)
-Subject: Re: [PATCH] scsi: ibmvscsi: Don't use rc uninitialized in
- ibmvscsi_do_work
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     clang-built-linux@googlegroups.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20190531185306.41290-1-natechancellor@gmail.com>
- <87blzgnvhx.fsf@concordia.ellerman.id.au>
-From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Message-ID: <031eaca1-bb6d-a14f-bb66-a520219549e4@linux.vnet.ibm.com>
-Date:   Mon, 3 Jun 2019 16:30:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 3 Jun 2019 19:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfFCXcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:32:01 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1782425605;
+        Mon,  3 Jun 2019 23:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559604720;
+        bh=E9CbAgEs9+d36Gh/v1+Cws4NtjKbU5ADhJ1M4gwvR9E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GH5sg4QwpgZM3iuEisPxKW+Ubw3VCRPMUMdNGNY3JHzOR6dceBUuZHWy3Q9dgI/Hq
+         EgDQMP5vG54tCIkql1xtJXyssxV1w8R0fbMPyjBWes3mPEzpQUws40Nr6UajtTQnwU
+         88QFAG8+2BP75gxbw9gXmdVT/5y7Qll76R/R4Pwo=
+Subject: Re: [PATCH 5.1 00/40] 5.1.7-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190603090522.617635820@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <59b66e9f-69be-63a8-348a-9a24a1246dbf@kernel.org>
+Date:   Mon, 3 Jun 2019 17:31:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <87blzgnvhx.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_18:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/02/2019 03:15 AM, Michael Ellerman wrote:
-> Hi Nathan,
+On 6/3/19 3:08 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.7 release.
+> There are 40 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Nathan Chancellor <natechancellor@gmail.com> writes:
->> clang warns:
->>
->> drivers/scsi/ibmvscsi/ibmvscsi.c:2126:7: warning: variable 'rc' is used
->> uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
->>         case IBMVSCSI_HOST_ACTION_NONE:
->>              ^~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/scsi/ibmvscsi/ibmvscsi.c:2151:6: note: uninitialized use occurs
->> here
->>         if (rc) {
->>             ^~
->>
->> Initialize rc to zero so that the atomic_set and dev_err statement don't
->> trigger for the cases that just break.
->>
->> Fixes: 035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
->> Link: https://github.com/ClangBuiltLinux/linux/issues/502
->> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->> ---
->>  drivers/scsi/ibmvscsi/ibmvscsi.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
->> index 727c31dc11a0..6714d8043e62 100644
->> --- a/drivers/scsi/ibmvscsi/ibmvscsi.c
->> +++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
->> @@ -2118,7 +2118,7 @@ static unsigned long ibmvscsi_get_desired_dma(struct vio_dev *vdev)
->>  static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
->>  {
->>  	unsigned long flags;
->> -	int rc;
->> +	int rc = 0;
->>  	char *action = "reset";
->>  
->>  	spin_lock_irqsave(hostdata->host->host_lock, flags);
+> Responses should be made by Wed 05 Jun 2019 09:04:46 AM UTC.
+> Anything received after that time might be too late.
 > 
-> It's always preferable IMHO to keep any initialisation as localised as
-> possible, so that the compiler can continue to warn about uninitialised
-> usages elsewhere. In this case that would mean doing the rc = 0 in the
-> switch, something like:
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
 > 
-> diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-> index 727c31dc11a0..7ee5755cf636 100644
-> --- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-> +++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-> @@ -2123,9 +2123,6 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
->  
->         spin_lock_irqsave(hostdata->host->host_lock, flags);
->         switch (hostdata->action) {
-> -       case IBMVSCSI_HOST_ACTION_NONE:
-> -       case IBMVSCSI_HOST_ACTION_UNBLOCK:
-> -               break;
->         case IBMVSCSI_HOST_ACTION_RESET:
->                 spin_unlock_irqrestore(hostdata->host->host_lock, flags);
->                 rc = ibmvscsi_reset_crq_queue(&hostdata->queue, hostdata);
-> @@ -2142,7 +2139,10 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
->                 if (!rc)
->                         rc = ibmvscsi_send_crq(hostdata, 0xC001000000000000LL, 0);
->                 break;
-> +       case IBMVSCSI_HOST_ACTION_NONE:
-> +       case IBMVSCSI_HOST_ACTION_UNBLOCK:
->         default:
-> +               rc = 0;
->                 break;
->         }
+> thanks,
 > 
+> greg k-h
 > 
-> But then that makes me wonder if that's actually correct?
-> 
-> If we get an action that we don't recognise should we just throw it away
-> like that? (by doing hostdata->action = IBMVSCSI_HOST_ACTION_NONE). Tyrel?
 
-On initial pass I was ok with this, but after thinking on it I think it is more
-subtle.
+Compiled and booted on my test system. No dmesg regressions.
 
-The right approach is to set rc = 0 for HOST_ACTION_UNBLOCK as we want to fall
-through. For HOST_ACTION_NONE and default we need to return directly from the
-function.
-
--Tyrel
-
-> 
-> cheers
-> 
+thanks,
+-- Shuah
 
