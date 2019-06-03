@@ -2,91 +2,136 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E87C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E1DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B282493D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:17:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/ZG8ie+"
+	by mail.kernel.org (Postfix) with ESMTP id F333D249BE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfFCRRb (ORCPT
+        id S1729302AbfFCRTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:17:31 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43094 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfFCRRa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:17:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c6so10980595pfa.10;
-        Mon, 03 Jun 2019 10:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ckQRX7jIGb4l/cxVq0XKTKehz2Xwu1/odSjdARib/ko=;
-        b=s/ZG8ie+uxVPyt/Nusz8m9vVpRRtifco8q6bq/pOU3rqGKKk5aAUhNYKdjeQMl851Y
-         FQfAE8c//QbkT/ewIspHIWkaBR1Ran2QDp/oDPummNHlF1EqGLrNeltiUS/xi0aQ8DNU
-         dFbqQi957adhmG4VPUydGwETmgW2j9dnDgp2AUsEG2zhTpxF72f/G6PYbO0ZeiEkur2R
-         1bxUR9aw/il6i55Ds7HVAkCZRML0tXlu9vRrH3MYpGzozZg5KZ+yVldjOwwlSy367hrg
-         sHhmD7+8tTdFIvsZMOiOsRwrRmcNtvPaD0nqtwVLIxzONdBtEsiEfoAwC1sXob9rCanE
-         vqMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ckQRX7jIGb4l/cxVq0XKTKehz2Xwu1/odSjdARib/ko=;
-        b=bwy0HhFJRcbgIF/N0J6jbVt9QdrXs1zFEPfj7ogH3E22VEogJvNoCaS8M9DqtozqTf
-         +ra5KvBSEYG5Laxw0Kpjjx/Kth30Mzv45sC/QcFOrXbUWxFYFIbJa+i2SIO9uDsfYbQ6
-         +4ecfYyoM5PPfgWJh52WP2QOTQuQpOiVNX1f2Bl0nO8waH+3ueV+pNPWVU6tlaUQiwdu
-         tJiNHIZR0LZS2fMg4FjH2XnP+0R5KOcC+3M5C5EtG4ZcDkecQKOVxEZuW1SMFoKvImho
-         hplQ18Lh799r9zcxx74KltlM6VchHlxZHRnmOHAu2ASIWlLQQxHE85A4/Tih6C5yjihO
-         jhGw==
-X-Gm-Message-State: APjAAAU5e60MsRuDsx+qbQXC0co/LjgIeDDtMs/dsXkZ/uWje00Qn0YP
-        VOx+Zs7wT8qK/tw4+Zg06TE=
-X-Google-Smtp-Source: APXvYqyGpqyu8yTa/NDeG/OjFE3MV52NyrkkAGdVdxWuNwtiEZ37W4Pmvk5A0ssfX4cgX/22NQUl1A==
-X-Received: by 2002:a17:90a:a00b:: with SMTP id q11mr31661120pjp.108.1559582250204;
-        Mon, 03 Jun 2019 10:17:30 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c21sm1168759pfd.129.2019.06.03.10.17.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 10:17:29 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 10:17:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/40] 5.1.7-stable review
-Message-ID: <20190603171728.GC4704@roeck-us.net>
-References: <20190603090522.617635820@linuxfoundation.org>
+        Mon, 3 Jun 2019 13:19:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:47822 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbfFCRTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:19:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 10:19:14 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Jun 2019 10:19:14 -0700
+Received: from [10.251.11.94] (kliang2-mobl.ccr.corp.intel.com [10.251.11.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 5A9635804A1;
+        Mon,  3 Jun 2019 10:19:13 -0700 (PDT)
+Subject: Re: [RESEND PATCH 0/6] Perf uncore support for Snow Ridge server
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        acme@kernel.org, eranian@google.com, ak@linux.intel.com
+References: <1556672028-119221-1-git-send-email-kan.liang@linux.intel.com>
+ <20190603163420.GD3402@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <4ba6aac7-1286-3307-dc5f-ebb42468a604@linux.intel.com>
+Date:   Mon, 3 Jun 2019 13:19:12 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190603163420.GD3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:08:53AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.7 release.
-> There are 40 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 05 Jun 2019 09:04:46 AM UTC.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 349 pass: 349 fail: 0
 
-Guenter
+
+On 6/3/2019 12:34 PM, Peter Zijlstra wrote:
+> On Tue, Apr 30, 2019 at 05:53:42PM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The patch series intends to enable perf uncore support for Snow Ridge
+>> server.
+>>
+>> Here is the link for the uncore document.
+>> https://cdrdv2.intel.com/v1/dl/getContent/611319
+>>
+>> Patch 1: Fixes a generic issue for uncore free-running counter, which
+>> also impacts the Snow Ridge server.
+>>
+>> Patch 2-6: Perf uncore support for Snow Ridge server.
+>>
+>> Kan Liang (6):
+>>    perf/x86/intel/uncore: Handle invalid event coding for free-running
+>>      counter
+>>    perf/x86/intel/uncore: Add uncore support for Snow Ridge server
+>>    perf/x86/intel/uncore: Extract codes of box ref/unref
+>>    perf/x86/intel/uncore: Support MMIO type uncore blocks
+>>    perf/x86/intel/uncore: Clean up client IMC
+>>    perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge
+>>
+>>   arch/x86/events/intel/uncore.c       | 122 +++++--
+>>   arch/x86/events/intel/uncore.h       |  41 ++-
+>>   arch/x86/events/intel/uncore_snb.c   |  16 +-
+>>   arch/x86/events/intel/uncore_snbep.c | 601 +++++++++++++++++++++++++++++++++++
+>>   4 files changed, 737 insertions(+), 43 deletions(-)
+> 
+> Kan, we had horrible conflicts between this set and the topology
+> s/pkg/die/ thing. I've attempted a rebase here:
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=perf/core
+> 
+> can you please double check?
+
+There are two errors. I think they have been reported by 0-day.
+Rest of the patches looks good.
+
+The first one is from ("perf/x86/intel/uncore: Support MMIO type uncore 
+blocks"). The fix is as below.
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index baee051..8453e60 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1201,7 +1201,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+  	/* Clear the references */
+  	die = topology_logical_die_id(cpu);
+  	uncore_box_unref(uncore_msr_uncores, die);
+-	uncore_box_unref(uncore_mmio_uncores, pkg);
++	uncore_box_unref(uncore_mmio_uncores, die);
+  	return 0;
+  }
+
+
+The other is from ("perf/x86/intel/uncore: Add IMC uncore support for 
+Snow Ridge"). The fix is as below.
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c 
+b/arch/x86/events/intel/uncore_snbep.c
+index f4e04d8..b10a5ec 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -4406,7 +4406,7 @@ static struct pci_dev *snr_uncore_get_mc_dev(int id)
+
+  static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
+  {
+-	struct pci_dev *pdev = snr_uncore_get_mc_dev(box->pkgid);
++	struct pci_dev *pdev = snr_uncore_get_mc_dev(box->dieid);
+  	unsigned int box_ctl = uncore_mmio_box_ctl(box);
+  	resource_size_t addr;
+  	u32 pci_dword;
+
+
+
+
+Thanks,
+Kan
+
