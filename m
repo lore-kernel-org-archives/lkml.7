@@ -2,84 +2,60 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A445FC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7353CC46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB6B28117
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6BA24AC3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbfFCLQy convert rfc822-to-8bit (ORCPT
+        id S1728195AbfFCLRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:16:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42603 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728144AbfFCLQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:16:53 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-108-o7jhmQwnN0qxpv2KrDfHtw-1; Mon, 03 Jun 2019 12:16:50 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
- 3 Jun 2019 12:16:49 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 3 Jun 2019 12:16:49 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Masahiro Yamada' <yamada.masahiro@socionext.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
-CC:     Vineet Gupta <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        Mon, 3 Jun 2019 07:17:32 -0400
+Received: from verein.lst.de ([213.95.11.211]:56566 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfFCLRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 07:17:32 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C725068AA6; Mon,  3 Jun 2019 13:17:05 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 13:17:05 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] kbuild: use more portable 'command -v' for
- cc-cross-prefix
-Thread-Topic: [PATCH] kbuild: use more portable 'command -v' for
- cc-cross-prefix
-Thread-Index: AQHVGfoc7Nk6FX5Ty02s910sxgLWxaaJxwdw
-Date:   Mon, 3 Jun 2019 11:16:49 +0000
-Message-ID: <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190603104902.23799-1-yamada.masahiro@socionext.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+Message-ID: <20190603111705.GA27163@lst.de>
+References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com> <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com> <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com> <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com> <4864dc3e-6e04-43e5-32c8-2cf5a0705fe5@codeaurora.org> <CAF6AEGuFyk1DJWUcQTnW=xsEUhYTYJccjzHJFxvipK4M8UdrUA@mail.gmail.com> <CAFp+6iGexVjbak8RQhEQNPp5cV8PK2ubTNNCMyaFPqdTGAbJ0A@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: o7jhmQwnN0qxpv2KrDfHtw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGexVjbak8RQhEQNPp5cV8PK2ubTNNCMyaFPqdTGAbJ0A@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada
-> Sent: 03 June 2019 11:49
-> 
-> To print the pathname that will be used by shell in the current
-> environment, 'command -v' is a standardized way. [1]
-> 
-> 'which' is also often used in scripting, but it is not portable.
-
-All uses of 'which' should be expunged.
-It is a bourne shell script that is trying to emulate a csh builtin.
-It is doomed to fail in corner cases.
-ISTR it has serious problems with shell functions and aliases.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+If you (and a few others actors in the thread) want people to actually
+read what you wrote please follow proper mailing list ettiquette.  I've
+given up on reading all the recent mails after scrolling through two
+pages of full quotes.
