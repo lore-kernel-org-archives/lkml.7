@@ -2,291 +2,176 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36B2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076A0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1BD2182B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tQvVjQQe"
+	by mail.kernel.org (Postfix) with ESMTP id D8AA423407
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfFCNDE (ORCPT
+        id S1728078AbfFCNDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:03:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48841 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfFCNDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:03:04 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D2lQq602107
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:02:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D2lQq602107
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559566968;
-        bh=K3urjQF6gb2vS7AitEUt69E8yo4hQfAk4YYunD66sR0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=tQvVjQQeLE/KL3GrjZGLGpJzpJ9MzaBgYWhMgDgPTpFCXjgQ5pWhbS//XXot89yTu
-         knC8qfi73AwXtkbscZJs7EPX2Px3gCjea1QLgg09qFAt070J/8m38ZCqP/GjtOgBUW
-         80A6aKhm08fFkrGK+cVGIdxPRFbMhbIt98mpoKQuoMG0zz+5KDc7zCuk/Dyb691SJ8
-         kjlOA+B2gt1+l4JQsmn8lwstyJlY5LiyKbKSi3Jg6ZxMIFf+W9rSgvq9++iMpLLE1O
-         WlsYoMOUMl4xTyUBh3RxlBSeGemxx+I00iM4DhZtlBpZ51yRCT70JNQTurFH53ipVE
-         CYDNKwndrG9lg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D2k6d602103;
-        Mon, 3 Jun 2019 06:02:46 -0700
-Date:   Mon, 3 Jun 2019 06:02:46 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
-Message-ID: <tip-1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e@git.kernel.org>
-Cc:     morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        dietmar.eggemann@arm.com, torvalds@linux-foundation.org,
-        vincent.guittot@linaro.org, quentin.perret@arm.com,
-        fweisbec@gmail.com, hpa@zytor.com, patrick.bellasi@arm.com,
-        mingo@kernel.org, riel@surriel.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, tglx@linutronix.de
-Reply-To: valentin.schneider@arm.com, morten.rasmussen@arm.com,
-          dietmar.eggemann@arm.com, quentin.perret@arm.com,
-          vincent.guittot@linaro.org, torvalds@linux-foundation.org,
-          patrick.bellasi@arm.com, fweisbec@gmail.com, hpa@zytor.com,
-          mingo@kernel.org, riel@surriel.com, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, tglx@linutronix.de
-In-Reply-To: <20190527062116.11512-3-dietmar.eggemann@arm.com>
-References: <20190527062116.11512-3-dietmar.eggemann@arm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Replace source_load() & target_load()
- with weighted_cpuload()
-Git-Commit-ID: 1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:03:15 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50872 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfFCNDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:03:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 06:03:14 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2019 06:03:09 -0700
+Subject: Re: [PATCH 8/9] mmc: sdhci-sprd: Add PHY DLL delay configuration
+To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
+Cc:     vincent.guittot@linaro.org, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <cover.1558346019.git.baolin.wang@linaro.org>
+ <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <6b539c8b-c2fd-6c37-d645-ef714c0e29c9@intel.com>
+Date:   Mon, 3 Jun 2019 16:01:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
-Gitweb:     https://git.kernel.org/tip/1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
-Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-AuthorDate: Mon, 27 May 2019 07:21:11 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:49:39 +0200
+On 20/05/19 1:12 PM, Baolin Wang wrote:
+> Set the PHY DLL delay for each timing mode, which is used to sample the clock
+> accurately and make the clock more stable.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-sched/fair: Replace source_load() & target_load() with weighted_cpuload()
+One comment, nevertheless:
 
-With LB_BIAS disabled, source_load() & target_load() return
-weighted_cpuload(). Replace both with calls to weighted_cpuload().
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-The function to obtain the load index (sd->*_idx) for an sd,
-get_sd_load_idx(), can be removed as well.
+> ---
+>  drivers/mmc/host/sdhci-sprd.c |   51 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index e6eda13..911a09b 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -29,6 +29,8 @@
+>  #define  SDHCI_SPRD_DLL_INIT_COUNT	0xc00
+>  #define  SDHCI_SPRD_DLL_PHASE_INTERNAL	0x3
+>  
+> +#define SDHCI_SPRD_REG_32_DLL_DLY	0x204
+> +
+>  #define SDHCI_SPRD_REG_32_DLL_DLY_OFFSET	0x208
+>  #define  SDHCIBSPRD_IT_WR_DLY_INV		BIT(5)
+>  #define  SDHCI_SPRD_BIT_CMD_DLY_INV		BIT(13)
+> @@ -72,6 +74,24 @@ struct sdhci_sprd_host {
+>  	struct clk *clk_2x_enable;
+>  	u32 base_rate;
+>  	int flags; /* backup of host attribute */
+> +	u32 phy_delay[MMC_TIMING_MMC_HS400 + 2];
+> +};
+> +
+> +struct sdhci_sprd_phy_cfg {
+> +	const char *property;
+> +	u8 timing;
+> +};
+> +
+> +static const struct sdhci_sprd_phy_cfg sdhci_sprd_phy_cfgs[] = {
+> +	{ "sprd,phy-delay-legacy", MMC_TIMING_LEGACY, },
+> +	{ "sprd,phy-delay-sd-highspeed", MMC_TIMING_MMC_HS, },
 
-Finally, get rid of the sched feature LB_BIAS.
+Did you mean MMC_TIMING_SD_HS
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Patrick Bellasi <patrick.bellasi@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20190527062116.11512-3-dietmar.eggemann@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/fair.c     | 90 +++----------------------------------------------
- kernel/sched/features.h |  1 -
- 2 files changed, 4 insertions(+), 87 deletions(-)
+> +	{ "sprd,phy-delay-sd-uhs-sdr50", MMC_TIMING_UHS_SDR50, },
+> +	{ "sprd,phy-delay-sd-uhs-sdr104", MMC_TIMING_UHS_SDR104, },
+> +	{ "sprd,phy-delay-mmc-highspeed", MMC_TIMING_MMC_HS, },
+> +	{ "sprd,phy-delay-mmc-ddr52", MMC_TIMING_MMC_DDR52, },
+> +	{ "sprd,phy-delay-mmc-hs200", MMC_TIMING_MMC_HS200, },
+> +	{ "sprd,phy-delay-mmc-hs400", MMC_TIMING_MMC_HS400, },
+> +	{ "sprd,phy-delay-mmc-hs400es", MMC_TIMING_MMC_HS400 + 1, },
+>  };
+>  
+>  #define TO_SPRD_HOST(host) sdhci_pltfm_priv(sdhci_priv(host))
+> @@ -276,6 +296,9 @@ static unsigned int sdhci_sprd_get_min_clock(struct sdhci_host *host)
+>  static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
+>  					 unsigned int timing)
+>  {
+> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+> +	struct mmc_host *mmc = host->mmc;
+> +	u32 *p = sprd_host->phy_delay;
+>  	u16 ctrl_2;
+>  
+>  	if (timing == host->timing)
+> @@ -314,6 +337,9 @@ static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
+>  	}
+>  
+>  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+> +
+> +	if (!mmc->ios.enhanced_strobe)
+> +		sdhci_writel(host, p[timing], SDHCI_SPRD_REG_32_DLL_DLY);
+>  }
+>  
+>  static void sdhci_sprd_hw_reset(struct sdhci_host *host)
+> @@ -381,6 +407,8 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
+>  					     struct mmc_ios *ios)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+> +	u32 *p = sprd_host->phy_delay;
+>  	u16 ctrl_2;
+>  
+>  	if (!ios->enhanced_strobe)
+> @@ -395,6 +423,28 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
+>  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+>  
+>  	sdhci_sprd_sd_clk_on(host);
+> +
+> +	/* Set the PHY DLL delay value for HS400 enhanced strobe mode */
+> +	sdhci_writel(host, p[MMC_TIMING_MMC_HS400 + 1],
+> +		     SDHCI_SPRD_REG_32_DLL_DLY);
+> +}
+> +
+> +static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
+> +				       struct device_node *np)
+> +{
+> +	u32 *p = sprd_host->phy_delay;
+> +	int ret, i, index;
+> +	u32 val[4];
+> +
+> +	for (i = 0; i < ARRAY_SIZE(sdhci_sprd_phy_cfgs); i++) {
+> +		ret = of_property_read_u32_array(np,
+> +				sdhci_sprd_phy_cfgs[i].property, val, 4);
+> +		if (ret)
+> +			continue;
+> +
+> +		index = sdhci_sprd_phy_cfgs[i].timing;
+> +		p[index] = val[0] | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
+> +	}
+>  }
+>  
+>  static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
+> @@ -428,6 +478,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+>  		goto pltfm_free;
+>  
+>  	sprd_host = TO_SPRD_HOST(host);
+> +	sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
+>  
+>  	clk = devm_clk_get(&pdev->dev, "sdio");
+>  	if (IS_ERR(clk)) {
+> 
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1aab323f1b4b..5b9691e5ea59 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1467,8 +1467,6 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- }
- 
- static unsigned long weighted_cpuload(struct rq *rq);
--static unsigned long source_load(int cpu, int type);
--static unsigned long target_load(int cpu, int type);
- 
- /* Cached statistics for all CPUs within a node */
- struct numa_stats {
-@@ -5333,45 +5331,11 @@ static struct {
- 
- #endif /* CONFIG_NO_HZ_COMMON */
- 
--/* Used instead of source_load when we know the type == 0 */
- static unsigned long weighted_cpuload(struct rq *rq)
- {
- 	return cfs_rq_runnable_load_avg(&rq->cfs);
- }
- 
--/*
-- * Return a low guess at the load of a migration-source CPU weighted
-- * according to the scheduling class and "nice" value.
-- *
-- * We want to under-estimate the load of migration sources, to
-- * balance conservatively.
-- */
--static unsigned long source_load(int cpu, int type)
--{
--	struct rq *rq = cpu_rq(cpu);
--	unsigned long total = weighted_cpuload(rq);
--
--	if (type == 0 || !sched_feat(LB_BIAS))
--		return total;
--
--	return min(rq->cpu_load[type-1], total);
--}
--
--/*
-- * Return a high guess at the load of a migration-target CPU weighted
-- * according to the scheduling class and "nice" value.
-- */
--static unsigned long target_load(int cpu, int type)
--{
--	struct rq *rq = cpu_rq(cpu);
--	unsigned long total = weighted_cpuload(rq);
--
--	if (type == 0 || !sched_feat(LB_BIAS))
--		return total;
--
--	return max(rq->cpu_load[type-1], total);
--}
--
- static unsigned long capacity_of(int cpu)
- {
- 	return cpu_rq(cpu)->cpu_capacity;
-@@ -5479,7 +5443,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
- 	s64 this_eff_load, prev_eff_load;
- 	unsigned long task_load;
- 
--	this_eff_load = target_load(this_cpu, sd->wake_idx);
-+	this_eff_load = weighted_cpuload(cpu_rq(this_cpu));
- 
- 	if (sync) {
- 		unsigned long current_load = task_h_load(current);
-@@ -5497,7 +5461,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
- 		this_eff_load *= 100;
- 	this_eff_load *= capacity_of(prev_cpu);
- 
--	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
-+	prev_eff_load = weighted_cpuload(cpu_rq(prev_cpu));
- 	prev_eff_load -= task_load;
- 	if (sched_feat(WA_BIAS))
- 		prev_eff_load *= 100 + (sd->imbalance_pct - 100) / 2;
-@@ -5558,14 +5522,10 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
- 	unsigned long this_runnable_load = ULONG_MAX;
- 	unsigned long min_avg_load = ULONG_MAX, this_avg_load = ULONG_MAX;
- 	unsigned long most_spare = 0, this_spare = 0;
--	int load_idx = sd->forkexec_idx;
- 	int imbalance_scale = 100 + (sd->imbalance_pct-100)/2;
- 	unsigned long imbalance = scale_load_down(NICE_0_LOAD) *
- 				(sd->imbalance_pct-100) / 100;
- 
--	if (sd_flag & SD_BALANCE_WAKE)
--		load_idx = sd->wake_idx;
--
- 	do {
- 		unsigned long load, avg_load, runnable_load;
- 		unsigned long spare_cap, max_spare_cap;
-@@ -5589,12 +5549,7 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
- 		max_spare_cap = 0;
- 
- 		for_each_cpu(i, sched_group_span(group)) {
--			/* Bias balancing toward CPUs of our domain */
--			if (local_group)
--				load = source_load(i, load_idx);
--			else
--				load = target_load(i, load_idx);
--
-+			load = weighted_cpuload(cpu_rq(i));
- 			runnable_load += load;
- 
- 			avg_load += cfs_rq_load_avg(&cpu_rq(i)->cfs);
-@@ -7676,34 +7631,6 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
- 	};
- }
- 
--/**
-- * get_sd_load_idx - Obtain the load index for a given sched domain.
-- * @sd: The sched_domain whose load_idx is to be obtained.
-- * @idle: The idle status of the CPU for whose sd load_idx is obtained.
-- *
-- * Return: The load index.
-- */
--static inline int get_sd_load_idx(struct sched_domain *sd,
--					enum cpu_idle_type idle)
--{
--	int load_idx;
--
--	switch (idle) {
--	case CPU_NOT_IDLE:
--		load_idx = sd->busy_idx;
--		break;
--
--	case CPU_NEWLY_IDLE:
--		load_idx = sd->newidle_idx;
--		break;
--	default:
--		load_idx = sd->idle_idx;
--		break;
--	}
--
--	return load_idx;
--}
--
- static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
- {
- 	struct rq *rq = cpu_rq(cpu);
-@@ -7992,9 +7919,6 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 				      struct sg_lb_stats *sgs,
- 				      int *sg_status)
- {
--	int local_group = cpumask_test_cpu(env->dst_cpu, sched_group_span(group));
--	int load_idx = get_sd_load_idx(env->sd, env->idle);
--	unsigned long load;
- 	int i, nr_running;
- 
- 	memset(sgs, 0, sizeof(*sgs));
-@@ -8005,13 +7929,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 		if ((env->flags & LBF_NOHZ_STATS) && update_nohz_stats(rq, false))
- 			env->flags |= LBF_NOHZ_AGAIN;
- 
--		/* Bias balancing toward CPUs of our domain: */
--		if (local_group)
--			load = target_load(i, load_idx);
--		else
--			load = source_load(i, load_idx);
--
--		sgs->group_load += load;
-+		sgs->group_load += weighted_cpuload(rq);
- 		sgs->group_util += cpu_util(i);
- 		sgs->sum_nr_running += rq->cfs.h_nr_running;
- 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index 858589b83377..2410db5e9a35 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -39,7 +39,6 @@ SCHED_FEAT(WAKEUP_PREEMPTION, true)
- 
- SCHED_FEAT(HRTICK, false)
- SCHED_FEAT(DOUBLE_TICK, false)
--SCHED_FEAT(LB_BIAS, false)
- 
- /*
-  * Decrement CPU capacity based on time not spent running tasks
