@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB667C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937F4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE9D26FD4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6961F26F77
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMrvAxcY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDtH4dKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfFCTEb (ORCPT
+        id S1726878AbfFCTEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:04:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35871 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfFCTE2 (ORCPT
+        Mon, 3 Jun 2019 15:04:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38638 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbfFCTEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:04:28 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q26so14466181lfc.3;
-        Mon, 03 Jun 2019 12:04:26 -0700 (PDT)
+        Mon, 3 Jun 2019 15:04:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id o13so17290735lji.5;
+        Mon, 03 Jun 2019 12:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UtwYPIjZ42A6onEXbTjq/QuGswOItAJSTPwR+apDGiY=;
-        b=sMrvAxcYfXNUviEHEnCtvKgFVE836xKMCpUXm73t5lOkP5xUvKxgb5/vk75z0Sjajo
-         5krxgUniGjRrd/KPOmOD8i+pXAoaMGMd+63f99E4Ebe1QpxRQ7TT91KZATx2+aT2kAzL
-         ke0VDy4NjLHdCQ3m5iBEgswbHThd8+p2Lqk8FDX98kJCeBN7OHpBy2bm40vzWY4jRDgY
-         EPtlZw7svD1ZzInc22n5kGwVpG+Jdmu0v9k9+8EeUwUNRmem8oSzlSF4rsKGqQudCoKA
-         jwWyT4ZorP4SuWRCUaTCA4WVXP9iVmLTS0hMj6c2RLt8feNYuRcZGiid/Fvj32G5E9ZD
-         q8Ig==
+        bh=PdWdZJtFLzv4jBGeRTNjR+jpddUaN+iIYYeuiIm2P7U=;
+        b=fDtH4dKSmtMQ6MN6v2gwGTwC3anRHfBwnA+RH5dIEtGTPcO4LWcn1gdY3VPkAMd9Ey
+         9hB/xH7LOL2+/Rx3o3GBLI4s9rvZlkqcFx0mKAkLBzbhlqWv5vTqE5eS3bYSyK8QilCX
+         bzBg9mR5UWRgn9gI352lxR8X5lnh5mUNtZBxfGulzKnUxsP0gmIob9mxlu4KSwC+Asam
+         JpGOamIJxWx2cmJKe/N72WUBjo6ZvgJykBz1gOb9C6IpP+G1LFSSy9Qtqg9Gzw5lKsCJ
+         beA44JAgRwfkb965gwHVLNogeqARzYKPORyFogW516NWMUo1QxR/VvUyPy5d7Ec0UeOg
+         WtNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UtwYPIjZ42A6onEXbTjq/QuGswOItAJSTPwR+apDGiY=;
-        b=FV9ZIMl/+uO7AHvm48oQ50XZeD2QRzefiYtTorCsW81pqJwqS0MfllYSEhhWesJUk+
-         Y/Un/TRvYDA+60mBA28suk9tMSHwRDqu2P+Z05OyXf3AAvr2KXMA8X0V7pp3lx4ihatJ
-         tn2255Z9NGD00JBeUsoyvsbOZaH7Hub7JqTvbbSssxVhilH7su/1+sPdAJWZp5s5Pznk
-         xOdJodcXT4W/AKvsU38XXGqM6j8GJeX1exWT7EShMFE/LBjnEg+UabA0QD9nrdgk9qYB
-         WphCWK6ijxHlqdv0mi/oI5BCM83GkCVvbvfeSN9583BlRdpVB5NbWFZkU2NJWEd2alJs
-         qytg==
-X-Gm-Message-State: APjAAAWzIDKHisLB6gNsVz1teSEE4UXh+x5dhtA3W/71QQw51ZVUS6mS
-        DR1zPIe9ONHGnl0LpT0oDOQeUxo5
-X-Google-Smtp-Source: APXvYqzqzLCtVGr7EitdsLEfbcc9TA3vFm+FQ8dUIaK97cWDR55QlhwCkEm47jV09PlMx00U/VkVHg==
-X-Received: by 2002:ac2:5922:: with SMTP id v2mr14401591lfi.180.1559588665943;
-        Mon, 03 Jun 2019 12:04:25 -0700 (PDT)
+        bh=PdWdZJtFLzv4jBGeRTNjR+jpddUaN+iIYYeuiIm2P7U=;
+        b=I5XhMTsWC29fNlhT5mjYtZMlt6vZK3+u+QscKp8qaCL5Ay1Ay2n6FWqqTXWXhfQf7v
+         M7bVdYOG8mygDQWO/Ni+S4ZyfSgWPWIl9Dt3Nn+jUd/HiBscNGzV3MbkFcPb5HRKwuf0
+         d6rtvoLeT6/Wa2bmHqk0U2lQvHcyu7KJzhWj+MozSnJcyEkXGbyilsTmg5VgLVMzSpwt
+         w5c22dx8f1JEnKAoDagpvGaLslsjw3Mc8SPRrcLfUj98q/iFdHMb2hrUrNB4D0brTVzb
+         1IA/ga2eRh1Pkx/QwyBDBLj4s9M0cJYNMOBWhIHBot2ilxJiNRXN316noYIQUbDRc9mY
+         ZTiQ==
+X-Gm-Message-State: APjAAAXh760plAi/fPiooGwQo3z/6YZcqGPEWEdx0zk5Q0w7X304vGxy
+        dxJn2wdZnWOwvoHpCNMhIkY=
+X-Google-Smtp-Source: APXvYqzVdZqbt/3xufEe8kXoCpvJZ/T65wAOGOU9isSXFxHE+gLwafoPPLI1WZ6Z2ywjO4A6vAPkNg==
+X-Received: by 2002:a2e:91d7:: with SMTP id u23mr14631935ljg.150.1559588660339;
+        Mon, 03 Jun 2019 12:04:20 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id l22sm2768805ljb.39.2019.06.03.12.04.23
+        by smtp.gmail.com with ESMTPSA id l22sm2768805ljb.39.2019.06.03.12.04.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 12:04:25 -0700 (PDT)
+        Mon, 03 Jun 2019 12:04:19 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Joseph Lo <josephl@nvidia.com>,
@@ -64,9 +64,9 @@ To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/10] clocksource/drivers/tegra: Rename timer-tegra20.c to timer-tegra.c
-Date:   Mon,  3 Jun 2019 21:59:48 +0300
-Message-Id: <20190603185948.30438-11-digetx@gmail.com>
+Subject: [PATCH v4 07/10] clocksource/drivers/tegra: Use SPDX identifier
+Date:   Mon,  3 Jun 2019 21:59:45 +0300
+Message-Id: <20190603185948.30438-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603185948.30438-1-digetx@gmail.com>
 References: <20190603185948.30438-1-digetx@gmail.com>
@@ -77,34 +77,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename driver's source file to better reflect that it's not specific to
-older SoC generations.
+Use SPDX tag for the license identification instead of a free form text
+to aid license-checking automation and for brevity.
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clocksource/Makefile                           | 2 +-
- drivers/clocksource/{timer-tegra20.c => timer-tegra.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/clocksource/{timer-tegra20.c => timer-tegra.c} (100%)
+ drivers/clocksource/timer-tegra20.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 236858fa7fbf..4145b21eaed3 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -36,7 +36,7 @@ obj-$(CONFIG_U300_TIMER)	+= timer-u300.o
- obj-$(CONFIG_SUN4I_TIMER)	+= timer-sun4i.o
- obj-$(CONFIG_SUN5I_HSTIMER)	+= timer-sun5i.o
- obj-$(CONFIG_MESON6_TIMER)	+= timer-meson6.o
--obj-$(CONFIG_TEGRA_TIMER)	+= timer-tegra20.o
-+obj-$(CONFIG_TEGRA_TIMER)	+= timer-tegra.o
- obj-$(CONFIG_VT8500_TIMER)	+= timer-vt8500.o
- obj-$(CONFIG_NSPIRE_TIMER)	+= timer-zevio.o
- obj-$(CONFIG_BCM_KONA_TIMER)	+= bcm_kona_timer.o
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra.c
-similarity index 100%
-rename from drivers/clocksource/timer-tegra20.c
-rename to drivers/clocksource/timer-tegra.c
+diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
+index 12784a82fd57..1a3ee928e9a5 100644
+--- a/drivers/clocksource/timer-tegra20.c
++++ b/drivers/clocksource/timer-tegra20.c
+@@ -1,18 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2010 Google, Inc.
+- *
+- * Author:
+- *	Colin Cross <ccross@google.com>
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
++ * Author: Colin Cross <ccross@google.com>
+  */
+ 
+ #define pr_fmt(fmt)	"tegra-timer: " fmt
 -- 
 2.21.0
 
