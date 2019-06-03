@@ -2,182 +2,148 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BB0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13672C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1325427AA6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C2827AD6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="CmQr8cs7"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="LBIypiuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbfFCOnR (ORCPT
+        id S1729183AbfFCOoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:43:17 -0400
-Received: from mail-eopbgr30118.outbound.protection.outlook.com ([40.107.3.118]:22244
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729157AbfFCOmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:42:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HFqtuQVaTNqueRGRe8hYb9fq1bAIrlO1Nx4ZWl5Q/UE=;
- b=CmQr8cs77KffwdA+/8MGlYiAFjWistMQ/gw6CIQCjQGaYN2J1gvdrWDiFxFR4MBsOviKXbyZiYxcYISZm6daDQ3ADMoiLq6sjAsWH0sqKA+INv53xAz9O+S3JDTyP5vu35slxh1Pa22k2PP3stmZkl8VZORzPLCYW8y/igls9Qg=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM (20.178.125.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 14:42:20 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 14:42:20 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next v3 07/10] net: dsa: mv88e6xxx: implement
- port_link_state for mv88e6250
-Thread-Topic: [PATCH net-next v3 07/10] net: dsa: mv88e6xxx: implement
- port_link_state for mv88e6250
-Thread-Index: AQHVGhqMVovvKTA3ckOe9NR8Pab9Yw==
-Date:   Mon, 3 Jun 2019 14:42:20 +0000
-Message-ID: <20190603144112.27713-8-rasmus.villemoes@prevas.dk>
-References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0701CA0070.eurprd07.prod.outlook.com
- (2603:10a6:3:64::14) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 170e9326-fe0a-48e9-2495-08d6e831aeae
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2574;
-x-ms-traffictypediagnostic: VI1PR10MB2574:
-x-microsoft-antispam-prvs: <VI1PR10MB257448616F202B91A1D2D8E28A140@VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(42882007)(50226002)(446003)(476003)(73956011)(66556008)(64756008)(66446008)(66476007)(81156014)(11346002)(256004)(8976002)(53936002)(72206003)(66946007)(316002)(14454004)(99286004)(8676002)(81166006)(8936002)(71190400001)(110136005)(71200400001)(102836004)(2616005)(4326008)(54906003)(25786009)(386003)(7736002)(52116002)(6506007)(26005)(486006)(2906002)(66066001)(36756003)(186003)(6512007)(68736007)(1076003)(74482002)(305945005)(76176011)(478600001)(3846002)(5660300002)(6436002)(6116002)(44832011)(6486002)(138113003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2574;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Nc4Z7/PNh9iJL1XrYuxzLXXq6d3EDHg4z87pFmTYB1W2QzAiBWKddYE4H8AC5FGCWetUCERaBN6olxa1FkEq/6F3sKtzxkjOyauzzlY4LssndmhMUWgfETHqEpm/H1W63mdEz7jeta30O8AkQ1r5eBAhm6gieGH09gfjURtCdaPJ+08CxAswdPI4ZzCF9H9tsmxpiksPhrZsSAO9mIhT7Mep9ynpixN2UAXHnYPfoL9yXRRZA3hTS456c5F5X8mSro6GoFngxwgDPFrBqYoXHKWNDwmwscRfF8yDasLx5H6582Q5R+0OO7dZlZ1kSk6g/DuLJxyFOc/Q5nf9tiQQR9UflmQnCd3U8i+BBee9TECVJo+S256uyZdt8gkzxMFmIqQCGiih7mR5jLMurqzbjsPpFWpTQCUqjSwWt6SA4Tc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 3 Jun 2019 10:44:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38356 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbfFCOoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:44:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t5so11388670wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2n8KUWE3mEPh7r/u0P9GAsbcb3XzF8DN1nLPmw9SmYA=;
+        b=LBIypiuLvGlf3u5FnslCwaambPTGPqJStGZQ8uvhGsKj8SUoTcJtbrhHrStYJpTutl
+         VquqSWxjA1nLl2LROx2iNWN/8ddkwF8Qur2OLWm5F8gGC18F35VZIx4/qHmFNjwwPf5J
+         xr8vGiNAgc0xPiYl94/W/H3fwwPqzdR8j9R+vv5Yam3VXmIRrEIKO6uVuLieKzvpE/z4
+         EI4fkNgavHs+aMAG7KHiDMbdcDcoalu8gfqkjchsW/VTNBJ17hnOw2EZAeEyEcyZEnxW
+         O6CkStlPk2s2N3W5fXTsdQKyH5iyJvznQUzPScJGCsVpJvZeEMBGxLuTfnyddTdZBC5D
+         GFSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2n8KUWE3mEPh7r/u0P9GAsbcb3XzF8DN1nLPmw9SmYA=;
+        b=URTCsF6WTXFjZPEKFTTZTWkGttqaDqjl3CXZ54UtNR8/+0JSQ+Kwb7XQN1IHIvjmv2
+         0JPmWVl49cn25mCK+pP2QPmTjfo8rWObZvVUwgH8hAqnsAOQZbMFo5R3GBd65xuWjdTm
+         LLMsvk7TVT+tTEu8yAaiNrZUnByUM6OAY8bpJCskYNriuUBqN73vynuV5Ia+uwYxe21G
+         2Qvyskd93Exwf5NOT5lbbF7CE6mOn5TdPhIeAKajfKDe09Ypx1A3PIpIETvznGud920H
+         Qe/zJWjnrI1De/rvmcPk9hslu6KppSYEBVhvnF5DoAQhYMddciPeqZ54UlwPOtPg/mIN
+         3FRg==
+X-Gm-Message-State: APjAAAWHGBQFHD+Nrb99ZWcXLOM3blTLoq6bwUyNRDEnizM3YpjT8JBV
+        Mvbp+ZIRikEWGMo7/Cwe0cNT1g==
+X-Google-Smtp-Source: APXvYqwOq8JMLcKmAC25HfB3WU9PodW1dRPByveHWW7p+wN+k1tru28BLGgM7YcFm+xuYaHmqa5ldg==
+X-Received: by 2002:a1c:f910:: with SMTP id x16mr2501197wmh.132.1559573042055;
+        Mon, 03 Jun 2019 07:44:02 -0700 (PDT)
+Received: from localhost.localdomain ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id 197sm14672583wma.36.2019.06.03.07.44.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 07:44:01 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com
+Cc:     keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
+        arnd@arndb.de, dhowells@redhat.com,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2 2/2] arch: wire-up clone3() syscall on x86
+Date:   Mon,  3 Jun 2019 16:43:31 +0200
+Message-Id: <20190603144331.16760-2-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190603144331.16760-1-christian@brauner.io>
+References: <20190603144331.16760-1-christian@brauner.io>
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 170e9326-fe0a-48e9-2495-08d6e831aeae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 14:42:20.4091
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2574
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIG12ODhlNjI1MCBoYXMgYSByYXRoZXIgZGlmZmVyZW50IHdheSBvZiByZXBvcnRpbmcgdGhl
-IGxpbmssIHNwZWVkDQphbmQgZHVwbGV4IHN0YXR1cy4gQSBzaW1wbGUgZGlmZmVyZW5jZSBpcyB0
-aGF0IHRoZSBsaW5rIGJpdCBpcyBiaXQgMTINCnJhdGhlciB0aGFuIGJpdCAxMSBvZiB0aGUgcG9y
-dCBzdGF0dXMgcmVnaXN0ZXIuDQoNCkl0IGdldHMgbW9yZSBjb21wbGljYXRlZCBmb3Igc3BlZWQg
-YW5kIGR1cGxleCwgd2hpY2ggZG8gbm90IGhhdmUNCnNlcGFyYXRlIGZpZWxkcy4gSW5zdGVhZCwg
-dGhlcmUncyBhIGZvdXItYml0IFBvcnRNb2RlIGZpZWxkLCBhbmQNCmRlY29kaW5nIHRoYXQgZGVw
-ZW5kcyBvbiB3aGV0aGVyIGl0J3MgYSBwaHkgb3IgbWlpIHBvcnQuIEZvciB0aGUgcGh5DQpwb3J0
-cywgb25seSBmb3VyIG9mIHRoZSAxNiB2YWx1ZXMgaGF2ZSBkZWZpbmVkIG1lYW5pbmc7IHRoZSBy
-ZXN0IGFyZQ0KY2FsbGVkICJyZXNlcnZlZCIsIHNvIHJldHVybmluZyB7U1BFRUQsRFVQTEVYfV9V
-TktOT1dOIHNlZW1zDQpyZWFzb25hYmxlLg0KDQpGb3IgdGhlIG1paSBwb3J0cywgbW9zdCBwb3Nz
-aWJsZSB2YWx1ZXMgYXJlIGRvY3VtZW50ZWQgKDB4MyBhbmQgMHg1DQphcmUgcmVzZXJ2ZWQpLCBi
-dXQgSSdtIHVuYWJsZSB0byBtYWtlIHNlbnNlIG9mIHRoZW0gYWxsLiBTaW5jZSB0aGUNCmJpdHMg
-c2ltcGx5IHJlZmxlY3QgdGhlIFB4X01PREVbMzowXSBjb25maWd1cmF0aW9uIHBpbnMsIGp1c3Qg
-c3VwcG9ydA0KdGhlIHN1YnNldCB0aGF0IEknbSBjZXJ0YWluIGFib3V0LiBTdXBwb3J0IGZvciBv
-dGhlciBzZXR1cHMgY2FuIGJlDQphZGRlZCBsYXRlci4NCg0KU2lnbmVkLW9mZi1ieTogUmFzbXVz
-IFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2YXMuZGs+DQotLS0NCiBkcml2ZXJzL25l
-dC9kc2EvbXY4OGU2eHh4L3BvcnQuYyB8IDY1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9wb3J0LmggfCAxMiArKysrKysNCiAyIGZp
-bGVzIGNoYW5nZWQsIDc3IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
-L2RzYS9tdjg4ZTZ4eHgvcG9ydC5jIGIvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9wb3J0LmMN
-CmluZGV4IGE0MWJjYTE3Y2JhMS4uYTlhMzA4MDUxZDdjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9u
-ZXQvZHNhL212ODhlNnh4eC9wb3J0LmMNCisrKyBiL2RyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgv
-cG9ydC5jDQpAQCAtNTMzLDYgKzUzMyw3MSBAQCBpbnQgbXY4OGU2MzUyX3BvcnRfZ2V0X2Ntb2Rl
-KHN0cnVjdCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCwgaW50IHBvcnQsIHU4ICpjbW9kZSkNCiAJcmV0
-dXJuIDA7DQogfQ0KIA0KK2ludCBtdjg4ZTYyNTBfcG9ydF9saW5rX3N0YXRlKHN0cnVjdCBtdjg4
-ZTZ4eHhfY2hpcCAqY2hpcCwgaW50IHBvcnQsDQorCQkJICAgICAgc3RydWN0IHBoeWxpbmtfbGlu
-a19zdGF0ZSAqc3RhdGUpDQorew0KKwlpbnQgZXJyOw0KKwl1MTYgcmVnOw0KKw0KKwllcnIgPSBt
-djg4ZTZ4eHhfcG9ydF9yZWFkKGNoaXAsIHBvcnQsIE1WODhFNlhYWF9QT1JUX1NUUywgJnJlZyk7
-DQorCWlmIChlcnIpDQorCQlyZXR1cm4gZXJyOw0KKw0KKwlpZiAocG9ydCA8IDUpIHsNCisJCXN3
-aXRjaCAocmVnICYgTVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX01BU0spIHsNCisJCWNhc2Ug
-TVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX1BIWV8xMF9IQUxGOg0KKwkJCXN0YXRlLT5zcGVl
-ZCA9IFNQRUVEXzEwOw0KKwkJCXN0YXRlLT5kdXBsZXggPSBEVVBMRVhfSEFMRjsNCisJCQlicmVh
-azsNCisJCWNhc2UgTVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX1BIWV8xMDBfSEFMRjoNCisJ
-CQlzdGF0ZS0+c3BlZWQgPSBTUEVFRF8xMDA7DQorCQkJc3RhdGUtPmR1cGxleCA9IERVUExFWF9I
-QUxGOw0KKwkJCWJyZWFrOw0KKwkJY2FzZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfUEhZ
-XzEwX0ZVTEw6DQorCQkJc3RhdGUtPnNwZWVkID0gU1BFRURfMTA7DQorCQkJc3RhdGUtPmR1cGxl
-eCA9IERVUExFWF9GVUxMOw0KKwkJCWJyZWFrOw0KKwkJY2FzZSBNVjg4RTYyNTBfUE9SVF9TVFNf
-UE9SVE1PREVfUEhZXzEwMF9GVUxMOg0KKwkJCXN0YXRlLT5zcGVlZCA9IFNQRUVEXzEwMDsNCisJ
-CQlzdGF0ZS0+ZHVwbGV4ID0gRFVQTEVYX0ZVTEw7DQorCQkJYnJlYWs7DQorCQlkZWZhdWx0Og0K
-KwkJCXN0YXRlLT5zcGVlZCA9IFNQRUVEX1VOS05PV047DQorCQkJc3RhdGUtPmR1cGxleCA9IERV
-UExFWF9VTktOT1dOOw0KKwkJCWJyZWFrOw0KKwkJfQ0KKwl9IGVsc2Ugew0KKwkJc3dpdGNoIChy
-ZWcgJiBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfTUFTSykgew0KKwkJY2FzZSBNVjg4RTYy
-NTBfUE9SVF9TVFNfUE9SVE1PREVfTUlJXzEwX0hBTEY6DQorCQkJc3RhdGUtPnNwZWVkID0gU1BF
-RURfMTA7DQorCQkJc3RhdGUtPmR1cGxleCA9IERVUExFWF9IQUxGOw0KKwkJCWJyZWFrOw0KKwkJ
-Y2FzZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfTUlJXzEwMF9IQUxGOg0KKwkJCXN0YXRl
-LT5zcGVlZCA9IFNQRUVEXzEwMDsNCisJCQlzdGF0ZS0+ZHVwbGV4ID0gRFVQTEVYX0hBTEY7DQor
-CQkJYnJlYWs7DQorCQljYXNlIE1WODhFNjI1MF9QT1JUX1NUU19QT1JUTU9ERV9NSUlfMTBfRlVM
-TDoNCisJCQlzdGF0ZS0+c3BlZWQgPSBTUEVFRF8xMDsNCisJCQlzdGF0ZS0+ZHVwbGV4ID0gRFVQ
-TEVYX0ZVTEw7DQorCQkJYnJlYWs7DQorCQljYXNlIE1WODhFNjI1MF9QT1JUX1NUU19QT1JUTU9E
-RV9NSUlfMTAwX0ZVTEw6DQorCQkJc3RhdGUtPnNwZWVkID0gU1BFRURfMTAwOw0KKwkJCXN0YXRl
-LT5kdXBsZXggPSBEVVBMRVhfRlVMTDsNCisJCQlicmVhazsNCisJCWRlZmF1bHQ6DQorCQkJc3Rh
-dGUtPnNwZWVkID0gU1BFRURfVU5LTk9XTjsNCisJCQlzdGF0ZS0+ZHVwbGV4ID0gRFVQTEVYX1VO
-S05PV047DQorCQkJYnJlYWs7DQorCQl9DQorCX0NCisNCisJc3RhdGUtPmxpbmsgPSAhIShyZWcg
-JiBNVjg4RTYyNTBfUE9SVF9TVFNfTElOSyk7DQorCXN0YXRlLT5hbl9lbmFibGVkID0gMTsNCisJ
-c3RhdGUtPmFuX2NvbXBsZXRlID0gc3RhdGUtPmxpbms7DQorDQorCXJldHVybiAwOw0KK30NCisN
-CiBpbnQgbXY4OGU2MzUyX3BvcnRfbGlua19zdGF0ZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNo
-aXAsIGludCBwb3J0LA0KIAkJCSAgICAgIHN0cnVjdCBwaHlsaW5rX2xpbmtfc3RhdGUgKnN0YXRl
-KQ0KIHsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L3BvcnQuaCBiL2Ry
-aXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvcG9ydC5oDQppbmRleCAxOTU3ZTNlMWNmNDcuLjNhODlj
-Mjg2OGNlYyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvcG9ydC5oDQor
-KysgYi9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L3BvcnQuaA0KQEAgLTIzLDYgKzIzLDE2IEBA
-DQogI2RlZmluZSBNVjg4RTZYWFhfUE9SVF9TVFNfTVlfUEFVU0UJCTB4NDAwMA0KICNkZWZpbmUg
-TVY4OEU2WFhYX1BPUlRfU1RTX0hEX0ZMT1cJCTB4MjAwMA0KICNkZWZpbmUgTVY4OEU2WFhYX1BP
-UlRfU1RTX1BIWV9ERVRFQ1QJCTB4MTAwMA0KKyNkZWZpbmUgTVY4OEU2MjUwX1BPUlRfU1RTX0xJ
-TksJCQkJMHgxMDAwDQorI2RlZmluZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfTUFTSwkJ
-MHgwZjAwDQorI2RlZmluZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfUEhZXzEwX0hBTEYJ
-CTB4MDgwMA0KKyNkZWZpbmUgTVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX1BIWV8xMDBfSEFM
-RgkweDA5MDANCisjZGVmaW5lIE1WODhFNjI1MF9QT1JUX1NUU19QT1JUTU9ERV9QSFlfMTBfRlVM
-TAkJMHgwYTAwDQorI2RlZmluZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfUEhZXzEwMF9G
-VUxMCTB4MGIwMA0KKyNkZWZpbmUgTVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX01JSV8xMF9I
-QUxGCQkweDBjMDANCisjZGVmaW5lIE1WODhFNjI1MF9QT1JUX1NUU19QT1JUTU9ERV9NSUlfMTAw
-X0hBTEYJMHgwZDAwDQorI2RlZmluZSBNVjg4RTYyNTBfUE9SVF9TVFNfUE9SVE1PREVfTUlJXzEw
-X0ZVTEwJCTB4MGUwMA0KKyNkZWZpbmUgTVY4OEU2MjUwX1BPUlRfU1RTX1BPUlRNT0RFX01JSV8x
-MDBfRlVMTAkweDBmMDANCiAjZGVmaW5lIE1WODhFNlhYWF9QT1JUX1NUU19MSU5LCQkJMHgwODAw
-DQogI2RlZmluZSBNVjg4RTZYWFhfUE9SVF9TVFNfRFVQTEVYCQkweDA0MDANCiAjZGVmaW5lIE1W
-ODhFNlhYWF9QT1JUX1NUU19TUEVFRF9NQVNLCQkweDAzMDANCkBAIC0zMzMsNiArMzQzLDggQEAg
-aW50IG12ODhlNjE4NV9wb3J0X2dldF9jbW9kZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAs
-IGludCBwb3J0LCB1OCAqY21vZGUpOw0KIGludCBtdjg4ZTYzNTJfcG9ydF9nZXRfY21vZGUoc3Ry
-dWN0IG12ODhlNnh4eF9jaGlwICpjaGlwLCBpbnQgcG9ydCwgdTggKmNtb2RlKTsNCiBpbnQgbXY4
-OGU2MTg1X3BvcnRfbGlua19zdGF0ZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAsIGludCBw
-b3J0LA0KIAkJCSAgICAgIHN0cnVjdCBwaHlsaW5rX2xpbmtfc3RhdGUgKnN0YXRlKTsNCitpbnQg
-bXY4OGU2MjUwX3BvcnRfbGlua19zdGF0ZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAsIGlu
-dCBwb3J0LA0KKwkJCSAgICAgIHN0cnVjdCBwaHlsaW5rX2xpbmtfc3RhdGUgKnN0YXRlKTsNCiBp
-bnQgbXY4OGU2MzUyX3BvcnRfbGlua19zdGF0ZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAs
-IGludCBwb3J0LA0KIAkJCSAgICAgIHN0cnVjdCBwaHlsaW5rX2xpbmtfc3RhdGUgKnN0YXRlKTsN
-CiBpbnQgbXY4OGU2eHh4X3BvcnRfc2V0X21hcF9kYShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNo
-aXAsIGludCBwb3J0KTsNCi0tIA0KMi4yMC4xDQoNCg==
+Wire up the clone3() call on x86.
+
+This patch only wires up clone3() on x86. Some of the arches look like they
+need special assembly massaging and it is probably smarter if the
+appropriate arch maintainers would do the actual wiring.
+
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Adrian Reber <adrian@lisas.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: linux-api@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: x86@kernel.org
+---
+v1: unchanged
+v2: unchanged
+---
+ arch/x86/entry/syscalls/syscall_32.tbl | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl | 1 +
+ include/uapi/asm-generic/unistd.h      | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index ad968b7bac72..80e26211feff 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -438,3 +438,4 @@
+ 431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+ 432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+ 433	i386	fspick			sys_fspick			__ia32_sys_fspick
++436	i386	clone3			sys_clone3			__ia32_sys_clone3
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index b4e6f9e6204a..7968f0b5b5e8 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -355,6 +355,7 @@
+ 431	common	fsconfig		__x64_sys_fsconfig
+ 432	common	fsmount			__x64_sys_fsmount
+ 433	common	fspick			__x64_sys_fspick
++436	common	clone3			__x64_sys_clone3/ptregs
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index a87904daf103..45bc87687c47 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+ __SYSCALL(__NR_fsmount, sys_fsmount)
+ #define __NR_fspick 433
+ __SYSCALL(__NR_fspick, sys_fspick)
++#define __NR_clone3 436
++__SYSCALL(__NR_clone3, sys_clone3)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 434
++#define __NR_syscalls 437
+ 
+ /*
+  * 32 bit systems traditionally used different
+-- 
+2.21.0
+
