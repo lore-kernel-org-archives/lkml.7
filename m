@@ -2,37 +2,36 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E140C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12819C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB3527A47
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A2F27A47
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfFCB62 (ORCPT
+        id S1726940AbfFCB63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 21:58:28 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48623 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726600AbfFCB61 (ORCPT
+        Sun, 2 Jun 2019 21:58:29 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:9859 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726587AbfFCB62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 21:58:27 -0400
-X-UUID: f0f7dc039f7c4edf9d9ff850f1708a70-20190603
-X-UUID: f0f7dc039f7c4edf9d9ff850f1708a70-20190603
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        Sun, 2 Jun 2019 21:58:28 -0400
+X-UUID: 883802220f714c1b96c41c46de9ef1f6-20190603
+X-UUID: 883802220f714c1b96c41c46de9ef1f6-20190603
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <biao.huang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2125373192; Mon, 03 Jun 2019 09:58:22 +0800
+        with ESMTP id 95759638; Mon, 03 Jun 2019 09:58:20 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Jun 2019 09:58:20 +0800
+ 15.0.1395.4; Mon, 3 Jun 2019 09:58:18 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Jun 2019 09:58:19 +0800
+ Transport; Mon, 3 Jun 2019 09:58:17 +0800
 From:   Biao Huang <biao.huang@mediatek.com>
 To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
         <andrew@lunn.ch>
@@ -47,42 +46,43 @@ CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
         <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
         <boon.leong.ong@intel.com>
-Subject: [v2, PATCH 2/4] net: stmmac: dwmac-mediatek: disable rx watchdog
-Date:   Mon, 3 Jun 2019 09:58:04 +0800
-Message-ID: <1559527086-7227-3-git-send-email-biao.huang@mediatek.com>
+Subject: [v2, PATCH 0/4] complete dwmac-mediatek driver and fix flow control issue
+Date:   Mon, 3 Jun 2019 09:58:02 +0800
+Message-ID: <1559527086-7227-1-git-send-email-biao.huang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559527086-7227-1-git-send-email-biao.huang@mediatek.com>
-References: <1559527086-7227-1-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 7D0565A1FE1EFC274A578540D2089DD78AB5CB210095DDB5636615ACBAD78AAD2000:8
+X-TM-SNTS-SMTP: EC69FD41C9E8FD24660C96396E7791983B1B28FC35671685A2509970C2084FF82000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-disable rx watchdog for dwmac-mediatek, then the hw will
-issue a rx interrupt once receiving a packet, so the responding time
-for rx path will be reduced.
-
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index b84269e..79f2ee3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -356,6 +356,7 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
-+	plat_dat->riwt_off = 1;
- 	plat_dat->maxmtu = ETH_DATA_LEN;
- 	plat_dat->bsp_priv = priv_plat;
- 	plat_dat->init = mediatek_dwmac_init;
--- 
+Changes in v2:                                                                  
+        patch#1: there is no extra action in mediatek_dwmac_remove, remove it            
+                                                                                
+v1:                                                                             
+This series mainly complete dwmac-mediatek driver:                              
+        1. add power on/off operations for dwmac-mediatek.                      
+        2. disable rx watchdog to reduce rx path reponding time.                
+        3. change the default value of tx-frames from 25 to 1, so               
+           ptp4l will test pass by default.                                     
+                                                                                
+and also fix the issue that flow control won't be disabled any more             
+once being enabled.                                                             
+                                                                                
+Biao Huang (4):                                                                 
+  net: stmmac: dwmac-mediatek: enable Ethernet power domain                     
+  net: stmmac: dwmac-mediatek: disable rx watchdog                              
+  net: stmmac: modify default value of tx-frames                                
+  net: stmmac: dwmac4: fix flow control issue                                   
+                                                                                
+ drivers/net/ethernet/stmicro/stmmac/common.h       |    2 +-                   
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    8 ++++++++             
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |    8 ++++++--             
+ 3 files changed, 15 insertions(+), 3 deletions(-)                              
+                                                                                
+--                                                                              
 1.7.9.5
 
