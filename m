@@ -2,108 +2,135 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCD9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F13C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BA525DB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DEF2715E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5dZgeoI"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="UaVuEr/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbfFCRsQ (ORCPT
+        id S1727935AbfFCRtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:48:16 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40729 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFCRrk (ORCPT
+        Mon, 3 Jun 2019 13:49:41 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39612 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFCRth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:47:40 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a9so12869913lff.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:47:40 -0700 (PDT)
+        Mon, 3 Jun 2019 13:49:37 -0400
+Received: by mail-qt1-f194.google.com with SMTP id i34so10437056qta.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:49:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d+gHoaqCUhQT6e1Ym0xN6NiXtzxs58xfZkboy1ldAY4=;
-        b=h5dZgeoIw79Kv/1VWSq4u0iUmi8FcFdS5XaGrfJHimMztfcNh7dQVIiKTiQVrkFIDN
-         tt/CEWjxMPtIutWCG+Qg+dtaAfT8RTFKodnxjVUm+CTtev6nBWMKe1yR60NbdJEjuLOi
-         C+DB7NPOh7+CSv6DMZJCEVsOwd/i3pQcTjpXDt/Wn5ifvBjUm2lbprVhPFw0q4fsoiLr
-         TcIXPDhB2iLwZP0At3Jw9MdR5dSfxgLEYObLerFRfewHaFrjRn6FKPzO7wIez3xx1ttZ
-         7iqSRQDjsL6B1qv5AlpMCLWBsJs2IKTdBCpAA7J3Uno8uUTSJ1vnaWTAZheT04VtAZED
-         0P2w==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=YGNZXdoeRNmz7BqeF0/v3i59X3wiJHrSCMaZEz5idac=;
+        b=UaVuEr/kuy5hiq44Vf2xKm1Yj7c+f/OmHOwwwaNBE+hEEHXF2JMkizF7W0TNG0ZqOV
+         vAVGiZfmwhJNGAgCvAwCEhC1PlGwzWbBUyCLkgOrSi7zvR0FxhY8W1dJelfaN/00dRWc
+         97P8ELdZwEXFh0hdUXrMdmEPvlEVZ51R4ltg0ecUrBNziApYmpfYaVpnkP+bkP2otft+
+         lmVLkL3cATiX1Uxg1dV/nKaKl5/rore1zlk0dVi5wn/2NoB6BLWN4UFAlG2KYsqcomDC
+         iSM/Vgcuf5WgI+Kxky6hG1HH47rBWZ0MWU2MSoJ5sSqrZ21p0sl7SGN6kTgzFeEOlqww
+         nQHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d+gHoaqCUhQT6e1Ym0xN6NiXtzxs58xfZkboy1ldAY4=;
-        b=L157T4tViC3yD69RjJ1qwL9jX4Au04wTvfgMfJkWzEXAvqf/7revoJnrrrN6+aozFw
-         gDdPsfFqTiaVu0cytlE4tMahnX2dEgtNpmMFL51cBCsD6HnOzjtrfHybB1nQTZorwZ+k
-         597OZD8y6cg1X2MmkAsePtzKp3lLRMNe1flKs0F8hM95vqhaha5L/mb2opHHhURbAFOX
-         qILXcjt+iWa8EkOAm+dsVISeXVpTYE2oDMYlmyoWBaPCQQm6j8b2UnajzSjTg/jIyPNR
-         l7J9QMEyquuPJutQPAeYX6oIswgvWcN25ZOouJ17BCpxAT59qbepc0xmr/AaMEAeDhqN
-         wWyw==
-X-Gm-Message-State: APjAAAUjZH5UYo7xrVGiOmaM5i318/MEb6H8s8zVmxSgRINuSTjnPzur
-        qu9njVevbIj0choCfE043yU=
-X-Google-Smtp-Source: APXvYqwSvyGLQCwtw23kykXSMCtNcYtakfcNcaj9YVYmjqtrKle0F/xUggVT07pnNTUG4U0Miv6MBA==
-X-Received: by 2002:ac2:5938:: with SMTP id v24mr4108075lfi.161.1559584059490;
-        Mon, 03 Jun 2019 10:47:39 -0700 (PDT)
-Received: from localhost.localdomain ([188.150.253.81])
-        by smtp.gmail.com with ESMTPSA id n7sm2803532lfi.68.2019.06.03.10.47.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 10:47:38 -0700 (PDT)
-From:   codekipper@gmail.com
-To:     maxime.ripard@free-electrons.com, wens@csie.org,
-        linux-sunxi@googlegroups.com
-Cc:     linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: [PATCH v4 2/9] ASoC: sun4i-i2s: Add offset to RX channel select
-Date:   Mon,  3 Jun 2019 19:47:28 +0200
-Message-Id: <20190603174735.21002-3-codekipper@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603174735.21002-1-codekipper@gmail.com>
-References: <20190603174735.21002-1-codekipper@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=YGNZXdoeRNmz7BqeF0/v3i59X3wiJHrSCMaZEz5idac=;
+        b=UJqQqXSo+KXPkIcu/53o0a/47zwX/RTOqbg+ko/T2OFyUSeVGfAInLWKa6Jp1WWf68
+         9lvPcnXpzi42JKzN2hXCBqV/ffC/UV7/TCu6t+f1cIGw6Pg9UBYzDOcRUlSseFKodLAD
+         EVxsI4x3QjBPArlFggHbFglyt6N9Lum/2KT0XjLIh/AGuEJUsBf9Ei5HZwM0EU9bvQ0U
+         /cH6rF88FbV1RZVXdofmDduD09xxYVbhd0D1vt6OQLwYlP1Aw5j0rwlIZGd1F2ywZYWe
+         XgVJKtBEBBkO/c7aKTHY4e6A3G6m+ZDADqHHJYUFyTe8RkuJxN3bfV9b+osdiORyFGeL
+         G6fw==
+X-Gm-Message-State: APjAAAWTNq7WR8UmQorDuwpUSMRWKf3K9tRuCaGYYXKdXhwbbNvojGyk
+        r4fpRGqaISY9jlJY9Yv2D1Ty9g==
+X-Google-Smtp-Source: APXvYqy/e+Icc90gZvRu6SLe47LtjkZ15LHtXZ8eD5H9j0kECFuBEjDcn8Vx5zAwaodVM/Kr93ev9Q==
+X-Received: by 2002:a0c:b5c7:: with SMTP id o7mr22920460qvf.220.1559584175979;
+        Mon, 03 Jun 2019 10:49:35 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e133sm11972673qkb.76.2019.06.03.10.49.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 10:49:35 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:49:30 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
+Message-ID: <20190603104930.466a306b@cakuba.netronome.com>
+In-Reply-To: <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
+References: <20190603170247.9951-1-colin.king@canonical.com>
+        <20190603102140.70fee157@cakuba.netronome.com>
+        <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
+> On 03/06/2019 18:21, Jakub Kicinski wrote:
+> > On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> The variable err is assigned with the value -EINVAL that is never
+> >> read and it is re-assigned a new value later on.  The assignment is
+> >> redundant and can be removed.
+> >>
+> >> Addresses-Coverity: ("Unused value")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  kernel/bpf/devmap.c | 2 +-
+> >>  kernel/bpf/xskmap.c | 2 +-
+> >>  2 files changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> >> index 5ae7cce5ef16..a76cc6412fc4 100644
+> >> --- a/kernel/bpf/devmap.c
+> >> +++ b/kernel/bpf/devmap.c
+> >> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
+> >>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+> >>  {
+> >>  	struct bpf_dtab *dtab;
+> >> -	int err = -EINVAL;
+> >> +	int err;
+> >>  	u64 cost;  
+> > 
+> > Perhaps keep the variables ordered longest to shortest?  
+> 
+> Is that a required coding standard?
 
-Whilst testing the capture functionality of the i2s on the newer
-SoCs it was noticed that the recording was somewhat distorted.
-This was due to the offset not being set correctly on the receiver
-side.
+For networking code, yes.  Just look around the files you're changing
+and see for yourself.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
----
- sound/soc/sunxi/sun4i-i2s.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 90bd3963d8ae..fd7c37596f21 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -456,6 +456,10 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
- 				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
- 				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
-+
-+		regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
-+				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
-+				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
- 	}
- 
- 	regmap_field_write(i2s->field_fmt_mode, val);
--- 
-2.21.0
-
+> >>  	if (!capable(CAP_NET_ADMIN))
+> >> diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
+> >> index 22066c28ba61..26859c6c9491 100644
+> >> --- a/kernel/bpf/xskmap.c
+> >> +++ b/kernel/bpf/xskmap.c
+> >> @@ -17,7 +17,7 @@ struct xsk_map {
+> >>  
+> >>  static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
+> >>  {
+> >> -	int cpu, err = -EINVAL;
+> >> +	int cpu, err;
+> >>  	struct xsk_map *m;
+> >>  	u64 cost;  
+> > 
+> > And here.
