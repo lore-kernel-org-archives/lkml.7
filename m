@@ -2,80 +2,131 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3568C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 10:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACFAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 10:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F9527F11
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 10:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFBC28034
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 10:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFS8Bn2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfFCKCu (ORCPT
+        id S1728047AbfFCKC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 06:02:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52992 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbfFCKCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 06:02:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B558DAFE1;
-        Mon,  3 Jun 2019 10:02:22 +0000 (UTC)
+        Mon, 3 Jun 2019 06:02:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42938 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFCKC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 06:02:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z25so65999edq.9;
+        Mon, 03 Jun 2019 03:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=367tjLqmrbfhNkAABHcK0QMmDaaghOywvCw3Tj7l6Uw=;
+        b=RFS8Bn2Klx2iiJKovzQUkNmwHkcTRuYfn/XQK2SfpBEBx+wIjnIXIhxVgmmlB8wlGH
+         G4bFtz0NjtapKugBXxAygj1TeXbUBrcJZy5MTLg1LGCDVf/A/cwXsgVx7H3KN/2QgyBX
+         WHXUbpoefeAQXHevaTN9LRXVUziI7qhPpe/EmPmBJhqx2+998YlQCwv1OCMuqR+k5hQI
+         4JgeQr/kQATseR59QpK7gqC+ZPvsm+i2F4nTXSgi892HDULCA0E1OjRiso8jIV/FIzL7
+         91Ccx3mdwBlkgnxWyoJlhygG9GHe7n5rJrDhcP04IdNl8ba2ID0ya4qmfv+8j8P5FiM/
+         O41w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=367tjLqmrbfhNkAABHcK0QMmDaaghOywvCw3Tj7l6Uw=;
+        b=DcnNbSv3VWoBhxZWxAlhcRdzDxy+tOBzoRQhnCrHHHCO2oxIt9fIQsSJsTu5MbMoz2
+         hLfQmdOiL2vr6HcwCDuCAtl9lmm4lO7QVcFgcxiELR/Uf/hYWwiFj79zyTgWI3kXWsFL
+         kxZTjI63OMcF/9xRFlIL49YCZ+vqZQ+UZxj2OWwCGLzD+GRwrYl8MifhYKQ3FY5cUQPk
+         XEK6XjrZcKuu9poRx3fm3WmZGeeRAAn5zkVBofOlyVg4De7nX8ocxoKqUXuE2xnn+6UU
+         g/FsK76HztzWrlgUkDsFXXwu3MNgpiDWfk1P6qi5QXpTLnD2snZZlO5v36iumDziUa2j
+         jToQ==
+X-Gm-Message-State: APjAAAW8SAmpfPjrpS5n6lJ6B87h8Dqis3tnfTgiTyha7GD+pEcUmIjS
+        pW3HCQAVs/NBG8fPpPj8VTmMeZnsmqusRLqSZmI=
+X-Google-Smtp-Source: APXvYqyUtzOFs/GJBzchqlUSLwD+zSN8nLxTdVGyUPbZYObIQKMiB/3/xYkXr1lzvZaWFfkLmNbakesNJ3dJ5+W16Lo=
+X-Received: by 2002:aa7:da4b:: with SMTP id w11mr19778176eds.36.1559556174689;
+ Mon, 03 Jun 2019 03:02:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Jun 2019 12:02:22 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     azat@libevent.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/13] epoll: introduce helpers for adding/removing
- events to uring
-In-Reply-To: <20190603090906.GE3436@hirez.programming.kicks-ass.net>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <20190516085810.31077-7-rpenyaev@suse.de>
- <20190531095607.GC17637@hirez.programming.kicks-ass.net>
- <274e29d102133f3be1f309c66cb0af36@suse.de>
- <20190531125636.GZ2606@hirez.programming.kicks-ass.net>
- <98e74ceeefdffc9b50fb33e597d270f7@suse.de>
- <20190531165144.GE2606@hirez.programming.kicks-ass.net>
- <9e13f80872e5b6c96e9cd3343e27b1f1@suse.de>
- <20190603090906.GE3436@hirez.programming.kicks-ass.net>
-Message-ID: <904d7aea51552c9be9afb3b19bfac66b@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+References: <20190602213926.2290-1-olteanv@gmail.com> <20190602213926.2290-3-olteanv@gmail.com>
+ <20190603010740.GI19081@lunn.ch>
+In-Reply-To: <20190603010740.GI19081@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 3 Jun 2019 13:02:43 +0300
+Message-ID: <CA+h21hrb5YBnMJe728ers9MZqLbuP8MTdV_4WOKJkOi0owJggg@mail.gmail.com>
+Subject: Re: [PATCH v2 net-next 02/10] net: dsa: Add teardown callback for drivers
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-03 11:09, Peter Zijlstra wrote:
-> On Fri, May 31, 2019 at 08:58:19PM +0200, Roman Penyaev wrote:
->> On 2019-05-31 18:51, Peter Zijlstra wrote:
-> 
->> > But like you show, it can be done. It also makes the thing wait-free, as
->> > opposed to merely lockless.
->> 
->> You think it's better?  I did not like this variant from the very
->> beginning because of the unnecessary complexity.  But maybe you're
->> right.  No busy loops on user side makes it wait-free.  And also
->> I can avoid c11 in kernel using cmpxchg along with atomic_t.
-> 
-> Imagine the (v)CPU going for an extended nap right between publishing 
-> the
-> new tail and writing the !0 entry. Then your userspace is stuck burning
-> cycles without getting anything useful done.
+On Mon, 3 Jun 2019 at 04:07, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Mon, Jun 03, 2019 at 12:39:18AM +0300, Vladimir Oltean wrote:
+> > This is helpful for e.g. draining per-driver (not per-port) tagger
+> > queues.
+> >
+> > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> > ---
+> > Changes in v2:
+> >
+> > Patch is new.
+> >
+> >  include/net/dsa.h | 1 +
+> >  net/dsa/dsa2.c    | 3 +++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/include/net/dsa.h b/include/net/dsa.h
+> > index a7f36219904f..4033e0677be4 100644
+> > --- a/include/net/dsa.h
+> > +++ b/include/net/dsa.h
+> > @@ -361,6 +361,7 @@ struct dsa_switch_ops {
+> >                                                 int port);
+> >
+> >       int     (*setup)(struct dsa_switch *ds);
+> > +     void    (*teardown)(struct dsa_switch *ds);
+> >       u32     (*get_phy_flags)(struct dsa_switch *ds, int port);
+> >
+> >       /*
+> > diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+> > index b70befe8a3c8..5bd3e9a4c709 100644
+> > --- a/net/dsa/dsa2.c
+> > +++ b/net/dsa/dsa2.c
+> > @@ -407,6 +407,9 @@ static int dsa_switch_setup(struct dsa_switch *ds)
+> >
+> >  static void dsa_switch_teardown(struct dsa_switch *ds)
+> >  {
+> > +     if (ds->ops->teardown)
+> > +             ds->ops->teardown(ds);
+> > +
+> >       if (ds->slave_mii_bus && ds->ops->phy_read)
+> >               mdiobus_unregister(ds->slave_mii_bus);
+> >
+>
+> Hi Vladimir
+>
+> If we want to keep with symmetric with dsa_switch_setup(), this
+> teardown should be added after dsa_switch_unregister_notifier() and
+> before devlink_unregister().
+>
+>        Andrew
 
-Yes, that is absolutely not nice.  That also worries me.  I wanted
-to minimize number of atomic ops on hot path, and of course in that
-respect this busy-loop is more attractive.
+True.
 
-I will polish and switch back to the wait-free variant and resend the
-whole patchset.  Could you please take a look?  Will add you to CC.
-
---
-Roman
+-Vladimir
