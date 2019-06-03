@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4255C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CEB25B28
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7866725C0B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559567946;
-	bh=aXYplNsQyPIIU3iosXdops52mTbvO5TWj1ZH0e2m5y8=;
+	s=default; t=1559567973;
+	bh=iTXPAmNoS8U3ZfZP8OM65q8vMO1UxvNGuf2LD/JekMg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xQNsRHuaSqE3NSxEn4gMTbpF1U7hO5nVT8sWaKLQN+y6ZLwKSGVJUrmOP7iSAzgV5
-	 46WpmzcM0yHn0jRnuuCoNf6qFxqw+XKsNPPoA2+3CX823Rv6L4jd+oRmsRNfZnGicn
-	 psUO01EKaJqibwKbQVeV9VnuHpfL1NmC9qbQI7GI=
+	b=lzbdkpginpm5Z9OFBSZU36wh7oMTIVWV88TwOj3ya96xtyc566Q9HGMkyBRqrf/dF
+	 B3yLL46KU9WaLRuEpGP2tQoIlUsNOBhHugo6BcwCRm/IsY2bZUUxXWcyzalVbjttL0
+	 oq4zqRRXlEoEb1QWBVdPa1n6InCWVBekHehz8XQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfFCNTF (ORCPT
+        id S1728549AbfFCNTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57354 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 09:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfFCNTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:19:04 -0400
+        id S1726360AbfFCNTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948FB25162;
-        Mon,  3 Jun 2019 13:19:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C5525162;
+        Mon,  3 Jun 2019 13:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559567944;
-        bh=aXYplNsQyPIIU3iosXdops52mTbvO5TWj1ZH0e2m5y8=;
+        s=default; t=1559567972;
+        bh=iTXPAmNoS8U3ZfZP8OM65q8vMO1UxvNGuf2LD/JekMg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yKyo6M2XLijHBSpowPCGIa52e50oIDHg5UeXTQK8/A5zpiDZgdgHr6O9spi+oGfM6
-         UzDmJzm4PH+evWpGO0R/juuUCACjkHgWRvdVP8RvqHrpsTN2m18HmT9OzLT3TXidJ0
-         JPVbT1eNdKxVsUTu5846R4uUF014XBU7gbiTMlww=
-Date:   Mon, 3 Jun 2019 15:19:01 +0200
+        b=CcGJJpFmrlsHX6mBdHs3v0fHB1uavQRKBc6nMPgrNFeen9ngnUkvK6oNt03IYRjM8
+         I4SN83kxaM1SHFkzKdey4/tTLsAKzAKPvqLpp6eq9ab82M065aQOLOwFL+tt1pdKMq
+         uG8Oa7CoQVojZ79ad9OjscM4AF2roixRmat1GcO0=
+Date:   Mon, 3 Jun 2019 15:19:29 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -57,39 +57,38 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-mediatek@lists.infradead.org,
         Biju Das <biju.das@bp.renesas.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>
-Subject: Re: [PATCH v6 07/10] usb: roles: Add fwnode_usb_role_switch_get()
- function
-Message-ID: <20190603131901.GB10397@kroah.com>
+        Yu Chen <chenyu56@huawei.com>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v6 05/10] usb: roles: Introduce stubs for the exiting
+ functions in role.h.
+Message-ID: <20190603131929.GC10397@kroah.com>
 References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
- <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
+ <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:43:45PM +0800, Chunfeng Yun wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Wed, May 29, 2019 at 03:43:43PM +0800, Chunfeng Yun wrote:
+> From: Yu Chen <chenyu56@huawei.com>
 > 
-> The fwnode_usb_role_switch_get() function is exactly the
-> same as usb_role_switch_get(), except that it takes struct
-> fwnode_handle as parameter instead of struct device.
+> This patch adds stubs for the exiting functions while
+> CONFIG_USB_ROLE_SWITCH does not enabled.
 > 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
-> v6:
->   new patch
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
 
-If you are forwarding on a patch from someone else, like this, you need
-to put your signed-off-by line on it as well.
-
-Please fix that up, and add the tested-by one, when you resend this
-series.
+Same here, you need to sign off on it too.
 
 thanks,
 
