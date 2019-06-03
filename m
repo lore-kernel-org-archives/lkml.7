@@ -2,189 +2,97 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED10CC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4953C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C4328158
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xnJbx/M7"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE2528154
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfFCLjF (ORCPT
+        id S1728475AbfFCLke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:39:05 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:33368 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbfFCLjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:39:04 -0400
-X-Greylist: delayed 2942 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Jun 2019 07:39:03 EDT
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x53Bcx5D002520;
-        Mon, 3 Jun 2019 20:39:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x53Bcx5D002520
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559561940;
-        bh=CBdWP6U5fS8ocJgm10xiO9eR7ixowyWCa6YOFPTndao=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xnJbx/M7MnkH1nXgVJ9kik2tKAAPChkBGFUbSjEkdoEUskVJS0AUuCn7fmZ3nNzwP
-         Bbba3y+W2sFDOY8iy0fi4+PzI7GEGweS6F4z1TRoDqkjr26Fd/Jt9uvV7bqa+ioDNH
-         15lhMPScK6UwcwI3ODwSyLdptxVR/fS6EZ/tWe7VxwdVjULZaaG9QlzNJdPIXWh7f2
-         p+BK50wknjFHhEHLOlDGVGgvUwfrFy/+mhRKQGG6XnfnoX5w0EXOzt/3qPifB9Nmar
-         aVqrErhWX0Pnt9jPo8ZzyC1COQJ1K8ru9NNWgnoui610MDdnv7hhFST1ZlncwjMqxB
-         AknUTSJ+wJgrg==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id d128so10978088vsc.10;
-        Mon, 03 Jun 2019 04:39:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAVjmGFkDyIuyrveLgEhWHIXmTOXOU6HA7UaOsJy2eQ7U7rWa3yk
-        S+bYyPL0xMqiFcxa2VbAjQO+BaSHXgLXwk5E9/M=
-X-Google-Smtp-Source: APXvYqxc8Ii0MUr5JGLfu/eGUPS88exTq+Twca8+poIHObUT3eQXOK2MUh19AaVQFAaWUfAq3xUbsfTfogyqMxXwT6Q=
-X-Received: by 2002:a67:b109:: with SMTP id w9mr1536213vsl.155.1559561939094;
- Mon, 03 Jun 2019 04:38:59 -0700 (PDT)
+        Mon, 3 Jun 2019 07:40:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57686 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728216AbfFCLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 07:40:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 04:40:32 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Jun 2019 04:40:29 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 03 Jun 2019 14:40:29 +0300
+Date:   Mon, 3 Jun 2019 14:40:29 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
+ 'pwm'
+Message-ID: <20190603114029.GC2781@lahna.fi.intel.com>
+References: <20190601035709.85379-1-yuehaibing@huawei.com>
+ <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
+ <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
+ <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com> <863c29c5f0214c008fbcbb2aac517a5c@AcuMS.aculab.com>
-In-Reply-To: <863c29c5f0214c008fbcbb2aac517a5c@AcuMS.aculab.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 3 Jun 2019 20:38:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
-Message-ID: <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use more portable 'command -v' for cc-cross-prefix
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Sun, Jun 02, 2019 at 10:18:15AM -0400, Sven Van Asbroeck wrote:
+> On Sat, Jun 1, 2019 at 12:05 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > I didn't look into the driver to try to understand that, but the
+> > definitely needs a comment to explain for the next person to think they
+> > can do a cleanup here.
+> 
+> Certainly.
 
-On Mon, Jun 3, 2019 at 8:14 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Masahiro Yamada
-> > Sent: 03 June 2019 11:49
-> >
-> > To print the pathname that will be used by shell in the current
-> > environment, 'command -v' is a standardized way. [1]
-> >
-> > 'which' is also often used in scripting, but it is not portable.
-> >
-> > When I worked on commit bd55f96fa9fc ("kbuild: refactor cc-cross-prefix
-> > implementation"), I was eager to use 'command -v' but it did not work.
-> > (The reason is explained below.)
-> >
-> > I kept 'which' as before but got rid of '> /dev/null 2>&1' as I
-> > thought it was no longer needed. Sorry, I was wrong.
-> >
-> > It works well on my Ubuntu machine, but Alexey Brodkin reports annoying
-> > warnings from the 'which' on CentOS 7 when the given command is not
-> > found in the PATH environment.
-> >
-> >   $ which foo
-> >   which: no foo in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
-> >
-> > Given that behavior of 'which' is different on environment, I want
-> > to try 'command -v' again.
-> >
-> > The specification [1] clearly describes the behavior of 'command -v'
-> > when the given command is not found:
-> >
-> >   Otherwise, no output shall be written and the exit status shall reflect
-> >   that the name was not found.
-> >
-> > However, we need a little magic to use 'command -v' from Make.
-> >
-> > $(shell ...) passes the argument to a subshell for execution, and
-> > returns the standard output of the command.
-> >
-> > Here is a trick. GNU Make may optimize this by executing the command
-> > directly instead of forking a subshell, if no shell special characters
-> > are found in the command line and omitting the subshell will not
-> > change the behavior.
-> >
-> > In this case, no shell special character is used. So, Make will try
-> > to run the command directly. However, 'command' is a shell-builtin
-> > command. In fact, Make has a table of shell-builtin commands because
-> > it must spawn a subshell to execute them.
-> >
-> > Until recently, 'command' was missing in the table.
-> >
-> > This issue was fixed by the following commit:
-> >
-> > | commit 1af314465e5dfe3e8baa839a32a72e83c04f26ef
-> > | Author: Paul Smith <psmith@gnu.org>
-> > | Date:   Sun Nov 12 18:10:28 2017 -0500
-> > |
-> > |     * job.c: Add "command" as a known shell built-in.
-> > |
-> > |     This is not a POSIX shell built-in but it's common in UNIX shells.
-> > |     Reported by Nick Bowler <nbowler@draconx.ca>.
-> >
-> > This is not included in any released versions of Make yet.
-> > (But, some distributions may have back-ported the fix-up.)
-> >
-> > To trick Make and let it fork the subshell, I added a shell special
-> > character '~'. We may be able to get rid of this workaround someday,
-> > but it is very far into the future.
-> >
-> > [1] http://pubs.opengroup.org/onlinepubs/9699919799/utilities/command.html
-> >
-> > Fixes: bd55f96fa9fc ("kbuild: refactor cc-cross-prefix implementation")
-> > Cc: linux-stable <stable@vger.kernel.org> # 5.1
-> > Reported-by: Alexey Brodkin <abrodkin@synopsys.com>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  scripts/Kbuild.include | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-> > index 85d758233483..5a32ca80c3f6 100644
-> > --- a/scripts/Kbuild.include
-> > +++ b/scripts/Kbuild.include
-> > @@ -74,8 +74,11 @@ endef
-> >  # Usage: CROSS_COMPILE := $(call cc-cross-prefix, m68k-linux-gnu- m68k-linux-)
-> >  # Return first <prefix> where a <prefix>gcc is found in PATH.
-> >  # If no gcc found in PATH with listed prefixes return nothing
-> > +#
-> > +# Note: the special character '~' forces Make to invoke a shell. This workaround
-> > +# is needed because this issue was only fixed after GNU Make 4.2.1 release.
-> >  cc-cross-prefix = $(firstword $(foreach c, $(filter-out -%, $(1)), \
-> > -                                     $(if $(shell which $(c)gcc), $(c))))
-> > +                             $(if $(shell command -v $(c)gcc ~), $(c))))
->
-> I see a problem here:
->         command -v foo bar
-> could be deemed to be an error (extra argument).
+I agree.
 
-OK, the specification does not allow to pass arguments
-with -v.
+> But if we do restore the old behaviour, there may still be problems.
+> I'm unsure if the old synchronization was working correctly.
+> See the example at the end of this email.
 
+I think you are right. pca9685_pwm_request() should take the mutex as
+long as it is requesting PWM.
 
-> You could use:
->         $(shell sh -c "command -v $(c)gcc")
-> or maybe:
->         $(shell command$${x:+} -v $(c)gcc)
+> An intuitive way forward would be to use a simple bitfield in
+> struct pca9685 to track if a specific pwm is in use by either
+> pwm or gpio. Protected by a mutex.
 
+A flag would probably be easier to understand than the magic we have
+now. Or then wrap it inside function with an explanation comment:
 
-How about this?
+static inline void pca9685_pwm_set_as_gpio(struct pwm_device *pwm)
+{
+	/*
+	 * We use ->chip_data to convoy the fact that the PWM channel is
+	 * being used as GPIO instead of PWM.
+	 */
+	pwm_set_chip_data(pwm, (void *)1)
+}
 
-          $(shell : ~; command -v $(c)gcc)
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+static inline void pca9685_pwm_set_as_pwm(struct pwm_device *pwm)
+{
+	pwm_set_chip_data(pwm, NULL);
+}
