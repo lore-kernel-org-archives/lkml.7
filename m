@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-11.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53D0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878D027D32
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8652124C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfFCICT (ORCPT
+        id S1727550AbfFCIC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:02:19 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:60925 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfFCICT (ORCPT
+        Mon, 3 Jun 2019 04:02:29 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59339 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfFCIC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:02:19 -0400
+        Mon, 3 Jun 2019 04:02:29 -0400
 X-Originating-IP: 90.88.144.139
 Received: from localhost.localdomain (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BA80F240010;
-        Mon,  3 Jun 2019 08:02:13 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4F948FF835;
+        Mon,  3 Jun 2019 08:02:21 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jeff Kletsky <lede@allycomm.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -36,34 +36,27 @@ To:     Jeff Kletsky <lede@allycomm.com>,
         Vignesh Raghavendra <vigneshr@ti.com>
 Cc:     linux-mtd@lists.infradead.org,
         Jeff Kletsky <git-commits@allycomm.com>,
-        kbuild test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Date:   Mon,  3 Jun 2019 10:02:11 +0200
-Message-Id: <20190603080211.27447-1-miquel.raynal@bootlin.com>
+        linux-kernel@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH v4 2/3] mtd: spinand: Add support for two-byte device IDs
+Date:   Mon,  3 Jun 2019 10:02:19 +0200
+Message-Id: <20190603080219.27512-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190522220555.11626-4-lede@allycomm.com>
+In-Reply-To: <20190522220555.11626-3-lede@allycomm.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 049df13c4e63884fe6634db5568e08f65922256e
+X-linux-mtd-patch-commit: 53dd94a79d3bfdaae30e5a4ebf474ea1af1d572e
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 22:05:55 UTC, Jeff Kletsky wrote:
+On Wed, 2019-05-22 at 22:05:54 UTC, Jeff Kletsky wrote:
 > From: Jeff Kletsky <git-commits@allycomm.com>
 > 
-> The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
-> and, while it has the same logical layout as the E-series devices,
-> it differs in the SPI interfacing in significant ways.
-> 
-> This support is contingent on previous commits to:
-> 
->   * Add support for two-byte device IDs
->   * Define macros for page-read ops with three-byte addresses
+> The GigaDevice GD5F1GQ4UFxxG SPI NAND utilizes two-byte device IDs.
 > 
 > http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
 > 
