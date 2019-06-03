@@ -2,100 +2,105 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8E9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F08C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D69C24067
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C0924204
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559565168;
+	bh=nH7El9F5kOiagXyhzBVYhdnWSGsNuX6qBDg41snSmDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mx9/DnvrLobMveSdlRcWRYzifT4ETGANKUPx4m3/Pb/M19E+LG2neGqDtj3/70lxI
+	 UYh/qjwVIfrvmEvgvbyjjo1soCshdNupb4fysXhwDBxPf09fnCdMBgTR7eF1iaaahz
+	 6PbMNt1vP5ROKPFTQkDD4i4eH3nbJ9QdYKtd28f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfFCMc1 (ORCPT
+        id S1727323AbfFCMcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:32:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:60756 "EHLO mga11.intel.com"
+        Mon, 3 Jun 2019 08:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfFCMc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:32:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 05:32:26 -0700
-X-ExtLoop1: 1
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by orsmga007.jf.intel.com with ESMTP; 03 Jun 2019 05:32:23 -0700
-Subject: Re: [PATCH v11 2/2] usb: xhci: Add Clear_TT_Buffer
-To:     Jim Lin <jilin@nvidia.com>, gregkh@linuxfoundation.org,
-        mathias.nyman@intel.com, stern@rowland.harvard.edu,
-        kai.heng.feng@canonical.com, drinkcat@chromium.org,
-        Thinh.Nguyen@synopsys.com, nsaenzjulienne@suse.de,
-        jflat@chromium.org, malat@debian.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1559559224-9845-1-git-send-email-jilin@nvidia.com>
- <1559559224-9845-3-git-send-email-jilin@nvidia.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <10d35c94-5938-aa47-0f12-7ce1143caa41@linux.intel.com>
-Date:   Mon, 3 Jun 2019 15:35:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726270AbfFCMcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:32:47 -0400
+Received: from dragon (li1232-89.members.linode.com [45.79.133.89])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4405C26A31;
+        Mon,  3 Jun 2019 12:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559565167;
+        bh=nH7El9F5kOiagXyhzBVYhdnWSGsNuX6qBDg41snSmDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k/BlXcMhrQvbfDVb3Rns/tjKuya+BuFBiSA0VusyE3Kq+8ab3qZQsmVQXufMv5piA
+         GJu1alG/6SqCfX3OlRoYWSQSZcURZJl6NIBhX1hrYLjW/HCvFdS3Jt6mkqzC/bBNmt
+         MwJBCSEXrkWQiwU5ttd7ObCaKAA7DEZ8uKuK2uaQ=
+Date:   Mon, 3 Jun 2019 20:32:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V7 1/2] soc: imx: Add SCU SoC info driver support
+Message-ID: <20190603123124.GB16651@dragon>
+References: <1558662440-8820-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1559559224-9845-3-git-send-email-jilin@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558662440-8820-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3.6.2019 13.53, Jim Lin wrote:
-> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-> processing for full-/low-speed endpoints connected via a TT, the host
-> software must use the Clear_TT_Buffer request to the TT to ensure
-> that the buffer is not in the busy state".
+On Fri, May 24, 2019 at 01:52:36AM +0000, Anson Huang wrote:
+> Add i.MX SCU SoC info driver to support i.MX8QXP SoC, introduce
+> driver dependency into Kconfig as CONFIG_IMX_SCU must be
+> selected to support i.MX SCU SoC driver, also need to use
+> platform driver model to make sure IMX_SCU driver is probed
+> before i.MX SCU SoC driver.
 > 
-> In our case, a full-speed speaker (ConferenceCam) is behind a high-
-> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-> request we may continue to get STALL with the folllowing requests,
-> like Set_Interface.
+> With this patch, SoC info can be read from sysfs:
 > 
-> Here we invoke usb_hub_clear_tt_buffer() to send Clear_TT_Buffer
-> request to the hub of the device for the following Set_Interface
-> requests to the device to get ACK successfully.
+> i.mx8qxp-mek# cat /sys/devices/soc0/family
+> Freescale i.MX
 > 
-> Signed-off-by: Jim Lin <jilin@nvidia.com>
-> ---
-> v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
->      , remove its claiming in xhci.h
-> v3: Add description for clearing_tt (xhci.h)
-> v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
->      to protect for Clear_TT_Buffer to be run serially.
->      Remove xhci_clear_tt_buffer_complete as it's not necessary.
->      Same reason as the above.
->      Extend usb_hub_clear_tt_buffer parameter
-> v5: Not extending usb_hub_clear_tt_buffer parameter
->      Add description.
-> v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-> v7: Add devaddr field in "struct usb_device"
-> v8: split as two patches
-> v9: no change flag
-> v10: Add EP_CLEARING_TT flag
-> v11: Add spin_lock/unlock in xhci_clear_tt_buffer_complete
+> i.mx8qxp-mek# cat /sys/devices/soc0/soc_id
+> 0x2
 > 
+> i.mx8qxp-mek# cat /sys/devices/soc0/machine
+> Freescale i.MX8QXP MEK
 > 
->   drivers/usb/host/xhci-ring.c | 27 ++++++++++++++++++++++++++-
->   drivers/usb/host/xhci.c      | 21 +++++++++++++++++++++
->   drivers/usb/host/xhci.h      |  5 +++++
->   3 files changed, 52 insertions(+), 1 deletion(-)
+> i.mx8qxp-mek# cat /sys/devices/soc0/revision
+> 1.1
 > 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-xhci parts look good to me,
-
-In case Greg wants to pick up both the core changes (1/2) and
-the xhci changes (2/2) at the same time:
-
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-
-
+Applied, thanks.
