@@ -2,117 +2,147 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B38C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A387C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEB224E88
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7719F25EAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ob1Luuhj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBvj2a/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfFCRwb (ORCPT
+        id S1726818AbfFCRxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:52:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39872 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfFCRwb (ORCPT
+        Mon, 3 Jun 2019 13:53:19 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35799 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfFCRxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:52:31 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 196so8711200pgc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:52:31 -0700 (PDT)
+        Mon, 3 Jun 2019 13:53:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a25so14316814lfg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=DGoxdD5EUIGT9bBxoW5B+18v9hq8tueDEjWNmvtG0II=;
-        b=ob1LuuhjIlmwK3FDWvTNjdt5OAF8gJwg61MhWz2Mx/CWZtO36JkJe2KxBFhHrd/r/6
-         3NI+AAM2zh+2+hfcvuvBT5tbwG/HCWd5QAdIrLQRPFMud2AY0NKW9/CI14FNeeqlAOV4
-         ZjKEbiFClDENsZ8mC6zmO28eFhmmKZ3QL/NrNRjUD+MNT3IHEjHGPxvb+3wCdEWZN80m
-         CLAdQdImWDFk8LKVgvMMKvHI+yaYfsnGwIKIcwQJYBAv1I500HiDj8iCSLvrnLmoy7A0
-         5Bhg4qqM+iTEHPXsJlZIL8Z+x28aJFhCq7QdGpQOC4uKbUeGZ7oFpdBt1QbkZCCptcSo
-         e00w==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Srx+JSQEvVah+8jZbb/etDm06U9ghyEFAowtj168rhg=;
+        b=hBvj2a/SxeY8uo2/eITryp250u7lguAtkLG3Rzw/28UO6KoV8ECca3G6kiHt9yAFR8
+         4GYgW/r5DAJg5uGAXloHi0Kqx3rpg5+lP5dDjIFmwXxGsTiIlSYcvgfn9XfogyQ/Lw73
+         BBjkwHmuinB+Jej8dicc57ngL+G5Xkokj4e7d4rLBGc8oFNaNuhR+xNXZXgXHj98Rv5e
+         Hd8T2iOkvt6klZc5R/VZB65XH/tHhVZkSWsnW3xgRdaxOKnJ+aEww9sdKG1hp9VB371Z
+         L6pePxzhDKwYKHZskQL5tNPsFmXYZvbYRNnBt4uRwKc7cyZbOOavOnwXzMsKlivIZcxI
+         S75w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DGoxdD5EUIGT9bBxoW5B+18v9hq8tueDEjWNmvtG0II=;
-        b=hrATWORgMyzYV7IR2NgqFpU3EzvuWly4Z1vUjs0ewcEpZChKOtUxOXvgPT3LJABSVE
-         d3wYMQ5h/EFB9ulaaKGdczhEkQwldEio4MtHrf7fvBhe4Yqr5s/OIbbDTp1Xq1heLSd+
-         +n94DSkl22Asig1Lx7xFpQ3qs4z2y2E/U4kMimqsAg7haGupMdKFJopVwtXoNlD61Ft5
-         YqQkUuWLgJWNWuO+pk8wYJxvbZ18BcGkDS72gs+yS3Q77i/ce08KhMxVYnXP8PuCXIrQ
-         Vl7lpy/WiF8aZ5iHTPzyo0HN/lc1mUhZd4kim3ShSCJyGurN4nA5EOlvDvDJeb4X1Yr7
-         R7jQ==
-X-Gm-Message-State: APjAAAXIzaerefMyDZUeB6LshBnV00o4ThQgSLLuV4/WWCaRUnu8dBtp
-        EPV/0xiD5NWU1wRb0Ab/iTo=
-X-Google-Smtp-Source: APXvYqyzlJBE8dZ2W7VdzNCe0CNxLtYKrIcDjILqD3pD1BNSm89pIOihJmk7uZXlhG7hqgMlJhHiTA==
-X-Received: by 2002:a63:d504:: with SMTP id c4mr21542620pgg.20.1559584350790;
-        Mon, 03 Jun 2019 10:52:30 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id 127sm15459038pfc.159.2019.06.03.10.52.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 10:52:29 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 23:22:24 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: fix error "do not initialise
- globals to 0"
-Message-ID: <20190603175224.GA4969@hari-Inspiron-1545>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Srx+JSQEvVah+8jZbb/etDm06U9ghyEFAowtj168rhg=;
+        b=FbAc29uHun2RtvWotKwjVfV5lXgaikcwiviUloAzAMIPzDcEkTBQBUrFiv1kFjebXi
+         3X9ed1eQd6+6Wxuuby5B2I9Gg01yOQ932PV/WAp2ThvX0IsMW0om6Qhb8q96Jbi/FwIo
+         QObSenm2pWx2h7spxAHciwQW1WoCO34mYMOWrdOpIlNGejr1TykvR2dMDdwYX5p6CP6T
+         I4y+N3ZIBNl5aH7hxASU0wzAIC1QpScVPsHpjAE/KthuOpI/zkliydpOjeZPvhSuwYTC
+         bBFseajCf7WRWhWk/oMW+ISQX09ZrwGnG+kxxBTSXj8OGvm/NNsiYFTKyMieFxtFDZzn
+         7O4g==
+X-Gm-Message-State: APjAAAWMcq9GgfUffmlvxo6ogED2V/Cpbgf9EjcgttvOxhUWl7vWqriA
+        2DbRDKUaNc/9fWJsim4dt2A=
+X-Google-Smtp-Source: APXvYqwkNqnG7HCV7jYR28Yp6QjtylKEBiui88FHYvyLoqwJOwUAPczmn457xBJ7dqYkon33WuCwMg==
+X-Received: by 2002:ac2:42c8:: with SMTP id n8mr6415lfl.28.1559584396076;
+        Mon, 03 Jun 2019 10:53:16 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id v16sm3315552ljk.80.2019.06.03.10.53.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 10:53:15 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 3 Jun 2019 19:53:12 +0200
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 2/4] mm/vmap: preload a CPU with one object for split
+ purpose
+Message-ID: <20190603175312.72td46uahgchfgma@pc636>
+References: <20190527093842.10701-1-urezki@gmail.com>
+ <20190527093842.10701-3-urezki@gmail.com>
+ <20190528224217.GG27847@tower.DHCP.thefacebook.com>
+ <20190529142715.pxzrjthsthqudgh2@pc636>
+ <20190529163435.GC3228@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190529163435.GC3228@tower.DHCP.thefacebook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch fixes below Errors reported by checkpatch
+Hello, Roman!
 
-ERROR: do not initialise globals to 0
-+u8 g_fwdl_chksum_fail = 0;
+On Wed, May 29, 2019 at 04:34:40PM +0000, Roman Gushchin wrote:
+> On Wed, May 29, 2019 at 04:27:15PM +0200, Uladzislau Rezki wrote:
+> > Hello, Roman!
+> > 
+> > > On Mon, May 27, 2019 at 11:38:40AM +0200, Uladzislau Rezki (Sony) wrote:
+> > > > Refactor the NE_FIT_TYPE split case when it comes to an
+> > > > allocation of one extra object. We need it in order to
+> > > > build a remaining space.
+> > > > 
+> > > > Introduce ne_fit_preload()/ne_fit_preload_end() functions
+> > > > for preloading one extra vmap_area object to ensure that
+> > > > we have it available when fit type is NE_FIT_TYPE.
+> > > > 
+> > > > The preload is done per CPU in non-atomic context thus with
+> > > > GFP_KERNEL allocation masks. More permissive parameters can
+> > > > be beneficial for systems which are suffer from high memory
+> > > > pressure or low memory condition.
+> > > > 
+> > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > > ---
+> > > >  mm/vmalloc.c | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+> > > >  1 file changed, 76 insertions(+), 3 deletions(-)
+> > > 
+> > > Hi Uladzislau!
+> > > 
+> > > This patch generally looks good to me (see some nits below),
+> > > but it would be really great to add some motivation, e.g. numbers.
+> > > 
+> > The main goal of this patch to get rid of using GFP_NOWAIT since it is
+> > more restricted due to allocation from atomic context. IMHO, if we can
+> > avoid of using it that is a right way to go.
+> > 
+> > From the other hand, as i mentioned before i have not seen any issues
+> > with that on all my test systems during big rework. But it could be
+> > beneficial for tiny systems where we do not have any swap and are
+> > limited in memory size.
+> 
+> Ok, that makes sense to me. Is it possible to emulate such a tiny system
+> on kvm and measure the benefits? Again, not a strong opinion here,
+> but it will be easier to justify adding a good chunk of code.
+> 
+It seems it is not so straightforward as it looks like. I tried it before,
+but usually the systems gets panic due to out of memory or just invokes
+the OOM killer.
 
-ERROR: do not initialise globals to 0
-+u8 g_fwdl_wintint_rdy_fail = 0;
+I will upload a new version of it, where i embed "preloading" logic directly
+into alloc_vmap_area() function.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks.
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-index caa8e2f..21f2365 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-@@ -217,7 +217,7 @@ void _8051Reset8723(struct adapter *padapter)
- 	DBG_8192C("%s: Finish\n", __func__);
- }
- 
--u8 g_fwdl_chksum_fail = 0;
-+u8 g_fwdl_chksum_fail;
- 
- static s32 polling_fwdl_chksum(
- 	struct adapter *adapter, u32 min_cnt, u32 timeout_ms
-@@ -262,7 +262,7 @@ static s32 polling_fwdl_chksum(
- 	return ret;
- }
- 
--u8 g_fwdl_wintint_rdy_fail = 0;
-+u8 g_fwdl_wintint_rdy_fail;
- 
- static s32 _FWFreeToGo(struct adapter *adapter, u32 min_cnt, u32 timeout_ms)
- {
--- 
-2.7.4
-
+--
+Vlad Rezki
