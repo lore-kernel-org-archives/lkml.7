@@ -2,99 +2,128 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42569C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A02C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D21271AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559584799;
-	bh=+j+Z5yrXYrk12i/w+udO7S/iAI3TaKAqbb1gBZmCuTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PmTz1BupLwVnmdaaWNLCPHXbdT4F+tGK/E+ZU0o5YNvAb5+5WYjuUYzVIaqE1luyv
-	 qDmfLSr6pxFJgaLSlroX8UH2eiL/n3SNpr8+c/9T2mRdVMY8NpN0esOYenvbjptxww
-	 dnY7tye4GyZQPG97Nsduy1aAeeJoPvHa143/eu8A=
+	by mail.kernel.org (Postfix) with ESMTP id 2D9EB271AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfFCR76 (ORCPT
+        id S1726587AbfFCSAf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:59:58 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51436 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfFCR75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:59:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vNoaf/BsgR5R3vkbQszzxACBpSzqrvmtQNpGl/ZGtVo=; b=ERkp3AU0Wn3OR8kwDnboAVXRT
-        HSa2MUef+xurMo13nBTNlXdnGoslMWOjPzFa8Ch8O0j5Bi98vHUVSfr1K8F9wfwv43BduTAQ9m+X+
-        STCp7vL/qJB+IhZjMXLi+drV920WiM+1XvaGg7dv7exOUTKS7KR/CHP1FfUC7ekZjy/7c=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hXrEK-0003XG-PV; Mon, 03 Jun 2019 17:58:44 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B2C30440046; Mon,  3 Jun 2019 18:58:43 +0100 (BST)
-Date:   Mon, 3 Jun 2019 18:58:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: Re: [PATCH] ASoC: soc-core: fix ifnullfree.cocci warnings
-Message-ID: <20190603175843.GA30701@sirena.org.uk>
-References: <alpine.DEB.2.21.1905301904530.2500@hadrien>
+        Mon, 3 Jun 2019 14:00:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31358 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfFCSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:00:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 11:00:34 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Jun 2019 11:00:34 -0700
+Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 3 Jun 2019 11:00:34 -0700
+Received: from hasmsx114.ger.corp.intel.com (10.184.198.65) by
+ FMSMSX125.amr.corp.intel.com (10.18.125.40) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 3 Jun 2019 11:00:33 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.66]) by
+ HASMSX114.ger.corp.intel.com ([169.254.14.203]) with mapi id 14.03.0415.000;
+ Mon, 3 Jun 2019 21:00:31 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: RE: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt
+ match helper
+Thread-Topic: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt
+ match helper
+Thread-Index: AQHVGiRM/z8BqVnv+kKKGRNhs5xXkaaKN3cQ
+Date:   Mon, 3 Jun 2019 18:00:30 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DC23236@hasmsx108.ger.corp.intel.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-37-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1559577023-558-37-git-send-email-suzuki.poulose@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.11]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1905301904530.2500@hadrien>
-X-Cookie: Goes (Went) over like a lead balloon.
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2019 at 07:06:11PM -0400, Julia Lawall wrote:
-> From: kbuild test robot <lkp@intel.com>
->=20
-> sound/soc/soc-core.c:391:2-7: WARNING: NULL check before some freeing fun=
-ctions is not needed.
->=20
->  NULL check before some freeing functions is not needed.
+> -----Original Message-----
+> From: Suzuki K Poulose [mailto:suzuki.poulose@arm.com]
+> Sent: Monday, June 03, 2019 18:50
+> To: linux-kernel@vger.kernel.org
+> Cc: gregkh@linuxfoundation.org; rafael@kernel.org; suzuki.poulose@arm.com;
+> Winkler, Tomas <tomas.winkler@intel.com>; Arnd Bergmann
+> <arnd@arndb.de>
+> Subject: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt match
+> helper
+> 
+> Switch to the generic helper class_find_device_by_devt.
 
-This doesn't apply against current code, please check and resend.
+Looks okay, but  you could add me at least to cover later mail, there is very little context. 
 
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Thanks
+Tomas
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz1X9IACgkQJNaLcl1U
-h9CjqAf/dHMmaH160jKSA3JntU1LqgMdZeChArVfnwMLbNzKgFHsL3QKbmUKc4AG
-Tr2UTEkqrx9bWisFr6QHitR8Cn4J65tJd11GlgbtKhbIp4SzA0R91QBgwIq11Ydf
-be3a/fPLacVITJLzpB6HXX84NbutITX7NXO3UBrHdvGungUBdp8Y+v7fEtQslP4u
-jJjMISUqPyM7zZzKR53beoKqjHQpfyKXaEyM/zJwvj/1kQzOLfw2CXQ7qEfIs0B0
-im0OuQfsVNFiOwzP5Ns10p96TbTJ+pTFuuT0jbiMwmKjNDgETC9chUUljIsZZwM+
-mCFTYM80ltgY0iT3MjGFN/GPtxoUqA==
-=kyDr
------END PGP SIGNATURE-----
 
---x+6KMIRAuhnl3hBn--
+> 
+> Cc: Tomas Winkler <tomas.winkler@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/misc/mei/main.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c index
+> ad02097..243b481 100644
+> --- a/drivers/misc/mei/main.c
+> +++ b/drivers/misc/mei/main.c
+> @@ -858,13 +858,6 @@ static ssize_t dev_state_show(struct device *device,  }
+> static DEVICE_ATTR_RO(dev_state);
+> 
+> -static int match_devt(struct device *dev, const void *data) -{
+> -	const dev_t *devt = data;
+> -
+> -	return dev->devt == *devt;
+> -}
+> -
+>  /**
+>   * dev_set_devstate: set to new device state and notify sysfs file.
+>   *
+> @@ -880,7 +873,7 @@ void mei_set_devstate(struct mei_device *dev, enum
+> mei_dev_state state)
+> 
+>  	dev->dev_state = state;
+> 
+> -	clsdev = class_find_device(mei_class, NULL, &dev->cdev.dev,
+> match_devt);
+> +	clsdev = class_find_device_by_devt(mei_class, NULL, dev->cdev.dev);
+>  	if (clsdev) {
+>  		sysfs_notify(&clsdev->kobj, NULL, "dev_state");
+>  		put_device(clsdev);
+> --
+> 2.7.4
+
