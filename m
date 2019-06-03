@@ -2,120 +2,95 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D645C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432B425162
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VjmeaWuh"
+	by mail.kernel.org (Postfix) with ESMTP id 84CEB25B28
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559567946;
+	bh=aXYplNsQyPIIU3iosXdops52mTbvO5TWj1ZH0e2m5y8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xQNsRHuaSqE3NSxEn4gMTbpF1U7hO5nVT8sWaKLQN+y6ZLwKSGVJUrmOP7iSAzgV5
+	 46WpmzcM0yHn0jRnuuCoNf6qFxqw+XKsNPPoA2+3CX823Rv6L4jd+oRmsRNfZnGicn
+	 psUO01EKaJqibwKbQVeV9VnuHpfL1NmC9qbQI7GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfFCNS7 (ORCPT
+        id S1728487AbfFCNTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:18:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38057 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfFCNS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:18:58 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DIml9606529
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:18:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DIml9606529
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567928;
-        bh=7x3A5oWFpgYr0tVgBDY3EP7l4/sPmFLYG4URyzXl+QI=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=VjmeaWuhOf5U7tvbTxVRI1KQ7KsiCJTk1Hh3Md8S7HWwLJVTw0wYerqy9Xat0/QRD
-         Y8UJxrkkyOtLcbNr/nUrTfU1ripxRBNrKFKLKEP10T7XPyG+w8iZvInXtcy+lRiA8F
-         Zf6u9gwqj/xmXYk/TrDyGPbAaINn7YzyLgKive7UGgLMvRZO/L+sSl7MtMx1epOOU1
-         fXSiTJmgsdITOLb4c09f2xgjus5H8G8fnpIlmo/1xS+K7TdqsAazzXg0EmiMy1kJl1
-         fsuX81AO94CttAsHnE7isvjWe47aNyPXlgA3JA+nUWMbzsz/6E14aSBc9l9cJm4kvU
-         yN8ZIj+s5wdew==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DIl00606524;
-        Mon, 3 Jun 2019 06:18:47 -0700
-Date:   Mon, 3 Jun 2019 06:18:47 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yuyang Du <tipbot@zytor.com>
-Message-ID: <tip-b4adfe8e05f15d7e73309c93c2c337df7eb5278f@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
-        tglx@linutronix.de, duyuyang@gmail.com
-Reply-To: hpa@zytor.com, peterz@infradead.org, tglx@linutronix.de,
-          duyuyang@gmail.com, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, torvalds@linux-foundation.org
-In-Reply-To: <20190506081939.74287-19-duyuyang@gmail.com>
-References: <20190506081939.74287-19-duyuyang@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Remove unused argument in
- __lock_release
-Git-Commit-ID: b4adfe8e05f15d7e73309c93c2c337df7eb5278f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbfFCNTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:19:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 948FB25162;
+        Mon,  3 Jun 2019 13:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559567944;
+        bh=aXYplNsQyPIIU3iosXdops52mTbvO5TWj1ZH0e2m5y8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yKyo6M2XLijHBSpowPCGIa52e50oIDHg5UeXTQK8/A5zpiDZgdgHr6O9spi+oGfM6
+         UzDmJzm4PH+evWpGO0R/juuUCACjkHgWRvdVP8RvqHrpsTN2m18HmT9OzLT3TXidJ0
+         JPVbT1eNdKxVsUTu5846R4uUF014XBU7gbiTMlww=
+Date:   Mon, 3 Jun 2019 15:19:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Biju Das <biju.das@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yu Chen <chenyu56@huawei.com>
+Subject: Re: [PATCH v6 07/10] usb: roles: Add fwnode_usb_role_switch_get()
+ function
+Message-ID: <20190603131901.GB10397@kroah.com>
+References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b4adfe8e05f15d7e73309c93c2c337df7eb5278f
-Gitweb:     https://git.kernel.org/tip/b4adfe8e05f15d7e73309c93c2c337df7eb5278f
-Author:     Yuyang Du <duyuyang@gmail.com>
-AuthorDate: Mon, 6 May 2019 16:19:34 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:55:49 +0200
+On Wed, May 29, 2019 at 03:43:45PM +0800, Chunfeng Yun wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> The fwnode_usb_role_switch_get() function is exactly the
+> same as usb_role_switch_get(), except that it takes struct
+> fwnode_handle as parameter instead of struct device.
+> 
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+> v6:
+>   new patch
 
-locking/lockdep: Remove unused argument in __lock_release
+If you are forwarding on a patch from someone else, like this, you need
+to put your signed-off-by line on it as well.
 
-The @nested is not used in __release_lock so remove it despite that it
-is not used in lock_release in the first place.
+Please fix that up, and add the tested-by one, when you resend this
+series.
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bvanassche@acm.org
-Cc: frederic@kernel.org
-Cc: ming.lei@redhat.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190506081939.74287-19-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/lockdep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+thanks,
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index be4c1348ddcd..8169706df767 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -4096,7 +4096,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
-  * @nested is an hysterical artifact, needs a tree wide cleanup.
-  */
- static int
--__lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
-+__lock_release(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
- 	struct held_lock *hlock;
-@@ -4384,7 +4384,7 @@ void lock_release(struct lockdep_map *lock, int nested,
- 	check_flags(flags);
- 	current->lockdep_recursion = 1;
- 	trace_lock_release(lock, ip);
--	if (__lock_release(lock, nested, ip))
-+	if (__lock_release(lock, ip))
- 		check_chain_key(current);
- 	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
+greg k-h
