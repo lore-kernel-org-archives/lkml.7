@@ -2,303 +2,216 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFA7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3EFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A4F27DB3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B4A2407A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="k8SJZHGe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qe1vSnm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfFCNcL (ORCPT
+        id S1728750AbfFCNc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:32:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41117 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfFCNcL (ORCPT
+        Mon, 3 Jun 2019 09:32:27 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37220 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728263AbfFCNc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:32:11 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DVuvt610232
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:31:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DVuvt610232
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559568717;
-        bh=tuJUTfZDFkJlyqJAY5AhfeSThTuNHh3cxL+IKwIk6G8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=k8SJZHGeERFrxC+/K+EWLXnirytpVPQWJbi+FIJeIIDpPdB9IOG25ZoKwrQhUWBlg
-         0876zPCGTD3g+KzO9wP2HLSuR5llBoDa1tAG8JFkvhlmBFNrTxHIa0/jmCPq8Ynb+i
-         SGMWyEtMR92ZRgKa1vxAMsyuGAcJ0EYO0V8Y0V3SLAP63P3tH1aYdNaHqnjJc0E0Ip
-         gHIyroVkCMVXVS5xaoJ27FvyuxO/oOVXzuHMHgv3dqyUKKjR649tzAlOOKvpt/zNWV
-         UNE5pxZayla+Ox6OmxapFNN93wQBuy6sim+Nn8pC4IF/r+0JnXQID5lccHU6rtJ5Di
-         fCg603+1l6MIg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DVuL7610229;
-        Mon, 3 Jun 2019 06:31:56 -0700
-Date:   Mon, 3 Jun 2019 06:31:56 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Imre Deak <tipbot@zytor.com>
-Message-ID: <tip-8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a@git.kernel.org>
-Cc:     peterz@infradead.org, tglx@linutronix.de, hpa@zytor.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, will.deacon@arm.com, imre.deak@intel.com
-Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de,
-          imre.deak@intel.com, will.deacon@arm.com, mingo@kernel.org
-In-Reply-To: <20190524201509.9199-1-imre.deak@intel.com>
-References: <20190524201509.9199-1-imre.deak@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Fix OOO unlock when hlocks need
- merging
-Git-Commit-ID: 8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:32:26 -0400
+Received: by mail-io1-f67.google.com with SMTP id e5so14303912iok.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VeCYvjZJn7GtHGX/PA2+xplClEyq02Kh7mrOK3/KKkQ=;
+        b=Qe1vSnm0mjNiYHSbelkoOUXFNvMhWM6uGc2KkQgJt+rwmeVowKLMaXwjSnBm28Z/yN
+         6NoDXwMRZnH3TqrjYpwHkbZyKYDDd2xIlflxAOc5MyRZYlynM3Z4ViCBwHv50/Gcw4jN
+         TUAQd/2V+k0sIIdiM+Yz87B8qMzOslP2Z+v9U+NzcmWH1jLhNo2fH/EXzD36rc4NIZrb
+         mifzUlDv9zwGQ0JDO1YTdJEjM7bpWeYz5RoE0ZdErgQhKtjmZ22GIKOpEUvkAUV6wJVX
+         kDK8cs1vSLgIKchGhxDtEQcjOeHNnkWjn3BUtdOY/m5XReuDGtB9aNnyGrNBsO4TGQQg
+         iecQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VeCYvjZJn7GtHGX/PA2+xplClEyq02Kh7mrOK3/KKkQ=;
+        b=oxCttPj3pGXjEq94l2v6KEid65QpSH1BU0hkHEEByi5eeGS+QKmXNLdIQOZcKmJm+X
+         4JaJ6r6wr0TGnwOdf4f4fSVy5dT6qIL9DQyOWtzYjDInjquGDfh87PcyQ8bquKOrQCpE
+         KSiCEY6oXvg6B4FAlZovcB9TPNGzcZ8M4E2rH5olduX9jSrWEJO1m4ktmdw6x1wGhYZ8
+         AN3JBkdge/3EDMPtyb4yt6S7W8L3iDE5/J3jxYRNqHbWIH5/BsG6kzYx5t4q2bG2qXK9
+         04NGgX/pW+Apsfgh73/cSb8LTxQZMGSqLWbLnjEqtcyBVMi/+OjMEQy2GpaqwM6wbRAy
+         XBrQ==
+X-Gm-Message-State: APjAAAUiLCAnlKxHI96joTHvCdKqC1GZl3g/I1WDVS9UPGp4SgyovwQT
+        kF/x8/emmoPjGAxLu5M87eGyzQ==
+X-Google-Smtp-Source: APXvYqxAAkJUqQ+MU00LqQKkZdcB5/FFu5kIbtc8fTc7xJteSQ3kRtirsmt17Olj3hOZ/pdqjsk6Bw==
+X-Received: by 2002:a05:6602:2256:: with SMTP id o22mr8751729ioo.95.1559568745189;
+        Mon, 03 Jun 2019 06:32:25 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id k18sm6383686itb.0.2019.06.03.06.32.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 06:32:24 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dan Williams <dcbw@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, abhishek.esse@gmail.com,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <20190531233306.GB25597@minitux>
+ <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+ <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
+Date:   Mon, 3 Jun 2019 08:32:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
-Gitweb:     https://git.kernel.org/tip/8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
-Author:     Imre Deak <imre.deak@intel.com>
-AuthorDate: Fri, 24 May 2019 23:15:08 +0300
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 12:32:29 +0200
+On 6/3/19 5:04 AM, Arnd Bergmann wrote:
+> On Sat, Jun 1, 2019 at 1:59 AM Subash Abhinov Kasiviswanathan
+> <subashab@codeaurora.org> wrote:
+>> On 2019-05-31 17:33, Bjorn Andersson wrote:
+>>> On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+>>>> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+>>> But any such changes would either be years into the future or for
+>>> specific devices and as such not applicable to any/most of devices on
+>>> the market now or in the coming years.
+>>>
+>>>
+>>> But as Arnd points out, if the software split between IPA and rmnet is
+>>> suboptimal your are encouraged to fix that.
+>>
+>> The split rmnet design was chosen because we could place rmnet
+>> over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
+>> or USB.
+>>
+>> rmnet registers a rx handler, so the rmnet packet processing itself
+>> happens in the same softirq when packets are queued to network stack
+>> by IPA.
+> 
+> I've read up on the implementation some more, and concluded that
+> it's mostly a regular protocol wrapper, doing IP over QMAP. There
+> is nothing wrong with the basic concept I think, and as you describe
+> this is an abstraction to keep the common bits in one place, and
+> have them configured consistently.
+> 
+> A few observations on more details here:
+> 
+> - What I'm worried about most here is the flow control handling on the
+>   transmit side. The IPA driver now uses the modern BQL method to
+>   control how much data gets submitted to the hardware at any time.
+>   The rmnet driver also uses flow control using the
+>   rmnet_map_command() function, that blocks tx on the higher
+>   level device when the remote side asks us to.
+>   I fear that doing flow control for a single physical device on two
+>   separate netdev instances is counterproductive and confuses
+>   both sides.
 
-locking/lockdep: Fix OOO unlock when hlocks need merging
+I understand what you're saying here, and instinctively I think
+you're right.
 
-The sequence
+But BQL manages the *local* interface's ability to get rid of
+packets, whereas the QMAP flow control is initiated by the other
+end of the connection (the modem in this case).
 
-	static DEFINE_WW_CLASS(test_ww_class);
+With multiplexing, it's possible that one of several logical
+devices on the modem side has exhausted a resource and must
+ask the source of the data on the host side to suspend the
+flow.  Meanwhile the other logical devices sharing the physical
+link might be fine, and should not be delayed by the first one. 
 
-	struct ww_acquire_ctx ww_ctx;
-	struct ww_mutex ww_lock_a;
-	struct ww_mutex ww_lock_b;
-	struct mutex lock_c;
-	struct mutex lock_d;
+It is the multiplexing itself that confuses the BQL algorithm.
+The abstraction obscures the *real* rates at which individual
+logical connections are able to transmit data.
 
-	ww_acquire_init(&ww_ctx, &test_ww_class);
+Even if the multiple logical interfaces implemented BQL, they
+would not get the feedback they need directly from the IPA
+driver, because transmitting over the physical interface might
+succeed even if the logical interface on the modem side can't
+handle more data.  So I think the flow control commands may be
+necessary, given multiplexing.
 
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
+The rmnet driver could use BQL, and could return NETDEV_TX_BUSY
+for a logical interface when its TX flow has been stopped by a
+QMAP command.  That way the feedback for BQL on the logical
+interfaces would be provided in the right place.
 
-	mutex_init(&lock_c);
+I have no good intuition about the interaction between
+two layered BQL managed queues though.
 
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+> - I was a little confused by the location of the rmnet driver in
+>   drivers/net/ethernet/... More conventionally, I think as a protocol
+>   handler it should go into net/qmap/, with the ipa driver going
+>   into drivers/net/qmap/ipa/, similar to what we have fo ethernet,
+>   wireless, ppp, appletalk, etc.
+> 
+> - The rx_handler uses gro_cells, which as I understand is meant
+>   for generic tunnelling setups and takes another loop through
+>   NAPI to aggregate data from multiple queues, but in case of
+>   IPA's single-queue receive calling gro directly would be simpler
+>   and more efficient.
 
-	mutex_lock(&lock_c);
+I have been planning to investigate some of the generic GRO
+stuff for IPA but was going to wait on that until the basic
+code was upstream.
 
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+> - I'm still not sure I understand the purpose of the layering with
+>   using an rx_handler as opposed to just using
+>   EXPORT_SYMBOL(rmnet_rx_handler) and calling that from
+>   the hardware driver directly.
 
-	mutex_unlock(&lock_c);		(*)
+I think that's a good idea.
 
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
+>   From the overall design and the rmnet Kconfig description, it
+>   appears as though the intention as that rmnet could be a
+>   generic wrapper on top of any device, but from the
+>   implementation it seems that IPA is not actually usable that
+>   way and would always go through IPA.
 
-	ww_acquire_fini(&ww_ctx);
+As far as I know *nothing* upstream currently uses rmnet; the
+IPA driver will be the first, but as Bjorn said others seem to
+be on the way.  I'm not sure what you mean by "IPA is not
+usable that way."  Currently the IPA driver assumes a fixed
+configuration, and that configuration assumes the use of QMAP,
+and therefore assumes the rmnet driver is layered above it.
+That doesn't preclude rmnet from using a different back end.
 
-triggers the following WARN in __lock_release() when doing the unlock at *:
+And I'll also mention that although QMAP *can* do multiplexed
+connections over a single physical link, the IPA code I posted
+currently supports only one logical interface.
 
-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
+					-Alex
 
-The problem is that the WARN check doesn't take into account the merging
-of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
-by 2 not only 1.
 
-Note that the following sequence doesn't trigger the WARN, since there
-won't be any hlock merging.
-
-	ww_acquire_init(&ww_ctx, &test_ww_class);
-
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-
-	mutex_init(&lock_c);
-	mutex_init(&lock_d);
-
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
-
-	mutex_lock(&lock_c);
-	mutex_lock(&lock_d);
-
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
-
-	mutex_unlock(&lock_d);
-
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	mutex_unlock(&lock_c);
-
-	ww_acquire_fini(&ww_ctx);
-
-In general both of the above two sequences are valid and shouldn't
-trigger any lockdep warning.
-
-Fix this by taking the decrement due to the hlock merging into account
-during lock release and hlock class re-setting. Merging can't happen
-during lock downgrading since there won't be a new possibility to merge
-hlocks in that case, so add a WARN if merging still happens then.
-
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: ville.syrjala@linux.intel.com
-Link: https://lkml.kernel.org/r/20190524201509.9199-1-imre.deak@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/lockdep.c | 41 +++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2168e94715b9..6c97f67ec321 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3808,7 +3808,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 				hlock->references = 2;
- 			}
+> 
+>         Arnd
+> 
  
--			return 1;
-+			return 2;
- 		}
- 	}
- 
-@@ -4011,22 +4011,33 @@ out:
- }
- 
- static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
--			      int idx)
-+				int idx, unsigned int *merged)
- {
- 	struct held_lock *hlock;
-+	int first_idx = idx;
- 
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return 0;
- 
- 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
--		if (!__lock_acquire(hlock->instance,
-+		switch (__lock_acquire(hlock->instance,
- 				    hlock_class(hlock)->subclass,
- 				    hlock->trylock,
- 				    hlock->read, hlock->check,
- 				    hlock->hardirqs_off,
- 				    hlock->nest_lock, hlock->acquire_ip,
--				    hlock->references, hlock->pin_count))
-+				    hlock->references, hlock->pin_count)) {
-+		case 0:
- 			return 1;
-+		case 1:
-+			break;
-+		case 2:
-+			*merged += (idx == first_idx);
-+			break;
-+		default:
-+			WARN_ON(1);
-+			return 0;
-+		}
- 	}
- 	return 0;
- }
-@@ -4037,9 +4048,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 		 unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
- 	struct lock_class *class;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4066,14 +4077,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	curr->lockdep_depth = i;
- 	curr->curr_chain_key = hlock->prev_chain_key;
- 
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
- 		return 0;
- 
- 	/*
- 	 * I took it apart and put it back together again, except now I have
- 	 * these 'spare' parts.. where shall I put them.
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
-+	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
- 		return 0;
- 	return 1;
- }
-@@ -4081,8 +4092,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4109,7 +4120,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	hlock->read = 1;
- 	hlock->acquire_ip = ip;
- 
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
-+		return 0;
-+
-+	/* Merging can't happen with unchanged classes.. */
-+	if (DEBUG_LOCKS_WARN_ON(merged))
- 		return 0;
- 
- 	/*
-@@ -4118,6 +4133,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	 */
- 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
- 		return 0;
-+
- 	return 1;
- }
- 
-@@ -4132,8 +4148,8 @@ static int
- __lock_release(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 1;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4192,14 +4208,15 @@ __lock_release(struct lockdep_map *lock, unsigned long ip)
- 	if (i == depth-1)
- 		return 1;
- 
--	if (reacquire_held_locks(curr, depth, i + 1))
-+	if (reacquire_held_locks(curr, depth, i + 1, &merged))
- 		return 0;
- 
- 	/*
- 	 * We had N bottles of beer on the wall, we drank one, but now
- 	 * there's not N-1 bottles of beer left on the wall...
-+	 * Pouring two of the bottles together is acceptable.
- 	 */
--	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
-+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
- 
- 	/*
- 	 * Since reacquire_held_locks() would have called check_chain_key()
