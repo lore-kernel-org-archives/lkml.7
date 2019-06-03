@@ -2,99 +2,119 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B70AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93577C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42FF27414
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D637274A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gQFdb6/V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+B93gDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfFCQvr (ORCPT
+        id S1728141AbfFCQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:51:47 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:57787 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfFCQvr (ORCPT
+        Mon, 3 Jun 2019 12:52:10 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39933 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfFCQwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:51:47 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x53GoTBY008328;
-        Tue, 4 Jun 2019 01:50:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x53GoTBY008328
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559580630;
-        bh=Uf6Bqw9USDMuxj3PzqazDovjCc2/XohbsDH/Cgwz43Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gQFdb6/Vt3HdMh6R5JJW4MWNJEjRvuP4wPeGxL1iEJMfhT0bHqVTadtRZgzNiVrwv
-         rZIWW1rhoDVsNqdEqizQga9AgRGhc4o7HTDt2xEYydpm9F0gyBQThB97tHLZxOi2ul
-         aPDY+l2djP0mhEeLmeuTvraYWEIOPP3Gh77WOsZkJ5UXGDn6YsJTDrvweaSlpDYDdI
-         3ciE+96nXaQ0OhLUJm3SEbLyZFsQ3xvSzXb9/36pxwWZEGiMSm1B65ReZLFy4cpQY9
-         ZXeUo+PbTBUtIyA6Kx5Frb+GQA5I4w05ToFYh+OuN1RvMg0TDIUirEKcBEN14lnVzR
-         A2QSe/jaiimWg==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mtd@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Richard Weinberger <richard@nod.at>
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mon, 3 Jun 2019 12:52:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a10so13662166ljf.6;
+        Mon, 03 Jun 2019 09:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KnyOXSIopN/Ka24mmzbYok8zeywL4IgEj6G0AfcpK3A=;
+        b=d+B93gDZ4Zk80L8xsAhKGDk4unnUHBGzGpeAymLI25/KfdgoS9X/IUyTOlVXfeCdPs
+         Mk5RwWdM1RK0oR3opCh9kR4PI8ZzeT3bk1DTubMa+dY1+5Ss3uhgvhu7/SM71Ez27r+2
+         jc54KlG60/IPrSWzRw07yu3VhieKip16jZU0EZeXofJi3bftO6kxPJKqBK+yGpVKqf8g
+         FmZe275fw4uz9mQ2dxRoEOPSFyOhlS8E1gKljsxtHGxwM2K7OwEvBnseyloATe8+sdy7
+         GY4VbobDxwzy58KQRhUdKjfvM5m4rg6RRHFfd7yL113PIwdXLFHRk2nx6bRdNp2bMB9n
+         Q8NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KnyOXSIopN/Ka24mmzbYok8zeywL4IgEj6G0AfcpK3A=;
+        b=cn1IEZlLo2KVpX7ULhT83m8vjpB6S7G34HGCOyP1mA3e27YxCKBvzUVjB7TGc5vk6S
+         9AxJe3sA13X+Lok8BpCyBeIyuQTh2yy+om1WsXWly0Oc8qLvnRXPbWCNkmA/7o2OXA3E
+         kqfZbbN7mSYyk7qEI96HBqiGzjoKf2p8/MU9SZdjSrjuLhr/lRd6xmvtQBXhmih5nmsV
+         dke2TEKS6jXXavhbzoKDsD6PFn4FmsitVLoYR+I+TO/pM3yIbqfGfhn6oIDUSBVPE/az
+         6CCADXWQDkk7Pw8kKapR4ajLAVyXyRj4+ZjV6eZ/ac2ygVgAuEl8QjkK+k5WasahWmS+
+         W7Lg==
+X-Gm-Message-State: APjAAAVCGjWrfy66WHhzuhgMKhNSUWfhE2IQKdyQJBvh65/KMukHxDm3
+        1T4zinJ5tAtLOdAXwvJYfSwoS3Fw
+X-Google-Smtp-Source: APXvYqyGlRWcTRlcdz2/rbx1rjdp70p0Jn2ZIFv0VW4Jvkh/0sW6DGGqWSmvRBpuwfEvYQR/X9IZFQ==
+X-Received: by 2002:a2e:7d09:: with SMTP id y9mr10782512ljc.110.1559580727119;
+        Mon, 03 Jun 2019 09:52:07 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id q1sm2631361lfc.79.2019.06.03.09.52.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 09:52:05 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30
+ support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] jffs2: do not use C++ style comments in uapi header
-Date:   Tue,  4 Jun 2019 01:50:27 +0900
-Message-Id: <20190603165027.11831-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+ <20190501233815.32643-1-digetx@gmail.com>
+ <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+ <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+Message-ID: <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
+Date:   Mon, 3 Jun 2019 19:52:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel tolerates C++ style comments these days. Actually, the
-SPDX License Identifier for .c files uses C++ comment style.
+03.05.2019 3:52, Dmitry Osipenko пишет:
+> 03.05.2019 3:31, Chanwoo Choi пишет:
+>> Hi Dmitry,
+>>
+>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>>> Changelog:
+>>>
+>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+>>>
+>>>     - changed the driver removal order to match the probe exactly
+>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>>
+>>>     Chanwoo, please also note that the clk patch that should fix
+>>>     compilation problem that was reported the kbuild-test-robot is already
+>>>     applied and available in the recent linux-next.
+>>
+>> I knew that Stephen picked up your path about clock.
+> 
+> Hi Chanwoo,
+> 
+> Okay, good. Thank you very much for reviewing this series! I assume it's
+> too late now for v5.2, but it should be good to go for v5.3.
+> 
 
-On the other hand, uapi headers are strict, where the C++ comment
-style is banned.
+Hello Chanwoo,
 
-Looks like these lines are temporarily commented out, so I did not
-use the block comment style.
-
-Having said that, they have been commented out since the pre-git era.
-(so, at least 14 years). 'Maybe later' may not happen. Alternative fix
-might be to delete these lines entirely.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/uapi/linux/jffs2.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/include/uapi/linux/jffs2.h b/include/uapi/linux/jffs2.h
-index a18b719f49d4..5dee6d930d5b 100644
---- a/include/uapi/linux/jffs2.h
-+++ b/include/uapi/linux/jffs2.h
-@@ -77,10 +77,10 @@
- 
- #define JFFS2_ACL_VERSION		0x0001
- 
--// Maybe later...
--//#define JFFS2_NODETYPE_CHECKPOINT (JFFS2_FEATURE_RWCOMPAT_DELETE | JFFS2_NODE_ACCURATE | 3)
--//#define JFFS2_NODETYPE_OPTIONS (JFFS2_FEATURE_RWCOMPAT_COPY | JFFS2_NODE_ACCURATE | 4)
--
-+/* Maybe later...
-+#define JFFS2_NODETYPE_CHECKPOINT (JFFS2_FEATURE_RWCOMPAT_DELETE | JFFS2_NODE_ACCURATE | 3)
-+#define JFFS2_NODETYPE_OPTIONS (JFFS2_FEATURE_RWCOMPAT_COPY | JFFS2_NODE_ACCURATE | 4)
-+*/
- 
- #define JFFS2_INO_FLAG_PREREAD	  1	/* Do read_inode() for this one at
- 					   mount time, don't wait for it to
--- 
-2.17.1
-
+Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
+everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
+AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
+this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
+for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
+we'll be able to work out that with Thierry and Jon if necessary.
