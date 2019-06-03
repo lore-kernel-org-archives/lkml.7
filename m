@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A765CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D606C2791F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647E6278FE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NVRF1jRO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ygoDCOnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfFCP00 (ORCPT
+        id S1727677AbfFCP03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:26:26 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50356 "EHLO
+        Mon, 3 Jun 2019 11:26:29 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:50394 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfFCP00 (ORCPT
+        with ESMTP id S1727356AbfFCP01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:26:26 -0400
+        Mon, 3 Jun 2019 11:26:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559575583; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1559575584; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=HE4CQPY/zjM71d5YcrWnITVnnDDo1P+pXVsHmG+Q88g=;
-        b=NVRF1jROkqVnmc5j86acG8s6j6Skd1JiciZ3tvJqM4lFS9EEo22F3D4zHJ8NUUz+ESg8/n
-        0ZukzBeFUYugLS8cq2KlIOhuIwSGOh7s9XXDBsES2KjEjA2gaw2fik+vmNMme7k2hRjJft
-        pXB5W+QLoqeYswOVmuMt/0YnIk2fdXM=
+         in-reply-to:in-reply-to:references:references;
+        bh=1xY7+XI8Hj0+1PI1pTdJqblUd7r6bzlrxvLvMUUhZCM=;
+        b=ygoDCOnRohP8PcqKU3PvKVw2QXT5RlQ2/Vok8Hm3Z6B1lz3wxj0C4x+Qc3Fu4KxHENcpbP
+        +HFJIhVm+cltZowOCG4e8Am1Y9TijajjruK+HZugffAR3u02csI3RE8dVhxY6jaIMrmViR
+        Q4NMPyPMHVruCtY+vRDU8SrPDkjfJJU=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -37,10 +38,13 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 1/2] dt-bindings: display: Add King Display KD035G6-54NT panel documentation
-Date:   Mon,  3 Jun 2019 17:25:54 +0200
-Message-Id: <20190603152555.23527-1-paul@crapouillou.net>
+        Paul Cercueil <paul@crapouillou.net>,
+        Maarten ter Huurne <maarten@treewalker.org>
+Subject: [PATCH v2 2/2] drm/panel: Add Novatek NT39016 panel support
+Date:   Mon,  3 Jun 2019 17:25:55 +0200
+Message-Id: <20190603152555.23527-2-paul@crapouillou.net>
+In-Reply-To: <20190603152555.23527-1-paul@crapouillou.net>
+References: <20190603152555.23527-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,68 +52,432 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KD035G6-54NT is a 3.5" 320x240 24-bit TFT LCD panel.
+Add support for display panels built around the Novatek NT39016 display
+controller, as found on e.g. the King Display KD035G6-54NT 24-bit
+320x240 3.5" LCD panel which equips the GCW Zero open-source handheld
+gaming console.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
 ---
 
 Notes:
-    v2: - Add an address to the panel node
-    	- Add information about SPI properties
-    	- Add information about the 'port' sub-node
+    v2: - Don't cleanup backlight, as we use devm function to create it
+        - Use backlight_enable / backlight_disable
+    	- Reorder includes
+    	- Use %d instead of %i to match other panel drivers
+    	- Bit 2 of NT39016_REG_SYSTEM register is 'reserved' and setting
+    	  it doesn't seem to have any effect, so we don't set it anymore
+    	- Use macros for bits 0 and 1 of NT39016_REG_SYSTEM
+    	- Avoid 150ms sleep in nt39016_enable() if there is no backlight
+    	  device
+    	- Include <linux/media-bus-format.h> instead of
+    	  <uapi/linux/media-bus-format.h>
+    	- use /* sentinel */ in the last entry of the of_device_id table
 
- .../panel/kingdisplay,kd035g6-54nt.txt        | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c | 359 ++++++++++++++++++
+ 3 files changed, 369 insertions(+)
+ create mode 100644 drivers/gpu/drm/panel/panel-novatek-nt39016.c
 
-diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index d9d931aa6e26..17959876621f 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -111,6 +111,15 @@ config DRM_PANEL_LG_LG4573
+ 	  Say Y here if you want to enable support for LG4573 RGB panel.
+ 	  To compile this driver as a module, choose M here.
+ 
++config DRM_PANEL_NOVATEK_NT39016
++	tristate "Novatek NT39016 RGB/SPI panel"
++	depends on OF && SPI
++	depends on BACKLIGHT_CLASS_DEVICE
++	select REGMAP_SPI
++	help
++	  Say Y here if you want to enable support for the panels built
++	  around the Novatek NT39016 display controller.
++
+ config DRM_PANEL_OLIMEX_LCD_OLINUXINO
+ 	tristate "Olimex LCD-OLinuXino panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index fb0cb3aaa9e6..f8709d280d61 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
+ obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) += panel-jdi-lt070me05000.o
+ obj-$(CONFIG_DRM_PANEL_KINGDISPLAY_KD097D04) += panel-kingdisplay-kd097d04.o
+ obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
++obj-$(CONFIG_DRM_PANEL_NOVATEK_NT39016) += panel-novatek-nt39016.o
+ obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
+ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
+ obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
+diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
 new file mode 100644
-index 000000000000..fa9596082e44
+index 000000000000..4a1c172b57c3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
-@@ -0,0 +1,42 @@
-+King Display KD035G6-54NT 3.5" (320x240 pixels) 24-bit TFT LCD panel
++++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+@@ -0,0 +1,359 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Novatek NT39016 TFT LCD panel driver
++ *
++ * Copyright (C) 2017, Maarten ter Huurne <maarten@treewalker.org>
++ * Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
++ */
 +
-+Required properties:
-+- compatible: should be "kingdisplay,kd035g6-54nt"
-+- power-supply: See panel-common.txt
-+- reset-gpios: See panel-common.txt
++#include <linux/backlight.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/gpio/consumer.h>
++#include <linux/media-bus-format.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/spi/spi.h>
 +
-+Optional properties:
-+- backlight: see panel-common.txt
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
 +
-+The generic bindings for the SPI slaves documented in [1] also apply.
 +
-+The device node can contain one 'port' child node with one child
-+'endpoint' node, according to the bindings defined in [2]. This
-+node should describe panel's video bus.
-+
-+[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
-+[2]: Documentation/devicetree/bindings/graph.txt
-+
-+Example:
-+
-+&spi {
-+	panel@0 {
-+		compatible = "kingdisplay,kd035g6-54nt";
-+		reg = <0>;
-+
-+		spi-max-frequency = <3125000>;
-+		spi-3wire;
-+		spi-cs-high;
-+
-+		reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
-+
-+		backlight = <&backlight>;
-+		power-supply = <&ldo6>;
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&panel_output>;
-+			};
-+		};
-+	};
++enum nt39016_regs {
++	NT39016_REG_SYSTEM,
++	NT39016_REG_TIMING,
++	NT39016_REG_OP,
++	NT39016_REG_DATA_IN,
++	NT39016_REG_SRC_TIMING_DELAY,
++	NT39016_REG_GATE_TIMING_DELAY,
++	NT39016_REG_RESERVED,
++	NT39016_REG_INITIAL_FUNC,
++	NT39016_REG_CONTRAST,
++	NT39016_REG_BRIGHTNESS,
++	NT39016_REG_HUE_SATURATION,
++	NT39016_REG_RB_SUBCONTRAST,
++	NT39016_REG_R_SUBBRIGHTNESS,
++	NT39016_REG_B_SUBBRIGHTNESS,
++	NT39016_REG_VCOMDC,
++	NT39016_REG_VCOMAC,
++	NT39016_REG_VGAM2,
++	NT39016_REG_VGAM34,
++	NT39016_REG_VGAM56,
++	NT39016_REG_VCOMDC_TRIM = 0x1e,
++	NT39016_REG_DISPLAY_MODE = 0x20,
 +};
++
++#define NT39016_SYSTEM_RESET_N	BIT(0)
++#define NT39016_SYSTEM_STANDBY	BIT(1)
++
++struct nt39016_panel_info {
++	struct drm_display_mode display_mode;
++	u16 width_mm, height_mm;
++	u32 bus_format, bus_flags;
++};
++
++struct nt39016 {
++	struct drm_panel drm_panel;
++	struct device *dev;
++	struct regmap *map;
++	struct regulator *supply;
++	const struct nt39016_panel_info *panel_info;
++
++	struct gpio_desc *reset_gpio;
++
++	struct backlight_device *backlight;
++};
++
++static inline struct nt39016 *to_nt39016(struct drm_panel *panel)
++{
++	return container_of(panel, struct nt39016, drm_panel);
++}
++
++#define RV(REG, VAL) { .reg = (REG), .def = (VAL), .delay_us = 2 }
++static const struct reg_sequence nt39016_panel_regs[] = {
++	RV(NT39016_REG_SYSTEM, 0x00),
++	RV(NT39016_REG_TIMING, 0x00),
++	RV(NT39016_REG_OP, 0x03),
++	RV(NT39016_REG_DATA_IN, 0xCC),
++	RV(NT39016_REG_SRC_TIMING_DELAY, 0x46),
++	RV(NT39016_REG_GATE_TIMING_DELAY, 0x05),
++	RV(NT39016_REG_RESERVED, 0x00),
++	RV(NT39016_REG_INITIAL_FUNC, 0x00),
++	RV(NT39016_REG_CONTRAST, 0x08),
++	RV(NT39016_REG_BRIGHTNESS, 0x40),
++	RV(NT39016_REG_HUE_SATURATION, 0x88),
++	RV(NT39016_REG_RB_SUBCONTRAST, 0x88),
++	RV(NT39016_REG_R_SUBBRIGHTNESS, 0x20),
++	RV(NT39016_REG_B_SUBBRIGHTNESS, 0x20),
++	RV(NT39016_REG_VCOMDC, 0x67),
++	RV(NT39016_REG_VCOMAC, 0xA4),
++	RV(NT39016_REG_VGAM2, 0x04),
++	RV(NT39016_REG_VGAM34, 0x24),
++	RV(NT39016_REG_VGAM56, 0x24),
++	RV(NT39016_REG_DISPLAY_MODE, 0x00),
++};
++#undef RV
++
++static const struct regmap_range nt39016_regmap_no_ranges[] = {
++	regmap_reg_range(0x13, 0x1D),
++	regmap_reg_range(0x1F, 0x1F),
++};
++
++static const struct regmap_access_table nt39016_regmap_access_table = {
++	.no_ranges = nt39016_regmap_no_ranges,
++	.n_no_ranges = ARRAY_SIZE(nt39016_regmap_no_ranges),
++};
++
++static const struct regmap_config nt39016_regmap_config = {
++	.reg_bits = 6,
++	.pad_bits = 2,
++	.val_bits = 8,
++
++	.max_register = NT39016_REG_DISPLAY_MODE,
++	.wr_table = &nt39016_regmap_access_table,
++	.write_flag_mask = 0x02,
++
++	.cache_type = REGCACHE_FLAT,
++};
++
++static int nt39016_prepare(struct drm_panel *drm_panel)
++{
++	struct nt39016 *panel = to_nt39016(drm_panel);
++	int err;
++
++	err = regulator_enable(panel->supply);
++	if (err) {
++		dev_err(panel->dev, "Failed to enable power supply: %d", err);
++		return err;
++	}
++
++	/*
++	 * Reset the NT39016.
++	 * The documentation says the reset pulse should be at least 40 us to
++	 * pass the glitch filter, but when testing I see some resets fail and
++	 * some succeed when using a 70 us delay, so we use 100 us instead.
++	 */
++	gpiod_set_value_cansleep(panel->reset_gpio, 1);
++	usleep_range(100, 1000);
++	gpiod_set_value_cansleep(panel->reset_gpio, 0);
++	udelay(2);
++
++	/* Init all registers. */
++	err = regmap_multi_reg_write(panel->map, nt39016_panel_regs,
++				     ARRAY_SIZE(nt39016_panel_regs));
++	if (err) {
++		dev_err(panel->dev, "Failed to init registers: %d", err);
++		goto err_disable_regulator;
++	}
++
++	return 0;
++
++err_disable_regulator:
++	regulator_disable(panel->supply);
++	return err;
++}
++
++static int nt39016_unprepare(struct drm_panel *drm_panel)
++{
++	struct nt39016 *panel = to_nt39016(drm_panel);
++
++	gpiod_set_value_cansleep(panel->reset_gpio, 1);
++
++	regulator_disable(panel->supply);
++
++	return 0;
++}
++
++static int nt39016_enable(struct drm_panel *drm_panel)
++{
++	struct nt39016 *panel = to_nt39016(drm_panel);
++	int ret;
++
++	ret = regmap_write(panel->map, NT39016_REG_SYSTEM,
++			   NT39016_SYSTEM_RESET_N | NT39016_SYSTEM_STANDBY);
++	if (ret) {
++		dev_err(panel->dev, "Unable to enable panel: %d", ret);
++		return ret;
++	}
++
++	if (panel->backlight) {
++		/* Wait for the picture to be ready before enabling backlight */
++		msleep(150);
++
++		ret = backlight_enable(panel->backlight);
++	}
++
++	return ret;
++}
++
++static int nt39016_disable(struct drm_panel *drm_panel)
++{
++	struct nt39016 *panel = to_nt39016(drm_panel);
++	int err;
++
++	backlight_disable(panel->backlight);
++
++	err = regmap_write(panel->map, NT39016_REG_SYSTEM,
++			   NT39016_SYSTEM_RESET_N);
++	if (err) {
++		dev_err(panel->dev, "Unable to disable panel: %d", err);
++		return err;
++	}
++
++	return 0;
++}
++
++static int nt39016_get_modes(struct drm_panel *drm_panel)
++{
++	struct nt39016 *panel = to_nt39016(drm_panel);
++	const struct nt39016_panel_info *panel_info = panel->panel_info;
++	struct drm_connector *connector = drm_panel->connector;
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(drm_panel->drm, &panel_info->display_mode);
++	if (!mode)
++		return -ENOMEM;
++
++	drm_mode_set_name(mode);
++
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	drm_mode_probed_add(connector, mode);
++
++	connector->display_info.bpc = 8;
++	connector->display_info.width_mm = panel_info->width_mm;
++	connector->display_info.height_mm = panel_info->height_mm;
++
++	drm_display_info_set_bus_formats(&connector->display_info,
++					 &panel_info->bus_format, 1);
++	connector->display_info.bus_flags = panel_info->bus_flags;
++
++	return 1;
++}
++
++static const struct drm_panel_funcs nt39016_funcs = {
++	.prepare	= nt39016_prepare,
++	.unprepare	= nt39016_unprepare,
++	.enable		= nt39016_enable,
++	.disable	= nt39016_disable,
++	.get_modes	= nt39016_get_modes,
++};
++
++static int nt39016_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct nt39016 *panel;
++	int err;
++
++	panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
++	if (!panel)
++		return -ENOMEM;
++
++	panel->dev = dev;
++	spi_set_drvdata(spi, panel);
++
++	panel->panel_info = of_device_get_match_data(dev);
++	if (!panel->panel_info)
++		return -EINVAL;
++
++	panel->supply = devm_regulator_get(dev, "power");
++	if (IS_ERR(panel->supply)) {
++		dev_err(dev, "Failed to get power supply");
++		return PTR_ERR(panel->supply);
++	}
++
++	panel->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(panel->reset_gpio)) {
++		dev_err(dev, "Failed to get reset GPIO");
++		return PTR_ERR(panel->reset_gpio);
++	}
++
++	spi->bits_per_word = 8;
++	spi->mode = SPI_MODE_3 | SPI_3WIRE;
++	err = spi_setup(spi);
++	if (err) {
++		dev_err(dev, "Failed to setup SPI");
++		return err;
++	}
++
++	panel->map = devm_regmap_init_spi(spi, &nt39016_regmap_config);
++	if (IS_ERR(panel->map)) {
++		dev_err(dev, "Failed to init regmap");
++		return PTR_ERR(panel->map);
++	}
++
++	panel->backlight = devm_of_find_backlight(dev);
++	if (IS_ERR(panel->backlight)) {
++		err = PTR_ERR(panel->backlight);
++		if (err != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get backlight handle");
++		return err;
++	}
++
++	drm_panel_init(&panel->drm_panel);
++	panel->drm_panel.dev = dev;
++	panel->drm_panel.funcs = &nt39016_funcs;
++
++	err = drm_panel_add(&panel->drm_panel);
++	if (err < 0) {
++		dev_err(dev, "Failed to register panel");
++		return err;
++	}
++
++	return 0;
++}
++
++static int nt39016_remove(struct spi_device *spi)
++{
++	struct nt39016 *panel = spi_get_drvdata(spi);
++
++	drm_panel_remove(&panel->drm_panel);
++
++	nt39016_disable(&panel->drm_panel);
++	nt39016_unprepare(&panel->drm_panel);
++
++	return 0;
++}
++
++static const struct nt39016_panel_info kd035g6_info = {
++	.display_mode = {
++		.clock = 6000,
++		.hdisplay = 320,
++		.hsync_start = 320 + 10,
++		.hsync_end = 320 + 10 + 50,
++		.htotal = 320 + 10 + 50 + 20,
++		.vdisplay = 240,
++		.vsync_start = 240 + 5,
++		.vsync_end = 240 + 5 + 1,
++		.vtotal = 240 + 5 + 1 + 4,
++		.vrefresh = 60,
++		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++	},
++	.width_mm = 71,
++	.height_mm = 53,
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_PIXDATA_NEGEDGE,
++};
++
++static const struct of_device_id nt39016_of_match[] = {
++	{ .compatible = "kingdisplay,kd035g6-54nt", .data = &kd035g6_info },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, nt39016_of_match);
++
++static struct spi_driver nt39016_driver = {
++	.driver = {
++		.name = "nt39016",
++		.of_match_table = nt39016_of_match,
++	},
++	.probe = nt39016_probe,
++	.remove = nt39016_remove,
++};
++
++module_spi_driver(nt39016_driver);
++
++MODULE_AUTHOR("Maarten ter Huurne <maarten@treewalker.org>");
++MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0.593.g511ec345e18
 
