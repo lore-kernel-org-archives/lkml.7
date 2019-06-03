@@ -2,208 +2,133 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F42AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0118C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3625F25ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A7025ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="aE8seyUS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="InOlRsv+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YI3bF1wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfFCVol (ORCPT
+        id S1726521AbfFCVpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:44:41 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37153 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfFCVok (ORCPT
+        Mon, 3 Jun 2019 17:45:11 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36531 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfFCVpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:44:40 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id E0B35220DB;
-        Mon,  3 Jun 2019 17:44:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 03 Jun 2019 17:44:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        pedrovanzella.com; h=date:from:to:cc:subject:message-id
-        :references:mime-version:content-type:in-reply-to; s=fm3; bh=sJt
-        vpQ8YjOpkGpI3jG3o8DzEDik537U+60zTVFQ+ys0=; b=aE8seyUSGyaHXH3+i4L
-        oV35I4W9JYM+W1eF+mv30VZxIbltvL8Bd1MMmdR0J17aoNg+dELpu+K7AIbqQBcI
-        P97vLuAeP1TrVzmuTTtik6yh+ebSJZxHOv5DvKAlcY3J4DeF20d44lKVYZES1s1s
-        Ju0hhhHTh9pDa7aplJy8v06CItpsmSKX67H4Dcr2Od00UUdChG0lJl6kz5X/FwD5
-        ONbKePcxq8sxEZMileIH2iOGx0J3Cfb5I2gU3WnBrEm/EK7jATs2HXDIpGVVy3rz
-        6ukwL+dY4LTLpqHkrRmJOzPT1MbAQfYmrz4scDzGgdPUUyuhfvMsT3Dd90tL9vk8
-        Q3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sJtvpQ
-        8YjOpkGpI3jG3o8DzEDik537U+60zTVFQ+ys0=; b=InOlRsv+DslFkm9areGgJf
-        VXxVP2+GZcPGLv5m6FarnjJIHyDY8B2A+szwE1JEqaBPzRzv04BYtKnEjOOutZgk
-        nUebQ7zmG6XVuNpA7RdcihRt0OtmtkrLUVjpiSOv24yd2v8JZ3F/7ODc2YvPVgfU
-        41iA/qc3coFeuO+Z0NfhnJPArNfLWn2UX5Zuqy16E8Eo6NPr2fc/T5YLl8PT8t5u
-        g/xSvQkzf7HQ7RbQ7R6KhI5wbyGAf/YqluuS1vH0/SG1xbot0O+gvAWFmTF8ZKVf
-        J8x5k3ysTCg5lHPTBVPs+VSGkQs+rBiL9Sew0JyHKv7SzFu6+fRS7bqMsggWkf4A
-        ==
-X-ME-Sender: <xms:x5T1XIJopwmdDhzQPLrmkPfN7n4i4ltRPERpqqztpuQfiihxe4UqUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefkedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomheprfgvughr
-    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
-    eqnecuffhomhgrihhnpehpvggurhhovhgrnhiivghllhgrrdgtohhmpdhkvghrnhgvlhdr
-    ohhrghenucfkphepjedtrddvjedrvdejrddugeelnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehpvggurhhosehpvggurhhovhgrnhiivghllhgrrdgtohhmnecuvehluhhsthgvrhfu
-    ihiivgeptd
-X-ME-Proxy: <xmx:x5T1XFhChO6a-kokg4xZnKUdMTkTmFYDgYvLusqtRJ2xWK_llnScIA>
-    <xmx:x5T1XEtE7a9G2Botqh4H1VeDtSlyfNh2v4wmtIdijdPSwWQZT5KfpA>
-    <xmx:x5T1XJH4T7Q2vuNMYuKTN7jt3bKxYpxGqxeIDJq3leXqvNujlJML1Q>
-    <xmx:x5T1XBKF6ydfyU_2sJe3x1YdwaZWKYeTn5BvO7S8YJazSMVGer7QQQ>
-Received: from localhost (toroon020aw-lp130-02-70-27-27-149.dsl.bell.ca [70.27.27.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 50875380084;
-        Mon,  3 Jun 2019 17:44:39 -0400 (EDT)
-Date:   Mon, 3 Jun 2019 17:44:38 -0400
-From:   Pedro Vanzella <pedro@pedrovanzella.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: hid-logitech-hidpp: detect wireless lightspeed
- devices
-Message-ID: <20190603214438.2cnmrx7g2sakjdr4@Fenrir>
-References: <20190528162924.32754-1-pedro@pedrovanzella.com>
- <CAO-hwJ+zAvDizJRpykky+D3pf1M1NhFGWztwyA4mJEv8C+nO-w@mail.gmail.com>
+        Mon, 3 Jun 2019 17:45:11 -0400
+Received: by mail-ua1-f65.google.com with SMTP id 94so7065131uam.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 14:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=abYS+Uz7A281R7NvC6O8zM/sshSHcswm8DbDdd1frRg=;
+        b=YI3bF1wxRrFFyQe1fOOz0HEeP24BXNJUB5WaMcuJQiiEXYicZaZjP+RDPlt4vZZTFG
+         eXNqIAopT3I9G6yVvErYwCBjRHaou0mmLJA3k221pf03KQ0A+QkDPr4pbAevxP3HQjos
+         ANB17tDD0zu4EM4sRMHhzs02e9QgRsbY7hTmc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abYS+Uz7A281R7NvC6O8zM/sshSHcswm8DbDdd1frRg=;
+        b=HkD5E4jbJNGvpJ9wy+Ea9vWhoGQT3xU2yvhPFSnsc5ZMqDUxMxWasrKHXF5bBpCw8a
+         BzGTLb4PvIFYi89Qtrzu7FD2s1N04UyXYJtErt5h/jClbGnU4x8XcWFrhc0hkoAUuuqB
+         QUHtrUL7r46NBHYyI9X+tLg+qGSxlVEDNaAoaWf6zX1oBLUiCET/0Ki7c7pDp6xOXvqL
+         Bc/lNnJiVFuemohS7YdmimDouysIUQLQpwfWiNydX+fgFLPajs6qZk/MCr91uZlJaup0
+         WHmykM0FSWAU12cWVZ+GviSbWA/xuKWFfYnVGcjoYrScFTQx3OyksIAt5Krk4uXFkt3M
+         Z3Wg==
+X-Gm-Message-State: APjAAAWIc2lc1lyYPO9AO4Su77+I2QHpOaHXxJLDAFoe8BrItaR7qYg6
+        jRMSbQkrTMbIn0R176aupjuzdjrFgoM=
+X-Google-Smtp-Source: APXvYqz7gHf82JbZ7jJUpsU8XARYof6sZHonHDJEUVfIy7qAFR4gg7BwIKBWAF4vQbt1SjOUJ41Yfg==
+X-Received: by 2002:ab0:1849:: with SMTP id j9mr7768803uag.75.1559597841541;
+        Mon, 03 Jun 2019 14:37:21 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id s24sm5494835vsj.26.2019.06.03.14.37.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 14:37:20 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id 7so7061191uah.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 14:37:19 -0700 (PDT)
+X-Received: by 2002:ab0:670c:: with SMTP id q12mr13608918uam.106.1559597839129;
+ Mon, 03 Jun 2019 14:37:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="il23bg2tbeerivkt"
-Content-Disposition: inline
-In-Reply-To: <CAO-hwJ+zAvDizJRpykky+D3pf1M1NhFGWztwyA4mJEv8C+nO-w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190516214022.65220-1-dianders@chromium.org>
+In-Reply-To: <20190516214022.65220-1-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 3 Jun 2019 14:37:07 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Ukt+Y=CNDR2uRLx5JhwyBK36UH4fCaY00a3FoMm-0VCA@mail.gmail.com>
+Message-ID: <CAD=FV=Ukt+Y=CNDR2uRLx5JhwyBK36UH4fCaY00a3FoMm-0VCA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drm: bridge: dw-hdmi: Add hook for resume
+To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sandy Huang <hjc@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Laurent,
 
---il23bg2tbeerivkt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 16, 2019 at 2:40 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> On Rockchip rk3288-based Chromebooks when you do a suspend/resume
+> cycle:
+>
+> 1. You lose the ability to detect an HDMI device being plugged in.
+>
+> 2. If you're using the i2c bus built in to dw_hdmi then it stops
+> working.
+>
+> Let's add a hook to the core dw-hdmi driver so that we can call it in
+> dw_hdmi-rockchip in the next commit.
+>
+> NOTE: the exact set of steps I've done here in resume come from
+> looking at the normal dw_hdmi init sequence in upstream Linux plus the
+> sequence that we did in downstream Chrome OS 3.14.  Testing show that
+> it seems to work, but if an extra step is needed or something here is
+> not needed we could improve it.
+>
+> As part of this change we'll refactor the hardware init bits of
+> dw-hdmi to happen all in one function and all at the same time.  Since
+> we need to init the interrupt mutes before we request the IRQ, this
+> means moving the hardware init earlier in the function, but there
+> should be no problems with that.  Also as part of this we now
+> unconditionally init the "i2c" parts of dw-hdmi, but again that ought
+> to be fine.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v2:
+> - No empty stub for suspend (Laurent)
+> - Refactor to use the same code in probe and resume (Laurent)
+> - Unconditionally init i2c (seems OK + needed before hdmi->i2c init)
+> - Combine "init" of i2c and "setup" of i2c (no reason to split)
 
-On 05/28, Benjamin Tissoires wrote:
-> On Tue, May 28, 2019 at 6:30 PM Pedro Vanzella <pedro@pedrovanzella.com> =
-wrote:
-> >
-> > Send a low device index when the device is connected via the lightspeed
-> > receiver so that the receiver will pass the message along to the device
-> > instead of responding. If we don't do that, we end up thinking it's a
-> > hidpp10 device and miss out on all new features available to newer devi=
-ces.
-> >
-> > This will enable correct detection of the following models:
-> > G603, GPro, G305, G613, G900 and G903, and possibly others.
->=20
-> Thanks for the patch.
-Thanks for reviewing it :)
+Are you happy with this now?  Even if you feel like you don't want to
+give it a full Reviewed-by, it'd good if you could confirm that I
+handled your suggestions properly.
 
-> However, there is already support for this receiver in Linus' tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/drivers/hid/hid-logitech-dj.c?id=3Df5fb57a74e88bd1788f57bf77d587c91d4dc9d57
->=20
-> With kernel 5.2-rc1, the connected device should already be handled by
-> hid-logitech-hidpp :)
-Why are the wireless receivers handled by hid-logitech-dj and the wired
-mice handled by hid-logitech-hidpp? They are, in the end, all hidpp
-devices, and having them all handled by the -hidpp driver with a quirk
-class would allow us to check for support for the battery voltage
-feature, as it seems to be an either-or scenario here.
+Thanks!  :-)
 
-- Pedro
->=20
-> Cheers,
-> Benjamin
->=20
-> >
-> > Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
-> > ---
-> >  drivers/hid/hid-logitech-hidpp.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
-h-hidpp.c
-> > index 72fc9c0566db..621fce141d9f 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -62,6 +62,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
-> >  #define HIDPP_QUIRK_CLASS_K400                 BIT(2)
-> >  #define HIDPP_QUIRK_CLASS_G920                 BIT(3)
-> >  #define HIDPP_QUIRK_CLASS_K750                 BIT(4)
-> > +#define HIDPP_QUIRK_CLASS_LIGHTSPEED           BIT(5)
-> >
-> >  /* bits 2..20 are reserved for classes */
-> >  /* #define HIDPP_QUIRK_CONNECT_EVENTS          BIT(21) disabled */
-> > @@ -236,7 +237,11 @@ static int __hidpp_send_report(struct hid_device *=
-hdev,
-> >          * set the device_index as the receiver, it will be overwritten=
- by
-> >          * hid_hw_request if needed
-> >          */
-> > -       hidpp_report->device_index =3D 0xff;
-> > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_LIGHTSPEED) {
-> > +               hidpp_report->device_index =3D 0x01;
-> > +       } else {
-> > +               hidpp_report->device_index =3D 0xff;
-> > +       }
-> >
-> >         if (hidpp->quirks & HIDPP_QUIRK_FORCE_OUTPUT_REPORTS) {
-> >                 ret =3D hid_hw_output_report(hdev, (u8 *)hidpp_report, =
-fields_count);
-> > @@ -3753,6 +3758,9 @@ static const struct hid_device_id hidpp_devices[]=
- =3D {
-> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
-> >         { /* Logitech G900 Gaming Mouse over USB */
-> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
-> > +       { /* Logitech Gaming Mice over Lightspeed Receiver */
-> > +         HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC539),
-> > +         .driver_data =3D HIDPP_QUIRK_CLASS_LIGHTSPEED },
-> >         { /* Logitech G920 Wheel over USB */
-> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH=
-_G920_WHEEL),
-> >                 .driver_data =3D HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_F=
-ORCE_OUTPUT_REPORTS},
-> > --
-> > 2.21.0
-> >
-
---=20
-Pedro Vanzella
-pedrovanzella.com
-#include <paranoia.h>
-Don't Panic
-
---il23bg2tbeerivkt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEXrNKwhI/eDFBCGo3v5huqi4pBxkFAlz1lLUACgkQv5huqi4p
-Bxk2IRAAhZ/xJZ8uT7NGw8Ix8cOQJ4kqLzZbTv/jr2a9FAs8y4tj22VBKoo1zNwo
-hyQuvToImgP6Tnql+l/SyTWoG14n6GBnmCv2CUy6rNpt7yBlr1w2UuYzIw+bHsN4
-DEwjNg0RjM5o5fNHGDUzRz1+WuZDNVDmGYdWeg4PLw1aK3TXbqTQBXaqq5xHZTLx
-MF1ZxwGD1+Cyp4gCwn/Rns50/hM9iDg1mUg9L2VrlSkuSHWWhD2WEprovd2fe2xD
-ELV/fu88M8Y2SF2HqWD57hQCGnqG0nsRCdcCV7wC7n1mjqvQFIBnPkx5dm2RJYan
-ubarZ3Qt/B0F9bfC3S2b74YNCUxFMtm+iWcg+4SI2g4uDCBA64HfJtsL67mb5IbA
-q4JW7wyJH83stHNFwFNgWio3q4jmrlEaB06xQ7joeT+w/79Gs/Y0zRWiGLBX3PGT
-yZWNojwJU7T3wLwlm/yASFFXmg1HiG2VuQkzJGamsbil1XnEIXxPR1O41zN50cym
-IlS4T4ciBfymVhYNOwPpUwxRVLW1EG3aurBurx9QAssKKc9ho4LbnZP5o9xlPowl
-TflW78Cr9ga4AJUZZzxW0ptxeqM0HHxYAX1eBfn2MsWnQjW4TI3gw9yOXtQk7sA3
-96uiUjrYY3PNzKAhc5x00v4QbtGO7npEnCm9XHedEc/RaVHvilo=
-=fbNq
------END PGP SIGNATURE-----
-
---il23bg2tbeerivkt--
+-Doug
