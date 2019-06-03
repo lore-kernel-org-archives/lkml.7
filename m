@@ -2,145 +2,162 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB9FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FA8C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D66D25D50
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oD9NwKTJ"
+	by mail.kernel.org (Postfix) with ESMTP id A600D25D50
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfFCXom (ORCPT
+        id S1726488AbfFCXpy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:44:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32929 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfFCXol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:44:41 -0400
-Received: by mail-ed1-f67.google.com with SMTP id y17so11185404edr.0;
-        Mon, 03 Jun 2019 16:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iUy17fN7770FCrI/QNupqS+ou4at1wV04TcSjndKp2g=;
-        b=oD9NwKTJf5z2zrDzsi8009pHmlRtw9kWEpI1bZ5z1Tj9w5XKm++lvrwDcBtM2GoOYR
-         tAfx0fsmedFy5tadWiGYRb+d5oK+l1T6ue/4JMyzKO+l59ihgiA9Bi4FRsgYNRR4YqZA
-         MGhldpQR2s0y1ahkROxL4LPO6pNwrsQ5zSyjLY8jLjrpIE/h2xoXaCSF1uK058Fdby+1
-         cRTVrlbB5Fxc+5SssC/A/x5r/XJFzpWYMsIuH6tsPgr1g7ISxP7Z0fUkSukxwE4PyQvJ
-         vYrPtbAGZ8kbyQAvWXlVsUUnqcUfOBEQSIyb4k9yc2Q6xV8Yqs0I3G88yxl5jgPWucbK
-         iXNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iUy17fN7770FCrI/QNupqS+ou4at1wV04TcSjndKp2g=;
-        b=qwNWzBF5ovdmAtTLPzuhFPbi83ZvdC0PmnQK0JaEaic5QNSLmh+4y+AtWLFarhy6WU
-         9Gvz9l2nfj/SsnVUun43b3X3Ow3sjoF3Wu1Z01GRz8UncWfovToIM2cxCmDQhdevxsZM
-         nuQb8Qq3AEMJHdA2+xnG7CufcT4JVNupQN5+Gb6fR0AyRxqFpoPEh2X06ebVCkDV5ON6
-         +tlzZ0aJbvXea8t+BZd4ynvZF3F5WJBc+aYYiGxKGkntS5y/yxVLI/Jo0VPuNqIaC8Hd
-         foj3Di4Ggn8XwxoxZ2vq64+0OEZEKr8UKoaMVIO7pstcb4/YyGOcf++Te1oNGW3C4P79
-         Pcfw==
-X-Gm-Message-State: APjAAAUzM35+xX0JXO1grgzvpJ+xygBGifIbx2oN8kG1DzTgUUoV1f0z
-        C0LQJhN2+ZibYLFHc448MDE=
-X-Google-Smtp-Source: APXvYqweCDTicOF+93cu952noxE9ZtNmcV/VMB+JSgKYoYKuLBG2FVMsTqn3lsN1cj2084kluUPO1w==
-X-Received: by 2002:a50:9413:: with SMTP id p19mr9742843eda.224.1559605480020;
-        Mon, 03 Jun 2019 16:44:40 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id gu4sm137011ejb.52.2019.06.03.16.44.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 16:44:39 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v3] scsi: ibmvscsi: Don't use rc uninitialized in ibmvscsi_do_work
-Date:   Mon,  3 Jun 2019 16:44:06 -0700
-Message-Id: <20190603234405.29600-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc3
-In-Reply-To: <20190603221941.65432-1-natechancellor@gmail.com>
-References: <20190603221941.65432-1-natechancellor@gmail.com>
+        Mon, 3 Jun 2019 19:45:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3668 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfFCXpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:45:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 16:45:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,548,1549958400"; 
+   d="scan'208";a="181334111"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 16:45:51 -0700
+Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 3 Jun 2019 16:45:46 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX123.amr.corp.intel.com ([169.254.1.141]) with mapi id 14.03.0415.000;
+ Mon, 3 Jun 2019 16:45:46 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: RE: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
+ in single ioctl()
+Thread-Topic: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
+ in single ioctl()
+Thread-Index: AQHVGAki7TYpY4ZsUk+m4jTej+khLaaJYAJQgAF1XwCAAAjgAP//veIw
+Date:   Mon, 3 Jun 2019 23:45:45 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654ED478@ORSMSX116.amr.corp.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-4-sean.j.christopherson@intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654ECBBD@ORSMSX116.amr.corp.intel.com>
+ <20190603200804.GG13384@linux.intel.com>
+ <20190603203950.GJ13384@linux.intel.com>
+In-Reply-To: <20190603203950.GJ13384@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTEzYzAxMTAtYzhkNC00MDZhLWFmMjEtMzY1OTQ4YzBhMWRiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibkE2Rm5qdWZyak14eVpBbHk3QUlrYlQreE4wWFVSNE9GclBmWU5zcjhiYlQ5dEVxelJyam9VdDZYalVMMjlpRSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns:
+> From: Christopherson, Sean J
+> Sent: Monday, June 03, 2019 1:40 PM
+> 
+> On Mon, Jun 03, 2019 at 01:08:04PM -0700, Sean Christopherson wrote:
+> > On Sun, Jun 02, 2019 at 11:26:09PM -0700, Xing, Cedric wrote:
+> > > > From: Christopherson, Sean J
+> > > > Sent: Friday, May 31, 2019 4:32 PM
+> > > >
+> > > > +/**
+> > > > + * sgx_ioc_enclave_add_pages - handler for
+> > > > +%SGX_IOC_ENCLAVE_ADD_PAGES
+> > > > + *
+> > > > + * @filep:	open file to /dev/sgx
+> > > > + * @cmd:	the command value
+> > > > + * @arg:	pointer to an &sgx_enclave_add_page instance
+> > > > + *
+> > > > + * Add a range of pages to an uninitialized enclave (EADD), and
+> > > > +optionally
+> > > > + * extend the enclave's measurement with the contents of the page
+> (EEXTEND).
+> > > > + * The range of pages must be virtually contiguous.  The SECINFO
+> > > > +and
+> > > > + * measurement maskare applied to all pages, i.e. pages with
+> > > > +different
+> > > > + * properties must be added in separate calls.
+> > > > + *
+> > > > + * EADD and EEXTEND are done asynchronously via worker threads.
+> > > > +A successful
+> > > > + * sgx_ioc_enclave_add_page() only indicates the pages have been
+> > > > +added to the
+> > > > + * work queue, it does not guarantee adding the pages to the
+> > > > +enclave will
+> > > > + * succeed.
+> > > > + *
+> > > > + * Return:
+> > > > + *   0 on success,
+> > > > + *   -errno otherwise
+> > > > + */
+> > > > +static long sgx_ioc_enclave_add_pages(struct file *filep,
+> unsigned int cmd,
+> > > > +				      unsigned long arg)
+> > > > +{
+> > > > +	struct sgx_enclave_add_pages *addp = (void *)arg;
+> > > > +	struct sgx_encl *encl = filep->private_data;
+> > > > +	struct sgx_secinfo secinfo;
+> > > > +	unsigned int i;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (copy_from_user(&secinfo, (void __user *)addp->secinfo,
+> > > > +			   sizeof(secinfo)))
+> > > > +		return -EFAULT;
+> > > > +
+> > > > +	for (i = 0, ret = 0; i < addp->nr_pages && !ret; i++) {
+> > > > +		if (signal_pending(current))
+> > > > +			return -ERESTARTSYS;
+> > >
+> > > If interrupted, how would user mode code know how many pages have
+> been EADD'ed?
+> >
+> > Hmm, updating nr_pages would be fairly simple and shouldn't confuse
+> > userspace, e.g. as opposed to overloading the return value.
+> 
+> Or maybe update @addr and @src as well?  That would allow userspace to
+> re-invoke the ioctl() without having to modify the struct.
 
-drivers/scsi/ibmvscsi/ibmvscsi.c:2126:7: warning: variable 'rc' is used
-uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
-        case IBMVSCSI_HOST_ACTION_NONE:
-             ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/ibmvscsi/ibmvscsi.c:2151:6: note: uninitialized use occurs
-here
-        if (rc) {
-            ^~
-
-Initialize rc in the IBMVSCSI_HOST_ACTION_UNBLOCK case statement then
-shuffle IBMVSCSI_HOST_ACTION_NONE down to the default case statement and
-make it return early so that rc is never used uninitialized in this
-function.
-
-Fixes: 035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
-Link: https://github.com/ClangBuiltLinux/linux/issues/502
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Suggested-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
-
-v1 -> v2:
-
-* Initialize rc in the case statements, rather than at the top of the
-  function, as suggested by Michael.
-  
-v2 -> v3:
-
-* default and IBMVSCSI_HOST_ACTION_NONE now return early from the
-  function, as requested by Tyrel.
-
- drivers/scsi/ibmvscsi/ibmvscsi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 65053daef5f7..7f66a7783209 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2109,8 +2109,8 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
- 
- 	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	switch (hostdata->action) {
--	case IBMVSCSI_HOST_ACTION_NONE:
- 	case IBMVSCSI_HOST_ACTION_UNBLOCK:
-+		rc = 0;
- 		break;
- 	case IBMVSCSI_HOST_ACTION_RESET:
- 		spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-@@ -2128,8 +2128,10 @@ static void ibmvscsi_do_work(struct ibmvscsi_host_data *hostdata)
- 		if (!rc)
- 			rc = ibmvscsi_send_crq(hostdata, 0xC001000000000000LL, 0);
- 		break;
-+	case IBMVSCSI_HOST_ACTION_NONE:
- 	default:
--		break;
-+		spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-+		return;
- 	}
- 
- 	hostdata->action = IBMVSCSI_HOST_ACTION_NONE;
--- 
-2.22.0.rc3
-
+How about returning the number of pages (or bytes) EADD'ed, similar to write() syscall? 
