@@ -2,95 +2,93 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E30C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113B9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B0B276D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559577892;
-	bh=LNZAm9MbMd2wOXj54gpP2dOl8w/OYBkIpTy62sDjvZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MsoIk9ysLw2RBxyCbXgUfZeXYyRPWV9PGqDGxQZT/P+hhRjfbF6AYg0YiOAkyWeOh
-	 ErZykNVd5kMzgVYVcRyxZ3s5SFTF/GO4CyKAAUzGeY4gQ7Nh1/Uz/YzIGD1FEjI69y
-	 RSNwE4rfvrvsK6tWQhnzkKqaMp1UOozjlUcHocgQ=
+	by mail.kernel.org (Postfix) with ESMTP id D47F027862
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CJiFdJrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfFCQEv (ORCPT
+        id S1728572AbfFCQFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:04:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55752 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbfFCQEv (ORCPT
+        Mon, 3 Jun 2019 12:05:54 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46012 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbfFCQFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tT2HG5okus4hJgw9QU/wQuZR9JExuOgwKWTHzjjeb6Q=; b=J4mtivVhS7rU2EPLDMM6R1/8a
-        ccMN3kqzO8V9BipYt5fp8welsJK+EQ1IOGFBjDz4MNvAmLfkA39O8KGhlpS0fQfPMqPGqnbJrxIe4
-        JuiYB4F3CMIN/+RXJHRmygMX7zwU1llaEK+T6bR3JBmd2GqKrOZ3foIR8OtFCgZp/NW8s=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hXpS3-0002JB-Li; Mon, 03 Jun 2019 16:04:47 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 1A5F7440046; Mon,  3 Jun 2019 17:04:47 +0100 (BST)
-Date:   Mon, 3 Jun 2019 17:04:47 +0100
-From:   Mark Brown <broonie@kernel.org>
+        Mon, 3 Jun 2019 12:05:54 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so6296795qtr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9HiIovokzOYphw8IOYOQGLxzeS88agF96fM/nChgZT4=;
+        b=CJiFdJrbD+cbmaYt9NoRnbWU46TlHs/rIasuzCXAC2ST66ULpZedGMfHxjy0rN1kGD
+         qapjOsceVjypRME8Y3H9gFYa0pF0CKx/bLn3LOADFIupF+rmfxld9V9Ryvq0fL+qvX8P
+         OAG53Q0lvIftSEJZ96Goym3zw2Qbs8WjUB2CCE5lwCP8Kqx8GcRH4ohHu+KqC2dqtQRO
+         TeNZNfkJHIr+GOdqwWanYOcrSgi5zf9ZbSw2wEPRRoOUXzoMu0ksT594upJ6UL93Gsgj
+         XeQ2nt2Tole1H3aaHz3kcM8bh6b5QT/73Wo9keSs/HIaMx1HLIjfUJuDRRi0D5tuJfqj
+         J/lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9HiIovokzOYphw8IOYOQGLxzeS88agF96fM/nChgZT4=;
+        b=N0TiQYPK+3H4yUD6GEOZDN9Noo4Nyf0SJOHD6qr5p2He4CnyTemvA7RwPk34JGSip6
+         9NxyMm4sZ8FwAMPdxfwAYO403hY/Pd45oORWT3SaMXdK7GV8CuNCDuZYS6vD1ikKnDUf
+         eH+PgqQB4l6+DCwh+SujCZE19hjBvS2qik+W1O4aUdyEjOVftBQVOQzFiO9ace1uIIzq
+         dknGLWE1DlYA91i2XURSFUsEQWRyFINlexVDT3LBPLck5HtPoHhNQdrZFVJrHDDjwQfT
+         rUxscsIwBM/3tDH3JflmeINJg5aqnk0JERucbn7nesLKcWJSwIpWIQUWftAjpqT/mFYG
+         uPIA==
+X-Gm-Message-State: APjAAAXkS3AG5NR+zmPvUgEU9qmH2YC5+/2xvgz6NUrutNEAnj9/wvW2
+        NNrIy8XeLc8SJn6sWRn8MiHCRw==
+X-Google-Smtp-Source: APXvYqymChUmF/O60pHUin/O4Kk1XIV7XclnszRykg8S4CkA4sZaezgQfOsJoCq9uU9XsIwPJ7aC5g==
+X-Received: by 2002:ac8:2cbc:: with SMTP id 57mr23098627qtw.222.1559577953439;
+        Mon, 03 Jun 2019 09:05:53 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id 102sm8429304qte.52.2019.06.03.09.05.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 09:05:52 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hXpT6-0005LA-8I; Mon, 03 Jun 2019 13:05:52 -0300
+Date:   Mon, 3 Jun 2019 13:05:52 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [RFC PATCH 42/57] drivers: regulator: Use
- class_find_device_by_of_node helper
-Message-ID: <20190603160447.GD27065@sirena.org.uk>
+        rafael@kernel.org, Doug Ledford <dledford@redhat.com>
+Subject: Re: [RFC PATCH 16/57] net: hns_roce: Use bus_find_device_by_fwnode
+ helper
+Message-ID: <20190603160552.GB11474@ziepe.ca>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-43-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-17-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559577023-558-43-git-send-email-suzuki.poulose@arm.com>
-X-Cookie: Been Transferred Lately?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559577023-558-17-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 03, 2019 at 04:49:42PM +0100, Suzuki K Poulose wrote:
+> Switch to using the bus_find_device_by_fwnode helper
+> 
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 
---C+ts3FVlLX8+P6JN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Jason Gunthorpe <jgg@mellanox.com>
 
-On Mon, Jun 03, 2019 at 04:50:08PM +0100, Suzuki K Poulose wrote:
-> Use the generic helper to find a device matching the of_node.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---C+ts3FVlLX8+P6JN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz1RR4ACgkQJNaLcl1U
-h9C2EAf2PYD6xY/y9LaBYAMD+T6pdYzojkeSfG6q30AB2n0CLvFwE0Ojd6jD6COa
-FwnOP2yA2c3XtKn8EUzl0Lb+CYTXrCrS0IeWn8BCt90gyF9SelS+jP3bOSe4SujY
-rnrGxSAGhzgx93fullPmpaBFV66/ik+a4yHSy7EvBYFYxmymduWb7NgEB0S35x6i
-XsBjIQkTYOUbS6b7kYxxugxfB5Xtk9XKO6sZh5angdUIs8njz9PgTsxKUlg1vYM9
-3iyzaDhCaj64PgDIhUzbz7PZgllIlqAJORLN4evuCH9dCNrRRmA+ypDCHLu9Y7tx
-QAYV0VemvK5THyjk31UM9tjj0avC
-=jMfv
------END PGP SIGNATURE-----
-
---C+ts3FVlLX8+P6JN--
+Jason
