@@ -2,85 +2,134 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4412C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89707C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CEA27EEC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5701027EFE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559553290;
+	bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=by8kBGHdW2lt2QdNA9+sGGgOqo3g/tCJdx3gDVrER01GAUwxBZCzLi2hMeJ5u4oJ9
+	 VZijiXsWfcXD1NeSyqNf9PqcBB5VN/RcE28FrGcfqtcMXpB1G5PoJnlB74qeNEJz0+
+	 p/ktxsQvdanmaYySym1rKi/LmOA6/Fo90yC8FL+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfFCJOn (ORCPT
+        id S1729059AbfFCJOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:14:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729032AbfFCJOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:14:41 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E475A1C793E5AEDA66D9;
-        Mon,  3 Jun 2019 17:14:38 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019
- 17:14:28 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        <stable@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        <koujilong@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2] sched/core: add __sched tag for io_schedule()
-Date:   Mon, 3 Jun 2019 17:13:38 +0800
-Message-ID: <20190603091338.2695-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190531082912.80724-1-gaoxiang25@huawei.com>
-References: <20190531082912.80724-1-gaoxiang25@huawei.com>
+        Mon, 3 Jun 2019 05:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729012AbfFCJOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:14:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2273427EF0;
+        Mon,  3 Jun 2019 09:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559553269;
+        bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HDgLe+U7JyTSWPE3ifXO398gnzBpCab82PdYIvVSSCL7+NbnNc3eUv6tKawX75MOn
+         BnRiux7Khwy5C9BC3s9FsT05dOaUbrztDvsghGGejc6qS3zbBJGASkVq/Hd9TU9Eav
+         aN0GRyivNKb5qFlCVmTKqnU977pD85M9fM0NRLG0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 39/40] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+Date:   Mon,  3 Jun 2019 11:09:32 +0200
+Message-Id: <20190603090524.827111176@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
+References: <20190603090522.617635820@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-non-inline io_schedule() was introduced in
-commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-Keep in line with io_schedule_timeout, Otherwise
-"/proc/<pid>/wchan" will report io_schedule()
-rather than its callers when waiting io.
+From: David S. Miller <davem@davemloft.net>
 
-Reported-by: Jilong Kou <koujilong@huawei.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-Cc: <stable@vger.kernel.org> # 4.11+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
+
+This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
+
+More revisions coming up.
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-change log v2:
- - add missing tags
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427742a9..4d5962232a55 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5123,7 +5123,7 @@ long __sched io_schedule_timeout(long timeout)
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -66,10 +66,6 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
+ 
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -96,8 +92,6 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
+-	tipc_socket_stop();
+-out_socket:
+ 	return err;
  }
- EXPORT_SYMBOL(io_schedule_timeout);
  
--void io_schedule(void)
-+void __sched io_schedule(void)
+@@ -108,7 +102,6 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
+-	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -144,6 +137,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -151,6 +148,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	tipc_socket_stop();
++out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -166,6 +165,7 @@ out_netlink:
+ static void __exit tipc_exit(void)
  {
- 	int token;
- 
--- 
-2.17.1
+ 	tipc_bearer_cleanup();
++	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
+
 
