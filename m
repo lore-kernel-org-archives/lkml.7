@@ -3,52 +3,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E60C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C21C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585752428A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477652804D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfFCMdA (ORCPT
+        id S1727458AbfFCMcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:33:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:47467 "EHLO ozlabs.org"
+        Mon, 3 Jun 2019 08:32:55 -0400
+Received: from ozlabs.org ([203.11.71.1]:44639 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfFCMc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:32:59 -0400
+        id S1726336AbfFCMcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:32:50 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45HZG14vJpz9sP6; Mon,  3 Jun 2019 22:32:57 +1000 (AEST)
+        id 45HZFq6dddz9sN6; Mon,  3 Jun 2019 22:32:47 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: efa9ace68e487ddd29c2b4d6dd23242158f1f607
+X-powerpc-patch-commit: d667edc01bedcd23988ef69f851e7cc26cc3c67f
 X-Patchwork-Hint: ignore
 Content-Type: text/plain; charset="utf-8";
-In-Reply-To: <20190526024240.GA14546@zhanggen-UX430UQ>
-To:     Gen Zhang <blackgod016574@gmail.com>, benh@kernel.crashing.org,
-        paulus@samba.org
+In-Reply-To: <20190504102427.12332-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <christophe.leroy@c-s.fr>,
+        <aneesh.kumar@linux.vnet.ibm.com>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     nfont@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+Cc:     YueHaibing <yuehaibing@huawei.com>, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dlpar: Fix a missing-check bug in dlpar_parse_cc_property()
-Message-Id: <45HZG14vJpz9sP6@ozlabs.org>
-Date:   Mon,  3 Jun 2019 22:32:57 +1000 (AEST)
+Subject: Re: [PATCH -next] powerpc/book3s64: Make some symbols static
+Message-Id: <45HZFq6dddz9sN6@ozlabs.org>
+Date:   Mon,  3 Jun 2019 22:32:47 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-05-26 at 02:42:40 UTC, Gen Zhang wrote:
-> In dlpar_parse_cc_property(), 'prop->name' is allocated by kstrdup().
-> kstrdup() may return NULL, so it should be checked and handle error.
-> And prop should be freed if 'prop->name' is NULL.
+On Sat, 2019-05-04 at 10:24:27 UTC, YueHaibing wrote:
+> Fix sparse warnings:
 > 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+> arch/powerpc/mm/book3s64/radix_pgtable.c:326:13: warning: symbol 'radix_init_pgtable' was not declared. Should it be static?
+> arch/powerpc/mm/book3s64/hash_native.c:48:1: warning: symbol 'native_tlbie_lock' was not declared. Should it be static?
+> arch/powerpc/mm/book3s64/hash_utils.c:988:24: warning: symbol 'init_hash_mm_context' was not declared. Should it be static?
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/efa9ace68e487ddd29c2b4d6dd232421
+https://git.kernel.org/powerpc/c/d667edc01bedcd23988ef69f851e7cc2
 
 cheers
