@@ -2,432 +2,291 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02E2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36B2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7068227FA7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1BD2182B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qzFQ9aAr"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tQvVjQQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfFCNCk (ORCPT
+        id S1728062AbfFCNDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:02:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43965 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfFCNCk (ORCPT
+        Mon, 3 Jun 2019 09:03:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48841 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfFCNDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:02:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r18so2967689wrm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=t3jRkmMvvYUcX38p0+CSbqABbIMO7QDuY4PJUMhyIbw=;
-        b=qzFQ9aArsHHHBZ/mbraHZgLRH5x2McZK08kpYO8261hOGCRXxavE+Za4/jmUl6CW68
-         mJ5+RW1zfpkt1QtAyDEeIyM8jjyUDNXKS03IG1SrLVdN/rSj1NFFQFtaYGw1rS7wutd1
-         GBBOj3TQ3pI8JcJbr1yvOl/Y8AMyB/H7pE4GEP042iwkG4NCSEVZXVVS8Zd+8hXSEmVe
-         BlE2X5nvJvBI0iq+OoZ7bZIVdzHDwhbEhUYL3sDgQgGApVXFt9Eux4ue4VlbPXTm05gY
-         fsLrsxgz7erUM/rJRj0YmvlsL7WXFEd/d2GClyRk6jsErMyLNCovQbXLSgGwNvBSA8lG
-         bO4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=t3jRkmMvvYUcX38p0+CSbqABbIMO7QDuY4PJUMhyIbw=;
-        b=NZNl1s54eYsU5cP29Fou2lD+8bJHzDwfsbd7Yh8/bUAa/dbFU/tAFIuTa/ZQh7Qbyi
-         /43ZcMsBClnFNuTFS9RP3Vfq6cx77RDOpZgg15VEUssC+7vPxQT9VI0jmwuMrUAv+q+7
-         Dlfq4NaoAejRufr8vr4RzYC/ByGONDhrCvzJJpseIjnM3TIW2ordz+Tx0gYs61gJ2QXn
-         8ho94Ko51PZG4idEp4MrUQUnaRpC1Pn4zVfpqWE0HMxbLnsp5WdCQou0ggnDSOok4tDN
-         Ljyl60/PFpksHCsNEAG38R3CqXf8gmf8KBIerdsJtUGe7/lSiSN06sKhi8uwr6MhvVR0
-         CdWQ==
-X-Gm-Message-State: APjAAAVePyOUs54Zygss1o8owEvircpj2xNxM/m5G8Wlrcx6buYnOg/D
-        xoOu5TBcP2ROVvTZgixUbHSl4g==
-X-Google-Smtp-Source: APXvYqzmN6YtUszstuU6HNSExQmNkMFWRqO8a+47RdwCdbB5V3utY9lcpOVdCFjFH27PZnXzYPjm9A==
-X-Received: by 2002:adf:ee0e:: with SMTP id y14mr15441018wrn.275.1559566958095;
-        Mon, 03 Jun 2019 06:02:38 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id l8sm10485193wrw.56.2019.06.03.06.02.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 06:02:37 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 14:02:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     broonie@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
-        miquel.raynal@bootlin.com
-Subject: Re: [PATCH v13 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
-Message-ID: <20190603130235.GW4797@dell>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
- <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw>
+        Mon, 3 Jun 2019 09:03:04 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D2lQq602107
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:02:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D2lQq602107
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559566968;
+        bh=K3urjQF6gb2vS7AitEUt69E8yo4hQfAk4YYunD66sR0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=tQvVjQQeLE/KL3GrjZGLGpJzpJ9MzaBgYWhMgDgPTpFCXjgQ5pWhbS//XXot89yTu
+         knC8qfi73AwXtkbscZJs7EPX2Px3gCjea1QLgg09qFAt070J/8m38ZCqP/GjtOgBUW
+         80A6aKhm08fFkrGK+cVGIdxPRFbMhbIt98mpoKQuoMG0zz+5KDc7zCuk/Dyb691SJ8
+         kjlOA+B2gt1+l4JQsmn8lwstyJlY5LiyKbKSi3Jg6ZxMIFf+W9rSgvq9++iMpLLE1O
+         WlsYoMOUMl4xTyUBh3RxlBSeGemxx+I00iM4DhZtlBpZ51yRCT70JNQTurFH53ipVE
+         CYDNKwndrG9lg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D2k6d602103;
+        Mon, 3 Jun 2019 06:02:46 -0700
+Date:   Mon, 3 Jun 2019 06:02:46 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
+Message-ID: <tip-1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e@git.kernel.org>
+Cc:     morten.rasmussen@arm.com, valentin.schneider@arm.com,
+        dietmar.eggemann@arm.com, torvalds@linux-foundation.org,
+        vincent.guittot@linaro.org, quentin.perret@arm.com,
+        fweisbec@gmail.com, hpa@zytor.com, patrick.bellasi@arm.com,
+        mingo@kernel.org, riel@surriel.com, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, tglx@linutronix.de
+Reply-To: valentin.schneider@arm.com, morten.rasmussen@arm.com,
+          dietmar.eggemann@arm.com, quentin.perret@arm.com,
+          vincent.guittot@linaro.org, torvalds@linux-foundation.org,
+          patrick.bellasi@arm.com, fweisbec@gmail.com, hpa@zytor.com,
+          mingo@kernel.org, riel@surriel.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, tglx@linutronix.de
+In-Reply-To: <20190527062116.11512-3-dietmar.eggemann@arm.com>
+References: <20190527062116.11512-3-dietmar.eggemann@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/fair: Replace source_load() & target_load()
+ with weighted_cpuload()
+Git-Commit-ID: 1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Mason Yang wrote:
+Commit-ID:  1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
+Gitweb:     https://git.kernel.org/tip/1c1b8a7b03ef50f80f5d0c871ee261c04a6c967e
+Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate: Mon, 27 May 2019 07:21:11 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:49:39 +0200
 
-> Add a driver for Renesas R-Car Gen3 RPC-IF MFD
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mfd/Kconfig             |   9 +++
->  drivers/mfd/Makefile            |   1 +
->  drivers/mfd/renesas-rpc.c       | 125 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/renesas-rpc.h | 141 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 276 insertions(+)
->  create mode 100644 drivers/mfd/renesas-rpc.c
->  create mode 100644 include/linux/mfd/renesas-rpc.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 294d956..cdbde79 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1002,6 +1002,15 @@ config MFD_RDC321X
->  	  southbridge which provides access to GPIOs and Watchdog using the
->  	  southbridge PCI device configuration space.
->  
-> +config MFD_RENESAS_RPC
-> +	tristate "Renesas R-Car Gen3 RPC-IF controller driver"
+sched/fair: Replace source_load() & target_load() with weighted_cpuload()
 
-Please expand these short-forms, either here or in the help.
+With LB_BIAS disabled, source_load() & target_load() return
+weighted_cpuload(). Replace both with calls to weighted_cpuload().
 
-> +	select MFD_CORE
-> +	depends on ARCH_RENESAS
-> +	help
-> +	  This supports Renesas R-Car Gen3 RPC-IF controller which provides
-> +	  either SPI host or HyperFlash.
-> +	  You have to select individual components under the corresponding menu.
-> +
->  config MFD_RT5033
->  	tristate "Richtek RT5033 Power Management IC"
->  	depends on I2C
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 52b1a90..459eb2f 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -184,6 +184,7 @@ obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
->  obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
->  obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
->  obj-$(CONFIG_MFD_RDC321X)	+= rdc321x-southbridge.o
-> +obj-$(CONFIG_MFD_RENESAS_RPC)	+= renesas-rpc.o
->  obj-$(CONFIG_MFD_JANZ_CMODIO)	+= janz-cmodio.o
->  obj-$(CONFIG_MFD_JZ4740_ADC)	+= jz4740-adc.o
->  obj-$(CONFIG_MFD_TPS6586X)	+= tps6586x.o
-> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
-> new file mode 100644
-> index 0000000..c80c8d1
-> --- /dev/null
-> +++ b/drivers/mfd/renesas-rpc.c
-> @@ -0,0 +1,125 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
+The function to obtain the load index (sd->*_idx) for an sd,
+get_sd_load_idx(), can be removed as well.
 
-Expand this.
+Finally, get rid of the sched feature LB_BIAS.
 
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rik van Riel <riel@surriel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20190527062116.11512-3-dietmar.eggemann@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c     | 90 +++----------------------------------------------
+ kernel/sched/features.h |  1 -
+ 2 files changed, 4 insertions(+), 87 deletions(-)
 
-Why do you have blank commented line here?
-
-By the way, is C++ style throughout the new format?
-
-> +#include <linux/clk.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/renesas-rpc.h>
-> +#include <linux/reset.h>
-
-Alphabetical.
-
-> +static const struct mfd_cell rpc_hf_ctlr = {
-> +	.name = "rpc-hf",
-> +};
-> +
-> +static const struct mfd_cell rpc_spi_ctlr = {
-> +	.name = "rpc-spi",
-> +};
-> +
-> +static const struct regmap_range rpc_mfd_volatile_ranges[] = {
-> +	regmap_reg_range(RPC_SMRDR0, RPC_SMRDR1),
-> +	regmap_reg_range(RPC_SMWDR0, RPC_SMWDR1),
-> +	regmap_reg_range(RPC_CMNSR, RPC_CMNSR),
-> +};
-> +
-> +static const struct regmap_access_table rpc_mfd_volatile_table = {
-> +	.yes_ranges	= rpc_mfd_volatile_ranges,
-> +	.n_yes_ranges	= ARRAY_SIZE(rpc_mfd_volatile_ranges),
-> +};
-> +
-> +static const struct regmap_config rpc_mfd_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +	.max_register = RPC_PHYOFFSET2,
-> +	.volatile_table = &rpc_mfd_volatile_table,
-> +};
-> +
-> +static int rpc_mfd_probe(struct platform_device *pdev)
-
-Remove the "mfd" from the nomenclature.
-
-> +	struct device_node *flash;
-> +	const struct mfd_cell *cell;
-> +	struct resource *res;
-> +	struct rpc_mfd *rpc;
-> +	void __iomem *base;
-> +
-> +	flash = of_get_next_child(pdev->dev.of_node, NULL);
-> +	if (!flash) {
-> +		dev_warn(&pdev->dev, "no flash node found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_device_is_compatible(flash, "jedec,spi-nor")) {
-> +		cell = &rpc_spi_ctlr;
-> +	} else if (of_device_is_compatible(flash, "cfi-flash")) {
-> +		cell = &rpc_hf_ctlr;
-> +	} else {
-> +		dev_warn(&pdev->dev, "unknown flash type\n");
-> +		return -ENODEV;
-> +	}
-
-Are there going to be more children coming?
-
-If not, I'd argue that this is not an MFD.
-
-> +	rpc = devm_kzalloc(&pdev->dev, sizeof(*rpc), GFP_KERNEL);
-> +	if (!rpc)
-> +		return -ENOMEM;
-> +
-> +	rpc->clk_rpc = devm_clk_get(&pdev->dev, "rpc");
-> +	if (IS_ERR(rpc->clk_rpc))
-> +		return PTR_ERR(rpc->clk_rpc);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	rpc->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-> +					    &rpc_mfd_regmap_config);
-> +	if (IS_ERR(rpc->regmap)) {
-> +		dev_err(&pdev->dev,
-> +			"failed to init regmap for rpc-mfd, error %ld\n",
-> +			PTR_ERR(rpc->regmap));
-> +		return PTR_ERR(rpc->regmap);
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirmap");
-> +	rpc->dirmap = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(rpc->dirmap))
-> +		rpc->dirmap = NULL;
-> +
-> +	rpc->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> +	if (IS_ERR(rpc->rstc))
-> +		return PTR_ERR(rpc->rstc);
-> +
-> +	platform_set_drvdata(pdev, rpc);
-> +
-> +	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
-> +}
-> +
-> +static const struct of_device_id rpc_mfd_of_match[] = {
-> +	{ .compatible = "renesas,rcar-gen3-rpc", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rpc_mfd_of_match);
-> +
-> +static struct platform_driver rpc_mfd_driver = {
-> +	.probe = rpc_mfd_probe,
-> +	.driver = {
-> +		.name =	"rpc-mfd",
-> +		.of_match_table = rpc_mfd_of_match,
-> +	},
-> +};
-> +module_platform_driver(rpc_mfd_driver);
-> +
-> +MODULE_AUTHOR("Mason Yang <masonccyang@mxic.com.tw>");
-> +MODULE_DESCRIPTION("Renesas R-Car Gen3 RPC MFD driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
-> new file mode 100644
-> index 0000000..bc53d02
-> --- /dev/null
-> +++ b/include/linux/mfd/renesas-rpc.h
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
-> +//
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
-> +
-> +#ifndef __MFD_RENESAS_RPC_H
-> +#define __MFD_RENESAS_RPC_H
-> +
-> +#define RPC_CMNCR		0x0000	// R/W
-> +#define RPC_CMNCR_MD		BIT(31)
-> +#define RPC_CMNCR_SFDE		BIT(24) // undocumented bit but must be set
-> +#define RPC_CMNCR_MOIIO3(val)	(((val) & 0x3) << 22)
-> +#define RPC_CMNCR_MOIIO2(val)	(((val) & 0x3) << 20)
-> +#define RPC_CMNCR_MOIIO1(val)	(((val) & 0x3) << 18)
-> +#define RPC_CMNCR_MOIIO0(val)	(((val) & 0x3) << 16)
-> +#define RPC_CMNCR_MOIIO_HIZ	(RPC_CMNCR_MOIIO0(3) | RPC_CMNCR_MOIIO1(3) | \
-> +				 RPC_CMNCR_MOIIO2(3) | RPC_CMNCR_MOIIO3(3))
-> +#define RPC_CMNCR_IO3FV(val)	(((val) & 0x3) << 14) // undocumented
-> +#define RPC_CMNCR_IO2FV(val)	(((val) & 0x3) << 12) // undocumented
-> +#define RPC_CMNCR_IO0FV(val)	(((val) & 0x3) << 8)
-> +#define RPC_CMNCR_IOFV_HIZ	(RPC_CMNCR_IO0FV(3) | RPC_CMNCR_IO2FV(3) | \
-> +				 RPC_CMNCR_IO3FV(3))
-> +#define RPC_CMNCR_BSZ(val)	(((val) & 0x3) << 0)
-> +
-> +#define RPC_SSLDR		0x0004	// R/W
-> +#define RPC_SSLDR_SPNDL(d)	(((d) & 0x7) << 16)
-> +#define RPC_SSLDR_SLNDL(d)	(((d) & 0x7) << 8)
-> +#define RPC_SSLDR_SCKDL(d)	(((d) & 0x7) << 0)
-> +
-> +#define RPC_DRCR		0x000C	// R/W
-> +#define RPC_DRCR_SSLN		BIT(24)
-> +#define RPC_DRCR_RBURST(v)	((((v) - 1) & 0x1F) << 16)
-> +#define RPC_DRCR_RCF		BIT(9)
-> +#define RPC_DRCR_RBE		BIT(8)
-> +#define RPC_DRCR_SSLE		BIT(0)
-> +
-> +#define RPC_DRCMR		0x0010	// R/W
-> +#define RPC_DRCMR_CMD(c)	(((c) & 0xFF) << 16)
-> +#define RPC_DRCMR_OCMD(c)	(((c) & 0xFF) << 0)
-> +
-> +#define RPC_DREAR		0x0014	// R/W
-> +#define RPC_DREAR_EAV(c)	(((c) & 0xf) << 16)
-> +#define RPC_DREAR_EAC(c)	(((c) & 0x7) << 0)
-> +
-> +#define RPC_DROPR		0x0018	// R/W
-> +
-> +#define RPC_DRENR		0x001C	// R/W
-> +#define RPC_DRENR_CDB(o)	(u32)((((o) & 0x3) << 30))
-> +#define RPC_DRENR_OCDB(o)	(((o) & 0x3) << 28)
-> +#define RPC_DRENR_ADB(o)	(((o) & 0x3) << 24)
-> +#define RPC_DRENR_OPDB(o)	(((o) & 0x3) << 20)
-> +#define RPC_DRENR_DRDB(o)	(((o) & 0x3) << 16)
-> +#define RPC_DRENR_DME		BIT(15)
-> +#define RPC_DRENR_CDE		BIT(14)
-> +#define RPC_DRENR_OCDE		BIT(12)
-> +#define RPC_DRENR_ADE(v)	(((v) & 0xF) << 8)
-> +#define RPC_DRENR_OPDE(v)	(((v) & 0xF) << 4)
-> +
-> +#define RPC_SMCR		0x0020	// R/W
-> +#define RPC_SMCR_SSLKP		BIT(8)
-> +#define RPC_SMCR_SPIRE		BIT(2)
-> +#define RPC_SMCR_SPIWE		BIT(1)
-> +#define RPC_SMCR_SPIE		BIT(0)
-> +
-> +#define RPC_SMCMR		0x0024	// R/W
-> +#define RPC_SMCMR_CMD(c)	(((c) & 0xFF) << 16)
-> +#define RPC_SMCMR_OCMD(c)	(((c) & 0xFF) << 0)
-> +
-> +#define RPC_SMADR		0x0028	// R/W
-> +#define RPC_SMOPR		0x002C	// R/W
-> +#define RPC_SMOPR_OPD3(o)	(((o) & 0xFF) << 24)
-> +#define RPC_SMOPR_OPD2(o)	(((o) & 0xFF) << 16)
-> +#define RPC_SMOPR_OPD1(o)	(((o) & 0xFF) << 8)
-> +#define RPC_SMOPR_OPD0(o)	(((o) & 0xFF) << 0)
-> +
-> +#define RPC_SMENR		0x0030	// R/W
-> +#define RPC_SMENR_CDB(o)	(((o) & 0x3) << 30)
-> +#define RPC_SMENR_OCDB(o)	(((o) & 0x3) << 28)
-> +#define RPC_SMENR_ADB(o)	(((o) & 0x3) << 24)
-> +#define RPC_SMENR_OPDB(o)	(((o) & 0x3) << 20)
-> +#define RPC_SMENR_SPIDB(o)	(((o) & 0x3) << 16)
-> +#define RPC_SMENR_DME		BIT(15)
-> +#define RPC_SMENR_CDE		BIT(14)
-> +#define RPC_SMENR_OCDE		BIT(12)
-> +#define RPC_SMENR_ADE(v)	(((v) & 0xF) << 8)
-> +#define RPC_SMENR_OPDE(v)	(((v) & 0xF) << 4)
-> +#define RPC_SMENR_SPIDE(v)	(((v) & 0xF) << 0)
-> +
-> +#define RPC_SMRDR0		0x0038	// R
-> +#define RPC_SMRDR1		0x003C	// R
-> +#define RPC_SMWDR0		0x0040	// W
-> +#define RPC_SMWDR1		0x0044	// W
-> +
-> +#define RPC_CMNSR		0x0048	// R
-> +#define RPC_CMNSR_SSLF		BIT(1)
-> +#define RPC_CMNSR_TEND		BIT(0)
-> +
-> +#define RPC_DRDMCR		0x0058	// R/W
-> +#define RPC_DRDRENR		0x005C	// R/W
-> +
-> +#define RPC_SMDMCR		0x0060	// R/W
-> +#define RPC_SMDMCR_DMCYC(v)	((((v) - 1) & 0x1F) << 0)
-> +
-> +#define RPC_SMDRENR		0x0064	// R/W
-> +#define RPC_SMDRENR_HYPE	(0x7 << 12)
-> +#define RPC_SMDRENR_ADDRE	BIT(8)
-> +#define RPC_SMDRENR_OPDRE	BIT(4)
-> +#define RPC_SMDRENR_SPIDRE	BIT(0)
-> +
-> +#define RPC_PHYCNT		0x007C	// R/W
-> +#define RPC_PHYCNT_CAL		BIT(31)
-> +#define PRC_PHYCNT_OCTA_AA	BIT(22)
-> +#define PRC_PHYCNT_OCTA_SA	BIT(23)
-> +#define PRC_PHYCNT_EXDS		BIT(21)
-> +#define RPC_PHYCNT_OCT		BIT(20)
-> +#define RPC_PHYCNT_STRTIM(v)	(((v) & 0x7) << 15)
-> +#define RPC_PHYCNT_WBUF2	BIT(4)
-> +#define RPC_PHYCNT_WBUF		BIT(2)
-> +#define RPC_PHYCNT_PHYMEM(v)	(((v) & 0x3) << 0)
-> +
-> +#define RPC_PHYOFFSET1		0x0080	// R/W
-> +#define RPC_PHYOFFSET1_DDRTMG(v) (((v) & 0x3) << 28)
-> +#define RPC_PHYOFFSET2		0x0084	// R/W
-> +#define RPC_PHYOFFSET2_OCTTMG(v) (((v) & 0x7) << 8)
-> +
-> +#define RPC_DIRMAP_SIZE		0x4000000
-> +
-> +struct rpc_mfd {
-> +	struct clk *clk_rpc;
-> +	void __iomem *dirmap;
-> +	struct regmap *regmap;
-> +	struct reset_control *rstc;
-> +};
-> +
-> +#endif // __MFD_RENESAS_RPC_H
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1aab323f1b4b..5b9691e5ea59 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1467,8 +1467,6 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ }
+ 
+ static unsigned long weighted_cpuload(struct rq *rq);
+-static unsigned long source_load(int cpu, int type);
+-static unsigned long target_load(int cpu, int type);
+ 
+ /* Cached statistics for all CPUs within a node */
+ struct numa_stats {
+@@ -5333,45 +5331,11 @@ static struct {
+ 
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+-/* Used instead of source_load when we know the type == 0 */
+ static unsigned long weighted_cpuload(struct rq *rq)
+ {
+ 	return cfs_rq_runnable_load_avg(&rq->cfs);
+ }
+ 
+-/*
+- * Return a low guess at the load of a migration-source CPU weighted
+- * according to the scheduling class and "nice" value.
+- *
+- * We want to under-estimate the load of migration sources, to
+- * balance conservatively.
+- */
+-static unsigned long source_load(int cpu, int type)
+-{
+-	struct rq *rq = cpu_rq(cpu);
+-	unsigned long total = weighted_cpuload(rq);
+-
+-	if (type == 0 || !sched_feat(LB_BIAS))
+-		return total;
+-
+-	return min(rq->cpu_load[type-1], total);
+-}
+-
+-/*
+- * Return a high guess at the load of a migration-target CPU weighted
+- * according to the scheduling class and "nice" value.
+- */
+-static unsigned long target_load(int cpu, int type)
+-{
+-	struct rq *rq = cpu_rq(cpu);
+-	unsigned long total = weighted_cpuload(rq);
+-
+-	if (type == 0 || !sched_feat(LB_BIAS))
+-		return total;
+-
+-	return max(rq->cpu_load[type-1], total);
+-}
+-
+ static unsigned long capacity_of(int cpu)
+ {
+ 	return cpu_rq(cpu)->cpu_capacity;
+@@ -5479,7 +5443,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
+ 	s64 this_eff_load, prev_eff_load;
+ 	unsigned long task_load;
+ 
+-	this_eff_load = target_load(this_cpu, sd->wake_idx);
++	this_eff_load = weighted_cpuload(cpu_rq(this_cpu));
+ 
+ 	if (sync) {
+ 		unsigned long current_load = task_h_load(current);
+@@ -5497,7 +5461,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
+ 		this_eff_load *= 100;
+ 	this_eff_load *= capacity_of(prev_cpu);
+ 
+-	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
++	prev_eff_load = weighted_cpuload(cpu_rq(prev_cpu));
+ 	prev_eff_load -= task_load;
+ 	if (sched_feat(WA_BIAS))
+ 		prev_eff_load *= 100 + (sd->imbalance_pct - 100) / 2;
+@@ -5558,14 +5522,10 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+ 	unsigned long this_runnable_load = ULONG_MAX;
+ 	unsigned long min_avg_load = ULONG_MAX, this_avg_load = ULONG_MAX;
+ 	unsigned long most_spare = 0, this_spare = 0;
+-	int load_idx = sd->forkexec_idx;
+ 	int imbalance_scale = 100 + (sd->imbalance_pct-100)/2;
+ 	unsigned long imbalance = scale_load_down(NICE_0_LOAD) *
+ 				(sd->imbalance_pct-100) / 100;
+ 
+-	if (sd_flag & SD_BALANCE_WAKE)
+-		load_idx = sd->wake_idx;
+-
+ 	do {
+ 		unsigned long load, avg_load, runnable_load;
+ 		unsigned long spare_cap, max_spare_cap;
+@@ -5589,12 +5549,7 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+ 		max_spare_cap = 0;
+ 
+ 		for_each_cpu(i, sched_group_span(group)) {
+-			/* Bias balancing toward CPUs of our domain */
+-			if (local_group)
+-				load = source_load(i, load_idx);
+-			else
+-				load = target_load(i, load_idx);
+-
++			load = weighted_cpuload(cpu_rq(i));
+ 			runnable_load += load;
+ 
+ 			avg_load += cfs_rq_load_avg(&cpu_rq(i)->cfs);
+@@ -7676,34 +7631,6 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
+ 	};
+ }
+ 
+-/**
+- * get_sd_load_idx - Obtain the load index for a given sched domain.
+- * @sd: The sched_domain whose load_idx is to be obtained.
+- * @idle: The idle status of the CPU for whose sd load_idx is obtained.
+- *
+- * Return: The load index.
+- */
+-static inline int get_sd_load_idx(struct sched_domain *sd,
+-					enum cpu_idle_type idle)
+-{
+-	int load_idx;
+-
+-	switch (idle) {
+-	case CPU_NOT_IDLE:
+-		load_idx = sd->busy_idx;
+-		break;
+-
+-	case CPU_NEWLY_IDLE:
+-		load_idx = sd->newidle_idx;
+-		break;
+-	default:
+-		load_idx = sd->idle_idx;
+-		break;
+-	}
+-
+-	return load_idx;
+-}
+-
+ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+@@ -7992,9 +7919,6 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 				      struct sg_lb_stats *sgs,
+ 				      int *sg_status)
+ {
+-	int local_group = cpumask_test_cpu(env->dst_cpu, sched_group_span(group));
+-	int load_idx = get_sd_load_idx(env->sd, env->idle);
+-	unsigned long load;
+ 	int i, nr_running;
+ 
+ 	memset(sgs, 0, sizeof(*sgs));
+@@ -8005,13 +7929,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 		if ((env->flags & LBF_NOHZ_STATS) && update_nohz_stats(rq, false))
+ 			env->flags |= LBF_NOHZ_AGAIN;
+ 
+-		/* Bias balancing toward CPUs of our domain: */
+-		if (local_group)
+-			load = target_load(i, load_idx);
+-		else
+-			load = source_load(i, load_idx);
+-
+-		sgs->group_load += load;
++		sgs->group_load += weighted_cpuload(rq);
+ 		sgs->group_util += cpu_util(i);
+ 		sgs->sum_nr_running += rq->cfs.h_nr_running;
+ 
+diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+index 858589b83377..2410db5e9a35 100644
+--- a/kernel/sched/features.h
++++ b/kernel/sched/features.h
+@@ -39,7 +39,6 @@ SCHED_FEAT(WAKEUP_PREEMPTION, true)
+ 
+ SCHED_FEAT(HRTICK, false)
+ SCHED_FEAT(DOUBLE_TICK, false)
+-SCHED_FEAT(LB_BIAS, false)
+ 
+ /*
+  * Decrement CPU capacity based on time not spent running tasks
