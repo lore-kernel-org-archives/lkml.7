@@ -6,34 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48514C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619D3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1D27984
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B749279C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfFCPvu (ORCPT
+        id S1729700AbfFCPxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:51:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53852 "EHLO
+        Mon, 3 Jun 2019 11:53:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53906 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbfFCPvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:51:47 -0400
+        id S1729426AbfFCPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:51:54 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D424915AB;
-        Mon,  3 Jun 2019 08:51:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42D101AED;
+        Mon,  3 Jun 2019 08:51:54 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 720923F246;
-        Mon,  3 Jun 2019 08:51:45 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06C723F246;
+        Mon,  3 Jun 2019 08:51:52 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 31/57] drivers: rtc: Use class_find_device_by_name() helper
-Date:   Mon,  3 Jun 2019 16:49:57 +0100
-Message-Id: <1559577023-558-32-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt match helper
+Date:   Mon,  3 Jun 2019 16:50:02 +0100
+Message-Id: <1559577023-558-37-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,43 +41,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new class_find_device_by_name() helper.
+Switch to the generic helper class_find_device_by_devt.
 
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
+Cc: Tomas Winkler <tomas.winkler@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/rtc/interface.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/misc/mei/main.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index 4124f4d..307dbc6 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -663,21 +663,12 @@ void rtc_update_irq(struct rtc_device *rtc,
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index ad02097..243b481 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -858,13 +858,6 @@ static ssize_t dev_state_show(struct device *device,
  }
- EXPORT_SYMBOL_GPL(rtc_update_irq);
+ static DEVICE_ATTR_RO(dev_state);
  
--static int __rtc_match(struct device *dev, const void *data)
+-static int match_devt(struct device *dev, const void *data)
 -{
--	const char *name = data;
+-	const dev_t *devt = data;
 -
--	if (strcmp(dev_name(dev), name) == 0)
--		return 1;
--	return 0;
+-	return dev->devt == *devt;
 -}
 -
- struct rtc_device *rtc_class_open(const char *name)
- {
- 	struct device *dev;
- 	struct rtc_device *rtc = NULL;
+ /**
+  * dev_set_devstate: set to new device state and notify sysfs file.
+  *
+@@ -880,7 +873,7 @@ void mei_set_devstate(struct mei_device *dev, enum mei_dev_state state)
  
--	dev = class_find_device(rtc_class, NULL, name, __rtc_match);
-+	dev = class_find_device_by_name(rtc_class, NULL, name);
- 	if (dev)
- 		rtc = to_rtc_device(dev);
+ 	dev->dev_state = state;
  
+-	clsdev = class_find_device(mei_class, NULL, &dev->cdev.dev, match_devt);
++	clsdev = class_find_device_by_devt(mei_class, NULL, dev->cdev.dev);
+ 	if (clsdev) {
+ 		sysfs_notify(&clsdev->kobj, NULL, "dev_state");
+ 		put_device(clsdev);
 -- 
 2.7.4
 
