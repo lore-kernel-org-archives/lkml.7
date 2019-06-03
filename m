@@ -2,159 +2,117 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF4C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C0EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF0D272AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2070272AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MU9p6u1k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GtAdhoHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfFCHa1 (ORCPT
+        id S1726600AbfFCHau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:30:27 -0400
-Received: from mail-eopbgr10050.outbound.protection.outlook.com ([40.107.1.50]:41538
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726136AbfFCHa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:30:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y0styPCxA2kXlg4P9JLhrWY2z3+c+PAly9DON3UUT0M=;
- b=MU9p6u1k/BOgFJMSe6V6ZX5i5KlXgKFMgbcoNEuTBBnuOwygwc3sMG6SruHe3GG0HNVzsL8KcBkfJOzUZteT/J63reauKt86MNsxhnyZ/Fe1B7Fs1uGhtNQuuVvuWKtasPBx11RbeG7FLk1KfcAQbJlHqlypEM4hoaiFHCPAcmc=
-Received: from VI1PR04MB5790.eurprd04.prod.outlook.com (20.178.127.224) by
- VI1PR04MB5805.eurprd04.prod.outlook.com (20.178.204.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.17; Mon, 3 Jun 2019 07:30:20 +0000
-Received: from VI1PR04MB5790.eurprd04.prod.outlook.com
- ([fe80::607a:a473:5c73:7d7e]) by VI1PR04MB5790.eurprd04.prod.outlook.com
- ([fe80::607a:a473:5c73:7d7e%5]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 07:30:20 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
-Thread-Topic: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
-Thread-Index: AQHVGaxevUMbLPz7GEiRBakv1/ckCqaJiQoA
-Date:   Mon, 3 Jun 2019 07:30:20 +0000
-Message-ID: <20190603073018.j236j57ooc7t5hp6@fsr-ub1664-175>
-References: <20190603013503.40626-1-Anson.Huang@nxp.com>
- <20190603013503.40626-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190603013503.40626-2-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3081f70e-89dd-41c4-bf65-08d6e7f5552d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5805;
-x-ms-traffictypediagnostic: VI1PR04MB5805:
-x-microsoft-antispam-prvs: <VI1PR04MB5805D57728B5DF413B81A950F6140@VI1PR04MB5805.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:758;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(39860400002)(376002)(136003)(346002)(366004)(189003)(199004)(53936002)(476003)(486006)(256004)(26005)(81156014)(7416002)(446003)(44832011)(8936002)(11346002)(305945005)(33716001)(68736007)(4326008)(7736002)(25786009)(186003)(229853002)(6636002)(6862004)(6486002)(6436002)(99286004)(66446008)(5660300002)(81166006)(66066001)(6246003)(64756008)(66556008)(8676002)(66476007)(66946007)(73956011)(6512007)(9686003)(71190400001)(71200400001)(14454004)(76116006)(54906003)(6506007)(86362001)(2906002)(3846002)(53546011)(6116002)(102836004)(478600001)(1076003)(76176011)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5805;H:VI1PR04MB5790.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qaotL9fdM+dVKd4ZPG3fiJg7l1Na5uRru6qhe7eHg0Bk8jizNjkX9RATm/5YlEOECvFA6rlQWZKChqiYR3XGDkzhLuFDK8vGNGQqJFxYOZTJ9GWP6r8xMH/yUE63uiYh4zz/9rkYc3OQcrRG3G3MS/9dc+qxeXt8d12Ciit8bq5eLJu+nFw7mu2V4kYG4knuauTIn4PvWIUbuxeIOGavQhtzg8IYSekOpFAgMdMjvlc66xH5VArVx6Uzr8FCMWRbSe1B3pMGO8FEgYlGZzaMKxCFm0pn9vsFLtjvvW95360SqM3ASu1A9iITyritHBIf0DN3doKzPXvSVlExCPYlweZAp5IRkAfFnxprnv8HK3qvnKKoN4uffR5swtQrgAbQTnzmknqEybSKNKnjcpC1DfKcuJZiq9jDpMtBXSEiS1Y=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <051749EE44B0A8469CD620AEC45CD774@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Jun 2019 03:30:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43815 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfFCHau (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:30:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r18so1822897wrm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 00:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=M4ll74/WKhSFaghcnaaP+t7DHNq0bSr1SP/Y1vqsSMo=;
+        b=GtAdhoHtwc2UCM/fNKoxa3pte2zyqWg9Y3CCRrmtcD31LG/urmbFSPuGMbFvz+tvHV
+         ZHH+NJQXciB7dg1bAYZLAvo24X8JhL0ncnZrlbuzu/prk/t/FDmJxedrQbr6wxmc2XDf
+         qXdYr4UUHDxRlIBwbYCsrY9oR/DPZaKjXxH3u2ItvDIhpNMZVFOgYfppSuEMcAj/lFJ0
+         fiW7yxk8volCVJiAeDPF5lbDa69vCSfMcHiX4hr/rs5i3/LR6h5Vzm2BifbCms9wu7QD
+         fLYHxdQlfOKpD/+WKLAQcUsVG1cwdmfqFSzQ6Fr7dc2dnM1iUI+V39wl5tMGoPl1OIy8
+         9+jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=M4ll74/WKhSFaghcnaaP+t7DHNq0bSr1SP/Y1vqsSMo=;
+        b=Dxc/mG4dOwMr8/fTQNiMrxIdgnVAjRrJ24WnGR39YqFG1scQzhpg+/ku0SeH5jcds0
+         QrgT5vb3W/k3rcRCrurGCAC9bTLblIGPILw/EoDQZdwFnHynLSIIynqCpmYtS/O8QSSD
+         tIThu01bzvXFD5QFI9qIGcEOI8A/2hvkJxey+8T1rG0rhNFKbDLOhljJhB4Jf78C3cVc
+         PvuTRS6KKlUo/rpOd93BHpE7pQzKKum5+XheQb3uLAqs5McZoGm5ulqcT4NC4+Zcqq2y
+         ohU5BYAhGkOyLQpa+hp2H0ao5zjgDTEl8qTtMZLSLOsaK8EX1mwCG3Z8t8rHD1RAL7qM
+         jFVA==
+X-Gm-Message-State: APjAAAV5lxFEsW4Wcv3R5FPW6xASXkyBHJQD0/fECEdAq6hCLaQbHW5e
+        HaiWYZO9t5Gq37l/h+21LYoclN/WNW0=
+X-Google-Smtp-Source: APXvYqzfy2LHhRFy7PNkZKC5674AEGU8ujPSR9Q7IvezsJ54X8ybuyDE/zf++yvc5EpUmcd0tgVCig==
+X-Received: by 2002:adf:f743:: with SMTP id z3mr1307228wrp.129.1559547048775;
+        Mon, 03 Jun 2019 00:30:48 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id g185sm13041249wmf.30.2019.06.03.00.30.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 00:30:47 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 08:30:45 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Gomez <dagmcr@gmail.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        "moderated list:CIRRUS LOGIC MADERA CODEC DRIVERS" 
+        <alsa-devel@alsa-project.org>,
+        "open list:CIRRUS LOGIC MADERA CODEC DRIVERS" 
+        <patches@opensource.cirrus.com>,
+        open list <linux-kernel@vger.kernel.org>, javier@dowhile0.org
+Subject: Re: [PATCH v2] mfd: madera: Add missing of table registration
+Message-ID: <20190603073045.GE4797@dell>
+References: <1557569038-20340-1-git-send-email-dagmcr@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3081f70e-89dd-41c4-bf65-08d6e7f5552d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 07:30:20.0389
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5805
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557569038-20340-1-git-send-email-dagmcr@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-06-03 09:35:02, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
->=20
-> This patch adds i.MX8MN clock driver support.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Sat, 11 May 2019, Daniel Gomez wrote:
+
+> MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+> OF mathing mechanism and register it.
+> 
+> Before this patch:
+> modinfo ./drivers/mfd/madera.ko | grep alias
+> 
+> After this patch:
+> modinfo ./drivers/mfd/madera.ko | grep alias
+> alias:          of:N*T*Ccirrus,wm1840C*
+> alias:          of:N*T*Ccirrus,wm1840
+> alias:          of:N*T*Ccirrus,cs47l91C*
+> alias:          of:N*T*Ccirrus,cs47l91
+> alias:          of:N*T*Ccirrus,cs47l90C*
+> alias:          of:N*T*Ccirrus,cs47l90
+> alias:          of:N*T*Ccirrus,cs47l85C*
+> alias:          of:N*T*Ccirrus,cs47l85
+> alias:          of:N*T*Ccirrus,cs47l35C*
+> alias:          of:N*T*Ccirrus,cs47l35
+> 
+> Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 > ---
-> Changes since V1:
-> 	- add GPIOx clocks.
+>  drivers/mfd/madera-core.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-...
+Applied, thanks.
 
-> +static struct imx_pll14xx_clk imx8mn_sys_pll __initdata =3D {
-> +		.type =3D PLL_1416X,
-> +		.rate_table =3D imx8mn_pll1416x_tbl,
-> +};
-> +
-> +static const char *pll_ref_sels[] =3D { "osc_24m", "dummy", "dummy", "du=
-mmy", };
-
-All of these should be "static const char * const ".
-
-> +static const char *audio_pll1_bypass_sels[] =3D {"audio_pll1", "audio_pl=
-l1_ref_sel", };
-> +static const char *audio_pll2_bypass_sels[] =3D {"audio_pll2", "audio_pl=
-l2_ref_sel", };
-
-...
-
-> +	clk_data.clks =3D clks;
-> +	clk_data.clk_num =3D ARRAY_SIZE(clks);
-> +	ret =3D of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
-> +	if (ret < 0) {
-> +		pr_err("failed to register clks for i.MX8MN\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	imx_register_uart_clocks(uart_clks);
-> +
-> +	return 0;
-> +}
-> +CLK_OF_DECLARE_DRIVER(imx8mn, "fsl,imx8mn-ccm", imx8mn_clocks_init);
-
-Any reason why this cannot be a platform driver ?
-
-> --=20
-> 2.7.4
-> =
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
