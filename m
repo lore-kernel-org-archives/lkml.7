@@ -6,48 +6,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D70C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BDAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E5124278
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869CB28034
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfFCMcy (ORCPT
+        id S1727554AbfFCMc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:32:54 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59073 "EHLO ozlabs.org"
+        Mon, 3 Jun 2019 08:32:56 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46633 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfFCMcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:32:52 -0400
+        id S1727349AbfFCMcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:32:50 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45HZFt61Ynz9sNl; Mon,  3 Jun 2019 22:32:49 +1000 (AEST)
+        id 45HZFr6FK1z9sNC; Mon,  3 Jun 2019 22:32:48 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: f8e0d0fddf87f26aed576983f752329de4c0900f
+X-powerpc-patch-commit: 00b0cdbbc87fb4b531a0d75f4004ed3d89999b80
 X-Patchwork-Hint: ignore
 Content-Type: text/plain; charset="utf-8";
-In-Reply-To: <7496da89e027e563cb8e62dc89548525cf53b57e.1557741292.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+In-Reply-To: <20190504102720.42220-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>, <fbarrat@linux.ibm.com>,
+        <ajd@linux.ibm.com>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] powerpc/lib: fix redundant inclusion of quad.o
-Message-Id: <45HZFt61Ynz9sNl@ozlabs.org>
-Date:   Mon,  3 Jun 2019 22:32:49 +1000 (AEST)
+Cc:     YueHaibing <yuehaibing@huawei.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] misc: ocxl: Make ocxl_remove static
+Message-Id: <45HZFr6FK1z9sNC@ozlabs.org>
+Date:   Mon,  3 Jun 2019 22:32:48 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-13 at 10:00:14 UTC, Christophe Leroy wrote:
-> quad.o is only for PPC64, and already included in obj64-y,
-> so it doesn't have to be in obj-y
+On Sat, 2019-05-04 at 10:27:20 UTC, YueHaibing wrote:
+> Fix sparse warning:
 > 
-> Fixes: 31bfdb036f12 ("powerpc: Use instruction emulation infrastructure to handle alignment faults")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> drivers/misc/ocxl/pci.c:44:6: warning:
+>  symbol 'ocxl_remove' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-Series applied to powerpc next, thanks.
+Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/f8e0d0fddf87f26aed576983f752329d
+https://git.kernel.org/powerpc/c/00b0cdbbc87fb4b531a0d75f4004ed3d
 
 cheers
