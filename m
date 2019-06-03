@@ -2,156 +2,96 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1EEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB893C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BB827A8E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C65527A91
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559572537;
+	bh=hk/xMLxFXk4kJBGBwlcG++wGkbLPTKk2rGWiw3Ye9mQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=I+tEbjSLnTz4k/HtS1mLqzSVVVvSVedP0HSMVrBs/qH99aqqaxYIz9FLUGLbTlvPX
+	 r1bjDQNpT2H3LtImHK343yekBaLmXioxYhvYN4EtMAbwfOFSY85Tb0Yxhfao8SuijW
+	 OqSxMUybYMid0moc8FQlVwS8dJltFc/cb5A4cBBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbfFCOfY (ORCPT
+        id S1729116AbfFCOfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:35:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728988AbfFCOfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:35:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F19ADADDA;
-        Mon,  3 Jun 2019 14:35:11 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 1/3] mm, debug_pagelloc: use static keys to enable debugging
-Date:   Mon,  3 Jun 2019 16:34:49 +0200
-Message-Id: <20190603143451.27353-2-vbabka@suse.cz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603143451.27353-1-vbabka@suse.cz>
-References: <20190603143451.27353-1-vbabka@suse.cz>
+        Mon, 3 Jun 2019 10:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728988AbfFCOfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:35:36 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8423227AF4;
+        Mon,  3 Jun 2019 14:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559572535;
+        bh=hk/xMLxFXk4kJBGBwlcG++wGkbLPTKk2rGWiw3Ye9mQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xRY+ChZwcxFTR01zBWEpCDzqDawzaXX8BoxQ0hmqSrh2c+43cmgeskejeZ2bdG25X
+         vRPjSFEyjtGBkNKFUbEn3pOB1Ubc6IkL+wNksi7gfju4OwJjpwhSuOFaCRWfP5229N
+         ZPfaGKPgvA6q8jvaV/hupBv4lNEgmua37PINB+R0=
+Received: by mail-lf1-f46.google.com with SMTP id y13so13771879lfh.9;
+        Mon, 03 Jun 2019 07:35:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAU8lvTy+JzUyncGZ/BV6VOyE6XJtIgUvo8obSn6bJFnxRF7dcIY
+        Rupsv9K+pZEDORPnwFrzi6nLUFhrKmw3UYwkRSk=
+X-Google-Smtp-Source: APXvYqweQ+vKT3uUCXOStqdayFxBRi48G3kwhXvoDIjzC25dmMqP23a+ZySiUA8IqV9rXywdcuG6d+pcD6+MWJ+InEE=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr2053137lfc.60.1559572533667;
+ Mon, 03 Jun 2019 07:35:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
+ <20190603135939.e2mb7vkxp64qairr@pc636> <CAJKOXPdczUnsaBeXTuutZXCQ70ejDT68xnVm-e+SSdLZi-vyCA@mail.gmail.com>
+ <20190604003153.76f33dd2@canb.auug.org.au>
+In-Reply-To: <20190604003153.76f33dd2@canb.auug.org.au>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 3 Jun 2019 16:35:22 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPed=npnfk0H2WUDityHg5cPLH_zwShyRd+B2RS8h6C7SQ@mail.gmail.com>
+Message-ID: <CAJKOXPed=npnfk0H2WUDityHg5cPLH_zwShyRd+B2RS8h6C7SQ@mail.gmail.com>
+Subject: Re: [BUG BISECT] bug mm/vmalloc.c:470 (mm/vmalloc.c: get rid of one
+ single unlink_va() when merge)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, Andrei Vagin <avagin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_DEBUG_PAGEALLOC has been redesigned by 031bc5743f15
-("mm/debug-pagealloc: make debug-pagealloc boottime configurable") to allow
-being always enabled in a distro kernel, but only perform its expensive
-functionality when booted with debug_pagelloc=on. We can further reduce
-the overhead when not boot-enabled (including page allocator fast paths) using
-static keys. This patch introduces one for debug_pagealloc core functionality,
-and another for the optional guard page functionality (enabled by booting with
-debug_guardpage_minorder=X).
+On Mon, 3 Jun 2019 at 16:32, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Krzysztof,
+>
+> On Mon, 3 Jun 2019 16:10:40 +0200 Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Indeed it looks like effect of merge conflict resolution or applying.
+> > When I look at MMOTS, it is the same as yours:
+> > http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/commit/?id=b77b8cce67f246109f9d87417a32cd38f0398f2f
+> >
+> > However in linux-next it is different.
+> >
+> > Stephen, any thoughts?
+>
+> Have you had a look at today's linux-next?  It looks correct in
+> there.  Andrew updated his patch series over the weekend.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/mm.h | 15 +++++++++++----
- mm/page_alloc.c    | 23 +++++++++++++++++------
- 2 files changed, 28 insertions(+), 10 deletions(-)
+Yes, I am looking at today's next. Both the source code and the commit
+728e0fbf263e3ed359c10cb13623390564102881 have wrong "if (merged)" (put
+in wrong hunk).
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..c71ed22769f3 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2685,11 +2685,18 @@ static inline void kernel_poison_pages(struct page *page, int numpages,
- 					int enable) { }
- #endif
- 
--extern bool _debug_pagealloc_enabled;
-+#ifdef CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
-+DECLARE_STATIC_KEY_TRUE(_debug_pagealloc_enabled);
-+#else
-+DECLARE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
-+#endif
- 
- static inline bool debug_pagealloc_enabled(void)
- {
--	return IS_ENABLED(CONFIG_DEBUG_PAGEALLOC) && _debug_pagealloc_enabled;
-+	if (!IS_ENABLED(CONFIG_DEBUG_PAGEALLOC))
-+		return false;
-+
-+	return static_branch_unlikely(&_debug_pagealloc_enabled);
- }
- 
- #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
-@@ -2843,7 +2850,7 @@ extern struct page_ext_operations debug_guardpage_ops;
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
- extern unsigned int _debug_guardpage_minorder;
--extern bool _debug_guardpage_enabled;
-+DECLARE_STATIC_KEY_FALSE(_debug_guardpage_enabled);
- 
- static inline unsigned int debug_guardpage_minorder(void)
- {
-@@ -2852,7 +2859,7 @@ static inline unsigned int debug_guardpage_minorder(void)
- 
- static inline bool debug_guardpage_enabled(void)
- {
--	return _debug_guardpage_enabled;
-+	return static_branch_unlikely(&_debug_guardpage_enabled);
- }
- 
- static inline bool page_is_guard(struct page *page)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d66bc8abe0af..639f1f9e74c5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -646,16 +646,27 @@ void prep_compound_page(struct page *page, unsigned int order)
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
- unsigned int _debug_guardpage_minorder;
--bool _debug_pagealloc_enabled __read_mostly
--			= IS_ENABLED(CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT);
-+
-+#ifdef CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
-+DEFINE_STATIC_KEY_TRUE(_debug_pagealloc_enabled);
-+#else
-+DEFINE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
-+#endif
- EXPORT_SYMBOL(_debug_pagealloc_enabled);
--bool _debug_guardpage_enabled __read_mostly;
-+
-+DEFINE_STATIC_KEY_FALSE(_debug_guardpage_enabled);
- 
- static int __init early_debug_pagealloc(char *buf)
- {
--	if (!buf)
-+	bool enable = false;
-+
-+	if (kstrtobool(buf, &enable))
- 		return -EINVAL;
--	return kstrtobool(buf, &_debug_pagealloc_enabled);
-+
-+	if (enable)
-+		static_branch_enable(&_debug_pagealloc_enabled);
-+
-+	return 0;
- }
- early_param("debug_pagealloc", early_debug_pagealloc);
- 
-@@ -679,7 +690,7 @@ static void init_debug_guardpage(void)
- 	if (!debug_guardpage_minorder())
- 		return;
- 
--	_debug_guardpage_enabled = true;
-+	static_branch_enable(&_debug_guardpage_enabled);
- }
- 
- struct page_ext_operations debug_guardpage_ops = {
--- 
-2.21.0
-
+Best regards,
+Krzysztof
