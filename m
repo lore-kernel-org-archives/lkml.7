@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B06DC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300FAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD94627E70
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C0127E7A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553132;
-	bh=MivKhZFqyVucaP+giaGMPW53cagxJeI36GhOt82tA+E=;
+	s=default; t=1559553137;
+	bh=RokwJaxmfCRgi0uqFVxRhyqXjSgRlyTjIFQ9il/sdiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dds/xaWj6MLUAZ0wmUgP4OBWmaZZ3wsw+tUxZel6/Vft10n7kcmqIkKZ3e04wcmJF
-	 fR32USIZ/3g14GS5fwWCayB4Cq5Jd+3uubCh6wrGDg2a93M0MC5iwqhyjw7US7bt5N
-	 05eFhaxAZDWvxeF3kZwh9IJeua4gmPxSsjCOVoH8=
+	b=X62BYC2hlycHeOKM/KQDodyxSm/HBxIMWXxOHvye6Aj05CSrtkMXnWIbwqEuJkp/t
+	 AR5LqOVmN3NcA+RXKP0y2jh//2IZcZrD+Bo7bOgBoa3XwFkI+NFeuB0bCHmYMrTqpU
+	 3NdXhCVmKbbbGTTCva2dGzdBMs+QFggZ9hmZm3A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbfFCJML (ORCPT
+        id S1728605AbfFCJMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbfFCJMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:08 -0400
+        id S1728597AbfFCJMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC50D27E5C;
-        Mon,  3 Jun 2019 09:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A93227E94;
+        Mon,  3 Jun 2019 09:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553128;
-        bh=MivKhZFqyVucaP+giaGMPW53cagxJeI36GhOt82tA+E=;
+        s=default; t=1559553130;
+        bh=RokwJaxmfCRgi0uqFVxRhyqXjSgRlyTjIFQ9il/sdiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkNtJuwk7f7LnHVvn5QigPj9kX9MUNYv989ArGYwXOV03dmGTPl8RUTi0u4QEWE0L
-         GwRY6jt+X22CaXn+tbDW48feu4oAmos+Wthgx90EW665I0L1ZEu8yl/wPONaWsaXe/
-         6h3YyVAMu3pdXPWhKNw+b22qvAW4X5McHfyqUDUk=
+        b=qv2b0GmleiqGd9yIJuOStdOnBzQRgfXSD8wb9kUDqUt9d/WfzqWMOvEGzyVX6pyk4
+         cmE1PuLx/CZTtuOQvZDD26pf3+U6PFBu6ve3ziUx18V7BPt/AB2wDayLE7xwU+rz4d
+         NDVDBFfi5kEVnvl/Subui2Xzm7QpfcNyF9C6bsXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 23/36] net/mlx5e: Disable rxhash when CQE compress is enabled
-Date:   Mon,  3 Jun 2019 11:09:11 +0200
-Message-Id: <20190603090522.514888806@linuxfoundation.org>
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>
+Subject: [PATCH 5.0 32/36] net: correct zerocopy refcnt with udp MSG_MORE
+Date:   Mon,  3 Jun 2019 11:09:20 +0200
+Message-Id: <20190603090523.101971185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -58,64 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saeed Mahameed <saeedm@mellanox.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit c0194e2d0ef0e5ce5e21a35640d23a706827ae28 ]
+[ Upstream commit 100f6d8e09905c59be45b6316f8f369c0be1b2d8 ]
 
-When CQE compression is enabled (Multi-host systems), compressed CQEs
-might arrive to the driver rx, compressed CQEs don't have a valid hash
-offload and the driver already reports a hash value of 0 and invalid hash
-type on the skb for compressed CQEs, but this is not good enough.
+TCP zerocopy takes a uarg reference for every skb, plus one for the
+tcp_sendmsg_locked datapath temporarily, to avoid reaching refcnt zero
+as it builds, sends and frees skbs inside its inner loop.
 
-On a congested PCIe, where CQE compression will kick in aggressively,
-gro will deliver lots of out of order packets due to the invalid hash
-and this might cause a serious performance drop.
+UDP and RAW zerocopy do not send inside the inner loop so do not need
+the extra sock_zerocopy_get + sock_zerocopy_put pair. Commit
+52900d22288ed ("udp: elide zerocopy operation in hot path") introduced
+extra_uref to pass the initial reference taken in sock_zerocopy_alloc
+to the first generated skb.
 
-The only valid solution, is to disable rxhash offload at all when CQE
-compression is favorable (Multi-host systems).
+But, sock_zerocopy_realloc takes this extra reference at the start of
+every call. With MSG_MORE, no new skb may be generated to attach the
+extra_uref to, so refcnt is incorrectly 2 with only one skb.
 
-Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Do not take the extra ref if uarg && !tcp, which implies MSG_MORE.
+Update extra_uref accordingly.
+
+This conditional assignment triggers a false positive may be used
+uninitialized warning, so have to initialize extra_uref at define.
+
+Changes v1->v2: fix typo in Fixes SHA1
+
+Fixes: 52900d22288e7 ("udp: elide zerocopy operation in hot path")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Diagnosed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/core/skbuff.c     |    6 +++++-
+ net/ipv4/ip_output.c  |    4 ++--
+ net/ipv6/ip6_output.c |    4 ++--
+ 3 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3789,6 +3789,12 @@ static netdev_features_t mlx5e_fix_featu
- 			netdev_warn(netdev, "Disabling LRO, not supported in legacy RQ\n");
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -1001,7 +1001,11 @@ struct ubuf_info *sock_zerocopy_realloc(
+ 			uarg->len++;
+ 			uarg->bytelen = bytelen;
+ 			atomic_set(&sk->sk_zckey, ++next);
+-			sock_zerocopy_get(uarg);
++
++			/* no extra ref when appending to datagram (MSG_MORE) */
++			if (sk->sk_type == SOCK_STREAM)
++				sock_zerocopy_get(uarg);
++
+ 			return uarg;
+ 		}
  	}
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -883,7 +883,7 @@ static int __ip_append_data(struct sock
+ 	int csummode = CHECKSUM_NONE;
+ 	struct rtable *rt = (struct rtable *)cork->dst;
+ 	unsigned int wmem_alloc_delta = 0;
+-	bool paged, extra_uref;
++	bool paged, extra_uref = false;
+ 	u32 tskey = 0;
  
-+	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS)) {
-+		features &= ~NETIF_F_RXHASH;
-+		if (netdev->features & NETIF_F_RXHASH)
-+			netdev_warn(netdev, "Disabling rxhash, not supported when CQE compress is active\n");
-+	}
-+
- 	mutex_unlock(&priv->state_lock);
+ 	skb = skb_peek_tail(queue);
+@@ -923,7 +923,7 @@ static int __ip_append_data(struct sock
+ 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
+ 		if (!uarg)
+ 			return -ENOBUFS;
+-		extra_uref = true;
++		extra_uref = !skb;	/* only extra ref if !MSG_MORE */
+ 		if (rt->dst.dev->features & NETIF_F_SG &&
+ 		    csummode == CHECKSUM_PARTIAL) {
+ 			paged = true;
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1269,7 +1269,7 @@ static int __ip6_append_data(struct sock
+ 	int csummode = CHECKSUM_NONE;
+ 	unsigned int maxnonfragsize, headersize;
+ 	unsigned int wmem_alloc_delta = 0;
+-	bool paged, extra_uref;
++	bool paged, extra_uref = false;
  
- 	return features;
-@@ -3915,6 +3921,9 @@ int mlx5e_hwstamp_set(struct mlx5e_priv
- 	memcpy(&priv->tstamp, &config, sizeof(config));
- 	mutex_unlock(&priv->state_lock);
- 
-+	/* might need to fix some features */
-+	netdev_update_features(priv->netdev);
-+
- 	return copy_to_user(ifr->ifr_data, &config,
- 			    sizeof(config)) ? -EFAULT : 0;
- }
-@@ -4744,6 +4753,10 @@ static void mlx5e_build_nic_netdev(struc
- 	if (!priv->channels.params.scatter_fcs_en)
- 		netdev->features  &= ~NETIF_F_RXFCS;
- 
-+	/* prefere CQE compression over rxhash */
-+	if (MLX5E_GET_PFLAG(&priv->channels.params, MLX5E_PFLAG_RX_CQE_COMPRESS))
-+		netdev->features &= ~NETIF_F_RXHASH;
-+
- #define FT_CAP(f) MLX5_CAP_FLOWTABLE(mdev, flow_table_properties_nic_receive.f)
- 	if (FT_CAP(flow_modify_en) &&
- 	    FT_CAP(modify_root) &&
+ 	skb = skb_peek_tail(queue);
+ 	if (!skb) {
+@@ -1338,7 +1338,7 @@ emsgsize:
+ 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
+ 		if (!uarg)
+ 			return -ENOBUFS;
+-		extra_uref = true;
++		extra_uref = !skb;	/* only extra ref if !MSG_MORE */
+ 		if (rt->dst.dev->features & NETIF_F_SG &&
+ 		    csummode == CHECKSUM_PARTIAL) {
+ 			paged = true;
 
 
