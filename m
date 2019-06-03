@@ -2,149 +2,130 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D710CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34356C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9703F24894
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hn4Q0Lbm"
+	by mail.kernel.org (Postfix) with ESMTP id 16DC924925
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfFCIix (ORCPT
+        id S1727780AbfFCIjX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:38:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49766 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfFCIix (ORCPT
+        Mon, 3 Jun 2019 04:39:23 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44630 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfFCIjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:38:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PB3xGZced/1uwatVXqFMqerQ1qgEDmtxsfjbArKoqJw=; b=hn4Q0LbmRFOFC+4v7LUhJWzl9
-        Q0JhgvQ2P/pn+KWp+Wb/9Csz/beg4cYcYI+Aal4Sn6BLa4Ud9dWv/YKwst6z5m/eC8uGeQQqtwzZ8
-        hS2U+pgMtp/9teOpGnKCxChGYK9EkcNyxmn5+XWtvqPzqSA59XsKANngUIcsZo4PaCbgwj8v65NDG
-        v8E0lOSoABKn2qrFRHWysYD4B6eQgWMFJh8OC2WJT13TfhZ0S0W+dRSZcGCbyJ46S3mWqWzStRz/Y
-        ff2N5y7Ls+NNupivi72s9g4uQYcraEenJmk6Ox06x5qIHQrO+TXZ3NCBi8VLIEzODO8+2KXYv7/TR
-        o0r8gATfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXiUU-0000FB-6o; Mon, 03 Jun 2019 08:38:50 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B6932029F880; Mon,  3 Jun 2019 10:38:48 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 10:38:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     tglx@linutronix.de, mingo@kernel.org, jpoimboe@redhat.com,
-        mojha@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
- disrupting offline
-Message-ID: <20190603083848.GB3436@hirez.programming.kicks-ass.net>
-References: <20190602011253.GA6167@linux.ibm.com>
+        Mon, 3 Jun 2019 04:39:23 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r15so12896610lfm.11;
+        Mon, 03 Jun 2019 01:39:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TWvaDqv8T+3nSnhW96l6kR7tta+6ilsMfM4h26eVB0A=;
+        b=ngJIb8rR0CVkrU3y1S1sh+mFnFBQkKJ5o4MM7UE6i0Fel7i+p7FqhlRk34q9+lYVXF
+         1aweaf/bIuCiNwohCC14fg/+ZtTXutrfCb5L91qKRf4P3qAplLt5UOL2SlAk0rAeXUZR
+         OhAV6Z72i4oYL2YSN6GI+43jdg0oeuX6K0g3GQzUt4xi8qBugi6ogOeUDAFxq7q3/hdQ
+         vL21jw91gh5ZgLSRFctq/cyyfnztJrmVMMAm7lCherXWE4/+UPGKPFs5HnxZDNfecTkm
+         4NQlpR5P1eYCVF7Pe2pbMc9yp0B2EsozcCUcn/i3rgoaZ56P+FyonrbcOQZbQvZSYSia
+         CRjw==
+X-Gm-Message-State: APjAAAWQDWr4BWokZmY95bof7f9L9toTvvOG2O0Hn/zCsujx2czMjkJG
+        gORpQVxmh1sZ8AYCFyRgq51djuVk0siNwo7QjgQ=
+X-Google-Smtp-Source: APXvYqyXL8w6cO+p1/AqPPxJsRM7EMbyvZE5iVOyx5i9Q6tpF80hkDon+evxwhRB18XKOnAOCAASGOsw2s8ExRWUo2M=
+X-Received: by 2002:a19:c142:: with SMTP id r63mr13997915lff.49.1559551160938;
+ Mon, 03 Jun 2019 01:39:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190602011253.GA6167@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
+ <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com> <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Jun 2019 10:39:08 +0200
+Message-ID: <CAMuHMdXiBz6L83sBHXOg=zc0zo4ff37SbLOZc5NwgiTLVG-nTw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ Document power Domains
+To:     Phil Edworthy <phil.edworthy@renesas.com>
+Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
-> Scheduling-clock interrupts can arrive late in the CPU-offline process,
-> after idle entry and the subsequent call to cpuhp_report_idle_dead().
-> Once execution passes the call to rcu_report_dead(), RCU is ignoring
-> the CPU, which results in lockdep complaints when the interrupt handler
-> uses RCU:
+Hi Phil,
 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 448efc06bb2d..3b33d83b793d 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -930,6 +930,7 @@ void cpuhp_report_idle_dead(void)
->  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
->  
->  	BUG_ON(st->state != CPUHP_AP_OFFLINE);
-> +	local_irq_disable();
->  	rcu_report_dead(smp_processor_id());
->  	st->state = CPUHP_AP_IDLE_DEAD;
->  	udelay(1000);
+On Mon, Jun 3, 2019 at 10:29 AM Phil Edworthy <phil.edworthy@renesas.com> wrote:
+> On 28 May 2019 08:29 Geert Uytterhoeven wrote:
+> > On Fri, May 24, 2019 at 5:32 PM Gareth Williams wrote:
+> > > The driver is gaining power domain support, so add the new property to
+> > > the DT binding and update the examples.
+> > >
+> > > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 
-Urgh... I'd almost suggest we do something like the below.
+> > > ---
+> > > a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> > @@ -40,4 +42,5 @@ Examples
+> > >                 reg-io-width = <4>;
+> > >                 clocks = <&sysctrl R9A06G032_CLK_UART0>;
+> > >                 clock-names = "baudclk";
+> > > +               power-domains = <&sysctrl>;
+> >
+> > This is an interesting example: according to the driver,
+> > R9A06G032_CLK_UART0, is not clock used for power management?
+> >
+> > Oh, the real uart0 node in arch/arm/boot/dts/r9a06g032.dtsi uses
+> >
+> >     clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl
+> > R9A06G032_HCLK_UART0>;
+> >     clock-names = "baudclk", "apb_pclk";
+> >
+> > That does make sense...
+> Note that the Synopsys DW uart driver already gets the "apb_pclk" clock, so
+> we don’t actually need to use clock domains to enable this clock.
 
+That is not necessarily a problem:
+  1) DT describes hardware, not software policy,
+  2) It doesn't hurt to enable a clock twice.
 
-But then I started looking at the various arch_cpu_idle_dead()
-implementations and ran into arm's implementation, which is calling
-complete() where generic code already established this isn't possible
-(see for example cpuhp_report_idle_dead()).
+There are still some R-Car drivers that manage clocks themselves, but
+we're slowly migrating away from that, where possible. If the driver
+is e.g. shared with a platform without clock domains, we obviously cannot
+do that.
 
-And then there's powerpc which for some obscure reason thinks it needs
-to enable preemption when dying ?! pseries_cpu_die() actually calls
-msleep() ?!?!
+So you can take out that code again, that's up to you.
 
-Sparc64 agains things it should enable preemption when playing dead.
+> This is also true for many of the peripheral drivers used on rzn1 (Synopsys
+> gpio controller, i2c controller, gmac, dmac, Arasan sdio controller). The
+> commit to add this clock to the i2c controller driver is my fault, as I was
+> following the pattern of the others.
+>
+> Of the few drivers that don't already get the hclk/pclk used to access the
+> peripherals is the Synopsys spi controller (though that currently doesn’t
+> support runtime PM) and the USB Host controller.
 
-So clearly this isn't going to work well :/
+Good, so the latter will start working magically, I assume? ;-)
 
----
- include/linux/tick.h | 10 ----------
- kernel/sched/idle.c  |  5 +++--
- 2 files changed, 3 insertions(+), 12 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index f92a10b5e112..196a0a7bfc4f 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -134,14 +134,6 @@ extern unsigned long tick_nohz_get_idle_calls(void);
- extern unsigned long tick_nohz_get_idle_calls_cpu(int cpu);
- extern u64 get_cpu_idle_time_us(int cpu, u64 *last_update_time);
- extern u64 get_cpu_iowait_time_us(int cpu, u64 *last_update_time);
--
--static inline void tick_nohz_idle_stop_tick_protected(void)
--{
--	local_irq_disable();
--	tick_nohz_idle_stop_tick();
--	local_irq_enable();
--}
--
- #else /* !CONFIG_NO_HZ_COMMON */
- #define tick_nohz_enabled (0)
- static inline int tick_nohz_tick_stopped(void) { return 0; }
-@@ -164,8 +156,6 @@ static inline ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
- }
- static inline u64 get_cpu_idle_time_us(int cpu, u64 *unused) { return -1; }
- static inline u64 get_cpu_iowait_time_us(int cpu, u64 *unused) { return -1; }
--
--static inline void tick_nohz_idle_stop_tick_protected(void) { }
- #endif /* !CONFIG_NO_HZ_COMMON */
- 
- #ifdef CONFIG_NO_HZ_FULL
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 80940939b733..e4bc4aa739b8 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -241,13 +241,14 @@ static void do_idle(void)
- 		check_pgt_cache();
- 		rmb();
- 
-+		local_irq_disable();
-+
- 		if (cpu_is_offline(cpu)) {
--			tick_nohz_idle_stop_tick_protected();
-+			tick_nohz_idle_stop_tick();
- 			cpuhp_report_idle_dead();
- 			arch_cpu_idle_dead();
- 		}
- 
--		local_irq_disable();
- 		arch_cpu_idle_enter();
- 
- 		/*
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
