@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAB1C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA549C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2159528039
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801C92804B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NDatLUAT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2Ie/h4H8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfFCJrz (ORCPT
+        id S1727899AbfFCJry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:47:55 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51966 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbfFCJrx (ORCPT
+        Mon, 3 Jun 2019 05:47:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42913 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFCJrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:47:53 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f10so10448464wmb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:47:52 -0700 (PDT)
+        Mon, 3 Jun 2019 05:47:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o12so4177528wrj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ySITkoSpV5tz/0UidgwrcEdFJZVNdmdPr2B7jtp9jvc=;
-        b=NDatLUATUjuiUD4hERuG9znRQfMuTUCAU4ggEVOIBP+FgVSRJt3WZaY0RrGa7Dwvb1
-         tPXdCBOtf0m2SVVhC/s51PZUQLWyTn//g+w5QgkbouvAEZZfvo/hYS0Qvxc9mY1N3RDl
-         12CLAjcT2rNrEYGTTAfmXLf/b4PMau58fO8Tf1EJrQQRkioz3g1D42ztA9XxEOAFB+W/
-         su2WX/nD5EDsKD8vv14foqsrzziZLg0rVZSxVTe2nVknHPJXLy1BppZQLalDKIXavP16
-         72N48w4vbmtGK60MSJzcw8yI8w33mpxO9I6dUgQOrevlX7znnciyGipSUQ3j2jUt1vHw
-         bNhA==
+        bh=O3SKx4XRWM8BeL1IT8cdljXN1WfKTiELxY4AFeUt8cM=;
+        b=2Ie/h4H83Parn1NAqbsfpl+cqjGciqNLWktE9yU8F5Wu1eiuO7vBgmdjroB9d9/6yW
+         WGAWpIsqZ5h7Nx9hbcdFtF2M+pT0Y357Teg8UbOmET4h04ZQf30ho2+IUGqfVyQH2aHI
+         27ZsFxVQ75uxhiTAKi2koxOYe1MUp7cMF1QczSnOesJQDnLZS1q3rj1J2yMW8AuHCxEb
+         pJLRRRh2uKLSA2syI74GTlsxAoEE+SIVHw7prgiwOYRRW/9eSrjaWqdpXNy8MC81N9jK
+         8lvz7DL6AMzAnQhLunrEB6CrRx7VOFjrJbZT69UARDmEe1L/xXObO0pykKFoRnb5c0qw
+         SgmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ySITkoSpV5tz/0UidgwrcEdFJZVNdmdPr2B7jtp9jvc=;
-        b=OBAQnQUvbZxBRl2IRZ2JUqwYu7jMk/CVPoLjhTSnOK8wZVwT3VmGxXAZrkLatlTQRO
-         m592HabhnZj10ckGZPGv6nKNnQXLRv4aBPsoL1EtLfZeiJDOS6lKWJv8Wu3y535P6mBp
-         eBp+4X3ADTSXxKg065enquCPyWh16qDMcnL5Gmbi8DGMe0S9+pdeseo97K+pl1HzugIK
-         CHpzrlrQETZxvt4NKsc12YnhJBoABROtCQ59bEOQDzDnfhMS3Y7BYAM7yaG4w8ZmFshy
-         Im1hNkiD9uXh5tq8ac4TKv06CkAchEmehQNgBTERFqu/HDH0ThluiHwcmXLbUBVr2yXW
-         AI4A==
-X-Gm-Message-State: APjAAAUNI0/U3TDXBaJpOqApQXfTtFeq4gXgJHgEuORJtwDTGCnx+2/Z
-        D0HLwUiFO/33dImdxK1mODBWOw==
-X-Google-Smtp-Source: APXvYqyFQyOwq3NatVmnOTvLBdiP1Y15tNjKDOOA5BlWh3lX91HYLp+dMM229VRYhDYAQ5xrcfOheQ==
-X-Received: by 2002:a1c:b046:: with SMTP id z67mr1498018wme.49.1559555271273;
-        Mon, 03 Jun 2019 02:47:51 -0700 (PDT)
+        bh=O3SKx4XRWM8BeL1IT8cdljXN1WfKTiELxY4AFeUt8cM=;
+        b=alVn8BrEMYEyy9vxwns9JOS3ngvUS/QSjRZN2RLHc/1fh+pp0WcRcjfeJiOseWH459
+         sIiUMRSNktmz3LjKJTIIwwXaKyL7x2NDQqL2MegXTl3GJm7MpdZKGshzLzlDa4uxZ9ab
+         Qv5wd5VLhqZuXx4laGOOq3KF+HPLc+QF6EHxqOl9M7tVI8O8L12eYkVx3N/tuXKWNBJn
+         pDAw3xuoTTsT92d2PQs+8v1tI8Cgwlq8enyY9bgTns14586YUxqragQWr2f/VmoBjeof
+         yfqRNyuv07TxmGmUz/EyRe4v9qemR4VfhCtzQYnvVBr/3/HMcqB8Y2ZQsd8YjbeSi+y1
+         +9ww==
+X-Gm-Message-State: APjAAAUk7AiNvxYwpAn8bxLPQsbSZnhsrGM+AufcXWFAlt0ezFdHo+fM
+        ReVFlQ5oij7wxWXPidiOEgu8jQ==
+X-Google-Smtp-Source: APXvYqy2XBlQJstPqfMb4Anuzykhl7kWIDzWYiNsCkJbOe/WK+Wjw9v5b6HEixuGViFvp7vEwYZD3Q==
+X-Received: by 2002:adf:ea88:: with SMTP id s8mr1580983wrm.68.1559555268990;
+        Mon, 03 Jun 2019 02:47:48 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z14sm11235375wrh.86.2019.06.03.02.47.50
+        by smtp.gmail.com with ESMTPSA id z14sm11235375wrh.86.2019.06.03.02.47.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 03 Jun 2019 02:47:50 -0700 (PDT)
+        Mon, 03 Jun 2019 02:47:47 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 4/4] arm64: dts: meson-g12a-x96-max: bump bluetooth bus speed to 2Mbaud/s
-Date:   Mon,  3 Jun 2019 11:47:40 +0200
-Message-Id: <20190603094740.12255-5-narmstrong@baylibre.com>
+Subject: [PATCH 2/4] arm64: dts: meson-g12a-x96-max: add 32k clock to bluetooth node
+Date:   Mon,  3 Jun 2019 11:47:38 +0200
+Message-Id: <20190603094740.12255-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603094740.12255-1-narmstrong@baylibre.com>
 References: <20190603094740.12255-1-narmstrong@baylibre.com>
@@ -74,25 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting to 2Mbaud/s is the nominal bus speed for common usages.
+The 32k low power clock is necessary for the bluetooth part of the
+combo module to initialize correctly, simply add the same clock we
+use for the sdio pwrseq.
 
+Fixes: c5c9c7cff269 ("arm64: dts: meson-g12a-x96-max: Enable BT Module")
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index aa9da5de5c2d..300c29dad49f 100644
+index 2c10ebfd9e7c..aa9da5de5c2d 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -206,6 +206,7 @@
+@@ -206,6 +206,8 @@
  	bluetooth {
  		compatible = "brcm,bcm43438-bt";
  		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
- 		clock-names = "lpo";
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
  	};
+ };
+ 
 -- 
 2.21.0
 
