@@ -2,106 +2,165 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8101FC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF71C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5619F26BA1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70AF278B1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="KRQ1ldMq"
+	dkim=pass (2048-bit key) header.d=utc.com header.i=@utc.com header.b="QFhr+rO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfFCOtb (ORCPT
+        id S1729077AbfFCOuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:49:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39941 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbfFCOtb (ORCPT
+        Mon, 3 Jun 2019 10:50:07 -0400
+Received: from mx0a-00105401.pphosted.com ([67.231.144.184]:44042 "EHLO
+        mx0a-00105401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728988AbfFCOuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:49:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u16so6167920wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=dTxrOsxUCXsXFGn572IgwOw5+RP5dDurYTRimMn6u1g=;
-        b=KRQ1ldMqRf+t9uEOltxOnY4Xv3IUu2Ap1UZngM8Y/83u83IYLqnaQHvT8pNr7PKUwn
-         jz+y7EF7ispu8qLP0saeTZTKRSFGTsiKgz4wt/NNzxKUBNmh7DJ3OYf//AcsBiWp5ArE
-         pJ9kHcTi7pwCHndCWZboOEv3Dqig2KECesxH6SuvIzHuG40TWhNOZxulKi/VjkBmrSkE
-         towN5BaUBZ39Jcj54b8U85nzo6ig7haW4v2P8c6gQDgZE1aWxc7xgvxNhl7lRJsXPLca
-         IDMbPgGc8NYQPbVA2wtqaT1ZnbLXelaY/RSdoeMSWK/BdqhsVhEBaGgs1K4gv9PWoW3P
-         P61A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=dTxrOsxUCXsXFGn572IgwOw5+RP5dDurYTRimMn6u1g=;
-        b=U/g5PPzYlOYPIIhdAnrWt5MXyXB6UH8kJ6eUfNxeS1AcLCEQS7zNeGRVVvymggHFWY
-         XDkK89wcu9ByuKSWz3XABUBoBz2vMQN6nrUMT3vFwHIeKZGORJkLxgxIE16oLJNEsjCJ
-         dJce5qc08Q5rlXHpc7h/DKBC7iHYlvF9PvqM9Wpj3Zo8pSxeRRYg512Ion05kjIRK1GV
-         mM09q3t4I6YkKDb3LbENpend10RWPk/9h+KuMul32uwjoYiQ7tzB79Ho/U2JC1lpLTD9
-         qVjSqgMP4/VJ22YZvcExlT2Xb8ghOBpM7/PcqNt4YoeABdEdk12cLo9vn0GdFzpZCsxy
-         y8fA==
-X-Gm-Message-State: APjAAAU6Jn2UF/Qq5Jq023ssbXMC/IHLfE1EQGUrV3k+l0nqvTs+aBMc
-        MTiqTym3Gqs/eH3wBL1V/eqwb/bHAbrNfA==
-X-Google-Smtp-Source: APXvYqxflosKqqZmYHVB8+xU9goQyTfdOA+I5W/YRTVMGyHo/V6JC5v0+imOMtt35U2hPwrOciB7Rw==
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr5694176wme.125.1559573369333;
-        Mon, 03 Jun 2019 07:49:29 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id r8sm12975277wrt.92.2019.06.03.07.49.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 07:49:28 -0700 (PDT)
-Message-ID: <5cf53378.1c69fb81.9dd1b.494b@mx.google.com>
-Date:   Mon, 03 Jun 2019 07:49:28 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Mon, 3 Jun 2019 10:50:07 -0400
+Received: from pps.filterd (m0078137.ppops.net [127.0.0.1])
+        by mx0a-00105401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53EkeDp042562;
+        Mon, 3 Jun 2019 10:49:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=utc.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=POD040618;
+ bh=FSiJPJPkYdS+osE+iTurtwGkbAGRi9Sce6GJOZsjXPc=;
+ b=QFhr+rO17Ip3boWsaBycMcQDqZY2554hxwuIWjCTMmYu2Ei7zA+fAdL/5xV/zcaqp+oY
+ 6Bi57/mboH9f3slANRWa7G7moE/KubPXlD5c1kCGTG40/Y0CtTSbQPGJYuE0n0jUNf2k
+ WSdk2spV9ZEZgstJViUDjcCm8xRBQYKjW6KP8llGdiDloguRei58XiW24HeHpQUlR/cf
+ d0ERDbILqUSqrpg+60J7mESE/kQqp1TdoGFNTtOZ1nVeCnVCWYqSUZww1m7kygOgbVRT
+ 9YgZ6zQs3hbBw3xEC/GoF9H1qMfekZxPVybawBRU8fpxo+AqP4Ug2wCq7srMww8V3Rsi Bw== 
+Received: from xnwpv36.utc.com ([167.17.239.16])
+        by mx0a-00105401.pphosted.com with ESMTP id 2sw4nbsv47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 03 Jun 2019 10:49:58 -0400
+Received: from uusmna1r.utc.com (uusmna1r.utc.com [159.82.219.64])
+        by xnwpv36.utc.com (8.16.0.27/8.16.0.27) with ESMTPS id x53Ent7b149578
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 10:49:55 -0400
+Received: from UUSTOE1Q.utcmail.com (UUSTOE1Q.utcmail.com [10.221.3.41])
+        by uusmna1r.utc.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x53EnsFA003894
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 10:49:55 -0400
+Received: from UUSALE1A.utcmail.com (10.220.3.27) by UUSTOE1Q.utcmail.com
+ (10.221.3.41) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Jun
+ 2019 09:49:53 -0500
+Received: from UUSALE1A.utcmail.com ([10.220.5.27]) by UUSALE1A.utcmail.com
+ ([10.220.5.27]) with mapi id 15.00.1473.003; Mon, 3 Jun 2019 10:49:53 -0400
+From:   "Nagal, Amit               UTC CCS" <Amit.Nagal@utc.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "CHAWLA, RITU UTC CCS" <RITU.CHAWLA@utc.com>,
+        "Netter, Christian M UTC CCS" <christian.Netter@fs.UTC.COM>
+Subject: RE: [External] Re: linux kernel page allocation failure and tuning of
+ page cache
+Thread-Topic: [External] Re: linux kernel page allocation failure and tuning
+ of page cache
+Thread-Index: AdUXwJaEVv2cRvqaQPqGQFhwqLYB3QAWIwGAAGydulAAFtsUAAADqGyA
+Date:   Mon, 3 Jun 2019 14:49:53 +0000
+Message-ID: <4f5f770de6254adb943854865a3484cd@UUSALE1A.utcmail.com>
+References: <09c5d10e9d6b4c258b22db23e7a17513@UUSALE1A.utcmail.com>
+ <CAKgT0UfoLDxL_8QkF_fuUK-2-6KGFr5y=2_nRZCNc_u+d+LCrg@mail.gmail.com>
+ <6ec47a90f5b047dabe4028ca90bb74ab@UUSALE1A.utcmail.com>
+ <20190603121138.GC23346@bombadil.infradead.org>
+In-Reply-To: <20190603121138.GC23346@bombadil.infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.220.35.246]
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v5.1.6-41-ge674455b9242
-X-Kernelci-Branch: linux-5.1.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
-References: <20190603090522.617635820@linuxfoundation.org>
-Subject: Re: [PATCH 5.1 00/40] 5.1.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+MIME-Version: 1.0
+X-Proofpoint-Spam-Details: rule=outbound_default_notspam policy=outbound_default score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.1.y boot: 132 boots: 1 failed, 131 passed (v5.1.6-41-ge67=
-4455b9242)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.1.y/kernel/v5.1.6-41-ge674455b9242/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
-/kernel/v5.1.6-41-ge674455b9242/
+From: Matthew Wilcox [mailto:willy@infradead.org]=20
+Sent: Monday, June 3, 2019 5:42 PM
+To: Nagal, Amit UTC CCS <Amit.Nagal@utc.com>
+On Mon, Jun 03, 2019 at 05:30:57AM +0000, Nagal, Amit               UTC CCS=
+ wrote:
+> > [  776.174308] Mem-Info:
+> > [  776.176650] active_anon:2037 inactive_anon:23 isolated_anon:0 [=20
+> > 776.176650]  active_file:2636 inactive_file:7391 isolated_file:32 [=20
+> > 776.176650]  unevictable:0 dirty:1366 writeback:1281 unstable:0 [=20
+> > 776.176650]  slab_reclaimable:719 slab_unreclaimable:724 [=20
+> > 776.176650]  mapped:1990 shmem:26 pagetables:159 bounce:0 [=20
+> > 776.176650]  free:373 free_pcp:6 free_cma:0 [  776.209062] Node 0=20
+> > active_anon:8148kB inactive_anon:92kB active_file:10544kB=20
+> > inactive_file:29564kB unevictable:0kB isolated(anon):0kB=20
+> > isolated(file):128kB mapped:7960kB dirty:5464kB writeback:5124kB=20
+> > shmem:104kB writeback_tmp:0kB unstable:0kB pages_scanned:0=20
+> > all_unreclaimable? no [  776.233602] Normal free:1492kB min:964kB=20
+> > low:1204kB high:1444kB active_anon:8148kB inactive_anon:92kB=20
+> > active_file:10544kB inactive_file:29564kB unevictable:0kB=20
+> > writepending:10588kB present:65536kB managed:59304kB mlocked:0kB=20
+> > slab_reclaimable:2876kB slab_unreclaimable:2896kB=20
+> > kernel_stack:1152kB pagetables:636kB bounce:0kB free_pcp:24kB=20
+> > local_pcp:24kB free_cma:0kB [  776.265406] lowmem_reserve[]: 0 0 [ =20
+> > 776.268761] Normal: 7*4kB (H) 5*8kB (H) 7*16kB (H) 5*32kB (H) 6*64kB=20
+> > (H) 2*128kB (H) 2*256kB (H) 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D=20
+> > 1492kB
+> > 10071 total pagecache pages
+> > [  776.284124] 0 pages in swap cache [  776.287446] Swap cache=20
+> > stats: add 0, delete 0, find 0/0 [ 776.292645] Free swap  =3D 0kB [ =20
+> > 776.295532] Total swap =3D 0kB [ 776.298421] 16384 pages RAM [ =20
+> > 776.301224] 0 pages HighMem/MovableOnly [  776.305052] 1558 pages=20
+> > reserved
+> >
+> > 6) we have certain questions as below :
+> > a) how the kernel memory got exhausted ? at the time of low memory cond=
+itions in kernel , are the kernel page flusher threads , which should have =
+written dirty pages from page cache to flash disk , not > >executing at rig=
+ht time ? is the kernel page reclaim mechanism not executing at right time =
+?
+>=20
+> >I suspect the pages are likely stuck in a state of buffering. In the cas=
+e of sockets the packets will get queued up until either they can be servic=
+ed or the maximum size of the receive buffer as been exceeded >and they are=
+ dropped.
+>=20
+> My concern here is that why the reclaim procedure has not triggered ?
 
-Tree: stable-rc
-Branch: linux-5.1.y
-Git Describe: v5.1.6-41-ge674455b9242
-Git Commit: e674455b924207b06e6527d961a4b617cf13e7a9
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 73 unique boards, 23 SoC families, 14 builds out of 209
+>It has triggered.  1281 pages are under writeback.
+Thanks for the reply .
 
-Boot Failure Detected:
+Also , on target , cat /proc/sys/vm/min_free_kbytes =3D 965 .  As per https=
+://www.kernel.org/doc/Documentation/sysctl/vm.txt  ,=20
+the minimum value min_free_kbytes  should be set must be 1024 .=20
+is this min_free_kbytes setting creating the problem ?
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm4708-smartrg-sr400ac: 1 failed lab
+Target is having 64MB memory  , what value is recommended for setting min_f=
+ree_kbytes  ?
 
----
-For more info write to <info@kernelci.org>
+also is this a problem if the process receiving socket data is run at eleva=
+ted priority ( we set it firstly  chrt -r 20 and then changed it later to r=
+enice -n -20)
+I observed lru-add-drain , writeback threads were executing at normal prior=
+ity .
+
+
+
+
+
+
+
+
+
+
+
