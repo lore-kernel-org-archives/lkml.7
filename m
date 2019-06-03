@@ -2,89 +2,93 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB213C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03471C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01B327FF9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFA7280C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559564207;
+	bh=wulgFJ3+yhHuyD9dxZ/TbsHdJm7qURFTPLhJyoQxgw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NAiUu49KmDTVc6kCceH7BgyXRzjmYae5utMXamYrqh0NKgx81elwrWdOX8NU9wZ+J
+	 fHLn5/5WDwp9ylGvIdepEsBVSwvJ5wBP1YXMv0S6SOyKwp/ZeqamM6KfkPhiK+B6VE
+	 NAmlr3FN4RXtGIew2vcbByo0DTE9ZF0jYtU0RpGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfFCMOu (ORCPT
+        id S1727591AbfFCMQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:14:50 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:56801 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726873AbfFCMOu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:14:50 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id XlrOhLJi7sDWyXlrRhszmS; Mon, 03 Jun 2019 14:14:48 +0200
-Subject: Re: [PATCH] media: cxusb-analog: Use ARRAY_SIZE for
- cxusub_medion_pin_config
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, kbuild test robot <lkp@intel.com>
-References: <20190531223756.1305617-1-mail@maciej.szmigiero.name>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8512e951-03fc-34d0-6dcf-fe9667eba022@xs4all.nl>
-Date:   Mon, 3 Jun 2019 14:14:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 08:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbfFCMQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:16:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DBB8280C0;
+        Mon,  3 Jun 2019 12:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559564205;
+        bh=wulgFJ3+yhHuyD9dxZ/TbsHdJm7qURFTPLhJyoQxgw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GbX3eLZzOyim2Gyqv5jHF5jIvDinNpRiZiEfETW6gw+ijDjYfdyRBe0n3kS2OEyGw
+         8BhbmNSlhBrWU0h8ZyKGKlQUhNyJhC5217gPeVRJUoairtqivdjOlLLmFI+5CXAqao
+         gx80KM8zMSRxHSL9g/LMFg2gVWMvwk2ARWFFO0jk=
+Date:   Mon, 3 Jun 2019 14:16:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geordan Neukum <gneukum1@gmail.com>
+Cc:     devel@driverdev.osuosl.org, YueHaibing <yuehaibing@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 5/5] staging: kpc2000: kpc_spi: use devm_* API to manage
+ mapped I/O space
+Message-ID: <20190603121643.GA25274@kroah.com>
+References: <cover.1559488571.git.gneukum1@gmail.com>
+ <ea222a6da192a4eb0ba9c8c840843f240f414092.1559488571.git.gneukum1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190531223756.1305617-1-mail@maciej.szmigiero.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGmmtXUUHWs4Wy+dOqpToMDsFs7CxmiRlydZe5t0GbMerN0581bsVAZyRW8PzdOffOAs7MRwnJbXTIOXwihj+s7sPIvmPvy33D9LA7srershSdsfMgZj
- lIO2U90mRo/aVMkcSY/Va4sRZJhUrmYtw/GhZYXItXv7+IgEyO7GbG0nkQL0voyUVF6TaJgUY4s5HjyuUkNariA1gK14HeE2olOJdS53Fe818DySC1DRi60i
- oH/VxHKJWkrWMBU35rz5KqIA5t/1XrmxbSQPA0FKBDMOIuuH0Uir3QaPWgWn9OwYOd/RmoffqQOEV59rgNqXfdS6+baGbBDgLTPrNeLUnI0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea222a6da192a4eb0ba9c8c840843f240f414092.1559488571.git.gneukum1@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maciej,
-
-Thank you for the patch, but I posted a fix for this earlier already:
-
-https://patchwork.linuxtv.org/patch/56441/
-
-I'll drop this patch in favor of the one above. Apologies for not
-CC-ing you on my patch, I should have done that.
-
-Regards,
-
-	Hans
-
-On 6/1/19 12:37 AM, Maciej S. Szmigiero wrote:
-> Use ARRAY_SIZE for computing element count of cxusub_medion_pin_config
-> array as suggested by the kbuild test robot.
+On Sun, Jun 02, 2019 at 03:58:37PM +0000, Geordan Neukum wrote:
+> The kpc_spi driver does not unmap its I/O space upon error cases in the
+> probe() function or upon remove(). Make the driver clean up after itself
+> more maintainably by migrating to using the managed resource API.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 > ---
->  drivers/media/usb/dvb-usb/cxusb-analog.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/staging/kpc2000/kpc2000_spi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/usb/dvb-usb/cxusb-analog.c b/drivers/media/usb/dvb-usb/cxusb-analog.c
-> index 9b42ca71c177..51d3cba32b60 100644
-> --- a/drivers/media/usb/dvb-usb/cxusb-analog.c
-> +++ b/drivers/media/usb/dvb-usb/cxusb-analog.c
-> @@ -1622,8 +1622,7 @@ int cxusb_medion_analog_init(struct dvb_usb_device *dvbdev)
->  	/* TODO: setup audio samples insertion */
+> diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+> index b513432a26ed..32d3ec532e26 100644
+> --- a/drivers/staging/kpc2000/kpc2000_spi.c
+> +++ b/drivers/staging/kpc2000/kpc2000_spi.c
+> @@ -471,7 +471,8 @@ kp_spi_probe(struct platform_device *pldev)
+>  		goto free_master;
+>  	}
 >  
->  	ret = v4l2_subdev_call(cxdev->cx25840, core, s_io_pin_config,
-> -			       sizeof(cxusub_medion_pin_config) /
-> -			       sizeof(cxusub_medion_pin_config[0]),
-> +			       ARRAY_SIZE(cxusub_medion_pin_config),
->  			       cxusub_medion_pin_config);
->  	if (ret != 0)
->  		dev_warn(&dvbdev->udev->dev,
-> 
+> -	kpspi->phys = (unsigned long)ioremap_nocache(r->start, resource_size(r));
+> +	kpspi->phys = (unsigned long)devm_ioremap_nocache(&pldev->dev, r->start,
+> +							  resource_size(r));
 
+Why is this being cast?  This should just be an __iomem *, right?
+
+>  	kpspi->base = (u64 __iomem *)kpspi->phys;
+
+Then that cast will go away :)
+
+Anyway, something for a future patch, this one is fine, thanks.
+
+greg k-h
