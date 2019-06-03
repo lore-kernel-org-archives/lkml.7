@@ -2,97 +2,152 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC8BC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D96CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F93225E05
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D96525EE6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfFCWaU (ORCPT
+        id S1726531AbfFCWbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:30:20 -0400
-Received: from mga04.intel.com ([192.55.52.120]:8672 "EHLO mga04.intel.com"
+        Mon, 3 Jun 2019 18:31:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48996 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfFCWaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:30:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 14:08:36 -0700
-X-ExtLoop1: 1
-Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Jun 2019 14:08:26 -0700
-Date:   Tue, 4 Jun 2019 00:08:25 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190603210825.GG4894@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
- <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
- <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
- <20190530180110.GB23930@linux.intel.com>
- <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
- <20190530211645.GB27551@linux.intel.com>
- <CALCETrVAoDppmdJzkpwagt3q64M-QpNajXbKGR1yQdqyofeANQ@mail.gmail.com>
- <20190530213601.GC27551@linux.intel.com>
+        id S1726101AbfFCWbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 18:31:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D896D307D945;
+        Mon,  3 Jun 2019 22:31:34 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 707CF5D9C6;
+        Mon,  3 Jun 2019 22:31:31 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 16:31:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+Subject: Re: [PATCH v8 28/29] vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+Message-ID: <20190603163130.3f7497ba@x1.home>
+In-Reply-To: <20190526161004.25232-29-eric.auger@redhat.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+        <20190526161004.25232-29-eric.auger@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530213601.GC27551@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 03 Jun 2019 22:31:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:36:01PM -0700, Sean Christopherson wrote:
-> Assuming MRENCLAVE generated by Graphene or any other hosting scheme are
-> stable[1], then avoiding EXEC<whatever> means the user can effectively
-> whitelist what enclaves are runnable by Graphene, even if the kernel
-> doesn't implement security_enclave_create/init().
-> 
-> I agree that it probably isn't all that important, it's more of a "why
-> not" argument, i.e. what is gained by not using sigstruct as a proxy?
-> 
-> [1] What in the world is being attested if MRENCLAVE isn't stable?
+On Sun, 26 May 2019 18:10:03 +0200
+Eric Auger <eric.auger@redhat.com> wrote:
 
-If I've understood correctly, Graphene uses a single loader enclave
-that loads the executable in.
+> Add a new VFIO_PCI_DMA_FAULT_IRQ_INDEX index. This allows to
+> set/unset an eventfd that will be triggered when DMA translation
+> faults are detected at physical level when the nested mode is used.
+> 
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c       |  3 +++
+>  drivers/vfio/pci/vfio_pci_intrs.c | 19 +++++++++++++++++++
+>  include/uapi/linux/vfio.h         |  1 +
+>  3 files changed, 23 insertions(+)
 
-/Jarkko
+
+Note that I suggested to Intel folks trying to add a GVT-g page
+flipping eventfd to convert to device specific interrupts the same way
+we added device specific regions:
+
+https://patchwork.kernel.org/patch/10962337/
+
+I'd probably suggest the same here so we can optionally expose it when
+supported.  Thanks,
+
+Alex
+
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index a9c8af2a774a..65a1e6814f5c 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -746,6 +746,8 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
+>  			return 1;
+>  	} else if (irq_type == VFIO_PCI_REQ_IRQ_INDEX) {
+>  		return 1;
+> +	} else if (irq_type == VFIO_PCI_DMA_FAULT_IRQ_INDEX) {
+> +		return 1;
+>  	}
+>  
+>  	return 0;
+> @@ -1082,6 +1084,7 @@ static long vfio_pci_ioctl(void *device_data,
+>  		switch (info.index) {
+>  		case VFIO_PCI_INTX_IRQ_INDEX ... VFIO_PCI_MSIX_IRQ_INDEX:
+>  		case VFIO_PCI_REQ_IRQ_INDEX:
+> +		case VFIO_PCI_DMA_FAULT_IRQ_INDEX:
+>  			break;
+>  		case VFIO_PCI_ERR_IRQ_INDEX:
+>  			if (pci_is_pcie(vdev->pdev))
+> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+> index 1c46045b0e7f..28a96117daf3 100644
+> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+> @@ -622,6 +622,18 @@ static int vfio_pci_set_req_trigger(struct vfio_pci_device *vdev,
+>  					       count, flags, data);
+>  }
+>  
+> +static int vfio_pci_set_dma_fault_trigger(struct vfio_pci_device *vdev,
+> +					  unsigned index, unsigned start,
+> +					  unsigned count, uint32_t flags,
+> +					  void *data)
+> +{
+> +	if (index != VFIO_PCI_DMA_FAULT_IRQ_INDEX || start != 0 || count > 1)
+> +		return -EINVAL;
+> +
+> +	return vfio_pci_set_ctx_trigger_single(&vdev->dma_fault_trigger,
+> +					       count, flags, data);
+> +}
+> +
+>  int vfio_pci_set_irqs_ioctl(struct vfio_pci_device *vdev, uint32_t flags,
+>  			    unsigned index, unsigned start, unsigned count,
+>  			    void *data)
+> @@ -671,6 +683,13 @@ int vfio_pci_set_irqs_ioctl(struct vfio_pci_device *vdev, uint32_t flags,
+>  			break;
+>  		}
+>  		break;
+> +	case VFIO_PCI_DMA_FAULT_IRQ_INDEX:
+> +		switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
+> +		case VFIO_IRQ_SET_ACTION_TRIGGER:
+> +			func = vfio_pci_set_dma_fault_trigger;
+> +			break;
+> +		}
+> +		break;
+>  	}
+>  
+>  	if (!func)
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 13e041b84d48..66b6b08c4a38 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -559,6 +559,7 @@ enum {
+>  	VFIO_PCI_MSIX_IRQ_INDEX,
+>  	VFIO_PCI_ERR_IRQ_INDEX,
+>  	VFIO_PCI_REQ_IRQ_INDEX,
+> +	VFIO_PCI_DMA_FAULT_IRQ_INDEX,
+>  	VFIO_PCI_NUM_IRQS
+>  };
+>  
+
