@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA82C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35A0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73F825763
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BB225763
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="KqwWUkpS"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MaKfWbk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfFCINc (ORCPT
+        id S1727655AbfFCINh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:13:32 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:56807 "EHLO
+        Mon, 3 Jun 2019 04:13:37 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:56792 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfFCINc (ORCPT
+        with ESMTP id S1726690AbfFCINc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Jun 2019 04:13:32 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x538Cdor002048;
-        Mon, 3 Jun 2019 17:12:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x538Cdor002048
+        by conuserg-08.nifty.com with ESMTP id x538Cdoq002048;
+        Mon, 3 Jun 2019 17:12:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x538Cdoq002048
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559549562;
-        bh=p//No+hpKX3bBuChWljMBq7O7wxZpa31Ei+M+7TG65Q=;
+        s=dec2015msa; t=1559549561;
+        bh=Yy6xaRVBbLuyh41FBcaoTVAl8eAfN9twm28AUEdXycQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqwWUkpSXMd92pSxF2HHBDB61ZSrRw+BjVwv+W5EF2BsU5V0Zx4yxckLK5wu6dE+n
-         dRVMiWIZY96EGO5/vH0gbYT35oCsyXoUCY9Kpr42u8RlPCVh/3KJCKI2VhMnYaUxB1
-         XZpxXl4kBtiC217nMC6Vl1Y7NxryhBrUASviXra3ycmubs32Bn9W232B6RWK+SIjgy
-         7BzS3L/A4YZ9l2RU8rTu+NyCa6VVzQLfhojLBzhq3a5GQO4v8XAB6lfFWWkydl03do
-         KSwEHwKwWDslw4Sx5OWy6HoRM40uKD+GrSika+cA1gZh3S07MZoQve2U9/ASMZmTGX
-         fxSJlpmD2FtxA==
+        b=MaKfWbk+u3wpVWJQJUa2yLnFBc1y42PpgtLUsd2euIuj4urVlPr7CF3pDUiVLQCfm
+         cbghzAtofe1v71Lq3ofmfw0qnkxkiXQKGk5mGwn7i4uEAgWVVFhYLdhFjGeRHcL1ur
+         lLrv45psTRB+gbNt6QpZmN25e2h++gW5cnhzbhTFNJvxKosyVvru1UC9SUsynILwR+
+         9oEkSV/CyB2TQCjp7vJ8bnzEXO7sZIfTkbNGM9UHd3ACIO5UIyt8aZkvbKRmN++WD2
+         Er2T6UQhUw8yCG3IpINybHJn5qvZ2sdf8WY1y4a7g/Jy2q/rESAvpyp4PG62512ngZ
+         DUL73jw+4r9gA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
         Arnd Bergmann <arnd@arndb.de>
 Cc:     linux-arm-kernel@lists.infradead.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Subject: [RESEND PATCH 2/2] memory: move jedec_ddr.h from include/memory to drivers/memory/
-Date:   Mon,  3 Jun 2019 17:12:33 +0900
-Message-Id: <20190603081233.17394-3-yamada.masahiro@socionext.com>
+        linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH 1/2] memory: move jedec_ddr_data.c from lib/ to drivers/memory/
+Date:   Mon,  3 Jun 2019 17:12:32 +0900
+Message-Id: <20190603081233.17394-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190603081233.17394-1-yamada.masahiro@socionext.com>
 References: <20190603081233.17394-1-yamada.masahiro@socionext.com>
@@ -56,97 +55,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that jedec_ddr_data.c was moved from lib/ to drivers/memory/,
-<memory/jedec_ddr.h> is included only from drivers/memory/.
+jedec_ddr_data.c exports 3 symbols, and all of them are only
+referenced from drivers/memory/{emif.c,of_memory.c}
 
-Make it a local header of drivers/memory/.
+drivers/memory/ is a better location than lib/.
 
-The directory include/memory is now gone.
-
-While I am here, I also changed #include <linux/module.h> to
-<linux/export.h>. Because CONFIG_DDR is bool, jedec_ddr_data.c is
-never compiled as a module.
+I removed the Kconfig prompt "JEDEC DDR data" because it is only
+select'ed by TI_EMIF, and there is no other user. There is no good
+reason in making it a user-configurable CONFIG option.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- drivers/memory/emif.c                   | 3 ++-
- {include => drivers}/memory/jedec_ddr.h | 6 +++---
- drivers/memory/jedec_ddr_data.c         | 5 +++--
- drivers/memory/of_memory.c              | 3 ++-
- 4 files changed, 10 insertions(+), 7 deletions(-)
- rename {include => drivers}/memory/jedec_ddr.h (97%)
+ drivers/memory/Kconfig                   | 8 ++++++++
+ drivers/memory/Makefile                  | 1 +
+ {lib => drivers/memory}/jedec_ddr_data.c | 0
+ lib/Kconfig                              | 8 --------
+ lib/Makefile                             | 2 --
+ 5 files changed, 9 insertions(+), 10 deletions(-)
+ rename {lib => drivers/memory}/jedec_ddr_data.c (100%)
 
-diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
-index 2f214440008c..32cad7540d78 100644
---- a/drivers/memory/emif.c
-+++ b/drivers/memory/emif.c
-@@ -26,8 +26,9 @@
- #include <linux/list.h>
- #include <linux/spinlock.h>
- #include <linux/pm.h>
--#include <memory/jedec_ddr.h>
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index 392ad4f5c570..477f0f130e5b 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -8,6 +8,14 @@ menuconfig MEMORY
+ 
+ if MEMORY
+ 
++config DDR
++	bool
++	help
++	  Data from JEDEC specs for DDR SDRAM memories,
++	  particularly the AC timing parameters and addressing
++	  information. This data is useful for drivers handling
++	  DDR SDRAM controllers.
 +
- #include "emif.h"
-+#include "jedec_ddr.h"
- #include "of_memory.h"
+ config ARM_PL172_MPMC
+ 	tristate "ARM PL172 MPMC driver"
+ 	depends on ARM_AMBA && OF
+diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+index 91ae4eb0e913..9d5c409a1591 100644
+--- a/drivers/memory/Makefile
++++ b/drivers/memory/Makefile
+@@ -3,6 +3,7 @@
+ # Makefile for memory devices
+ #
  
- /**
-diff --git a/include/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
-similarity index 97%
-rename from include/memory/jedec_ddr.h
-rename to drivers/memory/jedec_ddr.h
-index ddad0f870e5d..a2094a9a588e 100644
---- a/include/memory/jedec_ddr.h
-+++ b/drivers/memory/jedec_ddr.h
-@@ -9,8 +9,8 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
--#ifndef __LINUX_JEDEC_DDR_H
--#define __LINUX_JEDEC_DDR_H
-+#ifndef __JEDEC_DDR_H
-+#define __JEDEC_DDR_H
++obj-$(CONFIG_DDR)		+= jedec_ddr_data.o
+ ifeq ($(CONFIG_DDR),y)
+ obj-$(CONFIG_OF)		+= of_memory.o
+ endif
+diff --git a/lib/jedec_ddr_data.c b/drivers/memory/jedec_ddr_data.c
+similarity index 100%
+rename from lib/jedec_ddr_data.c
+rename to drivers/memory/jedec_ddr_data.c
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 90623a0e1942..e09b3e081a53 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -531,14 +531,6 @@ config LRU_CACHE
+ config CLZ_TAB
+ 	bool
  
- #include <linux/types.h>
+-config DDR
+-	bool "JEDEC DDR data"
+-	help
+-	  Data from JEDEC specs for DDR SDRAM memories,
+-	  particularly the AC timing parameters and addressing
+-	  information. This data is useful for drivers handling
+-	  DDR SDRAM controllers.
+-
+ config IRQ_POLL
+ 	bool "IRQ polling library"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index fb7697031a79..cb66bc9c5b2f 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -206,8 +206,6 @@ obj-$(CONFIG_SIGNATURE) += digsig.o
  
-@@ -172,4 +172,4 @@ extern const struct lpddr2_timings
- 	lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
- extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
+ lib-$(CONFIG_CLZ_TAB) += clz_tab.o
  
--#endif /* __LINUX_JEDEC_DDR_H */
-+#endif /* __JEDEC_DDR_H */
-diff --git a/drivers/memory/jedec_ddr_data.c b/drivers/memory/jedec_ddr_data.c
-index 6d2cbf1d567f..1f9ca0f23407 100644
---- a/drivers/memory/jedec_ddr_data.c
-+++ b/drivers/memory/jedec_ddr_data.c
-@@ -10,8 +10,9 @@
-  * published by the Free Software Foundation.
-  */
+-obj-$(CONFIG_DDR) += jedec_ddr_data.o
+-
+ obj-$(CONFIG_GENERIC_STRNCPY_FROM_USER) += strncpy_from_user.o
+ obj-$(CONFIG_GENERIC_STRNLEN_USER) += strnlen_user.o
  
--#include <memory/jedec_ddr.h>
--#include <linux/module.h>
-+#include <linux/export.h>
-+
-+#include "jedec_ddr.h"
- 
- /* LPDDR2 addressing details from JESD209-2 section 2.4 */
- const struct lpddr2_addressing
-diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
-index 12a61f558644..46539b27a3fb 100644
---- a/drivers/memory/of_memory.c
-+++ b/drivers/memory/of_memory.c
-@@ -10,8 +10,9 @@
- #include <linux/list.h>
- #include <linux/of.h>
- #include <linux/gfp.h>
--#include <memory/jedec_ddr.h>
- #include <linux/export.h>
-+
-+#include "jedec_ddr.h"
- #include "of_memory.h"
- 
- /**
 -- 
 2.17.1
 
