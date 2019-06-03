@@ -2,95 +2,90 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7D9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CAEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A25228160
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC38D28166
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfFCLpE (ORCPT
+        id S1727786AbfFCLpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:45:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49542 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfFCLpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:45:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22B6515A2;
-        Mon,  3 Jun 2019 04:45:03 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAE9C3F5AF;
-        Mon,  3 Jun 2019 04:45:01 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 12:44:56 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>, tglx@linutronix.de,
-        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
- disrupting offline
-Message-ID: <20190603114455.GA16119@lakrids.cambridge.arm.com>
-References: <20190602011253.GA6167@linux.ibm.com>
- <20190603083848.GB3436@hirez.programming.kicks-ass.net>
+        Mon, 3 Jun 2019 07:45:34 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:48453 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726561AbfFCLpd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 07:45:33 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id XlP5hL7kAsDWyXlP8hsryq; Mon, 03 Jun 2019 13:45:31 +0200
+Subject: Re: [PATCH] media: stm32-dcmi: fix irq = 0 case
+To:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@denx.de>, linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <46944972-1f88-ef3b-fef9-8e37753c0ffe@xs4all.nl>
+Date:   Mon, 3 Jun 2019 13:45:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603083848.GB3436@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCN0MWjkjUyGzp6RpvMIZ2ZANeW2kYEP03Lpq3iqxfDwME2NkMqcJ+4u8wJA/QHfTb1eUz+uisc7OqX0O7kndwdR0ZVW6uYMPcB/P15b1VaJn538Lf+x
+ NpoGEuGPiPtkBx9DsS6X0tLYlnRiI7z09uP0CoCsy8Xjtn42bpslVuei6PSli3eMoap5saASbpiDX6XpET+OFtD9B3RPXBwVdY8s8ZorQPRjKWBS+iFs5tU5
+ JcyHlEgjEwFC3lQWFrLx7IKttSJSdQhzLTcFNI4C/GGkE2trkxzNun+9+Ruulo+8qY9ak+/SmKIQ+kgTg7xKgQBhwcWRnLRBWT55TpNhtogX6wNgZDrHA6R+
+ DP8O8sDZLy5bkdDBxfik+WTTyrM7PXg/048e9w11h0IqIIlGhif1381FUXcLSGcLziyMd6bFNfwfgVfEUgK16hHn9FgCB4acy5ykhFHypGJ47adWQgK/dE6G
+ 9TJhkrGyPEBntvMjPZ9BgUNRVSNLdIIqLJzmuyPjIYgbtaRxjKOprgUXnCZ2Mg+Lh4zk3jdL6wiFvQH6IqSYwOZc/HHUQ3Mu+pq0ncGcj1p4oBZbHedZLcz6
+ 1ZXK7+Aa9y7T7q16w8DCGy61
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
-> On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
-> > Scheduling-clock interrupts can arrive late in the CPU-offline process,
-> > after idle entry and the subsequent call to cpuhp_report_idle_dead().
-> > Once execution passes the call to rcu_report_dead(), RCU is ignoring
-> > the CPU, which results in lockdep complaints when the interrupt handler
-> > uses RCU:
+On 5/31/19 11:18 AM, Fabien Dessenne wrote:
+> Manage the irq = 0 case, where we shall return an error.
 > 
-> > diff --git a/kernel/cpu.c b/kernel/cpu.c
-> > index 448efc06bb2d..3b33d83b793d 100644
-> > --- a/kernel/cpu.c
-> > +++ b/kernel/cpu.c
-> > @@ -930,6 +930,7 @@ void cpuhp_report_idle_dead(void)
-> >  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
-> >  
-> >  	BUG_ON(st->state != CPUHP_AP_OFFLINE);
-> > +	local_irq_disable();
-> >  	rcu_report_dead(smp_processor_id());
-> >  	st->state = CPUHP_AP_IDLE_DEAD;
-> >  	udelay(1000);
+> Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Urgh... I'd almost suggest we do something like the below.
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index b9dad0a..d855e9c 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
+>  	if (irq <= 0) {
+
+Shouldn't this be 'irq < 0' instead of '<=' ?
+
+AFAICT irq == 0 can be a valid irq and isn't an error.
+
+Regards,
+
+	Hans
+
+>  		if (irq != -EPROBE_DEFER)
+>  			dev_err(&pdev->dev, "Could not get irq\n");
+> -		return irq;
+> +		return irq ? irq : -ENXIO;
+>  	}
+>  
+>  	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 > 
-> 
-> But then I started looking at the various arch_cpu_idle_dead()
-> implementations and ran into arm's implementation, which is calling
-> complete() where generic code already established this isn't possible
-> (see for example cpuhp_report_idle_dead()).
 
-IIRC, that should have been migrated over to cpu_report_death(), as
-arm64 was in commit:
-
-  05981277a4de1ad6 ("arm64: Use common outgoing-CPU-notification code")
-
-... but it looks like Paul's patch to do so [1] fell through the cracks;
-I'm not aware of any reason that shouldn't have been taken.
-  
-[1] https://lore.kernel.org/lkml/1431467407-1223-8-git-send-email-paulmck@linux.vnet.ibm.com/
-
-Paul, do you want to resend that?
-
-For arm64 we mask SError, debug, and FIQ exceptions later in our
-cpu_die(). FIQ should never happen, but we could take SError or debug
-exceptions, and I think we end up using RCU behind the scenes in the
-handlers for those. :/
-
-Thanks,
-Mark.
