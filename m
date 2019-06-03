@@ -2,200 +2,372 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9923C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608CC28D18
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893AF2723C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0BE2723C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uINysbsp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QbBj31DP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfFCSgT (ORCPT
+        id S1726837AbfFCSe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:36:19 -0400
-Received: from mail-oi1-f201.google.com ([209.85.167.201]:37614 "EHLO
-        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfFCSgQ (ORCPT
+        Mon, 3 Jun 2019 14:34:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45466 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfFCSeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:36:16 -0400
-Received: by mail-oi1-f201.google.com with SMTP id 5so5567072oix.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:36:16 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:17 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w34so8747413pga.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=eZitS+dbekPKdSNKv5e4dRxz7q7psKdXco7JWUyUMYI=;
-        b=uINysbsp98/V5G2kBWYHoIhT/rBsJepOwPJSjBVEQppBYNRWnvqVwAApBvYTW84bEJ
-         tzMyyXoKwN4rqiWZvrGMNzC+qf5fkucrR0NzYetxglwxXgUTMns5m26CdQijOasEi1g+
-         Hlqhd3qZhx1UTY5M0mOwhadaipDfE7owhYN9ym9VYoblRb2e/RPpaiGrNqNEGh/wDzVl
-         PKKT8k7dnNbYCPMxODos/8GERZ6DBGH0nuhWTal6oC+WXtflYyNJ5zdsFLLJYelg/otc
-         Y4Y5VddFnoFFBILsWu2w4SiGvxMorSWDUn032trwlFJD8hSaDWgMeZ3jyTnuH8nmK4MH
-         rg3g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ukgxjUVacW1jHs3CdZtBXUAQpC+KY/oy4Y6vaU2txQg=;
+        b=QbBj31DPtDEEKAfXFArKVV1cOEVdNz2dpGirqcGe0dw0aLD+a9wa9a/KUmjSqXhRjC
+         t/bfdERdVDmd2xLQMnFUpymFWmfJtv9Oi4y5P3h102aHGRqX20vdu6C3QQjp5OkmqtnE
+         f7VMeYxRz0L0bi5Xe4HTkYnZ6eyKbdAQYkAQw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=eZitS+dbekPKdSNKv5e4dRxz7q7psKdXco7JWUyUMYI=;
-        b=kLioJqiCEJDbHpB7iYjn3QwZSqANeRPH+BBactrz2So4HkWj99WJ4p7Qna5/gJIhUN
-         XZTT7ocDelzy8+N4YDha/L/93GD/r7yAOkTsMOT2F1vJxMBWqby9CGj9+vesNRkAK84q
-         tC2tIg7T0fCKJ0VRfI6fE3T0fM/w8O7ruj3w9+sy/3B739aqEH5AgWAUnJTSqDDuNB2g
-         ijYphUAro1yaRCJGzU9/Hga8YF8blfMGY/gljcRzT5cecGGWu2FcgsXWt6yipGGWeSWi
-         uvF6pp4sALps56RWrg1ldfPBhFqfCCOsBXSgmQhhpnknHn70xtiDRR3XoT//6DVvem1X
-         WLdQ==
-X-Gm-Message-State: APjAAAU+6IhsSW4lzJFH6KlOrEq/HcYls7en8QmabxJNd1R14dRaG5sA
-        vECtNrfdwDjl8Q0LGoEC104p66fPUOc=
-X-Google-Smtp-Source: APXvYqxpXOFxdc3vJz3PZMQqPBZKT2Eii9UcnH3WZRUmIJ8WKqVB4eFIcjYFCMRAi97cbu9nJOcjDT4/rJc=
-X-Received: by 2002:a9d:4d04:: with SMTP id n4mr937988otf.234.1559586975858;
- Mon, 03 Jun 2019 11:36:15 -0700 (PDT)
-Date:   Mon,  3 Jun 2019 11:36:10 -0700
-In-Reply-To: <20190529224350.6460-1-mikewu@google.com>
-Message-Id: <20190603183610.241026-1-mikewu@google.com>
-Mime-Version: 1.0
-References: <20190529224350.6460-1-mikewu@google.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ukgxjUVacW1jHs3CdZtBXUAQpC+KY/oy4Y6vaU2txQg=;
+        b=C2adt/6idupcS15s5HM6DJ2Yz3Lg1fFA4djo/wDrgoifdDcI/4tM4EMlYxKy8BsWGd
+         eN6+uzy+BA2kazBggG/P7LW4CREa79HDtvbjKkusqimcyjP+dMLBq3o4BXfAnfr2WWh2
+         L23//wcc9DIsiI1MDyqX8DjvaQ2A0EU+9idmRnJxjsmbcozMN03LNRJUXtQ8FWPRq8zM
+         ce9ZYAMmfBW3zEW4N6QfIWuScMq6YYExJjmFvxBSjK6JPZhtyR4w7adCx2wGixg7UD3r
+         RPoS1DpcH0WIMn9VfQLydqaaMU6IlhCz/1rzLyicfJ8QJd+bODNCdMRvxuXXBo1VS4nk
+         3z8g==
+X-Gm-Message-State: APjAAAVlt5UTFpdRbVVvShSOHZDN1MPJkk9wgBfO4DBafLZ4qq1Za3X5
+        2XIjeMUASvXzq3sRu8wGciypFA==
+X-Google-Smtp-Source: APXvYqxwvcrQUfi/we8ZcGH1RECU4k1nFDPv75vRdd1kx0HH0AsSHQeGlRFESZbUw//QuDBCYKoWQA==
+X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr17538211pjo.111.1559586856221;
+        Mon, 03 Jun 2019 11:34:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id bx5sm12775839pjb.25.2019.06.03.11.34.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 11:34:15 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
+        broonie@kernel.org, cychiang@chromium.org, tiwai@suse.com,
+        fabien.lahoudere@collabora.com
+Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [RESEND PATCH v3 06/30] mfd: cros_ec: use BIT macro
+Date:   Mon,  3 Jun 2019 11:33:37 -0700
+Message-Id: <20190603183401.151408-7-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: [PATCH v4] Allow to exclude specific file types in LoadPin
-From:   Ke Wu <mikewu@google.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, Ke Wu <mikewu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
+References: <20190603183401.151408-1-gwendal@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel already provide MODULE_SIG and KEXEC_VERIFY_SIG to
-make sure loaded kernel module and kernel image are trusted. This
-patch adds a kernel command line option "loadpin.exclude" which
-allows to exclude specific file types from LoadPin. This is useful
-when people want to use different mechanisms to verify module and
-kernel image while still use LoadPin to protect the integrity of
-other files kernel loads.
+Replace (1 << ...) with BIT().
 
-Signed-off-by: Ke Wu <mikewu@google.com>
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Benson Leung <bleung@chromium.org>
+Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
-Changelog since v3:
-- Undo patch v3 change.
-- Use ignore_read_file_id rahther than kernel_read_file_str when
-  iterating to prevent out-of-bounds write.
+ include/linux/mfd/cros_ec_commands.h | 110 +++++++++++++--------------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
-Changelog since v2:
-- Make size of exclude_read_files and ignore_read_file_id to be
-  equal to the size of kernel_read_file_str.
-
-Changelog since v1:
-- Mark ignore_read_file_id with __ro_after_init.
-- Mark parse_exclude() with __init.
-- Use ARRAY_SIZE(ignore_read_file_id) instead of READING_MAX_ID.
-
-
- Documentation/admin-guide/LSM/LoadPin.rst | 10 ++++++
- security/loadpin/loadpin.c                | 44 +++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
-
-diff --git a/Documentation/admin-guide/LSM/LoadPin.rst b/Documentation/admin-guide/LSM/LoadPin.rst
-index 32070762d24c..716ad9b23c9a 100644
---- a/Documentation/admin-guide/LSM/LoadPin.rst
-+++ b/Documentation/admin-guide/LSM/LoadPin.rst
-@@ -19,3 +19,13 @@ block device backing the filesystem is not read-only, a sysctl is
- created to toggle pinning: ``/proc/sys/kernel/loadpin/enabled``. (Having
- a mutable filesystem means pinning is mutable too, but having the
- sysctl allows for easy testing on systems with a mutable filesystem.)
-+
-+It's also possible to exclude specific file types from LoadPin using kernel
-+command line option "``loadpin.exclude``". By default, all files are
-+included, but they can be excluded using kernel command line option such
-+as "``loadpin.exclude=kernel-module,kexec-image``". This allows to use
-+different mechanisms such as ``CONFIG_MODULE_SIG`` and
-+``CONFIG_KEXEC_VERIFY_SIG`` to verify kernel module and kernel image while
-+still use LoadPin to protect the integrity of other files kernel loads. The
-+full list of valid file types can be found in ``kernel_read_file_str``
-+defined in ``include/linux/fs.h``.
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index 055fb0a64169..ae59b812f4c8 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -45,6 +45,8 @@ static void report_load(const char *origin, struct file *file, char *operation)
- }
+diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+index 8ad77d8a9141..e97e9e976bd0 100644
+--- a/include/linux/mfd/cros_ec_commands.h
++++ b/include/linux/mfd/cros_ec_commands.h
+@@ -28,7 +28,7 @@
+ #define EC_PROTO_VERSION          0x00000002
  
- static int enforce = IS_ENABLED(CONFIG_SECURITY_LOADPIN_ENFORCE);
-+static char *exclude_read_files[READING_MAX_ID];
-+static int ignore_read_file_id[READING_MAX_ID] __ro_after_init;
- static struct super_block *pinned_root;
- static DEFINE_SPINLOCK(pinned_root_spinlock);
+ /* Command version mask */
+-#define EC_VER_MASK(version) (1UL << (version))
++#define EC_VER_MASK(version) BIT(version)
  
-@@ -129,6 +131,13 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
- 	struct super_block *load_root;
- 	const char *origin = kernel_read_file_id_str(id);
+ /* I/O addresses for ACPI commands */
+ #define EC_LPC_ADDR_ACPI_DATA  0x62
+@@ -57,13 +57,13 @@
+ #define EC_HOST_CMD_REGION_SIZE 0x80
  
-+	/* If the file id is excluded, ignore the pinning. */
-+	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
-+	    ignore_read_file_id[id]) {
-+		report_load(origin, file, "pinning-excluded");
-+		return 0;
-+	}
-+
- 	/* This handles the older init_module API that has a NULL file. */
- 	if (!file) {
- 		if (!enforce) {
-@@ -187,10 +196,43 @@ static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
+ /* EC command register bit functions */
+-#define EC_LPC_CMDR_DATA	(1 << 0)  /* Data ready for host to read */
+-#define EC_LPC_CMDR_PENDING	(1 << 1)  /* Write pending to EC */
+-#define EC_LPC_CMDR_BUSY	(1 << 2)  /* EC is busy processing a command */
+-#define EC_LPC_CMDR_CMD		(1 << 3)  /* Last host write was a command */
+-#define EC_LPC_CMDR_ACPI_BRST	(1 << 4)  /* Burst mode (not used) */
+-#define EC_LPC_CMDR_SCI		(1 << 5)  /* SCI event is pending */
+-#define EC_LPC_CMDR_SMI		(1 << 6)  /* SMI event is pending */
++#define EC_LPC_CMDR_DATA	BIT(0)  /* Data ready for host to read */
++#define EC_LPC_CMDR_PENDING	BIT(1)  /* Write pending to EC */
++#define EC_LPC_CMDR_BUSY	BIT(2)  /* EC is busy processing a command */
++#define EC_LPC_CMDR_CMD		BIT(3)  /* Last host write was a command */
++#define EC_LPC_CMDR_ACPI_BRST	BIT(4)  /* Burst mode (not used) */
++#define EC_LPC_CMDR_SCI		BIT(5)  /* SCI event is pending */
++#define EC_LPC_CMDR_SMI		BIT(6)  /* SMI event is pending */
+ 
+ #define EC_LPC_ADDR_MEMMAP       0x900
+ #define EC_MEMMAP_SIZE         255 /* ACPI IO buffer max is 255 bytes */
+@@ -110,8 +110,8 @@
+ 
+ /* Define the format of the accelerometer mapped memory status byte. */
+ #define EC_MEMMAP_ACC_STATUS_SAMPLE_ID_MASK  0x0f
+-#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        (1 << 4)
+-#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    (1 << 7)
++#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        BIT(4)
++#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    BIT(7)
+ 
+ /* Number of temp sensors at EC_MEMMAP_TEMP_SENSOR */
+ #define EC_TEMP_SENSOR_ENTRIES     16
+@@ -336,7 +336,7 @@ enum host_event_code {
+ 	EC_HOST_EVENT_INVALID = 32
+ };
+ /* Host event mask */
+-#define EC_HOST_EVENT_MASK(event_code) (1UL << ((event_code) - 1))
++#define EC_HOST_EVENT_MASK(event_code) BIT_ULL((event_code) - 1)
+ 
+ /**
+  * struct ec_lpc_host_args - Arguments at EC_LPC_ADDR_HOST_ARGS
+@@ -734,7 +734,7 @@ struct ec_response_get_cmd_versions {
+ 
+ /* Avoid using ec_status which is for return values */
+ enum ec_comms_status {
+-	EC_COMMS_STATUS_PROCESSING	= 1 << 0,	/* Processing cmd */
++	EC_COMMS_STATUS_PROCESSING	= BIT(0),	/* Processing cmd */
  };
  
-+static void __init parse_exclude(void)
-+{
-+	int i, j;
-+	char *cur;
-+
-+	/* Robustness check: size of kernel_read_file_str should be size of
-+	 * ignore_read_file_id + 1.
-+	 */
-+	BUILD_BUG_ON(ARRAY_SIZE(kernel_read_file_str) <
-+		     ARRAY_SIZE(ignore_read_file_id));
-+
-+	for (i = 0; i < ARRAY_SIZE(exclude_read_files); i++) {
-+		cur = exclude_read_files[i];
-+		if (!cur)
-+			break;
-+		if (*cur == '\0')
-+			continue;
-+
-+		for (j = 0; j < ARRAY_SIZE(ignore_read_file_id); j++) {
-+			if (strcmp(cur, kernel_read_file_str[j]) == 0) {
-+				pr_info("excluding: %s\n",
-+					kernel_read_file_str[j]);
-+				ignore_read_file_id[j] = 1;
-+				/*
-+				 * Can not break, because one read_file_str
-+				 * may map to more than on read_file_id.
-+				 */
-+			}
-+		}
-+	}
-+}
-+
- static int __init loadpin_init(void)
- {
- 	pr_info("ready to pin (currently %senforcing)\n",
- 		enforce ? "" : "not ");
-+	parse_exclude();
- 	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");
- 	return 0;
- }
-@@ -203,3 +245,5 @@ DEFINE_LSM(loadpin) = {
- /* Should not be mutable after boot, so not listed in sysfs (perm == 0). */
- module_param(enforce, int, 0);
- MODULE_PARM_DESC(enforce, "Enforce module/firmware pinning");
-+module_param_array_named(exclude, exclude_read_files, charp, NULL, 0);
-+MODULE_PARM_DESC(exclude, "Exclude pinning specific read file types");
+ /**
+@@ -766,7 +766,7 @@ struct ec_response_test_protocol {
+ 
+ /* Flags for ec_response_get_protocol_info.flags */
+ /* EC_RES_IN_PROGRESS may be returned if a command is slow */
+-#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED (1 << 0)
++#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED BIT(0)
+ 
+ /**
+  * struct ec_response_get_protocol_info - Response to the get protocol info.
+@@ -925,8 +925,8 @@ enum ec_feature_code {
+ 	EC_FEATURE_ISH = 40,
+ };
+ 
+-#define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
+-#define EC_FEATURE_MASK_1(event_code) (1UL << (event_code - 32))
++#define EC_FEATURE_MASK_0(event_code) BIT(event_code % 32)
++#define EC_FEATURE_MASK_1(event_code) BIT(event_code - 32)
+ 
+ struct ec_response_get_features {
+ 	uint32_t flags[2];
+@@ -961,7 +961,7 @@ struct ec_response_flash_info {
+  * Flags for version 1+ flash info command
+  * EC flash erases bits to 0 instead of 1.
+  */
+-#define EC_FLASH_INFO_ERASE_TO_0 (1 << 0)
++#define EC_FLASH_INFO_ERASE_TO_0 BIT(0)
+ 
+ /**
+  * struct ec_response_flash_info_1 - Response to the flash info v1 command.
+@@ -1061,26 +1061,26 @@ struct ec_params_flash_erase {
+ 
+ /* Flags for flash protection */
+ /* RO flash code protected when the EC boots */
+-#define EC_FLASH_PROTECT_RO_AT_BOOT         (1 << 0)
++#define EC_FLASH_PROTECT_RO_AT_BOOT         BIT(0)
+ /*
+  * RO flash code protected now.  If this bit is set, at-boot status cannot
+  * be changed.
+  */
+-#define EC_FLASH_PROTECT_RO_NOW             (1 << 1)
++#define EC_FLASH_PROTECT_RO_NOW             BIT(1)
+ /* Entire flash code protected now, until reboot. */
+-#define EC_FLASH_PROTECT_ALL_NOW            (1 << 2)
++#define EC_FLASH_PROTECT_ALL_NOW            BIT(2)
+ /* Flash write protect GPIO is asserted now */
+-#define EC_FLASH_PROTECT_GPIO_ASSERTED      (1 << 3)
++#define EC_FLASH_PROTECT_GPIO_ASSERTED      BIT(3)
+ /* Error - at least one bank of flash is stuck locked, and cannot be unlocked */
+-#define EC_FLASH_PROTECT_ERROR_STUCK        (1 << 4)
++#define EC_FLASH_PROTECT_ERROR_STUCK        BIT(4)
+ /*
+  * Error - flash protection is in inconsistent state.  At least one bank of
+  * flash which should be protected is not protected.  Usually fixed by
+  * re-requesting the desired flags, or by a hard reset if that fails.
+  */
+-#define EC_FLASH_PROTECT_ERROR_INCONSISTENT (1 << 5)
++#define EC_FLASH_PROTECT_ERROR_INCONSISTENT BIT(5)
+ /* Entire flash code protected when the EC boots */
+-#define EC_FLASH_PROTECT_ALL_AT_BOOT        (1 << 6)
++#define EC_FLASH_PROTECT_ALL_AT_BOOT        BIT(6)
+ 
+ /**
+  * struct ec_params_flash_protect - Parameters for the flash protect command.
+@@ -1451,8 +1451,8 @@ enum ec_led_id {
+ };
+ 
+ /* LED control flags */
+-#define EC_LED_FLAGS_QUERY (1 << 0) /* Query LED capability only */
+-#define EC_LED_FLAGS_AUTO  (1 << 1) /* Switch LED back to automatic control */
++#define EC_LED_FLAGS_QUERY BIT(0) /* Query LED capability only */
++#define EC_LED_FLAGS_AUTO  BIT(1) /* Switch LED back to automatic control */
+ 
+ enum ec_led_colors {
+ 	EC_LED_COLOR_RED = 0,
+@@ -2116,13 +2116,13 @@ enum mkbp_config_flags {
+ };
+ 
+ enum mkbp_config_valid {
+-	EC_MKBP_VALID_SCAN_PERIOD		= 1 << 0,
+-	EC_MKBP_VALID_POLL_TIMEOUT		= 1 << 1,
+-	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= 1 << 3,
+-	EC_MKBP_VALID_OUTPUT_SETTLE		= 1 << 4,
+-	EC_MKBP_VALID_DEBOUNCE_DOWN		= 1 << 5,
+-	EC_MKBP_VALID_DEBOUNCE_UP		= 1 << 6,
+-	EC_MKBP_VALID_FIFO_MAX_DEPTH		= 1 << 7,
++	EC_MKBP_VALID_SCAN_PERIOD		= BIT(0),
++	EC_MKBP_VALID_POLL_TIMEOUT		= BIT(1),
++	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= BIT(3),
++	EC_MKBP_VALID_OUTPUT_SETTLE		= BIT(4),
++	EC_MKBP_VALID_DEBOUNCE_DOWN		= BIT(5),
++	EC_MKBP_VALID_DEBOUNCE_UP		= BIT(6),
++	EC_MKBP_VALID_FIFO_MAX_DEPTH		= BIT(7),
+ };
+ 
+ /*
+@@ -2176,7 +2176,7 @@ enum ec_collect_flags {
+ 	 * Indicates this scan was processed by the EC. Due to timing, some
+ 	 * scans may be skipped.
+ 	 */
+-	EC_KEYSCAN_SEQ_FLAG_DONE	= 1 << 0,
++	EC_KEYSCAN_SEQ_FLAG_DONE	= BIT(0),
+ };
+ 
+ struct ec_collect_item {
+@@ -2543,7 +2543,7 @@ struct ec_params_console_read_v1 {
+  */
+ #define EC_CMD_BATTERY_CUT_OFF 0x0099
+ 
+-#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	(1 << 0)
++#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	BIT(0)
+ 
+ struct ec_params_battery_cutoff {
+ 	uint8_t flags;
+@@ -2614,13 +2614,13 @@ struct ec_response_power_info {
+ #define EC_CMD_I2C_PASSTHRU 0x009E
+ 
+ /* Read data; if not present, message is a write */
+-#define EC_I2C_FLAG_READ	(1 << 15)
++#define EC_I2C_FLAG_READ	BIT(15)
+ 
+ /* Mask for address */
+ #define EC_I2C_ADDR_MASK	0x3ff
+ 
+-#define EC_I2C_STATUS_NAK	(1 << 0) /* Transfer was not acknowledged */
+-#define EC_I2C_STATUS_TIMEOUT	(1 << 1) /* Timeout during transfer */
++#define EC_I2C_STATUS_NAK	BIT(0) /* Transfer was not acknowledged */
++#define EC_I2C_STATUS_TIMEOUT	BIT(1) /* Timeout during transfer */
+ 
+ /* Any error */
+ #define EC_I2C_STATUS_ERROR	(EC_I2C_STATUS_NAK | EC_I2C_STATUS_TIMEOUT)
+@@ -2650,27 +2650,27 @@ struct ec_response_i2c_passthru {
+ 
+ /* Reasons to start hang detection timer */
+ /* Power button pressed */
+-#define EC_HANG_START_ON_POWER_PRESS  (1 << 0)
++#define EC_HANG_START_ON_POWER_PRESS  BIT(0)
+ 
+ /* Lid closed */
+-#define EC_HANG_START_ON_LID_CLOSE    (1 << 1)
++#define EC_HANG_START_ON_LID_CLOSE    BIT(1)
+ 
+  /* Lid opened */
+-#define EC_HANG_START_ON_LID_OPEN     (1 << 2)
++#define EC_HANG_START_ON_LID_OPEN     BIT(2)
+ 
+ /* Start of AP S3->S0 transition (booting or resuming from suspend) */
+-#define EC_HANG_START_ON_RESUME       (1 << 3)
++#define EC_HANG_START_ON_RESUME       BIT(3)
+ 
+ /* Reasons to cancel hang detection */
+ 
+ /* Power button released */
+-#define EC_HANG_STOP_ON_POWER_RELEASE (1 << 8)
++#define EC_HANG_STOP_ON_POWER_RELEASE BIT(8)
+ 
+ /* Any host command from AP received */
+-#define EC_HANG_STOP_ON_HOST_COMMAND  (1 << 9)
++#define EC_HANG_STOP_ON_HOST_COMMAND  BIT(9)
+ 
+ /* Stop on end of AP S0->S3 transition (suspending or shutting down) */
+-#define EC_HANG_STOP_ON_SUSPEND       (1 << 10)
++#define EC_HANG_STOP_ON_SUSPEND       BIT(10)
+ 
+ /*
+  * If this flag is set, all the other fields are ignored, and the hang detect
+@@ -2678,14 +2678,14 @@ struct ec_response_i2c_passthru {
+  * without reconfiguring any of the other hang detect settings.  Note that
+  * you must previously have configured the timeouts.
+  */
+-#define EC_HANG_START_NOW             (1 << 30)
++#define EC_HANG_START_NOW             BIT(30)
+ 
+ /*
+  * If this flag is set, all the other fields are ignored (including
+  * EC_HANG_START_NOW).  This provides the AP a way to stop the hang timer
+  * without reconfiguring any of the other hang detect settings.
+  */
+-#define EC_HANG_STOP_NOW              (1 << 31)
++#define EC_HANG_STOP_NOW              BIT(31)
+ 
+ struct ec_params_hang_detect {
+ 	/* Flags; see EC_HANG_* */
+@@ -3040,8 +3040,8 @@ enum ec_reboot_cmd {
+ };
+ 
+ /* Flags for ec_params_reboot_ec.reboot_flags */
+-#define EC_REBOOT_FLAG_RESERVED0      (1 << 0)  /* Was recovery request */
+-#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN (1 << 1)  /* Reboot after AP shutdown */
++#define EC_REBOOT_FLAG_RESERVED0      BIT(0)  /* Was recovery request */
++#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN BIT(1)  /* Reboot after AP shutdown */
+ 
+ struct ec_params_reboot_ec {
+ 	uint8_t cmd;           /* enum ec_reboot_cmd */
+@@ -3343,9 +3343,9 @@ struct ec_params_usb_pd_control {
+ 	uint8_t swap;
+ } __ec_align1;
+ 
+-#define PD_CTRL_RESP_ENABLED_COMMS      (1 << 0) /* Communication enabled */
+-#define PD_CTRL_RESP_ENABLED_CONNECTED  (1 << 1) /* Device connected */
+-#define PD_CTRL_RESP_ENABLED_PD_CAPABLE (1 << 2) /* Partner is PD capable */
++#define PD_CTRL_RESP_ENABLED_COMMS      BIT(0) /* Communication enabled */
++#define PD_CTRL_RESP_ENABLED_CONNECTED  BIT(1) /* Device connected */
++#define PD_CTRL_RESP_ENABLED_PD_CAPABLE BIT(2) /* Partner is PD capable */
+ 
+ #define PD_CTRL_RESP_ROLE_POWER         BIT(0) /* 0=SNK/1=SRC */
+ #define PD_CTRL_RESP_ROLE_DATA          BIT(1) /* 0=UFP/1=DFP */
+@@ -3545,10 +3545,10 @@ struct ec_params_usb_pd_mux_info {
+ } __ec_align1;
+ 
+ /* Flags representing mux state */
+-#define USB_PD_MUX_USB_ENABLED       (1 << 0)
+-#define USB_PD_MUX_DP_ENABLED        (1 << 1)
+-#define USB_PD_MUX_POLARITY_INVERTED (1 << 2)
+-#define USB_PD_MUX_HPD_IRQ           (1 << 3)
++#define USB_PD_MUX_USB_ENABLED       BIT(0) /* USB connected */
++#define USB_PD_MUX_DP_ENABLED        BIT(1) /* DP connected */
++#define USB_PD_MUX_POLARITY_INVERTED BIT(2) /* CC line Polarity inverted */
++#define USB_PD_MUX_HPD_IRQ           BIT(3) /* HPD IRQ is asserted */
+ 
+ struct ec_response_usb_pd_mux_info {
+ 	uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
 -- 
-2.22.0.rc1.311.g5d7573a151-goog
+2.21.0.1020.gf2820cf01a-goog
 
