@@ -2,239 +2,95 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB780C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EF8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985B92251A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8AA227CC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cLa02IF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfFCOCo (ORCPT
+        id S1728722AbfFCODG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:02:44 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:35119 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727429AbfFCOCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:02:44 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id XnXphM2PbsDWyXnXshtSjV; Mon, 03 Jun 2019 16:02:40 +0200
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     linux-media@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-Message-ID: <bbc4e018-44d2-b9a7-1453-3e462fc33206@xs4all.nl>
-Date:   Mon, 3 Jun 2019 16:02:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 10:03:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:36913 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbfFCODF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:03:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HcFy3VZNz9s4V;
+        Tue,  4 Jun 2019 00:03:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559570582;
+        bh=YQmprlQcov0lqweTkPPWd8ZDL5rmWYDbaGinmtBxu44=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cLa02IF7Ofm8/RPc/K7inCIHa7B8re7Tmz/iqluo3XqfRIKxzRxwyf9uf+EvClD60
+         xxtf3tDqcuFhZir2op+AHJ3tNVILDFv1sd6nFmnvydPvVJ8cD9mwOc1i36x9ViSJ8i
+         ER/aVRw7UTuu7tngjpUutUanJ7I0LK5Xtv3ScE/adW7sutx7mHOuarr44x5w563MVv
+         OJCn6+bwDUefwtkDiMV9D1Tss3E7dy33Ny+HWEHJVc0vPpF1k+lj8+yq2IsTMsuuZD
+         MEQW2iuhW5oLGqRbmA8RC3Ir4cBaMNXEUWR301IXtnx5MbcX4KaOLd2nS00xcdHR09
+         gbRCCniG+M8yQ==
+Date:   Tue, 4 Jun 2019 00:02:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: linux-next: Fixes tag needs some work in the phy tree
+Message-ID: <20190604000255.38c084e3@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfOw8dA4irUZWLqqC75I14gmMwiV4wMq7OUEwWPl8AypmDrqWaQOO1YfQG+XcxMfM3f6HrIoSHQjannlKjzSyXGb7FYIRSv/1GezWgiTjfLvEHrsPv/Qr
- eFcF5+gGQeC4BDBdcBSDVFXgvmh0L1keflmZTVv+Ieqd3oAGu2oh7hLBU0WVBg0KUtgw/QoLnnO0LtPZF8UVHywvychkFBt0JPMtwGVmtEZZNgairI7AkaX5
- w+tPdsCrwRmhqqHK33uQtMw3oQvbLzuRMTY4e30XSbHelOQLq2xtf06hD6jKYEZOQsMzebGerVGfpwgbiO6Y+r4vRMpxD17PLq6Gy9LJKDmzNcmZSMvc7rJN
- DaZ6UJ0QK1iS+fVhRPMyZHFS/eKOfIbxAwbdYbO2KN8NndgsdOFdpuq4spFdKBjFNY/K93myMVZyMTckaR1HOJIKNVLhxqDi0yv/hjoWteSz1w/L8cps9GKy
- ALR013ph4QmY0QEX
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/.k/a7L63NBkov+bwl0D_R_N"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These changes + the stateless decoder v4 patch are now available here:
+--Sig_/.k/a7L63NBkov+bwl0D_R_N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-https://hverkuil.home.xs4all.nl/codec-api/uapi/v4l/dev-mem2mem.html
+Hi all,
 
-Easier to read than a patch :-)
+In commit
 
-Regards,
+  3ddc3f3057ff ("phy: renesas: rcar-gen2: Fix memory leak at error paths")
 
-	Hans
+Fixes tag
 
-On 6/3/19 1:28 PM, Hans Verkuil wrote:
-> Since Thomasz was very busy with other things, I've taken over this
-> patch series. This v4 includes his draft changes and additional changes
-> from me.
-> 
-> This series attempts to add the documentation of what was discussed
-> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
-> later Embedded Linux Conference Europe 2014 in Düsseldorf and then
-> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
-> video team (but mostly in a cosmetic way or making the document more
-> precise), during the several years of Chrome OS using the APIs in
-> production.
-> 
-> Note that most, if not all, of the API is already implemented in
-> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
-> this series is just to formalize what we already have.
-> 
-> Thanks everyone for the huge amount of useful comments to previous
-> versions of this series. Much of the credits should go to Pawel Osciak
-> too, for writing most of the original text of the initial RFC.
-> 
-> This v4 incorporates all known comments (let me know if I missed
-> something!) and should be complete for the decoder.
-> 
-> For the encoder there are two remaining TODOs for the API:
-> 
-> 1) Setting the frame rate so bitrate control can make sense, since
->    they need to know this information.
-> 
->    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
->    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
->    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
->    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
->    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
-> 
-> 2) Interactions between OUTPUT and CAPTURE formats.
-> 
->    The main problem is what to do if the capture sizeimage is too small
->    for the OUTPUT resolution when streaming starts.
-> 
->    Proposal: width and height of S_FMT(OUTPUT) are used to
->    calculate a minimum sizeimage (app may request more). This is
->    driver-specific.
-> 
->    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
->    for the encoder (i.e. we don't support mid-stream resolution
->    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
->    supported. See https://patchwork.linuxtv.org/patch/56478/ for
->    the patch adding this flag.
-> 
->    Of course, if we start to support mid-stream resolution
->    changes (or other changes that require a source change event),
->    then this flag should be dropped by the encoder driver and
->    documentation on how to handle the source change event should
->    be documented in the encoder spec. I prefer to postpone this
->    until we have an encoder than can actually do mid-stream
->    resolution changes.
-> 
->    If sizeimage of the OUTPUT is too small for the CAPTURE
->    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
->    then the second STREAMON (either CAPTURE or OUTPUT) will
->    return -ENOMEM since there is not enough memory to do the
->    encode.
-> 
->    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
->    be the case for all current encoders), then any bitrate controls
->    will be limited in range to what the current state (CAPTURE and
->    OUTPUT formats and frame rate) supports.
-> 
-> Comments regarding these two encoder proposals are welcome!
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> Changes since v3:
-> 
-> - Lots of stylistic fixes and fixing typos/grammar/etc.
-> 
-> Decoder:
-> 
-> - width/height for S_FMT(OUTPUT):
-> 
->   Expects that the output width and height is always a valid
->   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
->   instead of returning an error. Note that this resolution is a placeholder
->   until the actual resolution is parsed from the stream.
-> 
-> - Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
->   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
->   a left-over from earlier versions. The same information is also in Step 10,
->   so no need to have this in two places.
-> 
-> - Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
-> 
-> - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
-> 
-> Encoder:
-> 
-> - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
->   are marked as read-only and are based on the encoders current state such
->   as the OUTPUT format.
-> 
-> - Drop TGT_COMPOSE support in the encoder: there are currently
->   no encoders that can do composing/scaling.
-> 
-> - Document corner cases in the Drain sequence
-> 
-> - Document error handling.
-> 
-> - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
-> 
-> Changes since v2:
-> (https://lore.kernel.org/patchwork/cover/1002474/)
-> Decoder:
->  - Specified that the initial source change event is signaled
->    regardless of whether the client-set format matches the
->    stream format.
->  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
->    for the bitstream input buffers of decoders.
->  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
->    if the stream information is not available.
->  - Described decode error handling.
->  - Mentioned that timestamps can be observed after a seek to
->    determine whether the CAPTURE buffers originated from before
->    or after the seek.
->  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
->    V4L2_DEC_CMD_START, the decoder is not reset and preserves
->    all the state.
-> 
-> Encoder:
->  - Specified that width and height of CAPTURE format are ignored
->    and always zero.
->  - Explicitly noted the common use case for the CROP target with
->    macroblock-unaligned video resolutions.
->  - Added a reference to Request API.
->  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
->    for the bitstream output buffers of encoders.
->  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
->    V4L2_ENC_CMD_START, the encoder is not reset and preserves
->    all the state.
-> 
-> General:
->  - Dropped format enumeration from "Initialization", since it's already
->    a part of "Querying capabilities".
->  - Many spelling, grammar, stylistic, etc. changes.
->  - Changed the style of note blocks.
->  - Rebased onto Hans' documentation cleanup series.
->    (https://patchwork.kernel.org/cover/10775407/
->     https://patchwork.kernel.org/patch/10776737/)
->  - Moved the interfaces under the "Video Memory-To-Memory Interface"
->    section.
-> 
-> For changes since v1 see the v2:
-> https://lore.kernel.org/patchwork/cover/1002474/
-> 
-> For changes since RFC see the v1:
-> https://patchwork.kernel.org/cover/10542207/
-> 
-> Tomasz Figa (2):
->   media: docs-rst: Document memory-to-memory video decoder interface
->   media: docs-rst: Document memory-to-memory video encoder interface
-> 
->  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
->  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
->  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
->  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
->  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
->  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
->  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
->  7 files changed, 1779 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
->  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
-> 
+  Fixes: 1233f59f745 ("phy: Renesas R-Car Gen2 PHY driver")
 
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.k/a7L63NBkov+bwl0D_R_N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz1KI8ACgkQAVBC80lX
+0GwVdgf6AgnZzXI0Tsoy83ah8JTi/GgbIvsitDcjcKwY/pblvYx2aL1VMtFOP+m+
+NtIZdRxwH6Sn6msGEeq5JEst2chVWWqDRAbzPm3ANT7rH88meORasAgPLLP0HzDv
+f1kenI5bDjti/eC2PUch6Rdpn5Ey7qAUXYJmJFEo0Nz72lSQUUSwBuHoX+r6UQAS
+H3GExOPpMO05u1vh2ZJ2s7HLQsQcVXT5Cj/uptPTJxqzvdjPDGizS2C9Y38eQqc9
+fBR4FuZzAalPOytImTLWOiqb2jyUbCb/MIUAFMPDoNZ4vnk/3xRsj42NZZ5R1/pm
+J+Z5ghCs3rEyzVuPx52gYhulUv5LLw==
+=AcrJ
+-----END PGP SIGNATURE-----
+
+--Sig_/.k/a7L63NBkov+bwl0D_R_N--
