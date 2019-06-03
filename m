@@ -2,83 +2,129 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9696CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E22DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBAA27A3F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619E727A4F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1wKahOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbfFCO4m (ORCPT
+        id S1729247AbfFCO4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:56:42 -0400
-Received: from relay.sw.ru ([185.231.240.75]:35872 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbfFCO4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:56:41 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hXoO0-0004bx-Na; Mon, 03 Jun 2019 17:56:32 +0300
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <20190522152254.5cyxhjizuwuojlix@box>
- <4228b541-d31c-b76a-2570-1924df0d4724@virtuozzo.com>
-Message-ID: <5ae7e3c1-3875-ea1e-54b3-ac3c493a11f0@virtuozzo.com>
-Date:   Mon, 3 Jun 2019 17:56:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 10:56:46 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:37553 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbfFCO4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:56:45 -0400
+Received: by mail-it1-f194.google.com with SMTP id s16so27032102ita.2;
+        Mon, 03 Jun 2019 07:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mDJyinIzAZyFYe2sQ1nvpl8lfVCu1z1DXV2UGQiSxUc=;
+        b=a1wKahOOGnjNUHH39gwKMWenzErmEXnVRogYkXZKiMyndol9pbe5Mjh/SqhbeE/KTP
+         fCgpVR7pWXw2wcjjsfLS99pMCnnxY476MDc9Il2x1dX9l50B3vRkW2lFeJ1OqAmw6LQN
+         S/+8dbRcWLBv5lKHe8YOb83okaxNB2S0HiDpbxspR7hQmr73oe65MqAo9h+3ZRmzAFkv
+         Ha8V57jnONibXaUmNOoSxPSR6J5G1zEPYv9ynfPl6DOh4Ow+GzqKVPJ0XjQXsowSgs8u
+         gz1S8r7YdoPya0Moors6iQjh0Jz+FjxN9AILw3UMxRU2vQOKhtx6URpGC79z4m71j9ML
+         ZyTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mDJyinIzAZyFYe2sQ1nvpl8lfVCu1z1DXV2UGQiSxUc=;
+        b=nUe9iGRIGm4FNyGojHIRKbToX9hhp/W9rLgbZNrqR/+nZHSEXQuy6yuLOk2aj3rUkF
+         cUt32kQeoEnWOzZccxLub1CUlyIc8/q7V1Zq/hfpUMkAgei0uVgDLMzcqjSb3O9neRaK
+         Vm2ycr4ZdzYIqHLIcqmT2cQJYNnF038dQRs87n2IrT5Jpovy5yPkEPMVkqWfmXRW2M0o
+         X3M1CefaJlNmWmZ5LPUX86hLDhdV/uN4l6f4mhJSaePPxyU8IvHSUR6khaydxtt+J9BV
+         jRwN7NAjrtcyLrC/9odKjGbOultcJU4LbfV1RH6KVQqUSlaFhdAqjQhyg78uUYMQtQJP
+         AMag==
+X-Gm-Message-State: APjAAAUtohS0ORpbrLD60JuuRPV/L3vq8QmfdbiqD1coML1VrWzsV2IV
+        EiQ7v6vjQnPmDd8L0MwiDfUsVk9hDlRNT+KUp38=
+X-Google-Smtp-Source: APXvYqyRg0Fg1qPHiU3BgdRlHNJ1G1zap/Jd1HuXxZCcEi4n2e10eRL07pYKaaPwzlSx5gUPRgdv2Ze3bkfZQ+Kxw5I=
+X-Received: by 2002:a02:7121:: with SMTP id n33mr15499842jac.19.1559573804520;
+ Mon, 03 Jun 2019 07:56:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4228b541-d31c-b76a-2570-1924df0d4724@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1559340578-11482-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1559340578-11482-1-git-send-email-jcrouse@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 3 Jun 2019 08:56:33 -0600
+Message-ID: <CAOCk7Nr9r3Spnvh9_CO2rh8vTAP3hHOXjBO=5oGS4CyS4hhNrQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm/adreno: Ensure that the zap shader
+ region is big enough
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.06.2019 17:38, Kirill Tkhai wrote:
-> On 22.05.2019 18:22, Kirill A. Shutemov wrote:
->> On Mon, May 20, 2019 at 05:00:01PM +0300, Kirill Tkhai wrote:
->>> This patchset adds a new syscall, which makes possible
->>> to clone a VMA from a process to current process.
->>> The syscall supplements the functionality provided
->>> by process_vm_writev() and process_vm_readv() syscalls,
->>> and it may be useful in many situation.
->>
->> Kirill, could you explain how the change affects rmap and how it is safe.
->>
->> My concern is that the patchset allows to map the same page multiple times
->> within one process or even map page allocated by child to the parrent.
-> 
-> Speaking honestly, we already support this model, since ZERO_PAGE() may
-> be mapped multiply times in any number of mappings.
+On Fri, May 31, 2019 at 4:09 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Before loading the zap shader we should ensure that the reserved memory
+> region is big enough to hold the loaded file.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-Picking of huge_zero_page and mremapping its VMA to unaligned address also gives
-the case, when the same huge page is mapped as huge page and as set of ordinary
-pages in the same process.
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Summing up two above cases, is there really a fundamental problem with
-the functionality the patch set introduces? It looks like we already have
-these cases in stable kernel supported.
-
-Thanks,
-Kirill
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 6f7f411..3db8e49 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -67,7 +67,6 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+>                 return ret;
+>
+>         mem_phys = r.start;
+> -       mem_size = resource_size(&r);
+>
+>         /* Request the MDT file for the firmware */
+>         fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> @@ -83,6 +82,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+>                 goto out;
+>         }
+>
+> +       if (mem_size > resource_size(&r)) {
+> +               DRM_DEV_ERROR(dev,
+> +                       "memory region is too small to load the MDT\n");
+> +               ret = -E2BIG;
+> +               goto out;
+> +       }
+> +
+>         /* Allocate memory for the firmware image */
+>         mem_region = memremap(mem_phys, mem_size,  MEMREMAP_WC);
+>         if (!mem_region) {
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
