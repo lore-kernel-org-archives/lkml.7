@@ -2,131 +2,113 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B88C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7F2C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7392727D04
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EEF27D26
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGSqkCE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfFCIAE (ORCPT
+        id S1727473AbfFCIAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:00:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfFCIAD (ORCPT
+        Mon, 3 Jun 2019 04:00:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51956 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfFCIAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:00:03 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x537vRx5139333
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 04:00:02 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2svvpeec8e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 04:00:01 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
-        Mon, 3 Jun 2019 08:59:59 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Jun 2019 08:59:55 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x537xsA146989420
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 07:59:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CEC342045;
-        Mon,  3 Jun 2019 07:59:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 870E642042;
-        Mon,  3 Jun 2019 07:59:53 +0000 (GMT)
-Received: from [10.0.2.15] (unknown [9.152.224.114])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 07:59:53 +0000 (GMT)
-Subject: Re: [RFC PATCH 1/2] crypto: Allow working with key references
-To:     Richard Weinberger <richard@nod.at>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>, linux-imx@nxp.com,
-        festevam@gmail.com, kernel <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>, shawnguo@kernel.org,
-        davem@davemloft.net, david <david@sigma-star.at>
-References: <20190529224844.25203-1-richard@nod.at>
- <20190530023357.2mrjtslnka4i6dbl@gondor.apana.org.au>
- <2084969721.73871.1559201016164.JavaMail.zimbra@nod.at>
-From:   Harald Freudenberger <freude@linux.ibm.com>
-Date:   Mon, 3 Jun 2019 09:59:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 04:00:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f10so10080722wmb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 01:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=S5cWpjCtWP6cEwCb4PLedIGxhmVpA+oBg2HMGf8+esM=;
+        b=GGSqkCE8VrBwFRdievnVdY9WcCEc5q61VPbovitryaz2nJE2PFCKQxmFXd+9SRXlRY
+         rFW37LGw9eQZC2sb43EvX2MIz08D/i5aBTwly+YxPi9oD2JDJ7Tj7G5S66ONTsPSpNMz
+         RDPgsVU0qJwzX9RAOhW8bPCOitT2I14975Wi1ZD83vKJbz3wRS9QhRkTAjpdjf4Rlf3Q
+         MwWqzTUMVbQT3l6UDdziTydLrXC/iCDnvRQB714w/16wEYt/YkZ24D92XjCAMZ/u7NYD
+         pkLMGowgKpRtLity/kSp+IVy4lLKksSRzb2DdcCTes2IqZ7jlL1kYXk0W7ZwZsAWcJLX
+         MQng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=S5cWpjCtWP6cEwCb4PLedIGxhmVpA+oBg2HMGf8+esM=;
+        b=anCIR+NOzB65jcHLF8bi+wbhXyCid5emZkPHO5ViV90OHGsQPob00RUksXEfIbkpPu
+         hsbIbTs2pGxdyOsmKMLgmRmuyPa6pFp9Os/BFRYHxxR3gR0vCzdyVkQiSQ+yKxWu2IDm
+         VCGUAZ2zapaJKVBJ3O08JJUPl7dzgNR5FHUi18G10S/RW3E19K8F96L/Bc4mLSHPaHVN
+         VZTiDgoKBykAZxP6AnTmXWMBTvR+41/gr41ieL3KmuWKGrnoO2uhsEMej9j2fAszK4ff
+         kGQV5PbuKuPyW7CGGsC16zZFipXoo+Wiruf+M+JtfBmg49wxhVmmV/tOwZ7b9PxpBQMJ
+         2Zmw==
+X-Gm-Message-State: APjAAAXRzQUIpJ8FeM9aZ0xzbkynnwsXCa7mR96MuB2MoJa0g0zQee35
+        uGO3U7JONQ1efWHUdTy61ipf1Q==
+X-Google-Smtp-Source: APXvYqyTO3DC1woO81zp4cGlWYvtMXURLSdDWgNtBMOrhf4T74MPm+NUUV5RQdYEK3BX2mUkV3JAJQ==
+X-Received: by 2002:a1c:7ec8:: with SMTP id z191mr1251839wmc.66.1559548832228;
+        Mon, 03 Jun 2019 01:00:32 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id g5sm16275111wrp.29.2019.06.03.01.00.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 01:00:30 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 09:00:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-kernel@vger.kernel.org, Daniel Schultz <d.schultz@phytec.de>,
+        stable@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>,
+        Joseph Chen <chenjh@rock-chips.com>
+Subject: Re: [PATCH RESEND] mfd: rk808: Fix RK818 ID template
+Message-ID: <20190603080029.GF4797@dell>
+References: <20190513082943.31750-1-heiko@sntech.de>
 MIME-Version: 1.0
-In-Reply-To: <2084969721.73871.1559201016164.JavaMail.zimbra@nod.at>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19060307-0016-0000-0000-000002830744
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060307-0017-0000-0000-000032E00F2A
-Message-Id: <14ffcdf2-ed9f-be07-fde5-62dfb1fce4f9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030059
+In-Reply-To: <20190513082943.31750-1-heiko@sntech.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.05.19 09:23, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
->> Von: "Herbert Xu" <herbert@gondor.apana.org.au>
->> An: "richard" <richard@nod.at>
->> CC: "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel"
->> <linux-kernel@vger.kernel.org>, linux-imx@nxp.com, festevam@gmail.com, "kernel" <kernel@pengutronix.de>, "Sascha Hauer"
->> <s.hauer@pengutronix.de>, shawnguo@kernel.org, davem@davemloft.net, "david" <david@sigma-star.at>
->> Gesendet: Donnerstag, 30. Mai 2019 04:33:57
->> Betreff: Re: [RFC PATCH 1/2] crypto: Allow working with key references
->> On Thu, May 30, 2019 at 12:48:43AM +0200, Richard Weinberger wrote:
->>> Some crypto accelerators allow working with secure or hidden keys.
->>> This keys are not exposed to Linux nor main memory. To use them
->>> for a crypto operation they are referenced with a device specific id.
->>>
->>> This patch adds a new flag, CRYPTO_TFM_REQ_REF_KEY.
->>> If this flag is set, crypto drivers should tread the key as
->>> specified via setkey as reference and not as regular key.
->>> Since we reuse the key data structure such a reference is limited
->>> by the key size of the chiper and is chip specific.
->>>
->>> TODO: If the cipher implementation or the driver does not
->>> support reference keys, we need a way to detect this an fail
->>> upon setkey.
->>> How should the driver indicate that it supports this feature?
->>>
->>> Signed-off-by: Richard Weinberger <richard@nod.at>
->> We already have existing drivers doing this.  Please have a look
->> at how they're doing it and use the same paradigm.  You can grep
->> for paes under drivers/crypto.
-> Thanks for the pointer.
-> So the preferred way is defining a new crypto algorithm prefixed with
-> "p" and reusing setkey to provide the key reference.
-The "p" in paes is because we call it "protected key aes". I think you are not limited
-to the "p". What Herbert tries to point out is that you may define your own
-cipher with an unique name and there you can handle your secure key references
-as you like. You may use the s390 paes implementation as a starting point.
+On Mon, 13 May 2019, Heiko Stuebner wrote:
 
-regards Harald Freudenberger <freude@linux.ibm.com>
+> From: Daniel Schultz <d.schultz@phytec.de>
+> 
+> The Rockchip PMIC driver can automatically detect connected component
+> versions by reading the ID_MSB and ID_LSB registers. The probe function
+> will always fail with RK818 PMICs because the ID_MSK is 0xFFF0 and the
+> RK818 template ID is 0x8181.
+> 
+> This patch changes this value to 0x8180.
+> 
+> Fixes: 9d6105e19f61 ("mfd: rk808: Fix up the chip id get failed")
+> Cc: stable@vger.kernel.org
+> Cc: Elaine Zhang <zhangqing@rock-chips.com>
+> Cc: Joseph Chen <chenjh@rock-chips.com>
+> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> [added Fixes and cc-stable]
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> The original patch from Feburary 2018 got an Ack but never reached
+> the mfd-tree, so I ran into that problem this weekend as well.
+> So it would be really cool if this could be applied as fix :-) .
+> 
+>  include/linux/mfd/rk808.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Thanks,
-> //richard
->
+Applied, thanks.
 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
