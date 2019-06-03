@@ -2,267 +2,324 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F932C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C471C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F5D26A32
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="qjcb5iWJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5F11F26B61
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfFCSjF (ORCPT
+        id S1726843AbfFCSjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:39:05 -0400
-Received: from ucol19pa12.eemsg.mail.mil ([214.24.24.85]:19889 "EHLO
-        UCOL19PA12.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfFCSjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:39:04 -0400
-X-EEMSG-check-017: 24972983|UCOL19PA12_EEMSG_MP10.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.60,547,1549929600"; 
-   d="scan'208";a="24972983"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UCOL19PA12.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 03 Jun 2019 18:38:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1559587135; x=1591123135;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=wU6Hyz+2a34azTq6srz6DRW2jQIaBM564Y0b8P74+aY=;
-  b=qjcb5iWJzYhZPYiWEUCiEpN1nGqnB3ukt2uQ3aIeYAd+TQ0v/07kuO95
-   YIed2mbsjsMOFobVkVEaeL9v6KP/4clC5vyMmgY4/+Tg5TiuLOLDUlkms
-   So2/HQJ+viV879/vzf8rUvAyhKklMaQ5pGYg03FH6Qh+2RBiqwCwI/aJz
-   lgIgA08X/cBtFC4K4uFjeeXhbQUnCwfiBu8Ec7HbyDtizrlJeDL17gvWu
-   soLB15FKhzWOhH1kzBDJe7ofhmBLT3Q6V6Saq5h+Xc7pRyJh8AnnYfza1
-   JE3LcyNqL5JtEykkXWrGwlR2N6CL5SZIZZzSRs43//sfbYHly4tImoE0a
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,547,1549929600"; 
-   d="scan'208";a="28493144"
-IronPort-PHdr: =?us-ascii?q?9a23=3ARGr9tRWKY2pim9N63BJJm1TY6S/V8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYZhKPuKdThVPEFb/W9+hDw7KP9fy5ACpZusnK6SpYOLV3FD?=
- =?us-ascii?q?Y9wf0MmAIhBMPXQWbaF9XNKxIAIcJZSVV+9Gu6O0UGUOz3ZlnVv2HgpWVKQk?=
- =?us-ascii?q?a3OgV6PPn6FZDPhMqrye+y54fTYwJVjzahfL9+Nhq7oRjMusUMnIdvJKQ8xh?=
- =?us-ascii?q?TUrndWZehd2H9lK0+Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElRrFGDzooLn?=
- =?us-ascii?q?446tTzuRbMUQWA6H0cUn4LkhVTGAjK8Av6XpbqvSTksOd2xTSXMtf3TbAwXj?=
- =?us-ascii?q?Si8rtrRRr1gyoJKzI17GfagdFrgalFvByuuQBww4/MYIGUKvV+eL/dfcgHTm?=
- =?us-ascii?q?ZFR8pdSjBNDp+5Y4YJAeUBJ+JYpJTjqVUIoxW1GA2gCPrxxjJMg3P727Ax3e?=
- =?us-ascii?q?Y8HgHcxAEuAswAsHrUotv2OqkdX++6w6vUwjvMdP5WxTXw5ZLUfhw9r/yBX7?=
- =?us-ascii?q?R9etfRx0k1EAPFi02dp5H5PzyLzuQNs3aU7+x9Xuyyjm4osQVxojyxycYsl4?=
- =?us-ascii?q?LEgZkVxU3f9Shi3IY0JcG3SE58YdK+FptQrDuVO5F5QsMlXWFloSA3waAIt5?=
- =?us-ascii?q?68eSgF0pUnxxjHZvyEbYeI+BTjW/iVITtig3JlYr2/ihCv+kaj0u3xTtS43V?=
- =?us-ascii?q?lFoyZfktTAq2oB2wLc58SZUPdx40Gs0iuV2Q/J8OFLO0U0mLLeK54m37E/iI?=
- =?us-ascii?q?IesV/GHi/qgEX2i7KWdlk89uio9evnZrLmq4eAN4BukAH+M7kumtelDeQkMg?=
- =?us-ascii?q?kBQ2ib+eOm2L3l4UL5W6lFguczkqnYtJDWPcUbpqinDA9Jyosv9hmyAji83N?=
- =?us-ascii?q?kYgHULNkxJdR2Zg4TzJl3COPX4Au2+g1Sonjdr3ffGPrj5D5XWM3fDi6zsfa?=
- =?us-ascii?q?p96kFAyAozyspT55RPCr4bOv7zVUjxtMLAAh8jLwO02/rnCMl61o4GQmKAHL?=
- =?us-ascii?q?WWMKXIvV+K/O4gP+mMZJUUuDbmN/gl4ObujX8nll8HZqmp2p0XZWu5HvRgP0?=
- =?us-ascii?q?WWf37sjs0dHmcNuwo0VPbqh0GaUT5Pe3ayWLox5jMhB4K8DofDRYetjKaa3C?=
- =?us-ascii?q?ihHZ1WZWFGClaSHnfubIiEX/YMaCSPIs5uiDAEVL6hS5M/2hGqrgP1171nLu?=
- =?us-ascii?q?/M8C0CqZ3jzMR15/HUlRwq8Tx0Etid02aWQmF3gGwIXTk20757oUBnzVeDy6?=
- =?us-ascii?q?d4ieRCFdNP//NJThs6NZnEwuNmFd/9RxjBftaVR1q8TdSmADcxTt0qzt8PZU?=
- =?us-ascii?q?Z9B8utjhTZ0yW2BL8VkqSBBIYo/aLEw3jxO8F9xm7E1KkkiFkmWNFPNWy9hq?=
- =?us-ascii?q?Nk8QjcHYvJnFuYl6qwcqQcxiHN/n+ZzWWSpEFYTBJwUaLdUHAEeETWt9v56V?=
- =?us-ascii?q?3ZQr+uE7snNg9ByM6EKqdQdtLpilBGTu/5ONvCe2Kxh3uwBRGQy7OIbYrqfX?=
- =?us-ascii?q?gd3SrEBEgfjQ8c4WuGNRI/Bie9o2PSFTluFVXybEPx9elxtmi2TlE7zw6UdU?=
- =?us-ascii?q?1tzbm19QAPhfyaVfwT2qgIuCA7qzV7BFy9xc7ZC8Kcpwp9e6VRecs9701a1W?=
- =?us-ascii?q?LdrAF9JoavL71mhlIHdgR3uETu1w9pBYlajccqq3YqxhJoKa2EyFNBay+Y3Z?=
- =?us-ascii?q?foN7LJMmn95gqva6/N2lzFyNaZ4L0P6PUjq1X7uAGmDFYt/Gt939lSyXuc6Y?=
- =?us-ascii?q?3ADBAOXpLpTkY36x96qqnBYiYj44PU1HtsMbS7szLZxdIpC/Uqygy6c9dcLq?=
- =?us-ascii?q?yEDgnyHNMeB8S0L+wqgVepZAoePO9O7K40I9+md/ye1a6pIulggDKmjX5A4I?=
- =?us-ascii?q?1m3EKM8DB8SvLS0JYDwvGZ0RGLWCv7jFekqsr3g5xLZSkOHmqjzijpHJNeab?=
- =?us-ascii?q?dsfYkVE2uuI9e4xtNlh5HzXX5V71+jB1Ua2MC3fRqedUDy3QpV1U4Pu3yohT?=
- =?us-ascii?q?O4zyBokzEutqefwCPOw+DtdRccPm5LRW9ijUrwIYiuiNAaWkmobgczmBS4+0?=
- =?us-ascii?q?nw37Jbq7hnL2nPXUdIeDD7L31lUquqqLqNecpP544zsShMVOS8YFaaSqPyoh?=
- =?us-ascii?q?cD3SPjGHZexDYmeD6wppX5nht6iGSHIHZ0tnrZdtl6xQ3D69zEWf5Rwj0GST?=
- =?us-ascii?q?F8iTnWAFi8Itao8cyXl5jdqOC+UXyuVplIfCn1woOPqjG76XdpARKhhfCznM?=
- =?us-ascii?q?PoEQwg3S/8zdlqWj3CrAzgbYnzy6S6LeVnc1FnBVL/6sd3AYJ+nZUqhJEWx3?=
- =?us-ascii?q?cago+Z/X0dkWf8Kd9bw77xbGIRRT4XxN7Y+Azl2ExlLnKUyIP1T26dwsRuZt?=
- =?us-ascii?q?ShfGMW1Twy79pQBKeX8rNEhy11rUS8rQ7LZvh9hDgdw+M06HEGm+EJpBYtzi?=
- =?us-ascii?q?KFD78IHklYJSnsmg+M79C/qqVXeWmufaG+1Ep5gNChCqyNrRtAWHb4fZciGz?=
- =?us-ascii?q?V87sJlMFLDyHfz8J3reMHMbdIPsR2ZixHAj+hSKJIrk/oFnyxnNHnnvXI71u?=
- =?us-ascii?q?E7jQZh3Y2gsIebLGVt+bqzAgREOT3te8MT5jbtgL5YnsaO2oCgAoluFS8PXJ?=
- =?us-ascii?q?vsUPKoFSkfte75OAmTED0zsGubFaDDEg+Y7Udst2jPHIyzN3GLOHkZys1vRA?=
- =?us-ascii?q?KDK0xFjwAbQi82kYQ5FwCt2czhdlx05jEX5l7ktBRMzvhkOAX4UmfavA2ocC?=
- =?us-ascii?q?s7SICDLBpK6QFP/1zVMcyE4eNzBS1Y/YeurBCMK2CCZgVHF2QJWk2eB134P7?=
- =?us-ascii?q?mu48XA/PacBuakM/TOZrCOo/REV/iU3ZKvzpdm/zGUO8WPJHZiDuE71VBEXX?=
- =?us-ascii?q?xjG8TZhi8ASyoYly/Wbs6bogu89TNzrsyl7PvrXwfv75OVC7ROKdVv5wy2ga?=
- =?us-ascii?q?CbOuGKgiZ2NCxY1pIMxHPS07gf3EAdiz9yeDmtD7sAsy3NTKXLl69TDh4bbT?=
- =?us-ascii?q?5zNcRS46I92AlNJdDUitfv2rFkif41Dk9PVUb9lcGxecwKP2a9OUvEBEmRNb?=
- =?us-ascii?q?SKPybLw9/tbqO8T71dl+RUtxusuTmFF0/vJCiMlz7sVxq3K+FDkDmbPABCuI?=
- =?us-ascii?q?G6ahtiEnDjQcn8ZR2/Md94kzs2zL4uinzXK2EWKSJ8fF9Vrr2M8SNYhe1yG2?=
- =?us-ascii?q?5G7np+LemJgCSZ7+7DKpYWrftrGCV0l/pe4Hsk17tV8DtIRPtvmCvdttRuuU?=
- =?us-ascii?q?2pkvGTyjp7VxpDsjVLi5iKvUl4OaXZ64NPWXDL/B8W7GWQDQgKqMVhCtH1p6?=
- =?us-ascii?q?9Qzd3PnrrpKDhe69LU4dccB8/MJcKdMXouLxzpGCLWDAQbVj6mLm7fh0takP?=
- =?us-ascii?q?Gd8n2asII2pYTrmJoLUrVbTkA6FusGCkR5G9wPOJl2XjIgkb6fjc4H/3++oA?=
- =?us-ascii?q?PNS8lApJDHUemdDuv1KDaFlrlJfBoIwbXkLYsNMo33wVBtal5/nI7SAUrfQc?=
- =?us-ascii?q?hNojF9bg8zuEhN6Hh+Tmw320LkcgOh+mQcGeSonh4siwtxffgi+y337lc2IF?=
- =?us-ascii?q?rKuDU/kE0rldr5hjCRdW25EKDlZoxfDWLft1IwKY/8WwZ4dxa1mwQwLzrNQf?=
- =?us-ascii?q?RTybBgb2FwlAjEuZZVAvlaZaxCfBIUg/qQYqN7/05br3Cc2UJf5ebDQaBnnQ?=
- =?us-ascii?q?8ufI/k+2lMwCp/fdU1IurWP6MPwV9O0PHd9hS03/w8lVdNb30G93mfLWtR4h?=
- =?us-ascii?q?0F?=
-X-IPAS-Result: =?us-ascii?q?A2CKAQDZaPVc/wHyM5BcChsBAQEBAwEBAQcDAQEBgWWBZ?=
- =?us-ascii?q?ypqUTMohBSTWQIGgTWJUJEICQEBAQEBAQEBAS0HAQIBAYRAAoMSIzgTAQMBA?=
- =?us-ascii?q?QEEAQEBAQMBAWwcDII6KQGCZgEBAQECASMEEUEQCxgCAiYCAlcGDQYCAQGCX?=
- =?us-ascii?q?z8BgXYFDw+pLX4zhUeDJYFABoEMKItaF3iBB4E4gms+gmEEgTQLAQGDKIJYB?=
- =?us-ascii?q?IspgkCGCZQdagmCD4IYhCeMbQYbgiKKc4lZLY18hWKRISGBWCsIAhgIIQ+DJ?=
- =?us-ascii?q?4sThVsjAzABAYEEAQGNag8XA4IpAQE?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 03 Jun 2019 18:38:37 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x53IcVxF024874;
-        Mon, 3 Jun 2019 14:38:32 -0400
-Subject: Re: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook for
- Intel SGX
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-9-sean.j.christopherson@intel.com>
- <d9ef6314-de91-ddcb-3d18-8155cd37e7be@tycho.nsa.gov>
- <20190603144251.GB13384@linux.intel.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <7fa39363-78ec-8bd3-50e3-b5d05cd4593c@tycho.nsa.gov>
-Date:   Mon, 3 Jun 2019 14:38:31 -0400
+        Mon, 3 Jun 2019 14:39:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42932 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbfFCSjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:39:14 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 22BAB300CAC0;
+        Mon,  3 Jun 2019 18:39:08 +0000 (UTC)
+Received: from [10.40.205.157] (unknown [10.40.205.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50DC110013D9;
+        Mon,  3 Jun 2019 18:38:51 +0000 (UTC)
+Subject: Re: [RFC][Patch v10 0/2] mm: Support for page hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, david@redhat.com, dodgen@google.com,
+        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com
+References: <20190603170306.49099-1-nitesh@redhat.com>
+ <20190603140304-mutt-send-email-mst@kernel.org>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <35dc90f3-3eaf-b2c2-a8a9-b7d8a6043f3b@redhat.com>
+Date:   Mon, 3 Jun 2019 14:38:48 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190603144251.GB13384@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190603140304-mutt-send-email-mst@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="cfSQOdHyBAa71Ofd0U9ySdm3rw06OprD3"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 03 Jun 2019 18:39:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 10:42 AM, Sean Christopherson wrote:
-> On Mon, Jun 03, 2019 at 10:19:18AM -0400, Stephen Smalley wrote:
->> On 5/31/19 7:31 PM, Sean Christopherson wrote:
->>> enclave_load() is roughly analogous to the existing file_mprotect().
->>>
->>> Due to the nature of SGX and its Enclave Page Cache (EPC), all enclave
->>> VMAs are backed by a single file, i.e. /dev/sgx/enclave, that must be
->>> MAP_SHARED.  Furthermore, all enclaves need read, write and execute
->>> VMAs.  As a result, file_mprotect() does not provide any meaningful
->>> security for enclaves since an LSM can only deny/grant access to the
->>> EPC as a whole.
->>>
->>> security_enclave_load() is called when SGX is first loading an enclave
->>> page, i.e. copying a page from normal memory into the EPC.  The notable
->>> difference from file_mprotect() is the allowed_prot parameter, which
->>> is essentially an SGX-specific version of a VMA's MAY_{READ,WRITE,EXEC}
->>> flags.  The purpose of allowed_prot is to enable checks such as
->>> SELinux's FILE__EXECMOD permission without having to track and update
->>> VMAs across multiple mm structs, i.e. SGX can ensure userspace doesn't
->>> overstep its bounds simply by restricting an enclave VMA's protections
->>> by vetting what is maximally allowed during build time.
->>>
->>> An alternative to the allowed_prot approach would be to use an enclave's
->>> SIGSTRUCT (a smallish structure that can uniquely identify an enclave)
->>> as a proxy for the enclave.  For example, SGX could take and hold a
->>> reference to the file containing the SIGSTRUCT (if it's in a file) and
->>> call security_enclave_load() during mprotect().  While the SIGSTRUCT
->>> approach would provide better precision, the actual value added was
->>> deemed to be negligible.  On the other hand, pinning a file for the
->>> lifetime of the enclave is ugly, and essentially caching LSM policies
->>> in each page's allowed_prot avoids having to make an extra LSM upcall
->>> during mprotect().
->>>
->>> Note, extensive discussion yielded no sane alternative to some form of
->>> SGX specific LSM hook[1].
->>>
->>> [1] https://lkml.kernel.org/r/CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com
->>>
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> ---
->>>   arch/x86/kernel/cpu/sgx/driver/ioctl.c | 14 +++++++++-----
->>>   include/linux/lsm_hooks.h              | 16 ++++++++++++++++
->>>   include/linux/security.h               |  2 ++
->>>   security/security.c                    |  8 ++++++++
->>>   4 files changed, 35 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
->>> index 5f71be7cbb01..260417ecbcff 100644
->>> --- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
->>> +++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
->>> @@ -8,6 +8,7 @@
->>>   #include <linux/highmem.h>
->>>   #include <linux/ratelimit.h>
->>>   #include <linux/sched/signal.h>
->>> +#include <linux/security.h>
->>>   #include <linux/shmem_fs.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/suspend.h>
->>> @@ -580,21 +581,24 @@ static int sgx_encl_page_protect(unsigned long src, unsigned long prot,
->>>   				 unsigned long *allowed_prot)
->>>   {
->>>   	struct vm_area_struct *vma;
->>> +	int ret = 0;
->>> -	if (!(*allowed_prot & VM_EXEC))
->>> +	if (!(*allowed_prot & VM_EXEC) && !IS_ENABLED(CONFIG_SECURITY))
->>>   		goto do_check;
->>>   	down_read(&current->mm->mmap_sem);
->>>   	vma = find_vma(current->mm, src);
->>>   	if (!vma || (vma->vm_file && path_noexec(&vma->vm_file->f_path)))
->>>   		*allowed_prot &= ~VM_EXEC;
->>> +#ifdef CONFIG_SECURITY
->>> +	ret = security_enclave_load(vma, prot, allowed_prot);
->>> +#endif
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--cfSQOdHyBAa71Ofd0U9ySdm3rw06OprD3
+Content-Type: multipart/mixed; boundary="Y5QNV8HrgVfCbdTDlLIOfT8WKVnZvSvIS";
+ protected-headers="v1"
+From: Nitesh Narayan Lal <nitesh@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+ wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+ david@redhat.com, dodgen@google.com, konrad.wilk@oracle.com,
+ dhildenb@redhat.com, aarcange@redhat.com, alexander.duyck@gmail.com
+Message-ID: <35dc90f3-3eaf-b2c2-a8a9-b7d8a6043f3b@redhat.com>
+Subject: Re: [RFC][Patch v10 0/2] mm: Support for page hinting
+References: <20190603170306.49099-1-nitesh@redhat.com>
+ <20190603140304-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190603140304-mutt-send-email-mst@kernel.org>
+
+--Y5QNV8HrgVfCbdTDlLIOfT8WKVnZvSvIS
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+
+
+On 6/3/19 2:04 PM, Michael S. Tsirkin wrote:
+> On Mon, Jun 03, 2019 at 01:03:04PM -0400, Nitesh Narayan Lal wrote:
+>> This patch series proposes an efficient mechanism for communicating fr=
+ee memory
+>> from a guest to its hypervisor. It especially enables guests with no p=
+age cache
+>> (e.g., nvdimm, virtio-pmem) or with small page caches (e.g., ram > dis=
+k) to
+>> rapidly hand back free memory to the hypervisor.
+>> This approach has a minimal impact on the existing core-mm infrastruct=
+ure.
+> Could you help us compare with Alex's series?
+> What are the main differences?
+I have just started reviewing Alex's series. Once I am done with it, I ca=
+n.
+>> Measurement results (measurement details appended to this email):
+>> * With active page hinting, 3 more guests could be launched each of 5 =
+GB(total=20
+>> 5 vs. 2) on a 15GB (single NUMA) system without swapping.
+>> * With active page hinting, on a system with 15 GB of (single NUMA) me=
+mory and
+>> 4GB of swap, the runtime of "memhog 6G" in 3 guests (run sequentially)=
+ resulted
+>> in the last invocation to only need 37s compared to 3m35s without page=
+ hinting.
 >>
->> Normally you'd define a static inline stub for the hook in the #else clause
->> for CONFIG_SECURITY in include/linux/security.h and avoid any ifdef here.
-> 
-> Ah, right.
->   
->> What ensures that the mapping referenced by src can't be changed to an
->> entirely different one (with a different vm_file) between the time of check
->> (here) and the time of use?
-> 
-> Nothing.  Holding mmap_sem across copy_from_user() would suffice, correct?
+>> This approach tracks all freed pages of the order MAX_ORDER - 2 in bit=
+maps.
+>> A new hook after buddy merging is used to set the bits in the bitmap.
+>> Currently, the bits are only cleared when pages are hinted, not when p=
+ages are
+>> re-allocated.
+>>
+>> Bitmaps are stored on a per-zone basis and are protected by the zone l=
+ock. A
+>> workqueue asynchronously processes the bitmaps as soon as a pre-define=
+d memory
+>> threshold is met, trying to isolate and report pages that are still fr=
+ee.
+>>
+>> The isolated pages are reported via virtio-balloon, which is responsib=
+le for
+>> sending batched pages to the host synchronously. Once the hypervisor p=
+rocessed
+>> the hinting request, the isolated pages are returned back to the buddy=
+=2E
+>>
+>> The key changes made in this series compared to v9[1] are:
+>> * Pages only in the chunks of "MAX_ORDER - 2" are reported to the hype=
+rvisor to
+>> not break up the THP.
+>> * At a time only a set of 16 pages can be isolated and reported to the=
+ host to
+>> avoids any false OOMs.
+>> * page_hinting.c is moved under mm/ from virt/kvm/ as the feature is d=
+ependent
+>> on virtio and not on KVM itself. This would enable any other hyperviso=
+r to use
+>> this feature by implementing virtio devices.
+>> * The sysctl variable is replaced with a virtio-balloon parameter to
+>> enable/disable page-hinting.
+>>
+>> Pending items:
+>> * Test device assigned guests to ensure that hinting doesn't break it.=
 
-I don't believe you can do that; copy_from_user() could stall 
-indefinitely.  Not sure how to do what you want here or if it requires 
-changing the interface.
+>> * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side support.
+>> * Compare reporting free pages via vring with vhost.
+>> * Decide between MADV_DONTNEED and MADV_FREE.
+>> * Look into memory hotplug, more efficient locking, possible races whe=
+n
+>> disabling.
+>> * Come up with proper/traceable error-message/logs.
+>> * Minor reworks and simplifications (e.g., virtio protocol).
+>>
+>> Benefit analysis:
+>> 1. Use-case - Number of guests that can be launched without swap usage=
 
-> 
->>>   	up_read(&current->mm->mmap_sem);
->>>   do_check:
->>> -	if (prot & ~*allowed_prot)
->>> -		return -EACCES;
->>> -
->>> -	return 0;
->>> +	if (!ret && (prot & ~*allowed_prot))
->>> +		ret = -EACCES;
->>> +	return ret;
->>>   }
->>>   static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long addr,
+>> NUMA Nodes =3D 1 with 15 GB memory
+>> Guest Memory =3D 5 GB
+>> Number of cores in guest =3D 1
+>> Workload =3D test allocation program allocates 4GB memory, touches it =
+via memset
+>> and exits.
+>> Procedure =3D
+>> The first guest is launched and once its console is up, the test alloc=
+ation
+>> program is executed with 4 GB memory request (Due to this the guest oc=
+cupies
+>> almost 4-5 GB of memory in the host in a system without page hinting).=
+ Once
+>> this program exits at that time another guest is launched in the host =
+and the
+>> same process is followed. It is continued until the swap is not used.
+>>
+>> Results:
+>> Without hinting =3D 3, swap usage at the end 1.1GB.
+>> With hinting =3D 5, swap usage at the end 0.
+>>
+>> 2. Use-case - memhog execution time
+>> Guest Memory =3D 6GB
+>> Number of cores =3D 4
+>> NUMA Nodes =3D 1 with 15 GB memory
+>> Process: 3 Guests are launched and the =E2=80=98memhog 6G=E2=80=99 exe=
+cution time is monitored
+>> one after the other in each of them.
+>> Without Hinting - Guest1:47s, Guest2:53s, Guest3:3m35s, End swap usage=
+: 3.5G
+>> With Hinting - Guest1:40s, Guest2:44s, Guest3:37s, End swap usage: 0
+>>
+>> Performance analysis:
+>> 1. will-it-scale's page_faul1:
+>> Guest Memory =3D 6GB
+>> Number of cores =3D 24
+>>
+>> Without Hinting:
+>> tasks,processes,processes_idle,threads,threads_idle,linear
+>> 0,0,100,0,100,0
+>> 1,315890,95.82,317633,95.83,317633
+>> 2,570810,91.67,531147,91.94,635266
+>> 3,826491,87.54,713545,88.53,952899
+>> 4,1087434,83.40,901215,85.30,1270532
+>> 5,1277137,79.26,916442,83.74,1588165
+>> 6,1503611,75.12,1113832,79.89,1905798
+>> 7,1683750,70.99,1140629,78.33,2223431
+>> 8,1893105,66.85,1157028,77.40,2541064
+>> 9,2046516,62.50,1179445,76.48,2858697
+>> 10,2291171,58.57,1209247,74.99,3176330
+>> 11,2486198,54.47,1217265,75.13,3493963
+>> 12,2656533,50.36,1193392,74.42,3811596
+>> 13,2747951,46.21,1185540,73.45,4129229
+>> 14,2965757,42.09,1161862,72.20,4446862
+>> 15,3049128,37.97,1185923,72.12,4764495
+>> 16,3150692,33.83,1163789,70.70,5082128
+>> 17,3206023,29.70,1174217,70.11,5399761
+>> 18,3211380,25.62,1179660,69.40,5717394
+>> 19,3202031,21.44,1181259,67.28,6035027
+>> 20,3218245,17.35,1196367,66.75,6352660
+>> 21,3228576,13.26,1129561,66.74,6670293
+>> 22,3207452,9.15,1166517,66.47,6987926
+>> 23,3153800,5.09,1172877,61.57,7305559
+>> 24,3184542,0.99,1186244,58.36,7623192
+>>
+>> With Hinting:
+>> 0,0,100,0,100,0
+>> 1,306737,95.82,305130,95.78,306737
+>> 2,573207,91.68,530453,91.92,613474
+>> 3,810319,87.53,695281,88.58,920211
+>> 4,1074116,83.40,880602,85.48,1226948
+>> 5,1308283,79.26,1109257,81.23,1533685
+>> 6,1501987,75.12,1093661,80.19,1840422
+>> 7,1695300,70.99,1104207,79.03,2147159
+>> 8,1901523,66.85,1193613,76.90,2453896
+>> 9,2051288,62.73,1200913,76.22,2760633
+>> 10,2275771,58.60,1192992,75.66,3067370
+>> 11,2435016,54.48,1191472,74.66,3374107
+>> 12,2623114,50.35,1196911,74.02,3680844
+>> 13,2766071,46.22,1178589,73.02,3987581
+>> 14,2932163,42.10,1166414,72.96,4294318
+>> 15,3000853,37.96,1177177,72.62,4601055
+>> 16,3113738,33.85,1165444,70.54,4907792
+>> 17,3132135,29.77,1165055,68.51,5214529
+>> 18,3175121,25.69,1166969,69.27,5521266
+>> 19,3205490,21.61,1159310,65.65,5828003
+>> 20,3220855,17.52,1171827,62.04,6134740
+>> 21,3182568,13.48,1138918,65.05,6441477
+>> 22,3130543,9.30,1128185,60.60,6748214
+>> 23,3087426,5.15,1127912,55.36,7054951
+>> 24,3099457,1.04,1176100,54.96,7361688
+>>
+>> [1] https://lkml.org/lkml/2019/3/6/413
+>>
+--=20
+Regards
+Nitesh
 
+
+--Y5QNV8HrgVfCbdTDlLIOfT8WKVnZvSvIS--
+
+--cfSQOdHyBAa71Ofd0U9ySdm3rw06OprD3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlz1aTgACgkQo4ZA3AYy
+ozn94g/7BeA8NfDTR9E50Fp31nZvDDzLUoiCaM8gOvxvp4UWiW6wuFUgOH3+1Vc9
+5EeMQm9jEnCE0ShOoa9NFk+ZYxdIVeno63V8pPn6qmNQiGPJPHxoOODwKv7wUezU
+1y4J7YF+XOrLwBeCm7rAus9ZwJzJozDk/nkXs56RowX7wA6KR+H8lOabq5xvk3zn
+n/9f6ZXCCB3V1WxJilJ5os9Lye2mN00urUeWeg8LKtV9jsnOa0pREqsmzdmipZCP
+YA/lxT/C6EskSvbcXGG/TkO5LXlgrWRNA7sokh2uDsXGMmUXSO7kN5xmcEDbUohq
+3ROBxr+TS56fQnYeXFAgGUdFq1cGZCd9Q8UA16DwGkjfmbMLrYamXE4ccBhm+zIE
+FtZA3BqT6JY+kkVDnCm6f8zK4zXkISYK1uQekaKoa9iphBk7yf/dyFo5+D7xMqeg
+4w6nz0KahiePt/V2I13nrtLiiI6GNKoZOw99CFw7UQkPySfHMxEIprqizBdS2MUF
+/csn78iT/2tMIlcge2pR4xAguJumORY0tUNXIT8Xj1RM/G7YLw8mINeqztWq9Bto
+yiaPmt3C9Wn8HkFZJTc+DbZQcXsLo3Cldy9Ea3FRcr/WgU6rESl4hxwFrJWu9G+q
+YWFeG7CKDtk8nP4uH7+hBXW90tZFztw4egk/fYPA/6paW+67Qkg=
+=CEiI
+-----END PGP SIGNATURE-----
+
+--cfSQOdHyBAa71Ofd0U9ySdm3rw06OprD3--
