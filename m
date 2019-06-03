@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD76C28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B8EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B53F27AB9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3C127ABA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfFCCLL (ORCPT
+        id S1727190AbfFCCLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:11:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17649 "EHLO huawei.com"
+        Sun, 2 Jun 2019 22:11:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17651 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbfFCCLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726917AbfFCCLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Jun 2019 22:11:02 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFD5DF5CBD9DD8024160;
+        by Forcepoint Email with ESMTP id C9C3996AC0E7F6520BDA;
         Mon,  3 Jun 2019 10:11:00 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 3 Jun 2019 10:10:52 +0800
+ 14.3.439.0; Mon, 3 Jun 2019 10:10:50 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
+        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 07/10] net: hns3: add handling of two bits in MAC tunnel interrupts
-Date:   Mon, 3 Jun 2019 10:09:19 +0800
-Message-ID: <1559527762-22931-8-git-send-email-tanhuazhong@huawei.com>
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 02/10] net: hns3: don't configure new VLAN ID into VF VLAN table when it's full
+Date:   Mon, 3 Jun 2019 10:09:14 +0800
+Message-ID: <1559527762-22931-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559527762-22931-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559527762-22931-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,54 +47,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-LINK_UP and LINK_DOWN are two bits of MAC tunnel interrupts, but previous
-HNS3 driver didn't handle them. If they were enabled, value of these two
-bits will change during link down and link up, which will cause HNS3
-driver keep receiving IRQ but can't handle them.
+VF VLAN table can only support no more than 256 VLANs. When user
+adds too many VLANs, the VF VLAN table will be full, and firmware
+will close the VF VLAN table for the function. When VF VLAN table
+is full, and user keeps adding new VLANs, it's unnecessary to
+configure the VF VLAN table, because it will always fail, and print
+warning message. The worst case is adding 4K VLANs, and doing reset,
+it will take much time to restore these VLANs, which may cause VF
+reset fail by timeout.
 
-This patch adds handling of these two bits of interrupts, we will record
-and clear them as what we do to other MAC tunnel interrupts.
-
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Fixes: 6c251711b37f ("net: hns3: Disable vf vlan filter when vf vlan table is full")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h     | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index ed1f533..e1007d9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -1053,7 +1053,7 @@ static void hclge_dbg_dump_mac_tnl_status(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index f0f618d..1215455 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7025,6 +7025,12 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, int vfid,
+ 	u8 vf_byte_off;
+ 	int ret;
  
- 	while (kfifo_get(&hdev->mac_tnl_log, &stats)) {
- 		rem_nsec = do_div(stats.time, HCLGE_BILLION_NANO_SECONDS);
--		dev_info(&hdev->pdev->dev, "[%07lu.%03lu]status = 0x%x\n",
-+		dev_info(&hdev->pdev->dev, "[%07lu.%03lu] status = 0x%x\n",
- 			 (unsigned long)stats.time, rem_nsec / 1000,
- 			 stats.status);
- 	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 9645590..c56b11e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -47,9 +47,9 @@
- #define HCLGE_NCSI_ERR_INT_TYPE	0x9
- #define HCLGE_MAC_COMMON_ERR_INT_EN		0x107FF
- #define HCLGE_MAC_COMMON_ERR_INT_EN_MASK	0x107FF
--#define HCLGE_MAC_TNL_INT_EN			GENMASK(7, 0)
--#define HCLGE_MAC_TNL_INT_EN_MASK		GENMASK(7, 0)
--#define HCLGE_MAC_TNL_INT_CLR			GENMASK(7, 0)
-+#define HCLGE_MAC_TNL_INT_EN			GENMASK(9, 0)
-+#define HCLGE_MAC_TNL_INT_EN_MASK		GENMASK(9, 0)
-+#define HCLGE_MAC_TNL_INT_CLR			GENMASK(9, 0)
- #define HCLGE_PPU_MPF_ABNORMAL_INT0_EN		GENMASK(31, 0)
- #define HCLGE_PPU_MPF_ABNORMAL_INT0_EN_MASK	GENMASK(31, 0)
- #define HCLGE_PPU_MPF_ABNORMAL_INT1_EN		GENMASK(31, 0)
++	/* if vf vlan table is full, firmware will close vf vlan filter, it
++	 * is unable and unnecessary to add new vlan id to vf vlan filter
++	 */
++	if (test_bit(vfid, hdev->vf_vlan_full) && !is_kill)
++		return 0;
++
+ 	hclge_cmd_setup_basic_desc(&desc[0],
+ 				   HCLGE_OPC_VLAN_FILTER_VF_CFG, false);
+ 	hclge_cmd_setup_basic_desc(&desc[1],
+@@ -7060,6 +7066,7 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, int vfid,
+ 			return 0;
+ 
+ 		if (req0->resp_code == HCLGE_VF_VLAN_NO_ENTRY) {
++			set_bit(vfid, hdev->vf_vlan_full);
+ 			dev_warn(&hdev->pdev->dev,
+ 				 "vf vlan table is full, vf vlan filter is disabled\n");
+ 			return 0;
+@@ -8621,6 +8628,7 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 	hclge_stats_clear(hdev);
+ 	memset(hdev->vlan_table, 0, sizeof(hdev->vlan_table));
++	memset(hdev->vf_vlan_full, 0, sizeof(hdev->vf_vlan_full));
+ 
+ 	ret = hclge_cmd_init(hdev);
+ 	if (ret) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 2b3bc95..414f7db 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -820,6 +820,7 @@ struct hclge_dev {
+ 	struct hclge_vlan_type_cfg vlan_type_cfg;
+ 
+ 	unsigned long vlan_table[VLAN_N_VID][BITS_TO_LONGS(HCLGE_VPORT_NUM)];
++	unsigned long vf_vlan_full[BITS_TO_LONGS(HCLGE_VPORT_NUM)];
+ 
+ 	struct hclge_fd_cfg fd_cfg;
+ 	struct hlist_head fd_rule_list;
 -- 
 2.7.4
 
