@@ -6,32 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667DFC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CD6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46733217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA432458D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfFCPwX (ORCPT
+        id S1729651AbfFCPw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:23 -0400
-Received: from foss.arm.com ([217.140.101.70]:54098 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbfFCPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:52:21 -0400
+        Mon, 3 Jun 2019 11:52:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54128 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729615AbfFCPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:26 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D68A1AED;
-        Mon,  3 Jun 2019 08:52:21 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0107515AB;
+        Mon,  3 Jun 2019 08:52:26 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 623E43F246;
-        Mon,  3 Jun 2019 08:52:20 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 968023F246;
+        Mon,  3 Jun 2019 08:52:24 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [RFC PATCH 54/57] drivers: pci: Use bus_find_next_device() helper
-Date:   Mon,  3 Jun 2019 16:50:20 +0100
-Message-Id: <1559577023-558-55-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Elie Morisse <syniurge@gmail.com>,
+        Nehal Shah <nehal-bakulchandra.shah@amd.com>,
+        Shyam Sundar S K <shyam-sundar.s-k@amd.com>
+Subject: [RFC PATCH 57/57] drivers: i2c-amd: Use driver_find_next_device() helper
+Date:   Mon,  3 Jun 2019 16:50:23 +0100
+Message-Id: <1559577023-558-58-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -40,39 +42,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reuse the generic helper to find the next device on bus.
+Reuse the generic helper to find the first device matching
+the driver.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Elie Morisse <syniurge@gmail.com>
+Cc: Nehal Shah <nehal-bakulchandra.shah@amd.com>
+Cc: Shyam Sundar S K <shyam-sundar.s-k@amd.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/pci/probe.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-amd-mp2-pci.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index f9ef7ad..3504695 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -64,11 +64,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
- 	return &r->res;
- }
+diff --git a/drivers/i2c/busses/i2c-amd-mp2-pci.c b/drivers/i2c/busses/i2c-amd-mp2-pci.c
+index c7fe3b4..5e4800d 100644
+--- a/drivers/i2c/busses/i2c-amd-mp2-pci.c
++++ b/drivers/i2c/busses/i2c-amd-mp2-pci.c
+@@ -457,18 +457,12 @@ static struct pci_driver amd_mp2_pci_driver = {
+ };
+ module_pci_driver(amd_mp2_pci_driver);
  
--static int find_anything(struct device *dev, const void *data)
+-static int amd_mp2_device_match(struct device *dev, const void *data)
 -{
 -	return 1;
 -}
 -
- /*
-  * Some device drivers need know if PCI is initiated.
-  * Basically, we think PCI is not initiated when there
-@@ -79,7 +74,7 @@ int no_pci_devices(void)
+ struct amd_mp2_dev *amd_mp2_find_device(void)
+ {
  	struct device *dev;
- 	int no_devices;
+ 	struct pci_dev *pci_dev;
  
--	dev = bus_find_device(&pci_bus_type, NULL, NULL, find_anything);
-+	dev = bus_find_next_device(&pci_bus_type, NULL);
- 	no_devices = (dev == NULL);
- 	put_device(dev);
- 	return no_devices;
+-	dev = driver_find_device(&amd_mp2_pci_driver.driver, NULL, NULL,
+-				 amd_mp2_device_match);
++	dev = driver_find_next_device(&amd_mp2_pci_driver.driver, NULL);
+ 	if (!dev)
+ 		return NULL;
+ 
 -- 
 2.7.4
 
