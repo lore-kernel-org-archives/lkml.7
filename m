@@ -6,34 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC6AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D375BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B645248CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA422248CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfFCPwA (ORCPT
+        id S1729683AbfFCPxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:00 -0400
-Received: from foss.arm.com ([217.140.101.70]:53920 "EHLO foss.arm.com"
+        Mon, 3 Jun 2019 11:53:25 -0400
+Received: from foss.arm.com ([217.140.101.70]:53956 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729440AbfFCPv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:51:56 -0400
+        id S1729463AbfFCPwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:00 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B31AC169E;
-        Mon,  3 Jun 2019 08:51:55 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D92D8169E;
+        Mon,  3 Jun 2019 08:51:59 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7FFA53F246;
-        Mon,  3 Jun 2019 08:51:54 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E43D93F246;
+        Mon,  3 Jun 2019 08:51:58 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [RFC PATCH 37/57] drivers: s390: zcrypt: Use class_find_device_by_devt helper
-Date:   Mon,  3 Jun 2019 16:50:03 +0100
-Message-Id: <1559577023-558-38-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com
+Subject: [RFC PATCH 40/57] drivers: spi: Use class_find_device_by_of_node helper
+Date:   Mon,  3 Jun 2019 16:50:06 +0100
+Message-Id: <1559577023-558-41-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,44 +40,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic helper to find a device matching the devt.
+Use the generic helper to find a device matching the of_node.
 
-Cc: Harald Freudenberger <freude@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/s390/crypto/zcrypt_api.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/spi/spi.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 16cad8e..99c9b77 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -133,12 +133,6 @@ struct zcdn_device {
- static int zcdn_create(const char *name);
- static int zcdn_destroy(const char *name);
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 5224ded..e1295e9 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3549,21 +3549,14 @@ EXPORT_SYMBOL_GPL(of_find_spi_device_by_node);
+ #endif /* IS_ENABLED(CONFIG_OF) */
  
--/* helper function, matches the devt value for find_zcdndev_by_devt() */
--static int __match_zcdn_devt(struct device *dev, const void *data)
+ #if IS_ENABLED(CONFIG_OF_DYNAMIC)
+-static int __spi_of_controller_match(struct device *dev, const void *data)
 -{
--	return dev->devt == *((dev_t *) data);
+-	return dev->of_node == data;
 -}
 -
- /*
-  * Find zcdn device by name.
-  * Returns reference to the zcdn device which needs to be released
-@@ -159,10 +153,7 @@ static inline struct zcdn_device *find_zcdndev_by_name(const char *name)
-  */
- static inline struct zcdn_device *find_zcdndev_by_devt(dev_t devt)
+ /* the spi controllers are not using spi_bus, so we find it with another way */
+ static struct spi_controller *of_find_spi_controller_by_node(struct device_node *node)
  {
--	struct device *dev =
--		class_find_device(zcrypt_class, NULL,
--				  (void *) &devt,
--				  __match_zcdn_devt);
-+	struct device *dev = class_find_device_by_devt(zcrypt_class, NULL, devt);
+ 	struct device *dev;
  
- 	return dev ? to_zcdn_dev(dev) : NULL;
- }
+-	dev = class_find_device(&spi_master_class, NULL, node,
+-				__spi_of_controller_match);
++	dev = class_find_device_by_of_node(&spi_master_class, NULL, node);
+ 	if (!dev && IS_ENABLED(CONFIG_SPI_SLAVE))
+-		dev = class_find_device(&spi_slave_class, NULL, node,
+-					__spi_of_controller_match);
++		dev = class_find_device_by_of_node(&spi_slave_class, NULL, node);
+ 	if (!dev)
+ 		return NULL;
+ 
 -- 
 2.7.4
 
