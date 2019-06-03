@@ -2,97 +2,114 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4953C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5E4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2528154
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F0C28155
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QnpyQMXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfFCLke (ORCPT
+        id S1728493AbfFCLkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:40:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57686 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbfFCLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:40:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 04:40:32 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Jun 2019 04:40:29 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 03 Jun 2019 14:40:29 +0300
-Date:   Mon, 3 Jun 2019 14:40:29 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
- 'pwm'
-Message-ID: <20190603114029.GC2781@lahna.fi.intel.com>
-References: <20190601035709.85379-1-yuehaibing@huawei.com>
- <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
- <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
- <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
+        Mon, 3 Jun 2019 07:40:49 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:36000 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726798AbfFCLks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 07:40:48 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 30711C1E73;
+        Mon,  3 Jun 2019 11:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559562028; bh=JNgLsT7LPunYfej4pP5aCroqrdhvEaNr8asK8r1HI7Y=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=QnpyQMXRrAFzeVwuPSVQX9syBt+Hb02uRHs7Fs7uKpQolYd8MaUOTYFEKb3Tvkqt9
+         ryS1+FR7+e8qYxHQFmZexwW9ROZau/gsFbKRW8YZxLn2JNuZh0RFRNvE3Kww/Cahjm
+         /VUoCFFnV/yofaYRK2uhyZ+RJ7lRutTQ9dWPb1YmY7UW8cmdF60WTBv9hcvoxI4Aa1
+         tw6oUYRs/E7Xfe8+LHapSeLdJuzhzEiI2BZQ0K/HHKSB/fX0xsfVFNPqGQUdZIPVMS
+         dbyLdu/ckJRdYQAGzW7p+A4V8h3eT/bTrRTjx0LBuOmQ6nw2vvbDvdGQ7gKWFrOtEn
+         NrO2YR068NpfA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 87BABA0067;
+        Mon,  3 Jun 2019 11:40:40 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 3 Jun 2019 04:40:40 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 3 Jun 2019 13:40:37 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Biao Huang <biao.huang@mediatek.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
+        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>
+Subject: RE: [v2, PATCH 3/4] net: stmmac: modify default value of tx-frames
+Thread-Topic: [v2, PATCH 3/4] net: stmmac: modify default value of tx-frames
+Thread-Index: AQHVGa/XGYfQ4t70BkaeZd4pZlVHSKaJzoyA
+Date:   Mon, 3 Jun 2019 11:40:37 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B93B6DF@DE02WEMBXB.internal.synopsys.com>
+References: <1559527086-7227-1-git-send-email-biao.huang@mediatek.com>
+ <1559527086-7227-4-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <1559527086-7227-4-git-send-email-biao.huang@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 10:18:15AM -0400, Sven Van Asbroeck wrote:
-> On Sat, Jun 1, 2019 at 12:05 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > I didn't look into the driver to try to understand that, but the
-> > definitely needs a comment to explain for the next person to think they
-> > can do a cleanup here.
-> 
-> Certainly.
+From: Biao Huang <biao.huang@mediatek.com>
 
-I agree.
+> the default value of tx-frames is 25, it's too late when
+> passing tstamp to stack, then the ptp4l will fail:
+>=20
+> ptp4l -i eth0 -f gPTP.cfg -m
+> ptp4l: selected /dev/ptp0 as PTP clock
+> ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+> ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+> ptp4l: port 1: link up
+> ptp4l: timed out while polling for tx timestamp
+> ptp4l: increasing tx_timestamp_timeout may correct this issue,
+>        but it is likely caused by a driver bug
+> ptp4l: port 1: send peer delay response failed
+> ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+>=20
+> ptp4l tests pass when changing the tx-frames from 25 to 1 with
+> ethtool -C option.
+> It should be fine to set tx-frames default value to 1, so ptp4l will pass
+> by default.
 
-> But if we do restore the old behaviour, there may still be problems.
-> I'm unsure if the old synchronization was working correctly.
-> See the example at the end of this email.
+I'm not sure if this is the right approach ... What's the timeout value=20
+you have for TX Timestamp ?
 
-I think you are right. pca9685_pwm_request() should take the mutex as
-long as it is requesting PWM.
-
-> An intuitive way forward would be to use a simple bitfield in
-> struct pca9685 to track if a specific pwm is in use by either
-> pwm or gpio. Protected by a mutex.
-
-A flag would probably be easier to understand than the magic we have
-now. Or then wrap it inside function with an explanation comment:
-
-static inline void pca9685_pwm_set_as_gpio(struct pwm_device *pwm)
-{
-	/*
-	 * We use ->chip_data to convoy the fact that the PWM channel is
-	 * being used as GPIO instead of PWM.
-	 */
-	pwm_set_chip_data(pwm, (void *)1)
-}
-
-static inline void pca9685_pwm_set_as_pwm(struct pwm_device *pwm)
-{
-	pwm_set_chip_data(pwm, NULL);
-}
+Thanks,
+Jose Miguel Abreu
