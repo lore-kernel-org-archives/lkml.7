@@ -2,153 +2,105 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE956C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C60C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07F726A4D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73680279DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hq13E+vc"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qRpvohLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfFCM7l (ORCPT
+        id S1727650AbfFCNAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:59:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59191 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfFCM7l (ORCPT
+        Mon, 3 Jun 2019 09:00:01 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36199 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCNAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:59:41 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53Cx2if601518
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 05:59:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53Cx2if601518
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559566743;
-        bh=jEygdx87i/j9q88sGfVRvjkbl9QSUse80iqW0PNV28M=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Hq13E+vc/PDtt/9CeexGF0BQTGNu7ykCcSKEEN21jI/AfI0sCV+8rDnpebs1BgVmT
-         GoIzPT6feaYs1iSja31pvebVnhygCDDIr9bKE2ec6eeK4lCm1wTqZ3Np477kHh2oF1
-         SnBk4pmvolLj5ORe0l5Ew+5rBmUzjzgcnxg4oj94um9BRzePRWAB4/fA7rzBwKtXk8
-         idECGf7lYGAOl8zl985ojYE1OumHGp1T9Dn/Sl0jpuKpAkWAvJdnXElZv9jektj6SZ
-         0fbgqMnLTYVsHMgXOQCYDC70td/6ttETKICR+kbe3AhIabVsOpGncussUppp33h/Os
-         Cu6CVyaNgLdHw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53Cx0OO601515;
-        Mon, 3 Jun 2019 05:59:00 -0700
-Date:   Mon, 3 Jun 2019 05:59:00 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rick Edgecombe <tipbot@zytor.com>
-Message-ID: <tip-8e41f8726dcf423621e2b6938d015b9796f6f676@git.kernel.org>
-Cc:     tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
-        rick.p.edgecombe@intel.com, dave.hansen@intel.com,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
-        luto@kernel.org, mingo@kernel.org, davem@davemloft.net,
-        mroos@linux.ee
-Reply-To: rick.p.edgecombe@intel.com, dave.hansen@intel.com,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          namit@vmware.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          bp@alien8.de, peterz@infradead.org, luto@kernel.org,
-          mingo@kernel.org, davem@davemloft.net, mroos@linux.ee,
-          akpm@linux-foundation.org
-In-Reply-To: <20190527211058.2729-2-rick.p.edgecombe@intel.com>
-References: <20190527211058.2729-2-rick.p.edgecombe@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] mm/vmalloc: Fix calculation of direct map addr
- range
-Git-Commit-ID: 8e41f8726dcf423621e2b6938d015b9796f6f676
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Mon, 3 Jun 2019 09:00:01 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u12so9198566qth.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3GBqMlRpDEXUxoNuOv2KJmSc/xPoPHNnhUlLhJex3iE=;
+        b=qRpvohLTlPZJtR683hLmpaceRRjgivOD7Qdxswo9AK3rCsZyhInoMNvg0MsixJln+e
+         TlyWuqKIprzhJSBpu7VW7Ai3O0w6md4UFUK9O6p8PFuioGZzP8fe2slXed7viXXwBUq8
+         Y8XhSxIXXLpkHTzyNdThVvS7JBLoQF2t7eQhkHaSBZzo1V+1QyNh41EB2/2S7QWNhlAu
+         gEpVgNyHuF1hbJabqjrZVSqcB7LnvFpcE3v59DwSKN45RAMxZM45AK1yxE4Ny5eal8aE
+         30BD1xGivWvImdcaZ0oq29YyZFCdpj0JvRaTPYCwCeUlXAcalg1fOpkEpPprYyFXYvaL
+         z1LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3GBqMlRpDEXUxoNuOv2KJmSc/xPoPHNnhUlLhJex3iE=;
+        b=A3+BHMkk7/sSGxhO8u+94/GMfhJTQp9CLkgLNVrfr49u7cU2koKxF6EHJftRAIFtkC
+         HGm4B2NJS7pUFh67GnMpwFjiqpQwBB5iuLF7rG2owYIS9K2aLV91TqtYNk4MAkf8vki4
+         y+kdseDilEqNx9DzFnHiQbH/ImA4YkzL9hP1iTwYXk8Br9j7FDyush1vKTQFX21HGObl
+         Tn7bidplW7wVuQVwF17nzXQ7cb1u79vGFoKR5D+XDAYiExOJZ2cjGskvUusO6WvUuupP
+         Uu5C5kTL7viuNuSXxRHeI4rpcN7G9sGokvFksB4eyXPYrnugrs1uv0I6otTWbImcyXip
+         dN0w==
+X-Gm-Message-State: APjAAAWwCzm3WiIZT0g1GOgYZUExuxJmJDxCWjElcBJYEP49CKuR9Z4f
+        IAUH1IW+P9cefKmZYUiBl9K43g==
+X-Google-Smtp-Source: APXvYqxMGyxbNzIAbxCU1eT0jwI7g02vzWvwWUKWs4q4Fiy4qO9njcKSHrfVKSyAcz6xwSSAxcZVTw==
+X-Received: by 2002:a0c:a066:: with SMTP id b93mr21181034qva.140.1559566800256;
+        Mon, 03 Jun 2019 06:00:00 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id i4sm9417138qti.62.2019.06.03.05.59.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 05:59:59 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     akpm@linux-foundation.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] iommu: replace single-char identifiers in macros
+Date:   Mon,  3 Jun 2019 08:59:43 -0400
+Message-Id: <1559566783-13627-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8e41f8726dcf423621e2b6938d015b9796f6f676
-Gitweb:     https://git.kernel.org/tip/8e41f8726dcf423621e2b6938d015b9796f6f676
-Author:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-AuthorDate: Mon, 27 May 2019 14:10:57 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:47:25 +0200
+There are a few macros in IOMMU have single-char identifiers make the
+code hard to read and debug. Replace them with meaningful names.
 
-mm/vmalloc: Fix calculation of direct map addr range
-
-The calculation of the direct map address range to flush was wrong.
-This could cause the RO direct map alias to not get flushed. Today
-this shouldn't be a problem because this flush is only needed on x86
-right now and the spurious fault handler will fix cached RO->RW
-translations. In the future though, it could cause the permissions
-to remain RO in the TLB for the direct map alias, and then the page
-would return from the page allocator to some other component as RO
-and cause a crash.
-
-So fix fix the address range calculation so the flush will include the
-direct map range.
-
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Meelis Roos <mroos@linux.ee>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
-Link: https://lkml.kernel.org/r/20190527211058.2729-2-rick.p.edgecombe@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- mm/vmalloc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/dmar.h | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 7350a124524b..93b2dca2aadb 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2123,7 +2123,6 @@ static inline void set_area_direct_map(const struct vm_struct *area,
- /* Handle removing and resetting vm mappings related to the vm_struct. */
- static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- {
--	unsigned long addr = (unsigned long)area->addr;
- 	unsigned long start = ULONG_MAX, end = 0;
- 	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
- 	int i;
-@@ -2135,8 +2134,8 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * execute permissions, without leaving a RW+X window.
- 	 */
- 	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
--		set_memory_nx(addr, area->nr_pages);
--		set_memory_rw(addr, area->nr_pages);
-+		set_memory_nx((unsigned long)area->addr, area->nr_pages);
-+		set_memory_rw((unsigned long)area->addr, area->nr_pages);
- 	}
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index f8af1d770520..eb634912f475 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -104,12 +104,14 @@ static inline bool dmar_rcu_check(void)
  
- 	remove_vm_area(area->addr);
-@@ -2160,9 +2159,10 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * the vm_unmap_aliases() flush includes the direct map.
- 	 */
- 	for (i = 0; i < area->nr_pages; i++) {
--		if (page_address(area->pages[i])) {
-+		unsigned long addr = (unsigned long)page_address(area->pages[i]);
-+		if (addr) {
- 			start = min(addr, start);
--			end = max(addr, end);
-+			end = max(addr + PAGE_SIZE, end);
- 		}
- 	}
+ #define	dmar_rcu_dereference(p)	rcu_dereference_check((p), dmar_rcu_check())
  
+-#define	for_each_dev_scope(a, c, p, d)	\
+-	for ((p) = 0; ((d) = (p) < (c) ? dmar_rcu_dereference((a)[(p)].dev) : \
+-			NULL, (p) < (c)); (p)++)
+-
+-#define	for_each_active_dev_scope(a, c, p, d)	\
+-	for_each_dev_scope((a), (c), (p), (d))	if (!(d)) { continue; } else
++#define for_each_dev_scope(devs, cnt, i, tmp)				\
++	for ((i) = 0; ((tmp) = (i) < (cnt) ?				\
++	    dmar_rcu_dereference((devs)[(i)].dev) : NULL, (i) < (cnt)); \
++	    (i)++)
++
++#define for_each_active_dev_scope(devs, cnt, i, tmp)			\
++	for_each_dev_scope((devs), (cnt), (i), (tmp))			\
++		if (!(tmp)) { continue; } else
+ 
+ extern int dmar_table_init(void);
+ extern int dmar_dev_scope_init(void);
+-- 
+1.8.3.1
+
