@@ -2,38 +2,42 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7122FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384A527AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D33C27AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 02:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfFCCK6 (ORCPT
+        id S1727049AbfFCCLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 22:10:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17648 "EHLO huawei.com"
+        Sun, 2 Jun 2019 22:11:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17650 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbfFCCK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 22:10:58 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B539C219D2BD07B5B9AF;
-        Mon,  3 Jun 2019 10:10:55 +0800 (CST)
+        id S1726921AbfFCCLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 22:11:02 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D70414A3C23838B1B565;
+        Mon,  3 Jun 2019 10:11:00 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 3 Jun 2019 10:10:50 +0800
+ 14.3.439.0; Mon, 3 Jun 2019 10:10:52 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 00/10] code optimizations & bugfixes for HNS3 driver
-Date:   Mon, 3 Jun 2019 10:09:12 +0800
-Message-ID: <1559527762-22931-1-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 09/10] net: hns3: add opcode about query and clear RAS & MSI-X to special opcode
+Date:   Mon, 3 Jun 2019 10:09:21 +0800
+Message-ID: <1559527762-22931-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1559527762-22931-1-git-send-email-tanhuazhong@huawei.com>
+References: <1559527762-22931-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -43,56 +47,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes code optimizations and bugfixes for the HNS3
-ethernet controller driver.
+From: Weihang Li <liweihang@hisilicon.com>
 
-[patch 1/10] removes the redundant core reset type
+There are four commands being used to query and clear RAS and MSI-X
+interrupts status. They should be contained in array of special opcodes
+because these commands have several descriptors, and we need to judge
+return value in the first descriptor rather than the last one as other
+opcodes. In addition, we shouldn't set the NEXT_FLAG of first descriptor.
 
-[patch 2/10 - 3/10] fixes two VLAN related issues
+This patch fixes above issues.
 
-[patch 4/10] fixes a TM issue
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |  6 +++++-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 16 ----------------
+ 2 files changed, 5 insertions(+), 17 deletions(-)
 
-[patch 5/10 - 10/10] includes some patches related to RAS & MSI-X error
-
-Change log:
-V1->V2: removes two patches which needs to change HNS's infiniband
-	driver as well, they will be upstreamed later with the
-	infiniband's one.
-
-Huazhong Tan (1):
-  net: hns3: remove redundant core reset
-
-Jian Shen (2):
-  net: hns3: don't configure new VLAN ID into VF VLAN table when it's
-    full
-  net: hns3: fix VLAN filter restore issue after reset
-
-Weihang Li (6):
-  net: hns3: add a check to pointer in error_detected and slot_reset
-  net: hns3: set ops to null when unregister ad_dev
-  net: hns3: add handling of two bits in MAC tunnel interrupts
-  net: hns3: remove setting bit of reset_requests when handling mac
-    tunnel interrupts
-  net: hns3: add opcode about query and clear RAS & MSI-X to special
-    opcode
-  net: hns3: delay and separate enabling of NIC and ROCE HW errors
-
-Yunsheng Lin (1):
-  net: hns3: set the port shaper according to MAC speed
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.c        |   2 +
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   4 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  41 ++-----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |   1 -
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |   6 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |   2 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |  50 +++------
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   9 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 123 +++++++++++++--------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |   2 +-
- 11 files changed, 117 insertions(+), 124 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index e532905..7a3bde7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -173,7 +173,11 @@ static bool hclge_is_special_opcode(u16 opcode)
+ 			     HCLGE_OPC_STATS_MAC,
+ 			     HCLGE_OPC_STATS_MAC_ALL,
+ 			     HCLGE_OPC_QUERY_32_BIT_REG,
+-			     HCLGE_OPC_QUERY_64_BIT_REG};
++			     HCLGE_OPC_QUERY_64_BIT_REG,
++			     HCLGE_QUERY_CLEAR_MPF_RAS_INT,
++			     HCLGE_QUERY_CLEAR_PF_RAS_INT,
++			     HCLGE_QUERY_CLEAR_ALL_MPF_MSIX_INT,
++			     HCLGE_QUERY_CLEAR_ALL_PF_MSIX_INT};
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(spec_opcode); i++) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 83b07ce..b4a7e6a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1098,8 +1098,6 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
+ 	/* query all main PF RAS errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_MPF_RAS_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret) {
+ 		dev_err(dev, "query all mpf ras int cmd failed (%d)\n", ret);
+@@ -1262,8 +1260,6 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
+ 
+ 	/* clear all main PF RAS errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret)
+ 		dev_err(dev, "clear all mpf ras int cmd failed (%d)\n", ret);
+@@ -1293,8 +1289,6 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
+ 	/* query all PF RAS errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_PF_RAS_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret) {
+ 		dev_err(dev, "query all pf ras int cmd failed (%d)\n", ret);
+@@ -1348,8 +1342,6 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
+ 
+ 	/* clear all PF RAS errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], num);
+ 	if (ret)
+ 		dev_err(dev, "clear all pf ras int cmd failed (%d)\n", ret);
+@@ -1667,8 +1659,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 	/* query all main PF MSIx errors */
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_ALL_MPF_MSIX_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], mpf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "query all mpf msix int cmd failed (%d)\n",
+@@ -1700,8 +1690,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 
+ 	/* clear all main PF MSIx errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], mpf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "clear all mpf msix int cmd failed (%d)\n",
+@@ -1713,8 +1701,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 	memset(desc, 0, bd_num * sizeof(struct hclge_desc));
+ 	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_CLEAR_ALL_PF_MSIX_INT,
+ 				   true);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "query all pf msix int cmd failed (%d)\n",
+@@ -1753,8 +1739,6 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 
+ 	/* clear all PF MSIx errors */
+ 	hclge_cmd_reuse_desc(&desc[0], false);
+-	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+-
+ 	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "clear all pf msix int cmd failed (%d)\n",
 -- 
 2.7.4
 
