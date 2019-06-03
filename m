@@ -2,170 +2,143 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEDCC28D17
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C169C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FB327D89
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B39725C0B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:21:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ombLNLEa"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fcHr2hRT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfFCNVO (ORCPT
+        id S1728604AbfFCNVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:21:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44812 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfFCNVN (ORCPT
+        Mon, 3 Jun 2019 09:21:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44251 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCNVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:21:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so26877123edm.11;
-        Mon, 03 Jun 2019 06:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zUZXyuZyG2fDHsGvmi+k7bXfPwkhPnoz7sk7xMguNts=;
-        b=ombLNLEaF/dFYAicRp2VoKFrkfCYOqTVTAkLZD4bpMiRzOLoLKdG4QuF1LUCIDERjI
-         9nh8/D1Dmnh1QItnCTXmxbAahU1gtgAYQ0pDKCRsFsjMXOMMgiKZJ2uY0R/Jhe20DHR5
-         U34UETveyU0xFGQMqw6+DC4o55r3lOPN5QNA2GCjyaAyTv/UOoe56m/faFSCjtkguOnw
-         Y6sE+Nu256ykweXIkvNxVunSA2c21HCDKqnhoG8GS3lJFerLLZcOY2Nhov1GRDlzSMMl
-         5WLNDHK7k1IXXW+dCeCSt2tTHplLmDWdFlRgXMAj3uiLlW41gmqy5HJLitsfJiuYljfp
-         PDJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zUZXyuZyG2fDHsGvmi+k7bXfPwkhPnoz7sk7xMguNts=;
-        b=kZN1LlybrkTy8mEY22pUFS42bxch1S6630UYVp0VpaPITAWSUPJFqycKViwByv3Wcu
-         ViI1Smk/7jZGSdLnuaidu1hv0I8seMHnpPzmqSxwLvFMsR4IyJXPbLztY1RjUVcHi2Qe
-         2H7X3+7DRh1nKOBtCCfR2yKAMM6acnSsToCNenJErye6oMkyc8cBQ0XTMAXMpwBUZoO9
-         bwJgww3C4sc8kvvvbERcf9U1BqQk0saoSiT+SLyd/LHNawhASIXto6Q5ToWsUjQI6JxT
-         hY5s4AFMUMyhb14cNB4wlPOACgQl1BKzC+u/ctCQkUnTP8O9KXweRJqWHWq/QH/07ra7
-         hD7g==
-X-Gm-Message-State: APjAAAX3lCDNMq1/47JUUJLDUVbLu4L66PWeYHLQl+YFWHq3cYlfbV7H
-        aaphO7b1W6qGSNCJ84KwpqbQQWKOt6nfpohNTxk=
-X-Google-Smtp-Source: APXvYqyKo7O9gwJcMEKm78nevLJSasxgDOvAf3Bu9lrKU3SGNfxGO3bGLZsPCGJciHrCkDKyNdKoIOvLbGurRikTp7A=
-X-Received: by 2002:a50:a7a5:: with SMTP id i34mr28554346edc.294.1559568070994;
- Mon, 03 Jun 2019 06:21:10 -0700 (PDT)
+        Mon, 3 Jun 2019 09:21:51 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DLeso607066
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:21:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DLeso607066
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559568100;
+        bh=RN2wDhoFLq6ABqLxgEME/VQcliZo+R93w8KdtFHEgTo=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=fcHr2hRTwMOaX1y+aJr3L3AP6c+MX52XBxnjU+Jjw2xgSUzPPpTXh2fpwUHfkSGM5
+         9fUx7fCKO8u32nMgVZsjYuBW1T4wvnPhOExFQG2OwFuydRMGVqpJXCavtbohHVGO5g
+         SmkOxRVR+/uielN8iiNDy7aCY/ln9IHwpAhjDGKmcr7LAkZTyU7UnNj38M42MdYbeb
+         WWtf3L1zyaohpfFzh02Xs3cbbuNN9eVwQDDafsccI/AiVqLLu3m/vK5jpWvueNU0Pr
+         0P1gloB5rzpqqv8uFLTTI2lMR15Inf/Yb12Tf2PVSu4KvffVkbvgBhNCORSOYefFjc
+         JUviDy11Y/MRQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DLedE607063;
+        Mon, 3 Jun 2019 06:21:40 -0700
+Date:   Mon, 3 Jun 2019 06:21:40 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Yuyang Du <tipbot@zytor.com>
+Message-ID: <tip-4d56330df22dd9dd9a24f147014f60ee4c914fb8@git.kernel.org>
+Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, peterz@infradead.org, duyuyang@gmail.com
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          mingo@kernel.org, torvalds@linux-foundation.org,
+          peterz@infradead.org, duyuyang@gmail.com
+In-Reply-To: <20190506081939.74287-23-duyuyang@gmail.com>
+References: <20190506081939.74287-23-duyuyang@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Adjust new bit cases in
+ mark_lock
+Git-Commit-ID: 4d56330df22dd9dd9a24f147014f60ee4c914fb8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com> <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
-In-Reply-To: <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 3 Jun 2019 06:20:57 -0700
-Message-ID: <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Will Deacon <will.deacon@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 4:14 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 03/06/2019 11:47, Rob Clark wrote:
-> > On Sun, Jun 2, 2019 at 11:25 PM Tomasz Figa <tfiga@chromium.org> wrote:
-> >>
-> >> On Mon, Jun 3, 2019 at 4:40 AM Rob Clark <robdclark@gmail.com> wrote:
-> >>>
-> >>> So, another case I've come across, on the display side.. I'm working
-> >>> on handling the case where bootloader enables display (and takes iommu
-> >>> out of reset).. as soon as DMA domain gets attached we get iommu
-> >>> faults, because bootloader has already configured display for scanout.
-> >>> Unfortunately this all happens before actual driver is probed and has
-> >>> a chance to intervene.
-> >>>
-> >>> It's rather unfortunate that we tried to be clever rather than just
-> >>> making drivers call some function to opt-in to the hookup of dma iommu
-> >>> ops :-(
-> >>
-> >> I think it still works for the 90% of cases and if 10% needs some
-> >> explicit work in the drivers, that's better than requiring 100% of the
-> >> drivers to do things manually.
->
-> Right, it's not about "being clever", it's about not adding opt-in code
-> to the hundreds and hundreds and hundreds of drivers which *might* ever
-> find themselves used on a system where they would need the IOMMU's help
-> for DMA.
+Commit-ID:  4d56330df22dd9dd9a24f147014f60ee4c914fb8
+Gitweb:     https://git.kernel.org/tip/4d56330df22dd9dd9a24f147014f60ee4c914fb8
+Author:     Yuyang Du <duyuyang@gmail.com>
+AuthorDate: Mon, 6 May 2019 16:19:38 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:55:52 +0200
 
-Well, I mean, at one point we didn't do the automatic iommu hookup, we
-could have just stuck with that and added a helper so drivers could
-request the hookup.  Things wouldn't have been any more broken than
-before, and when people bring up systems where iommu is required, they
-could have added the necessary dma_iommu_configure() call.  But that
-is water under the bridge now.
+locking/lockdep: Adjust new bit cases in mark_lock
 
-> >> Adding Marek who had the same problem on Exynos.
-> >
-> > I do wonder how many drivers need to iommu_map in their ->probe()?
-> > I'm thinking moving the auto-hookup to after a successful probe(),
-> > with some function a driver could call if they need mapping in probe,
-> > might be a way to eventually get rid of the blacklist.  But I've no
-> > idea how to find the subset of drivers that would be broken without a
-> > dma_setup_iommu_stuff() call in their probe.
->
-> Wouldn't help much. That particular issue is nothing to do with DMA ops
-> really, it's about IOMMU initialisation. On something like SMMUv3 there
-> is literally no way to turn the thing on without blocking unknown
-> traffic - it *has* to have stream table entries programmed before it can
-> even allow stuff to bypass.
+The new bit can be any possible lock usage except it is garbage, so the
+cases in switch can be made simpler. Warn early on if wrong usage bit is
+passed without taking locks. No functional change.
 
-fwiw, on these sdm850 laptops (and I think sdm845 boards like mtp and
-db845c) the SMMU (v2) is taken out of bypass by the bootloader.  Bjorn
-has some patches for arm-smmu to read-back the state at boot.
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bvanassche@acm.org
+Cc: frederic@kernel.org
+Cc: ming.lei@redhat.com
+Cc: will.deacon@arm.com
+Link: https://lkml.kernel.org/r/20190506081939.74287-23-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/lockdep.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-(Although older devices were booting with display enabled but SMMU in bypass.)
-
-> The answer is either to either pay attention to the "Quiesce all DMA
-> capable devices" part of the boot protocol (which has been there since
-> pretty much forever), or to come up with some robust way of
-> communicating "live" boot-time mappings to IOMMU drivers so that they
-> can program themselves appropriately during probe.
-
-Unfortunately display lit up by bootloader is basically ubiquitous.
-Every single android phone does it.  All of the windows-arm laptops do
-it.  Basically 99.9% of things that have a display do it.  It's a
-tough problem to solve involving clks, gdsc, regulators, etc, in
-addition to the display driver.. and sadly now smmu.  And devices
-where we can make changes to and update the firmware are rather rare.
-So there is really no option to ignore this problem.
-
-I guess if we had some early-quirks mechanism like x86 does, we could
-mash the display off early in boot.  That would be an easy solution.
-Although I'd prefer a proper solution so that android phones aren't
-carrying around enormous stacks of hack patches to achieve a smooth
-flicker-free boot.
-
-I suppose arm-smmu could realize that the context bank is already
-taken out of bypass..  although I'm not entirely sure if we can assume
-that the CPU would be able to read back the pagetable setup by the
-bootloader.  Maybe Vivek has an idea about that?
-
-BR,
--R
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 1123e7e6c78d..9c4e2a7547d3 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3582,6 +3582,11 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+ {
+ 	unsigned int new_mask = 1 << new_bit, ret = 1;
+ 
++	if (new_bit >= LOCK_USAGE_STATES) {
++		DEBUG_LOCKS_WARN_ON(1);
++		return 0;
++	}
++
+ 	/*
+ 	 * If already set then do not dirty the cacheline,
+ 	 * nor do any checks:
+@@ -3605,25 +3610,13 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+ 		return 0;
+ 
+ 	switch (new_bit) {
+-#define LOCKDEP_STATE(__STATE)			\
+-	case LOCK_USED_IN_##__STATE:		\
+-	case LOCK_USED_IN_##__STATE##_READ:	\
+-	case LOCK_ENABLED_##__STATE:		\
+-	case LOCK_ENABLED_##__STATE##_READ:
+-#include "lockdep_states.h"
+-#undef LOCKDEP_STATE
+-		ret = mark_lock_irq(curr, this, new_bit);
+-		if (!ret)
+-			return 0;
+-		break;
+ 	case LOCK_USED:
+ 		debug_atomic_dec(nr_unused_locks);
+ 		break;
+ 	default:
+-		if (!debug_locks_off_graph_unlock())
++		ret = mark_lock_irq(curr, this, new_bit);
++		if (!ret)
+ 			return 0;
+-		WARN_ON(1);
+-		return 0;
+ 	}
+ 
+ 	graph_unlock();
