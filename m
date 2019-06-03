@@ -2,153 +2,112 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C6FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66190C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D269125472
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559593956;
-	bh=/RG6GY5HUbFdN85atNoUJ/9eNmP23uOP2pabz9mg0qc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vVmUjgBcAUoczI774osgAzWqXxPOyYIkfs/QTo1OkbsMGOgrkc3aHu/Teahc/DvXI
-	 4DnQz5AOhiyW19lBO5NLwqWTNjRB7mhtltbQSbKXm8tnhzzpKSRVAWw/v4cESy5ZML
-	 sIGiuRiYG8FcCncjdrfbG2n+U1RLsD+D4n3spjvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 345ED25477
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:33:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vk8wrD/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfFCUcg (ORCPT
+        id S1726807AbfFCUdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:32:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35232 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726163AbfFCUcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:32:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 633F7ACF8;
-        Mon,  3 Jun 2019 20:32:33 +0000 (UTC)
-Date:   Mon, 3 Jun 2019 22:32:30 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
-Message-ID: <20190603203230.GB22799@dhcp22.suse.cz>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-2-minchan@kernel.org>
- <20190531084752.GI6896@dhcp22.suse.cz>
- <20190531133904.GC195463@google.com>
- <20190531140332.GT6896@dhcp22.suse.cz>
- <20190531143407.GB216592@google.com>
- <20190603071607.GB4531@dhcp22.suse.cz>
- <20190603172717.GA30363@cmpxchg.org>
+        Mon, 3 Jun 2019 16:33:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38563 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfFCUdX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 16:33:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id o13so17530352lji.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 13:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/QTzCtuviovIYfq8pTKDRR4SrKn6XoLJ/vPLJgFkB3w=;
+        b=Vk8wrD/KBb3ropxiBzC/cMY5H7uBQDbPJ+/9qpdljtDZ2GWz77sCU3Cr488J/uqgoW
+         hQY4/SQ04YkONghe61ER2V7f2oTZ/A4P2GGDSYSe+XGTOK631liT1TtW7STqA0a4VNiV
+         MKTcy7TAgRj2ZrarOYhnbL/RCqzHjF7F5VAv9uVZ4ssFvEthgJrvGuUXNk7MW5f+N+dH
+         5+2QbEEcMSj06UmRV5xKsYq0BqDU9E4dnO2GrRJbbwyJ7myCJv+33ABsjAmP4HYOLi0z
+         6a0WI5mp6LQc6b+tG9pRnaU0tYOrWXSyMBKowuP0og2uYNxY3VfeNL2oBCWCA91757+l
+         1Q1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/QTzCtuviovIYfq8pTKDRR4SrKn6XoLJ/vPLJgFkB3w=;
+        b=XaiUE8fIFBMHQl/NiostsI/1h8X5wHbsU7ecO8iV87HHXuP7LzS4sg3pTOoEqM9XJD
+         E6lLPbvjIQ1wLwCvE2y26jNrH4NXyrbGOmIEpc4WOC87al/liX3w2fLigb54F9NrlDTJ
+         Je0Fy6jZh1WDRjuIf+ItlRFatoGDZqo/8/iq4Fbktg53ppHGtE9WgsvEekPZPPx2eZtF
+         OMISHsycO5rggW1yBHaTFfwWRuUTk4iOq9Vp2OgHw24BcYH9gMKSCyfC2Tx5QRa8/vdk
+         y/OpiROASsQzZZDYYUzqC3S49MNFT6kMasD/N5ueakWGOwjdyFo5kUhiwOzNCWdnFqeK
+         dTkw==
+X-Gm-Message-State: APjAAAWa9WddPmsECH0FSjfSPbvtV0bZdZYp6Y1Mg4fXIPlnh4E6aDA0
+        q4WKVi0OG3ipHoaCZoWBinWtfhH2F0xecePQ2dEKx/97KXfj8Q==
+X-Google-Smtp-Source: APXvYqyGjcfLF23rJTiW8aVGJ6N1yjmEUfEYDArU7kaMrnqdGIB14pAkLyE5K3hc/DFNutaX3KbHgKKW1IAEYXLaLYg=
+X-Received: by 2002:a2e:9f52:: with SMTP id v18mr14823781ljk.176.1559594000924;
+ Mon, 03 Jun 2019 13:33:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603172717.GA30363@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190603214105.715a4072472ef4946123dc20@kernel.org> <155956708268.12228.10363800793132214198.stgit@devnote2>
+In-Reply-To: <155956708268.12228.10363800793132214198.stgit@devnote2>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 3 Jun 2019 22:33:09 +0200
+Message-ID: <CADYN=9+f9JQFUX74fhWm6CvMfvivVYhHrQ6mQ61mGH+NW4==DQ@mail.gmail.com>
+Subject: Re: [PATCH] kprobes: Fix to init kprobes in subsys_initcall
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 03-06-19 13:27:17, Johannes Weiner wrote:
-> On Mon, Jun 03, 2019 at 09:16:07AM +0200, Michal Hocko wrote:
-> > On Fri 31-05-19 23:34:07, Minchan Kim wrote:
-> > > On Fri, May 31, 2019 at 04:03:32PM +0200, Michal Hocko wrote:
-> > > > On Fri 31-05-19 22:39:04, Minchan Kim wrote:
-> > > > > On Fri, May 31, 2019 at 10:47:52AM +0200, Michal Hocko wrote:
-> > > > > > On Fri 31-05-19 15:43:08, Minchan Kim wrote:
-> > > > > > > When a process expects no accesses to a certain memory range, it could
-> > > > > > > give a hint to kernel that the pages can be reclaimed when memory pressure
-> > > > > > > happens but data should be preserved for future use.  This could reduce
-> > > > > > > workingset eviction so it ends up increasing performance.
-> > > > > > > 
-> > > > > > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > > > > > > MADV_COLD can be used by a process to mark a memory range as not expected
-> > > > > > > to be used in the near future. The hint can help kernel in deciding which
-> > > > > > > pages to evict early during memory pressure.
-> > > > > > > 
-> > > > > > > Internally, it works via deactivating pages from active list to inactive's
-> > > > > > > head if the page is private because inactive list could be full of
-> > > > > > > used-once pages which are first candidate for the reclaiming and that's a
-> > > > > > > reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
-> > > > > > > if the memory pressure happens, they will be reclaimed earlier than other
-> > > > > > > active pages unless there is no access until the time.
-> > > > > > 
-> > > > > > [I am intentionally not looking at the implementation because below
-> > > > > > points should be clear from the changelog - sorry about nagging ;)]
-> > > > > > 
-> > > > > > What kind of pages can be deactivated? Anonymous/File backed.
-> > > > > > Private/shared? If shared, are there any restrictions?
-> > > > > 
-> > > > > Both file and private pages could be deactived from each active LRU
-> > > > > to each inactive LRU if the page has one map_count. In other words,
-> > > > > 
-> > > > >     if (page_mapcount(page) <= 1)
-> > > > >         deactivate_page(page);
-> > > > 
-> > > > Why do we restrict to pages that are single mapped?
-> > > 
-> > > Because page table in one of process shared the page would have access bit
-> > > so finally we couldn't reclaim the page. The more process it is shared,
-> > > the more fail to reclaim.
-> > 
-> > So what? In other words why should it be restricted solely based on the
-> > map count. I can see a reason to restrict based on the access
-> > permissions because we do not want to simplify all sorts of side channel
-> > attacks but memory reclaim is capable of reclaiming shared pages and so
-> > far I haven't heard any sound argument why madvise should skip those.
-> > Again if there are any reasons, then document them in the changelog.
-> 
-> I think it makes sense. It could be explained, but it also follows
-> established madvise semantics, and I'm not sure it's necessarily
-> Minchan's job to re-iterate those.
-> 
-> Sharing isn't exactly transparent to userspace. The kernel does COW,
-> ksm etc. When you madvise, you can really only speak for your own
-> reference to that memory - "*I* am not using this."
-> 
-> This is in line with other madvise calls: MADV_DONTNEED clears the
-> local page table entries and drops the corresponding references, so
-> shared pages won't get freed. MADV_FREE clears the pte dirty bit and
-> also has explicit mapcount checks before clearing PG_dirty, so again
-> shared pages don't get freed.
+On Mon, 3 Jun 2019 at 15:04, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Since arm64 kernel initializes breakpoint trap vector in arch_initcall(),
+> initializing kprobe (and run smoke test) in postcore_initcall() causes
+> a kernel panic.
+>
+> To fix this issue, move the kprobe initialization in subsys_initcall()
+> (which is called right afer the arch_initcall).
+>
+> In-kernel kprobe users (ftrace and bpf) are using fs_initcall() which is
+> called after subsys_initcall(), so this shouldn't cause more problem.
+>
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Fixes: b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Right, being consistent with other madvise syscalls is certainly a way
-to go. And I am not pushing one way or another, I just want this to be
-documented with a reasoning behind. Consistency is certainly an argument
-to use.
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-On the other hand these non-destructive madvise operations are quite
-different and the shared policy might differ as a result as well. We are
-aging objects rather than destroying them after all. Being able to age
-a pagecache with a sufficient privileges sounds like a useful usecase to
-me. In other words you are able to cause the same effect indirectly
-without the madvise operation so it kinda makes sense to allow it in a
-more sophisticated way.
+Cheers,
+Anders
 
-That being said, madvise is just a _hint_ and the kernel will be always
-free to ignore it so the future implementation might change so we can
-start simple and consistent with existing MADV_$FOO operations now and
-extend later on. But let's document the intention in the changelog and
-make the decision clear. I am sorry to be so anal about this but I have
-seen so many ad-hoc policies that were undocumented and it was so hard
-to guess when revisiting later on and make some sense of it.
--- 
-Michal Hocko
-SUSE Labs
+> ---
+>  kernel/kprobes.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 54aaaad00a47..5471efbeb937 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2289,7 +2289,7 @@ static int __init init_kprobes(void)
+>                 init_test_probes();
+>         return err;
+>  }
+> -postcore_initcall(init_kprobes);
+> +subsys_initcall(init_kprobes);
+>
+>  #ifdef CONFIG_DEBUG_FS
+>  static void report_probe(struct seq_file *pi, struct kprobe *p,
+>
