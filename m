@@ -2,82 +2,73 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AB9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6940327D3B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878D027D32
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfFCIBm (ORCPT
+        id S1727236AbfFCICT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:01:42 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38156 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727530AbfFCIBk (ORCPT
+        Mon, 3 Jun 2019 04:02:19 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:60925 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfFCICT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:01:40 -0400
-Received: by mail-lj1-f195.google.com with SMTP id o13so15231702lji.5;
-        Mon, 03 Jun 2019 01:01:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KkW+WcA8xr3IAwKXO0NCLpjNO+SlOMn996T9vCAZgFM=;
-        b=H+m0ZxZZf+fC5n4l7BHI/0Fb9/YJl2/Dlwg6UTY9zsze8Zr9LSfEN4Hr1Lztq5n9yx
-         0Ztv2IVK/uyXj4ApVAsi7xSNHvwgNyYy77vI1qMXXOWKRhGzlEYxJbzxqGfN8bKQCQpV
-         gI5AFwvObRfq/sV+9SYQXjfZp+uk5Hi23NqqjQ99nEYXs4jT8fJH5/DyxoJ8bY2N2xbC
-         RV6jBPrdNYfjNVN0xMMKxrdByCIbXOVNx0saAJdNtjjOJgFSsLE5818aQaqdTN8fJ9+i
-         9tI81Z4d6hvy0H5RsaHQG5oOOcgzzELAyseXf5HIJGxCkG0Yv3b1cHVcUCn472OB4oLJ
-         8u0A==
-X-Gm-Message-State: APjAAAVjR/qv8IiPw5rDR/nTk1RIDpxuS4zcE9d34fxSsDxyoJAk5I5H
-        23+XxDhO76Gcga6nywU1hGR0C+tV7EEkfsrK2Rs=
-X-Google-Smtp-Source: APXvYqzGr2OJE5ibdf/4JMBzaDSw+RyaCvo/V1a/stIxCLEME3rIBFMKVouuvHC7voDpXdzuXIoF5hUrjPfHo3CULAU=
-X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr238216ljr.145.1559548898567;
- Mon, 03 Jun 2019 01:01:38 -0700 (PDT)
+        Mon, 3 Jun 2019 04:02:19 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost.localdomain (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BA80F240010;
+        Mon,  3 Jun 2019 08:02:13 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Jeff Kletsky <lede@allycomm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
+Date:   Mon,  3 Jun 2019 10:02:11 +0200
+Message-Id: <20190603080211.27447-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190522220555.11626-4-lede@allycomm.com>
+References: 
 MIME-Version: 1.0
-References: <1559044467-2639-1-git-send-email-gareth.williams.jx@renesas.com> <1559044467-2639-3-git-send-email-gareth.williams.jx@renesas.com>
-In-Reply-To: <1559044467-2639-3-git-send-email-gareth.williams.jx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Jun 2019 10:01:26 +0200
-Message-ID: <CAMuHMdXFVY6x37KtZWYfp4E3gSfEPs4uQDp2wofRTzKm_LFGrA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] clk: renesas: r9a06g032: Add clock domain support
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: 049df13c4e63884fe6634db5568e08f65922256e
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 1:55 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> There are several clocks on the r9a06g032 which are currently not
-> enabled in their drivers that can be delegated to clock domain system
-> for power management. Therefore add support for clock domain
-> functionality to the r9a06g032 clock driver.
->
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+On Wed, 2019-05-22 at 22:05:55 UTC, Jeff Kletsky wrote:
+> From: Jeff Kletsky <git-commits@allycomm.com>
+> 
+> The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
+> and, while it has the same logical layout as the E-series devices,
+> it differs in the SPI interfacing in significant ways.
+> 
+> This support is contingent on previous commits to:
+> 
+>   * Add support for two-byte device IDs
+>   * Define macros for page-read ops with three-byte addresses
+> 
+> http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
+> 
+> Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clock-renesas-for-v5.3.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Miquel
