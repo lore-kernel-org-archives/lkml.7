@@ -2,142 +2,120 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64572C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5329AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360A427606
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izqSZAFs"
+	by mail.kernel.org (Postfix) with ESMTP id 2EF1D27D83
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfFCI2V (ORCPT
+        id S1727705AbfFCI2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:28:21 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:41110 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfFCI2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:28:21 -0400
-Received: by mail-ua1-f68.google.com with SMTP id n2so6165888uad.8;
-        Mon, 03 Jun 2019 01:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EDoCDFTeq/DV5924Jr300cDXUIemOxujb3aLvb1Pkn0=;
-        b=izqSZAFsSv7SOmGqsDoVfN9penvenlTefSopGisyHYiY/XskElii9B/+HWXg3LY744
-         T5f2psSGpD9PJU7SbhE5E1k/7fbwKQu6BzfoPagMmVWs3mtkea2i9t8bVk9XEUKpi+iP
-         stYqxHiW7ZczPEF3yWAmhGks+gpi73T7NJzTTy+q8uNFPSSPGDe5IkisuivboMSetRKF
-         xQiX4fRkLAkVxfrUr+w/3FEQTD/SSydjPobocRo2lRJxoy4qzAhiqul6RFmKFgZZbXgx
-         3R925AMT8OJf9H/lfFDk4RFZ8qei57vUyS3sBrdVOft5CaSurYGwoCpT01zEyVJdahHk
-         jEIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EDoCDFTeq/DV5924Jr300cDXUIemOxujb3aLvb1Pkn0=;
-        b=jJhfqZIfbCA+keYbRrjuHSkeaqOaZV7YzTheelELSUoZWXYEGRJeXZAEhUKLuS71KL
-         woKFa+SEZgxgjLrF8MvsUOpZqZ2N0Y65UwMg9vTRLjBYpsuMCBr7wGqosXy7IoWxgQ+v
-         38oWaz2suQ6wbSHkZWxrdYzq2X8VQRvlqynN5/S4pLJXtYKnDKJTB1SeqkAjHJSolVC9
-         Y3TKO961n/Swu1AZuBeLUhve3b40rdWEE7NwTzThRyZ0NebqXLEwh+yck3Kd26cI5g++
-         PNvPGRb+D6TF6RJCkzj58AsSgO8gaTwPeyp37hs3GvTA7ZRcu4lvOHPP16kDaWaEl3Wi
-         1oGg==
-X-Gm-Message-State: APjAAAXkpZh3KdTN402bNZsEFESEbX1tWRoBSOtmSirmzzCvwdJFibEj
-        XHlmI/WIT9vSsIccXGuHFh7st1CMwQW2BFDbhk4=
-X-Google-Smtp-Source: APXvYqwHPHJVbjOmU3beNqvuieIuS0+sxO+hdF3ELDqayT2TnNjKZYL7ukuC99dJpgkpMcNMhWFjx76wOKe6XdqAvus=
-X-Received: by 2002:ab0:4e12:: with SMTP id g18mr11891564uah.1.1559550500034;
- Mon, 03 Jun 2019 01:28:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559532216-12114-1-git-send-email-92siuyang@gmail.com> <CADvbK_eUYhP=pSLqHdBp8E3-NJP28=jErSSvW5moO9WVK=X8XQ@mail.gmail.com>
-In-Reply-To: <CADvbK_eUYhP=pSLqHdBp8E3-NJP28=jErSSvW5moO9WVK=X8XQ@mail.gmail.com>
-From:   Yang Xiao <92siuyang@gmail.com>
-Date:   Mon, 3 Jun 2019 16:27:41 +0800
-Message-ID: <CAKgHYH1_Jcie=qP-TWRLMXV4OTCe8hm6qZzs2bu4Ciooo2hFiQ@mail.gmail.com>
-Subject: Re: [PATCH] ipvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     davem <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>, petrm@mellanox.com,
-        jiri@mellanox.com, idosch@mellanox.com, uehaibing@huawei.com,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Jun 2019 04:28:30 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50576 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfFCI2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:28:30 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 538DE1A03AD;
+        Mon,  3 Jun 2019 10:28:27 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E7BD1A03A5;
+        Mon,  3 Jun 2019 10:28:20 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 70820402D5;
+        Mon,  3 Jun 2019 16:28:12 +0800 (SGT)
+From:   peng.fan@nxp.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com,
+        sudeep.holla@arm.com, f.fainelli@gmail.com
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andre.przywara@arm.com, van.freenix@gmail.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 0/2] mailbox: arm: introduce smc triggered mailbox
+Date:   Mon,  3 Jun 2019 16:30:03 +0800
+Message-Id: <20190603083005.4304-1-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on your explanation, I found that the patch I submitted is useless.
-Great thanks and sorry for the trouble.
+From: Peng Fan <peng.fan@nxp.com>
 
-On Mon, Jun 3, 2019 at 3:54 PM Xin Long <lucien.xin@gmail.com> wrote:
->
-> On Mon, Jun 3, 2019 at 11:22 AM Young Xiao <92siuyang@gmail.com> wrote:
-> >
-> > Clearing the IFF_ALLMULTI flag on a down interface could cause an allmulti
-> > overflow on the underlying interface.
-> >
-> > Attempting the set IFF_ALLMULTI on the underlying interface would cause an
-> > error and the log message:
-> >
-> > "allmulti touches root, set allmulti failed."
-> s/root/roof
->
-> I guess this patch was inspired by:
->
-> commit bbeb0eadcf9fe74fb2b9b1a6fea82cd538b1e556
-> Author: Peter Christensen <pch@ordbogen.com>
-> Date:   Thu May 8 11:15:37 2014 +0200
->
->     macvlan: Don't propagate IFF_ALLMULTI changes on down interfaces.
->
-> I could trigger this error on macvlan prior to this patch with:
->
->   # ip link add mymacvlan1 link eth2 type macvlan mode bridge
->   # ip link set mymacvlan1 up
->   # ip link set mymacvlan1 allmulticast on
->   # ip link set mymacvlan1 down
->   # ip link set mymacvlan1 allmulticast off
->   # ip link set mymacvlan1 allmulticast on
->
-> but not on ipvlan, could you?
->
-> macvlan had this problem, as lowerdev's allmulticast is cleared when doing
-> dev_stop and set when doing dev_open, which doesn't happen on ipvlan.
->
-> So I'd think this patch fixes nothing unless you want to add
-> dev_set_allmulti(1/-1) in ipvlan_open/stop(), but that's another topic.
->
-> did I miss something?
->
-> >
-> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> > ---
-> >  drivers/net/ipvlan/ipvlan_main.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-> > index bbeb162..523bb83 100644
-> > --- a/drivers/net/ipvlan/ipvlan_main.c
-> > +++ b/drivers/net/ipvlan/ipvlan_main.c
-> > @@ -242,8 +242,10 @@ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
-> >         struct ipvl_dev *ipvlan = netdev_priv(dev);
-> >         struct net_device *phy_dev = ipvlan->phy_dev;
-> >
-> > -       if (change & IFF_ALLMULTI)
-> > -               dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI? 1 : -1);
-> > +       if (dev->flags & IFF_UP) {
-> > +               if (change & IFF_ALLMULTI)
-> > +                       dev_set_allmulti(phy_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
-> > +       }
-> >  }
-> >
-> >  static void ipvlan_set_multicast_mac_filter(struct net_device *dev)
-> > --
-> > 2.7.4
-> >
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
+
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
+
+The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+IP to signal a condition to some other processing unit, typically a dedicated
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
+
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
+
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI requests.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+this new driver.
+
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hypervisors
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used generically
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+Peng Fan (2):
+  DT: mailbox: add binding doc for the ARM SMC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 190 +++++++++++++++++++++
+ include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+ 5 files changed, 310 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+ create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
+
+-- 
+2.16.4
+
