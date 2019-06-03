@@ -2,122 +2,168 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BDEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8365FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CA825FDD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="cr9F9v/h"
+	by mail.kernel.org (Postfix) with ESMTP id 667082231F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfFCOmv (ORCPT
+        id S1729295AbfFCOmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:42:51 -0400
-Received: from mail-eopbgr30118.outbound.protection.outlook.com ([40.107.3.118]:22244
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729193AbfFCOme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:42:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ubYX5cnr/HfS+iuU3hOrYFyxPIk7BAwqUCfhM2LQveQ=;
- b=cr9F9v/hSD0+GUq/g1hsIs9eNs1iSbd+VP7gemmBuUIjOVE2tbE7JIkHZsS0t1mHm0YB2je639i2RJjx+MkzCiN2VPCP5UpBKJW1ar3tF2eDJPCjJ8FXX/YXzjGzVOQ9qCaIeoB7SYiJZW/9o3qqUFJjosnww5oRqpYY8TVymcc=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM (20.178.125.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 14:42:23 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 14:42:23 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next v3 09/10] dt-bindings: net: dsa: marvell: add
- "marvell,mv88e6250" compatible string
-Thread-Topic: [PATCH net-next v3 09/10] dt-bindings: net: dsa: marvell: add
- "marvell,mv88e6250" compatible string
-Thread-Index: AQHVGhqOZLX23H/SBUuAQcQCj0sPKw==
-Date:   Mon, 3 Jun 2019 14:42:23 +0000
-Message-ID: <20190603144112.27713-10-rasmus.villemoes@prevas.dk>
-References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0701CA0070.eurprd07.prod.outlook.com
- (2603:10a6:3:64::14) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a987d43f-5f3a-4d41-735f-08d6e831b084
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2574;
-x-ms-traffictypediagnostic: VI1PR10MB2574:
-x-microsoft-antispam-prvs: <VI1PR10MB25747295F0759D18D90929138A140@VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(42882007)(50226002)(446003)(476003)(73956011)(66556008)(64756008)(66446008)(66476007)(81156014)(11346002)(256004)(8976002)(53936002)(72206003)(66946007)(316002)(14454004)(99286004)(8676002)(81166006)(8936002)(71190400001)(110136005)(71200400001)(102836004)(2616005)(4326008)(54906003)(25786009)(386003)(7736002)(52116002)(6506007)(26005)(486006)(2906002)(66066001)(36756003)(186003)(6512007)(68736007)(1076003)(74482002)(305945005)(76176011)(478600001)(3846002)(5660300002)(6436002)(6116002)(44832011)(6486002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2574;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GSp1bWXYOe2R6dkwYILz0BtvsLTDBvnpUDjM64j3nz97eQ2P8AkJ4yh1RLsye/y+gcufz+wM0NonEc5v+qRNxHO22q7xkeJY1BVRaq1g1AMmdnddf3DJPPNpOI4m2GbDPhdOZyqvcjOpySb7XnRC7NXTGyhJb3EKwGiCkaj6Val/BU+JGG63uo1ot70nvnY5+BOv9ZhFPR0BF8fNk2HJqmW8BO8BH8ktOQI2AiLpXJJumwDbk2wM1hfWj6ElyOa6A+X4vy24neTD/Qb8Lb4OBQSd5DJ0CY6NT0oV8vbzOlj57SwA6uQ3OW1/FGXL6u+KUpi1RSzZl2RRwXzgvokmTDVL/xZ6RS0eBW1dtL+lPy6lI2NBbl52HVMENigbsqlzntNbSwc6t7EckOARK/haTVBpaHHS4xYIdeqYH1nBjqY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 3 Jun 2019 10:42:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43612 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729193AbfFCOmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:42:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 07:42:52 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2019 07:42:51 -0700
+Date:   Mon, 3 Jun 2019 07:42:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
+ for Intel SGX
+Message-ID: <20190603144251.GB13384@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-9-sean.j.christopherson@intel.com>
+ <d9ef6314-de91-ddcb-3d18-8155cd37e7be@tycho.nsa.gov>
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: a987d43f-5f3a-4d41-735f-08d6e831b084
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 14:42:23.5243
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2574
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d9ef6314-de91-ddcb-3d18-8155cd37e7be@tycho.nsa.gov>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIG12ODhlNjI1MCBoYXMgcG9ydF9iYXNlX2FkZHIgMHg4IG9yIDB4MTggKGRlcGVuZGluZyBv
-bg0KY29uZmlndXJhdGlvbiBwaW5zKSwgc28gaXQgY29uc3RpdHV0ZXMgYSBuZXcgZmFtaWx5IGFu
-ZCBoZW5jZSBuZWVkcw0KaXRzIG93biBjb21wYXRpYmxlIHN0cmluZy4NCg0KU2lnbmVkLW9mZi1i
-eTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2YXMuZGs+DQotLS0NCiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9tYXJ2ZWxsLnR4dCB8IDcg
-KysrKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Rz
-YS9tYXJ2ZWxsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNh
-L21hcnZlbGwudHh0DQppbmRleCBmZWIwMDdhZjEzY2IuLjZmOTUzODk3NGJiOSAxMDA2NDQNCi0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL21hcnZlbGwudHh0
-DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9tYXJ2ZWxs
-LnR4dA0KQEAgLTIxLDEwICsyMSwxMyBAQCB3aGljaCBpcyBhdCBhIGRpZmZlcmVudCBNRElPIGJh
-c2UgYWRkcmVzcyBpbiBkaWZmZXJlbnQgc3dpdGNoIGZhbWlsaWVzLg0KIAkJCSAgNjM0MSwgNjM1
-MCwgNjM1MSwgNjM1Mg0KIC0gIm1hcnZlbGwsbXY4OGU2MTkwIgk6IFN3aXRjaCBoYXMgYmFzZSBh
-ZGRyZXNzIDB4MDAuIFVzZSB3aXRoIG1vZGVsczoNCiAJCQkgIDYxOTAsIDYxOTBYLCA2MTkxLCA2
-MjkwLCA2MzkwLCA2MzkwWA0KKy0gIm1hcnZlbGwsbXY4OGU2MjUwIgk6IFN3aXRjaCBoYXMgYmFz
-ZSBhZGRyZXNzIDB4MDggb3IgMHgxOC4gVXNlIHdpdGggbW9kZWw6DQorCQkJICA2MjUwDQogDQog
-UmVxdWlyZWQgcHJvcGVydGllczoNCi0tIGNvbXBhdGlibGUJCTogU2hvdWxkIGJlIG9uZSBvZiAi
-bWFydmVsbCxtdjg4ZTYwODUiIG9yDQotCQkJICAibWFydmVsbCxtdjg4ZTYxOTAiIGFzIGluZGlj
-YXRlZCBhYm92ZQ0KKy0gY29tcGF0aWJsZQkJOiBTaG91bGQgYmUgb25lIG9mICJtYXJ2ZWxsLG12
-ODhlNjA4NSIsDQorCQkJICAibWFydmVsbCxtdjg4ZTYxOTAiIG9yICJtYXJ2ZWxsLG12ODhlNjI1
-MCIgYXMNCisJCQkgIGluZGljYXRlZCBhYm92ZQ0KIC0gcmVnCQkJOiBBZGRyZXNzIG9uIHRoZSBN
-SUkgYnVzIGZvciB0aGUgc3dpdGNoLg0KIA0KIE9wdGlvbmFsIHByb3BlcnRpZXM6DQotLSANCjIu
-MjAuMQ0KDQo=
+On Mon, Jun 03, 2019 at 10:19:18AM -0400, Stephen Smalley wrote:
+> On 5/31/19 7:31 PM, Sean Christopherson wrote:
+> >enclave_load() is roughly analogous to the existing file_mprotect().
+> >
+> >Due to the nature of SGX and its Enclave Page Cache (EPC), all enclave
+> >VMAs are backed by a single file, i.e. /dev/sgx/enclave, that must be
+> >MAP_SHARED.  Furthermore, all enclaves need read, write and execute
+> >VMAs.  As a result, file_mprotect() does not provide any meaningful
+> >security for enclaves since an LSM can only deny/grant access to the
+> >EPC as a whole.
+> >
+> >security_enclave_load() is called when SGX is first loading an enclave
+> >page, i.e. copying a page from normal memory into the EPC.  The notable
+> >difference from file_mprotect() is the allowed_prot parameter, which
+> >is essentially an SGX-specific version of a VMA's MAY_{READ,WRITE,EXEC}
+> >flags.  The purpose of allowed_prot is to enable checks such as
+> >SELinux's FILE__EXECMOD permission without having to track and update
+> >VMAs across multiple mm structs, i.e. SGX can ensure userspace doesn't
+> >overstep its bounds simply by restricting an enclave VMA's protections
+> >by vetting what is maximally allowed during build time.
+> >
+> >An alternative to the allowed_prot approach would be to use an enclave's
+> >SIGSTRUCT (a smallish structure that can uniquely identify an enclave)
+> >as a proxy for the enclave.  For example, SGX could take and hold a
+> >reference to the file containing the SIGSTRUCT (if it's in a file) and
+> >call security_enclave_load() during mprotect().  While the SIGSTRUCT
+> >approach would provide better precision, the actual value added was
+> >deemed to be negligible.  On the other hand, pinning a file for the
+> >lifetime of the enclave is ugly, and essentially caching LSM policies
+> >in each page's allowed_prot avoids having to make an extra LSM upcall
+> >during mprotect().
+> >
+> >Note, extensive discussion yielded no sane alternative to some form of
+> >SGX specific LSM hook[1].
+> >
+> >[1] https://lkml.kernel.org/r/CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com
+> >
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >  arch/x86/kernel/cpu/sgx/driver/ioctl.c | 14 +++++++++-----
+> >  include/linux/lsm_hooks.h              | 16 ++++++++++++++++
+> >  include/linux/security.h               |  2 ++
+> >  security/security.c                    |  8 ++++++++
+> >  4 files changed, 35 insertions(+), 5 deletions(-)
+> >
+> >diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> >index 5f71be7cbb01..260417ecbcff 100644
+> >--- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> >+++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> >@@ -8,6 +8,7 @@
+> >  #include <linux/highmem.h>
+> >  #include <linux/ratelimit.h>
+> >  #include <linux/sched/signal.h>
+> >+#include <linux/security.h>
+> >  #include <linux/shmem_fs.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/suspend.h>
+> >@@ -580,21 +581,24 @@ static int sgx_encl_page_protect(unsigned long src, unsigned long prot,
+> >  				 unsigned long *allowed_prot)
+> >  {
+> >  	struct vm_area_struct *vma;
+> >+	int ret = 0;
+> >-	if (!(*allowed_prot & VM_EXEC))
+> >+	if (!(*allowed_prot & VM_EXEC) && !IS_ENABLED(CONFIG_SECURITY))
+> >  		goto do_check;
+> >  	down_read(&current->mm->mmap_sem);
+> >  	vma = find_vma(current->mm, src);
+> >  	if (!vma || (vma->vm_file && path_noexec(&vma->vm_file->f_path)))
+> >  		*allowed_prot &= ~VM_EXEC;
+> >+#ifdef CONFIG_SECURITY
+> >+	ret = security_enclave_load(vma, prot, allowed_prot);
+> >+#endif
+> 
+> Normally you'd define a static inline stub for the hook in the #else clause
+> for CONFIG_SECURITY in include/linux/security.h and avoid any ifdef here.
+
+Ah, right.
+ 
+> What ensures that the mapping referenced by src can't be changed to an
+> entirely different one (with a different vm_file) between the time of check
+> (here) and the time of use?
+
+Nothing.  Holding mmap_sem across copy_from_user() would suffice, correct?
+
+> >  	up_read(&current->mm->mmap_sem);
+> >  do_check:
+> >-	if (prot & ~*allowed_prot)
+> >-		return -EACCES;
+> >-
+> >-	return 0;
+> >+	if (!ret && (prot & ~*allowed_prot))
+> >+		ret = -EACCES;
+> >+	return ret;
+> >  }
+> >  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long addr,
