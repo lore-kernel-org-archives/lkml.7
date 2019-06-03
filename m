@@ -2,100 +2,186 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAE9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84B9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C5827DED
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E8327DD5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OoWqRLOm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H/dToC9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfFCJDW (ORCPT
+        id S1727250AbfFCJDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:03:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46380 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfFCJDW (ORCPT
+        Mon, 3 Jun 2019 05:03:43 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44635 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfFCJDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:03:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so5894561wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:03:21 -0700 (PDT)
+        Mon, 3 Jun 2019 05:03:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b7so1753061otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=a1mkYyCrc83Bv+zphH07Gxd4PhX3LAFjUYuUVnAFGYo=;
-        b=OoWqRLOmDPj+mmfUzNKkgrBa1E+ijOzEbzhu5ES63kGonC2+w9C1xHgRl/W/MdjyQB
-         XvMHc6AXeQAWOTbVT/oaZZbrxXorwdeM0quSC7VEcxmcTCzlEQuLSQhGSuCN45Xmhg8L
-         mopTvWxvFVt3zkhzxu5H7sueSAJbCkGw1bV5LDHrhRQ/YfjMA769es6a8zMwL4CaCz76
-         ZZc/5mEUvw1ERXRow49PggplOBB2aNF8nD62x69CfjFidi48YDz4zimyI86UkfgnE+My
-         8JFoqUi2uW/FG7o0zbMX6h9FzVfeyzo4xeoBPWFNHnF/ZA/Okb3uMRVygXWjYM6CxnH3
-         QXYA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/VCvRg4+mMJ/yKzCQebn8clHJnLDYyzYIHqLnBJ4zrI=;
+        b=H/dToC9rVgyO60IieVWtYVTFQ1+mQqRSqm7v+uDMC1JFRW6hoq3rdcMjJGt9aQAIaH
+         mvwyuRkWbUoNOyCBYn6MwVr6/BdJhcTk06MVITyowa6mOgyUH9nBiAvZtjtGzy2TTkda
+         EAF67zsrU7hR7HeHdu/j+sq2s3b8F9Icz0URNmQ1Rh17LYo05PTttkSfR1u2coSXZRtQ
+         tqZZJCE1G1U4VD7OF+rDL6FcRsoI1FklrQXZiMF2/4vOHdaaiTaGerKo7Cs+Inh712v9
+         uB61H8IfL5Wmv7x9BdPISh8Mu7FAQiQ8nbHfWItpIqQV08wnaeX6MA4FCit0UuEXiTwb
+         8j4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a1mkYyCrc83Bv+zphH07Gxd4PhX3LAFjUYuUVnAFGYo=;
-        b=kjmwx4fRe2/MjiFEi1OjvyJ2Tcy4Nwfrm+ix9DSkPWVF4gwnWI0JPJHhmRBj4bkrTV
-         BFL/nGT+qiWPn6PPEf+7P6SuVc0y7DEGhn0hD98LHnst1pR2dDZFvQhCEchiNzAVb2LO
-         u7X7QgDgssymj+E9O1r20GJmxNNfBc9JgXUrS9LyB3Rf1mXn29rtZKSbLn70cHShu6SI
-         yTLlMsRcFezzaJYOEVBrtAGuRtwHBOuikdVnjWgg4B2HvhG6JHWSBQk2aSytTmyolaxO
-         VX9rNRbIqNtx9kzB6I9350Fqbc9HLiHhKQWfW1+a2bXvxnaRdAOTXVJcMRzKE++IsPhI
-         bZMw==
-X-Gm-Message-State: APjAAAVkeBfAdNWiKbgQxguHtmDq6XayNrhm2st5FmovOKf8KoaX57ZF
-        sZJdnq01+ulRFoGFZUmGXDj0JA==
-X-Google-Smtp-Source: APXvYqwFDCLsbQ/QRNN1gOWGbULHl5E+WHYuirmI65LmDirQ7atTzHodX99UNEbk9EtG2HUCL/9C0w==
-X-Received: by 2002:adf:9cd0:: with SMTP id h16mr1539930wre.211.1559552600653;
-        Mon, 03 Jun 2019 02:03:20 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id 65sm28726567wro.85.2019.06.03.02.03.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 02:03:20 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 10:03:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     robh+dt@kernel.org, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: Re: [PATCH 2/3] mfd: lp87565: Add support for 4-phase lp87561
- combination
-Message-ID: <20190603090318.GI4797@dell>
-References: <20190515100848.19560-1-j-keerthy@ti.com>
- <20190515100848.19560-3-j-keerthy@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/VCvRg4+mMJ/yKzCQebn8clHJnLDYyzYIHqLnBJ4zrI=;
+        b=ZPpCM7dH7ewe0qBBjUyvH2ftYZRf7uVAhWpDUk20joXh0h3cqFaP4T1AqCPcIXi8aK
+         W/gSpiVwnjRlJE+GM4wUjW8I6wlYYi5NS/+10j0sVumMUymGFJPg/Tv+CaFgXUdTaAQO
+         6CmTXmIs8burb6p4nfm3FL+M2i0sJeVpOEolXWC2HzD1ghP1hpHdUx7LTe30cWZKom+T
+         fVMwtqdhR3/JpS+cY3Ig+PneJG58v9erkGx2dRQ79zB3lSBgaF3M8OLAuoAz4yNZGqb5
+         F+Q4Lpvy/PyzDcS6TNA0ZKENTQouxi80l24hcgvuIdrJ+LzmOfcpb4NB+IyBgDKU645Y
+         CLJg==
+X-Gm-Message-State: APjAAAXVGyh9vgeI3sMOkozsYX+Vxl13qIpolXOZIHLF7A9XyYvG+7n/
+        tglS+C5U/3pXLdG3Mo6mtyszPLENvojvnpXWcPpxXg==
+X-Google-Smtp-Source: APXvYqzgegu9IcBC8sASS/9V/OPbAvth7UyhRrha31CWInyM6XSL4/wuA+jy2xZziSKYavPoDOqnLF4KhOatOj4Biuw=
+X-Received: by 2002:a05:6830:1688:: with SMTP id k8mr378583otr.233.1559552622037;
+ Mon, 03 Jun 2019 02:03:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190515100848.19560-3-j-keerthy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190529141500.193390-1-elver@google.com> <20190529141500.193390-3-elver@google.com>
+ <EE911EC6-344B-4EB2-90A4-B11E8D96BEDC@zytor.com> <CANpmjNOsPnVd50cTzUW8UYXPGqpSnRLcjj=JbZraTYVq1n18Fw@mail.gmail.com>
+ <3B49EF08-147F-451C-AA5B-FC4E1B8568EE@zytor.com>
+In-Reply-To: <3B49EF08-147F-451C-AA5B-FC4E1B8568EE@zytor.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 3 Jun 2019 11:03:30 +0200
+Message-ID: <CANpmjNMt8QK+j6yo8ut1UNe0wS3_B4iqG5N_eTmJcWj4TpZaDQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] x86: Move CPU feature test out of uaccess region
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019, Keerthy wrote:
+Thanks for the clarification.
 
-> Add support for 4-phase lp87561 combination.
-> 
-> Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/mfd/lp87565.c       | 4 ++++
->  include/linux/mfd/lp87565.h | 2 ++
->  2 files changed, 6 insertions(+)
+I found that static_cpu_has was replaced by static_cpu_has_safe:
+https://lkml.org/lkml/2016/1/24/29 -- so is it fair to assume that
+both are equally safe at this point?
 
-Applied, thanks.
+I have sent a follow-up patch which uses static_cpu_has:
+http://lkml.kernel.org/r/20190531150828.157832-3-elver@google.com
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Many thanks!
+-- Marco
+
+On Sat, 1 Jun 2019 at 03:13, <hpa@zytor.com> wrote:
+>
+> On May 31, 2019 2:57:36 AM PDT, Marco Elver <elver@google.com> wrote:
+> >On Wed, 29 May 2019 at 16:29, <hpa@zytor.com> wrote:
+> >>
+> >> On May 29, 2019 7:15:00 AM PDT, Marco Elver <elver@google.com> wrote:
+> >> >This patch is a pre-requisite for enabling KASAN bitops
+> >> >instrumentation:
+> >> >moves boot_cpu_has feature test out of the uaccess region, as
+> >> >boot_cpu_has uses test_bit. With instrumentation, the KASAN check
+> >would
+> >> >otherwise be flagged by objtool.
+> >> >
+> >> >This approach is preferred over adding the explicit kasan_check_*
+> >> >functions to the uaccess whitelist of objtool, as the case here
+> >appears
+> >> >to be the only one.
+> >> >
+> >> >Signed-off-by: Marco Elver <elver@google.com>
+> >> >---
+> >> >v1:
+> >> >* This patch replaces patch: 'tools/objtool: add kasan_check_* to
+> >> >  uaccess whitelist'
+> >> >---
+> >> > arch/x86/ia32/ia32_signal.c | 9 ++++++++-
+> >> > 1 file changed, 8 insertions(+), 1 deletion(-)
+> >> >
+> >> >diff --git a/arch/x86/ia32/ia32_signal.c
+> >b/arch/x86/ia32/ia32_signal.c
+> >> >index 629d1ee05599..12264e3c9c43 100644
+> >> >--- a/arch/x86/ia32/ia32_signal.c
+> >> >+++ b/arch/x86/ia32/ia32_signal.c
+> >> >@@ -333,6 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal
+> >> >*ksig,
+> >> >       void __user *restorer;
+> >> >       int err = 0;
+> >> >       void __user *fpstate = NULL;
+> >> >+      bool has_xsave;
+> >> >
+> >> >       /* __copy_to_user optimizes that into a single 8 byte store
+> >*/
+> >> >       static const struct {
+> >> >@@ -352,13 +353,19 @@ int ia32_setup_rt_frame(int sig, struct
+> >ksignal
+> >> >*ksig,
+> >> >       if (!access_ok(frame, sizeof(*frame)))
+> >> >               return -EFAULT;
+> >> >
+> >> >+      /*
+> >> >+       * Move non-uaccess accesses out of uaccess region if not
+> >strictly
+> >> >+       * required; this also helps avoid objtool flagging these
+> >accesses
+> >> >with
+> >> >+       * instrumentation enabled.
+> >> >+       */
+> >> >+      has_xsave = boot_cpu_has(X86_FEATURE_XSAVE);
+> >> >       put_user_try {
+> >> >               put_user_ex(sig, &frame->sig);
+> >> >               put_user_ex(ptr_to_compat(&frame->info),
+> >&frame->pinfo);
+> >> >               put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
+> >> >
+> >> >               /* Create the ucontext.  */
+> >> >-              if (boot_cpu_has(X86_FEATURE_XSAVE))
+> >> >+              if (has_xsave)
+> >> >                       put_user_ex(UC_FP_XSTATE,
+> >&frame->uc.uc_flags);
+> >> >               else
+> >> >                       put_user_ex(0, &frame->uc.uc_flags);
+> >>
+> >> This was meant to use static_cpu_has(). Why did that get dropped?
+> >
+> >I couldn't find any mailing list thread referring to why this doesn't
+> >use static_cpu_has, do you have any background?
+> >
+> >static_cpu_has also solves the UACCESS warning.
+> >
+> >If you confirm it is safe to change to static_cpu_has(), I will change
+> >this patch. Note that I should then also change
+> >arch/x86/kernel/signal.c to mirror the change for 32bit  (although
+> >KASAN is not supported for 32bit x86).
+> >
+> >Thanks,
+> >-- Marco
+>
+> I believe at some point the intent was that boot_cpu_has() was safer and could be used everywhere.
+> --
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
