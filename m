@@ -2,167 +2,72 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A076C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1339FC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD1921537
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBXBHrPv"
+	by mail.kernel.org (Postfix) with ESMTP id D66B823A5C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559598555;
+	bh=roe7k85B1WBARYVkgdFOauIjF/htR4Atr22VzMKxNss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RW49sf+OVAWZNiFlBmbayBJvJdvx2BfK1iZx4z8lysgIdVytqMfCzjSlt84z6ERzL
+	 TCVL7/MpyZnvhiol5gOS9xowtaPPxQ0JZ8ITvVl2h1v+axTZ957BgomKZKGGZ5Z7e0
+	 HMoPo43yoFIdQk0HOd7tvfH7S/mTVcXleEWIKaTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFCVrz (ORCPT
+        id S1726463AbfFCVtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:47:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33210 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfFCVrz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:47:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y17so10849292edr.0;
-        Mon, 03 Jun 2019 14:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MAT8OhoS4E4LTraS73i1GkEab4d2tmtFt+UsInKjjJY=;
-        b=VBXBHrPvpSV9c710oZQ/FURflCEUoDTzB2RsYYgOCVVgjMVNXiD5bLiXCZCFwcDnvY
-         4ZxP7ZineS8Zr0tO9wosc3nmO6TAkxrWp54rwY9om/RaukbnjBTUsOeYv4t8uhaPsJu2
-         oR4aYRxNPFUQ1YVC0FTz17jP38hO6TT6ZqiOfadcM6sNoStkP56sGqjJPGjUxxkXgsWF
-         +Cvico5SinDL2F/m87OmvsXih5rOYvdaXNnBikOJ2v0XY9X3ooZy6EJ6ojIzSa3qUtlX
-         lpverQaCNzdXzbI9wVblP0LgqNXzcuSGU3WnvMrawroQgUQSJ/+3zfuzCPcdwvH/4Rwy
-         vliw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MAT8OhoS4E4LTraS73i1GkEab4d2tmtFt+UsInKjjJY=;
-        b=rnvuMuU0X93qDQK+FRlrC8h6uoLtBSBc3UM8gaeTgRFEEL5VrT8SN+Ta+VN8L8OUKp
-         qnlBedNGFyZYoSd4AToNe3oNO4biuIK6H9RHMEvhWl7WB/Duj1DDHD5A7JH2YeE9kbNJ
-         0VwgbIAsKwTuRkFkRAQ9E2uAVcEcs0RjgZYRnTSTItum8csZyWEzkBPLXSfPIfOIqoIi
-         ISuY/5y/Cb70kSMQLneS1gtUdWEh4csiy1eqh9ln/i7aCs7B2L4qWBPYTibHdAk9F6K4
-         pUzQQLsDOEkCSsegVj2Q9EwrukWZFrElLDPWVQyGiFG1bK5TBQWMX797oQzX7uJRjq4u
-         hVAQ==
-X-Gm-Message-State: APjAAAWjgXk4dzz1S3q7Kj5QzB/IJcqX7scAbEOukTMgzjp1VPnXPUsY
-        mvs8ufXcGku9jGCwlnDfDuW9IX1tZWQ=
-X-Google-Smtp-Source: APXvYqztp4bl5Go/CL9OzkdSXd1fkORq8n4jiBnd3Uk9KoeuelIAM0v75z/280Ucla5BqFyXTwwKVQ==
-X-Received: by 2002:a17:906:318a:: with SMTP id 10mr4143419ejy.245.1559595066841;
-        Mon, 03 Jun 2019 13:51:06 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id j12sm856780ejq.44.2019.06.03.13.51.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 13:51:06 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] net: mscc: ocelot: Fix some struct initializations
-Date:   Mon,  3 Jun 2019 13:49:53 -0700
-Message-Id: <20190603204953.44235-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc3
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        Mon, 3 Jun 2019 17:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfFCVtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 17:49:13 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C4A23A48;
+        Mon,  3 Jun 2019 21:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559598553;
+        bh=roe7k85B1WBARYVkgdFOauIjF/htR4Atr22VzMKxNss=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aHoSjDuYs+ZX4i6zuooI42FjZrBT6jsYBTiyfvLT8vIiE2+NJ4cpctPy3uJslHaoD
+         DuOAqey1CzPQxtM6n7R7knkOHI2Tkhnh2bGu84jZ9Qjh9Br1aMTrU9/qB0sRq8fZ+B
+         ZZBE8Z1SJPdqOtoBIHdsiJwu9Lv1ZaysBitSi/AU=
+Date:   Mon, 3 Jun 2019 14:49:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Maninder Singh <maninder1.s@samsung.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com
+Subject: Re: [PATCH 0/4] zstd: reduce stack usage
+Message-Id: <20190603144912.34e1414376e07c7b1af53205@linux-foundation.org>
+In-Reply-To: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+References: <CGME20190603090227epcas5p348327061a3facbb9dfcf662bf2bc196e@epcas5p3.samsung.com>
+        <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Mon,  3 Jun 2019 14:32:02 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
 
-drivers/net/ethernet/mscc/ocelot_ace.c:335:37: warning: suggest braces
-around initialization of subobject [-Wmissing-braces]
-        struct ocelot_vcap_u64 payload = { 0 };
-                                           ^
-                                           {}
-drivers/net/ethernet/mscc/ocelot_ace.c:336:28: warning: suggest braces
-around initialization of subobject [-Wmissing-braces]
-        struct vcap_data data = { 0 };
-                                  ^
-                                  {}
-drivers/net/ethernet/mscc/ocelot_ace.c:683:37: warning: suggest braces
-around initialization of subobject [-Wmissing-braces]
-        struct ocelot_ace_rule del_ace = { 0 };
-                                           ^
-                                           {}
-drivers/net/ethernet/mscc/ocelot_ace.c:743:28: warning: suggest braces
-around initialization of subobject [-Wmissing-braces]
-        struct vcap_data data = { 0 };
-                                  ^
-                                  {}
-4 warnings generated.
+> This patch set reduces stack usage for zstd code, because target like ARM has
+> limited 8KB kernel stack, which is getting overflowed due to hight stack usage
+> of zstd code with call flow like:
 
-One way to fix these warnings is to add additional braces like Clang
-suggests; however, there has been a bit of push back from some
-maintainers[1][2], who just prefer memset as it is unambiguous, doesn't
-depend on a particular compiler version[3], and properly initializes all
-subobjects. Do that here so there are no more warnings.
+That's rather bad behaviour.  I assume the patchset actually fixes this?
 
-[1]: https://lore.kernel.org/lkml/022e41c0-8465-dc7a-a45c-64187ecd9684@amd.com/
-[2]: https://lore.kernel.org/lkml/20181128.215241.702406654469517539.davem@davemloft.net/
-[3]: https://lore.kernel.org/lkml/20181116150432.2408a075@redhat.com/
-
-Fixes: b596229448dd ("net: mscc: ocelot: Add support for tcam")
-Link: https://github.com/ClangBuiltLinux/linux/issues/505
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/mscc/ocelot_ace.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/mscc/ocelot_ace.c b/drivers/net/ethernet/mscc/ocelot_ace.c
-index afbeb837a372..34d8260b8cb8 100644
---- a/drivers/net/ethernet/mscc/ocelot_ace.c
-+++ b/drivers/net/ethernet/mscc/ocelot_ace.c
-@@ -332,10 +332,13 @@ static void is2_entry_set(struct ocelot *ocelot, int ix,
- {
- 	u32 val, msk, type, type_mask = 0xf, i, count;
- 	struct ocelot_ace_vlan *tag = &ace->vlan;
--	struct ocelot_vcap_u64 payload = { 0 };
--	struct vcap_data data = { 0 };
-+	struct ocelot_vcap_u64 payload;
-+	struct vcap_data data;
- 	int row = (ix / 2);
- 
-+	memset(&payload, 0, sizeof(payload));
-+	memset(&data, 0, sizeof(data));
-+
- 	/* Read row */
- 	vcap_row_cmd(ocelot, row, VCAP_CMD_READ, VCAP_SEL_ALL);
- 	vcap_cache2entry(ocelot, &data);
-@@ -680,10 +683,12 @@ static void ocelot_ace_rule_del(struct ocelot_acl_block *block,
- 
- int ocelot_ace_rule_offload_del(struct ocelot_ace_rule *rule)
- {
--	struct ocelot_ace_rule del_ace = { 0 };
-+	struct ocelot_ace_rule del_ace;
- 	struct ocelot_ace_rule *ace;
- 	int i, index;
- 
-+	memset(&del_ace, 0, sizeof(del_ace));
-+
- 	/* Gets index of the rule */
- 	index = ocelot_ace_rule_get_index_id(acl_block, rule);
- 
-@@ -740,8 +745,9 @@ static void ocelot_acl_block_destroy(struct ocelot_acl_block *block)
- 
- int ocelot_ace_init(struct ocelot *ocelot)
- {
--	struct vcap_data data = { 0 };
-+	struct vcap_data data;
- 
-+	memset(&data, 0, sizeof(data));
- 	vcap_entry2cache(ocelot, &data);
- 	ocelot_write(ocelot, vcap_is2.entry_count, S2_CORE_MV_CFG);
- 	vcap_cmd(ocelot, 0, VCAP_CMD_INITIALIZE, VCAP_SEL_ENTRY);
--- 
-2.22.0.rc3
+I think I'll schedule the patchset for 5.2-rcX so that zstd is actually
+usable on arm in 5.2.  Does that sound OK?
 
