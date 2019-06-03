@@ -2,100 +2,181 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B834FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9574BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912D327A87
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6806B27B42
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="fHnCkh64"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZoKRYuqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfFCPJc (ORCPT
+        id S1729219AbfFCPLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:09:32 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46689 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729105AbfFCPJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:09:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so7225704wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 08:09:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=Vqm1HfyKlx7kXvXfV/7917TkSslzuRGRJYlsCpZ14dM=;
-        b=fHnCkh64opjMDENTgwjQ13bgW0T+1YoOzZowkcdkniBNVXm8aGFQDtJj4HlKZKRAFU
-         hN6AEfR1z1NueaPGflcdbBVgeDT0UggM8NP4ipfGyaYPuZO2XQtuwnfEomt/a8JcL3sN
-         jB2mKZ1hk93hJUcZQDMUMa+Tav97VD1OKkWSVhCTGPaZLxJiJ1lBtpnwFJQvTyOPjeIW
-         DtcgPKo56GFWK7+yvS/Yr3EH418gsFv8dxe3nXW3JquC39gPHz+GSJir8Voot3XO30ee
-         FCquu6dmUxV3rmTMp7TGefhnBkLW9ePQFiZn3LtpQzSv4PRUX0+f6EwXS/XvgG9vjWif
-         OsyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=Vqm1HfyKlx7kXvXfV/7917TkSslzuRGRJYlsCpZ14dM=;
-        b=DjOk1FLIoJBw0NtfoVYcJFbF2NgXkI4rh4ztNhg4/IGIindKqFyTUrrgolligq47tn
-         xvKcIACmupf0jYGy7qqT//3Rt7Cc6iIjPNF+Wkh8+AmQZtu/n5WlN+tfM4Gw2B/Z+p+9
-         8nIOV8uT29fT531ek7e6ZswD31FCcpNSz88+lfjjVJH2a5dyP50eq357t1kA4iTAry6R
-         8oDEzESI08CPKRAiUjpbjjCa1dlc/UnV8WixWro6h2UAmbnwfLPd6je+WmkVgZvAbEMe
-         OIAll5Usa9rVRAJIiWpL5UJfIkJqXypwP8JXqaTswDEdDg8stIWYKu4g33nK0GGqn8XE
-         7X0A==
-X-Gm-Message-State: APjAAAU9aIrLfDx2TBGZkluFyPfqo1iecp064BZWOonxnm8UHxFbOkZo
-        vq8hHmAGeCmlsVYkfIuPGmqFrg==
-X-Google-Smtp-Source: APXvYqwU0lVglIFJfMRaSFftIxmyAjZdMht92axgOZOB37s5N3QdzwpNosqv4p6DZN+PAalximQWFw==
-X-Received: by 2002:adf:9791:: with SMTP id s17mr2904169wrb.274.1559574568930;
-        Mon, 03 Jun 2019 08:09:28 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 65sm30009471wro.85.2019.06.03.08.09.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 08:09:28 -0700 (PDT)
-Message-ID: <5cf53828.1c69fb81.8054a.1e80@mx.google.com>
-Date:   Mon, 03 Jun 2019 08:09:28 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 3 Jun 2019 11:11:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:50211 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729004AbfFCPLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:11:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Hdmv545Hz9s4Y;
+        Tue,  4 Jun 2019 01:11:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559574688;
+        bh=eDuRZMdVYYQROCCGmu+HKfLRFO7Y6eokeOO3l7DvWCo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZoKRYuqvpdEn7yiFycsiV4IDbycT0IPTFEnpBIksDlOrF1XldtLiq+2iloNCVu7Ey
+         42EgecTyjdqed8SbCbEbfYMj/p0/65mIlJngX8IOIyKbJd4Qd0jh4EKeVX5Fi7KWn8
+         vboNbS+dur7m6TyeZmY7wvdxsUsume249CrlxODn9R31tYvBiUdYlJrNZHDoqZeLBK
+         zDL9zRUKTqZWCuwO3RoiyergKGDPZm8AIA5NEz7RP1GqBPWLgMdupEiif1PA3OiE64
+         pJ8Yn3y0KXTDy9VgJjYl9XQsJkt6m7vf0GMQC49wUnE/pcKNFbj00bQYHfzfhHoFhG
+         mz3dWxEa2/9xw==
+Date:   Tue, 4 Jun 2019 01:11:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, Andrei Vagin <avagin@gmail.com>
+Subject: Re: [BUG BISECT] bug mm/vmalloc.c:470 (mm/vmalloc.c: get rid of one
+ single unlink_va() when merge)
+Message-ID: <20190604011125.266222a8@canb.auug.org.au>
+In-Reply-To: <CAJKOXPed=npnfk0H2WUDityHg5cPLH_zwShyRd+B2RS8h6C7SQ@mail.gmail.com>
+References: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
+        <20190603135939.e2mb7vkxp64qairr@pc636>
+        <CAJKOXPdczUnsaBeXTuutZXCQ70ejDT68xnVm-e+SSdLZi-vyCA@mail.gmail.com>
+        <20190604003153.76f33dd2@canb.auug.org.au>
+        <CAJKOXPed=npnfk0H2WUDityHg5cPLH_zwShyRd+B2RS8h6C7SQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.47-33-g322f4070727b
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
-References: <20190603090308.472021390@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/32] 4.19.48-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ydAB_847pdF8mWcT_YXzIYL"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 126 boots: 0 failed, 126 passed (v4.19.47-33-g=
-322f4070727b)
+--Sig_/ydAB_847pdF8mWcT_YXzIYL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.47-33-g322f4070727b/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.47-33-g322f4070727b/
+Hi Krzysztof,
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.47-33-g322f4070727b
-Git Commit: 322f4070727b6cedd9f682203efe5b910b4daceb
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 68 unique boards, 23 SoC families, 14 builds out of 206
+On Mon, 3 Jun 2019 16:35:22 +0200 Krzysztof Kozlowski <krzk@kernel.org> wro=
+te:
+>
+> On Mon, 3 Jun 2019 at 16:32, Stephen Rothwell <sfr@canb.auug.org.au> wrot=
+e:
+> >
+> > On Mon, 3 Jun 2019 16:10:40 +0200 Krzysztof Kozlowski <krzk@kernel.org>=
+ wrote: =20
+> > >
+> > > Indeed it looks like effect of merge conflict resolution or applying.
+> > > When I look at MMOTS, it is the same as yours:
+> > > http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/commit/?id=3Db77b8cce=
+67f246109f9d87417a32cd38f0398f2f
+> > >
+> > > However in linux-next it is different.
+> > >
+> > > Stephen, any thoughts? =20
+> >
+> > Have you had a look at today's linux-next?  It looks correct in
+> > there.  Andrew updated his patch series over the weekend. =20
+>=20
+> Yes, I am looking at today's next. Both the source code and the commit
+> 728e0fbf263e3ed359c10cb13623390564102881 have wrong "if (merged)" (put
+> in wrong hunk).
 
+OK, I have replaced that commit with this:
+
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: mm/vmalloc.c: get rid of one single unlink_va() when merge
+
+It does not make sense to try to "unlink" the node that is definitely not
+linked with a list nor tree.  On the first merge step VA just points to
+the previously disconnected busy area.
+
+On the second step, check if the node has been merged and do "unlink" if
+so, because now it points to an object that must be linked.
+
+Link: http://lkml.kernel.org/r/20190527151843.27416-4-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Acked-by: Hillf Danton <hdanton@sina.com>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
-For more info write to <info@kernelci.org>
+
+ mm/vmalloc.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+--- a/mm/vmalloc.c~mm-vmap-get-rid-of-one-single-unlink_va-when-merge
++++ a/mm/vmalloc.c
+@@ -719,9 +719,6 @@ merge_or_add_vmap_area(struct vmap_area
+ 			/* Check and update the tree if needed. */
+ 			augment_tree_propagate_from(sibling);
+=20
+-			/* Remove this VA, it has been merged. */
+-			unlink_va(va, root);
+-
+ 			/* Free vmap_area object. */
+ 			kmem_cache_free(vmap_area_cachep, va);
+=20
+@@ -746,12 +743,11 @@ merge_or_add_vmap_area(struct vmap_area
+ 			/* Check and update the tree if needed. */
+ 			augment_tree_propagate_from(sibling);
+=20
+-			/* Remove this VA, it has been merged. */
+-			unlink_va(va, root);
++			if (merged)
++				unlink_va(va, root);
+=20
+ 			/* Free vmap_area object. */
+ 			kmem_cache_free(vmap_area_cachep, va);
+-
+ 			return;
+ 		}
+ 	}
+_
+
+Which is the patch from mmots but with different line numbers.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ydAB_847pdF8mWcT_YXzIYL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz1OJ0ACgkQAVBC80lX
+0Gy1Awf8CHdwemQ/KgeILWHLGe2zYZfMlga1K+adEnhVDxrxEryZFGJiRTFghndD
+y2UPZLjUfSTmwmZwmUydCCNYHem0/M89nP6f6o2GYHtg3wQJKSVzDE7JXssQ0+p/
+DMtYxHL8VCKIzTU250tEC2kzxU+9IXwflrLHuLLEaWYmbtgudEpUdFr0xWGbGPh7
+17rGAfC7A+rJY3DoomLyJfsGYID6dbHewlghDzEPvNLziVfsAZH35bmzAnwEs3vv
+hZhB8TZb8Lj5U4e3JT6SqVBON96IAkOj2Ti5QaeEyjXrmrQuyZ57xy+yaZmTpmLj
+yFnHYZX/pQ2pSj41p4nS1joBmTaVOQ==
+=XHt+
+-----END PGP SIGNATURE-----
+
+--Sig_/ydAB_847pdF8mWcT_YXzIYL--
