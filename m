@@ -2,102 +2,67 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B900C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F368CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A80826EBD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C648E26E9C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFCU3Q (ORCPT
+        id S1726734AbfFCU3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:29:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42744 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726055AbfFCU3P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:29:15 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53KLmHe107402;
-        Mon, 3 Jun 2019 16:29:04 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw9kxjs3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 16:29:04 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x53ESVIQ011007;
-        Mon, 3 Jun 2019 14:34:05 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 2suh092qdy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 14:34:05 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53KT2hU19267592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 20:29:02 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDA4FAC060;
-        Mon,  3 Jun 2019 20:29:02 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29472AC05E;
-        Mon,  3 Jun 2019 20:29:02 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.85.191.102])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 20:29:01 +0000 (GMT)
-Subject: Re: linux-next: build warning after merge of the scsi tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-References: <20190531133612.35276ad9@canb.auug.org.au>
-From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Message-ID: <4029bacf-3b74-b54c-ad52-42a67a6c13f9@linux.vnet.ibm.com>
-Date:   Mon, 3 Jun 2019 13:29:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 3 Jun 2019 16:29:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17580 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfFCU3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 16:29:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 13:29:38 -0700
+X-ExtLoop1: 1
+Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
+  by orsmga008.jf.intel.com with ESMTP; 03 Jun 2019 13:29:34 -0700
+Date:   Mon, 3 Jun 2019 23:29:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 18/22] docs: security: trusted-encrypted.rst: fix
+ code-block tag
+Message-ID: <20190603202933.GB4894@linux.intel.com>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <9c8e63bba3c3735573ab107ffd65131db10e1d2e.1559171394.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190531133612.35276ad9@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c8e63bba3c3735573ab107ffd65131db10e1d2e.1559171394.git.mchehab+samsung@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30/2019 08:36 PM, Stephen Rothwell wrote:
-> Hi all,
+On Wed, May 29, 2019 at 08:23:49PM -0300, Mauro Carvalho Chehab wrote:
+> The code-block tag is at the wrong place, causing those
+> warnings:
 > 
-> After merging the scsi tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
+>     Documentation/security/keys/trusted-encrypted.rst:112: WARNING: Literal block expected; none found.
+>     Documentation/security/keys/trusted-encrypted.rst:121: WARNING: Unexpected indentation.
+>     Documentation/security/keys/trusted-encrypted.rst:122: WARNING: Block quote ends without a blank line; unexpected unindent.
+>     Documentation/security/keys/trusted-encrypted.rst:123: WARNING: Block quote ends without a blank line; unexpected unindent.
 > 
-> drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_work':
-> drivers/scsi/ibmvscsi/ibmvscsi.c:2151:5: warning: 'rc' may be used uninitialized in this function [-Wmaybe-uninitialized]
->   if (rc) {
->      ^
-> drivers/scsi/ibmvscsi/ibmvscsi.c:2121:6: note: 'rc' was declared here
->   int rc;
->       ^~
-> 
-> Introduced by commit
-> 
->   035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
-> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Oof, looks like I didn't compile with pedantic enough options, or just didn't
-notice the warning. Declaration should be "int rc = 0;". I can send a follow on
-patch.
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
--Tyrel
+/Jarkko
