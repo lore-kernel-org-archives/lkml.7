@@ -2,149 +2,86 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058A8C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8314C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19CE26D00
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iADSXB00"
+	by mail.kernel.org (Postfix) with ESMTP id 835812054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559598746;
+	bh=Xgr7lJ3JLwLrJm5SpjRoarLVI9iWkUQs9uPYN4YO6Z8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FP4SH3nGyX5LIwsPlXsy7hCT1DKz9BZ+brzVfcv5y2ttaeF6B/3gy1ZGXskp5q+h0
+	 i0Pn0hNdPzHhc4F153pdb41WU55BXKVrkIAXynSzNK9Xcw7RdJnBIm0G96dBPx4v2/
+	 O7vQ4ShBbg8yg/RUBfNPTy4sJjpk5vDQWa3DRGGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfFCVvm (ORCPT
+        id S1726379AbfFCVwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:51:42 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36554 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFCVvl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:51:41 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a8so28925180edx.3;
-        Mon, 03 Jun 2019 14:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=spxbSxrpztoX+OYGfxSQU5fac10irlk+vBajDvb33D0=;
-        b=iADSXB000vxOYJWwJoRtrAYRSo/dfLvDu8/qH49kJalqjkE/hRmqwTCq4kjqxxqPyz
-         mt7rwocjIZSBlcJTIetx5SRB82REH/WVNBhcl/al+3Jnif0mJk2tmzdtMRWUZ/A9kT+f
-         +vZRpM+tuHCzspT7CZxurPYPB5NkolL3JSOI2GggioMDa08zdzPluWWVaVkHqoXiCkaF
-         QXAllhgAKLE4rh2W5lCa5VoyCUhA+VrsRxjDVyYQz3WfPeUL4nfKX1Op/PRfZenluLnr
-         CDCQdYjIMW3k8Zlz8Dump4vaQY8BmqE5+lU9xzFcikpVlzg1kzyo3c4a1Az/Y6tPhB4d
-         Zt3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spxbSxrpztoX+OYGfxSQU5fac10irlk+vBajDvb33D0=;
-        b=bmMdPMoIggss6hKIf/XCxx8jnOB8Mg7LfFjIqJSBRK0kdLZ06RgRrSnzVWW/d6kPBi
-         moSZB/5UKGjFPAxAVUJwfA2R1m50qZGCXtz5hnDeewjwNCg8cvxcHILHvypno8YH+9o+
-         a1NwuL29iYB//b0uuunqu7xgOKyPks+UJcaroRcJzOttvEipAnzNOiVVNpFXfhl5E/3s
-         Tsz0A46eaqkv8TMt66ebWhwd5+IXEZFqRsgbAQTpY+OX175ix55+gzdrUgiWmiL+Tn6L
-         quAesuncAaaOoOru+5uFrG9GrIGXpuPqw0R/JQ60Y356CmoWAdLiry2OAxUZlNK8DXZ0
-         llng==
-X-Gm-Message-State: APjAAAVihVnRlXixCG/4EUqZS2P+mSezb7hHQ9c+e2DxUvkIR+511taQ
-        cuHz4dd+d6vhN1SGBnYBNEc=
-X-Google-Smtp-Source: APXvYqysmW+FQopVoJyDuQ/uqrAMHI1xHaH7Iwn4k4JCGIFFIXvqOIx6KZ7m/OoH/36YsKRUpIfwDQ==
-X-Received: by 2002:a17:906:25c9:: with SMTP id n9mr4769934ejb.51.1559598700059;
-        Mon, 03 Jun 2019 14:51:40 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id p13sm4239321edm.97.2019.06.03.14.51.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 14:51:38 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 14:51:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Message-ID: <20190603215136.GA45181@archlinux-epyc>
-References: <20190603174323.48251-1-natechancellor@gmail.com>
- <CAKwvOdkQzdZezwf51UddFVGQh0mRFMEexr1cMHx=va88T515YQ@mail.gmail.com>
+        Mon, 3 Jun 2019 17:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbfFCVwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 17:52:23 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F7D5241CD;
+        Mon,  3 Jun 2019 21:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559596609;
+        bh=Xgr7lJ3JLwLrJm5SpjRoarLVI9iWkUQs9uPYN4YO6Z8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bvQBuAmLUqTZy22XORfP7W+gTIOX0aBml0W7r3nHT6a7DxOLtLOD0UcQxj//i/hkh
+         7Rh2wwX/1MzfoP6ICSngMlEIRZ/9rA2H+4kA2S/pDN1F0r5ChHO8ffBHpDpSL0uu47
+         isSYTIplK2rlVjxoE/McfpfayBefl0SEA49Rwka0=
+Date:   Mon, 3 Jun 2019 17:16:48 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org
+Subject: Re: [PATCH v4 0/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190603211648.GV12898@sasha-vm>
+References: <20190530152758.16628-1-sashal@kernel.org>
+ <20190603202815.GA4894@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdkQzdZezwf51UddFVGQh0mRFMEexr1cMHx=va88T515YQ@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190603202815.GA4894@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+On Mon, Jun 03, 2019 at 11:28:15PM +0300, Jarkko Sakkinen wrote:
+>On Thu, May 30, 2019 at 11:27:56AM -0400, Sasha Levin wrote:
+>> Changes since v3:
+>>
+>>  - Address comments by Jarkko Sakkinen
+>>  - Address comments by Igor Opaniuk
+>>
+>> Sasha Levin (2):
+>>   fTPM: firmware TPM running in TEE
+>>   fTPM: add documentation for ftpm driver
+>
+>I think patches start to look proper but I wonder can anyone test
+>these? I don't think before that I can merge these.
 
-On Mon, Jun 03, 2019 at 02:07:50PM -0700, Nick Desaulniers wrote:
-> On Mon, Jun 3, 2019 at 10:44 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > Looking at the loop in a vacuum as clang would, fndit could be
-> > uninitialized if entries was ever zero or the if statement was
-> > always true within the loop. Regardless of whether or not this
-> > warning is a problem in practice, "found" variables should always
-> > be initialized to false so that there is no possibility of
-> > undefined behavior.
-> 
-> Thanks for the patch Nathan.  fndit isn't really being used for
-> anything other than a print statement outside of the loop.  How about:
+They're all functionally tested by us on actual hardware before being
+sent out.
 
-Thank you for the review, this seems reasonable. I will send a v2
-shortly.
+The reference implementation is open and being kept updated, and an
+interested third party should be able to verify the correctness of these
+patches. However, it doesn't look like there's an interested third party
+given that these patches have been out for a few months now.
 
-> 
-> ```
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c
-> b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..c3899ee1db99 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct
-> device_node *dn, char *drc_name,
->   struct of_drc_info drc;
->   const __be32 *value;
->   char cell_drc_name[MAX_DRC_NAME_LEN];
-> - int j, fndit;
-> + int j;
-> 
->   info = of_find_property(dn->parent, "ibm,drc-info", NULL);
->   if (info == NULL)
-> @@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct
-> device_node *dn, char *drc_name,
-> 
->   /* Should now know end of current entry */
-> 
-> - if (my_index > drc.last_drc_index)
-> - continue;
-> -
-> - fndit = 1;
-> - break;
-> + /* Found it */
-> + if (my_index <= drc.last_drc_index) {
-> + sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-> + my_index);
-> + break;
-> + }
->   }
-> - /* Found it */
-> -
-> - if (fndit)
-> - sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-> - my_index);
-> 
->   if (((drc_name == NULL) ||
->        (drc_name && !strcmp(drc_name, cell_drc_name))) &&
-> ```
-> (not sure my tabs were pasted properly in the above...)
-
-Doesn't look like it but no worries.
-
+--
 Thanks,
-Nathan
+Sasha
