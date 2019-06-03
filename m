@@ -2,148 +2,152 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBB1C46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AC2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B9827512
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3513275CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2LE6GvdF"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="PQ5b4O2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfFCR0A (ORCPT
+        id S1727750AbfFCR1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:26:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41602 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfFCRZ7 (ORCPT
+        Mon, 3 Jun 2019 13:27:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46006 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfFCR1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:25:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53HJ84U105594;
-        Mon, 3 Jun 2019 17:24:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=oT/Qbn3UCsmi4yHa5dCSEdLGPezhKqW3sHyFd1k2UMQ=;
- b=2LE6GvdF1Spn4zQDJ/S+Y7Lhctbk5tePOYyaCmnqsyOr3uLvhrds+WPbVc6hPXAu9sIP
- B0Y1nU/oFPg6ixsYXCZSDZnvxtWWQNi0j+MRjf0CBoAknHC52G/m4p1P8MrAI990VZia
- 8ujGe7kWSRf7xAIGevSgKmBC3Wct5lXwvZ7qokhMwnYkhd63Cundz/Zl5pnAreMOjiWl
- HWG+ViIH0FjQ4gxddvAi59ghuxHj+MdKKsrJR6n36wSKJyN/Ok8+n4Cy2uvBvd+9a3r5
- V3Zqu7KeEDVK/adkgGrKlbvS/ddKrXPyTWM+bUnf/xQW/+CSelKEJwh4J3SpjWi5HA+8 Jg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sugst8dvs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Jun 2019 17:24:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53HO5Kt055049;
-        Mon, 3 Jun 2019 17:24:42 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2supp77yt1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Jun 2019 17:24:42 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x53HOdQw028642;
-        Mon, 3 Jun 2019 17:24:39 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Jun 2019 10:24:38 -0700
-Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for other
- arches
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 3 Jun 2019 13:27:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w34so8647967pga.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=giaaUlfYCB4p9IcMpuBt2FywCr2iJGrguh6BYXiq67g=;
+        b=PQ5b4O2XlL6OPmwtnnq6KaLa51qn9sjNwVfi0PlxHiJGJ+i7VnVu+20+W1qNQomvSl
+         O3Bv5aHsJ+ipuVoMtxh+kzpSWlW4Fk3QMjP1zhFNcetUhou0CknU1EGHuroPrIz5z14C
+         qXzhT/f5tH7ZDs5fLUiEx4n4L8NnZWU7fN3LdyUmT8Mxq9mRnmUApBPrT2zWXQJ0feWI
+         4w3/MUVcT9pZIZJFcwZJF1GD0/TY6J7eT+huIUuMCYafpele/5qrcMQKXrkYlANL17q9
+         CUPSL9cFDkj7VHokflPz+CnEZ0hF9rhqwkjU7vUo1G4IBQ9beS8fsUpGZc8+5T2/sgSJ
+         Qd7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=giaaUlfYCB4p9IcMpuBt2FywCr2iJGrguh6BYXiq67g=;
+        b=f/gmXD9/4JrZX6achbsPN5LpEOJIUQhUBoqQ7ZBFNBcyGoLxIkiNAD1v/UvtflZJ9N
+         jGCQEDYepdgahAxOEzGuInC6DxyRPFLi/7Pz26ly94noOwRIClGHixIxxo+cPKuDfIA1
+         ftCgd/8HSRWA5UnijiLB1im3VLby/b7Nqsvd7bxVgXrsIPDYf3kYopCjD/cz97RA8lM9
+         u/Qkf3r96CzdgxuCWI0ZFSNaHFWiilMrH5bBFpAoXL8SIvIG/k5htrfZwOHmyqaOj2wi
+         WyGuJy+tReUhOfcAmfY2OPHcSI+HtctKjOvVsmIcrqHk/zHYIjH+6MckLQk4Ezprk1Lx
+         z+GQ==
+X-Gm-Message-State: APjAAAVABVuIb/05DOlUjahnkAWecwrJshOt/Ri5zp5TEaRXvo+AuxfX
+        ZXwyEDfB1j7MgVKLVV8EFkGs+g==
+X-Google-Smtp-Source: APXvYqzgq4qEKaWZh0wCQxHsqzHbOHu4nbzb40a+iOcqwVisgDkpzRyOJZZvootYCQo7snWqgQqhRA==
+X-Received: by 2002:a17:90a:8a10:: with SMTP id w16mr31345882pjn.133.1559582839582;
+        Mon, 03 Jun 2019 10:27:19 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:9fa4])
+        by smtp.gmail.com with ESMTPSA id s1sm12158354pgp.94.2019.06.03.10.27.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 10:27:18 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:27:17 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
- <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com>
- <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com>
-Date:   Mon, 3 Jun 2019 11:24:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
+Message-ID: <20190603172717.GA30363@cmpxchg.org>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-2-minchan@kernel.org>
+ <20190531084752.GI6896@dhcp22.suse.cz>
+ <20190531133904.GC195463@google.com>
+ <20190531140332.GT6896@dhcp22.suse.cz>
+ <20190531143407.GB216592@google.com>
+ <20190603071607.GB4531@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9277 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=800
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906030120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9277 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906030120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603071607.GB4531@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 11:06 AM, Andrey Konovalov wrote:
-> On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> wro=
-te:
->> Andrey,
->>
->> This patch has now become part of the other patch series Chris Hellwig=
+On Mon, Jun 03, 2019 at 09:16:07AM +0200, Michal Hocko wrote:
+> On Fri 31-05-19 23:34:07, Minchan Kim wrote:
+> > On Fri, May 31, 2019 at 04:03:32PM +0200, Michal Hocko wrote:
+> > > On Fri 31-05-19 22:39:04, Minchan Kim wrote:
+> > > > On Fri, May 31, 2019 at 10:47:52AM +0200, Michal Hocko wrote:
+> > > > > On Fri 31-05-19 15:43:08, Minchan Kim wrote:
+> > > > > > When a process expects no accesses to a certain memory range, it could
+> > > > > > give a hint to kernel that the pages can be reclaimed when memory pressure
+> > > > > > happens but data should be preserved for future use.  This could reduce
+> > > > > > workingset eviction so it ends up increasing performance.
+> > > > > > 
+> > > > > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> > > > > > MADV_COLD can be used by a process to mark a memory range as not expected
+> > > > > > to be used in the near future. The hint can help kernel in deciding which
+> > > > > > pages to evict early during memory pressure.
+> > > > > > 
+> > > > > > Internally, it works via deactivating pages from active list to inactive's
+> > > > > > head if the page is private because inactive list could be full of
+> > > > > > used-once pages which are first candidate for the reclaiming and that's a
+> > > > > > reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
+> > > > > > if the memory pressure happens, they will be reclaimed earlier than other
+> > > > > > active pages unless there is no access until the time.
+> > > > > 
+> > > > > [I am intentionally not looking at the implementation because below
+> > > > > points should be clear from the changelog - sorry about nagging ;)]
+> > > > > 
+> > > > > What kind of pages can be deactivated? Anonymous/File backed.
+> > > > > Private/shared? If shared, are there any restrictions?
+> > > > 
+> > > > Both file and private pages could be deactived from each active LRU
+> > > > to each inactive LRU if the page has one map_count. In other words,
+> > > > 
+> > > >     if (page_mapcount(page) <= 1)
+> > > >         deactivate_page(page);
+> > > 
+> > > Why do we restrict to pages that are single mapped?
+> > 
+> > Because page table in one of process shared the page would have access bit
+> > so finally we couldn't reclaim the page. The more process it is shared,
+> > the more fail to reclaim.
+> 
+> So what? In other words why should it be restricted solely based on the
+> map count. I can see a reason to restrict based on the access
+> permissions because we do not want to simplify all sorts of side channel
+> attacks but memory reclaim is capable of reclaiming shared pages and so
+> far I haven't heard any sound argument why madvise should skip those.
+> Again if there are any reasons, then document them in the changelog.
 
->> has sent out -
->> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. Can=
+I think it makes sense. It could be explained, but it also follows
+established madvise semantics, and I'm not sure it's necessarily
+Minchan's job to re-iterate those.
 
->> you coordinate with that patch series?
->=20
-> Hi!
->=20
-> Yes, I've seen it. How should I coordinate? Rebase this series on top
-> of that one?
+Sharing isn't exactly transparent to userspace. The kernel does COW,
+ksm etc. When you madvise, you can really only speak for your own
+reference to that memory - "*I* am not using this."
 
-That would be one way to do it. Better yet, separate this patch from
-both patch series, make it standalone and then rebase the two patch
-series on top of it.
-
---
-Khalid
-
+This is in line with other madvise calls: MADV_DONTNEED clears the
+local page table entries and drops the corresponding references, so
+shared pages won't get freed. MADV_FREE clears the pte dirty bit and
+also has explicit mapcount checks before clearing PG_dirty, so again
+shared pages don't get freed.
