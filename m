@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858FC46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121F4276E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9441921952
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553192;
-	bh=w/nMXZBsMbJGzSpX0xnGjerq2RFpskK0JWksbaweKws=;
+	s=default; t=1559553195;
+	bh=PR3pEMZSH3KFbln8alkYbGUX03PjFYjijAN0mROfEMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ccnnjHoWVB9IIO+WcjNBhhKDduYLet5+jTtNV9by8UY+jk4ZkMW3nnj2I9g2w9EiN
-	 fsJ/N60CmhFzW8a9vnmIvnQtbqUMgnq/5sZ7LChzb5mOQe0tdx98zcvFxDuoWAOIAt
-	 0JmtjD70UspfOM5yEw0w6jgP+afalS5F0uLW9xPQ=
+	b=w3sdWailAf1gJG22ff673km7VIHXyy/BxHhCyEbeGKGRXO5Fs+yBFngHbMo5WAmhJ
+	 e+EVnyDkN6l/dnVnyAfPUFNINhv8tXctLmXNG8LtzfiVhVGfMzGtQzNtw6UaKMP+/f
+	 xGRUuUnggMS0BwiORTSh4jbAg3v1LaEXuhTDo3Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfFCJNL (ORCPT
+        id S1728343AbfFCJNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfFCJND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:03 -0400
+        id S1728764AbfFCJNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842EE245DF;
-        Mon,  3 Jun 2019 09:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5CC25B40;
+        Mon,  3 Jun 2019 09:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553183;
-        bh=w/nMXZBsMbJGzSpX0xnGjerq2RFpskK0JWksbaweKws=;
+        s=default; t=1559553188;
+        bh=PR3pEMZSH3KFbln8alkYbGUX03PjFYjijAN0mROfEMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tErxMYcqPr6l+dur5Hw76osdFpmQlKq1R4hCPc+wJ0Kvbk+L9mZ6PVibJxrhSZZ1x
-         jY/z0OtaS0cEvCIy9djDQO1ABP1EtcH401DFIlImF14FG2YNec7xPRZXxcL4frASHZ
-         PjdP4f3b2rqFm8XABcpYShwzkRMvbn0rTPqBn8yU=
+        b=CePBlhZGEP6VKtyrRXEwLDZGw7mcF4uX+7t1t6dgDPKyqDJhc6JmQX1TW+YWYEtk5
+         yF5ELLsryoxUVJooMtfT6BSXwKWVqGGCiGCvuhg8dcr3pc0igXh4BLeYA4p7NWaym9
+         hbmgtLsH3X2pirc1rqPl8+7CKEJORqn81L9/Wxuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 15/40] net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
-Date:   Mon,  3 Jun 2019 11:09:08 +0200
-Message-Id: <20190603090523.564537785@linuxfoundation.org>
+Subject: [PATCH 5.1 17/40] net: sched: dont use tc_action->order during action dump
+Date:   Mon,  3 Jun 2019 11:09:10 +0200
+Message-Id: <20190603090523.682667101@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -60,57 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 21808437214637952b61beaba6034d97880fbeb3 ]
+[ Upstream commit 4097e9d250fb17958c1d9b94538386edd3f20144 ]
 
-MVPP2_TXQ_SCHED_TOKEN_CNTR_REG() expects the logical queue id but
-the current code is passing the global tx queue offset, so it ends
-up writing to unknown registers (between 0x8280 and 0x82fc, which
-seemed to be unused by the hardware). This fixes the issue by using
-the logical queue id instead.
+Function tcf_action_dump() relies on tc_action->order field when starting
+nested nla to send action data to userspace. This approach breaks in
+several cases:
 
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+- When multiple filters point to same shared action, tc_action->order field
+  is overwritten each time it is attached to filter. This causes filter
+  dump to output action with incorrect attribute for all filters that have
+  the action in different position (different order) from the last set
+  tc_action->order value.
+
+- When action data is displayed using tc action API (RTM_GETACTION), action
+  order is overwritten by tca_action_gd() according to its position in
+  resulting array of nl attributes, which will break filter dump for all
+  filters attached to that shared action that expect it to have different
+  order value.
+
+Don't rely on tc_action->order when dumping actions. Set nla according to
+action position in resulting array of actions instead.
+
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ net/sched/act_api.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1455,7 +1455,7 @@ static inline void mvpp2_xlg_max_rx_size
- /* Set defaults to the MVPP2 port */
- static void mvpp2_defaults_set(struct mvpp2_port *port)
- {
--	int tx_port_num, val, queue, ptxq, lrxq;
-+	int tx_port_num, val, queue, lrxq;
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -800,7 +800,7 @@ int tcf_action_dump(struct sk_buff *skb,
  
- 	if (port->priv->hw_version == MVPP21) {
- 		/* Update TX FIFO MIN Threshold */
-@@ -1476,11 +1476,9 @@ static void mvpp2_defaults_set(struct mv
- 	mvpp2_write(port->priv, MVPP2_TXP_SCHED_FIXED_PRIO_REG, 0);
- 
- 	/* Close bandwidth for all queues */
--	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++) {
--		ptxq = mvpp2_txq_phys(port->id, queue);
-+	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++)
- 		mvpp2_write(port->priv,
--			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(ptxq), 0);
--	}
-+			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(queue), 0);
- 
- 	/* Set refill period to 1 usec, refill tokens
- 	 * and bucket size to maximum
-@@ -2336,7 +2334,7 @@ static void mvpp2_txq_deinit(struct mvpp
- 	txq->descs_dma         = 0;
- 
- 	/* Set minimum bandwidth for disabled TXQs */
--	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->id), 0);
-+	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->log_id), 0);
- 
- 	/* Set Tx descriptors queue starting address and size */
- 	thread = mvpp2_cpu_to_thread(port->priv, get_cpu());
+ 	for (i = 0; i < TCA_ACT_MAX_PRIO && actions[i]; i++) {
+ 		a = actions[i];
+-		nest = nla_nest_start(skb, a->order);
++		nest = nla_nest_start(skb, i + 1);
+ 		if (nest == NULL)
+ 			goto nla_put_failure;
+ 		err = tcf_action_dump_1(skb, a, bind, ref);
+@@ -1300,7 +1300,6 @@ tca_action_gd(struct net *net, struct nl
+ 			ret = PTR_ERR(act);
+ 			goto err;
+ 		}
+-		act->order = i;
+ 		attr_size += tcf_action_fill_size(act);
+ 		actions[i - 1] = act;
+ 	}
 
 
