@@ -7,54 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BB9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFA226B4B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D08621900
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559584959;
-	bh=Y8GwcBFlxQtDqR/g5UMTqq5QCjuTQuTWKI94XEt5wP4=;
+	s=default; t=1559584963;
+	bh=Fme9iwxnMfuHajbWkaFwEutmc986rRPwZuRudH7litw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ewJ1u3LKGR/IZDZGk2WMjNz/kVkk4B0xEg2eNkxsOpHgd4GEe4f7yD+zkRUpMNpLU
-	 tWs5ktyB/my1a99RkqNNZxzs6h+EMGZIm+av2CgYeHNCT155ywwUR0uOQGhQ0H56rR
-	 nUnEXuL/mkiCKFjQYoOG70l7fqy5kXBWRDWbK1w8=
+	b=2UBbzVMumImro4m69COrRIEb2sSfw2E4Ain7KX9nawUkDc/rzXGPqEjjcxHAKfIhv
+	 MZIiQn6VwFll2blAwu3P6ZGphsSwnW0jy+tmdeFQs5VT74KHO7a6qPciSsCcJF8bqR
+	 OD+/p33QBEAnE93q6kxTNPMOjfwIBiwXCZWOHBRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfFCSCj (ORCPT
+        id S1726735AbfFCSCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:02:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56082 "EHLO
+        Mon, 3 Jun 2019 14:02:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56142 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFCSCg (ORCPT
+        with ESMTP id S1726691AbfFCSCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:02:36 -0400
+        Mon, 3 Jun 2019 14:02:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NLQI+tGOyr+RskvUQuRtxdHYuF/GDgmGTjO7Ul5MBBs=; b=XXRu82FJE1JE
-        5gB2EjnOVArBgUCqJKA+K52M8jqzy8Sr6dfhUyG852GXWG32LBft1ihCqOGqggxzT8rmUXnEzgI6a
-        +bXeT6QJp1dRcdkn5VWYe8cT8///4Hq5QP/cjcZpihtOBdHDPclehQNip2jmJzMv6jyM7x8pM/Zh0
-        rR1mE=;
+        List-Archive; bh=VXZFoIxhi+ru17r3G4lihTvQcDcxm5W+K1yLNf/64JA=; b=H87zknG8AaTd
+        qKMCwg9cVI5tr+9dXFMVIEKrHkLy9oGbx8CTGl1kIQv8j5vBF+gKKtZSBEDuV/Qs8iamJhxZ/ci0g
+        1WOK5Of6+1P0ZcWX+j2f0q+bPNbbkWU7qLpVTfO3mn+nbyH9930O7FQDB7kNgNXRNMfkasZzLFYl1
+        ahx4I=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hXrHw-0003aW-MD; Mon, 03 Jun 2019 18:02:28 +0000
+        id 1hXrHx-0003ac-S5; Mon, 03 Jun 2019 18:02:29 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 12077440046; Mon,  3 Jun 2019 19:02:28 +0100 (BST)
+        id 325BA440046; Mon,  3 Jun 2019 19:02:29 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Applied "regulator: bd718x7: Drop unused include" to the regulator tree
-In-Reply-To: <20190531230851.8084-1-linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: arizona-micsupp: Delete unused include" to the regulator tree
+In-Reply-To: <20190531230252.6541-1-linus.walleij@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190603180228.12077440046@finisterre.sirena.org.uk>
-Date:   Mon,  3 Jun 2019 19:02:28 +0100 (BST)
+Message-Id: <20190603180229.325BA440046@finisterre.sirena.org.uk>
+Date:   Mon,  3 Jun 2019 19:02:29 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: bd718x7: Drop unused include
+   regulator: arizona-micsupp: Delete unused include
 
 has been applied to the regulator tree at
 
@@ -87,34 +90,33 @@ to this mail.
 Thanks,
 Mark
 
-From 5cbb1515e75c0b8d328ddce0f5e4ff636334373c Mon Sep 17 00:00:00 2001
+From 60b909e413dab4d131a6629dce1fb2177d3cc918 Mon Sep 17 00:00:00 2001
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 1 Jun 2019 01:08:51 +0200
-Subject: [PATCH] regulator: bd718x7: Drop unused include
+Date: Sat, 1 Jun 2019 01:02:52 +0200
+Subject: [PATCH] regulator: arizona-micsupp: Delete unused include
 
-This driver does not use any symbols from <linux/gpio.h>
-so just drop the include.
+This driver uses no symbols from <linux/gpio.h> so just drop
+this include.
 
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/bd718x7-regulator.c | 1 -
+ drivers/regulator/arizona-micsupp.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index fde4264da6ff..8c22cfb76173 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -4,7 +4,6 @@
- 
- #include <linux/delay.h>
- #include <linux/err.h>
+diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
+index de6802b85e9f..ae1a5de3e57d 100644
+--- a/drivers/regulator/arizona-micsupp.c
++++ b/drivers/regulator/arizona-micsupp.c
+@@ -16,7 +16,6 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
 -#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/rohm-bd718x7.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+ #include <sound/soc.h>
 -- 
 2.20.1
 
