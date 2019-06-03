@@ -2,210 +2,126 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C699C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0746C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B2F2802A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C2E2805E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nbBgFkd5"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="EvNMtevT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfFCNLi (ORCPT
+        id S1728449AbfFCNLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:11:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40581 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfFCNLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:11:38 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DBRCf605320
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:11:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DBRCf605320
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567488;
-        bh=s34d0VTabWlRAkjesyhOO60Mw419kjVSeWCby5yulP8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=nbBgFkd5QVru+VjsdIaaSNR6HTvaswSqRxu7Tff4o6KPMgQVsMvPW8UgOrhrX5Ak6
-         Pu8Hrrpi7zO/qtMTIiVzcr5r6ZZ9TtfjuhBu+ka0F8zFA2CcNv6ABXu7DfYkn+K1QA
-         XO0IA0WcgQLWsSpaMVw1OOlqAdIUth1yWXUqGKE1E1zJ10dm7dF+fQfvPArIRmOv1h
-         f5sbcQDSK4Jfb5i885gLxTR4ezOEfQsPz82PUUA//t6kXN8B5zmkD/ZY2kW1nZpnuB
-         m0V6r/na0gZN+7i0ZiF6ooCSjlQElZ91k4S2TpXTv66382J5txw5AFo/gWqZfggPlD
-         yWckU+Ni9nbug==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DBQlb605317;
-        Mon, 3 Jun 2019 06:11:26 -0700
-Date:   Mon, 3 Jun 2019 06:11:26 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yuyang Du <tipbot@zytor.com>
-Message-ID: <tip-f6ec8829ac9d59b637366c13038f15d6f6156fe1@git.kernel.org>
-Cc:     peterz@infradead.org, duyuyang@gmail.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com,
-        torvalds@linux-foundation.org, mingo@kernel.org, tglx@linutronix.de
-Reply-To: torvalds@linux-foundation.org, peterz@infradead.org,
-          duyuyang@gmail.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          mingo@kernel.org, tglx@linutronix.de
-In-Reply-To: <20190506081939.74287-9-duyuyang@gmail.com>
-References: <20190506081939.74287-9-duyuyang@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Define INITIAL_CHAIN_KEY for
- chain keys to start with
-Git-Commit-ID: f6ec8829ac9d59b637366c13038f15d6f6156fe1
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:11:49 -0400
+Received: from mail-eopbgr80103.outbound.protection.outlook.com ([40.107.8.103]:35398
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726516AbfFCNLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:11:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=me4Q3yCxnaEDwABzPrqvBgZkv4GpBOMsZ6E/px0JVvA=;
+ b=EvNMtevTLyveqBaeIqVMe+MMvWtV6DmNsqsi6Bt2De+Kgi3TcaycKIWSuGVkrUEF9Id0/P2L5eBUYq+FJY+T6MQ1vnKzqUV9TB+3dMbQ3jfMvB6OH0noNsg+YzZUdExgTfQ7CWXrzOMSZ73h2PCl6O1BIzBuKXtlwyLF4b6o5P4=
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com (10.175.243.15) by
+ VI1PR07MB4143.eurprd07.prod.outlook.com (52.134.26.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Mon, 3 Jun 2019 13:11:45 +0000
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a]) by VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a%7]) with mapi id 15.20.1965.011; Mon, 3 Jun 2019
+ 13:11:45 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hwmon: pmbus: protect read-modify-write with lock
+Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
+Thread-Index: AQHVGg3k2XulVXbiDkOq27wOexnTBw==
+Date:   Mon, 3 Jun 2019 13:11:45 +0000
+Message-ID: <5ecab585-7e74-ea9f-8d33-93ab024e1a14@nokia.com>
+References: <20190530064509.GA13789@localhost.localdomain>
+In-Reply-To: <20190530064509.GA13789@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.166]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-clientproxiedby: HE1PR0102CA0005.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:14::18) To VI1PR07MB3165.eurprd07.prod.outlook.com
+ (2603:10a6:802:21::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4b7fbd54-94de-4f94-a5b4-08d6e8250727
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR07MB4143;
+x-ms-traffictypediagnostic: VI1PR07MB4143:
+x-microsoft-antispam-prvs: <VI1PR07MB41432681F33B862D570781B888140@VI1PR07MB4143.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(31686004)(76176011)(71190400001)(71200400001)(65826007)(25786009)(64126003)(486006)(26005)(446003)(11346002)(476003)(2616005)(52116002)(186003)(102836004)(99286004)(386003)(6506007)(53546011)(14444005)(256004)(4326008)(8676002)(31696002)(508600001)(6246003)(6512007)(7736002)(54906003)(316002)(81156014)(81166006)(66446008)(64756008)(66556008)(66476007)(66946007)(58126008)(73956011)(86362001)(5660300002)(110136005)(2906002)(53936002)(305945005)(229853002)(36756003)(8936002)(3846002)(6486002)(66066001)(6116002)(6436002)(65806001)(14454004)(65956001)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4143;H:VI1PR07MB3165.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V6qSizpizBOibPu2/FgKD41wPtxgWjQDQiLGlSSXAjMTlAxvi2vKAypn5zki6T8hSAhC0W6KR534+tCL4Dsc7+Vi5mUC1QH7BjhTcBPei+/raGdFG+UHuuiV9UkmV5HaE+eFvtqVTSicbUgbmYOJDnqAuKp699oQUZ/9LvPg/GN7QRPlYO+2iI3z4/AhXEcCLCn5nhPqHDstzXwzXSs3THWWIW6TlA4rpJgktyUNRiL0Nv7YmH6yRITe6iycCEsTcweTmrZik4HajEQh131j/SRHJtOZHdqT3SrxKbjO+6B8H6SS7q84GHMT+Ya/6Zl+fS5jGrzAHHQzHSTiIjafAw6WfvqdzkYM8RWQ71TcCIJNSavy+ROhcnShP8Vtr67bQGjEnwajMStiVOHfPm0euiuq0LjfXDlRKncpTPiMHqQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D6F218BE1CECF048AF31EE8BB5E643BD@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b7fbd54-94de-4f94-a5b4-08d6e8250727
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 13:11:45.3525
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: alexander.sverdlin@nokia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f6ec8829ac9d59b637366c13038f15d6f6156fe1
-Gitweb:     https://git.kernel.org/tip/f6ec8829ac9d59b637366c13038f15d6f6156fe1
-Author:     Yuyang Du <duyuyang@gmail.com>
-AuthorDate: Mon, 6 May 2019 16:19:24 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:55:43 +0200
-
-locking/lockdep: Define INITIAL_CHAIN_KEY for chain keys to start with
-
-Chain keys are computed using Jenkins hash function, which needs an initial
-hash to start with. Dedicate a macro to make this clear and configurable. A
-later patch changes this initial chain key.
-
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bvanassche@acm.org
-Cc: frederic@kernel.org
-Cc: ming.lei@redhat.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190506081939.74287-9-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/lockdep.h  |  1 +
- init/init_task.c         |  2 +-
- kernel/locking/lockdep.c | 18 +++++++++---------
- 3 files changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 5d05b8149f19..d4e69595dbd4 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -229,6 +229,7 @@ struct lock_chain {
-  * bitfield and hitting the BUG in hlock_class().
-  */
- #define MAX_LOCKDEP_KEYS		((1UL << MAX_LOCKDEP_KEYS_BITS) - 1)
-+#define INITIAL_CHAIN_KEY		0
- 
- struct held_lock {
- 	/*
-diff --git a/init/init_task.c b/init/init_task.c
-index 1b15cb90d64f..afa6ad795355 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -167,7 +167,7 @@ struct task_struct init_task
- #endif
- #ifdef CONFIG_LOCKDEP
- 	.lockdep_depth = 0, /* no locks held yet */
--	.curr_chain_key = 0,
-+	.curr_chain_key = INITIAL_CHAIN_KEY,
- 	.lockdep_recursion = 0,
- #endif
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index b7d9c28ecf3b..9edf6f12b711 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -362,7 +362,7 @@ static inline u64 iterate_chain_key(u64 key, u32 idx)
- void lockdep_init_task(struct task_struct *task)
- {
- 	task->lockdep_depth = 0; /* no locks held yet */
--	task->curr_chain_key = 0;
-+	task->curr_chain_key = INITIAL_CHAIN_KEY;
- 	task->lockdep_recursion = 0;
- }
- 
-@@ -857,7 +857,7 @@ static u16 chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS];
- static bool check_lock_chain_key(struct lock_chain *chain)
- {
- #ifdef CONFIG_PROVE_LOCKING
--	u64 chain_key = 0;
-+	u64 chain_key = INITIAL_CHAIN_KEY;
- 	int i;
- 
- 	for (i = chain->base; i < chain->base + chain->depth; i++)
-@@ -2524,7 +2524,7 @@ static void
- print_chain_keys_held_locks(struct task_struct *curr, struct held_lock *hlock_next)
- {
- 	struct held_lock *hlock;
--	u64 chain_key = 0;
-+	u64 chain_key = INITIAL_CHAIN_KEY;
- 	int depth = curr->lockdep_depth;
- 	int i = get_first_held_lock(curr, hlock_next);
- 
-@@ -2544,7 +2544,7 @@ print_chain_keys_held_locks(struct task_struct *curr, struct held_lock *hlock_ne
- static void print_chain_keys_chain(struct lock_chain *chain)
- {
- 	int i;
--	u64 chain_key = 0;
-+	u64 chain_key = INITIAL_CHAIN_KEY;
- 	int class_id;
- 
- 	printk("depth: %u\n", chain->depth);
-@@ -2848,7 +2848,7 @@ static void check_chain_key(struct task_struct *curr)
- #ifdef CONFIG_DEBUG_LOCKDEP
- 	struct held_lock *hlock, *prev_hlock = NULL;
- 	unsigned int i;
--	u64 chain_key = 0;
-+	u64 chain_key = INITIAL_CHAIN_KEY;
- 
- 	for (i = 0; i < curr->lockdep_depth; i++) {
- 		hlock = curr->held_locks + i;
-@@ -2872,7 +2872,7 @@ static void check_chain_key(struct task_struct *curr)
- 
- 		if (prev_hlock && (prev_hlock->irq_context !=
- 							hlock->irq_context))
--			chain_key = 0;
-+			chain_key = INITIAL_CHAIN_KEY;
- 		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
- 		prev_hlock = hlock;
- 	}
-@@ -3787,14 +3787,14 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 		/*
- 		 * How can we have a chain hash when we ain't got no keys?!
- 		 */
--		if (DEBUG_LOCKS_WARN_ON(chain_key != 0))
-+		if (DEBUG_LOCKS_WARN_ON(chain_key != INITIAL_CHAIN_KEY))
- 			return 0;
- 		chain_head = 1;
- 	}
- 
- 	hlock->prev_chain_key = chain_key;
- 	if (separate_irq_context(curr, hlock)) {
--		chain_key = 0;
-+		chain_key = INITIAL_CHAIN_KEY;
- 		chain_head = 1;
- 	}
- 	chain_key = iterate_chain_key(chain_key, class_idx);
-@@ -4636,7 +4636,7 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
- 	return;
- 
- recalc:
--	chain_key = 0;
-+	chain_key = INITIAL_CHAIN_KEY;
- 	for (i = chain->base; i < chain->base + chain->depth; i++)
- 		chain_key = iterate_chain_key(chain_key, chain_hlocks[i] + 1);
- 	if (chain->depth && chain->chain_key == chain_key)
+SGkhDQoNCk9uIDMwLzA1LzIwMTkgMDg6NDUsIEFkYW1za2ksIEtyenlzenRvZiAoTm9raWEgLSBQ
+TC9Xcm9jbGF3KSB3cm90ZToNCj4gVGhlIG9wZXJhdGlvbiBkb25lIGluIHRoZSBwbWJ1c191cGRh
+dGVfZmFuKCkgZnVuY3Rpb24gaXMgYQ0KPiByZWFkLW1vZGlmeS13cml0ZSBvcGVyYXRpb24gYnV0
+IGl0IGxhY2tzIGFueSBraW5kIG9mIGxvY2sgcHJvdGVjdGlvbg0KPiB3aGljaCBtYXkgY2F1c2Ug
+cHJvYmxlbXMgaWYgcnVuIG1vcmUgdGhhbiBvbmNlIHNpbXVsdGFuZW91c2x5LiBUaGlzDQo+IHBh
+dGNoIHVzZXMgYW4gZXhpc3RpbmcgdXBkYXRlX2xvY2sgbXV0ZXggdG8gZml4IHRoaXMgcHJvYmxl
+bS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBBZGFtc2tpIDxrcnp5c3p0b2YuYWRh
+bXNraUBub2tpYS5jb20+DQo+IC0tLQ0KPiANCj4gSSdtIHJlc2VuZGluZyB0aGlzIHBhdGNoIHRv
+IHByb3BlciByZWNpcGllbnRzIHRoaXMgdGltZS4gU29ycnkgaWYgdGhlDQo+IHByZXZpb3VzIHN1
+Ym1pc3Npb24gY29uZnVzZWQgYW55Ym9keS4NCj4gDQo+ICBkcml2ZXJzL2h3bW9uL3BtYnVzL3Bt
+YnVzX2NvcmUuYyB8IDExICsrKysrKysrLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRp
+b25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdtb24v
+cG1idXMvcG1idXNfY29yZS5jIGIvZHJpdmVycy9od21vbi9wbWJ1cy9wbWJ1c19jb3JlLmMNCj4g
+aW5kZXggZWY3ZWU5MGVlNzg1Li45NGFkYmVkZTc5MTIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+aHdtb24vcG1idXMvcG1idXNfY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvaHdtb24vcG1idXMvcG1i
+dXNfY29yZS5jDQo+IEBAIC0yNjgsNiArMjY4LDcgQEAgaW50IHBtYnVzX3VwZGF0ZV9mYW4oc3Ry
+dWN0IGkyY19jbGllbnQgKmNsaWVudCwgaW50IHBhZ2UsIGludCBpZCwNCj4gIAlpbnQgcnY7DQo+
+ICAJdTggdG87DQo+ICANCj4gKwltdXRleF9sb2NrKCZkYXRhLT51cGRhdGVfbG9jayk7DQo+ICAJ
+ZnJvbSA9IHBtYnVzX3JlYWRfYnl0ZV9kYXRhKGNsaWVudCwgcGFnZSwNCj4gIAkJCQkgICAgcG1i
+dXNfZmFuX2NvbmZpZ19yZWdpc3RlcnNbaWRdKTsNCj4gIAlpZiAoZnJvbSA8IDApDQo+IEBAIC0y
+NzgsMTEgKzI3OSwxNSBAQCBpbnQgcG1idXNfdXBkYXRlX2ZhbihzdHJ1Y3QgaTJjX2NsaWVudCAq
+Y2xpZW50LCBpbnQgcGFnZSwgaW50IGlkLA0KPiAgCQlydiA9IHBtYnVzX3dyaXRlX2J5dGVfZGF0
+YShjbGllbnQsIHBhZ2UsDQo+ICAJCQkJCSAgIHBtYnVzX2Zhbl9jb25maWdfcmVnaXN0ZXJzW2lk
+XSwgdG8pOw0KPiAgCQlpZiAocnYgPCAwKQ0KPiAtCQkJcmV0dXJuIHJ2Ow0KPiArCQkJZ290byBv
+dXQ7DQo+ICAJfQ0KPiAgDQo+IC0JcmV0dXJuIF9wbWJ1c193cml0ZV93b3JkX2RhdGEoY2xpZW50
+LCBwYWdlLA0KPiAtCQkJCSAgICAgIHBtYnVzX2Zhbl9jb21tYW5kX3JlZ2lzdGVyc1tpZF0sIGNv
+bW1hbmQpOw0KPiArCXJ2ID0gX3BtYnVzX3dyaXRlX3dvcmRfZGF0YShjbGllbnQsIHBhZ2UsDQo+
+ICsJCQkJICAgIHBtYnVzX2Zhbl9jb21tYW5kX3JlZ2lzdGVyc1tpZF0sIGNvbW1hbmQpOw0KPiAr
+DQo+ICtvdXQ6DQo+ICsJbXV0ZXhfbG9jaygmZGF0YS0+dXBkYXRlX2xvY2spOw0KDQpUaGlzIGhh
+cyB0byBiZSBtdXRleF91bmxvY2soKS4uLg0KDQo+ICsJcmV0dXJuIHJ2Ow0KPiAgfQ0KPiAgRVhQ
+T1JUX1NZTUJPTF9HUEwocG1idXNfdXBkYXRlX2Zhbik7DQoNCi0tIA0KQmVzdCByZWdhcmRzLA0K
+QWxleGFuZGVyIFN2ZXJkbGluLg0K
