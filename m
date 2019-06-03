@@ -2,116 +2,116 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84383C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AC4C28D17
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575A82064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2D923A9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559598446;
-	bh=n9SyFEz1scq0F+hulkDOofWavK0RVDUzt5KbFhVJxXU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rbk4UG/OiKKHHhN6qzXOn/9++SjtqDMen25vsyXH8wk8g7JPiVw772q2Xoh515tjX
-	 y0wYNdy/P0fgPY0gPAlAFX1B6fWsmCIrb821iRJQTETkw7K0xzfGvV57ds22S6GPIP
-	 FzIVoq2O6gh/zX9suwHk3WA9guDXuwWQk6peMO/s=
+	s=default; t=1559598448;
+	bh=IZXCj5jxf9eAYQwNueq6BzltjAUhCFsFwTi0mTPxogE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hjrCLvssrcRtQ+nlq3H0d7cAyOiK17Ebg6TYnOgQzMxFVAKZH36JurOudPtNxuLuM
+	 AqqzoOvQU2H+S/s1EA+qEljd3m/Iq5tyGwqoOYrSRLo9VhDRs4RlXiPR7Zez/9lToB
+	 34y7JtzWNCFGTjWn4W3qjdBKIx91iZxbbo6bfmKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfFCVrZ (ORCPT
+        id S1726589AbfFCVr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36696 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 17:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfFCVrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:47:24 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726223AbfFCVrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 17:47:25 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 102C6246A4
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2019 21:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E4224695;
+        Mon,  3 Jun 2019 21:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559597851;
-        bh=n9SyFEz1scq0F+hulkDOofWavK0RVDUzt5KbFhVJxXU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Wl+zxf1zXrXTscPd69no8f3com+w7DM1Ij9JSl6nzJEwn21nR1/vkX/KVRgO+NKi5
-         HqAYbd2/RvghdNstiyg9ha1DYR41NNpT/hot0tEZcFGgwBDLilwmu/lIQ6aGvQ7kRp
-         XYe9TujRyGiqLtBNWH6Yz4U1SacrGQimo6MS5eD0=
-Received: by mail-wm1-f41.google.com with SMTP id v22so12599955wml.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 14:37:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVktJ/6edtXh9X95D9egohorJL/DNTkZkrWnOOryzCJncXijwrT
-        oXEW//KN5pHQGFP9BIqyS9H0m3zcU4hFIaKiiJ+ZKw==
-X-Google-Smtp-Source: APXvYqxdUr7TDIteSerX6UkuNzjBgbrWWlCpsdbDlcFwObi9TtMlsj3g3nDpINh3WF26sC6Rc/305H4m02M04UFf+ic=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr9098862wme.173.1559597849219;
- Mon, 03 Jun 2019 14:37:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com> <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov> <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov> <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
- <20190603205405.GE4894@linux.intel.com>
-In-Reply-To: <20190603205405.GE4894@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 3 Jun 2019 14:37:17 -0700
-X-Gmail-Original-Message-ID: <CALCETrVS15kAsD9mko9sreyZ8uciiOfOpnMabcQr4_3jE-npNA@mail.gmail.com>
-Message-ID: <CALCETrVS15kAsD9mko9sreyZ8uciiOfOpnMabcQr4_3jE-npNA@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1559598093;
+        bh=IZXCj5jxf9eAYQwNueq6BzltjAUhCFsFwTi0mTPxogE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ts63bHhoHjEwHoguPS98FOlJlHULP9xS3Oy1wcT2MEqZrFAeXOpn3JlufH7Eef2pe
+         ebYDM7je/lskiEV548m5LQpSvFwVrW5LJtk/f/QJ2udr71wF1m41GGZCC3hyChJZMB
+         u+bdKxm2Nu+VwtMbYyqwJpCcxnq+j6gRC4KL67I0=
+Date:   Mon, 3 Jun 2019 14:41:32 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Maninder Singh <maninder1.s@samsung.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com
+Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to
+ functions
+Message-Id: <20190603144132.7611b8fe3cf6928d8391a24a@linux-foundation.org>
+In-Reply-To: <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+        <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
+        <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 1:54 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Thu, May 30, 2019 at 09:14:10AM -0700, Andy Lutomirski wrote:
-> > > What is the "source file" i.e. the target of the check?  Enclave file,
-> > > sigstruct file, or /dev/sgx/enclave?
-> >
-> > Enclave file -- that is, the file backing the vma from which the data
-> > is loaded.
->
-> Wonder why KVM gets away without having this given that enclaves are
-> lot alike VMs.
->
+On Mon,  3 Jun 2019 14:32:03 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
 
-I would argue it's because access to /dev/kvm means you can execute
-whatever you code you want in a VM.  I don't see how this is
-avoidable. On the other hand, it would be nice for SGX to not imply
-this same sort of "execute anything" right, especially since, unlike
-KVM, SGX is not a sandbox.
+> currently params structure is passed in all functions, which increases
+> stack usage in all the function and lead to stack overflow on target like
+> ARM with kernel stack size of 8 KB so better to pass pointer.
+> 
+> Checked for ARM:
+> 
+>                                 Original               Patched
+> Call FLow Size:                  1264                   1040
+> ....
+> (HUF_sort)                      -> 296
+> (HUF_buildCTable_wksp)          -> 144
+> (HUF_compress4X_repeat)         -> 88
+> (ZSTD_compressBlock_internal)   -> 200
+> (ZSTD_compressContinue_internal)-> 136                  -> 88
+> (ZSTD_compressCCtx)             -> 192                  -> 64
+> (zstd_compress)                 -> 144                  -> 96
+> (crypto_compress)               -> 32
+> (zcomp_compress)                -> 32
+> ....
+> 
+> ...
+>
+> --- a/crypto/zstd.c
+> +++ b/crypto/zstd.c
+> @@ -162,7 +162,7 @@ static int __zstd_compress(const u8 *src, unsigned int slen,
+>  	struct zstd_ctx *zctx = ctx;
+>  	const ZSTD_parameters params = zstd_params();
+>  
+> -	out_len = ZSTD_compressCCtx(zctx->cctx, dst, *dlen, src, slen, params);
+> +	out_len = ZSTD_compressCCtx(zctx->cctx, dst, *dlen, src, slen, &params);
+>  	if (ZSTD_isError(out_len))
+>  		return -EINVAL;
+>  	*dlen = out_len;
+> diff --git a/include/linux/zstd.h b/include/linux/zstd.h
+> index 249575e..5103efa 100644
+> --- a/include/linux/zstd.h
+> +++ b/include/linux/zstd.h
+> @@ -254,7 +254,7 @@ ZSTD_CCtx *ZSTD_initCCtx(void *workspace, size_t workspaceSize);
+>   *               ZSTD_isError().
+>   */
+>  size_t ZSTD_compressCCtx(ZSTD_CCtx *ctx, void *dst, size_t dstCapacity,
+> -	const void *src, size_t srcSize, ZSTD_parameters params);
+> +	const void *src, size_t srcSize, const ZSTD_parameters *params);
+
+Making the params poniter const made review a lot easier ;)
+
+But struct ZSTD_CCtx_s.params is still a copied structure.  Could we
+make it `const ZSTD_parameters *params'?  Probably not, due to lifetime
+issues?
+
+
