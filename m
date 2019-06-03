@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24962C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1365C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21A627E55
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7821627E55
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553069;
-	bh=pzvuY0MLooD1BHTw3uxhWYwmhUamRWf5Y/TkApoxcns=;
+	s=default; t=1559553072;
+	bh=vYK+S5IoxQQVHRo385/3aZ7IkzTAkxVmmcV5eHatUJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2hdaJaPfUDP8KEbahUKwSVmO55S/6akNzba9IYTB/NrGubrnsA7Is2fZN9zSfiqH
-	 dyPemhBeIZWT+fVzV1QkpNX4DsacRPI4mP0Ybcz5wycrn+n4bPmeIztvQMtnHlfnA6
-	 L4xRkel+Nk2zWK83SnR8VvxfmtWVLbukoDNJmoMY=
+	b=Tciacj5PQebl2SYSGb8WmMCXxcZHmy+A8WY1SKcPJt4OJHkwAZKEB7+BsGo+J0fsD
+	 36ytZfrBcI187j8Spq053cl15KUBO8ZZbflzPFNqac3CrizaMaXJnDkh1enOT/H/Ji
+	 jnLnOionti01bHFTNdf2nYyPKbblGqS1MWXpF49Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfFCJLH (ORCPT
+        id S1727913AbfFCJLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55840 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbfFCJLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:04 -0400
+        id S1728294AbfFCJLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7805527E44;
-        Mon,  3 Jun 2019 09:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA8C27E4A;
+        Mon,  3 Jun 2019 09:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553064;
-        bh=pzvuY0MLooD1BHTw3uxhWYwmhUamRWf5Y/TkApoxcns=;
+        s=default; t=1559553066;
+        bh=vYK+S5IoxQQVHRo385/3aZ7IkzTAkxVmmcV5eHatUJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lvrA51Zkkv/xmlzPIZkWZkDpNsF4WHvLEjri9iHStxD/BT7W16BXnCJ3JjsfQZl8Y
-         Gs9qs2DH28ASglE13hlAqtqoypaEzVPGulHAEgp8HLR2HjcPNgVPNEkbLz6+WqItfg
-         bKgjzl0dcjJVtXb9jxuh75QEbXsp6/rvWwR483mQ=
+        b=pdsN7P74QyK+K6v3x4YXXhiS7f4ZMyCgsTPV09DHK3xDmnmy0ShxZsHDgxYZPCaNf
+         yNdyFnNbWPQWf0lI3J8DCGX2nMPNJOY52KcTOXoDXIGltXCY/IDGcN+ybLgjFl2DZx
+         YRGB5vKqQROJyLI/Ue/LtPvVJ1btJ+09nz3ayBjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 18/32] net/mlx5: Avoid double free in fs init error unwinding path
-Date:   Mon,  3 Jun 2019 11:08:12 +0200
-Message-Id: <20190603090313.666082384@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 09/32] net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
+Date:   Mon,  3 Jun 2019 11:08:03 +0200
+Message-Id: <20190603090311.307798518@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
 References: <20190603090308.472021390@linuxfoundation.org>
@@ -60,71 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-[ Upstream commit 9414277a5df3669c67e818708c0f881597e0118e ]
+[ Upstream commit 84b3fd1fc9592d431e23b077e692fa4e3fd0f086 ]
 
-In below code flow, for ingress acl table root ns memory leads
-to double free.
+Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
+up in bits 47:32 of the return value, instead of bits 31:16 as they
+should.
 
-mlx5_init_fs
-  init_ingress_acls_root_ns()
-    init_ingress_acl_root_ns
-       kfree(steering->esw_ingress_root_ns);
-       /* steering->esw_ingress_root_ns is not marked NULL */
-  mlx5_cleanup_fs
-    cleanup_ingress_acls_root_ns
-       steering->esw_ingress_root_ns non NULL check passes.
-       kfree(steering->esw_ingress_root_ns);
-       /* double free */
-
-Similar issue exist for other tables.
-
-Hence zero out the pointers to not process the table again.
-
-Fixes: 9b93ab981e3bf ("net/mlx5: Separate ingress/egress namespaces for each vport")
-Fixes: 40c3eebb49e51 ("net/mlx5: Add support in RDMA RX steering")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -2363,6 +2363,7 @@ static void cleanup_egress_acls_root_ns(
- 		cleanup_root_ns(steering->esw_egress_root_ns[i]);
- 
- 	kfree(steering->esw_egress_root_ns);
-+	steering->esw_egress_root_ns = NULL;
- }
- 
- static void cleanup_ingress_acls_root_ns(struct mlx5_core_dev *dev)
-@@ -2377,6 +2378,7 @@ static void cleanup_ingress_acls_root_ns
- 		cleanup_root_ns(steering->esw_ingress_root_ns[i]);
- 
- 	kfree(steering->esw_ingress_root_ns);
-+	steering->esw_ingress_root_ns = NULL;
- }
- 
- void mlx5_cleanup_fs(struct mlx5_core_dev *dev)
-@@ -2505,6 +2507,7 @@ cleanup_root_ns:
- 	for (i--; i >= 0; i--)
- 		cleanup_root_ns(steering->esw_egress_root_ns[i]);
- 	kfree(steering->esw_egress_root_ns);
-+	steering->esw_egress_root_ns = NULL;
- 	return err;
- }
- 
-@@ -2532,6 +2535,7 @@ cleanup_root_ns:
- 	for (i--; i >= 0; i--)
- 		cleanup_root_ns(steering->esw_ingress_root_ns[i]);
- 	kfree(steering->esw_ingress_root_ns);
-+	steering->esw_ingress_root_ns = NULL;
- 	return err;
- }
- 
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -877,7 +877,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
+ 			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
+ 			if (err)
+ 				return U64_MAX;
+-			high = reg;
++			low |= ((u32)reg) << 16;
+ 		}
+ 		break;
+ 	case STATS_TYPE_BANK1:
 
 
