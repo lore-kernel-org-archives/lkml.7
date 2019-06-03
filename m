@@ -2,83 +2,62 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39D2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE94C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA0220673
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0D320673
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfFCP7D (ORCPT
+        id S1728453AbfFCP7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:59:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3129 "EHLO mga18.intel.com"
+        Mon, 3 Jun 2019 11:59:20 -0400
+Received: from foss.arm.com ([217.140.101.70]:54446 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbfFCP7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:59:02 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:59:02 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Jun 2019 08:58:59 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 03 Jun 2019 18:58:58 +0300
-Date:   Mon, 3 Jun 2019 18:58:58 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
- 'pwm'
-Message-ID: <20190603155858.GF2781@lahna.fi.intel.com>
-References: <20190601035709.85379-1-yuehaibing@huawei.com>
- <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
- <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
- <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
- <20190603114029.GC2781@lahna.fi.intel.com>
- <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
+        id S1726646AbfFCP7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:59:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CB1880D;
+        Mon,  3 Jun 2019 08:59:19 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 194243F246;
+        Mon,  3 Jun 2019 08:59:17 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 16:59:15 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64/hugetlb: Use macros for contiguous huge page sizes
+Message-ID: <20190603155915.GD63283@arrakis.emea.arm.com>
+References: <1558409703-31894-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1558409703-31894-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:08:06AM -0400, Sven Van Asbroeck wrote:
-> On Mon, Jun 3, 2019 at 7:40 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > I think you are right. pca9685_pwm_request() should take the mutex as
-> > long as it is requesting PWM.
+On Tue, May 21, 2019 at 09:05:03AM +0530, Anshuman Khandual wrote:
+> Replace all open encoded contiguous huge page size computations with
+> available macro encodings CONT_PTE_SIZE and CONT_PMD_SIZE. There are other
+> instances where these macros are used in the file and this change makes it
+> consistently use the same mnemonic.
 > 
-> Yes, but things get hairy because pca9685_pwm_request() will have to
-> give up the mutex when it returns. I cannot see a way to keep holding
-> this mutex while the in-use flag is set by the pwm core ?
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
 
-Right, I did not notice it's the PWM core that sets the flag.
+Queued for 5.3. Thanks.
 
-> Alternatively, we could set (void *)1 pwm_data inside the pwm_request,
-> wrapped inside the mutex.
-> But then things get 'messy'.
-> 
-> > A flag would probably be easier to understand than the magic we have
-> > now.
-> 
-> I have the feeling that a flag (plus a mutex) would be the clearest and
-> safest way forward. I'll post a patch soon, you guys tell me what you
-> think.
-
-Sounds good thanks!
+-- 
+Catalin
