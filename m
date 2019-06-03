@@ -2,140 +2,187 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D20C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3320C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA11B27EBE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866F627EBE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="jrcqtaqP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gcbf9zYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfFCMoL (ORCPT
+        id S1727629AbfFCMoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:44:11 -0400
-Received: from mail-eopbgr770075.outbound.protection.outlook.com ([40.107.77.75]:12399
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727675AbfFCMnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUZDn4kynYb8CzfeIIUlIK5EF6qvw4aXhcKlRXa1dcg=;
- b=jrcqtaqPxl84vmO7/MIcWqfEkT/63hcIyHP1yfScR2d9eqzpXQALhdgt9pnW1Klf9o5kV8gV+ovrLCMzeHBf8sVZBauSn/9emEdotyEU60m3miYn52dJTvS/UZ4y2uxjaZ7TeFXYhvsFd/CcwQURB8PZ3dhLJ7pvYjvPhquTSsE=
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
- MN2PR08MB5854.namprd08.prod.outlook.com (20.179.98.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 12:43:37 +0000
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::f0f7:f262:a3c6:ce23]) by MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::f0f7:f262:a3c6:ce23%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 12:43:37 +0000
-From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Yixun Lan <yixun.lan@amlogic.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 08/12] mtd: spinand: add parameter page fixup function
-Thread-Topic: [PATCH v3 08/12] mtd: spinand: add parameter page fixup function
-Thread-Index: AdUaBeblBBkTiS6jRfmQuYfbqm3u7g==
-Date:   Mon, 3 Jun 2019 12:43:36 +0000
-Message-ID: <MN2PR08MB59519F9C67AB1D6CAC6FCEAEB8140@MN2PR08MB5951.namprd08.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sshivamurthy@micron.com; 
-x-originating-ip: [165.225.81.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4d38a7a5-159e-474a-7d01-08d6e82118f9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR08MB5854;
-x-ms-traffictypediagnostic: MN2PR08MB5854:|MN2PR08MB5854:
-x-microsoft-antispam-prvs: <MN2PR08MB5854F089BAE35606A126BB27B8140@MN2PR08MB5854.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(5660300002)(81166006)(8936002)(7696005)(14444005)(7736002)(8676002)(305945005)(55016002)(256004)(2501003)(81156014)(102836004)(2906002)(110136005)(6506007)(25786009)(55236004)(33656002)(76116006)(476003)(73956011)(66066001)(66556008)(66946007)(26005)(99286004)(64756008)(486006)(66446008)(186003)(66476007)(52536014)(6436002)(74316002)(9686003)(6116002)(3846002)(2201001)(14454004)(7416002)(86362001)(316002)(53936002)(71190400001)(71200400001)(68736007)(478600001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5854;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2cCEbgFW0oux968vZAZ5+PK4vE/2EobbGSH5rQuHNWgXxCtlc4FvyeJddPoqFBIH7lm/LyqUQCK8DrvebadzbsyO3EYrqgHs62EgyEp5my9tl7alR9/kC8H6h++jK0FPRCpmAdV+ldIoJRRMbb4dgHq9b0Y5UF0FLF9wkBQiQRhKgAu3heq6efZodPwpgZZm9BKmqVEADtbxQWbzzbtdY+LcNJUqwjSqSb5C8EZXlTtO0k5+zFlV9rb664s96SZzwr8EUmGrrKxDtJC3WxcHgRnRRJ7BBUBOzxsQo4X02sOo3BDkx4xUwcmPI0hlYvKsHqxsMNkWQQtv4G/y+jeqy6FIent2z1DFMBklGqrGvl36E8ATx+gTz3+yLC5lkgsH13pyANU4BMGyGIsxvqFBwi77HtVct6IZs9HE+2yfWlI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Jun 2019 08:44:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41751 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfFCMoy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:44:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so11914609wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 05:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Zwr3vv+eMdjlpjmEc4HE3us4LgHzeUpOklcIYvSawzo=;
+        b=gcbf9zYk66xEbf+X9bevRXNLMvjzZWg16Bxg9CF4bRMx2fR6SZ+UaOpLE1PR8S7Yij
+         khKENx/ypIT/a74aWCgZBHnQ3zEcmu1Wd+8qQ8G1hts6S6FmUjVtYumpyiYDXfghg7MC
+         4rlcmGNCfQ268rMwrSlp+JXv8sEGVL6DxHWOm1VpPwdJpETTHGQWhM47T1RMucppOv3Y
+         +n8DZhvK8wACTMjNytAYCy6ErSPYmRIyICqpP0O4+I0SHpzzplAstmEB2tLugoTY32JW
+         jBIw6LejVrFucNfVrmCQzkL3JZt+mSGlepyavumsGEvB65PaR103lCQt04MPOS3/DcB1
+         q3Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Zwr3vv+eMdjlpjmEc4HE3us4LgHzeUpOklcIYvSawzo=;
+        b=t8lbldhVfnJw7nXBtv61/qy2DhAorqxWxds496x8Fx8JHSQjib7soLsY2DIHD5jPDX
+         hrIDhpunlLScpKiaFM/onOMbjT9M98BwxyMWXcqWElGsQfOOreCGUZne3khN4cMjTnvA
+         faInmqNx8rIGx2T9m2eLrJ57WttWcdrJ4YZeir7jC9yTNvem1jA8czSR9y9yPsN/AO1D
+         VPzA0KqmYGt1ISJt+bhweclQLU3Zl48iUW2AR/H2prTjFnlFtujYuL63PTdMqW60Hs25
+         GLB1OsBewqhUFs0QbEAYnSKLVBt4g4JQZXT4aXQ8YAZQb46LUqZU7cOkFuz/zAApt029
+         Z5gQ==
+X-Gm-Message-State: APjAAAUHBdxcaPUseerCXT0VBUWWjj+fO8AgGALfgCvic47QR5WsDwTv
+        nKSuzyJ+JGFQ07/7yPpc+lW+ICjAZVA=
+X-Google-Smtp-Source: APXvYqxbCV5ImKYCqFFDSptIpwwZwtXyEHcy1XwWTcXGUisZlyPfdZ1fxHI3RaPKKo6VtXU0grwM1g==
+X-Received: by 2002:adf:df8f:: with SMTP id z15mr797668wrl.140.1559565892246;
+        Mon, 03 Jun 2019 05:44:52 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id g8sm1156892wmf.17.2019.06.03.05.44.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 05:44:51 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:44:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mfd: rk808: Prepare rk805 for poweroff
+Message-ID: <20190603124450.GO4797@dell>
+References: <20190521062449.29410-1-stefan@olimex.com>
+ <20190521062449.29410-3-stefan@olimex.com>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d38a7a5-159e-474a-7d01-08d6e82118f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:43:36.7663
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sshivamurthy@micron.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5854
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521062449.29410-3-stefan@olimex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parameter page not following any standard. Hence, manufacturers may
-interpret parameters differently, and it is better to have a fixup
-function.
+On Tue, 21 May 2019, Stefan Mavrodiev wrote:
 
-Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
----
- drivers/mtd/nand/spi/core.c | 6 ++++++
- include/linux/mtd/spinand.h | 2 ++
- 2 files changed, 8 insertions(+)
+> RK805 has SLEEP signal, which can put the device into SLEEP or OFF
+> mode. The default is SLEEP mode.
+> 
+> However, when the kernel performs power-off (actually the ATF) the
+> device will not go fully off and this will result in higher power
+> consumption and inability to wake the device with RTC alarm.
+> 
+> The solution is to enable pm_power_off_prepare function, which will
+> configure SLEEP pin for OFF function.
+> 
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> ---
+> Changes for v2:
+>  - Move pm_pwroff_prep_fn to header
+>  - Check pm_power_off_prepare before make it NULL
+> 
+>  drivers/mfd/rk808.c       | 29 +++++++++++++++++++++++++++++
+>  include/linux/mfd/rk808.h |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index c0b179792bbf..fb6cdf900899 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -387,6 +387,24 @@ static void rk805_device_shutdown(void)
+>  		dev_err(&rk808_i2c_client->dev, "power off error!\n");
+>  }
+>  
+> +static void rk805_device_shutdown_prepare(void)
+> +{
+> +	int ret;
+> +	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+> +
+> +	if (!rk808) {
+> +		dev_warn(&rk808_i2c_client->dev,
+> +			 "have no rk805, so do nothing here\n");
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index b031c4a2cdf9..cdf578c45c08 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -479,6 +479,12 @@ static int check_version(struct nand_device *base,
- static int spinand_intf_data(struct nand_device *base,
- 			     struct nand_onfi_params *p)
- {
-+	struct spinand_device *spinand =3D nand_to_spinand(base);
-+
-+	/* Manufacturers may interpret the parameter page differently */
-+	if (spinand->manufacturer->ops->fixup_param_page)
-+		spinand->manufacturer->ops->fixup_param_page(spinand, p);
-+
- 	return 0;
- }
-=20
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 507f7e289bd1..41a03d59f003 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -179,6 +179,8 @@ struct spinand_manufacturer_ops {
- 	int (*detect)(struct spinand_device *spinand);
- 	int (*init)(struct spinand_device *spinand);
- 	void (*cleanup)(struct spinand_device *spinand);
-+	void (*fixup_param_page)(struct spinand_device *spinand,
-+				 struct nand_onfi_params *p);
- };
-=20
- /**
---=20
-2.17.1
+No need for this message I think.
 
+If it's not available, just return.
+
+> +		return;
+> +	}
+> +
+> +	ret = regmap_update_bits(rk808->regmap,
+> +				 RK805_GPIO_IO_POL_REG,
+> +				 SLP_SD_MSK, SHUTDOWN_FUN);
+> +	if (ret)
+> +		dev_err(&rk808_i2c_client->dev, "power off error!\n");
+> +}
+
+"Failed to shutdown device"
+
+>  static void rk808_device_shutdown(void)
+>  {
+>  	int ret;
+> @@ -475,6 +493,7 @@ static int rk808_probe(struct i2c_client *client,
+>  		cells = rk805s;
+>  		nr_cells = ARRAY_SIZE(rk805s);
+>  		rk808->pm_pwroff_fn = rk805_device_shutdown;
+> +		rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
+>  		break;
+>  	case RK808_ID:
+>  		rk808->regmap_cfg = &rk808_regmap_config;
+> @@ -550,6 +569,12 @@ static int rk808_probe(struct i2c_client *client,
+>  		pm_power_off = rk808->pm_pwroff_fn;
+>  	}
+>  
+> +	if (pm_off && !pm_power_off_prepare) {
+> +		if (!rk808_i2c_client)
+> +			rk808_i2c_client = client;
+> +		pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
+> +	}
+> +
+>  	return 0;
+>  
+>  err_irq:
+> @@ -566,6 +591,10 @@ static int rk808_remove(struct i2c_client *client)
+>  	if (rk808->pm_pwroff_fn && pm_power_off == rk808->pm_pwroff_fn)
+>  		pm_power_off = NULL;
+>  
+> +	if (rk808->pm_pwroff_prep_fn &&
+> +	    pm_power_off_prepare == rk808->pm_pwroff_prep_fn)
+> +		pm_power_off_prepare = NULL;
+
+I think this block would benefit from a comment.
+
+>  	return 0;
+>  }
+>  
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index 8b5d68a7bb9c..ec928173e507 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -454,5 +454,6 @@ struct rk808 {
+>  	const struct regmap_config	*regmap_cfg;
+>  	const struct regmap_irq_chip	*regmap_irq_chip;
+>  	void				(*pm_pwroff_fn)(void);
+> +	void				(*pm_pwroff_prep_fn)(void);
+>  };
+>  #endif /* __LINUX_REGULATOR_RK808_H */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
