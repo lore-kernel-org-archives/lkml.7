@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A390C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB73C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C9927E5D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A3D27E6E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553086;
-	bh=rrKoH+wLsNhDcMmgiH75B0ng71payu+f34ZXIwuEHJY=;
+	s=default; t=1559553089;
+	bh=AehziPUQS6ljn1V8LLSb27f6Zro9/dJ3O/PsXbIV+yk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+YwLZqMugK11t03UIwmRwuL8RrEtknMUuBk1n2C+6MWZj636SjESrVpnhC2CPBxt
-	 hFsggBUZ1+NaggH+SNaDJmztjeRtvfi3adGt6mfJLzBP7evrlXK1nGygNsm/rIKcR7
-	 wzXV79NmCyuMNlHc7/etCNAX+aYIijvXNJaACha4=
+	b=R+O5wBbZJjQugHp7K8l1zSZZoh0SDxELidO+jv/XIW3PnvZDtOPou+aiZaNi/S2+c
+	 p4O8h58Y4Kc62Cw/et8e2md1rlKoKfc4xBX2pWnxYcmubYQ4dTFypvLCU9WtNcpKvB
+	 zlCuOjDjrC41pZjaoalduogeCrT4T1knzHlUq5m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfFCJLZ (ORCPT
+        id S1728404AbfFCJL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56428 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbfFCJLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:23 -0400
+        id S1728392AbfFCJLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DABF27E4B;
-        Mon,  3 Jun 2019 09:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C50FF27E57;
+        Mon,  3 Jun 2019 09:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553082;
-        bh=rrKoH+wLsNhDcMmgiH75B0ng71payu+f34ZXIwuEHJY=;
+        s=default; t=1559553085;
+        bh=AehziPUQS6ljn1V8LLSb27f6Zro9/dJ3O/PsXbIV+yk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlyaM5bMR2bObpFlTHIxqJqOEgpdyY5iOmGa2xjLi1rymuOCNKEUxIpB5dUnb6G3K
-         NTCcAy9vCiI56LYnWrH0XYrRQnMywxjFIs+lvYUJi9Qpq0AsdfMPqqk7iWElB3pBLn
-         eV01GX8/IDhgi16nn0wX1X/JHabbnzNJapRYp+HA=
+        b=Pdu1SGwq/1ekyVKtStEOzf7zoI8r/0VA2PsP52gKZcm1enMnT5Ax0KPdSsVBxPPG0
+         tJI0rqUx/Yja0isA/+zhaWAoglgWWq4xX8aJp9sl3OtafgXwULSTEHO6Jb3i9rBldz
+         QcNkXJTy7A7bsCRgQbD9j3YLUeh+q4eqJsbCG6EU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 14/36] net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
-Date:   Mon,  3 Jun 2019 11:09:02 +0200
-Message-Id: <20190603090521.907589478@linuxfoundation.org>
+Subject: [PATCH 5.0 15/36] net: phy: marvell10g: report if the PHY fails to boot firmware
+Date:   Mon,  3 Jun 2019 11:09:03 +0200
+Message-Id: <20190603090521.967139526@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -60,57 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 21808437214637952b61beaba6034d97880fbeb3 ]
+[ Upstream commit 3d3ced2ec5d71b99d72ae6910fbdf890bc2eccf0 ]
 
-MVPP2_TXQ_SCHED_TOKEN_CNTR_REG() expects the logical queue id but
-the current code is passing the global tx queue offset, so it ends
-up writing to unknown registers (between 0x8280 and 0x82fc, which
-seemed to be unused by the hardware). This fixes the issue by using
-the logical queue id instead.
+Some boards do not have the PHY firmware programmed in the 3310's flash,
+which leads to the PHY not working as expected.  Warn the user when the
+PHY fails to boot the firmware and refuse to initialise.
 
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Fixes: 20b2af32ff3f ("net: phy: add Marvell Alaska X 88X3310 10Gigabit PHY support")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/phy/marvell10g.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1412,7 +1412,7 @@ static inline void mvpp2_xlg_max_rx_size
- /* Set defaults to the MVPP2 port */
- static void mvpp2_defaults_set(struct mvpp2_port *port)
- {
--	int tx_port_num, val, queue, ptxq, lrxq;
-+	int tx_port_num, val, queue, lrxq;
+--- a/drivers/net/phy/marvell10g.c
++++ b/drivers/net/phy/marvell10g.c
+@@ -29,6 +29,9 @@
+ #define MDIO_AN_10GBT_CTRL_ADV_NBT_MASK	0x01e0
  
- 	if (port->priv->hw_version == MVPP21) {
- 		/* Update TX FIFO MIN Threshold */
-@@ -1433,11 +1433,9 @@ static void mvpp2_defaults_set(struct mv
- 	mvpp2_write(port->priv, MVPP2_TXP_SCHED_FIXED_PRIO_REG, 0);
+ enum {
++	MV_PMA_BOOT		= 0xc050,
++	MV_PMA_BOOT_FATAL	= BIT(0),
++
+ 	MV_PCS_BASE_T		= 0x0000,
+ 	MV_PCS_BASE_R		= 0x1000,
+ 	MV_PCS_1000BASEX	= 0x2000,
+@@ -228,6 +231,16 @@ static int mv3310_probe(struct phy_devic
+ 	    (phydev->c45_ids.devices_in_package & mmd_mask) != mmd_mask)
+ 		return -ENODEV;
  
- 	/* Close bandwidth for all queues */
--	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++) {
--		ptxq = mvpp2_txq_phys(port->id, queue);
-+	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++)
- 		mvpp2_write(port->priv,
--			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(ptxq), 0);
--	}
-+			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(queue), 0);
- 
- 	/* Set refill period to 1 usec, refill tokens
- 	 * and bucket size to maximum
-@@ -2293,7 +2291,7 @@ static void mvpp2_txq_deinit(struct mvpp
- 	txq->descs_dma         = 0;
- 
- 	/* Set minimum bandwidth for disabled TXQs */
--	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->id), 0);
-+	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->log_id), 0);
- 
- 	/* Set Tx descriptors queue starting address and size */
- 	thread = mvpp2_cpu_to_thread(port->priv, get_cpu());
++	ret = phy_read_mmd(phydev, MDIO_MMD_PMAPMD, MV_PMA_BOOT);
++	if (ret < 0)
++		return ret;
++
++	if (ret & MV_PMA_BOOT_FATAL) {
++		dev_warn(&phydev->mdio.dev,
++			 "PHY failed to boot firmware, status=%04x\n", ret);
++		return -ENODEV;
++	}
++
+ 	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
 
 
