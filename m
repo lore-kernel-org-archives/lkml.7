@@ -2,90 +2,137 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B9FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCB9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC1126CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AFA26799
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LOMmLUn3"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VKJfnpAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfFCWKz (ORCPT
+        id S1726841AbfFCWLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:10:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43265 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfFCWKx (ORCPT
+        Mon, 3 Jun 2019 18:11:06 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37173 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfFCWLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:10:53 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so9052292pgv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:10:53 -0700 (PDT)
+        Mon, 3 Jun 2019 18:11:06 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m15so14806542lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:11:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Lqtk1JLPJRbV/Uor8A27eWDozVcUr19IPuyQSb2ZXss=;
-        b=LOMmLUn3OWji8hcp69Cer8ETlOICLjhPAltnN4rp4K5f25q0RlT24pWNBHwJHhZbmV
-         2AOmASgj1C5kiQPqxC5BPsx0ELPuyx2MPcfB89pVUNo90bBPw2TRyhbzh5SH2Scu6/j8
-         m64nBG/w+Yhv5R/ZfbzdPZw0gQ0oUVHxnJXordTCw9ZhsQak0YrH89m5teRm4Ut/zuvh
-         GgbweAG/DCgafajg9GpEaZgoG0ZouFPc22PwC77s1UnfGj1yN3pzGXJgXrWenNphhHR9
-         KJ1JQnfDizgW24Rp47icxjhjBl6WVLrhUsPnikns/XcaLkcA7vJy2Q2/jZAQk1GQB/eo
-         bz1Q==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KcMRXd21hP8UmZkIG2RNnfnlH3SL7cuLE0q0RRkiu6s=;
+        b=VKJfnpAi1elHGrQJDGOtM/gN/DHi+Ci3IGMyX3NflK3rCh5QLlasviFfYvd5Z1n0Ll
+         sfT8j+rkJXOwV+YDS4o331naQ3mO3WKL+3uzZCCq+E1Ng8/lfuiakuEj6quDz1FceLdp
+         VfWqSDxDiyG7NS9ZHVwM7jMRPxBMvAPlMmUAa+1zKBWuFKfkWh+WvFe7roZu+S9re1MR
+         3mC8jy0LYvW2rqnw21AMOZdU5BlpaR9WphB1XPicbMYHATdnNswhzKRw/tq3nf2r/7OW
+         3pfIOyj1vzv7RlvQMgzQll2YOArCb8xfux5xgJZAvw7K6GU8R2M0+JaSP0/ZEshAzMpu
+         KasQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Lqtk1JLPJRbV/Uor8A27eWDozVcUr19IPuyQSb2ZXss=;
-        b=kBzgR7d6IBh48MGv56vk+vU18XCH9KNlJBCNGry2Vi6nWK4aiK8SgUIgZC5sItASoT
-         fHbOCoxApe3ByB3lERZpyFGJ36OHGVozNFJX3IWyA4b7ZmNSQsuyLGWbkbxopK9L+cEt
-         HyxmJRKcJha4Xn7pobnanfNvHGLaISytsWjIdA6PVHg12frnlngivOCOalGM/31uaYWA
-         CQWiyrTY+3ZRep7cbnVxHp0jXUxaL4b8yGMdzEVzFopAKmDLPSZVNMKyTdxYWxFZ4/4D
-         wm/WpIobk/WweGcoKwokR0rTErXQG4/iqRRNN0Qu9uv1Ro32/Ypq0r4jrTiY7QVHuuTC
-         o0aQ==
-X-Gm-Message-State: APjAAAV6cshSj0l+NpzWTGR1cW/pYUgWfkSEcckrzUA/p7FOnjxF6bz1
-        gJB14UG67yD9UGFFESW2N87jcA==
-X-Google-Smtp-Source: APXvYqxTWg1pff0VpEjIEtZaLRKwlbARqN5oAhRdttUjDIsDawnE2zYntfrph7HTS32iO+Wx978D4A==
-X-Received: by 2002:a17:90a:29a4:: with SMTP id h33mr27038831pjd.105.1559599852823;
-        Mon, 03 Jun 2019 15:10:52 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id p20sm27244237pgk.7.2019.06.03.15.10.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 15:10:52 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, ulf.hansson@linaro.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-mmc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: meson: g12a: add SDIO controller
-In-Reply-To: <20190527124307.32075-4-narmstrong@baylibre.com>
-References: <20190527124307.32075-1-narmstrong@baylibre.com> <20190527124307.32075-4-narmstrong@baylibre.com>
-Date:   Mon, 03 Jun 2019 15:10:51 -0700
-Message-ID: <7hwoi2ial0.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KcMRXd21hP8UmZkIG2RNnfnlH3SL7cuLE0q0RRkiu6s=;
+        b=LGik2T1TR/ClC+kzcXlzbRhroJf8kGi2PU6dN6Lcvq2ATn5eX6IU+Ub8lLOMhi7qg/
+         5M6zt4qOjFSWcbzXE+AybPbyg/T0yRGOBtfEzlAILFxM7X40Wp+rU8cSBNkyskx07k5+
+         dMgStBe3Dnbtil8+95SIKdJu7JWXG3vaz/9A2KRWS1ze8PtcGAcePfUA30JaFV1oetns
+         eMRt05X+rznKkRE2VTdh3lK2wEVphVHeEqpOzdOI4x0z/oKn7DyMWJWRrCyAaSfMUXtM
+         Tlpn62doeVPQXy2DsH3aDX1jaS1A5CVBo1k8tLjYY6r1N5Kb3I8B5nlRu74bD3ygempw
+         YDQA==
+X-Gm-Message-State: APjAAAX1PNQP96gvIXxIoJpyFpIF2lMIbqgovrT4VXhWaO3CQClInx4p
+        GYGe/FifhnfJNTJZFNpC+NdHGDL5h5rqUwaUe//p
+X-Google-Smtp-Source: APXvYqzBxyQVJ38l2yQR8Z55mFmcEnbrYjFwFo/PW/t0ZGSpit+8SCjtd4FFxwH9Ik99pI6puP1BvcBqmSMmUGqMVew=
+X-Received: by 2002:ac2:4358:: with SMTP id o24mr14377637lfl.13.1559596567285;
+ Mon, 03 Jun 2019 14:16:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190601021526.GA8264@zhanggen-UX430UQ> <CAFqZXNvBpmxNYjZx6YcH5Q-u4Tkwhfyzu_8VmEe8O7r9CCsvNg@mail.gmail.com>
+In-Reply-To: <CAFqZXNvBpmxNYjZx6YcH5Q-u4Tkwhfyzu_8VmEe8O7r9CCsvNg@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 3 Jun 2019 17:15:56 -0400
+Message-ID: <CAHC9VhQdr0uOe0X0vLN9fOe7zDJ8bnX4fDLSTmjAGJymCyQ+zg@mail.gmail.com>
+Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in selinux_sb_eat_lsm_opts()
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> From: Jerome Brunet <jbrunet@baylibre.com>
+On Mon, Jun 3, 2019 at 3:23 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Sat, Jun 1, 2019 at 4:15 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts'
+> > should be freed when error.
+> >
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 >
-> The Amlogic G12A SDIO Controller has a bug preventing direct DDR access,
-> add the port A (SDIO) pinctrl and controller nodes and mark this specific
-> controller with the amlogic,dram-access-quirk property.
+> It looks like you're new to the kernel development community, so let
+> me give you a bit of friendly advice for the future :)
 >
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> You don't need to repost the patch when people give you
+> Acked-by/Reviewed-by/Tested-by (unless there is a different reason to
+> respin/repost the patches). The maintainer goes over the replies when
+> applying the final patch and adds Acked-by/Reviewed-by/... on his/her
+> own.
+>
+> If you *do* need to respin a path for which you have received A/R/T,
+> then you need to distinguish between two cases:
+> 1. Only trivial changes to the patch (only fixed typos, edited commit
+> message, removed empty line, etc. - for example, v1 -> v2 of this
+> patch falls into this category) - in this case you can collect the
+> A/R/T yourself and add them to the new version. This saves the
+> maintainer and the reviewers from redundant work, since the patch is
+> still semantically the same and the A/R/T from the last version still
+> apply.
+> 2. Non-trivial changes to the patch (as is the case for this patch) -
+> in this case your patch needs to be reviewed again and you should
+> disregard all A/R/T from the previous version. You can easily piss
+> someone off if you add their Reviewed-by to a patch they haven't
+> actually reviewed, so be careful ;-)
 
-Queued for v5.3,
+I want to stress Ondrej's last point.  Carrying over an
+Acked-by/Reviewed-by/Tested-by tag if you make anything more than the
+most trivial change in a patch is *very* bad, and will likely result
+in a loss of trust between you and the maintainer.  If you are unsure,
+drop the A/R/T tag, there is *much* less harm in asking someone to
+re-review a patch than falsely tagging a patch as reviewed by someone
+when you have made substantial changes.
 
-Thanks,
+I suspect you may have already read the
+Documentation/process/submitting-patches.rst file, but if you haven't
+it is worth reading.  It covers many of the things that are discussed
+elsewhere.
 
-Kevin
+If you aren't already, you should get in the habit of doing the
+following for each patch you post to the mailing list:
+1. Make sure it compiles cleanly, or at least doesn't introduce any
+new compiler warnings/errors.
+2. Run ./scripts/checkpatch.pl and fix as many problems as you can; a
+patch can still be accepted with checkpatch warnings/errors (and some
+maintainers might dislike some of checkpatch's decisions), but it
+helps a lot if you can fix all those.
+3. At the very least make sure your kernel changes boot, if you can,
+run the associated subsystem's test (if they have one) to verify that
+there are no regressions (the SELinux kernel test suite is here:
+https://github.com/SELinuxProject/selinux-testsuite)
+
+Lastly, when in doubt, you can always ask the mailing list; the
+SELinux list is a pretty friendly place :)
+
+-- 
+paul moore
+www.paul-moore.com
