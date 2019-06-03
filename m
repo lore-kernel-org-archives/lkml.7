@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4234CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1C7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21ED624C50
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7EF255DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfFCPw2 (ORCPT
+        id S1729624AbfFCPw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:54108 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729607AbfFCPwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:52:23 -0400
+        Mon, 3 Jun 2019 11:52:27 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54118 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729600AbfFCPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:24 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0216B15AB;
-        Mon,  3 Jun 2019 08:52:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58E381A25;
+        Mon,  3 Jun 2019 08:52:24 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA3583F246;
-        Mon,  3 Jun 2019 08:52:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3EFF23F246;
+        Mon,  3 Jun 2019 08:52:23 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
         suzuki.poulose@arm.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [RFC PATCH 55/57] drivers: scsi: Use bus_find_next_device() helper
-Date:   Mon,  3 Jun 2019 16:50:21 +0100
-Message-Id: <1559577023-558-56-git-send-email-suzuki.poulose@arm.com>
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [RFC PATCH 56/57] drivers: Introduce driver_find_next_device() helper
+Date:   Mon,  3 Jun 2019 16:50:22 +0100
+Message-Id: <1559577023-558-57-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,37 +41,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reuse the generic helper to find the next device.
+Similar to bus_find_next_device(), add a helper to find
+the next device for the given driver.
 
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/scsi/scsi_proc.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ include/linux/device.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/scsi/scsi_proc.c b/drivers/scsi/scsi_proc.c
-index c074631..5b31322 100644
---- a/drivers/scsi/scsi_proc.c
-+++ b/drivers/scsi/scsi_proc.c
-@@ -372,15 +372,10 @@ static ssize_t proc_scsi_write(struct file *file, const char __user *buf,
- 	return err;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 528efc0..39a7755 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -456,6 +456,12 @@ driver_find_device_by_fwnode(struct device_driver *drv,
+ 	return driver_find_device(drv, start, (void *)fwnode, device_match_fwnode);
  }
  
--static int always_match(struct device *dev, const void *data)
--{
--	return 1;
--}
--
- static inline struct device *next_scsi_device(struct device *start)
- {
--	struct device *next = bus_find_device(&scsi_bus_type, start, NULL,
--					      always_match);
-+	struct device *next = bus_find_next_device(&scsi_bus_type, start);
++static inline struct device *driver_find_next_device(struct device_driver *drv,
++						     struct device *start)
++{
++	return driver_find_device(drv, start, NULL, device_match_any);
++}
 +
- 	put_device(start);
- 	return next;
- }
+ void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ 
 -- 
 2.7.4
 
