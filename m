@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608CC28D18
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3225C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0BE2723C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42FC27278
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QbBj31DP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IUaOF2f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfFCSe0 (ORCPT
+        id S1726945AbfFCSg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:34:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45466 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfFCSeR (ORCPT
+        Mon, 3 Jun 2019 14:36:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38852 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfFCSe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w34so8747413pga.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:16 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:28 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f97so7317962plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ukgxjUVacW1jHs3CdZtBXUAQpC+KY/oy4Y6vaU2txQg=;
-        b=QbBj31DPtDEEKAfXFArKVV1cOEVdNz2dpGirqcGe0dw0aLD+a9wa9a/KUmjSqXhRjC
-         t/bfdERdVDmd2xLQMnFUpymFWmfJtv9Oi4y5P3h102aHGRqX20vdu6C3QQjp5OkmqtnE
-         f7VMeYxRz0L0bi5Xe4HTkYnZ6eyKbdAQYkAQw=
+        bh=u2iNll8uhS6Uwr30v8JVoQ7KAFJuDqhTY9jr2kV191w=;
+        b=IUaOF2f/aLHZlRp/CKxKRja+j6DpZRmPQAAoFvjvHYQbmYrYbj4OZeQX4YWm9OogLy
+         fhGOGTRmr49+n67hNEJSLQStlpzETmtom4MnskP6Z9yzw/odoWakM+3Csdqy7yaGDrJj
+         8XUkn/CiclE6rSJi3xr7P+2Qqw8UmBn359Ws0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ukgxjUVacW1jHs3CdZtBXUAQpC+KY/oy4Y6vaU2txQg=;
-        b=C2adt/6idupcS15s5HM6DJ2Yz3Lg1fFA4djo/wDrgoifdDcI/4tM4EMlYxKy8BsWGd
-         eN6+uzy+BA2kazBggG/P7LW4CREa79HDtvbjKkusqimcyjP+dMLBq3o4BXfAnfr2WWh2
-         L23//wcc9DIsiI1MDyqX8DjvaQ2A0EU+9idmRnJxjsmbcozMN03LNRJUXtQ8FWPRq8zM
-         ce9ZYAMmfBW3zEW4N6QfIWuScMq6YYExJjmFvxBSjK6JPZhtyR4w7adCx2wGixg7UD3r
-         RPoS1DpcH0WIMn9VfQLydqaaMU6IlhCz/1rzLyicfJ8QJd+bODNCdMRvxuXXBo1VS4nk
-         3z8g==
-X-Gm-Message-State: APjAAAVlt5UTFpdRbVVvShSOHZDN1MPJkk9wgBfO4DBafLZ4qq1Za3X5
-        2XIjeMUASvXzq3sRu8wGciypFA==
-X-Google-Smtp-Source: APXvYqxwvcrQUfi/we8ZcGH1RECU4k1nFDPv75vRdd1kx0HH0AsSHQeGlRFESZbUw//QuDBCYKoWQA==
-X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr17538211pjo.111.1559586856221;
-        Mon, 03 Jun 2019 11:34:16 -0700 (PDT)
+        bh=u2iNll8uhS6Uwr30v8JVoQ7KAFJuDqhTY9jr2kV191w=;
+        b=ocmQ/UZ5x2pPpAbA9VtV/MNrTZV3lDV6ZfYOvXzxfqR5PBkLihtcukkDf2lnjm8+by
+         1n18RpqOHzTZrRab9mdOxYEVAUY8R7A4g5uPRUfQxkxusKsFamoEyVZ+pV82Fv0GTPsv
+         AX6TbvK2YmJoIoccmKlY59ykLQ5BJ++0HOLU17/7ESzQUtXi1gLKGxUKxZAbOW/9Kww+
+         b4iAYj+2PPHXOHN8bA61TV11L7mfBdAIYwAB+gYxV0s6ojamQ6cqvDRb+8iCG5W77htA
+         WdLUwNSt32qCAPgJIN27Ir/IXM+u8ayWuW4S3TWlBde7kobVQuefhcYSfoM6kMqbTtzX
+         FIOw==
+X-Gm-Message-State: APjAAAU0P/A1NgmDysd0WF6ieXID66DOcXTFaUNyh/ulwvuGiuCY6oe9
+        D1ZFDHxIijksfnVe8JPCh/JZgg==
+X-Google-Smtp-Source: APXvYqzrA+wQiYHDahm8LHXOo2F7hGqBfGRvO5UUveNwHIgj4eeZXMwqHrOzCHyDOfD+Ph8e2qtPGA==
+X-Received: by 2002:a17:902:b084:: with SMTP id p4mr32995537plr.59.1559586868095;
+        Mon, 03 Jun 2019 11:34:28 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id bx5sm12775839pjb.25.2019.06.03.11.34.15
+        by smtp.gmail.com with ESMTPSA id r9sm12305419pgv.24.2019.06.03.11.34.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:15 -0700 (PDT)
+        Mon, 03 Jun 2019 11:34:27 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -61,9 +61,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 06/30] mfd: cros_ec: use BIT macro
-Date:   Mon,  3 Jun 2019 11:33:37 -0700
-Message-Id: <20190603183401.151408-7-gwendal@chromium.org>
+Subject: [RESEND PATCH v3 14/30] mfd: cros_ec: Add EC transport protocol v4
+Date:   Mon,  3 Jun 2019 11:33:45 -0700
+Message-Id: <20190603183401.151408-15-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
 References: <20190603183401.151408-1-gwendal@chromium.org>
@@ -74,300 +74,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace (1 << ...) with BIT().
+Introduce a new transport procotol between EC and host.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 110 +++++++++++++--------------
- 1 file changed, 55 insertions(+), 55 deletions(-)
+ include/linux/mfd/cros_ec_commands.h | 143 ++++++++++++++++++++++++++-
+ 1 file changed, 141 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 8ad77d8a9141..e97e9e976bd0 100644
+index 76943e64998a..40a8069a58e8 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -28,7 +28,7 @@
- #define EC_PROTO_VERSION          0x00000002
+@@ -455,7 +455,10 @@
+ #define EC_LPC_STATUS_BUSY_MASK \
+ 	(EC_LPC_STATUS_FROM_HOST | EC_LPC_STATUS_PROCESSING)
  
- /* Command version mask */
--#define EC_VER_MASK(version) (1UL << (version))
-+#define EC_VER_MASK(version) BIT(version)
- 
- /* I/O addresses for ACPI commands */
- #define EC_LPC_ADDR_ACPI_DATA  0x62
-@@ -57,13 +57,13 @@
- #define EC_HOST_CMD_REGION_SIZE 0x80
- 
- /* EC command register bit functions */
--#define EC_LPC_CMDR_DATA	(1 << 0)  /* Data ready for host to read */
--#define EC_LPC_CMDR_PENDING	(1 << 1)  /* Write pending to EC */
--#define EC_LPC_CMDR_BUSY	(1 << 2)  /* EC is busy processing a command */
--#define EC_LPC_CMDR_CMD		(1 << 3)  /* Last host write was a command */
--#define EC_LPC_CMDR_ACPI_BRST	(1 << 4)  /* Burst mode (not used) */
--#define EC_LPC_CMDR_SCI		(1 << 5)  /* SCI event is pending */
--#define EC_LPC_CMDR_SMI		(1 << 6)  /* SMI event is pending */
-+#define EC_LPC_CMDR_DATA	BIT(0)  /* Data ready for host to read */
-+#define EC_LPC_CMDR_PENDING	BIT(1)  /* Write pending to EC */
-+#define EC_LPC_CMDR_BUSY	BIT(2)  /* EC is busy processing a command */
-+#define EC_LPC_CMDR_CMD		BIT(3)  /* Last host write was a command */
-+#define EC_LPC_CMDR_ACPI_BRST	BIT(4)  /* Burst mode (not used) */
-+#define EC_LPC_CMDR_SCI		BIT(5)  /* SCI event is pending */
-+#define EC_LPC_CMDR_SMI		BIT(6)  /* SMI event is pending */
- 
- #define EC_LPC_ADDR_MEMMAP       0x900
- #define EC_MEMMAP_SIZE         255 /* ACPI IO buffer max is 255 bytes */
-@@ -110,8 +110,8 @@
- 
- /* Define the format of the accelerometer mapped memory status byte. */
- #define EC_MEMMAP_ACC_STATUS_SAMPLE_ID_MASK  0x0f
--#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        (1 << 4)
--#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    (1 << 7)
-+#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        BIT(4)
-+#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    BIT(7)
- 
- /* Number of temp sensors at EC_MEMMAP_TEMP_SENSOR */
- #define EC_TEMP_SENSOR_ENTRIES     16
-@@ -336,7 +336,7 @@ enum host_event_code {
- 	EC_HOST_EVENT_INVALID = 32
- };
- /* Host event mask */
--#define EC_HOST_EVENT_MASK(event_code) (1UL << ((event_code) - 1))
-+#define EC_HOST_EVENT_MASK(event_code) BIT_ULL((event_code) - 1)
- 
- /**
-  * struct ec_lpc_host_args - Arguments at EC_LPC_ADDR_HOST_ARGS
-@@ -734,7 +734,7 @@ struct ec_response_get_cmd_versions {
- 
- /* Avoid using ec_status which is for return values */
- enum ec_comms_status {
--	EC_COMMS_STATUS_PROCESSING	= 1 << 0,	/* Processing cmd */
-+	EC_COMMS_STATUS_PROCESSING	= BIT(0),	/* Processing cmd */
- };
- 
- /**
-@@ -766,7 +766,7 @@ struct ec_response_test_protocol {
- 
- /* Flags for ec_response_get_protocol_info.flags */
- /* EC_RES_IN_PROGRESS may be returned if a command is slow */
--#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED (1 << 0)
-+#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED BIT(0)
- 
- /**
-  * struct ec_response_get_protocol_info - Response to the get protocol info.
-@@ -925,8 +925,8 @@ enum ec_feature_code {
- 	EC_FEATURE_ISH = 40,
- };
- 
--#define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
--#define EC_FEATURE_MASK_1(event_code) (1UL << (event_code - 32))
-+#define EC_FEATURE_MASK_0(event_code) BIT(event_code % 32)
-+#define EC_FEATURE_MASK_1(event_code) BIT(event_code - 32)
- 
- struct ec_response_get_features {
- 	uint32_t flags[2];
-@@ -961,7 +961,7 @@ struct ec_response_flash_info {
-  * Flags for version 1+ flash info command
-  * EC flash erases bits to 0 instead of 1.
-  */
--#define EC_FLASH_INFO_ERASE_TO_0 (1 << 0)
-+#define EC_FLASH_INFO_ERASE_TO_0 BIT(0)
- 
- /**
-  * struct ec_response_flash_info_1 - Response to the flash info v1 command.
-@@ -1061,26 +1061,26 @@ struct ec_params_flash_erase {
- 
- /* Flags for flash protection */
- /* RO flash code protected when the EC boots */
--#define EC_FLASH_PROTECT_RO_AT_BOOT         (1 << 0)
-+#define EC_FLASH_PROTECT_RO_AT_BOOT         BIT(0)
- /*
-  * RO flash code protected now.  If this bit is set, at-boot status cannot
-  * be changed.
-  */
--#define EC_FLASH_PROTECT_RO_NOW             (1 << 1)
-+#define EC_FLASH_PROTECT_RO_NOW             BIT(1)
- /* Entire flash code protected now, until reboot. */
--#define EC_FLASH_PROTECT_ALL_NOW            (1 << 2)
-+#define EC_FLASH_PROTECT_ALL_NOW            BIT(2)
- /* Flash write protect GPIO is asserted now */
--#define EC_FLASH_PROTECT_GPIO_ASSERTED      (1 << 3)
-+#define EC_FLASH_PROTECT_GPIO_ASSERTED      BIT(3)
- /* Error - at least one bank of flash is stuck locked, and cannot be unlocked */
--#define EC_FLASH_PROTECT_ERROR_STUCK        (1 << 4)
-+#define EC_FLASH_PROTECT_ERROR_STUCK        BIT(4)
- /*
-  * Error - flash protection is in inconsistent state.  At least one bank of
-  * flash which should be protected is not protected.  Usually fixed by
-  * re-requesting the desired flags, or by a hard reset if that fails.
-  */
--#define EC_FLASH_PROTECT_ERROR_INCONSISTENT (1 << 5)
-+#define EC_FLASH_PROTECT_ERROR_INCONSISTENT BIT(5)
- /* Entire flash code protected when the EC boots */
--#define EC_FLASH_PROTECT_ALL_AT_BOOT        (1 << 6)
-+#define EC_FLASH_PROTECT_ALL_AT_BOOT        BIT(6)
- 
- /**
-  * struct ec_params_flash_protect - Parameters for the flash protect command.
-@@ -1451,8 +1451,8 @@ enum ec_led_id {
- };
- 
- /* LED control flags */
--#define EC_LED_FLAGS_QUERY (1 << 0) /* Query LED capability only */
--#define EC_LED_FLAGS_AUTO  (1 << 1) /* Switch LED back to automatic control */
-+#define EC_LED_FLAGS_QUERY BIT(0) /* Query LED capability only */
-+#define EC_LED_FLAGS_AUTO  BIT(1) /* Switch LED back to automatic control */
- 
- enum ec_led_colors {
- 	EC_LED_COLOR_RED = 0,
-@@ -2116,13 +2116,13 @@ enum mkbp_config_flags {
- };
- 
- enum mkbp_config_valid {
--	EC_MKBP_VALID_SCAN_PERIOD		= 1 << 0,
--	EC_MKBP_VALID_POLL_TIMEOUT		= 1 << 1,
--	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= 1 << 3,
--	EC_MKBP_VALID_OUTPUT_SETTLE		= 1 << 4,
--	EC_MKBP_VALID_DEBOUNCE_DOWN		= 1 << 5,
--	EC_MKBP_VALID_DEBOUNCE_UP		= 1 << 6,
--	EC_MKBP_VALID_FIFO_MAX_DEPTH		= 1 << 7,
-+	EC_MKBP_VALID_SCAN_PERIOD		= BIT(0),
-+	EC_MKBP_VALID_POLL_TIMEOUT		= BIT(1),
-+	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= BIT(3),
-+	EC_MKBP_VALID_OUTPUT_SETTLE		= BIT(4),
-+	EC_MKBP_VALID_DEBOUNCE_DOWN		= BIT(5),
-+	EC_MKBP_VALID_DEBOUNCE_UP		= BIT(6),
-+	EC_MKBP_VALID_FIFO_MAX_DEPTH		= BIT(7),
+-/* Host command response codes */
++/*
++ * Host command response codes (16-bit).  Note that response codes should be
++ * stored in a uint16_t rather than directly in a value of this type.
++ */
+ enum ec_status {
+ 	EC_RES_SUCCESS = 0,
+ 	EC_RES_INVALID_COMMAND = 1,
+@@ -471,7 +474,13 @@ enum ec_status {
+ 	EC_RES_OVERFLOW = 11,		/* Table / data overflow */
+ 	EC_RES_INVALID_HEADER = 12,     /* Header contains invalid data */
+ 	EC_RES_REQUEST_TRUNCATED = 13,  /* Didn't get the entire request */
+-	EC_RES_RESPONSE_TOO_BIG = 14    /* Response was too big to handle */
++	EC_RES_RESPONSE_TOO_BIG = 14,   /* Response was too big to handle */
++	EC_RES_BUS_ERROR = 15,		/* Communications bus error */
++	EC_RES_BUSY = 16,		/* Up but too busy.  Should retry */
++	EC_RES_INVALID_HEADER_VERSION = 17,  /* Header version invalid */
++	EC_RES_INVALID_HEADER_CRC = 18,      /* Header CRC invalid */
++	EC_RES_INVALID_DATA_CRC = 19,        /* Data CRC invalid */
++	EC_RES_DUP_UNAVAILABLE = 20,         /* Can't resend response */
  };
  
  /*
-@@ -2176,7 +2176,7 @@ enum ec_collect_flags {
- 	 * Indicates this scan was processed by the EC. Due to timing, some
- 	 * scans may be skipped.
- 	 */
--	EC_KEYSCAN_SEQ_FLAG_DONE	= 1 << 0,
-+	EC_KEYSCAN_SEQ_FLAG_DONE	= BIT(0),
- };
+@@ -744,6 +753,136 @@ struct ec_host_response {
+ 	uint16_t reserved;
+ } __ec_align4;
  
- struct ec_collect_item {
-@@ -2543,7 +2543,7 @@ struct ec_params_console_read_v1 {
-  */
- #define EC_CMD_BATTERY_CUT_OFF 0x0099
- 
--#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	(1 << 0)
-+#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	BIT(0)
- 
- struct ec_params_battery_cutoff {
- 	uint8_t flags;
-@@ -2614,13 +2614,13 @@ struct ec_response_power_info {
- #define EC_CMD_I2C_PASSTHRU 0x009E
- 
- /* Read data; if not present, message is a write */
--#define EC_I2C_FLAG_READ	(1 << 15)
-+#define EC_I2C_FLAG_READ	BIT(15)
- 
- /* Mask for address */
- #define EC_I2C_ADDR_MASK	0x3ff
- 
--#define EC_I2C_STATUS_NAK	(1 << 0) /* Transfer was not acknowledged */
--#define EC_I2C_STATUS_TIMEOUT	(1 << 1) /* Timeout during transfer */
-+#define EC_I2C_STATUS_NAK	BIT(0) /* Transfer was not acknowledged */
-+#define EC_I2C_STATUS_TIMEOUT	BIT(1) /* Timeout during transfer */
- 
- /* Any error */
- #define EC_I2C_STATUS_ERROR	(EC_I2C_STATUS_NAK | EC_I2C_STATUS_TIMEOUT)
-@@ -2650,27 +2650,27 @@ struct ec_response_i2c_passthru {
- 
- /* Reasons to start hang detection timer */
- /* Power button pressed */
--#define EC_HANG_START_ON_POWER_PRESS  (1 << 0)
-+#define EC_HANG_START_ON_POWER_PRESS  BIT(0)
- 
- /* Lid closed */
--#define EC_HANG_START_ON_LID_CLOSE    (1 << 1)
-+#define EC_HANG_START_ON_LID_CLOSE    BIT(1)
- 
-  /* Lid opened */
--#define EC_HANG_START_ON_LID_OPEN     (1 << 2)
-+#define EC_HANG_START_ON_LID_OPEN     BIT(2)
- 
- /* Start of AP S3->S0 transition (booting or resuming from suspend) */
--#define EC_HANG_START_ON_RESUME       (1 << 3)
-+#define EC_HANG_START_ON_RESUME       BIT(3)
- 
- /* Reasons to cancel hang detection */
- 
- /* Power button released */
--#define EC_HANG_STOP_ON_POWER_RELEASE (1 << 8)
-+#define EC_HANG_STOP_ON_POWER_RELEASE BIT(8)
- 
- /* Any host command from AP received */
--#define EC_HANG_STOP_ON_HOST_COMMAND  (1 << 9)
-+#define EC_HANG_STOP_ON_HOST_COMMAND  BIT(9)
- 
- /* Stop on end of AP S0->S3 transition (suspending or shutting down) */
--#define EC_HANG_STOP_ON_SUSPEND       (1 << 10)
-+#define EC_HANG_STOP_ON_SUSPEND       BIT(10)
- 
++/*****************************************************************************/
++
++/*
++ * Host command protocol V4.
++ *
++ * Packets always start with a request or response header.  They are followed
++ * by data_len bytes of data.  If the data_crc_present flag is set, the data
++ * bytes are followed by a CRC-8 of that data, using using x^8 + x^2 + x + 1
++ * polynomial.
++ *
++ * Host algorithm when sending a request q:
++ *
++ * 101) tries_left=(some value, e.g. 3);
++ * 102) q.seq_num++
++ * 103) q.seq_dup=0
++ * 104) Calculate q.header_crc.
++ * 105) Send request q to EC.
++ * 106) Wait for response r.  Go to 201 if received or 301 if timeout.
++ *
++ * 201) If r.struct_version != 4, go to 301.
++ * 202) If r.header_crc mismatches calculated CRC for r header, go to 301.
++ * 203) If r.data_crc_present and r.data_crc mismatches, go to 301.
++ * 204) If r.seq_num != q.seq_num, go to 301.
++ * 205) If r.seq_dup == q.seq_dup, return success.
++ * 207) If r.seq_dup == 1, go to 301.
++ * 208) Return error.
++ *
++ * 301) If --tries_left <= 0, return error.
++ * 302) If q.seq_dup == 1, go to 105.
++ * 303) q.seq_dup = 1
++ * 304) Go to 104.
++ *
++ * EC algorithm when receiving a request q.
++ * EC has response buffer r, error buffer e.
++ *
++ * 101) If q.struct_version != 4, set e.result = EC_RES_INVALID_HEADER_VERSION
++ *      and go to 301
++ * 102) If q.header_crc mismatches calculated CRC, set e.result =
++ *      EC_RES_INVALID_HEADER_CRC and go to 301
++ * 103) If q.data_crc_present, calculate data CRC.  If that mismatches the CRC
++ *      byte at the end of the packet, set e.result = EC_RES_INVALID_DATA_CRC
++ *      and go to 301.
++ * 104) If q.seq_dup == 0, go to 201.
++ * 105) If q.seq_num != r.seq_num, go to 201.
++ * 106) If q.seq_dup == r.seq_dup, go to 205, else go to 203.
++ *
++ * 201) Process request q into response r.
++ * 202) r.seq_num = q.seq_num
++ * 203) r.seq_dup = q.seq_dup
++ * 204) Calculate r.header_crc
++ * 205) If r.data_len > 0 and data is no longer available, set e.result =
++ *      EC_RES_DUP_UNAVAILABLE and go to 301.
++ * 206) Send response r.
++ *
++ * 301) e.seq_num = q.seq_num
++ * 302) e.seq_dup = q.seq_dup
++ * 303) Calculate e.header_crc.
++ * 304) Send error response e.
++ */
++
++/* Version 4 request from host */
++struct ec_host_request4 {
++	/*
++	 * bits 0-3: struct_version: Structure version (=4)
++	 * bit    4: is_response: Is response (=0)
++	 * bits 5-6: seq_num: Sequence number
++	 * bit    7: seq_dup: Sequence duplicate flag
++	 */
++	uint8_t fields0;
++
++	/*
++	 * bits 0-4: command_version: Command version
++	 * bits 5-6: Reserved (set 0, ignore on read)
++	 * bit    7: data_crc_present: Is data CRC present after data
++	 */
++	uint8_t fields1;
++
++	/* Command code (EC_CMD_*) */
++	uint16_t command;
++
++	/* Length of data which follows this header (not including data CRC) */
++	uint16_t data_len;
++
++	/* Reserved (set 0, ignore on read) */
++	uint8_t reserved;
++
++	/* CRC-8 of above fields, using x^8 + x^2 + x + 1 polynomial */
++	uint8_t header_crc;
++} __ec_align4;
++
++/* Version 4 response from EC */
++struct ec_host_response4 {
++	/*
++	 * bits 0-3: struct_version: Structure version (=4)
++	 * bit    4: is_response: Is response (=1)
++	 * bits 5-6: seq_num: Sequence number
++	 * bit    7: seq_dup: Sequence duplicate flag
++	 */
++	uint8_t fields0;
++
++	/*
++	 * bits 0-6: Reserved (set 0, ignore on read)
++	 * bit    7: data_crc_present: Is data CRC present after data
++	 */
++	uint8_t fields1;
++
++	/* Result code (EC_RES_*) */
++	uint16_t result;
++
++	/* Length of data which follows this header (not including data CRC) */
++	uint16_t data_len;
++
++	/* Reserved (set 0, ignore on read) */
++	uint8_t reserved;
++
++	/* CRC-8 of above fields, using x^8 + x^2 + x + 1 polynomial */
++	uint8_t header_crc;
++} __ec_align4;
++
++/* Fields in fields0 byte */
++#define EC_PACKET4_0_STRUCT_VERSION_MASK	0x0f
++#define EC_PACKET4_0_IS_RESPONSE_MASK		0x10
++#define EC_PACKET4_0_SEQ_NUM_SHIFT		5
++#define EC_PACKET4_0_SEQ_NUM_MASK		0x60
++#define EC_PACKET4_0_SEQ_DUP_MASK		0x80
++
++/* Fields in fields1 byte */
++#define EC_PACKET4_1_COMMAND_VERSION_MASK	0x1f  /* (request only) */
++#define EC_PACKET4_1_DATA_CRC_PRESENT_MASK	0x80
++
+ /*****************************************************************************/
  /*
-  * If this flag is set, all the other fields are ignored, and the hang detect
-@@ -2678,14 +2678,14 @@ struct ec_response_i2c_passthru {
-  * without reconfiguring any of the other hang detect settings.  Note that
-  * you must previously have configured the timeouts.
-  */
--#define EC_HANG_START_NOW             (1 << 30)
-+#define EC_HANG_START_NOW             BIT(30)
- 
- /*
-  * If this flag is set, all the other fields are ignored (including
-  * EC_HANG_START_NOW).  This provides the AP a way to stop the hang timer
-  * without reconfiguring any of the other hang detect settings.
-  */
--#define EC_HANG_STOP_NOW              (1 << 31)
-+#define EC_HANG_STOP_NOW              BIT(31)
- 
- struct ec_params_hang_detect {
- 	/* Flags; see EC_HANG_* */
-@@ -3040,8 +3040,8 @@ enum ec_reboot_cmd {
- };
- 
- /* Flags for ec_params_reboot_ec.reboot_flags */
--#define EC_REBOOT_FLAG_RESERVED0      (1 << 0)  /* Was recovery request */
--#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN (1 << 1)  /* Reboot after AP shutdown */
-+#define EC_REBOOT_FLAG_RESERVED0      BIT(0)  /* Was recovery request */
-+#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN BIT(1)  /* Reboot after AP shutdown */
- 
- struct ec_params_reboot_ec {
- 	uint8_t cmd;           /* enum ec_reboot_cmd */
-@@ -3343,9 +3343,9 @@ struct ec_params_usb_pd_control {
- 	uint8_t swap;
- } __ec_align1;
- 
--#define PD_CTRL_RESP_ENABLED_COMMS      (1 << 0) /* Communication enabled */
--#define PD_CTRL_RESP_ENABLED_CONNECTED  (1 << 1) /* Device connected */
--#define PD_CTRL_RESP_ENABLED_PD_CAPABLE (1 << 2) /* Partner is PD capable */
-+#define PD_CTRL_RESP_ENABLED_COMMS      BIT(0) /* Communication enabled */
-+#define PD_CTRL_RESP_ENABLED_CONNECTED  BIT(1) /* Device connected */
-+#define PD_CTRL_RESP_ENABLED_PD_CAPABLE BIT(2) /* Partner is PD capable */
- 
- #define PD_CTRL_RESP_ROLE_POWER         BIT(0) /* 0=SNK/1=SRC */
- #define PD_CTRL_RESP_ROLE_DATA          BIT(1) /* 0=UFP/1=DFP */
-@@ -3545,10 +3545,10 @@ struct ec_params_usb_pd_mux_info {
- } __ec_align1;
- 
- /* Flags representing mux state */
--#define USB_PD_MUX_USB_ENABLED       (1 << 0)
--#define USB_PD_MUX_DP_ENABLED        (1 << 1)
--#define USB_PD_MUX_POLARITY_INVERTED (1 << 2)
--#define USB_PD_MUX_HPD_IRQ           (1 << 3)
-+#define USB_PD_MUX_USB_ENABLED       BIT(0) /* USB connected */
-+#define USB_PD_MUX_DP_ENABLED        BIT(1) /* DP connected */
-+#define USB_PD_MUX_POLARITY_INVERTED BIT(2) /* CC line Polarity inverted */
-+#define USB_PD_MUX_HPD_IRQ           BIT(3) /* HPD IRQ is asserted */
- 
- struct ec_response_usb_pd_mux_info {
- 	uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
+  * Notes on commands:
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
