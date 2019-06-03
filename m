@@ -2,128 +2,64 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C411C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0449C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453EF26E61
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559593593;
-	bh=v9calqM6PHGdBj4mALXAqgtFc8xx6nsYR8rF3Gxiqq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PiDRds2tuMdv2wQcATpX29C+rQ1cdG7gCjOVH3FNqTtqBtS3x5pWyssAAQpjh7qFW
-	 TUjshXZvouHStsLYgWJPwm0QcLqyj/C0h5f05xLMuHm0VYCOFv+hYntFTpTKV107+y
-	 JQdl+/+rVibIwthc/5fVjknPEbsbz8vm3XlH1TZ0=
+	by mail.kernel.org (Postfix) with ESMTP id B34C326E91
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfFCU0c (ORCPT
+        id S1726406AbfFCU2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 16:28:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56757 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfFCU0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:26:32 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 551A626E5D;
-        Mon,  3 Jun 2019 20:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559593591;
-        bh=v9calqM6PHGdBj4mALXAqgtFc8xx6nsYR8rF3Gxiqq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zSYE0C9l3qM676qHbrmOp5NvQJ7w+P/sokWBCGTmaeHzN6QtS0eN38H8ncd3DClcz
-         DjJALXzTzp4c2qWSFZWGgUjssI7sur8d70+9u1UUURc9nWf9sh2sWM8WHjjM+HwVYQ
-         n/S63kQSg7IiUbcB3uM+zCD9Gf6KamrIGCdJ016w=
-Date:   Mon, 3 Jun 2019 13:26:30 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Daniel Rosenberg <drosen@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-f2fs-devel@lists.sourceforge.net,
+        id S1726033AbfFCU2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 16:28:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 13:28:29 -0700
+X-ExtLoop1: 1
+Received: from jgaire-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.169])
+  by orsmga007.jf.intel.com with ESMTP; 03 Jun 2019 13:28:22 -0700
+Date:   Mon, 3 Jun 2019 23:28:15 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v3 3/4] f2fs: Fix accounting for unusable blocks
-Message-ID: <20190603202630.GB34729@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190530004906.261170-1-drosen@google.com>
- <20190530004906.261170-4-drosen@google.com>
- <c99079bd-99e1-e100-08f6-1e8adae5e722@huawei.com>
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org
+Subject: Re: [PATCH v4 0/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190603202815.GA4894@linux.intel.com>
+References: <20190530152758.16628-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c99079bd-99e1-e100-08f6-1e8adae5e722@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20190530152758.16628-1-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03, Chao Yu wrote:
-> On 2019/5/30 8:49, Daniel Rosenberg wrote:
-> > Fixes possible underflows when dealing with unusable blocks.
-> > 
-> > Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> > ---
-> >  fs/f2fs/f2fs.h | 15 ++++++++++-----
-> >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 9b3d9977cd1ef..a39cc4ffeb4b1 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -1769,8 +1769,12 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
-> >  
-> >  	if (!__allow_reserved_blocks(sbi, inode, true))
-> >  		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
-> > -	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
-> > -		avail_user_block_count -= sbi->unusable_block_count;
-> > +	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
-> > +		if (avail_user_block_count > sbi->unusable_block_count)
-> > +			avail_user_block_count = 0;
+On Thu, May 30, 2019 at 11:27:56AM -0400, Sasha Levin wrote:
+> Changes since v3:
 > 
-> avail_user_block_count -= sbi->unusable_block_count;
+>  - Address comments by Jarkko Sakkinen
+>  - Address comments by Igor Opaniuk
 > 
-> > +		else
-> > +			avail_user_block_count -= sbi->unusable_block_count;
-> 
-> avail_user_block_count = 0;
-> 
+> Sasha Levin (2):
+>   fTPM: firmware TPM running in TEE
+>   fTPM: add documentation for ftpm driver
 
-I fixed this.
+I think patches start to look proper but I wonder can anyone test
+these? I don't think before that I can merge these.
 
-Thanks,
-
-> Thanks,
-> 
-> > +	}
-> >  	if (unlikely(sbi->total_valid_block_count > avail_user_block_count)) {
-> >  		diff = sbi->total_valid_block_count - avail_user_block_count;
-> >  		if (diff > *count)
-> > @@ -1970,7 +1974,7 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
-> >  					struct inode *inode, bool is_inode)
-> >  {
-> >  	block_t	valid_block_count;
-> > -	unsigned int valid_node_count;
-> > +	unsigned int valid_node_count, user_block_count;
-> >  	int err;
-> >  
-> >  	if (is_inode) {
-> > @@ -1997,10 +2001,11 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
-> >  
-> >  	if (!__allow_reserved_blocks(sbi, inode, false))
-> >  		valid_block_count += F2FS_OPTION(sbi).root_reserved_blocks;
-> > +	user_block_count = sbi->user_block_count;
-> >  	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
-> > -		valid_block_count += sbi->unusable_block_count;
-> > +		user_block_count -= sbi->unusable_block_count;
-> >  
-> > -	if (unlikely(valid_block_count > sbi->user_block_count)) {
-> > +	if (unlikely(valid_block_count > user_block_count)) {
-> >  		spin_unlock(&sbi->stat_lock);
-> >  		goto enospc;
-> >  	}
-> > 
+/Jarkko
