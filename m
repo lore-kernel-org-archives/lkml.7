@@ -2,162 +2,234 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626B0C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFEBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3935A24315
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C252A23A5C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 21:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgXqHJD2"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="otHK+Dp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFCVtg (ORCPT
+        id S1726343AbfFCVuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 17:49:36 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42726 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfFCVtf (ORCPT
+        Mon, 3 Jun 2019 17:50:18 -0400
+Received: from mail.efficios.com ([167.114.142.138]:36418 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfFCVuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 17:49:35 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so2864664edq.9;
-        Mon, 03 Jun 2019 14:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jSb30N0jvHoftFPeqnRT0DDU5guICPUBTZ+cum9JlR4=;
-        b=mgXqHJD2asQbJ2oQs51g/wKDUPSvM+cdNOzAPTyJufLHFAJ19jz11IiehaMBP9Q8ik
-         U7cGojJDSlIkY3XlU1wbDp/ZvfgCPH2xtvqbe8RTcqyW4RgEYqKYfvzgUXPExUHfWphX
-         l6AEhObQDHlSi21ygsz20Rc+h9b47N32S+aUh7dW5enm+vZUggpdxoXVUyuZMF5MtWwu
-         HvQgRVJ2g/tV3CdwcqyDzfDmGbDOJgMVhPQtiAPMWcP+2I1nYtbVep68GhMqaZszwkMu
-         ZoMyIv97BEMZtXBzKLTZmelReybdKtsgdltfFU51nMZzyYEnx+zhis0dtU/Ii/M4+PfR
-         vrDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jSb30N0jvHoftFPeqnRT0DDU5guICPUBTZ+cum9JlR4=;
-        b=j/w/YqFMJVKc+N4HOxL9Ycgncj+YQcIbHaLhxFJcCtft0530EWSYoCDp5/CRyzt/TY
-         fbRgMlLOkXbbctJcu4iYJDAhAxfc6D19RYy8obc7qsiOZYejG2jxorqaRDQHqnzR7yV2
-         hFv1Y7pBm3oiTKbod7Q8zzV5P5tnEnlSjwCbJTXaD3oMhojosGQPH6gvWtxQOrMC4Cnf
-         qmkJPYIhxTj7LuORRSldylSRmFbGz2nQEuYQfM/04ISS7gTutvpAyH55g+26oonNLSwV
-         rp3TgeTo3eN9IogWHVXd/nQs0u74bsAsU0J6qYmLJtD1X4PyiYU4WDXSHnwVE/eUxtuh
-         mVTw==
-X-Gm-Message-State: APjAAAU0Kqq0cVk6Kvg7QTN6RI59VNy/pAeJvGv5LxcQeStcb23oa4Gg
-        NJbO7ZM150kwuCsfwRcpOeM=
-X-Google-Smtp-Source: APXvYqy1VbSFtSybN1lKgHKlPjNOgnekacgTTpaBFyeruT/9MIRoRmfvBRLBg5v3bxan4Gxq56A6XA==
-X-Received: by 2002:aa7:c645:: with SMTP id z5mr31432297edr.43.1559598573674;
-        Mon, 03 Jun 2019 14:49:33 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id d5sm1533710edr.8.2019.06.03.14.49.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 14:49:32 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 21:49:32 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 05/11] drivers/base/memory: Pass a block_id to
- init_memory_block()
-Message-ID: <20190603214932.3xsvxwiiutcve4tz@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-6-david@redhat.com>
+        Mon, 3 Jun 2019 17:50:18 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 4EF181E9743;
+        Mon,  3 Jun 2019 17:32:42 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id iW9oEad8S2sy; Mon,  3 Jun 2019 17:32:41 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1BD5D1E973F;
+        Mon,  3 Jun 2019 17:32:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1BD5D1E973F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1559597561;
+        bh=nfyfj63ozJ3ZHO2GDnfJlIrHT8/X+g8nEVUfeEufS0E=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=otHK+Dp5OVJMd0mX0rbfivDErrWmYljmuqreMoJKrsEYYo4qW388sSFRdx9KhrNX2
+         DVjb4tg3AOPMQEnf1ZOJF/PqaUKOqsniOJirxx9RnVq30/djWOfioV8bdRyegqkpDu
+         3RRRaTU/j/q08678zbIoYAPBUF5WIhQlKN6NqKX7cXBxd0tgUdIr8Sq6zxVWual1pr
+         6klJJRNwieVYf7RMBx39HCn/fQoIKeHawu6zdN4/d2LjZytsiQUTmdhLvfvWYx7HB8
+         MUgHGhaZk4ekVwWf1l57wjjdEOQdGOpBJ+Mg8BPmzVjuC6WW54VOe58xqHVPbz7d6S
+         AO6qv2Qev1s5w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id ZN0JoOtfhMII; Mon,  3 Jun 2019 17:32:41 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id F20BF1E9735;
+        Mon,  3 Jun 2019 17:32:40 -0400 (EDT)
+Date:   Mon, 3 Jun 2019 17:32:40 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        lttng-dev <lttng-dev@lists.lttng.org>, rp <rp@svcs.cs.pdx.edu>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Message-ID: <1807476901.26032.1559597560952.JavaMail.zimbra@efficios.com>
+In-Reply-To: <990796059.510.1557174774246.JavaMail.zimbra@efficios.com>
+References: <990796059.510.1557174774246.JavaMail.zimbra@efficios.com>
+Subject: Re: [lttng-dev] [RELEASE] Userspace RCU 0.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-6-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Userspace RCU 0.11
+Thread-Index: 2Iev/flw77z+21I02ATmbGCqmUpBFOfMPHS/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 01:11:46PM +0200, David Hildenbrand wrote:
->We'll rework hotplug_memory_register() shortly, so it no longer consumes
->pass a section.
->
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> drivers/base/memory.c | 15 +++++++--------
-> 1 file changed, 7 insertions(+), 8 deletions(-)
->
->diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->index f180427e48f4..f914fa6fe350 100644
->--- a/drivers/base/memory.c
->+++ b/drivers/base/memory.c
->@@ -651,21 +651,18 @@ int register_memory(struct memory_block *memory)
-> 	return ret;
-> }
-> 
->-static int init_memory_block(struct memory_block **memory,
->-			     struct mem_section *section, unsigned long state)
->+static int init_memory_block(struct memory_block **memory, int block_id,
->+			     unsigned long state)
-> {
-> 	struct memory_block *mem;
-> 	unsigned long start_pfn;
->-	int scn_nr;
-> 	int ret = 0;
-> 
-> 	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> 	if (!mem)
-> 		return -ENOMEM;
-> 
->-	scn_nr = __section_nr(section);
->-	mem->start_section_nr =
->-			base_memory_block_id(scn_nr) * sections_per_block;
->+	mem->start_section_nr = block_id * sections_per_block;
-> 	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
-> 	mem->state = state;
-> 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
->@@ -694,7 +691,8 @@ static int add_memory_block(int base_section_nr)
-> 
-> 	if (section_count == 0)
-> 		return 0;
->-	ret = init_memory_block(&mem, __nr_to_section(section_nr), MEM_ONLINE);
->+	ret = init_memory_block(&mem, base_memory_block_id(base_section_nr),
->+				MEM_ONLINE);
+----- On May 6, 2019, at 4:32 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-If my understanding is correct, section_nr could be removed too.
-
-> 	if (ret)
-> 		return ret;
-> 	mem->section_count = section_count;
->@@ -707,6 +705,7 @@ static int add_memory_block(int base_section_nr)
->  */
-> int hotplug_memory_register(int nid, struct mem_section *section)
-> {
->+	int block_id = base_memory_block_id(__section_nr(section));
-> 	int ret = 0;
-> 	struct memory_block *mem;
+> Hi,
 > 
->@@ -717,7 +716,7 @@ int hotplug_memory_register(int nid, struct mem_section *section)
-> 		mem->section_count++;
-> 		put_device(&mem->dev);
-> 	} else {
->-		ret = init_memory_block(&mem, section, MEM_OFFLINE);
->+		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
-> 		if (ret)
-> 			goto out;
-> 		mem->section_count++;
->-- 
->2.20.1
+> This is a 0.11 release of the Userspace RCU project.
+
+FYI, I just released a 0.11.1 tag of Userspace RCU which does a
+mandatory soname bump. Distributions wishing to package it should
+grab 0.11.1. The prior release 0.11.0 changed the soname from 6.0.0 down
+to 5.1.0, which was not intended. This release bumps it to 6.1.0 as
+originally intended.
+
+Changes:
+
+2019-06-03 Userspace RCU 0.11.1
+        * Fix: SONAME bump to 6.1.0
+        * Fix: urcu/futex.h: users of struct timespec should include time.h
+
+Thanks,
+
+Mathieu
+
+
+> 
+> liburcu is a LGPLv2.1 userspace RCU (read-copy-update) library. This
+> data synchronization library provides read-side access which scales
+> linearly with the number of cores. It does so by allowing multiple
+> copies of a given data structure to live at the same time, and by
+> monitoring the data structure accesses to detect grace periods after
+> which memory reclamation is possible.
+> 
+> liburcu-cds provides efficient data structures based on RCU and
+> lock-free algorithms. Those structures include hash tables, queues,
+> stacks, and doubly-linked lists.
+> 
+> Here is the high-level view of the changes introduced in this release:
+> 
+> * Allow combining many urcu flavors within the same
+>  compile unit. Prefix public APIs with urcu_<flavor>_ prefix. Keep old
+>  symbols as aliases for backward compatibility.
+> 
+> * liburcu flavors public headers are moved, including them from previous
+>  headers for backward compatibility:
+> 
+>  urcu-bp.h -> urcu/urcu-bp.h
+>  urcu-qsbr.h -> urcu/urcu-qsbr.h
+>  urcu.h -> urcu/urcu-memb.h
+>  urcu.h (after #define RCU_MEMBARRIER) -> urcu/urcu-memb.h
+>  urcu.h (after #define RCU_MB) -> urcu/urcu-mb.h
+>  urcu.h (after #define RCU_SIGNAL) -> urcu/urcu-mb.h
+> 
+> * The library liburcu is renamed to liburcu-memb, keeping the old
+>  library name as alias for backward compatibility.
+> 
+> * RCU lock-free hash table debugging:
+> 
+>  --enable-cds-lfht-iter-debug is introduced.
+> 
+>  Building liburcu with --enable-cds-lfht-iter-debug and rebuilding
+>  application to match the ABI change allows finding cases where the hash
+>  table iterator is re-purposed to be used on a different hash table
+>  while still being used to iterate on a hash table.
+> 
+>  This option alters the rculfhash ABI. Make sure to compile both library
+>  and application with matching configuration.
+> 
+> * Added support for RISC-V architecture.
+> 
+> * Use membarrier PRIVATE_EXPEDITED when available from liburcu-bp and
+>  liburcu-memb flavors.
+> 
+> The backward compatibility header files, library shared objects, and
+> symbols will be kept for a few liburcu versions before being removed, at
+> which point a major soname bump will happen.
+> 
+> As always, feedback is welcome!
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> Changelog:
+> 
+> 2019-05-06 Userspace RCU 0.11.0
+>        * Bump library version to 6:0:1
+>        * Cleanup: update code layout to fix old gcc warning
+>        * Fix: typo CPPLAGS in examples Makefile
+>        * Harmonize pprint macro across projects
+>        * Check for TLS support after CC detection
+>        * Update macros from the autotools archive
+>        * tap-driver.sh: flush stdout after each test result
+>        * Update dead link in lgpl-relicensing.txt
+>        * Add multiflavor compat identifiers
+>        * Cleanup: missing sign compare fixes
+>        * Cleanup: enable signed/unsigned compare compiler warning
+>        * Cleanup: compiler warning on 32-bit architectures
+>        * config.h.in: rename CONFIG_RCU_MULTIFLAVOR to CONFIG_RCU_HAVE_MULTIFLAVOR
+>        * rculfhash: implement iterator debugging config option
+>        * Fix: examples silent rules on Solaris
+>        * Add missing fall through annotations
+>        * Fix: symbol aliases with TLS compat
+>        * Port: no symbols aliases on MacOS
+>        * Add -Wextra to CFLAGS
+>        * Add silent mode to examples Makefiles
+>        * doc: update examples to API changes
+>        * test multiflavor single compile unit
+>        * Update README following API changes
+>        * Use new header locations for includes from urcu code
+>        * Update call-rcu.h and defer.h comments and include guards
+>        * rculfqueue.h: do not include urcu-call-rcu.h
+>        * rculfhash: support use with multiple flavors per compile unit
+>        * rculfhash: do not include urcu-call-rcu.h from public API
+>        * Refactor liburcu to support many flavors per compile unit
+>        * Fix: only wait if work queue is empty in real-time mode
+>        * Fix: don't wait after completion of a work queue job batch
+>        * Fix: don't wait after completion of job batch if work queue is empty
+>        * Fix: workqueue: struct urcu_work vs rcu_head mixup
+>        * Cleanup: workqueue: update comments referring to call-rcu
+>        * Fix: mixup between URCU_WORKQUEUE_RT and URCU_CALL_RCU_RT
+>        * test_rwlock: Add per-thread count to verbose output
+>        * Add *.exe to gitignore for Cygwin
+>        * Fix: pthread_rwlock initialization on Cygwin
+>        * Fix: compat_futex_noasync on Cygwin
+>        * wfcqueue: allow defining CDS_WFCQ_WAIT_SLEEP to override `poll'
+>        * Update documentation for call_rcu before/after fork
+>        * Add support for the RISC-V architecture
+>        * Tests: Add tap-driver.sh for automake < 1.12
+>        * Tests: Replace prove by autotools tap runner
+>        * liburcu-bp: Use membarrier private expedited when available
+>        * liburcu: Use membarrier private expedited when available
+>        * rculfhash: improve error handling of mmap backend
+>        * Fix: don't use overlapping mmap mappings on Cygwin
+>        * Tests fix: errors in shell scripts
+>        * Revert "Use initial-exec tls model"
+>        * Use initial-exec tls model
+>        * Fix: don't use membarrier SHARED syscall command in liburcu-bp
+>        * Tests fix: add missing Cygwin thread id
+>        * Fix: assignment from incompatible pointer type warnings
+>        * Tests fix: unused variable warnings
+>        * Fix: add missing m68k headers to dist
+>        * Bump version to 0.11-pre
+> 
+> 
+> Project website: http://liburcu.org
+> Git repository: git://git.liburcu.org/urcu.git
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
+> _______________________________________________
+> lttng-dev mailing list
+> lttng-dev@lists.lttng.org
+> https://lists.lttng.org/cgi-bin/mailman/listinfo/lttng-dev
 
 -- 
-Wei Yang
-Help you, Help me
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
