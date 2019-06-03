@@ -7,97 +7,82 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719C7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324DC23D80
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F902409E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559588905;
-	bh=w74VBwz1842V2tJi9EuRrmeSWfxtE46cMzBtjfw0gFA=;
+	s=default; t=1559588965;
+	bh=v3DbUlOjumJJH58tAn84ookMKQ1r9+DBtCPDYVGrw7w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2jTSGHnQ+/X38TncBjID4k3/CDHv6mywlfgfgOlcEa/+0TvPO0LGBrJ3BMXYJ0IQu
-	 CAvDTs0UNRk2tzUxHdh/LJY5/wTH4Sd6cRCgLnSqcTlLKSvReGhOqNrhTPWmDRG9Ab
-	 2r8IYgrKdfYwgNuPCEKYM9QFnU+ujiL+CyCQiTxQ=
+	b=xPgP/OVG0QiUe/ZnAX0GjMhHibvt2pF/iJaujPdZ7S+WvQP01AUkAHy8ri5ee8hfE
+	 evkm5eN6vC8TFUi2gVosLiJ6pyN3Unqmysnd5CxTRf8bwULMD64wGzsg14GfN2+AUq
+	 MPlEHNEMJFk8e4BSF3uDXlnDRhN4ABkxVBUuVJrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFCTIY (ORCPT
+        id S1726642AbfFCTJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 15:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 15:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfFCTIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 15:08:24 -0400
+        id S1726136AbfFCTJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C7723D66;
-        Mon,  3 Jun 2019 19:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83FB923D66;
+        Mon,  3 Jun 2019 19:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559588903;
-        bh=w74VBwz1842V2tJi9EuRrmeSWfxtE46cMzBtjfw0gFA=;
+        s=default; t=1559588964;
+        bh=v3DbUlOjumJJH58tAn84ookMKQ1r9+DBtCPDYVGrw7w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z/eT6XScY5Rws2kTIl7Cz3Gg1mNSroVwPvZVUmME7rP/f85znhodsONqdjvULXZNI
-         /4S4ZSt8VIXMJbSXeQ6tOa+CfbojdhT/hZeK08MUL1aapdC7QUzqS4OneNwan7crQq
-         2jX/D7rfXDPXdr2CmghiambNCgH1gYr7mycigCKA=
-Date:   Mon, 3 Jun 2019 21:08:21 +0200
+        b=d5+hrVjPlZHNRVtoe6GznUPUSoj9eXuqYIT5KUOsoHc/O4pmRxSIH3jsW5GNkGyLA
+         RsfGRzNEQ6Xr18QRKmVtlKtTRz7xEiN7VYaMHypRq+JwZ4mqQoqwIX9JQBraokbCz4
+         jpUHFmnYWBD1uDDA4WO0fPVtHFV2oSLYCP0jq/QU=
+Date:   Mon, 3 Jun 2019 21:09:21 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [RFC PATCH 03/57] drivers: coresight: Drop device references
- found via bus_find_device
-Message-ID: <20190603190821.GB6487@kroah.com>
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 02/57] drivers: ipmi: Drop device reference
+Message-ID: <20190603190921.GC6487@kroah.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-4-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-3-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559577023-558-4-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1559577023-558-3-git-send-email-suzuki.poulose@arm.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 04:49:29PM +0100, Suzuki K Poulose wrote:
-> We must drop references to the device found via bus_find_device().
+On Mon, Jun 03, 2019 at 04:49:28PM +0100, Suzuki K Poulose wrote:
+> Drop the reference to a device found via bus_find_device()
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Corey Minyard <minyard@acm.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  drivers/hwtracing/coresight/coresight.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/char/ipmi/ipmi_si_platform.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 4b13028..37ccd67 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -540,7 +540,7 @@ struct coresight_device *coresight_get_enabled_sink(bool deactivate)
+> diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
+> index f2a91c4..ff82353 100644
+> --- a/drivers/char/ipmi/ipmi_si_platform.c
+> +++ b/drivers/char/ipmi/ipmi_si_platform.c
+> @@ -442,6 +442,7 @@ void ipmi_remove_platform_device_by_name(char *name)
+>  				      pdev_match_name))) {
+>  		struct platform_device *pdev = to_platform_device(dev);
 >  
->  	dev = bus_find_device(&coresight_bustype, NULL, &deactivate,
->  			      coresight_enabled_sink);
-> -
-> +	put_device(dev);
->  	return dev ? to_coresight_device(dev) : NULL;
+> +		put_device(dev);
+>  		platform_device_unregister(pdev);
 
-You drop the reference and then use the pointer?
+So you drop the reference, and then actually use the pointer?
 
-Not good :(
-
->  }
->  
-> @@ -581,7 +581,7 @@ struct coresight_device *coresight_get_sink_by_id(u32 id)
->  
->  	dev = bus_find_device(&coresight_bustype, NULL, &id,
->  			      coresight_sink_by_id);
-> -
-> +	put_device(dev);
->  	return dev ? to_coresight_device(dev) : NULL;
-
-Same here, not good :(
-
-Please fix this up and it can go in as a bugfix like any other normal
-patch, outside of this huge series.
+The drop needs to be _after_ the call to platform_device_unregister().
 
 thanks,
 
