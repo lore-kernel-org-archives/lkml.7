@@ -2,119 +2,129 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C90C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E6D28004
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2009328004
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dQA1fCug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfFCNIR (ORCPT
+        id S1726343AbfFCNIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:08:17 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:33087 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726343AbfFCNIQ (ORCPT
+        Mon, 3 Jun 2019 09:08:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45803 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbfFCNIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:08:16 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id Xmh9hLfvDsDWyXmhChtE4r; Mon, 03 Jun 2019 15:08:15 +0200
-Subject: Re: [PATCH] media: stm32-dcmi: fix irq = 0 case
-To:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Pavel Machek <pavel@denx.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
- <46944972-1f88-ef3b-fef9-8e37753c0ffe@xs4all.nl>
- <dd4ca76b-9f93-5ddc-e878-25b9905e0cd2@st.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <aa40a88d-9995-8cfc-682a-3c33445199e9@xs4all.nl>
-Date:   Mon, 3 Jun 2019 15:08:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 09:08:44 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D8YN4604764
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:08:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D8YN4604764
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559567314;
+        bh=axMoRurCx7P5uez1cqcSaps+epjAuRjig1jTffexH1g=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=dQA1fCugfZHcedq/r4rLlbx+TQmOUYuPKAuKDKHBkR0Db8bCchz8Lf7/Il4aoOb0/
+         VWfhlG8Tkn1mmiMN1T+Y55kzw62s/ea1AzzlRdeuuCaGIAdDzqqp5E2qUGcx5Uz9Ra
+         /4sfL2Ml3mxHp+RdIjkNp2qUEscyRrItMpAq3t/eF0m27fDv6S6NgYiF3CU+jQnZB4
+         Y2hBlkQ3mM9V4MdsyYw4UsKEAI9Wbj8EBlXtBsSjx4fqKcaDKhmu8sJ66tEO3X6sG3
+         6F5kgUWWaQ7DQGpP6vjfN9xn3eNDLEhuNOZ7aXrOXYRHUQ3wWgujMhKM6RTkJ3Hj8u
+         RInt/jHKpTx0A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D8X4m604761;
+        Mon, 3 Jun 2019 06:08:33 -0700
+Date:   Mon, 3 Jun 2019 06:08:33 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Yuyang Du <tipbot@zytor.com>
+Message-ID: <tip-e7a38f63ba50dc95426dd50c43383dfecaa35d7f@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, peterz@infradead.org,
+        duyuyang@gmail.com, tglx@linutronix.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: tglx@linutronix.de, duyuyang@gmail.com, peterz@infradead.org,
+          torvalds@linux-foundation.org, hpa@zytor.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190506081939.74287-5-duyuyang@gmail.com>
+References: <20190506081939.74287-5-duyuyang@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Remove useless conditional
+ macro
+Git-Commit-ID: e7a38f63ba50dc95426dd50c43383dfecaa35d7f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <dd4ca76b-9f93-5ddc-e878-25b9905e0cd2@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHHih37cLk8I5B7UWMg29h9+t3yjqMdqAeL1cmDBDScWB9AhtcP4c+T5U0qPVbKT00KNHg2pVihXau+13MBWQo78rkablFd9Va3TEOo3lq/b7D8ShVTF
- 1dk4Y9ghkLFLuzutb6p9jfN9EHM64jfRmG2XDMxMoR0sERAPgWcj2QJPAwcYV1fumSqr2UC31Vq4upPPihDg+OqFHyln4/equHH8gk3y/Ujgi0qK7loUwmEF
- 7asWsoHB8XPXfs6gm4n3EHg183Q59pXsQS+QUtZnschVSFFBaKXZz/ckdMk2s816Ue1bmf8tO88FyypzoXOnmb8ikzZXWbHSxEP0dEYoKvTBrqoK91jFyYUA
- w9FYP35FitxsSSem7++x3S1uZT9HudDm6CP3T8KhEQ4rt1JSiWwe6X0Z3FdItW1VjYaEWJE+9PRORGpuPElzXCj5jgTkgit1dZENMV+fPrgi4bxrg+7mDUjv
- Y/x1bkC2MF2lT4Vs9vgiFP45BgKgv/boSIWysJfkOzTTc4tuZuXebciu/EP7Nay9quMrDHLVMdCQVaVqykwwNBqJy4lumr8x9l3mUwE1ROoI0XSoPBCPuGKO
- SAbecdcZ05HgiEQau1DOk57w
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 3:03 PM, Fabien DESSENNE wrote:
-> Hi Hans
-> 
-> 
-> "platform_get_irq() = 0" shall be considered as an error. See these 
-> discussions:
-> https://patchwork.kernel.org/patch/10006651/
-> https://yarchive.net/comp/linux/zero.html
+Commit-ID:  e7a38f63ba50dc95426dd50c43383dfecaa35d7f
+Gitweb:     https://git.kernel.org/tip/e7a38f63ba50dc95426dd50c43383dfecaa35d7f
+Author:     Yuyang Du <duyuyang@gmail.com>
+AuthorDate: Mon, 6 May 2019 16:19:20 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:55:35 +0200
 
-Hmm, then many media drivers are wrong since most check for < 0.
+locking/lockdep: Remove useless conditional macro
 
-In any case, I'll pick up this patch whenever I make a next pull request
-for fixes like this.
+Since #defined(CONFIG_PROVE_LOCKING) is used in the scope of #ifdef
+CONFIG_PROVE_LOCKING, it can be removed.
 
-Regards,
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bvanassche@acm.org
+Cc: frederic@kernel.org
+Cc: ming.lei@redhat.com
+Cc: will.deacon@arm.com
+Link: https://lkml.kernel.org/r/20190506081939.74287-5-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/lockdep.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-	Hans
-
-> 
-> BR
-> 
-> Fabien
-> 
-> On 03/06/2019 1:45 PM, Hans Verkuil wrote:
->> On 5/31/19 11:18 AM, Fabien Dessenne wrote:
->>> Manage the irq = 0 case, where we shall return an error.
->>>
->>> Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
->>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
->>> ---
->>>   drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
->>> index b9dad0a..d855e9c 100644
->>> --- a/drivers/media/platform/stm32/stm32-dcmi.c
->>> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
->>> @@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
->>>   	if (irq <= 0) {
->> Shouldn't this be 'irq < 0' instead of '<=' ?
->>
->> AFAICT irq == 0 can be a valid irq and isn't an error.
->>
->> Regards,
->>
->> 	Hans
->>
->>>   		if (irq != -EPROBE_DEFER)
->>>   			dev_err(&pdev->dev, "Could not get irq\n");
->>> -		return irq;
->>> +		return irq ? irq : -ENXIO;
->>>   	}
->>>   
->>>   	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> >
-
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index a033df00fd1d..3c477018e184 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1674,7 +1674,7 @@ check_redundant(struct lock_list *root, struct lock_class *target,
+ 	return result;
+ }
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#ifdef CONFIG_TRACE_IRQFLAGS
+ 
+ static inline int usage_accumulate(struct lock_list *entry, void *mask)
+ {
+@@ -2152,7 +2152,7 @@ static inline void inc_chains(void)
+ 	nr_process_chains++;
+ }
+ 
+-#endif
++#endif /* CONFIG_TRACE_IRQFLAGS */
+ 
+ static void
+ print_deadlock_scenario(struct held_lock *nxt, struct held_lock *prv)
+@@ -2829,7 +2829,7 @@ static inline int validate_chain(struct task_struct *curr,
+ {
+ 	return 1;
+ }
+-#endif
++#endif /* CONFIG_PROVE_LOCKING */
+ 
+ /*
+  * We are building curr_chain_key incrementally, so double-check
