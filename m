@@ -2,109 +2,94 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D420C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7CAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208C0279DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AAB27A00
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfFCO3o (ORCPT
+        id S1729081AbfFCObr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:29:44 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32979 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727650AbfFCO3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:29:44 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id CB7DE93869A09C872220;
-        Mon,  3 Jun 2019 15:29:41 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 3 Jun
- 2019 15:29:33 +0100
-Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <silviu.vlasceanu@huawei.com>, <stable@vger.kernel.org>
-References: <20190529133035.28724-1-roberto.sassu@huawei.com>
- <20190529133035.28724-3-roberto.sassu@huawei.com>
- <1559217621.4008.7.camel@linux.ibm.com>
- <e6b31aa9-0319-1805-bdfc-3ddde5884494@huawei.com>
- <1559569401.5052.17.camel@HansenPartnership.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <3667fbd4-b6ed-6a76-9ff4-84ec3c2dda12@huawei.com>
-Date:   Mon, 3 Jun 2019 16:29:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 3 Jun 2019 10:31:47 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:61231 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729008AbfFCObr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:31:47 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hXnzq-0003wA-Ns from George_Davis@mentor.com ; Mon, 03 Jun 2019 07:31:34 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Mon, 3 Jun
+ 2019 07:31:32 -0700
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <linux-kbuild@vger.kernel.org>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
+Date:   Mon, 3 Jun 2019 10:30:39 -0400
+Message-ID: <1559572240-18706-1-git-send-email-george_davis@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1559569401.5052.17.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/2019 3:43 PM, James Bottomley wrote:
-> On Mon, 2019-06-03 at 11:25 +0200, Roberto Sassu wrote:
->> On 5/30/2019 2:00 PM, Mimi Zohar wrote:
->>> On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
->>>> Currently, ima_appraise_measurement() ignores the EVM status when
->>>> evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a
->>>> valid security.ima xattr with type IMA_XATTR_DIGEST or
->>>> IMA_XATTR_DIGEST_NG, ima_appraise_measurement() returns
->>>> INTEGRITY_PASS regardless of the EVM status. The problem is that
->>>> the EVM status is overwritten with the appraisal statu
->>>
->>> Roberto, your framing of this problem is harsh and misleading.  IMA
->>> and EVM are intentionally independent of each other and can be
->>> configured independently of each other.  The intersection of the
->>> two is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is
->>> returned for a number of reasons - when EVM is not configured, the
->>> EVM hmac key has not yet been loaded, the protected security
->>> attribute is unknown, or the file is not in policy.
->>>
->>> This patch does not differentiate between any of the above cases,
->>> requiring mutable files to always be protected by EVM, when
->>> specified as an "ima_appraise=" option on the boot command line.
->>>
->>> IMA could be extended to require EVM on a per IMA policy rule
->>> basis. Instead of framing allowing IMA file hashes without EVM as a
->>> bug that has existed from the very beginning, now that IMA/EVM have
->>> matured and is being used, you could frame it as extending IMA
->>> or hardening.
->>
->> I'm seeing it from the perspective of an administrator that manages
->> an already hardened system, and expects that the system only grants
->> access to files with a valid signature/HMAC. That system would not
->> enforce this behavior if EVM keys are removed and the digest in
->> security.ima is set to the actual file digest.
->>
->> Framing it as a bug rather than an extension would in my opinion help
->> to convince people about the necessity to switch to the safe mode, if
->> their system is already hardened.
-> 
-> I have a use case for IMA where I use it to enforce immutability of
-> containers.  In this use case, the cluster admin places hashes on
-> executables as the image is unpacked so that if an executable file is
-> changed, IMA will cause an execution failure.  For this use case, I
-> don't care about the EVM, in fact we don't use it, because the only
-> object is to fail execution if a binary is mutated.
+The following error occurs for the `make ARCH=arm64 checkstack` case:
 
-How would you prevent root in the container from updating security.ima?
+aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
+perl ./scripts/checkstack.pl arm64
+wrong or unknown architecture "arm64"
 
-Roberto
+As suggested by Masahiro Yamada, fix the above error using regular
+expressions in the same way it was fixed for the `ARCH=x86` case via
+commit fda9f9903be6 ("scripts/checkstack.pl: automatically handle
+32-bit and 64-bit mode for ARCH=x86").
 
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+---
+v1:
+- https://patchwork.kernel.org/patch/10970393/
+v2:
+- Updates as Suggested-by: Masahiro Yamada
+- Update commit subject due to moving the fix from Makefile to
+  checkstack.pl
+---
+ scripts/checkstack.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+index 122aef5e4e14..371bd17a4983 100755
+--- a/scripts/checkstack.pl
++++ b/scripts/checkstack.pl
+@@ -46,7 +46,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
+ 	$x	= "[0-9a-f]";	# hex character
+ 	$xs	= "[0-9a-f ]";	# hex character or space
+ 	$funcre = qr/^$x* <(.*)>:$/;
+-	if ($arch eq 'aarch64') {
++	if ($arch =~ '^(aarch|arm)64$') {
+ 		#ffffffc0006325cc:       a9bb7bfd        stp     x29, x30, [sp, #-80]!
+ 		#a110:       d11643ff        sub     sp, sp, #0x590
+ 		$re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
 -- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+2.7.4
+
