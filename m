@@ -2,111 +2,89 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A6AC46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AEEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8959B25405
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB05D255C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvwzkPEL"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="U43F8sSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfFCX1h (ORCPT
+        id S1726373AbfFCXbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:27:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:32966 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFCX1h (ORCPT
+        Mon, 3 Jun 2019 19:31:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33074 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfFCXbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:27:37 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so14930501lfe.0;
-        Mon, 03 Jun 2019 16:27:35 -0700 (PDT)
+        Mon, 3 Jun 2019 19:31:48 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so1692174pfq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 16:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o9KhBDmRSvyA17K9yLz93GnFppJZ9/pTjhne6a8KQc4=;
-        b=dvwzkPELPl5nUZRVZU4gRYPnhCE55hxxM399myYdEENPvpGIE8RV7G9g73ozE+ApRw
-         dJuqDbQdACfLbz60Tuqd9wyM78ah1m/nMlr997ItFEOHJhubidgZlOXj3Vi46T1mph5e
-         EFWmMJV5idtQTYKRlkwXIbmz9AjLzCLzNLYH+MD3SZdEZXII665wE2hoL42y5KjN5F0Z
-         I0nNupJH/f9mQKbJpDjqoTxTGmYE7U2PlXCO+wH1jTWVzNgVNcpwzxm4u6oV07Bxcq6t
-         6vc5uJMNz5oJY9I4A6X/rGGqnSFbwz7QCIxB5ORArf/3pNlxirELVli+BHINObtCFGlM
-         X1sw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=J5q67u/bE0NaIbXJT8NLoweDbHR9pR8xtFgHY3tljTw=;
+        b=U43F8sSKRnuOaThj9loHA1WhOgSlyUuLw7qVcLT4NnMwgHV/e1QptgXhkdhjRLlhIU
+         8nRK1apoAF0B7pRdldwLWfjJNJm1boMbc2HhVQ/qh64b3k7A0wO4B7PKUaB5vwu15s+h
+         VxU7oMtLku+8epmraApThVuerML+zpD1t2zLxWVYUg8nQ4RfJZ29scf1pIE3XJYrg3Ww
+         40GikizWsN7HTxx68NGWac2lSyXVnIWXm3xL5fOcnv9tCqWUEIfRQQNUzOkMNbJia6+H
+         ljOPrCNOGZhzOYC2nuis2DaT0wX32zWGfGZHwOq0mGfBp7wtXrOafAWL1lFK4YnVbn/I
+         LZ5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o9KhBDmRSvyA17K9yLz93GnFppJZ9/pTjhne6a8KQc4=;
-        b=h0/GIW+khEMAGiGF33uKgLNJPXEc7CUwUjZkPtioQKLoC9C/Y0CD6IvUUWNZcOduUv
-         S1SIueFPpDf/yDw/Ju/RzvSeni8QNAeYrazolH+0044VvMp+zjQhMlSnPHL3bulk/n53
-         gNyIGd3iSc2Xv4NRG06EdWl2DJhO/qqWBMJu671b09t2mJhRwJKsjZkjfRqP59ZkarjG
-         syRWKKr7Mg+33Gwq8eK1XSTaayxD5THPmFe0Ijgen/AZfrj9NJUX5D30KH/YXB7/OxFy
-         Ct4SvNHCVE2OY/a+/6HG9wjk+oxdG55SZU4JyEQ5OhQtvJuddlMLF+MzmWeJd/CsMIKk
-         /Ukg==
-X-Gm-Message-State: APjAAAXA82n3naRa96Kq2ex1FG4DXGkJnIJc6UUQf0L6/36bTW/CmPLg
-        ODF3Giu7SOg3HYl4oeg6vF8TGkYreFer3IsqbAlbTO4Q
-X-Google-Smtp-Source: APXvYqz9hOL4RaiKfOlOB3Z42QvxuObHHBxVPqDnbWXCIStvl7miabWH+J5FaAVZ8iLPzbs/JlQZ0s2aIwOnIbw59D8=
-X-Received: by 2002:ac2:4252:: with SMTP id m18mr14656401lfl.100.1559604454843;
- Mon, 03 Jun 2019 16:27:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=J5q67u/bE0NaIbXJT8NLoweDbHR9pR8xtFgHY3tljTw=;
+        b=f72oHEtQ36JSvrFQNO55kJ5xOIHZH9MFjuj3veyyoPOzrj4zpolKuOylXUDUAn06dU
+         olDjsPXvZB06OHRd8IEP/emaq3s6UeYxFNqDx59Xrte3ivOY6erkWZfx6Jo3kyhL57I/
+         Fhq5AV7cxI9JGJOumoZcBU6YGP55MxyHgubyR+DOihq2c1s8PXtWBbFgZHYQ1ZI9c8fn
+         D83wCNp27RXTbYSNhwzIJ+BtijwCMXI5drbiJXO2hScvq1j5xMYoFiFkEJjktVVaGoln
+         WBS0M3bRc0a+ndiS647vq/T2v9qk+5H3vrhwgpiGS37nAMmxlqkoy+8AFWo1wASNG4a3
+         x9AQ==
+X-Gm-Message-State: APjAAAW8wzpNFTD9d5qFer+2pe4zi9yvzuxvDnnxpL1xtW5ZMdgeN7ge
+        pP+n/bUhrcFzCBlkiTTdJWYJmQ==
+X-Google-Smtp-Source: APXvYqzFwYg0SY33IApIVejfjkchj8RZz0W9jfJKAxvgj5vGfWTfCtTCmsVczqop2IkQrJxb5WsGRg==
+X-Received: by 2002:a17:90a:2201:: with SMTP id c1mr33162789pje.10.1559604707835;
+        Mon, 03 Jun 2019 16:31:47 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id a69sm20791391pfa.81.2019.06.03.16.31.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 16:31:47 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/4] arm64: dts: meson: g12a: add SDIO controller
+In-Reply-To: <20190603100357.16799-2-narmstrong@baylibre.com>
+References: <20190603100357.16799-1-narmstrong@baylibre.com> <20190603100357.16799-2-narmstrong@baylibre.com>
+Date:   Mon, 03 Jun 2019 16:31:45 -0700
+Message-ID: <7hzhmygs9q.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190531223735.4998-1-mmullins@fb.com> <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
- <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net> <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
-In-Reply-To: <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 3 Jun 2019 16:27:23 -0700
-Message-ID: <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-To:     Matt Mullins <mmullins@fb.com>
-Cc:     "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Andrew Hall <hall@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
->
-> If these are invariably non-nested, I can easily keep bpf_misc_sd when
-> I resubmit.  There was no technical reason other than keeping the two
-> codepaths as similar as possible.
->
-> What resource gives you worry about doing this for the networking
-> codepath?
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-my preference would be to keep tracing and networking the same.
-there is already minimal nesting in networking and probably we see
-more when reuseport progs will start running from xdp and clsbpf
-
-> > Aside from that it's also really bad to miss events like this as exporting
-> > through rb is critical. Why can't you have a per-CPU counter that selects a
-> > sample data context based on nesting level in tracing? (I don't see a discussion
-> > of this in your commit message.)
+> From: Jerome Brunet <jbrunet@baylibre.com>
 >
-> This change would only drop messages if the same perf_event is
-> attempted to be used recursively (i.e. the same CPU on the same
-> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
-> BPF_F_CURRENT_CPU in testing).
+> The Amlogic G12A SDIO Controller has a bug preventing direct DDR access,
+> add the port A (SDIO) pinctrl and controller nodes and mark this specific
+> controller with the amlogic,dram-access-quirk property.
 >
-> I'll try to accomplish the same with a percpu nesting level and
-> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
-> same problem -- a local patch keeping track of the nesting level is how
-> I got the above stack trace, too.
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-I don't think counter approach works. The amount of nesting is unknown.
-imo the approach taken in this patch is good.
-I don't see any issue when event_outputs will be dropped for valid progs.
-Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
-But that's an error anyway.
+I'm assuming this one should replace the one that was already sent with
+the MMC quirks series?  Or maybe they identical (other than diff context?)
+
+Kevin
