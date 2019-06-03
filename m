@@ -2,97 +2,159 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C81C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB0BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74A22475D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559575664;
-	bh=6BbxqDitWM9alxT1tuEKV3wxqoqNVenlh/LEgLLZtTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S6/a22QjovZIk1RIdi8vNb6xpVH0VEJxPdiqi6TmP+k8ZW4pt14a17PPdGpG6XQRw
-	 Ed9480hlyTM+Lqxax/qe/nlUMaQKEWgmabq211DXMDV/3DHeqm5GWiz7ZgYZV/X9vu
-	 lldjQfdRXzRZAK6FFnVfzoruoevkEWrGH3grR1kA=
+	by mail.kernel.org (Postfix) with ESMTP id 5E5D32776C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9Kkj17D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfFCP1n (ORCPT
+        id S1727710AbfFCP2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:27:43 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49742 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfFCP1n (ORCPT
+        Mon, 3 Jun 2019 11:28:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45916 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbfFCP2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:27:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iEWFECNWEoRXHdke6havOY+8o53ZmeWbffO16u0RrZA=; b=xfE05/kilw0Y6BZLHtPD9FVK6
-        62ltCKphRfOyqNZePrg/XtYAowVIxrQ+G7gM5apeB/BvedYY4mVGEZgMkI3ZgJm2kV10K0W/sDnyM
-        Y6u2mIcR5iwBdSChCjobF2zBCFwdiWitghbQKKzgnYr2i9zC/aHTU7IDUR0beb8dhBYAs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hXorw-0002EH-9r; Mon, 03 Jun 2019 15:27:28 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 6B345440046; Mon,  3 Jun 2019 16:27:27 +0100 (BST)
-Date:   Mon, 3 Jun 2019 16:27:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Tzung-Bi Shih <tzungbi@google.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2] Revert "ASoC: core: use component driver name as
- component name"
-Message-ID: <20190603152727.GU2456@sirena.org.uk>
-References: <1559298842-15059-1-git-send-email-krzk@kernel.org>
+        Mon, 3 Jun 2019 11:28:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b18so12515972wrq.12;
+        Mon, 03 Jun 2019 08:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R0W4k3BICJ2WutXYH9IGV5/N63dSSF//OiRLIaj1e9Y=;
+        b=S9Kkj17DDzDE5Z7XeeEr+Rzf+HfZirV7k6u/QNk25GVYowii2mVqhnbBb7z9YBCNLf
+         qSHAIPSfiBDzhIHa2Hluko5PH5p3lXrLHkYVAB0AtRMcEyGvWyUYIfascea08kABZeAO
+         7febfroAd6uFY+EnOPYO4ONxC9tlnyXvy6w1iRj9IAjZUoUxUrQ2R4x9JKM1ZQOd43qg
+         ggW7PaIC5ZNy+QpYN0QI5xBoJbBNX00qgdnpwU+REWtcLWHhPgqz6fTIEgvCRSLpAwLx
+         EQxYgYvZtkVdLzGiYpGK/ii1i4B0MyefEoLPhUP266vd+Yc0GFzH5K4e88Ddgo3x0oEc
+         /WHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R0W4k3BICJ2WutXYH9IGV5/N63dSSF//OiRLIaj1e9Y=;
+        b=Bj+873IZEFJY374Kkrh7YnYK9UkdWlxUQezY647F5HYPL3Bo9CSDBOxJEQpqK11tas
+         voFJnaIpvnUa1MWqfxd6emsHYy2rH0eQLi9uUUXdJ/63CmL09E1L5uLR+P48QyaOvSD7
+         ZS+5EGumxjgsRuKqrTXQgwDeEJZh0NEnCZXik5L2D4qEiNh1+xJHNLz6UIGe3Q0n95hq
+         AcAXrUYeqKqn1fCQ0QtJcKTx4XzqUPYbZlOrZbcUpKcR7ouh6ddoUZQ5G6M+b69s+0CS
+         EktMB9s1Pwds0CUbp5RQUjkcFQ9jjAilFsB+rqjtssj9RkKKU1/i5oFWZh2ZdIhY9jh1
+         L1cg==
+X-Gm-Message-State: APjAAAU5JJKTPEH4ZUm9GjGmoojCdlpegTU2Ko4GKL74zgyGSwVO3eQa
+        b8IYFkBLG1M62+QxeEGR1kk=
+X-Google-Smtp-Source: APXvYqxNjelk8UuA5p+0R6FFQve85Va22YZnaVsDYbsKcbDvsVP02pGq0aCY6v8Q0G/y3TqkgdKYnQ==
+X-Received: by 2002:adf:8367:: with SMTP id 94mr17313992wrd.179.1559575730576;
+        Mon, 03 Jun 2019 08:28:50 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id f197sm15425228wme.39.2019.06.03.08.28.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 08:28:49 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 17:28:48 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
+Message-ID: <20190603152848.GA23747@ulmo>
+References: <20190529145322.20630-1-thierry.reding@gmail.com>
+ <20190529145322.20630-2-thierry.reding@gmail.com>
+ <CACRpkdb5vB6OwcAxtjsKLzHt9V27juEOEEDqqQczKT-3r+7X-g@mail.gmail.com>
+ <20190603075324.GA27753@ulmo>
+ <CACRpkda47EX981Dw=jLrU=PHn50+AQhJmpVRWJ9uJEQdcAsrTw@mail.gmail.com>
+ <20190603121227.GB30132@ulmo>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s9pXJW6w71JX4l3T"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
 Content-Disposition: inline
-In-Reply-To: <1559298842-15059-1-git-send-email-krzk@kernel.org>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190603121227.GB30132@ulmo>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---s9pXJW6w71JX4l3T
+--Q68bSM7Ycu6FN28Q
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 31, 2019 at 12:34:02PM +0200, Krzysztof Kozlowski wrote:
-> Using component driver as a name is not unique and it breaks audio in
-> certain configurations, e.g. Hardkernel Odroid XU3 board where following
-> components are registered:
+On Mon, Jun 03, 2019 at 02:12:27PM +0200, Thierry Reding wrote:
+> On Mon, Jun 03, 2019 at 12:58:02PM +0200, Linus Walleij wrote:
+> > On Mon, Jun 3, 2019 at 9:53 AM Thierry Reding <thierry.reding@gmail.com=
+> wrote:
+> > > Me
+> >=20
+> > > > Please drop this. The default .to_irq() should be good for everyone.
+> > > > Also patch 2/2 now contains a identical copy of the gpiolib
+> > > > .to_irq() which I suspect you indended to drop, actually.
+> > >
+> > > It's not actually identical to the gpiolib implementation. There's st=
+ill
+> > > the conversion to the non-linear DT representation for GPIO specifiers
+> > > from the linear GPIO number space, which is not taken care of by the
+> > > gpiolib variant. That's precisely the point why this patch makes it
+> > > possible to let the driver override things.
+> >=20
+> > OK something is off here, because the purpose of the irqdomain
+> > is exactly to translate between different number spaces, so it should
+> > not happen in the .to_irq() function at all.
+> >=20
+> > Irqdomain uses .map() in the old variant and .translate() in the
+> > hierarchical variant to do this, so something is skewed.
+> >=20
+> > All .to_irq() should ever do is just call the irqdomain to do the
+> > translation, no other logic (unless I am mistaken) so we should
+> > be able to keep the simple .to_irq() logic inside gpiolib.
+>=20
+> Well, that's exactly the problem that I'm trying to solve. The problem
+> is that .translate() translates from the DT number space to the GPIO or
+> IRQ number space. However, since gpiochip_to_irq() now wants to call the
+> irq_create_fwspec_mapping() interface, it must convert from the offset
+> (in GPIO space) into the DT number space, which is what that function
+> expects.
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+Hm... I wonder if we even need this irq_create_fwspec_mapping() there.
+Couldn't we just do an irq_create_mapping() since we already know which
+one of the GPIO IRQ controller's interrupts we want to create a mapping
+for? If we already convert to the GPIO number space in the .translate()
+then the offset already corresponds to the one that we need to map, no?
 
---s9pXJW6w71JX4l3T
+I'll make a note to try that tomorrow.
+
+Thierry
+
+--Q68bSM7Ycu6FN28Q
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz1PFwACgkQJNaLcl1U
-h9DFewf+Nrpc5dIbkdtpXJkd+/r3A72X4Qa3bSaqMe32ihQnjGEheNTX/QRKVJRI
-2CPV6hCZ21/kjRHjjPZh7wnz3/2ICFPbVFT0oqw7ODSgYB9mbKfJG22awJVr1xtY
-jncb8BwIddJhKu2wmP0kFqvZZ4bUhspqeQ5pStUhlrkpy2Vgk3KCzvhDcOaDaMv1
-1/+eGxpQfFQyHD6MFK+ilSePDl9ZYm+tnzjtAP7ztdjJaRQRiRhwHTUEHUf+ViAL
-Gd789UwaU9no7R0/MxgHHWB/0+qd/JTp91XzVCTJBFu7dlwoLynN4kVAIVrvUDTl
-mhhtur3Rm0khwJ2jfqvuVqv8Rwq5ag==
-=vsht
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz1PKwACgkQ3SOs138+
+s6EvrxAAhvVOkUGVn6WQQ2jnZM1b0tya6pzAhUw11OYc7Ub6nc6yFaiQ8wE0pbcG
+cAApoHS1T00Yj8qHqUQHieIVRAEE0dpWheKOs4hNsWHu/SlYW0l19EbfYOFBqo+n
+iQje2Vtmc2/eYSwHmE1ggqbX2OO9MtvxQ7oyKCPxXzDlXOO0c7zEMKvHmZpEp4zy
+RBNCQAcqUR3JbUgMVd4qvxytWjxhJo/AscOJ2754Wvd7Ut6FpO0qIJsTCcOCMaua
+6le5HOOYVEgj0Wd/3CFJUrpQWlikVPRUHVCZECieBoruv2IcffHC/zxDlYpMTRdV
++9OLds+6TRf1R6AiIPiAm/tcRpG+D30RoR8AsruR+9GuVZoRQf21Pr+pTT4WhWRT
+NPYRVSxe+mAMXgCjoWcu5qWYkweMsCxUVFhGWyoe0tRlxV3t0BJf6Rd+69SgbMmd
+RTJtLY/3vGkNkI7iXFEJgH8iBr0mPLCBMG6SwcA7E3xopVqhzHU2lsSNUEG5x6nz
+z09tzO1Bsr2RNAz5j5mPxJPUdbcUwE3dHnRB4XG99vCBxsPoPNShHir/9ygUg2tM
+sFLPLcMvHJfNe/jukF+3C0jLVVs8ZYY4yDfJtltKDwhoBeiS1+T7hocMlsohM8VG
+Mmsv1050gE6pzqQKF4sxEhqNO8vuh4gbOyX8cYThMdtkBic2aFQ=
+=IpuP
 -----END PGP SIGNATURE-----
 
---s9pXJW6w71JX4l3T--
+--Q68bSM7Ycu6FN28Q--
