@@ -2,175 +2,178 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB0CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11D126E6D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B5926F0C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 19:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rdI5nELG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mu8+YrUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfFCS6j (ORCPT
+        id S1726638AbfFCTBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:58:39 -0400
-Received: from mail-eopbgr750040.outbound.protection.outlook.com ([40.107.75.40]:21249
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbfFCS6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:58:38 -0400
+        Mon, 3 Jun 2019 15:01:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34901 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFCTBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 15:01:37 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p1so7329456plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 12:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fPLloLNsKW1cL+HWEfzGNNuCF2nAeJ5BpQY5PL+F/9E=;
- b=rdI5nELGaqY5isDhL77BPUTcy/FfsqIlQs6fJXFZF7l5r6sVgQnSeXbP8DbrwM5LK+zRyQtFgUbsqM1heTCeP7+w/YucnGutI+PsuZm9gdRFyvlodISAP8EKqHmi0zykjYZYNBvlwibSwcxBfOG2T2pIj6LTwp4LCnk0wEqFk6k=
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
- DM6PR12MB3755.namprd12.prod.outlook.com (10.255.172.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.18; Mon, 3 Jun 2019 18:58:33 +0000
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::308d:c697:4e8e:13f4]) by DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::308d:c697:4e8e:13f4%4]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 18:58:33 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     =?utf-8?B?SmFuIEguIFNjaMO2bmhlcnI=?= <jschoenh@amazon.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: [PATCH 6/6] svm: Temporary deactivate AVIC during ExtINT handling
-Thread-Topic: [PATCH 6/6] svm: Temporary deactivate AVIC during ExtINT
- handling
-Thread-Index: AQHU4KZzfF+I1STPkEG8oeMRWodS5qZhyCUAgCjzOAA=
-Date:   Mon, 3 Jun 2019 18:58:33 +0000
-Message-ID: <5f86b2ac-3a62-ab3d-ea00-59f1aaafa3f1@amd.com>
-References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
- <20190322115702.10166-7-suravee.suthikulpanit@amd.com>
- <a31f3f85-d94c-b139-ec69-d148dae5c67f@amazon.de>
-In-Reply-To: <a31f3f85-d94c-b139-ec69-d148dae5c67f@amazon.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-x-originating-ip: [165.204.78.1]
-x-clientproxiedby: SN6PR2101CA0024.namprd21.prod.outlook.com
- (2603:10b6:805:106::34) To DM6PR12MB2844.namprd12.prod.outlook.com
- (2603:10b6:5:45::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b2011fc0-8483-4048-5808-08d6e855799b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3755;
-x-ms-traffictypediagnostic: DM6PR12MB3755:
-x-microsoft-antispam-prvs: <DM6PR12MB3755C294D089D34346870E8CF3140@DM6PR12MB3755.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(396003)(366004)(376002)(189003)(199004)(65806001)(229853002)(110136005)(54906003)(2501003)(2201001)(68736007)(4326008)(65956001)(31696002)(86362001)(3846002)(6116002)(72206003)(66066001)(81156014)(76176011)(52116002)(25786009)(316002)(8936002)(26005)(66574012)(386003)(102836004)(2906002)(53546011)(486006)(81166006)(6506007)(36756003)(478600001)(71200400001)(476003)(58126008)(66556008)(66446008)(14444005)(66946007)(256004)(73956011)(66476007)(99286004)(2616005)(8676002)(6512007)(31686004)(186003)(53936002)(64756008)(5660300002)(6436002)(65826007)(446003)(71190400001)(7736002)(305945005)(14454004)(64126003)(6246003)(6486002)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3755;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +YjZZi/DOJF4POmD5jZ59aEiHmsV8plXTsdhj+GEQd3XCmhxfL4/ZRqYXFiIlvqKMn4DbGOw9wEbvNdwCmsfA8alYjo4l6y+dflQ9pXCgkWnjOCaf5ATSvhH4fce04ZLVqn6ia7C30GGW7v82UGYZIQkSz3WDPLeT0Hpao9fbjm2/yjSEyUpr/XnwypyY+QqUJ/ST8opWvGJI0+yJ89Vi80x+nowgX3tZkeEZFQcAns88wCfwumDYycnRVBVOgJxd1UhYtTnGmm4r1O+wOmCX7DJgPHwVrdey66mSM+E+L0OBWL8CWwuQfmUbfMqWrDFki5F6GKXogrGqdRoCTusjMvbEdUDpGty8Ocp078d3pe6EDjAlIapnlTdH3xPV9HMBN7DTHXGnWfYcMcBUbOA51tezcuGNb6qyDOhFB8R8kw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A9CE898BFD2BC445BAE2C891B52BA02C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uOj8qS4yMWJcPzBr8jU/oW2KYVngTdjQDL1LJv/Tl0k=;
+        b=mu8+YrUWQdYC2yPvI31aJeWbUy+/m/JdlBnvxPwbPgA4aR3Dko6HDsZHyi2HsBRRA8
+         5ZlaLTjxNM68Al1YETdnGXAFwRlrElG6NZZ1j8Hx4UVHJ3hcuZD5Y/7VqGQRirguL3N7
+         ccmPcVkphF2ROPyPYGWb6oqTC7KpewSiRiDXKJGxCopyHEAW0lSbHXCTbSbo40S30gSm
+         UrgWiQJ9MzEPZG4NWjrakLfjBSt+eTyVA+31+Grrka+qDfU5BzOXXSXNlVKnOEoumMGs
+         c9QGJJG4EXRd5w2FiwIHepI++jpU4ZPuUEBJf4WhgSmpKyN4NxdhbypbTGeXH38oeMkA
+         5P+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uOj8qS4yMWJcPzBr8jU/oW2KYVngTdjQDL1LJv/Tl0k=;
+        b=WArcoyXT/2R1p1NAJT99b7d+fO6/qNGB+YsxTfieMYOUDoXJxhPzMYwy++ZVJhA+Vw
+         c6YYihozzzkEzPhp40742bp9GdCyeOAUvcL3X1yqY8YbPCVT2hzFGy7iUPCtsyUIzzh2
+         j3k8c+Y9J8u9VhLtBF0o4Rq35DsWN/kFdMy0J7BGqWS9sY+HqcXvP+Ed2WXxLMI45i1c
+         vWXmGmoiBlJnBzOcnqD24ItR8askVTtDW5Q3Vo1tQiTaiyoRmEhWMGoTPCoNxgn3rcDB
+         8jUMZW5FbkXrj5nOALQJ/zKgvtdeJaH+ur87rHzG1eR4a4Iu1rHf5uDfjtIpcVZ6cCGq
+         058A==
+X-Gm-Message-State: APjAAAUL8b1frWOrysvCErLTP7/b+D1m/L9BEqrlhaFVKll+YLJto4pi
+        gqsIuOBvmEbh19PBrD5w3Zliqg==
+X-Google-Smtp-Source: APXvYqykPgkSoXQZvF7692GpCMJ2OMiNKz9Vibqh/vST8wLXn0EjIfLgD7N96K2Ny86xOMvDMWXBGw==
+X-Received: by 2002:a17:902:bc83:: with SMTP id bb3mr9026727plb.56.1559588495811;
+        Mon, 03 Jun 2019 12:01:35 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 24sm17259787pgn.32.2019.06.03.12.01.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 12:01:35 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:01:33 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        leo.yan@linaro.org, coresight@lists.linaro.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] Documentation: coresight: Update the generic device names
+Message-ID: <20190603190133.GA20462@xps15>
+References: <1559229077-26436-1-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2011fc0-8483-4048-5808-08d6e855799b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 18:58:33.1530
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ssuthiku@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3755
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559229077-26436-1-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFuLA0KDQpPbiA1LzgvMTkgMTI6MzcgUE0sIEphbiBILiBTY2jDtm5oZXJyIHdyb3RlOg0K
-PiBbQ0FVVElPTjogRXh0ZXJuYWwgRW1haWxdDQo+IA0KPiBIaSBTdXJhdmVlLg0KPiANCj4gSSB3
-b25kZXIsIGhvdyB0aGlzIGludGVyYWN0cyB3aXRoIEh5cGVyLVYgU3luSUM7IHNlZSBjb21tZW50
-cyBiZWxvdy4NCj4gDQo+IE9uIDIyLzAzLzIwMTkgMTIuNTcsIFN1dGhpa3VscGFuaXQsIFN1cmF2
-ZWUgd3JvdGU6DQo+PiBBTUQgQVZJQyBkb2VzIG5vdCBzdXBwb3J0IEV4dElOVC4gVGhlcmVmb3Jl
-LCBBVklDIG11c3QgYmUgdGVtcG9yYXJ5DQo+PiBkZWFjdGl2YXRlZCBhbmQgZmFsbCBiYWNrIHRv
-IHVzaW5nIGxlZ2FjeSBpbnRlcnJ1cHQgaW5qZWN0aW9uIHZpYQ0KPj4gdklOVFIgYW5kIGludGVy
-cnVwdCB3aW5kb3cuDQo+Pg0KPj4gSW50cm9kdWNlIHN2bV9yZXF1ZXN0X2FjdGl2YXRlL2RlYWN0
-aXZhdGVfYXZpYygpIGhlbHBlciBmdW5jdGlvbnMsDQo+PiB3aGljaCBoYW5kbGUgc3RlcHMgcmVx
-dWlyZWQgdG8gYWN0aXZhdGUvZGVhY3RpdmF0ZSBBVklDLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IFN1cmF2ZWUgU3V0aGlrdWxwYW5pdCA8c3VyYXZlZS5zdXRoaWt1bHBhbml0QGFtZC5jb20+DQo+
-PiAtLS0NCj4+ICAgYXJjaC94ODYva3ZtL3N2bS5jIHwgNTcgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgNTQgaW5zZXJ0
-aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3Zt
-L3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQo+PiBpbmRleCBmNDFmMzRmNzBkZGUuLjg0MTE2
-ZTY4OWQ1ZiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L2t2bS9zdm0uYw0KPj4gKysrIGIvYXJj
-aC94ODYva3ZtL3N2bS5jDQo+PiBAQCAtMzkxLDYgKzM5MSw4IEBAIHN0YXRpYyB1OCByc21faW5z
-X2J5dGVzW10gPSAiXHgwZlx4YWEiOw0KPj4gICBzdGF0aWMgdm9pZCBzdm1fc2V0X2NyMChzdHJ1
-Y3Qga3ZtX3ZjcHUgKnZjcHUsIHVuc2lnbmVkIGxvbmcgY3IwKTsNCj4+ICAgc3RhdGljIHZvaWQg
-c3ZtX2ZsdXNoX3RsYihzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIGJvb2wgaW52YWxpZGF0ZV9ncGEp
-Ow0KPj4gICBzdGF0aWMgdm9pZCBzdm1fY29tcGxldGVfaW50ZXJydXB0cyhzdHJ1Y3QgdmNwdV9z
-dm0gKnN2bSk7DQo+PiArc3RhdGljIHZvaWQgc3ZtX3JlcXVlc3RfYWN0aXZhdGVfYXZpYyhzdHJ1
-Y3Qga3ZtX3ZjcHUgKnZjcHUpOw0KPj4gK3N0YXRpYyBib29sIHN2bV9nZXRfZW5hYmxlX2FwaWN2
-KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSk7DQo+Pg0KPj4gICBzdGF0aWMgaW50IG5lc3RlZF9zdm1f
-ZXhpdF9oYW5kbGVkKHN0cnVjdCB2Y3B1X3N2bSAqc3ZtKTsNCj4+ICAgc3RhdGljIGludCBuZXN0
-ZWRfc3ZtX2ludGVyY2VwdChzdHJ1Y3QgdmNwdV9zdm0gKnN2bSk7DQo+PiBAQCAtMjEwOSw2ICsy
-MTExLDkgQEAgc3RhdGljIHZvaWQgYXZpY19zZXRfcnVubmluZyhzdHJ1Y3Qga3ZtX3ZjcHUgKnZj
-cHUsIGJvb2wgaXNfcnVuKQ0KPj4gICB7DQo+PiAgICAgICAgc3RydWN0IHZjcHVfc3ZtICpzdm0g
-PSB0b19zdm0odmNwdSk7DQo+Pg0KPj4gKyAgICAgaWYgKCFrdm1fdmNwdV9hcGljdl9hY3RpdmUo
-dmNwdSkpDQo+PiArICAgICAgICAgICAgIHJldHVybjsNCj4+ICsNCj4+ICAgICAgICBzdm0tPmF2
-aWNfaXNfcnVubmluZyA9IGlzX3J1bjsNCj4+ICAgICAgICBpZiAoaXNfcnVuKQ0KPj4gICAgICAg
-ICAgICAgICAgYXZpY192Y3B1X2xvYWQodmNwdSwgdmNwdS0+Y3B1KTsNCj4+IEBAIC0yMzU2LDYg
-KzIzNjEsMTAgQEAgc3RhdGljIHZvaWQgc3ZtX3ZjcHVfYmxvY2tpbmcoc3RydWN0IGt2bV92Y3B1
-ICp2Y3B1KQ0KPj4NCj4+ICAgc3RhdGljIHZvaWQgc3ZtX3ZjcHVfdW5ibG9ja2luZyhzdHJ1Y3Qg
-a3ZtX3ZjcHUgKnZjcHUpDQo+PiAgIHsNCj4+ICsgICAgIGlmIChrdm1fY2hlY2tfcmVxdWVzdChL
-Vk1fUkVRX0FQSUNWX0FDVElWQVRFLCB2Y3B1KSkNCj4+ICsgICAgICAgICAgICAga3ZtX3ZjcHVf
-YWN0aXZhdGVfYXBpY3YodmNwdSk7DQo+PiArICAgICBpZiAoa3ZtX2NoZWNrX3JlcXVlc3QoS1ZN
-X1JFUV9BUElDVl9ERUFDVElWQVRFLCB2Y3B1KSkNCj4+ICsgICAgICAgICAgICAga3ZtX3ZjcHVf
-ZGVhY3RpdmF0ZV9hcGljdih2Y3B1KTsNCj4+ICAgICAgICBhdmljX3NldF9ydW5uaW5nKHZjcHUs
-IHRydWUpOw0KPj4gICB9DQo+Pg0KPj4gQEAgLTQ1MDUsNiArNDUxNCwxNSBAQCBzdGF0aWMgaW50
-IGludGVycnVwdF93aW5kb3dfaW50ZXJjZXB0aW9uKHN0cnVjdCB2Y3B1X3N2bSAqc3ZtKQ0KPj4g
-ICB7DQo+PiAgICAgICAga3ZtX21ha2VfcmVxdWVzdChLVk1fUkVRX0VWRU5ULCAmc3ZtLT52Y3B1
-KTsNCj4+ICAgICAgICBzdm1fY2xlYXJfdmludHIoc3ZtKTsNCj4+ICsNCj4+ICsgICAgIC8qDQo+
-PiArICAgICAgKiBGb3IgQVZJQywgdGhlIG9ubHkgcmVhc29uIHRvIGVuZCB1cCBoZXJlIGlzIEV4
-dElOVHMuDQo+PiArICAgICAgKiBJbiB0aGlzIGNhc2UgQVZJQyB3YXMgdGVtcG9yYXJpbHkgZGlz
-YWJsZWQgZm9yDQo+PiArICAgICAgKiByZXF1ZXN0aW5nIHRoZSBJUlEgd2luZG93IGFuZCB3ZSBo
-YXZlIHRvIHJlLWVuYWJsZSBpdC4NCj4+ICsgICAgICAqLw0KPj4gKyAgICAgaWYgKHN2bV9nZXRf
-ZW5hYmxlX2FwaWN2KCZzdm0tPnZjcHUpKQ0KPj4gKyAgICAgICAgICAgICBzdm1fcmVxdWVzdF9h
-Y3RpdmF0ZV9hdmljKCZzdm0tPnZjcHUpOw0KPj4gKw0KPiANCj4gQXJlIHdlIHN1cmUsIHdlJ3Jl
-IG5vdCBhY2NpZGVudGFsbHkgcmUtZW5hYmxpbmcgQVZJQywgaWYgaXQgd2FzIGRpc2FibGVkIHZp
-YQ0KPiBrdm1faHZfYWN0aXZhdGVfc3luaWMoKT8NCg0KQWN0dWFsbHksIEkgbWlzc2VkIHRoaXMg
-Y2FzZS4gTm93IEkgaGF2ZSBhIHNvbHV0aW9uIHRoYXQgSSdsbCBiZSBzZW5kIG91dCBmb3IgcmV2
-aWV3IGluIFYyLg0KDQo+PiAgICAgICAgc3ZtLT52bWNiLT5jb250cm9sLmludF9jdGwgJj0gflZf
-SVJRX01BU0s7DQo+PiAgICAgICAgbWFya19kaXJ0eShzdm0tPnZtY2IsIFZNQ0JfSU5UUik7DQo+
-PiAgICAgICAgKytzdm0tPnZjcHUuc3RhdC5pcnFfd2luZG93X2V4aXRzOw0KPj4gQEAgLTUyMDYs
-NiArNTIyNCwzNCBAQCBzdGF0aWMgdm9pZCBzdm1faHdhcGljX2lzcl91cGRhdGUoc3RydWN0IGt2
-bV92Y3B1ICp2Y3B1LCBpbnQgbWF4X2lzcikNCj4+ICAgew0KPj4gICB9DQo+Pg0KPj4gK3N0YXRp
-YyBib29sIGlzX2F2aWNfYWN0aXZlKHN0cnVjdCB2Y3B1X3N2bSAqc3ZtKQ0KPj4gK3sNCj4+ICsg
-ICAgIHJldHVybiAoc3ZtX2dldF9lbmFibGVfYXBpY3YoJnN2bS0+dmNwdSkgJiYNCj4+ICsgICAg
-ICAgICAgICAgc3ZtLT52bWNiLT5jb250cm9sLmludF9jdGwgJiBBVklDX0VOQUJMRV9NQVNLKTsN
-Cj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHZvaWQgc3ZtX3JlcXVlc3RfYWN0aXZhdGVfYXZpYyhz
-dHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpDQo+PiArew0KPj4gKyAgICAgc3RydWN0IHZjcHVfc3ZtICpz
-dm0gPSB0b19zdm0odmNwdSk7DQo+PiArDQo+PiArICAgICBpZiAoIWxhcGljX2luX2tlcm5lbCh2
-Y3B1KSB8fCBpc19hdmljX2FjdGl2ZShzdm0pKQ0KPj4gKyAgICAgICAgICAgICByZXR1cm47DQo+
-PiArDQo+PiArICAgICBhdmljX3NldHVwX2FjY2Vzc19wYWdlKHZjcHUsIGZhbHNlKTsNCj4+ICsg
-ICAgIGt2bV9tYWtlX2FwaWN2X2FjdGl2YXRlX3JlcXVlc3QodmNwdS0+a3ZtKTsNCj4+ICt9DQo+
-PiArDQo+PiArc3RhdGljIHZvaWQgc3ZtX3JlcXVlc3RfZGVhY3RpdmF0ZV9hdmljKHN0cnVjdCBr
-dm1fdmNwdSAqdmNwdSkNCj4+ICt7DQo+PiArICAgICBzdHJ1Y3QgdmNwdV9zdm0gKnN2bSA9IHRv
-X3N2bSh2Y3B1KTsNCj4+ICsNCj4+ICsgICAgIGlmICghbGFwaWNfaW5fa2VybmVsKHZjcHUpIHx8
-ICFpc19hdmljX2FjdGl2ZShzdm0pKQ0KPj4gKyAgICAgICAgICAgICByZXR1cm47DQo+PiArDQo+
-PiArICAgICBhdmljX2Rlc3Ryb3lfYWNjZXNzX3BhZ2UodmNwdSk7DQo+IA0KPiBTb21ldGhpbmcg
-bGlrZSBhdmljX2Rlc3Ryb3lfYWNjZXNzX3BhZ2UoKSBpcyBub3QgY2FsbGVkLCB3aGVuIEFWSUMg
-aXMNCj4gZGlzYWJsZWQgdmlhIGt2bV9odl9hY3RpdmF0ZV9zeW5pYygpLg0KPiANCj4gSXMgdGhh
-dCBhbiBvdmVyc2lnaHQgaW4gdGhlIG90aGVyIGNvZGUgcGF0aCwgaXMgaXQgbm90IG5lZWRlZCBo
-ZXJlLA0KPiBvciBhbSBJIG1pc3Npbmcgc29tZXRoaW5nPw0KDQpUaGlzIGlzIGFuIG92ZXJzaWdo
-dC4gSSBhbHNvIGhhdmUgYSBmaXggZm9yIHRoaXMgaW4gVjIuDQoNClRoYW5rcywNClN1cmF2ZWUN
-Cg==
+Hi Suzuki,
+
+On Thu, May 30, 2019 at 04:11:17PM +0100, Suzuki K Poulose wrote:
+> Update the documentation to reflect the new naming scheme with
+> latest changes.
+> 
+> Reported-by: Leo Yan <leo.yan@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  Documentation/trace/coresight.txt | 34 +++++++++++++++++++---------------
+>  1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/trace/coresight.txt b/Documentation/trace/coresight.txt
+> index efbc832..7b427cf 100644
+> --- a/Documentation/trace/coresight.txt
+> +++ b/Documentation/trace/coresight.txt
+> @@ -326,16 +326,20 @@ amount of processor cores), the "cs_etm" PMU will be listed only once.
+>  A Coresight PMU works the same way as any other PMU, i.e the name of the PMU is
+>  listed along with configuration options within forward slashes '/'.  Since a
+>  Coresight system will typically have more than one sink, the name of the sink to
+> -work with needs to be specified as an event option.  Names for sink to choose
+> -from are listed in sysFS under ($SYSFS)/bus/coresight/devices:
+> +work with needs to be specified as an event option.
+> +On newer kernels the available sinks are listed in sysFS under:
+> +($SYSFS)/bus/event_source/devices/cs_etm/sinks/
+>  
+> -	root@linaro-nano:~# ls /sys/bus/coresight/devices/
+> -		20010000.etf   20040000.funnel  20100000.stm  22040000.etm
+> -		22140000.etm  230c0000.funnel  23240000.etm 20030000.tpiu
+> -		20070000.etr     20120000.replicator  220c0000.funnel
+> -		23040000.etm  23140000.etm     23340000.etm
+> +	root@localhost:/sys/bus/event_source/devices/cs_etm/sinks# ls
+> +	tmc_etf0  tmc_etr0  tpiu0
+>  
+> -	root@linaro-nano:~# perf record -e cs_etm/@20070000.etr/u --per-thread program
+> +On older kernels, this may need to be found from the list of coresight devices,
+> +available under ($SYSFS)/bus/coresight/devices/:
+> +
+> +	root@localhost:/sys/bus/coresight/devices# ls
+> +	etm0  etm1  etm2  etm3  etm4  etm5  funnel0  funnel1  funnel2  replicator0  stm0 tmc_etf0  tmc_etr0  tpiu0
+> +
+> +	root@linaro-nano:~# perf record -e cs_etm/@tmc_etr0/u --per-thread program
+
+On the "older" kernels you are referring to one would find the original naming
+convention.  Everything else looks good to me.
+
+Mathieu
+
+>  
+>  The syntax within the forward slashes '/' is important.  The '@' character
+>  tells the parser that a sink is about to be specified and that this is the sink
+> @@ -352,7 +356,7 @@ perf can be used to record and analyze trace of programs.
+>  Execution can be recorded using 'perf record' with the cs_etm event,
+>  specifying the name of the sink to record to, e.g:
+>  
+> -    perf record -e cs_etm/@20070000.etr/u --per-thread
+> +    perf record -e cs_etm/@tmc_etr0/u --per-thread
+>  
+>  The 'perf report' and 'perf script' commands can be used to analyze execution,
+>  synthesizing instruction and branch events from the instruction trace.
+> @@ -381,7 +385,7 @@ sort example is from the AutoFDO tutorial (https://gcc.gnu.org/wiki/AutoFDO/Tuto
+>  	Bubble sorting array of 30000 elements
+>  	5910 ms
+>  
+> -	$ perf record -e cs_etm/@20070000.etr/u --per-thread taskset -c 2 ./sort
+> +	$ perf record -e cs_etm/@tmc_etr0/u --per-thread taskset -c 2 ./sort
+>  	Bubble sorting array of 30000 elements
+>  	12543 ms
+>  	[ perf record: Woken up 35 times to write data ]
+> @@ -405,7 +409,7 @@ than the program flow through the code.
+>  As with any other CoreSight component, specifics about the STM tracer can be
+>  found in sysfs with more information on each entry being found in [1]:
+>  
+> -root@genericarmv8:~# ls /sys/bus/coresight/devices/20100000.stm
+> +root@genericarmv8:~# ls /sys/bus/coresight/devices/stm0
+>  enable_source   hwevent_select  port_enable     subsystem       uevent
+>  hwevent_enable  mgmt            port_select     traceid
+>  root@genericarmv8:~#
+> @@ -413,14 +417,14 @@ root@genericarmv8:~#
+>  Like any other source a sink needs to be identified and the STM enabled before
+>  being used:
+>  
+> -root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/20010000.etf/enable_sink
+> -root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/20100000.stm/enable_source
+> +root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/tmc_etf0/enable_sink
+> +root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/stm0/enable_source
+>  
+>  From there user space applications can request and use channels using the devfs
+>  interface provided for that purpose by the generic STM API:
+>  
+> -root@genericarmv8:~# ls -l /dev/20100000.stm
+> -crw-------    1 root     root       10,  61 Jan  3 18:11 /dev/20100000.stm
+> +root@genericarmv8:~# ls -l /dev/stm0
+> +crw-------    1 root     root       10,  61 Jan  3 18:11 /dev/stm0
+>  root@genericarmv8:~#
+>  
+>  Details on how to use the generic STM API can be found here [2].
+> -- 
+> 2.7.4
+> 
