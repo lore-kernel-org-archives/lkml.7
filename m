@@ -2,150 +2,119 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F15C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA79C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5587722CD6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvnVuQ4D"
+	by mail.kernel.org (Postfix) with ESMTP id C3A2C2760A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfFCERZ (ORCPT
+        id S1726719AbfFCERq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:17:25 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55938 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfFCERZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:17:25 -0400
-Received: by mail-it1-f195.google.com with SMTP id i21so5430377ita.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 21:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=peq2xV3j8zNOQJyA2LbX3LqEkuEYYsXuOFqRHr6IOqU=;
-        b=JvnVuQ4DFdCbGb+8Zkv/5rIcwPRGyExzreijPgFZCDf13bLjpWA1pBc9IWKBym8Zq3
-         Dci1cuZ6qApdvxMotCr/3WT1QMVvIwyzODuiB7N8fS74ianiMACqbup4doeNor1vXaW9
-         K8qsNwrK3e6YPdAJqj906ywET3GPFb0BNLXfufIsz+30ofscGa/T135AsetxqGKwgwIZ
-         6xZtbejKj08KOQpeoF3xUvEWXVcP7BUCI4ldDIipUBq6FvopxgB4ToFqrxl5SNgUm7TJ
-         YoSAEM6WIJiPz7kGg5b+r9mz0kmSfIrv1xrpSDSRH1T9n2mfdZNXFN32wE/DMYTzYVdr
-         k6jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=peq2xV3j8zNOQJyA2LbX3LqEkuEYYsXuOFqRHr6IOqU=;
-        b=Jaj4ZG9wVUTzHp2LE8UbpEXoIE1f+/IR19AIRCHdQVPB9MZdfm646mK25N/0oHh3cA
-         mMdfk0cjdfr1BtsDrEdm/bkJJ4l4uTAegqfcxCeWiaJVe19JdHfaK89YQ1/Wn3zR4U02
-         IZL96CQWiVM2uXFYeyUilj5PhXL8wCBjKvlP22KBD8TfbN1LQEqAEZBZAM5ojvtUVXPj
-         qRwrGtkTN1jFu5kIHDX+epPu9u9P6G8RpztppvZE0u/pd4dLOSFa9hvnfoVmZnUJHz4m
-         im/lv5ryvFoDiSN+uuHSe0lXSKZon23K1IoKToc6cEeJSrYbG5b2AeEsHI3KylVRs+05
-         P4zg==
-X-Gm-Message-State: APjAAAXNqCj4hRBZd7ZL34cC3Q/Rs/vfkfjEZUg0hXjHRFhJ80dcE1Sv
-        ShrQG6vJJsCW4r/6Idl70LE+x2lX5R5LD3T+8w==
-X-Google-Smtp-Source: APXvYqzDOjcNERX9CF10zqE2yCDGi7bcANmriTIIlUc06WqLqaxg59EX82ZHvw1lnZvxd2+smyAh3WoWcHvrCLG+onA=
-X-Received: by 2002:a24:7cd8:: with SMTP id a207mr6545545itd.68.1559535444067;
- Sun, 02 Jun 2019 21:17:24 -0700 (PDT)
+        Mon, 3 Jun 2019 00:17:46 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:48338 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfFCERp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 00:17:45 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hXePg-0000Ph-O8; Mon, 03 Jun 2019 12:17:36 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hXePb-00028Y-Ix; Mon, 03 Jun 2019 12:17:31 +0800
+Date:   Mon, 3 Jun 2019 12:17:31 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Message-ID: <20190603041731.m6rvcaivgeh4iw4g@gondor.apana.org.au>
+References: <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
+ <20150910171649.GE4029@linux.vnet.ibm.com>
+ <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
+ <20150921193045.GA13674@lerouge>
+ <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
+ <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
+ <20190603034707.GG28207@linux.ibm.com>
+ <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <20190513124112.GH24036@dhcp22.suse.cz> <1557755039.6132.23.camel@lca.pw>
- <20190513140448.GJ24036@dhcp22.suse.cz> <1557760846.6132.25.camel@lca.pw>
- <20190513153143.GK24036@dhcp22.suse.cz> <CAFgQCTt9XA9_Y6q8wVHkE9_i+b0ZXCAj__zYU0DU9XUkM3F4Ew@mail.gmail.com>
- <20190522111655.GA4374@dhcp22.suse.cz> <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
- <20190528182011.GG1658@dhcp22.suse.cz> <CAFgQCTtD5OYuDwRx1uE7R9N+qYf5k_e=OxajpPWZWb70+QgBvg@mail.gmail.com>
- <20190531090307.GL6896@dhcp22.suse.cz>
-In-Reply-To: <20190531090307.GL6896@dhcp22.suse.cz>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 3 Jun 2019 12:17:12 +0800
-Message-ID: <CAFgQCTv0oef9AX14FAzjB-WsdsNB+vBmjsRoRPKOGP9JfzJhLA@mail.gmail.com>
-Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA boot
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Barret Rhoden <brho@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@elte.hu>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 5:03 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 30-05-19 20:55:32, Pingfan Liu wrote:
-> > On Wed, May 29, 2019 at 2:20 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > [Sorry for a late reply]
-> > >
-> > > On Thu 23-05-19 11:58:45, Pingfan Liu wrote:
-> > > > On Wed, May 22, 2019 at 7:16 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > >
-> > > > > On Wed 22-05-19 15:12:16, Pingfan Liu wrote:
-> > > [...]
-> > > > > > But in fact, we already have for_each_node_state(nid, N_MEMORY) to
-> > > > > > cover this purpose.
-> > > > >
-> > > > > I do not really think we want to spread N_MEMORY outside of the core MM.
-> > > > > It is quite confusing IMHO.
-> > > > > .
-> > > > But it has already like this. Just git grep N_MEMORY.
-> > >
-> > > I might be wrong but I suspect a closer review would reveal that the use
-> > > will be inconsistent or dubious so following the existing users is not
-> > > the best approach.
-> > >
-> > > > > > Furthermore, changing the definition of online may
-> > > > > > break something in the scheduler, e.g. in task_numa_migrate(), where
-> > > > > > it calls for_each_online_node.
-> > > > >
-> > > > > Could you be more specific please? Why should numa balancing consider
-> > > > > nodes without any memory?
-> > > > >
-> > > > As my understanding, the destination cpu can be on a memory less node.
-> > > > BTW, there are several functions in the scheduler facing the same
-> > > > scenario, task_numa_migrate() is an example.
-> > >
-> > > Even if the destination node is memoryless then any migration would fail
-> > > because there is no memory. Anyway I still do not see how using online
-> > > node would break anything.
-> > >
-> > Suppose we have nodes A, B,C, where C is memory less but has little
-> > distance to B, comparing with the one from A to B. Then if a task is
-> > running on A, but prefer to run on B due to memory footprint.
-> > task_numa_migrate() allows us to migrate the task to node C. Changing
-> > for_each_online_node will break this.
->
-> That would require the task to have preferred node to be C no? Or do I
-> missunderstand the task migration logic?
-I think in task_numa_migrate(), the migration logic should looks like:
-  env.dst_nid = p->numa_preferred_nid; //Here dst nid is B
-But later in
-  if (env.best_cpu == -1 || (p->numa_group &&
-p->numa_group->active_nodes > 1)) {
-    for_each_online_node(nid) {
-[...]
-       task_numa_find_cpu(&env, taskimp, groupimp); // Here is a
-chance to change p->numa_preferred_nid
+On Mon, Jun 03, 2019 at 12:01:14PM +0800, Herbert Xu wrote:
+> On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
+> >
+> > 	CPU2:         if (b != 1)
+> > 	CPU2:                 b = 1;
+> 
+> Stop right there.  The kernel is full of code that assumes that
+> assignment to an int/long is atomic.  If your compiler breaks this
+> assumption that we can kiss the kernel good-bye.
 
-There are serveral other broken by changing for_each_online_node(),
--1. show_numa_stats()
--2. init_numa_topology_type(), where sched_numa_topology_type may be
-mistaken evaluated.
--3. ... can check call to for_each_online_node() one by one in scheduler.
+The slippery slope apparently started here:
 
-That is my understanding of the code.
+: commit ea435467500612636f8f4fb639ff6e76b2496e4b
+: Author: Matthew Wilcox <matthew@wil.cx>
+: Date:   Tue Jan 6 14:40:39 2009 -0800
+: 
+:     atomic_t: unify all arch definitions
+:
+: diff --git a/arch/x86/include/asm/atomic_32.h b/arch/x86/include/asm/atomic_32.h
+: index ad5b9f6ecddf..85b46fba4229 100644
+: --- a/arch/x86/include/asm/atomic_32.h
+: +++ b/arch/x86/include/asm/atomic_32.h
+: ...
+: @@ -10,15 +11,6 @@
+:   * resource counting etc..
+:   */
+:
+: -/*
+: - * Make sure gcc doesn't try to be clever and move things around
+: - * on us. We need to use _exactly_ the address the user gave us,
+: - * not some alias that contains the same information.
+: - */
+: -typedef struct {
+: -       int counter;
+: -} atomic_t;
+:
+: diff --git a/include/linux/types.h b/include/linux/types.h
+: index 121f349cb7ec..3b864f2d9560 100644
+: --- a/include/linux/types.h
+: +++ b/include/linux/types.h
+: @@ -195,6 +195,16 @@ typedef u32 phys_addr_t;
+:  
+:  typedef phys_addr_t resource_size_t;
+:
+: +typedef struct {
+: +       volatile int counter;
+: +} atomic_t;
+: +
 
-Thanks,
-  Pingfan
+Before evolving into the READ_ONCE/WRITE_ONCE that we have now.
+
+Linus, are we now really supporting a compiler where an assignment
+(or a read) from an int/long/pointer can be non-atomic without the
+volatile marker? Because if that's the case then we have a lot of
+code to audit.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
