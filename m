@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB38C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC219C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862C827ECE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807E427ECE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553232;
-	bh=ThvnHefOggdfHm5JVqIjsm5q+QS3OeoZAquMwoRHieI=;
+	s=default; t=1559553235;
+	bh=zz6nIc3k7gAyUWzdxWk2pdSynpiasWuI7dZG9CC/uf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYVP06uxjZ+Btak3gfMVpdTe1O7q2tV6E+PNkH7tr18x7nI5YwjAVtc5+KKqaQ7Zh
-	 //IZELFUNlm/ZjBLVu/2YwimxjMwmVvEbbFKrUYnB4gJoz+b3RqfjvngS5xjV0gS5S
-	 cLdVrpr1UsWXc0qfYuv4aJxZvjaYofoECej2LRfI=
+	b=HguaPSWrmbDHoTcaMhR1LU7wfqgUBxEu2VeL79kCWuGW3Ubxx3Svdm9e5vc9WKGoC
+	 DtwygX2ehbVm4cEYlzaOWsNoVgrQRV7eM2j4Q7BoOjw95HWkad3L+znUof0wryjuDh
+	 GHdpPsLM+2prpmmNo/KlcVhPKkR6rS0ZYymwCZE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfFCJNv (ORCPT
+        id S1728906AbfFCJNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbfFCJNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:43 -0400
+        id S1727318AbfFCJNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C3827EC9;
-        Mon,  3 Jun 2019 09:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A40527ECE;
+        Mon,  3 Jun 2019 09:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553223;
-        bh=ThvnHefOggdfHm5JVqIjsm5q+QS3OeoZAquMwoRHieI=;
+        s=default; t=1559553226;
+        bh=zz6nIc3k7gAyUWzdxWk2pdSynpiasWuI7dZG9CC/uf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7dDhlOSViDyAYBfUkeiotWxun0t7IBHXxVl2KXnjqC4ENm3xIG/W4DBinhZOsU3L
-         Ua/5Ow+zOD8eYLAqE16yt7mwkbSsqlgv19L2Mse1ZO2Ytbc4ff/cKPWfjd1tfPDeaQ
-         DaPzbxH9pals7AxaO+8kDvCNZ+rCstp5vLtmryZs=
+        b=Xe+sSENlEHnXIyyfzJhztzE3Cs5YWCfDbOVCTm5eHV/hr413Im33rkyecmKoT71r/
+         dGsVADvSy817s2+zGnQGXEJRNdGGgNSsDpubDNst1Y59J5ViNwPWrUPww06TYPz0/8
+         HdyqPKupIvNozb+X4OGUgASkTsd7LcynFnaFNKMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Pablo Neira Ayuso <pablo@gnumonks.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 29/40] bnxt_en: Reduce memory usage when running in kdump kernel.
-Date:   Mon,  3 Jun 2019 11:09:22 +0200
-Message-Id: <20190603090524.363467295@linuxfoundation.org>
+Subject: [PATCH 5.1 03/40] ethtool: Check for vlan etype or vlan tci when parsing flow_rule
+Date:   Mon,  3 Jun 2019 11:08:56 +0200
+Message-Id: <20190603090522.833590318@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -59,63 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-[ Upstream commit d629522e1d66561f38e5c8d4f52bb6d254ec0707 ]
+[ Upstream commit b73484b2fc0d0ba84a13e9d86eb4adcae718163b ]
 
-Skip RDMA context memory allocations, reduce to 1 ring, and disable
-TPA when running in the kdump kernel.  Without this patch, the driver
-fails to initialize with memory allocation errors when running in a
-typical kdump kernel.
+When parsing an ethtool flow spec to build a flow_rule, the code checks
+if both the vlan etype and the vlan tci are specified by the user to add
+a FLOW_DISSECTOR_KEY_VLAN match.
 
-Fixes: cf6daed098d1 ("bnxt_en: Increase context memory allocations on 57500 chips for RDMA.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+However, when the user only specified a vlan etype or a vlan tci, this
+check silently ignores these parameters.
+
+For example, the following rule :
+
+ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
+
+will result in no error being issued, but the equivalent rule will be
+created and passed to the NIC driver :
+
+ethtool -N eth0 flow-type udp4 action -1 loc 0
+
+In the end, neither the NIC driver using the rule nor the end user have
+a way to know that these keys were dropped along the way, or that
+incorrect parameters were entered.
+
+This kind of check should be left to either the driver, or the ethtool
+flow spec layer.
+
+This commit makes so that ethtool parameters are forwarded as-is to the
+NIC driver.
+
+Since none of the users of ethtool_rx_flow_rule_create are using the
+VLAN dissector, I don't think this qualifies as a regression.
+
+Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Acked-by: Pablo Neira Ayuso <pablo@gnumonks.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
- drivers/net/ethernet/broadcom/bnxt/bnxt.h |    4 +++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ net/core/ethtool.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6342,7 +6342,7 @@ static int bnxt_alloc_ctx_mem(struct bnx
- 	if (!ctx || (ctx->flags & BNXT_CTX_FLAG_INITED))
- 		return 0;
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -3008,11 +3008,12 @@ ethtool_rx_flow_rule_create(const struct
+ 		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
+ 		const struct ethtool_flow_ext *ext_m_spec = &fs->m_ext;
  
--	if (bp->flags & BNXT_FLAG_ROCE_CAP) {
-+	if ((bp->flags & BNXT_FLAG_ROCE_CAP) && !is_kdump_kernel()) {
- 		pg_lvl = 2;
- 		extra_qps = 65536;
- 		extra_srqs = 8192;
-@@ -10340,7 +10340,7 @@ static int bnxt_set_dflt_rings(struct bn
+-		if (ext_m_spec->vlan_etype &&
+-		    ext_m_spec->vlan_tci) {
++		if (ext_m_spec->vlan_etype) {
+ 			match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
+ 			match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
++		}
  
- 	if (sh)
- 		bp->flags |= BNXT_FLAG_SHARED_RINGS;
--	dflt_rings = netif_get_num_default_rss_queues();
-+	dflt_rings = is_kdump_kernel() ? 1 : netif_get_num_default_rss_queues();
- 	/* Reduce default rings on multi-port cards so that total default
- 	 * rings do not exceed CPU count.
- 	 */
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -20,6 +20,7 @@
++		if (ext_m_spec->vlan_tci) {
+ 			match->key.vlan.vlan_id =
+ 				ntohs(ext_h_spec->vlan_tci) & 0x0fff;
+ 			match->mask.vlan.vlan_id =
+@@ -3022,7 +3023,10 @@ ethtool_rx_flow_rule_create(const struct
+ 				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
+ 			match->mask.vlan.vlan_priority =
+ 				(ntohs(ext_m_spec->vlan_tci) & 0xe000) >> 13;
++		}
  
- #include <linux/interrupt.h>
- #include <linux/rhashtable.h>
-+#include <linux/crash_dump.h>
- #include <net/devlink.h>
- #include <net/dst_metadata.h>
- #include <net/xdp.h>
-@@ -1367,7 +1368,8 @@ struct bnxt {
- #define BNXT_CHIP_TYPE_NITRO_A0(bp) ((bp)->flags & BNXT_FLAG_CHIP_NITRO_A0)
- #define BNXT_RX_PAGE_MODE(bp)	((bp)->flags & BNXT_FLAG_RX_PAGE_MODE)
- #define BNXT_SUPPORTS_TPA(bp)	(!BNXT_CHIP_TYPE_NITRO_A0(bp) &&	\
--				 !(bp->flags & BNXT_FLAG_CHIP_P5))
-+				 !(bp->flags & BNXT_FLAG_CHIP_P5) &&	\
-+				 !is_kdump_kernel())
- 
- /* Chip class phase 5 */
- #define BNXT_CHIP_P5(bp)			\
++		if (ext_m_spec->vlan_etype ||
++		    ext_m_spec->vlan_tci) {
+ 			match->dissector.used_keys |=
+ 				BIT(FLOW_DISSECTOR_KEY_VLAN);
+ 			match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
 
 
