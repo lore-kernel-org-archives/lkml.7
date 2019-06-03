@@ -2,103 +2,97 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7AFC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB68C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F77928051
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QoJ+gWlW"
+	by mail.kernel.org (Postfix) with ESMTP id 7F27F2804B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfFCJuj (ORCPT
+        id S1727239AbfFCJvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:50:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51795 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfFCJuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:50:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HVff5rs6z9s4V;
-        Mon,  3 Jun 2019 19:50:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559555436;
-        bh=vhY0kokUcUkFOU3lj9cjTwC2KAuA/uoQnNufYlcVcnA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QoJ+gWlWFzaP3ZpzUUOovUV/R94v2s1tumzbtenF2SSUOfZ37YSq5uUXifWZ3amFi
-         VX4QuZOdYtcxN7VsX4YlzZxN0z6kkRJlGKhP+d1Ssb0L4FKCAdyNKdkeU6/nJoiFwg
-         WS1//h56etyxwdcQFWSH6fv/VjDcbc407d0+PDUrosozJftVxSs257gDQn0LOo3TCk
-         pIRnNtOBGTUxc4uKwWHFGSji3Ip+DCIW/y47Q0EBALPkFp6WTfbDRCnVVsMN7dYxp+
-         JBBmyjDapbLsZ6uEUBmmFB06SNPHqArffofQUWyRirPyJmM9zwW6jAuN1rAkhlVZcz
-         aiKA617962JQQ==
-Date:   Mon, 3 Jun 2019 19:50:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: linux-next: unable to fetch the drm-intel-fixes tree
-Message-ID: <20190603195018.2b7d5650@canb.auug.org.au>
-In-Reply-To: <20190603073103.GC21222@phenom.ffwll.local>
-References: <20190603082051.273a014c@canb.auug.org.au>
-        <20190603110403.0412ed22@canb.auug.org.au>
-        <20190603073103.GC21222@phenom.ffwll.local>
+        Mon, 3 Jun 2019 05:51:33 -0400
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:41839 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfFCJvc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:51:32 -0400
+Received: by mail-ed1-f46.google.com with SMTP id x25so13866659eds.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rFgMYWZVFF/pv2yQUfl1pVX/S/7PJrbgn5hFnfiX3Ao=;
+        b=KAgOvQfAR/ByX7GszlHnQ8v53Px+wrvGOqOZaILFGY374A4FNQDFJX0MvpVjmY7my6
+         dkq84ZymnUadJyYHXbW0sKEBxQchrHhVizlCc8+WS4rquvKx39q9ddCFJgr3aVbpksyA
+         4+945sRePcTDpTYR06rXV7IdzR7bSPN/lQtIhYIHFKzbpE+TGTn7IbVraaBtGLiWLEgR
+         xHuVadhLm06HORBhMq0jiR4m0yRLursekP9zSUyGJWbd4NLplzX9q2jnqoFLXIBHxR2J
+         lSSJ9kHS/NQl7EfmIfwCeRn3TuyRtbv95nYvtpH0dKmz9HY2MuMqGazWTZWAD9VdnkO6
+         eG5Q==
+X-Gm-Message-State: APjAAAVn+ekNyM1QZWVgf95wytFAhqmv65kAL/plYV4MiGU8CJYm9BOx
+        iNsd/gB0HBnItWnITAwuvrcRIid7C04=
+X-Google-Smtp-Source: APXvYqyWeH+AOs5iqMi+X6vzrvGzGfd5Wup2yVJUR4wVxwhOVY++WwxZic/YzC1hS8zijT302FZJpQ==
+X-Received: by 2002:aa7:db56:: with SMTP id n22mr11375926edt.192.1559555490316;
+        Mon, 03 Jun 2019 02:51:30 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id dc1sm2470642ejb.39.2019.06.03.02.51.29
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 02:51:29 -0700 (PDT)
+Subject: Re: hid-related 5.2-rc1 boot hang
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>, Dave Hansen <dave.hansen@intel.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+ <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
+ <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
+ <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
+ <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+ <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+ <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
+Message-ID: <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
+Date:   Mon, 3 Jun 2019 11:51:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//JwQn17N9SqUiY8Nnw9PZsD"; protocol="application/pgp-signature"
+In-Reply-To: <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//JwQn17N9SqUiY8Nnw9PZsD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Again,
 
-Hi Daniel,
+On 03-06-19 11:11, Hans de Goede wrote:
+<snip>
 
-On Mon, 3 Jun 2019 09:31:03 +0200 Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> drm.git too I guess?
+>> not sure about the rest of logitech issues yet) next week.
+> 
+> The main problem seems to be the request_module patches. Although I also
+> have 2 reports of problems with hid-logitech-dj driving the 0xc52f product-id,
+> so we may need to drop that product-id from hid-logitech-dj, I'm working on
+> that one...
 
-No, I fetch that from git://git.freedesktop.org/ which seems to answer.
+Besides the modprobe hanging issue, the only other issues all
+(2 reporters) seem to be with 0xc52f receivers. We have a bug
+open for this:
 
-> But yeah fd.o anongit keeled over over the w/e :-( Admins not yet awake,
-> so can't tell you what's up.
+https://bugzilla.kernel.org/show_bug.cgi?id=203619
 
-No worries, I will just keep using what I have previously fetched.
+And I've asked the reporter of the second bug to add his logs
+to that bug.
 
---=20
-Cheers,
-Stephen Rothwell
+Regards,
 
---Sig_//JwQn17N9SqUiY8Nnw9PZsD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Hans
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz07VoACgkQAVBC80lX
-0GzFTgf+IsAiY4vcv67JmXh8J250uxzWfqRZnd+JaMvMMjoe+z170eoKbfTn4f95
-jsYo+OaQfET7cvpoeeWO8CcF3IJDIE2Q+Z0/yARzvwvoIInN9ddwZ4U+zUwutBQm
-Ij1j14Ct+mGmGWwyWI7u9PVnMZTsgV5hrNOMbB86NEYbWr/GcfgcmLkX/uQTcBfp
-jLDZfkBCJ0maM8HeeHH83gEWoDG3/VY4gTcbMoFamcfsLUAoWEW3RVJdrvEN37En
-XIx+EsGZ6H35DqingsPw/SJ+T7NAavXgFevVSNE7b/z3aP2bfJTHdeZyAKzwZAXP
-1XSnbB8I6J5F4ISJ+Zn7NTHO5yiOQg==
-=QKuk
------END PGP SIGNATURE-----
-
---Sig_//JwQn17N9SqUiY8Nnw9PZsD--
