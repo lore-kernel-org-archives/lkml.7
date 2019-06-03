@@ -2,682 +2,200 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2081FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9923C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88F126FA3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893AF2723C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:36:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V5zk+KOM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uINysbsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfFCSgP (ORCPT
+        id S1727210AbfFCSgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:36:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45509 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfFCSea (ORCPT
+        Mon, 3 Jun 2019 14:36:19 -0400
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:37614 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfFCSgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s11so11083903pfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:30 -0700 (PDT)
+        Mon, 3 Jun 2019 14:36:16 -0400
+Received: by mail-oi1-f201.google.com with SMTP id 5so5567072oix.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cHQLAlUeoXGgF7wYq9wqbe9nkm08qs4rBamcBZ6vt/g=;
-        b=V5zk+KOM1nhJDHUo0Y4hIGadLHDhgAYlhla6u/3WDTPdK7+/jLWSbb6f1UvLR/G9cg
-         SHNdaeiQDc06uxr8kZz4WbKPfxQ5WNHVRjpDbNjA8kJfNmzrkOTCnf/fK4x5Bn/wdzik
-         0FtNiVBBjcQBxReuJGfxLupjymzcRX3ZnBZ7U=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=eZitS+dbekPKdSNKv5e4dRxz7q7psKdXco7JWUyUMYI=;
+        b=uINysbsp98/V5G2kBWYHoIhT/rBsJepOwPJSjBVEQppBYNRWnvqVwAApBvYTW84bEJ
+         tzMyyXoKwN4rqiWZvrGMNzC+qf5fkucrR0NzYetxglwxXgUTMns5m26CdQijOasEi1g+
+         Hlqhd3qZhx1UTY5M0mOwhadaipDfE7owhYN9ym9VYoblRb2e/RPpaiGrNqNEGh/wDzVl
+         PKKT8k7dnNbYCPMxODos/8GERZ6DBGH0nuhWTal6oC+WXtflYyNJ5zdsFLLJYelg/otc
+         Y4Y5VddFnoFFBILsWu2w4SiGvxMorSWDUn032trwlFJD8hSaDWgMeZ3jyTnuH8nmK4MH
+         rg3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cHQLAlUeoXGgF7wYq9wqbe9nkm08qs4rBamcBZ6vt/g=;
-        b=tykV9+auHedH1/WIAUmUy1j712gGp7dQ1smgyIs+gRU12EOAII0Q6/x1/FQ7ujU306
-         0JYvwv5FtEcoY7Q4lrHokkfJvbV06g/4IEo+onFqlpN3zO/7OqPDYkNz6pi4QQD91dWY
-         22p6mKdffCiM4IA+GQu81idHnUFf3zfF3jX/cCPGjpuA0Fr/Kji6GWlWOwFR4cGPMrx8
-         UH1shvpD0LVuVw2hFFFwfwveTZ2+HB0Vmxyqz1fVaQsRYbHWrBLBfOnIpPowU9Tr/n1H
-         cn4JzTvbPyEsMPeNbkSpje8pTzpIt4S1nHsq6+w2Ds1myClzaRZh/nGL3eptRZoM1iVH
-         EwIw==
-X-Gm-Message-State: APjAAAVNN7FX9m6oqG4WTrvUMqzSP9IXQnNWmpi9bVsKrmJrf5Lb54xL
-        po7bY0xibojzJJ9HfPjJjeRSWg==
-X-Google-Smtp-Source: APXvYqwBLdVNMzhkuTiBpdS++9L/BNqHmtNJ5fyBMyKyBBPBlR1A9E/BOfBcvqjq49wwoLmJNjudzQ==
-X-Received: by 2002:aa7:90ce:: with SMTP id k14mr33236846pfk.239.1559586869569;
-        Mon, 03 Jun 2019 11:34:29 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id q125sm33387154pfq.62.2019.06.03.11.34.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:29 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
-        broonie@kernel.org, cychiang@chromium.org, tiwai@suse.com,
-        fabien.lahoudere@collabora.com
-Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 15/30] mfd: cros_ec: Complete MEMS sensor API
-Date:   Mon,  3 Jun 2019 11:33:46 -0700
-Message-Id: <20190603183401.151408-16-gwendal@chromium.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=eZitS+dbekPKdSNKv5e4dRxz7q7psKdXco7JWUyUMYI=;
+        b=kLioJqiCEJDbHpB7iYjn3QwZSqANeRPH+BBactrz2So4HkWj99WJ4p7Qna5/gJIhUN
+         XZTT7ocDelzy8+N4YDha/L/93GD/r7yAOkTsMOT2F1vJxMBWqby9CGj9+vesNRkAK84q
+         tC2tIg7T0fCKJ0VRfI6fE3T0fM/w8O7ruj3w9+sy/3B739aqEH5AgWAUnJTSqDDuNB2g
+         ijYphUAro1yaRCJGzU9/Hga8YF8blfMGY/gljcRzT5cecGGWu2FcgsXWt6yipGGWeSWi
+         uvF6pp4sALps56RWrg1ldfPBhFqfCCOsBXSgmQhhpnknHn70xtiDRR3XoT//6DVvem1X
+         WLdQ==
+X-Gm-Message-State: APjAAAU+6IhsSW4lzJFH6KlOrEq/HcYls7en8QmabxJNd1R14dRaG5sA
+        vECtNrfdwDjl8Q0LGoEC104p66fPUOc=
+X-Google-Smtp-Source: APXvYqxpXOFxdc3vJz3PZMQqPBZKT2Eii9UcnH3WZRUmIJ8WKqVB4eFIcjYFCMRAi97cbu9nJOcjDT4/rJc=
+X-Received: by 2002:a9d:4d04:: with SMTP id n4mr937988otf.234.1559586975858;
+ Mon, 03 Jun 2019 11:36:15 -0700 (PDT)
+Date:   Mon,  3 Jun 2019 11:36:10 -0700
+In-Reply-To: <20190529224350.6460-1-mikewu@google.com>
+Message-Id: <20190603183610.241026-1-mikewu@google.com>
+Mime-Version: 1.0
+References: <20190529224350.6460-1-mikewu@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
-References: <20190603183401.151408-1-gwendal@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v4] Allow to exclude specific file types in LoadPin
+From:   Ke Wu <mikewu@google.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, Ke Wu <mikewu@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new command for batched mode, add support for more sensors.
+Linux kernel already provide MODULE_SIG and KEXEC_VERIFY_SIG to
+make sure loaded kernel module and kernel image are trusted. This
+patch adds a kernel command line option "loadpin.exclude" which
+allows to exclude specific file types from LoadPin. This is useful
+when people want to use different mechanisms to verify module and
+kernel image while still use LoadPin to protect the integrity of
+other files kernel loads.
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Benson Leung <bleung@chromium.org>
-Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Ke Wu <mikewu@google.com>
 ---
- include/linux/mfd/cros_ec_commands.h | 464 +++++++++++++++++++++++----
- 1 file changed, 406 insertions(+), 58 deletions(-)
+Changelog since v3:
+- Undo patch v3 change.
+- Use ignore_read_file_id rahther than kernel_read_file_str when
+  iterating to prevent out-of-bounds write.
 
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 40a8069a58e8..701b03cfa445 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -2191,7 +2191,13 @@ enum motionsense_command {
+Changelog since v2:
+- Make size of exclude_read_files and ignore_read_file_id to be
+  equal to the size of kernel_read_file_str.
+
+Changelog since v1:
+- Mark ignore_read_file_id with __ro_after_init.
+- Mark parse_exclude() with __init.
+- Use ARRAY_SIZE(ignore_read_file_id) instead of READING_MAX_ID.
+
+
+ Documentation/admin-guide/LSM/LoadPin.rst | 10 ++++++
+ security/loadpin/loadpin.c                | 44 +++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
+
+diff --git a/Documentation/admin-guide/LSM/LoadPin.rst b/Documentation/admin-guide/LSM/LoadPin.rst
+index 32070762d24c..716ad9b23c9a 100644
+--- a/Documentation/admin-guide/LSM/LoadPin.rst
++++ b/Documentation/admin-guide/LSM/LoadPin.rst
+@@ -19,3 +19,13 @@ block device backing the filesystem is not read-only, a sysctl is
+ created to toggle pinning: ``/proc/sys/kernel/loadpin/enabled``. (Having
+ a mutable filesystem means pinning is mutable too, but having the
+ sysctl allows for easy testing on systems with a mutable filesystem.)
++
++It's also possible to exclude specific file types from LoadPin using kernel
++command line option "``loadpin.exclude``". By default, all files are
++included, but they can be excluded using kernel command line option such
++as "``loadpin.exclude=kernel-module,kexec-image``". This allows to use
++different mechanisms such as ``CONFIG_MODULE_SIG`` and
++``CONFIG_KEXEC_VERIFY_SIG`` to verify kernel module and kernel image while
++still use LoadPin to protect the integrity of other files kernel loads. The
++full list of valid file types can be found in ``kernel_read_file_str``
++defined in ``include/linux/fs.h``.
+diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+index 055fb0a64169..ae59b812f4c8 100644
+--- a/security/loadpin/loadpin.c
++++ b/security/loadpin/loadpin.c
+@@ -45,6 +45,8 @@ static void report_load(const char *origin, struct file *file, char *operation)
+ }
  
- 	/*
- 	 * EC Rate command is a setter/getter command for the EC sampling rate
--	 * of all motion sensors in milliseconds.
-+	 * in milliseconds.
-+	 * It is per sensor, the EC run sample task  at the minimum of all
-+	 * sensors EC_RATE.
-+	 * For sensors without hardware FIFO, EC_RATE should be equals to 1/ODR
-+	 * to collect all the sensor samples.
-+	 * For sensor with hardware FIFO, EC_RATE is used as the maximal delay
-+	 * to process of all motion sensors in milliseconds.
- 	 */
- 	MOTIONSENSE_CMD_EC_RATE = 2,
+ static int enforce = IS_ENABLED(CONFIG_SECURITY_LOADPIN_ENFORCE);
++static char *exclude_read_files[READING_MAX_ID];
++static int ignore_read_file_id[READING_MAX_ID] __ro_after_init;
+ static struct super_block *pinned_root;
+ static DEFINE_SPINLOCK(pinned_root_spinlock);
  
-@@ -2222,32 +2228,76 @@ enum motionsense_command {
- 	MOTIONSENSE_CMD_DATA = 6,
+@@ -129,6 +131,13 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
+ 	struct super_block *load_root;
+ 	const char *origin = kernel_read_file_id_str(id);
  
- 	/*
--	 * Perform low level calibration.. On sensors that support it, ask to
--	 * do offset calibration.
-+	 * Return sensor fifo info.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_INFO = 7,
++	/* If the file id is excluded, ignore the pinning. */
++	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
++	    ignore_read_file_id[id]) {
++		report_load(origin, file, "pinning-excluded");
++		return 0;
++	}
 +
-+	/*
-+	 * Insert a flush element in the fifo and return sensor fifo info.
-+	 * The host can use that element to synchronize its operation.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_FLUSH = 8,
-+
-+	/*
-+	 * Return a portion of the fifo.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_READ = 9,
-+
-+	/*
-+	 * Perform low level calibration.
-+	 * On sensors that support it, ask to do offset calibration.
- 	 */
- 	MOTIONSENSE_CMD_PERFORM_CALIB = 10,
- 
- 	/*
--	 * Sensor Offset command is a setter/getter command for the offset used
--	 * for calibration. The offsets can be calculated by the host, or via
-+	 * Sensor Offset command is a setter/getter command for the offset
-+	 * used for calibration.
-+	 * The offsets can be calculated by the host, or via
- 	 * PERFORM_CALIB command.
- 	 */
- 	MOTIONSENSE_CMD_SENSOR_OFFSET = 11,
- 
--	/* Number of motionsense sub-commands. */
--	MOTIONSENSE_NUM_CMDS
--};
-+	/*
-+	 * List available activities for a MOTION sensor.
-+	 * Indicates if they are enabled or disabled.
-+	 */
-+	MOTIONSENSE_CMD_LIST_ACTIVITIES = 12,
-+
-+	/*
-+	 * Activity management
-+	 * Enable/Disable activity recognition.
-+	 */
-+	MOTIONSENSE_CMD_SET_ACTIVITY = 13,
-+
-+	/*
-+	 * Lid Angle
-+	 */
-+	MOTIONSENSE_CMD_LID_ANGLE = 14,
-+
-+	/*
-+	 * Allow the FIFO to trigger interrupt via MKBP events.
-+	 * By default the FIFO does not send interrupt to process the FIFO
-+	 * until the AP is ready or it is coming from a wakeup sensor.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_INT_ENABLE = 15,
-+
-+	/*
-+	 * Spoof the readings of the sensors.  The spoofed readings can be set
-+	 * to arbitrary values, or will lock to the last read actual values.
-+	 */
-+	MOTIONSENSE_CMD_SPOOF = 16,
- 
--enum motionsensor_id {
--	EC_MOTION_SENSOR_ACCEL_BASE = 0,
--	EC_MOTION_SENSOR_ACCEL_LID = 1,
--	EC_MOTION_SENSOR_GYRO = 2,
-+	/* Set lid angle for tablet mode detection. */
-+	MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE = 17,
- 
- 	/*
--	 * Note, if more sensors are added and this count changes, the padding
--	 * in ec_response_motion_sense dump command must be modified.
-+	 * Sensor Scale command is a setter/getter command for the calibration
-+	 * scale.
- 	 */
--	EC_MOTION_SENSOR_COUNT = 3
-+	MOTIONSENSE_CMD_SENSOR_SCALE = 18,
-+
-+	/* Number of motionsense sub-commands. */
-+	MOTIONSENSE_NUM_CMDS
+ 	/* This handles the older init_module API that has a NULL file. */
+ 	if (!file) {
+ 		if (!enforce) {
+@@ -187,10 +196,43 @@ static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
+ 	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
  };
  
- /* List of motion sensor types. */
-@@ -2259,6 +2309,7 @@ enum motionsensor_type {
- 	MOTIONSENSE_TYPE_LIGHT = 4,
- 	MOTIONSENSE_TYPE_ACTIVITY = 5,
- 	MOTIONSENSE_TYPE_BARO = 6,
-+	MOTIONSENSE_TYPE_SYNC = 7,
- 	MOTIONSENSE_TYPE_MAX,
- };
- 
-@@ -2266,36 +2317,48 @@ enum motionsensor_type {
- enum motionsensor_location {
- 	MOTIONSENSE_LOC_BASE = 0,
- 	MOTIONSENSE_LOC_LID = 1,
-+	MOTIONSENSE_LOC_CAMERA = 2,
- 	MOTIONSENSE_LOC_MAX,
- };
- 
- /* List of motion sensor chips. */
- enum motionsensor_chip {
- 	MOTIONSENSE_CHIP_KXCJ9 = 0,
-+	MOTIONSENSE_CHIP_LSM6DS0 = 1,
-+	MOTIONSENSE_CHIP_BMI160 = 2,
-+	MOTIONSENSE_CHIP_SI1141 = 3,
-+	MOTIONSENSE_CHIP_SI1142 = 4,
-+	MOTIONSENSE_CHIP_SI1143 = 5,
-+	MOTIONSENSE_CHIP_KX022 = 6,
-+	MOTIONSENSE_CHIP_L3GD20H = 7,
-+	MOTIONSENSE_CHIP_BMA255 = 8,
-+	MOTIONSENSE_CHIP_BMP280 = 9,
-+	MOTIONSENSE_CHIP_OPT3001 = 10,
-+	MOTIONSENSE_CHIP_BH1730 = 11,
-+	MOTIONSENSE_CHIP_GPIO = 12,
-+	MOTIONSENSE_CHIP_LIS2DH = 13,
-+	MOTIONSENSE_CHIP_LSM6DSM = 14,
-+	MOTIONSENSE_CHIP_LIS2DE = 15,
-+	MOTIONSENSE_CHIP_LIS2MDL = 16,
-+	MOTIONSENSE_CHIP_LSM6DS3 = 17,
-+	MOTIONSENSE_CHIP_LSM6DSO = 18,
-+	MOTIONSENSE_CHIP_LNG2DM = 19,
-+	MOTIONSENSE_CHIP_MAX,
- };
- 
--/* Module flag masks used for the dump sub-command. */
--#define MOTIONSENSE_MODULE_FLAG_ACTIVE (1<<0)
--
--/* Sensor flag masks used for the dump sub-command. */
--#define MOTIONSENSE_SENSOR_FLAG_PRESENT (1<<0)
--
--/*
-- * Send this value for the data element to only perform a read. If you
-- * send any other value, the EC will interpret it as data to set and will
-- * return the actual value set.
-- */
--#define EC_MOTION_SENSE_NO_VALUE -1
--
--#define EC_MOTION_SENSE_INVALID_CALIB_TEMP 0x8000
--
--/* Set Calibration information */
--#define MOTION_SENSE_SET_OFFSET	1
-+/* List of orientation positions */
-+enum motionsensor_orientation {
-+	MOTIONSENSE_ORIENTATION_LANDSCAPE = 0,
-+	MOTIONSENSE_ORIENTATION_PORTRAIT = 1,
-+	MOTIONSENSE_ORIENTATION_UPSIDE_DOWN_PORTRAIT = 2,
-+	MOTIONSENSE_ORIENTATION_UPSIDE_DOWN_LANDSCAPE = 3,
-+	MOTIONSENSE_ORIENTATION_UNKNOWN = 4,
-+};
- 
- struct ec_response_motion_sensor_data {
- 	/* Flags for each sensor. */
- 	uint8_t flags;
--	/* Sensor number the data comes from */
-+	/* Sensor number the data comes from. */
- 	uint8_t sensor_num;
- 	/* Each sensor is up to 3-axis. */
- 	union {
-@@ -2312,22 +2375,138 @@ struct ec_response_motion_sensor_data {
- 	};
- } __ec_todo_packed;
- 
-+/* Note: used in ec_response_get_next_data */
-+struct ec_response_motion_sense_fifo_info {
-+	/* Size of the fifo */
-+	uint16_t size;
-+	/* Amount of space used in the fifo */
-+	uint16_t count;
-+	/* Timestamp recorded in us.
-+	 * aka accurate timestamp when host event was triggered.
++static void __init parse_exclude(void)
++{
++	int i, j;
++	char *cur;
++
++	/* Robustness check: size of kernel_read_file_str should be size of
++	 * ignore_read_file_id + 1.
 +	 */
-+	uint32_t timestamp;
-+	/* Total amount of vector lost */
-+	uint16_t total_lost;
-+	/* Lost events since the last fifo_info, per sensors */
-+	uint16_t lost[0];
-+} __ec_todo_packed;
++	BUILD_BUG_ON(ARRAY_SIZE(kernel_read_file_str) <
++		     ARRAY_SIZE(ignore_read_file_id));
 +
-+struct ec_response_motion_sense_fifo_data {
-+	uint32_t number_data;
-+	struct ec_response_motion_sensor_data data[0];
-+} __ec_todo_packed;
++	for (i = 0; i < ARRAY_SIZE(exclude_read_files); i++) {
++		cur = exclude_read_files[i];
++		if (!cur)
++			break;
++		if (*cur == '\0')
++			continue;
 +
-+/* List supported activity recognition */
-+enum motionsensor_activity {
-+	MOTIONSENSE_ACTIVITY_RESERVED = 0,
-+	MOTIONSENSE_ACTIVITY_SIG_MOTION = 1,
-+	MOTIONSENSE_ACTIVITY_DOUBLE_TAP = 2,
-+	MOTIONSENSE_ACTIVITY_ORIENTATION = 3,
-+};
++		for (j = 0; j < ARRAY_SIZE(ignore_read_file_id); j++) {
++			if (strcmp(cur, kernel_read_file_str[j]) == 0) {
++				pr_info("excluding: %s\n",
++					kernel_read_file_str[j]);
++				ignore_read_file_id[j] = 1;
++				/*
++				 * Can not break, because one read_file_str
++				 * may map to more than on read_file_id.
++				 */
++			}
++		}
++	}
++}
 +
-+struct ec_motion_sense_activity {
-+	uint8_t sensor_num;
-+	uint8_t activity; /* one of enum motionsensor_activity */
-+	uint8_t enable;   /* 1: enable, 0: disable */
-+	uint8_t reserved;
-+	uint16_t parameters[3]; /* activity dependent parameters */
-+} __ec_todo_unpacked;
-+
-+/* Module flag masks used for the dump sub-command. */
-+#define MOTIONSENSE_MODULE_FLAG_ACTIVE BIT(0)
-+
-+/* Sensor flag masks used for the dump sub-command. */
-+#define MOTIONSENSE_SENSOR_FLAG_PRESENT BIT(0)
-+
-+/*
-+ * Flush entry for synchronization.
-+ * data contains time stamp
-+ */
-+#define MOTIONSENSE_SENSOR_FLAG_FLUSH BIT(0)
-+#define MOTIONSENSE_SENSOR_FLAG_TIMESTAMP BIT(1)
-+#define MOTIONSENSE_SENSOR_FLAG_WAKEUP BIT(2)
-+#define MOTIONSENSE_SENSOR_FLAG_TABLET_MODE BIT(3)
-+#define MOTIONSENSE_SENSOR_FLAG_ODR BIT(4)
-+
-+/*
-+ * Send this value for the data element to only perform a read. If you
-+ * send any other value, the EC will interpret it as data to set and will
-+ * return the actual value set.
-+ */
-+#define EC_MOTION_SENSE_NO_VALUE -1
-+
-+#define EC_MOTION_SENSE_INVALID_CALIB_TEMP 0x8000
-+
-+/* MOTIONSENSE_CMD_SENSOR_OFFSET subcommand flag */
-+/* Set Calibration information */
-+#define MOTION_SENSE_SET_OFFSET BIT(0)
-+
-+/* Default Scale value, factor 1. */
-+#define MOTION_SENSE_DEFAULT_SCALE BIT(15)
-+
-+#define LID_ANGLE_UNRELIABLE 500
-+
-+enum motionsense_spoof_mode {
-+	/* Disable spoof mode. */
-+	MOTIONSENSE_SPOOF_MODE_DISABLE = 0,
-+
-+	/* Enable spoof mode, but use provided component values. */
-+	MOTIONSENSE_SPOOF_MODE_CUSTOM,
-+
-+	/* Enable spoof mode, but use the current sensor values. */
-+	MOTIONSENSE_SPOOF_MODE_LOCK_CURRENT,
-+
-+	/* Query the current spoof mode status for the sensor. */
-+	MOTIONSENSE_SPOOF_MODE_QUERY,
-+};
-+
- struct ec_params_motion_sense {
- 	uint8_t cmd;
- 	union {
- 		/* Used for MOTIONSENSE_CMD_DUMP. */
- 		struct __ec_todo_unpacked {
--			/* no args */
-+			/*
-+			 * Maximal number of sensor the host is expecting.
-+			 * 0 means the host is only interested in the number
-+			 * of sensors controlled by the EC.
-+			 */
-+			uint8_t max_sensor_count;
- 		} dump;
- 
- 		/*
--		 * Used for MOTIONSENSE_CMD_EC_RATE and
--		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE.
-+		 * Used for MOTIONSENSE_CMD_KB_WAKE_ANGLE.
- 		 */
- 		struct __ec_todo_unpacked {
--			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
-+			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read.
-+			 * kb_wake_angle: angle to wakup AP.
-+			 */
- 			int16_t data;
--		} ec_rate, kb_wake_angle;
-+		} kb_wake_angle;
-+
-+		/*
-+		 * Used for MOTIONSENSE_CMD_INFO, MOTIONSENSE_CMD_DATA
-+		 * and MOTIONSENSE_CMD_PERFORM_CALIB.
-+		 */
-+		struct __ec_todo_unpacked {
-+			uint8_t sensor_num;
-+		} info, info_3, data, fifo_flush, perform_calib,
-+				list_activities;
-+
-+		/*
-+		 * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR
-+		 * and MOTIONSENSE_CMD_SENSOR_RANGE.
-+		 */
-+		struct __ec_todo_unpacked {
-+			uint8_t sensor_num;
-+
-+			/* Rounding flag, true for round-up, false for down. */
-+			uint8_t roundup;
-+
-+			uint16_t reserved;
-+
-+			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
-+			int32_t data;
-+		} ec_rate, sensor_odr, sensor_range;
- 
- 		/* Used for MOTIONSENSE_CMD_SENSOR_OFFSET */
- 		struct __ec_todo_packed {
-@@ -2358,33 +2537,99 @@ struct ec_params_motion_sense {
- 			int16_t offset[3];
- 		} sensor_offset;
- 
--		/* Used for MOTIONSENSE_CMD_INFO. */
-+		/* Used for MOTIONSENSE_CMD_SENSOR_SCALE */
- 		struct __ec_todo_packed {
- 			uint8_t sensor_num;
--		} info;
- 
--		/*
--		 * Used for MOTIONSENSE_CMD_SENSOR_ODR and
--		 * MOTIONSENSE_CMD_SENSOR_RANGE.
--		 */
--		struct {
--			/* Should be element of enum motionsensor_id. */
--			uint8_t sensor_num;
-+			/*
-+			 * bit 0: If set (MOTION_SENSE_SET_OFFSET), set
-+			 * the calibration information in the EC.
-+			 * If unset, just retrieve calibration information.
-+			 */
-+			uint16_t flags;
- 
--			/* Rounding flag, true for round-up, false for down. */
--			uint8_t roundup;
-+			/*
-+			 * Temperature at calibration, in units of 0.01 C
-+			 * 0x8000: invalid / unknown.
-+			 * 0x0: 0C
-+			 * 0x7fff: +327.67C
-+			 */
-+			int16_t temp;
- 
--			uint16_t reserved;
-+			/*
-+			 * Scale for calibration:
-+			 * By default scale is 1, it is encoded on 16bits:
-+			 * 1 = BIT(15)
-+			 * ~2 = 0xFFFF
-+			 * ~0 = 0.
-+			 */
-+			uint16_t scale[3];
-+		} sensor_scale;
- 
--			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
--			int32_t data;
--		} sensor_odr, sensor_range;
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_INFO */
-+		/* (no params) */
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_READ */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Number of expected vector to return.
-+			 * EC may return less or 0 if none available.
-+			 */
-+			uint32_t max_data_vector;
-+		} fifo_read;
-+
-+		struct ec_motion_sense_activity set_activity;
-+
-+		/* Used for MOTIONSENSE_CMD_LID_ANGLE */
-+		/* (no params) */
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_INT_ENABLE */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * 1: enable, 0 disable fifo,
-+			 * EC_MOTION_SENSE_NO_VALUE return value.
-+			 */
-+			int8_t enable;
-+		} fifo_int_enable;
-+
-+		/* Used for MOTIONSENSE_CMD_SPOOF */
-+		struct __ec_todo_packed {
-+			uint8_t sensor_id;
-+
-+			/* See enum motionsense_spoof_mode. */
-+			uint8_t spoof_enable;
-+
-+			/* Ignored, used for alignment. */
-+			uint8_t reserved;
-+
-+			/* Individual component values to spoof. */
-+			int16_t components[3];
-+		} spoof;
-+
-+		/* Used for MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE. */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Lid angle threshold for switching between tablet and
-+			 * clamshell mode.
-+			 */
-+			int16_t lid_angle;
-+
-+			/*
-+			 * Hysteresis degree to prevent fluctuations between
-+			 * clamshell and tablet mode if lid angle keeps
-+			 * changing around the threshold. Lid motion driver will
-+			 * use lid_angle + hys_degree to trigger tablet mode and
-+			 * lid_angle - hys_degree to trigger clamshell mode.
-+			 */
-+			int16_t hys_degree;
-+		} tablet_mode_threshold;
- 	};
- } __ec_todo_packed;
- 
- struct ec_response_motion_sense {
- 	union {
--		/* Used for MOTIONSENSE_CMD_DUMP. */
-+		/* Used for MOTIONSENSE_CMD_DUMP */
- 		struct __ec_todo_unpacked {
- 			/* Flags representing the motion sensor module. */
- 			uint8_t module_flags;
-@@ -2411,27 +2656,118 @@ struct ec_response_motion_sense {
- 			uint8_t chip;
- 		} info;
- 
-+		/* Used for MOTIONSENSE_CMD_INFO version 3 */
-+		struct __ec_todo_unpacked {
-+			/* Should be element of enum motionsensor_type. */
-+			uint8_t type;
-+
-+			/* Should be element of enum motionsensor_location. */
-+			uint8_t location;
-+
-+			/* Should be element of enum motionsensor_chip. */
-+			uint8_t chip;
-+
-+			/* Minimum sensor sampling frequency */
-+			uint32_t min_frequency;
-+
-+			/* Maximum sensor sampling frequency */
-+			uint32_t max_frequency;
-+
-+			/* Max number of sensor events that could be in fifo */
-+			uint32_t fifo_max_event_count;
-+		} info_3;
-+
- 		/* Used for MOTIONSENSE_CMD_DATA */
- 		struct ec_response_motion_sensor_data data;
- 
- 		/*
- 		 * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR,
--		 * MOTIONSENSE_CMD_SENSOR_RANGE, and
--		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE.
-+		 * MOTIONSENSE_CMD_SENSOR_RANGE,
-+		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE,
-+		 * MOTIONSENSE_CMD_FIFO_INT_ENABLE and
-+		 * MOTIONSENSE_CMD_SPOOF.
- 		 */
- 		struct __ec_todo_unpacked {
- 			/* Current value of the parameter queried. */
- 			int32_t ret;
--		} ec_rate, sensor_odr, sensor_range, kb_wake_angle;
-+		} ec_rate, sensor_odr, sensor_range, kb_wake_angle,
-+		  fifo_int_enable, spoof;
- 
--		/* Used for MOTIONSENSE_CMD_SENSOR_OFFSET */
-+		/*
-+		 * Used for MOTIONSENSE_CMD_SENSOR_OFFSET,
-+		 * PERFORM_CALIB.
-+		 */
- 		struct __ec_todo_unpacked  {
- 			int16_t temp;
- 			int16_t offset[3];
- 		} sensor_offset, perform_calib;
-+
-+		/* Used for MOTIONSENSE_CMD_SENSOR_SCALE */
-+		struct __ec_todo_unpacked  {
-+			int16_t temp;
-+			uint16_t scale[3];
-+		} sensor_scale;
-+
-+		struct ec_response_motion_sense_fifo_info fifo_info, fifo_flush;
-+
-+		struct ec_response_motion_sense_fifo_data fifo_read;
-+
-+		struct __ec_todo_packed {
-+			uint16_t reserved;
-+			uint32_t enabled;
-+			uint32_t disabled;
-+		} list_activities;
-+
-+		/* No params for set activity */
-+
-+		/* Used for MOTIONSENSE_CMD_LID_ANGLE */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Angle between 0 and 360 degree if available,
-+			 * LID_ANGLE_UNRELIABLE otherwise.
-+			 */
-+			uint16_t value;
-+		} lid_angle;
-+
-+		/* Used for MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE. */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Lid angle threshold for switching between tablet and
-+			 * clamshell mode.
-+			 */
-+			uint16_t lid_angle;
-+
-+			/* Hysteresis degree. */
-+			uint16_t hys_degree;
-+		} tablet_mode_threshold;
-+
- 	};
- } __ec_todo_packed;
- 
-+/*****************************************************************************/
-+/* Force lid open command */
-+
-+/* Make lid event always open */
-+#define EC_CMD_FORCE_LID_OPEN 0x002C
-+
-+struct ec_params_force_lid_open {
-+	uint8_t enabled;
-+} __ec_align1;
-+
-+/*****************************************************************************/
-+/* Configure the behavior of the power button */
-+#define EC_CMD_CONFIG_POWER_BUTTON 0x002D
-+
-+enum ec_config_power_button_flags {
-+	/* Enable/Disable power button pulses for x86 devices */
-+	EC_POWER_BUTTON_ENABLE_PULSE = BIT(0),
-+};
-+
-+struct ec_params_config_power_button {
-+	/* See enum ec_config_power_button_flags */
-+	uint8_t flags;
-+} __ec_align1;
-+
- /*****************************************************************************/
- /* USB charging control commands */
- 
-@@ -2888,6 +3224,12 @@ union __ec_align_offset1 ec_response_get_next_data {
- 	/* Unaligned */
- 	uint32_t  host_event;
- 
-+	struct __ec_todo_unpacked {
-+		/* For aligning the fifo_info */
-+		uint8_t reserved[3];
-+		struct ec_response_motion_sense_fifo_info info;
-+	} sensor_fifo;
-+
- 	uint32_t   buttons;
- 	uint32_t   switches;
- 	uint32_t   sysrq;
-@@ -2896,6 +3238,12 @@ union __ec_align_offset1 ec_response_get_next_data {
- union __ec_align_offset1 ec_response_get_next_data_v1 {
- 	uint8_t key_matrix[16];
- 	uint32_t host_event;
-+	struct __ec_todo_unpacked {
-+		/* For aligning the fifo_info */
-+		uint8_t reserved[3];
-+		struct ec_response_motion_sense_fifo_info info;
-+	} sensor_fifo;
-+
- 	uint32_t buttons;
- 	uint32_t switches;
- 	uint32_t sysrq;
+ static int __init loadpin_init(void)
+ {
+ 	pr_info("ready to pin (currently %senforcing)\n",
+ 		enforce ? "" : "not ");
++	parse_exclude();
+ 	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");
+ 	return 0;
+ }
+@@ -203,3 +245,5 @@ DEFINE_LSM(loadpin) = {
+ /* Should not be mutable after boot, so not listed in sysfs (perm == 0). */
+ module_param(enforce, int, 0);
+ MODULE_PARM_DESC(enforce, "Enforce module/firmware pinning");
++module_param_array_named(exclude, exclude_read_files, charp, NULL, 0);
++MODULE_PARM_DESC(exclude, "Exclude pinning specific read file types");
 -- 
-2.21.0.1020.gf2820cf01a-goog
+2.22.0.rc1.311.g5d7573a151-goog
 
