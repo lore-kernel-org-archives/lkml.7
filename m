@@ -2,241 +2,99 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECF6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86246C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA2E261A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBDE218A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wc1IAI5z"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ONMCeqFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFCWCh (ORCPT
+        id S1726725AbfFCWDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:02:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38746 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfFCWCg (ORCPT
+        Mon, 3 Jun 2019 18:03:03 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45624 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbfFCWDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:02:36 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v11so9045203pgl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:02:35 -0700 (PDT)
+        Mon, 3 Jun 2019 18:03:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r76so17720746lja.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:03:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/ECwKX3tAPVrwDHDKYOADHOjDCqITvrKBeA6eRqjWZs=;
-        b=wc1IAI5zkjEeNFD/HUHIIB2H4ZEiiwVM44Ba+r/EDaRF3+H7i/JdKOmLOc7GkpUaXZ
-         nsmUhjtAzV6Xt8bZLVEcSDL1/ZUOBooQnG9O1/17mij+ggkqxQYuN5S6vLcYdIDVLQFd
-         HheOIOvrDxa75BK5RdfurEfDBmnxdJSk7pB/Sr4G/PRfMm3jCCWh7pWJW+C3c8Ue7voh
-         Bk09b4PFXAcp/azMkFm0cUu0GP9FagGP0M0WlvdSyz5/KYs0QJo2xMGEH9BHt+MEwAqK
-         fFXTKl+Ep/ZRQl2YI8RuqcPatNZBQ540LUZXo2NCHuCOvic+kaKnJ8EiOvdAO80Fzg8A
-         C+wg==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9i0fLB3ctHjhbMv4GYPOBusi0dAWBcq7kpoGxU/5uy0=;
+        b=ONMCeqFi2tN4KQtO8Da4s9yG59tc8l/KfFqoS1qMjM18ZALi+QRdNvLyvmqjblfODX
+         AEDDqvyyVbhpxg/VK23dTgeYdOCNfUAeN9FMKxPHyN0oOgeZXok+ZdnjAU71ZRwhjRcZ
+         RKItIQEhhsnBqu68xNOZ4kGcM7U88snPqRtDsLUEx8rf3Yhzq0Qic4T7B76sFqZf00i7
+         AElPiJoLHOF+jb7bESf1g+jcZihky+tgr51oHeOGb6U4JSkGjP+rWTQfsGba+S3nPimu
+         AO4tBX9I8ylLnCTVAKVNnUMY5lmasvu4gqpdI4OdGfoDFbNCBNxdy/VApJOD7Zps4aJo
+         qZmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/ECwKX3tAPVrwDHDKYOADHOjDCqITvrKBeA6eRqjWZs=;
-        b=IPzZm+5f0S0QgLBX6sHc4k+ertsYGkmOm2IOxtKauiQtXaKW2is9GvbbzFX61jQQKO
-         zcro0uukkNlLYToQJm1fxSZkywkL5/mj+8YdrtE77dTtMAEteL4HzCtNoiO9/JgNitpB
-         BztFYQUdNhg2jEx9n6WyJLzVPnpW8RF4BLwuutBM6GlcpGGiGJhXHExlcl2Cca/LhOcN
-         ubUk6vJa1bUUM8JBJ5GO2SeMOAaY89If0IzFBaaJ7a2j6U6C/l1qFcMeUSzEIIyzMOKM
-         uOYROwqySEdcs1cTa9o2GGOB6qX6ldbYlg/prr89MIc+vxhJ16Av04zGdnVlhJ8kLIq+
-         Ggjw==
-X-Gm-Message-State: APjAAAVfSK//QzThGlEMm9i8Wypv6uYd5r1R4p0M5+Dj+rxcaPel3ZFd
-        7jlRQly2lhgD9NP1DusYQgi786d+9aI=
-X-Google-Smtp-Source: APXvYqx/5Lrk+LdVqxZQme1ApdkTNrnq9skskkPna5IZ39YLgvkLp8SXhS67uQwguS5V8QjCLUPvmA==
-X-Received: by 2002:aa7:8b49:: with SMTP id i9mr6357080pfd.74.1559596111356;
-        Mon, 03 Jun 2019 14:08:31 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:9fa4])
-        by smtp.gmail.com with ESMTPSA id m8sm23997383pff.137.2019.06.03.14.08.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 14:08:30 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 04/11] mm: vmscan: naming fixes: cgroup_reclaim() and writeback_working()
-Date:   Mon,  3 Jun 2019 17:07:39 -0400
-Message-Id: <20190603210746.15800-5-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603210746.15800-1-hannes@cmpxchg.org>
-References: <20190603210746.15800-1-hannes@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9i0fLB3ctHjhbMv4GYPOBusi0dAWBcq7kpoGxU/5uy0=;
+        b=tc/DcvpVEWs/+XK9/41WE02qbgX2nGqCKtjXcz7KTvYugd2qgHm5KQ25IV4EERwV/U
+         CfZS6T4GNBr1PmQ4K9W3OiAmRdiugyZd7vdPNeq+lRANtfEWeHTuwyiLypF7BQqvKMEz
+         bxIZT1DCGBosvRlxiTTQrBAcvhskZ25N+1WLL/OAeDd72NsUtk/y2fKkWwRYbNsrfMdn
+         UU4pOBmCXUz8QC0snZTJo5SswEFXoddNg1zaduPbGNvdbOY8h9i4DfTL59cMaKZ0u90y
+         OGYAZfq2CUaxenMzOMkGHPZzMgoeKUTc8jw1UEr/8G6uEEFHD52bKHIEtG4BBh+mtRte
+         mLRA==
+X-Gm-Message-State: APjAAAXxFJifEcpexTYfzQPs6fx1DfOK+AB9CFlfccpqpcOGI/aDj07r
+        OGgqxFs7kBp/UwAeJmBmR4vTGm4MQaxYcXD+BDjO
+X-Google-Smtp-Source: APXvYqwOt5QwwF991N5QgfhgtcwXRJbuTWTAvKoJqehKyrnMTSwptDkGcIf1MEltn7xdxIzkIBJlP3kGx13ECWw/nmo=
+X-Received: by 2002:a2e:900e:: with SMTP id h14mr14762142ljg.77.1559595589392;
+ Mon, 03 Jun 2019 13:59:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190601021526.GA8264@zhanggen-UX430UQ> <20190601022527.GR17978@ZenIV.linux.org.uk>
+ <20190601024459.GA8563@zhanggen-UX430UQ>
+In-Reply-To: <20190601024459.GA8563@zhanggen-UX430UQ>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 3 Jun 2019 16:59:38 -0400
+Message-ID: <CAHC9VhSbS6_Hp6_k0qpqQTvyG29ADx+b7JoXjDgXViO9bRXVMA@mail.gmail.com>
+Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in selinux_sb_eat_lsm_opts()
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, omosnace@redhat.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seven years after introducing the global_reclaim() function, I still
-have to double take when reading a callsite. I don't know how others
-do it. This is a terrible name.
+On Fri, May 31, 2019 at 10:45 PM Gen Zhang <blackgod016574@gmail.com> wrote:
+> On Sat, Jun 01, 2019 at 03:25:27AM +0100, Al Viro wrote:
+> > On Sat, Jun 01, 2019 at 10:15:26AM +0800, Gen Zhang wrote:
+> > > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> > > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts'
+> > > should be freed when error.
+> >
+> > What's the latter one for?  On failure we'll get to put_fs_context()
+> > pretty soon, so
+> >         security_free_mnt_opts(&fc->security);
+> > will be called just fine.  Leaving it allocated on failure is fine...
+> Paul Moore <paul@paul-moore.com> wrote:
+> >It seems like we should also check for, and potentially free *mnt_opts
+> >as the selinux_add_opt() error handling does just below this change,
+> >yes?  If that is the case we might want to move that error handling
+> >code to the bottom of the function and jump there on error.
+> I am not familiar with this part. So could you please show the function
+> call sequence?
 
-Invert the meaning and rename it to cgroup_reclaim().
+I'm not sure I understand your question above, but I did review your
+latest patch and agree with Ondrej's comment regarding the ret/rc
+variable.  If you make that change I think we can merge this into
+selinux/stable-5.2.
 
-[ After all, "global reclaim" is just regular reclaim invoked from the
-  page allocator. It's reclaim on behalf of a cgroup limit that is a
-  special case of reclaim, and should be explicit - not the reverse. ]
-
-sane_reclaim() isn't very descriptive either: it tests whether we can
-use the regular writeback throttling - available during regular page
-reclaim or cgroup2 limit reclaim - or need to use the broken
-wait_on_page_writeback() method. Rename it to writeback_working().
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 69c4c82a9b5a..afd5e2432a8e 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -239,13 +239,13 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
- #endif /* CONFIG_MEMCG_KMEM */
- 
- #ifdef CONFIG_MEMCG
--static bool global_reclaim(struct scan_control *sc)
-+static bool cgroup_reclaim(struct scan_control *sc)
- {
--	return !sc->target_mem_cgroup;
-+	return sc->target_mem_cgroup;
- }
- 
- /**
-- * sane_reclaim - is the usual dirty throttling mechanism operational?
-+ * writeback_working - is the usual dirty throttling mechanism unavailable?
-  * @sc: scan_control in question
-  *
-  * The normal page dirty throttling mechanism in balance_dirty_pages() is
-@@ -257,11 +257,9 @@ static bool global_reclaim(struct scan_control *sc)
-  * This function tests whether the vmscan currently in progress can assume
-  * that the normal dirty throttling mechanism is operational.
-  */
--static bool sane_reclaim(struct scan_control *sc)
-+static bool writeback_working(struct scan_control *sc)
- {
--	struct mem_cgroup *memcg = sc->target_mem_cgroup;
--
--	if (!memcg)
-+	if (!cgroup_reclaim(sc))
- 		return true;
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
-@@ -293,12 +291,12 @@ static bool memcg_congested(pg_data_t *pgdat,
- 
- }
- #else
--static bool global_reclaim(struct scan_control *sc)
-+static bool cgroup_reclaim(struct scan_control *sc)
- {
--	return true;
-+	return false;
- }
- 
--static bool sane_reclaim(struct scan_control *sc)
-+static bool writeback_working(struct scan_control *sc)
- {
- 	return true;
- }
-@@ -1211,7 +1209,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 				goto activate_locked;
- 
- 			/* Case 2 above */
--			} else if (sane_reclaim(sc) ||
-+			} else if (writeback_working(sc) ||
- 			    !PageReclaim(page) || !may_enter_fs) {
- 				/*
- 				 * This is slightly racy - end_page_writeback()
-@@ -1806,7 +1804,7 @@ static int too_many_isolated(struct pglist_data *pgdat, int file,
- 	if (current_is_kswapd())
- 		return 0;
- 
--	if (!sane_reclaim(sc))
-+	if (!writeback_working(sc))
- 		return 0;
- 
- 	if (file) {
-@@ -1957,7 +1955,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	reclaim_stat->recent_scanned[file] += nr_taken;
- 
- 	item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
--	if (global_reclaim(sc))
-+	if (!cgroup_reclaim(sc))
- 		__count_vm_events(item, nr_scanned);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
- 	spin_unlock_irq(&pgdat->lru_lock);
-@@ -1971,7 +1969,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	spin_lock_irq(&pgdat->lru_lock);
- 
- 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
--	if (global_reclaim(sc))
-+	if (!cgroup_reclaim(sc))
- 		__count_vm_events(item, nr_reclaimed);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
- 	reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
-@@ -2239,7 +2237,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
- 	 * using the memory controller's swap limit feature would be
- 	 * too expensive.
- 	 */
--	if (!global_reclaim(sc) && !swappiness) {
-+	if (cgroup_reclaim(sc) && !swappiness) {
- 		scan_balance = SCAN_FILE;
- 		goto out;
- 	}
-@@ -2263,7 +2261,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
- 	 * thrashing file LRU becomes infinitely more attractive than
- 	 * anon pages.  Try to detect this based on file LRU size.
- 	 */
--	if (global_reclaim(sc)) {
-+	if (!cgroup_reclaim(sc)) {
- 		unsigned long pgdatfile;
- 		unsigned long pgdatfree;
- 		int z;
-@@ -2494,7 +2492,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
- 	 * abort proportional reclaim if either the file or anon lru has already
- 	 * dropped to zero at the first pass.
- 	 */
--	scan_adjusted = (global_reclaim(sc) && !current_is_kswapd() &&
-+	scan_adjusted = (!cgroup_reclaim(sc) && !current_is_kswapd() &&
- 			 sc->priority == DEF_PRIORITY);
- 
- 	blk_start_plug(&plug);
-@@ -2816,7 +2814,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 		 * Legacy memcg will stall in page writeback so avoid forcibly
- 		 * stalling in wait_iff_congested().
- 		 */
--		if (!global_reclaim(sc) && sane_reclaim(sc) &&
-+		if (cgroup_reclaim(sc) && writeback_working(sc) &&
- 		    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
- 			set_memcg_congestion(pgdat, root, true);
- 
-@@ -2911,7 +2909,7 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
- 		 * Take care memory controller reclaiming has small influence
- 		 * to global LRU.
- 		 */
--		if (global_reclaim(sc)) {
-+		if (!cgroup_reclaim(sc)) {
- 			if (!cpuset_zone_allowed(zone,
- 						 GFP_KERNEL | __GFP_HARDWALL))
- 				continue;
-@@ -3011,7 +3009,7 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
- retry:
- 	delayacct_freepages_start();
- 
--	if (global_reclaim(sc))
-+	if (!cgroup_reclaim(sc))
- 		__count_zid_vm_events(ALLOCSTALL, sc->reclaim_idx, 1);
- 
- 	do {
 -- 
-2.21.0
-
+paul moore
+www.paul-moore.com
