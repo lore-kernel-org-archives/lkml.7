@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1D8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4288BC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081AA27E66
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2B627E57
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553092;
-	bh=p/x8X6sBEti6Y9gLNGUZJDvgAbjmXLS9dkytr/uQFnA=;
+	s=default; t=1559553095;
+	bh=ujhi6CpwYLYZfWyY7aUjKt1dxXqrqMs4fZUEJRhOKfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ZF0y8I/Olvm8VKml/ODBZOn0Mf3b1epUhU+18JUBPFxJjdDl5yd+jV0hSzULMUof
-	 oIT0xWmDBjQlACkt/hmc1oRsjsn8WW2+qJDqoXEPvJXATtRUAem8nK2Tvr0TuqK3Is
-	 7Z8vTjRxFiMEBCFDdKyP02UpHNYU9A+wtvUM2cww=
+	b=U/G2fI9B0ATG+siVxxDj1pK4qrSOd9BYg3GnwIFkZvD6HsLx/rth9lA23AxiCwazX
+	 hV9xMpCkgS+ysuekR1sPsAaFcE15XN4zxauFn0JwI43F4aRJKpFMdoq7KaCn1hxVzo
+	 UabjQZTt6F5M1/Dp4T52qERaqs3hmK9yGrgjp0h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfFCJLb (ORCPT
+        id S1728428AbfFCJLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbfFCJL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:28 -0400
+        id S1727947AbfFCJLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F26A27E69;
-        Mon,  3 Jun 2019 09:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD55827E7A;
+        Mon,  3 Jun 2019 09:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553087;
-        bh=p/x8X6sBEti6Y9gLNGUZJDvgAbjmXLS9dkytr/uQFnA=;
+        s=default; t=1559553090;
+        bh=ujhi6CpwYLYZfWyY7aUjKt1dxXqrqMs4fZUEJRhOKfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntfp3Tx7kXy5K4e9zg6UTapuHWfKeHjTf6eqh1Ve07W59dDyE60Ven+mxxz2pSnKS
-         F5z+ug+cOBFFXAe8fxvvQer/9j+ibzRiAOvNg/CsMwozPAmbjR68WOi7ez8vE+/l9L
-         eT1E+tzkWK8jLyT3iLt/pWqwkK60CJGL89g/zEv4=
+        b=eJod5U4fsOVvo5jH0Z0DX/xV1OeL1wHbm2SvtVeaApomraxrUxanKJMqxQcy1eVTG
+         GLjuyODzvydkTM1lg+wJrX4wC/Zl0fVGveOA+idi0rCMpDHSL3qTl0U39SQpcbxq1J
+         xkZ7Awa7RC6l87nMr48zTd6t+UlC4iq+ltMJWx1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 16/36] net: sched: dont use tc_action->order during action dump
-Date:   Mon,  3 Jun 2019 11:09:04 +0200
-Message-Id: <20190603090522.047637373@linuxfoundation.org>
+Subject: [PATCH 5.0 17/36] net: stmmac: fix reset gpio free missing
+Date:   Mon,  3 Jun 2019 11:09:05 +0200
+Message-Id: <20190603090522.116311384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -60,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 4097e9d250fb17958c1d9b94538386edd3f20144 ]
+[ Upstream commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 ]
 
-Function tcf_action_dump() relies on tc_action->order field when starting
-nested nla to send action data to userspace. This approach breaks in
-several cases:
+Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+removed the reset gpio free, when the driver is unbinded or rmmod,
+we miss the gpio free.
 
-- When multiple filters point to same shared action, tc_action->order field
-  is overwritten each time it is attached to filter. This causes filter
-  dump to output action with incorrect attribute for all filters that have
-  the action in different position (different order) from the last set
-  tc_action->order value.
+This patch uses managed API to request the reset gpio, so that the
+gpio could be freed properly.
 
-- When action data is displayed using tc action API (RTM_GETACTION), action
-  order is overwritten by tca_action_gd() according to its position in
-  resulting array of nl attributes, which will break filter dump for all
-  filters attached to that shared action that expect it to have different
-  order value.
-
-Don't rely on tc_action->order when dumping actions. Set nla according to
-action position in resulting array of actions instead.
-
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/act_api.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -766,7 +766,7 @@ int tcf_action_dump(struct sk_buff *skb,
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -267,7 +267,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
+ 			of_property_read_u32_array(np,
+ 				"snps,reset-delays-us", data->delays, 3);
  
- 	for (i = 0; i < TCA_ACT_MAX_PRIO && actions[i]; i++) {
- 		a = actions[i];
--		nest = nla_nest_start(skb, a->order);
-+		nest = nla_nest_start(skb, i + 1);
- 		if (nest == NULL)
- 			goto nla_put_failure;
- 		err = tcf_action_dump_1(skb, a, bind, ref);
-@@ -1283,7 +1283,6 @@ tca_action_gd(struct net *net, struct nl
- 			ret = PTR_ERR(act);
- 			goto err;
+-			if (gpio_request(data->reset_gpio, "mdio-reset"))
++			if (devm_gpio_request(priv->device, data->reset_gpio,
++					      "mdio-reset"))
+ 				return 0;
  		}
--		act->order = i;
- 		attr_size += tcf_action_fill_size(act);
- 		actions[i - 1] = act;
- 	}
+ 
 
 
