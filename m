@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4424C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388D9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F9127ED9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D71727ED7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553248;
-	bh=EalTZgYLMxKMB+SmBCfQ3J+rYslJYpfRcOIGgXSOiW8=;
+	s=default; t=1559553253;
+	bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaewQC3dKcaOd+X8zvh0IBL+oBG03jHcoD8GR/Ll7TuFRdriC6vQwn+I8EEqIKfxB
-	 RmBA+SiLVI1NtP2lS6WgWOSwRFv0kkw4+UkRqKkW56R8/C8BxCNU5O2GiJRDvxVNNq
-	 MQkTfCETAy74YJXTETfXsJuhT3hFcGbiibBcDBcU=
+	b=hdP3BSa4BfVpb+G7PjnJgHcsUE/WviwUECBlaXGPETP79LLJEEht6rqyCwpoHpmlV
+	 ukurrC+qRuXPaXadl125H5o7dG1wnJZb3riwPIfu7j1V6oI2t193sg4VR/u3IA8x8O
+	 Besx0G13JaJJlY/4mu8Et+vVlHwyC7r8lfW3EzdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfFCJOI (ORCPT
+        id S1728962AbfFCJOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:14:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbfFCJOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:14:00 -0400
+        id S1728543AbfFCJOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:14:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DB6627EC8;
-        Mon,  3 Jun 2019 09:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C7C427ED7;
+        Mon,  3 Jun 2019 09:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553239;
-        bh=EalTZgYLMxKMB+SmBCfQ3J+rYslJYpfRcOIGgXSOiW8=;
+        s=default; t=1559553247;
+        bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oBqXxow+4luDbYK7wHZLLG4NX6tQuIMB2c1MIwKo1dkR+sPdRu/lyJ+CCUYenUPDa
-         btEYg2znqYiw0vLPYnDAddtNB4zR3TziBXtX31Gd9jDLBylABiDHMgbuNKIIK89ryI
-         gTyQs0wvWF+F8+8bDAzpu/207K2cyEqs96zoGOKE=
+        b=2eXUIVxMe4tCve7LomT596oH69WzxBpnf4VbjUA2NysTVIoM6wtjO/PspYRDPOliE
+         E7IpJ2ncfTm6GKwfdX12+69czdyIap9debeT3LLJ/yTv6d8RB2F9yFF8jsIY3N4jLu
+         wZBkcs6ICsgfLVyg/gata/XjupVoPcnueJr0K9M0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        kbuild test robot <lkp@intel.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 06/40] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
-Date:   Mon,  3 Jun 2019 11:08:59 +0200
-Message-Id: <20190603090523.025416619@linuxfoundation.org>
+Subject: [PATCH 5.1 09/40] llc: fix skb leak in llc_build_and_send_ui_pkt()
+Date:   Mon,  3 Jun 2019 11:09:02 +0200
+Message-Id: <20190603090523.207080348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -62,56 +62,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
+[ Upstream commit 8fb44d60d4142cd2a440620cd291d346e23c131e ]
 
-ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
+If llc_mac_hdr_init() returns an error, we must drop the skb
+since no llc_build_and_send_ui_pkt() caller will take care of this.
 
-Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
+BUG: memory leak
+unreferenced object 0xffff8881202b6800 (size 2048):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
+    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
+    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
+    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
+    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
+    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
+    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
+    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
+    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
+    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
+    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
+    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811d750d00 (size 224):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
+  backtrace:
+    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
+    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
+    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
+    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
+    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
+    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
+    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
+    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/igmp.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ net/llc/llc_output.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -188,6 +188,17 @@ static void ip_ma_put(struct ip_mc_list
- 	     pmc != NULL;					\
- 	     pmc = rtnl_dereference(pmc->next_rcu))
- 
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
-+
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
-+	}
-+}
-+
- #ifdef CONFIG_IP_MULTICAST
- 
- /*
-@@ -633,17 +644,6 @@ static void igmpv3_clear_zeros(struct ip
- 	}
+--- a/net/llc/llc_output.c
++++ b/net/llc/llc_output.c
+@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
+ 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
+ 	if (likely(!rc))
+ 		rc = dev_queue_xmit(skb);
++	else
++		kfree_skb(skb);
+ 	return rc;
  }
  
--static void ip_sf_list_clear_all(struct ip_sf_list *psf)
--{
--	struct ip_sf_list *next;
--
--	while (psf) {
--		next = psf->sf_next;
--		kfree(psf);
--		psf = next;
--	}
--}
--
- static void kfree_pmc(struct ip_mc_list *pmc)
- {
- 	ip_sf_list_clear_all(pmc->sources);
 
 
