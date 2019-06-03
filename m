@@ -2,132 +2,144 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986CAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E90C46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683112750D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EtqdNP4l"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5F82750D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfFCPsH (ORCPT
+        id S1728167AbfFCPsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:48:07 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54274 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfFCPsG (ORCPT
+        Mon, 3 Jun 2019 11:48:31 -0400
+Received: from mailoutvs60.siol.net ([185.57.226.251]:54987 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727458AbfFCPsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:48:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RHZ0xaAf/ckgPfj0zlFSV1kVsqjqoOm1zs8CgP8zISg=; b=EtqdNP4ltpzt4uTJqo5dA9Act
-        MyEcDGtD9kzTFBGJHfXbYuBcW90l/2a4WwN3iiaLCEKzQ4S3t7K++jeHWY5Y6VwODX/+iuxXqduTZ
-        HgN2/BCUqT+E7hc1Ze4c5c3JHX+6UDSVmg2tK//fryiFvubqmTZ52IgDVO82QqtOAGj86/fgMzlvv
-        uNfBmxuvCLda1Uwvn0H5AaMZDhsecYz2MZPPJ3V1b9/Qy4pRPp0ClcUKaNI7t/dJF6NGfsKM1WXb2
-        Xo8ReH/UB8I49VGHxyiPmFqzCWcT4/GsctlSrMaaI2ouUkgtBU3NYqE/U7PKrr6f9OsL89EwCHGJ6
-        SOSEKAdtw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXpBg-0004EG-8h; Mon, 03 Jun 2019 15:47:52 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D5E1E2066CC1B; Mon,  3 Jun 2019 17:47:50 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 17:47:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, bp@alien8.de, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, qiuxu.zhuo@intel.com,
-        tony.luck@intel.com, rui.zhang@intel.com
-Subject: Re: [PATCH 2/3] perf/x86/intel: Add more Icelake CPUIDs
-Message-ID: <20190603154750.GA3402@hirez.programming.kicks-ass.net>
-References: <20190603134122.13853-1-kan.liang@linux.intel.com>
- <20190603134122.13853-2-kan.liang@linux.intel.com>
+        Mon, 3 Jun 2019 11:48:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 54562521077;
+        Mon,  3 Jun 2019 17:48:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id iTDkvQqWG0oc; Mon,  3 Jun 2019 17:48:27 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id E4C9152089C;
+        Mon,  3 Jun 2019 17:48:26 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 800E75210B0;
+        Mon,  3 Jun 2019 17:48:25 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] media: cedrus: Add infra for extra buffers connected to capture buffers
+Date:   Mon, 03 Jun 2019 17:48:25 +0200
+Message-ID: <3029072.frl2UAsRGt@jernej-laptop>
+In-Reply-To: <20190603121859.sbphcjy75kmed6oc@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net> <20190530211516.1891-7-jernej.skrabec@siol.net> <20190603121859.sbphcjy75kmed6oc@flea>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603134122.13853-2-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:41:21AM -0700, kan.liang@linux.intel.com wrote:
-> @@ -4962,7 +4965,9 @@ __init int intel_pmu_init(void)
->  		x86_pmu.cpu_events = get_icl_events_attrs();
->  		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
->  		x86_pmu.lbr_pt_coexist = true;
-> -		intel_pmu_pebs_data_source_skl(false);
-> +		intel_pmu_pebs_data_source_skl(
-> +			(boot_cpu_data.x86_model == INTEL_FAM6_ICELAKE_X) ||
-> +			(boot_cpu_data.x86_model == INTEL_FAM6_ICELAKE_XEON_D));
+Dne ponedeljek, 03. junij 2019 ob 14:18:59 CEST je Maxime Ripard napisal(a):
+> Hi,
+> 
+> On Thu, May 30, 2019 at 11:15:15PM +0200, Jernej Skrabec wrote:
+> > H264 and HEVC engines need additional buffers for each capture buffer.
+> > H264 engine has this currently solved by allocating fixed size pool,
+> > which is not ideal. Most of the time pool size is much bigger than it
+> > needs to be.
+> > 
+> > Ideally, extra buffer should be allocated at buffer initialization, but
+> > that's not efficient. It's size in H264 depends on flags set in SPS, but
+> > that information is not available in buffer init callback.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 ++++
+> >  .../staging/media/sunxi/cedrus/cedrus_video.c | 19 +++++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> > d8e6777e5e27..16c1bdfd243a 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > @@ -81,6 +81,10 @@ struct cedrus_run {
+> > 
+> >  struct cedrus_buffer {
+> >  
+> >  	struct v4l2_m2m_buffer          m2m_buf;
+> > 
+> > +	void		*extra_buf;
+> > +	dma_addr_t	extra_buf_dma;
+> > +	ssize_t		extra_buf_size;
+> > +
+> > 
+> >  	union {
+> >  	
+> >  		struct {
+> >  		
+> >  			unsigned int			position;
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_video.c index
+> > 681dfe3367a6..d756e0e69634 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> > @@ -411,6 +411,24 @@ static void cedrus_queue_cleanup(struct vb2_queue
+> > *vq, u32 state)> 
+> >  	}
+> >  
+> >  }
+> > 
+> > +static void cedrus_buf_cleanup(struct vb2_buffer *vb)
+> > +{
+> > +	struct vb2_queue *vq = vb->vb2_queue;
+> > +
+> > +	if (!V4L2_TYPE_IS_OUTPUT(vq->type)) {
+> > +		struct cedrus_ctx *ctx = vb2_get_drv_priv(vq);
+> > +		struct cedrus_buffer *cedrus_buf;
+> > +
+> > +		cedrus_buf = vb2_to_cedrus_buffer(vq->bufs[vb->index]);
+> > +
+> > +		if (cedrus_buf->extra_buf_size)
+> > +			dma_free_coherent(ctx->dev->dev,
+> > +					  cedrus_buf-
+>extra_buf_size,
+> > +					  cedrus_buf-
+>extra_buf,
+> > +					  cedrus_buf-
+>extra_buf_dma);
+> > +	}
+> > +}
+> > +
+> 
+> I'm really not a fan of allocating something somewhere, and freeing it
+> somewhere else. Making sure you don't leak something is hard enough to
+> not have some non-trivial allocation scheme.
 
-That's pretty sad, a model switch inside a model switch :/
+Ok, what about introducing two new optional methods in engine callbacks, 
+buffer_init and buffer_destroy, which would be called from cedrus_buf_init() and 
+cedrus_buf_cleanup(), respectively. That way all (de)allocation logic stays 
+within the same engine.
 
->  		pr_cont("Icelake events, ");
->  		name = "icelake";
->  		break;
+Best regards,
+Jernej
 
-Would something like so not be nicer?
 
----
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4485,6 +4485,7 @@ __init int intel_pmu_init(void)
- 	struct event_constraint *c;
- 	unsigned int unused;
- 	struct extra_reg *er;
-+	bool pmem = false;
- 	int version, i;
- 	char *name;
- 
-@@ -4936,9 +4937,10 @@ __init int intel_pmu_init(void)
- 		name = "knights-landing";
- 		break;
- 
-+	case INTEL_FAM6_SKYLAKE_X:
-+		pmem = true;
- 	case INTEL_FAM6_SKYLAKE_MOBILE:
- 	case INTEL_FAM6_SKYLAKE_DESKTOP:
--	case INTEL_FAM6_SKYLAKE_X:
- 	case INTEL_FAM6_KABYLAKE_MOBILE:
- 	case INTEL_FAM6_KABYLAKE_DESKTOP:
- 		x86_add_quirk(intel_pebs_isolation_quirk);
-@@ -4970,8 +4972,7 @@ __init int intel_pmu_init(void)
- 		td_attr  = hsw_events_attrs;
- 		mem_attr = hsw_mem_events_attrs;
- 		tsx_attr = hsw_tsx_events_attrs;
--		intel_pmu_pebs_data_source_skl(
--			boot_cpu_data.x86_model == INTEL_FAM6_SKYLAKE_X);
-+		intel_pmu_pebs_data_source_skl(pmem);
- 
- 		if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
- 			x86_pmu.flags |= PMU_FL_TFA;
-@@ -4985,7 +4986,11 @@ __init int intel_pmu_init(void)
- 		name = "skylake";
- 		break;
- 
-+	case INTEL_FAM6_ICELAKE_X:
-+	case INTEL_FAM6_ICELAKE_XEON_D:
-+		pmem = true;
- 	case INTEL_FAM6_ICELAKE_MOBILE:
-+	case INTEL_FAM6_ICELAKE_DESKTOP:
- 		x86_pmu.late_ack = true;
- 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
- 		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
-@@ -5009,7 +5014,7 @@ __init int intel_pmu_init(void)
- 		tsx_attr = icl_tsx_events_attrs;
- 		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
- 		x86_pmu.lbr_pt_coexist = true;
--		intel_pmu_pebs_data_source_skl(false);
-+		intel_pmu_pebs_data_source_skl(pmem);
- 		pr_cont("Icelake events, ");
- 		name = "icelake";
- 		break;
+
