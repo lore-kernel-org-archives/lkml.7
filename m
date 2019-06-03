@@ -2,109 +2,144 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35184C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752ACC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A67D27888
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D63D278B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FUhD80QZ"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="N73+jNRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbfFCOlW (ORCPT
+        id S1729127AbfFCOmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:41:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:58759 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727650AbfFCOlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:41:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Hd65126Gz9s4Y;
-        Tue,  4 Jun 2019 00:41:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559572879;
-        bh=BsUXuWa7XZdMan5Fr/rBomN8mgUXMm2wwUq2B3Ou28s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FUhD80QZIpWWBSfznH3zCDFWzaeAnWIH0wHVmpu/F3XL7BZWkG6pc6kHmSCd5P/+o
-         +3iR54uLVbLlQx6F7Zm6RsWmqyYwRVtlvjAPUajyFuaKiktVT9eZheBdsWMuLh/EuH
-         T6GH3qGYrKu15TKH0scM96UyXDA44ijbe0+jCsXK8rFPcLO2PvZjnepniqD9nXXh7s
-         hizaG6+A/q13y4a8U5T/yUOhQ4mTcDMaehVAzdfmegzLzyr+jWae26uhzhsRdscOn9
-         It0nU4836ERGVkch8iWh3rE9jmh4eZY3zSvukKQrS34YCAqGA5PJ4yl4c2EAqW1suG
-         8fwBV3mcLZQyw==
-Date:   Tue, 4 Jun 2019 00:41:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: linux-next: unable to fetch the drm-intel-fixes tree
-Message-ID: <20190604004115.47bd8b0b@canb.auug.org.au>
-In-Reply-To: <20190603195018.2b7d5650@canb.auug.org.au>
-References: <20190603082051.273a014c@canb.auug.org.au>
-        <20190603110403.0412ed22@canb.auug.org.au>
-        <20190603073103.GC21222@phenom.ffwll.local>
-        <20190603195018.2b7d5650@canb.auug.org.au>
+        Mon, 3 Jun 2019 10:42:19 -0400
+Received: from mail-eopbgr30100.outbound.protection.outlook.com ([40.107.3.100]:11233
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727650AbfFCOmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:42:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jGK5V79uVY6ivmZu7SZ5vD3+lpGxkb2rGvR55HCjek4=;
+ b=N73+jNRhP/TQbW8d8Ptjpx1Jc73wWmtN5HsAJlGGSAHFUFr/9js1PikABUdokjc2iKRMXGKOm6nmxbBLt3Au6PE9Nyq98ogDZkviFJwEDZ+Uhh48TmNh5HDVXPgElOfopbiRbzOoLW1W18RcUc/qFHq/Q9N5D6OuSbxHc+8T87M=
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
+ VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM (20.178.125.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Mon, 3 Jun 2019 14:42:11 +0000
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 14:42:11 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: [PATCH net-next v3 00/10] net: dsa: mv88e6xxx: support for mv88e6250
+Thread-Topic: [PATCH net-next v3 00/10] net: dsa: mv88e6xxx: support for
+ mv88e6250
+Thread-Index: AQHVGhqGjje/xsefAEaPf0JYGqjm9g==
+Date:   Mon, 3 Jun 2019 14:42:11 +0000
+Message-ID: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0070.eurprd07.prod.outlook.com
+ (2603:10a6:3:64::14) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7e4d5941-37d7-4963-5b80-08d6e831a924
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2574;
+x-ms-traffictypediagnostic: VI1PR10MB2574:
+x-microsoft-antispam-prvs: <VI1PR10MB25740D9E4DB6AC1AFC7012408A140@VI1PR10MB2574.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(42882007)(50226002)(476003)(73956011)(66556008)(64756008)(66446008)(66476007)(81156014)(256004)(14444005)(8976002)(53936002)(72206003)(66946007)(316002)(2201001)(14454004)(99286004)(8676002)(81166006)(8936002)(71190400001)(110136005)(71200400001)(107886003)(2501003)(102836004)(2616005)(4326008)(25786009)(386003)(7736002)(52116002)(6506007)(26005)(486006)(2906002)(66066001)(36756003)(186003)(6512007)(68736007)(1076003)(74482002)(305945005)(478600001)(3846002)(5660300002)(6436002)(6116002)(44832011)(6486002)(138113003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2574;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 94L/TACrio555Zl6Uw1ooOtBpWHaeWVkVjKj7mqymHDEDxD1yvA5YVdqGzvo4o7q3+59h129zzKC9PMF4ClZhwYeLY2ltrheUWUZJq0LuEG7lkVtVVMCcccRLiOpZrFY6P95sBSO/T9mQqh9SVMAL3g7oIg6DTZ9yMgEC82ko7fcmscsp/4LN7/RaFz8I/rvApdf80XJXPLWOul8aa3RN5hYWBDljDxtFgxD2ySggdjatah2eoqaVxdXOp674KIRYLQb2g3ixanZw6rZ/x0+1ueRCemTqXHcrBebhFaVJtjBXNpnnOAY1BM42S8+N5V4WLgv684mXuu57CLzNRiOlIbkh6Cm7DAeO1JVsQFXtXyXwoUbkWJpghII2m1Y/M4gJtgVqtN1NuInVVjvi5J1NAeAK6rQZSDDNqLzDikWh1Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PVNl=NbJTltydIWQshEQ=3x"; protocol="application/pgp-signature"
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e4d5941-37d7-4963-5b80-08d6e831a924
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 14:42:11.1165
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PVNl=NbJTltydIWQshEQ=3x
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Daniel,
-
-On Mon, 3 Jun 2019 19:50:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Mon, 3 Jun 2019 09:31:03 +0200 Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > drm.git too I guess? =20
->=20
-> No, I fetch that from git://git.freedesktop.org/ which seems to answer.
->=20
-> > But yeah fd.o anongit keeled over over the w/e :-( Admins not yet awake,
-> > so can't tell you what's up. =20
->=20
-> No worries, I will just keep using what I have previously fetched.
-
-And they all look good now.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PVNl=NbJTltydIWQshEQ=3x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz1MYsACgkQAVBC80lX
-0GxQ2gf+MsA9Cz1p3W5VUruP+KpaK324qe/ntfUXjDtOCjOgpLIl8DFk79R869Dc
-/4uy0ZCYI8PNCWMhZB4bjtcWQuj/biI9dzHuochdCT2g4We0x/+zpRPmaicxDCHa
-NRHd56TZ+EUUUfr+7dinpCW42lHv0hRSEpyyi7IDg0eU7iT95CGFU61m/Hf1nuuN
-Mhy6MW8poK3KP9fIFrofepMO/39weWwOH62/uMw1I9QiA6LNEsnZxi3fk6aLhr9g
-Xco3trX6NOe541/10yyWVDSPmzIu3pGiB3e6YW9W84/R7B8RPeeQUnJOFfn/aNoS
-xYMfxQ48+Pnb1XCK1bFMQ9Aoodurzw==
-=Y1hp
------END PGP SIGNATURE-----
-
---Sig_/PVNl=NbJTltydIWQshEQ=3x--
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBtdjg4ZTYyNTAgY2hpcC4gSW5pdGlhbGx5IGJhc2Vk
+IG9uIHRoZQ0KbXY4OGU2MjQwLCB0aGlzIHRpbWUgYXJvdW5kLCBJJ3ZlIGJlZW4gdGhyb3VnaCBl
+YWNoIC0+b3BzIGNhbGxiYWNrIGFuZA0KY2hlY2tlZCB0aGF0IGl0IG1ha2VzIHNlbnNlLCBlaXRo
+ZXIgcmVwbGFjaW5nIHdpdGggYSA2MjUwIHNwZWNpZmljDQp2YXJpYW50IG9yIGRyb3BwaW5nIGl0
+IGlmIG5vIGVxdWl2YWxlbnQgZnVuY3Rpb25hbGl0eSBzZWVtcyB0byBleGlzdA0KZm9yIHRoZSA2
+MjUwLiBBbG9uZyB0aGUgd2F5LCBJIGZvdW5kIGEgZmV3IG9kZGl0aWVzIGluIHRoZSBleGlzdGlu
+Zw0KY29kZSwgbW9zdGx5IHNlbnQgYXMgc2VwYXJhdGUgcGF0Y2hlcy9xdWVzdGlvbnMuDQoNClRo
+ZSBvbmUgcmVsZXZhbnQgdG8gdGhlIDYyNTAgaXMgdGhlIGllZWVfcHJpX21hcCBjYWxsYmFjaywg
+d2hlcmUgdGhlDQpleGlzdGluZyBtdjg4ZTYwODVfZzFfaWVlZV9wcmlfbWFwKCkgaXMgYWN0dWFs
+bHkgd3JvbmcgZm9yIG1hbnkgb2YgdGhlDQpleGlzdGluZyB1c2Vycy4gSSd2ZSBwdXQgdGhlIG12
+ODhlNjI1MF9nMV9pZWVlX3ByaV9tYXAoKSBwYXRjaCBmaXJzdA0KaW4gY2FzZSBzb21lIG9mIHRo
+ZSBleGlzdGluZyBjaGlwcyBnZXQgc3dpdGNoZWQgb3ZlciB0byB1c2UgdGhhdCBhbmQNCml0IGlz
+IGRlZW1lZCBpbXBvcnRhbnQgZW5vdWdoIGZvciAtc3RhYmxlLg0KDQp2MzoNCi0gcmViYXNlIG9u
+IHRvcCBvZiBuZXQtbmV4dC9tYXN0ZXINCi0gYWRkIHJldmlld2VkLWJ5cyB0byBwYXRjaGVzIHVu
+Y2hhbmdlZCBmcm9tIHYyICgyLDMsNCw1KQ0KLSBhZGQgNjI1MC1zcGVjaWZpYyAtPmllZWVfcHJp
+X21hcCwgLT5wb3J0X3NldF9zcGVlZCwgLT5wb3J0X2xpbmtfc3RhdGUgKDEsNiw3KQ0KLSBpbiBh
+ZGRpdGlvbiwgdXNlIG12ODhlNjA2NV9waHlsaW5rX3ZhbGlkYXRlIGZvciAtPnBoeWxpbmtfdmFs
+aWRhdGUsDQogIGFuZCBkb24ndCBpbXBsZW1lbnQgLT5wb3J0X2dldF9jbW9kZSwgLT5wb3J0X3Nl
+dF9qdW1ib19zaXplLA0KICAtPnBvcnRfZGlzYWJsZV9sZWFybl9saW1pdCwgLT5ybXVfZGlzYWJs
+ZQ0KLSBkcm9wIHB0cCBzdXBwb3J0DQotIGFkZCBwYXRjaCBhZGRpbmcgdGhlIGNvbXBhdGlibGUg
+c3RyaW5nIHRvIHRoZSBEVCBiaW5kaW5nICg5KQ0KLSBhZGQgc21hbGwgcmVmYWN0b3JpbmcgcGF0
+Y2ggKDEwKQ0KDQp2MjoNCi0gcmViYXNlIG9uIHRvcCBvZiBuZXQtbmV4dC9tYXN0ZXINCi0gYWRk
+IHJldmlld2VkLWJ5IHRvIHR3byBwYXRjaGVzIHVuY2hhbmdlZCBmcm9tIHYxICgyLDMpDQotIGFk
+ZCBzZXBhcmF0ZSB3YXRjaGRvZ19vcHMNCg0KUmFzbXVzIFZpbGxlbW9lcyAoMTApOg0KICBuZXQ6
+IGRzYTogbXY4OGU2eHh4OiBhZGQgbXY4OGU2MjUwX2cxX2llZWVfcHJpX21hcA0KICBuZXQ6IGRz
+YTogbXY4OGU2eHh4OiBpbnRyb2R1Y2Ugc3VwcG9ydCBmb3IgdHdvIGNoaXBzIHVzaW5nIGRpcmVj
+dCBzbWkNCiAgICBhZGRyZXNzaW5nDQogIG5ldDogZHNhOiBtdjg4ZTZ4eHg6IHByZXBhcmUgbXY4
+OGU2eHh4X2cxX2F0dV9vcCgpIGZvciB0aGUgbXY4OGU2MjUwDQogIG5ldDogZHNhOiBtdjg4ZTZ4
+eHg6IGltcGxlbWVudCB2dHVfZ2V0bmV4dCBhbmQgdnR1X2xvYWRwdXJnZSBmb3INCiAgICBtdjg4
+ZTYyNTANCiAgbmV0OiBkc2E6IG12ODhlNnh4eDogaW1wbGVtZW50IHdhdGNoZG9nX29wcyBmb3Ig
+bXY4OGU2MjUwDQogIG5ldDogZHNhOiBtdjg4ZTZ4eHg6IGltcGxlbWVudCBwb3J0X3NldF9zcGVl
+ZCBmb3IgbXY4OGU2MjUwDQogIG5ldDogZHNhOiBtdjg4ZTZ4eHg6IGltcGxlbWVudCBwb3J0X2xp
+bmtfc3RhdGUgZm9yIG12ODhlNjI1MA0KICBuZXQ6IGRzYTogbXY4OGU2eHh4OiBhZGQgc3VwcG9y
+dCBmb3IgbXY4OGU2MjUwDQogIGR0LWJpbmRpbmdzOiBuZXQ6IGRzYTogbWFydmVsbDogYWRkICJt
+YXJ2ZWxsLG12ODhlNjI1MCIgY29tcGF0aWJsZQ0KICAgIHN0cmluZw0KICBuZXQ6IGRzYTogbXY4
+OGU2eHh4OiByZWZhY3RvciBtdjg4ZTYzNTJfZzFfcmVzZXQNCg0KIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL25ldC9kc2EvbWFydmVsbC50eHQgICB8ICA3ICstDQogZHJpdmVycy9uZXQvZHNhL212
+ODhlNnh4eC9jaGlwLmMgICAgICAgICAgICAgIHwgODEgKysrKysrKysrKysrKysrKysrKw0KIGRy
+aXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvY2hpcC5oICAgICAgICAgICAgICB8ICA4ICsrDQogZHJp
+dmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxLmMgICAgICAgICAgIHwgMTcgKysrLQ0KIGRy
+aXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xvYmFsMS5oICAgICAgICAgICB8ICA3ICsrDQogZHJp
+dmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxX2F0dS5jICAgICAgIHwgIDUgKy0NCiBkcml2
+ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDFfdnR1LmMgICAgICAgfCA1OCArKysrKysrKysr
+KysrDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwyLmMgICAgICAgICAgIHwgMjYg
+KysrKysrDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwyLmggICAgICAgICAgIHwg
+MTQgKysrKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvcG9ydC5jICAgICAgICAgICAgICB8
+IDc3ICsrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvcG9ydC5o
+ICAgICAgICAgICAgICB8IDE0ICsrKysNCiBkcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L3NtaS5j
+ICAgICAgICAgICAgICAgfCAyNSArKysrKy0NCiAxMiBmaWxlcyBjaGFuZ2VkLCAzMzMgaW5zZXJ0
+aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjIwLjENCg0K
