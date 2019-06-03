@@ -7,52 +7,57 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0108FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3362C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD5B25B23
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B42321923
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553173;
-	bh=SHGrPKIiVBxyE3Nkt9MzwLW4Z2dC6ZA1S7kLZz5ZUSQ=;
+	s=default; t=1559553176;
+	bh=erX6YxDH2r6uXzI9LcRs8ZHxY09bIc1J7b+RmnL8fMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Byi+89tiLSCaQelZE7eW4CPRriWpWHxCYt940vjdFLFqMLgZqaj9xO7YqcB4hsWYK
-	 sR8mwH2Bx4r+TlGlBPrgJjzKx48nOka1C6dHilPhX4RVvEQg+J9TfWXOYLtkfgpbqK
-	 t81AOkQux4OBb0CWBImU0xiWamyeOIfHq/OjIviM=
+	b=RCSH+EQcL06EPDERiETL54oML2cOgyPqxUg9gc9SSm6EB6XAzcY9JSBxZorhYJi+Z
+	 QXcol7N3QxjqsOZIsUsqykBOWopjRMpBT1KjecjOeZBtP68Nx4ea+yox86EgTMw8LI
+	 lic21uDPoUBQXvn0ImLeUPuBbh0/VwELRRHS4hm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfFCJMw (ORCPT
+        id S1728284AbfFCJMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32824 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728689AbfFCJMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:50 -0400
+        id S1728693AbfFCJMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C61DC21923;
-        Mon,  3 Jun 2019 09:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4856F245B9;
+        Mon,  3 Jun 2019 09:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553169;
-        bh=SHGrPKIiVBxyE3Nkt9MzwLW4Z2dC6ZA1S7kLZz5ZUSQ=;
+        s=default; t=1559553166;
+        bh=erX6YxDH2r6uXzI9LcRs8ZHxY09bIc1J7b+RmnL8fMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MM1jybR5wtXw7su05cAVCabYOEYjAsi9UXOxDFFJBUmMbwcBXj5AM17XMwxZi9lbA
-         aW6Zn749Kp2hhsL/Qhvho+T6JPjTWBj6BqNNiNhXEJ9SGqlJy+Vh54acQIw0/1UVtN
-         UkcHgPmyhsC5fHktqyJKWSeRZ9bD9PIT4nvRBX/I=
+        b=aS91T9+Xmh5q7CpqlkXFGskdaGSaVzQkIHi7J9piv3sQRgupXj1aDCh0CS2xxCMqy
+         vKlqJlhRVuGeTaMWIlfaTwGkC1izpru7sfz9fABBamKe4R+fryWzZnwu8wXSdTovyj
+         /5pFSu5wDabtuIL5D1/N+JiPpqcH/bSdmUAU2JWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Kushnarov <alexanderk@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 10/40] mlxsw: spectrum_acl: Avoid warning after identical rules insertion
-Date:   Mon,  3 Jun 2019 11:09:03 +0200
-Message-Id: <20190603090523.269719877@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Heesoon Kim <Heesoon.Kim@stratus.com>,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 5.1 01/40] bonding/802.3ad: fix slave link initialization transition states
+Date:   Mon,  3 Jun 2019 11:08:54 +0200
+Message-Id: <20190603090522.709589250@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,46 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-[ Upstream commit ef74422020aa8c224b00a927e3e47faac4d8fae3 ]
+[ Upstream commit 334031219a84b9994594015aab85ed7754c80176 ]
 
-When identical rules are inserted, the latter one goes to C-TCAM. For
-that, a second eRP with the same mask is created. These 2 eRPs by the
-nature cannot be merged and also one cannot be parent of another.
-Teach mlxsw_sp_acl_erp_delta_fill() about this possibility and handle it
-gracefully.
+Once in a while, with just the right timing, 802.3ad slaves will fail to
+properly initialize, winding up in a weird state, with a partner system
+mac address of 00:00:00:00:00:00. This started happening after a fix to
+properly track link_failure_count tracking, where an 802.3ad slave that
+reported itself as link up in the miimon code, but wasn't able to get a
+valid speed/duplex, started getting set to BOND_LINK_FAIL instead of
+BOND_LINK_DOWN. That was the proper thing to do for the general "my link
+went down" case, but has created a link initialization race that can put
+the interface in this odd state.
 
-Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
-Fixes: c22291f7cf45 ("mlxsw: spectrum: acl: Implement delta for ERP")
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+The simple fix is to instead set the slave link to BOND_LINK_DOWN again,
+if the link has never been up (last_link_up == 0), so the link state
+doesn't bounce from BOND_LINK_DOWN to BOND_LINK_FAIL -- it hasn't failed
+in this case, it simply hasn't been up yet, and this prevents the
+unnecessary state change from DOWN to FAIL and getting stuck in an init
+failure w/o a partner mac.
+
+Fixes: ea53abfab960 ("bonding/802.3ad: fix link_failure_count tracking")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Tested-by: Heesoon Kim <Heesoon.Kim@stratus.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/net/bonding/bond_main.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c
-@@ -1171,13 +1171,12 @@ mlxsw_sp_acl_erp_delta_fill(const struct
- 			return -EINVAL;
- 	}
- 	if (si == -1) {
--		/* The masks are the same, this cannot happen.
--		 * That means the caller is broken.
-+		/* The masks are the same, this can happen in case eRPs with
-+		 * the same mask were created in both A-TCAM and C-TCAM.
-+		 * The only possible condition under which this can happen
-+		 * is identical rule insertion. Delta is not possible here.
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3122,13 +3122,18 @@ static int bond_slave_netdev_event(unsig
+ 	case NETDEV_CHANGE:
+ 		/* For 802.3ad mode only:
+ 		 * Getting invalid Speed/Duplex values here will put slave
+-		 * in weird state. So mark it as link-fail for the time
+-		 * being and let link-monitoring (miimon) set it right when
+-		 * correct speeds/duplex are available.
++		 * in weird state. Mark it as link-fail if the link was
++		 * previously up or link-down if it hasn't yet come up, and
++		 * let link-monitoring (miimon) set it right when correct
++		 * speeds/duplex are available.
  		 */
--		WARN_ON(1);
--		*delta_start = 0;
--		*delta_mask = 0;
--		return 0;
-+		return -EINVAL;
- 	}
- 	pmask = (unsigned char) parent_key->mask[__MASK_IDX(si)];
- 	mask = (unsigned char) key->mask[__MASK_IDX(si)];
+ 		if (bond_update_speed_duplex(slave) &&
+-		    BOND_MODE(bond) == BOND_MODE_8023AD)
+-			slave->link = BOND_LINK_FAIL;
++		    BOND_MODE(bond) == BOND_MODE_8023AD) {
++			if (slave->last_link_up)
++				slave->link = BOND_LINK_FAIL;
++			else
++				slave->link = BOND_LINK_DOWN;
++		}
+ 
+ 		if (BOND_MODE(bond) == BOND_MODE_8023AD)
+ 			bond_3ad_adapter_speed_duplex_changed(slave);
 
 
