@@ -2,109 +2,154 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70CDC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEC9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973F52759A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2009246DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iulw2LDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfFCQ5E (ORCPT
+        id S1729717AbfFCQ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:57:04 -0400
-Received: from foss.arm.com ([217.140.101.70]:55640 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbfFCQ5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:57:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC65A80D;
-        Mon,  3 Jun 2019 09:56:59 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D30F3F5AF;
-        Mon,  3 Jun 2019 09:56:57 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 17:56:51 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        shawnguo@kernel.org, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, andre.przywara@arm.com,
-        van.freenix@gmail.com, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-Message-ID: <20190603165651.GA12196@e107155-lin>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-2-peng.fan@nxp.com>
- <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 3 Jun 2019 12:57:28 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:41987 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729630AbfFCQz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:55:57 -0400
+Received: by mail-qk1-f201.google.com with SMTP id l16so992502qkk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=QTQ4ZZ+1ONHvx3iNcSe/c62gqBzIbuX20WtdiRnopfw=;
+        b=Iulw2LDXuMXrguiNT2nc8pImmlAd9SEaHxzy+PIXZoC7Ry1861+IgSJT7msXK0lxjW
+         Stlg9JACJI0q7DDqW7dFD1lXLlRa2BWigOxwo5Vw8cFe6qNirKkII0FhPNgtUk9+cp1T
+         aHJGoLoDr4Q8979Fk7TFLPwhp9/TzWuYwglUurKj3rFU9GpRJ5xL6D7/jxXgMSu4llum
+         hXs/FNVkTTazIDAfHhBMirRaAiVUM4CzdwvnR1yvQzgHmFdNai1A63k4wvi7etXyFGuo
+         QDD/dhSJypo/bxB/7BkdNMWk1BD1fsQcPpD2mwu3O8zxH9SkplM6OKzkYqDvbWZfOgAq
+         9GzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=QTQ4ZZ+1ONHvx3iNcSe/c62gqBzIbuX20WtdiRnopfw=;
+        b=MbbooAY3T9h39oEcJ0wOW+3URh53ik9LjTMwBnuq2NfrZxjgTiiGJdEQdOuxzeMUfj
+         q5+bQ/9oFgWH5FVTjUTIyuXUavmVBeQPP9ieH/AQiMi6FLQhJBKGGXj/69481VcM+rUs
+         u2nJzV/Xbnd2FnEY52U1LzhrFs1Rx6Cy+oy0XtYdd4Lph1OxNo855XghBBcGixTnjzhI
+         drVyAUo1DulE8QXkhntYfnJiDa2UvdSvrUjkxFq81sX/5Ypu5qkzpX++iGAsdO0USGqB
+         4zy6eVYwtZOuPaRD5Oc8MhFLB3Rt44eRyOfzOya4W4aM49WSnGVaMcdFAKB+EXvBmAGW
+         Cx/w==
+X-Gm-Message-State: APjAAAW+W4TTcryMZ866qKKyjxZ1QnxOkB9cb+KfyquXneO/Nk2iiXMp
+        QG92aJyxtg1djsJyPFIlGo3u4fSZpfy/A5oE
+X-Google-Smtp-Source: APXvYqynCi8uC9mwY5hf72ttWfEiYBsQ+6wl0nvKi3Uj+AQb+Ufw5GSOsuV9qYkE0ai47XUYEZWA+IZ0Az+FoQAg
+X-Received: by 2002:a37:8002:: with SMTP id b2mr23304828qkd.289.1559580956267;
+ Mon, 03 Jun 2019 09:55:56 -0700 (PDT)
+Date:   Mon,  3 Jun 2019 18:55:12 +0200
+In-Reply-To: <cover.1559580831.git.andreyknvl@google.com>
+Message-Id: <47d4e95b61013933ffe4f0be8832d03179d94b27.1559580831.git.andreyknvl@google.com>
+Mime-Version: 1.0
+References: <cover.1559580831.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
+Subject: [PATCH v16 10/16] drm/amdgpu, arm64: untag user pointers
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>, Kuehling@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
-> On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The ARM SMC mailbox binding describes a firmware interface to trigger
-> > actions in software layers running in the EL2 or EL3 exception levels.
-> > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > instruction set, not as a standard endorsed by ARM Ltd.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >
-> > V2:
-> > Introduce interrupts as a property.
-> >
-> > V1:
-> > arm,func-ids is still kept as an optional property, because there is no
-> > defined SMC funciton id passed from SCMI. So in my test, I still use
-> > arm,func-ids for ARM SIP service.
-> >
-> >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
-> >  1 file changed, 101 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > new file mode 100644
-> > index 000000000000..401887118c09
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > @@ -0,0 +1,101 @@
+This patch is a part of a series that extends arm64 kernel ABI to allow to
+pass tagged user pointers (with the top byte set to something else other
+than 0x00) as syscall arguments.
 
-[...]
+In amdgpu_gem_userptr_ioctl() and amdgpu_amdkfd_gpuvm.c/init_user_pages()
+an MMU notifier is set up with a (tagged) userspace pointer. The untagged
+address should be used so that MMU notifiers for the untagged address get
+correctly matched up with the right BO. This patch untag user pointers in
+amdgpu_gem_userptr_ioctl() for the GEM case and in amdgpu_amdkfd_gpuvm_
+alloc_memory_of_gpu() for the KFD case. This also makes sure that an
+untagged pointer is passed to amdgpu_ttm_tt_get_user_pages(), which uses
+it for vma lookups.
 
-> > +Optional properties:
-> > +- arm,func-ids		An array of 32-bit values specifying the function
-> > +			IDs used by each mailbox channel. Those function IDs
-> > +			follow the ARM SMC calling convention standard [1].
-> > +			There is one identifier per channel and the number
-> > +			of supported channels is determined by the length
-> > +			of this array.
-> > +- interrupts		SPI interrupts may be listed for notification,
-> > +			each channel should use a dedicated interrupt
-> > +			line.
->
-> I would not go about defining a specific kind of interrupt, since SPI is
-> a GIC terminology, this firmware interface could be used in premise with
-> any parent interrupt controller, for which the concept of a SPI/PPI/SGI
-> may not be relevant.
->
+Suggested-by: Kuehling, Felix <Felix.Kuehling@amd.com>
+Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c          | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-While I agree the binding document may not contain specifics, I still
-don't see how to use SGI with this. Also note it's generally reserved
-for OS future use(IPC) and using this for other than IPC may be bit
-challenging IMO. It opens up lots of questions.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index a6e5184d436c..5d476e9bbc43 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -1108,7 +1108,7 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
+ 		alloc_flags = 0;
+ 		if (!offset || !*offset)
+ 			return -EINVAL;
+-		user_addr = *offset;
++		user_addr = untagged_addr(*offset);
+ 	} else if (flags & ALLOC_MEM_FLAGS_DOORBELL) {
+ 		domain = AMDGPU_GEM_DOMAIN_GTT;
+ 		alloc_domain = AMDGPU_GEM_DOMAIN_CPU;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+index d4fcf5475464..e91df1407618 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+@@ -287,6 +287,8 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
+ 	uint32_t handle;
+ 	int r;
+ 
++	args->addr = untagged_addr(args->addr);
++
+ 	if (offset_in_page(args->addr | args->size))
+ 		return -EINVAL;
+ 
+-- 
+2.22.0.rc1.311.g5d7573a151-goog
 
---
-Regards,
-Sudeep
