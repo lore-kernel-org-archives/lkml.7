@@ -2,60 +2,61 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30FBC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AE9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB46724FC5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68065270F1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqTz1839"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdhORNEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbfFCRrj (ORCPT
+        id S1729043AbfFCRro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:47:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34445 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFCRrj (ORCPT
+        Mon, 3 Jun 2019 13:47:44 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40730 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728966AbfFCRrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:47:39 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y198so3797795lfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:47:38 -0700 (PDT)
+        Mon, 3 Jun 2019 13:47:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a9so12869956lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f1Dtl9xXT8tEGwrUxBzQBfGddt3tp9MI+UPqkpN1WN0=;
-        b=mqTz1839SvTGVA6JMBG6+XjE0xYwF2fSddZ7+seYCgdrXgukg0+NU1E4tXpmGF15Im
-         UZJXC+yUDioaBsN6la1dNtjTzmPzvL4teQe+GSwWL7g0C0GQ8xS+7Y5L2BBcCfXp+86x
-         wmMcAuVi4hbPPf8Pu4a/f2A02J0NXA367FrEGeAtR7D+OzvyqwIKbnX6pmohPchdxcab
-         om1NVhjh5ihdIMLobhgkrDeIrhVafIUwILMNvwzW9QzXJf7xfvMfpFZqOPjCRzZdWpdS
-         xCDuNsMcjH7LJDGLtHTp/dy+CwlmAJLQAjPt9FsfMow6RPEaUZ3hCIdNIW31jvDpVBA0
-         Et6A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eTpr5vmYx+4PQoKXbPkvuxXzIJqpQ3J3+BEDcR37i9o=;
+        b=AdhORNEGJyXa28hjmgyo+I46Wacno8kLfpt5N581IFLrUXkcGYATKdc9DktXkTSftY
+         5fF/V8rwGZYcsdkLst4jq1jCHNY8gcFoUIU3j/DloS+iritZfrBnZSJhDnzOWvYroBR4
+         ZQ5VkrfHTCc3CJLwKlxjyT6qOCGMmd+prkSjvi+jjeyjNNsBtt8VY57ecOL1pkUhFD3u
+         S+EJH458MjZqPDGIj5/wvIAg5RIR1HywmNaGoZCD6ocmoYSD9mzODxr7G0QAXMCh6Mf6
+         ILspvhgjwtR6Ix7P1h6OMQrNN57x6pVeU1MCLYqVrY/xNRnTN3X8Y4V9v5ax0pNByujl
+         Ncqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f1Dtl9xXT8tEGwrUxBzQBfGddt3tp9MI+UPqkpN1WN0=;
-        b=DDfIEuMVBS7ypq6Rl8VdBzC7GPDDJ/b7fyYid/ejXPVtw1pqAHtj+67BqXyt7HskY6
-         6tKksyqSMB1bVqqS0ZW8Ng8Wz32C2IAwoKAJ9KURRptKsmOAVgysx5gOI7c5gom3FzgT
-         PW5QizjTA+sQJEm9+Y3HlhOQrdqZLMSoqRLQfTgTwIhS2nXYEU6FlcfqW/N7RIUDPpOQ
-         8dhVtv6IVJu27+RUjwSjeQhMz0JoeqfeDzuKvpuvgcbAeEvFAxpqGfq1WubRwW+E+PTq
-         sr/zQsZ3EwQkgXKp3s4f1t17XOd51dWXv5rSjk4B1oz+xP2b8SRD0N52xGHuLNy41Co3
-         EDrg==
-X-Gm-Message-State: APjAAAXW29R+051qHkDQV054dmtBkFSUymx22nnTgNdCpjitqe+C5tH7
-        b42+i3X5qvtwhupKNNftGOY=
-X-Google-Smtp-Source: APXvYqxCQNjDQHJYWJnJyGea/doMquTKfXFLsAZndtY60a6k8pR2NhL8Rsw2Q/prcSP3U/G6IrOLRg==
-X-Received: by 2002:ac2:599b:: with SMTP id w27mr15110769lfn.184.1559584057528;
-        Mon, 03 Jun 2019 10:47:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eTpr5vmYx+4PQoKXbPkvuxXzIJqpQ3J3+BEDcR37i9o=;
+        b=HpddZh55WcJjmiO7S5sHIiNGda0Xu9+P4hqQiyHlZjCXwv45/3ohzue/Gai6c6sFCN
+         BfkuOxWRS8O4sAyD0BhBvhlbyCp33zjtyWXp2GBT6q2q9T1DGxbM+aWadD8DraGgrCrg
+         9k9iHE7gTVPMiOfVA3dwWaryugjo8r2/iIpRM/v+1c20V540UwAaWIL/nPoWXXi4Nyca
+         DC8tnPbgPiMD4j9Uwd8A+ClIKK9j4L6zFWbpPaf60fPd1AbPovTQHL9uDBfp25IkkQNO
+         uBy/rTrxRxcwQNvwujZlRD1Yro3D8+OLbGjNdkni/DMwxT35kO56yHLS5YH811udAXkP
+         MyAQ==
+X-Gm-Message-State: APjAAAX59fLf44xE3acwgBoVggbKB/k315GQi0nL/rgEeRW7BpvJRj8W
+        mE7RznJwwWVcvpCAdq8EBzA=
+X-Google-Smtp-Source: APXvYqylFVoVP9qdtJwm5SQFqUJALd4A978lZUNaHF+gTwQHftzFhZJcrtyfVrv2UH2MEPy5myCQvg==
+X-Received: by 2002:a19:9e53:: with SMTP id h80mr14028072lfe.77.1559584060567;
+        Mon, 03 Jun 2019 10:47:40 -0700 (PDT)
 Received: from localhost.localdomain ([188.150.253.81])
-        by smtp.gmail.com with ESMTPSA id n7sm2803532lfi.68.2019.06.03.10.47.36
+        by smtp.gmail.com with ESMTPSA id n7sm2803532lfi.68.2019.06.03.10.47.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 10:47:36 -0700 (PDT)
+        Mon, 03 Jun 2019 10:47:40 -0700 (PDT)
 From:   codekipper@gmail.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org,
         linux-sunxi@googlegroups.com
@@ -63,10 +64,12 @@ Cc:     linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
         broonie@kernel.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
         Marcus Cooper <codekipper@gmail.com>
-Subject: [PATCH v4 0/9]ASoC: sun4i-i2s: Updates to the driver
-Date:   Mon,  3 Jun 2019 19:47:26 +0200
-Message-Id: <20190603174735.21002-1-codekipper@gmail.com>
+Subject: [PATCH v4 3/9] ASoC: sun4i-i2s: Add regmap field to sign extend sample
+Date:   Mon,  3 Jun 2019 19:47:29 +0200
+Message-Id: <20190603174735.21002-4-codekipper@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190603174735.21002-1-codekipper@gmail.com>
+References: <20190603174735.21002-1-codekipper@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,74 +79,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcus Cooper <codekipper@gmail.com>
 
-Hi All,
+On the newer SoCs this is set by default to transfer a 0 after
+each sample in each slot. However the platform that this driver
+was developed on had the default setting where it padded the
+audio gain with zeros. This isn't a problem whilst we have only
+support for 16bit audio but with larger sample resolution rates
+in the pipeline then it should be fixed to also pad. Without this
+the audio gets distorted.
 
-here is a patch series to add some improvements to the sun4i-i2s driver
-found whilst getting slave clocking and hdmi audio working on the newer
-SoCs. As the LibreELEC project is progressing extremely well then there
-has been some activity getting surround sound working and this is included.
-
-The functionality included with the new patch set has been extended to
-cover more sample resolutions, multi-lane data output for HDMI audio
-and some bug fixes that have been discovered along the way.
-
-I can see more usage of the tdm property since I last attempted to push
-these patches and the examples currently in mainline sort of the opposite
-to what I'm trying to achieve. When we first started looking at the i2s
-driver, the codecs that we were using allowed for the frame width to be
-determined based on the sampling resolution but in most use cases it
-seems that a fixed width is required(my highest priority should be to get
-HDMI audio support in). We're using the tdm property to override the old
-way to calculate the frame width. What I've seen in what has already been
-mainlined is that the i2s driver has a frame width that is fixed to 32
-bits and this can be overridden using the tdm property.
-
-I still need to investigate the FIFO syncing issues which i've not had a 
-chance to change or address the concerns that broonie and wens brought up.
-This change has been moved to the top of the patch stack.
-
-BR,
-CK
-
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 ---
-v4 changes compared to v3 are:
-- Moved patches around so that the more controversial of patches are
-  at the top of the stack.
-- Added more details to commit messages.
-- Fixed 20bit audio PCM format to use 4 bytes.
-- Reduced number of flags used to indicate a new SoC.
+ sound/soc/sunxi/sun4i-i2s.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-v3 changes compared to v2 are:
- - added back slave mode changes
- - added back the use of tdm properties
- - changes to regmap and caching
- - removed loopback functionality
- - fixes to the channel offset mask
-
-v2 changes compared to v1 are:
- - removed slave mode changes which didn't set mclk and bclk div.
- - removed use of tdm and now use a dedicated property.
- - fix commit message to better explain reason for sign extending
- - add divider calculations for newer SoCs.
- - add support for multi-lane i2s data output.
- - add support for 20, 24 and 32 bit samples.
- - add loopback property so blocks can be tested without a codec.
-
-
-Marcus Cooper (9):
-  ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
-  ASoC: sun4i-i2s: Add offset to RX channel select
-  ASoC: sun4i-i2s: Add regmap field to sign extend sample
-  ASoC: sun4i-i2s: Reduce quirks for sun8i-h3
-  ASoC: sun4i-i2s: Add set_tdm_slot functionality
-  ASoC: sun4i-i2s: Add multi-lane functionality
-  ASoC: sun4i-i2s: Add multichannel functionality
-  ASoc: sun4i-i2s: Add 20, 24 and 32 bit support
-  ASoC: sun4i-i2s: Adjust regmap settings
-
- sound/soc/sunxi/sun4i-i2s.c | 242 ++++++++++++++++++++++++------------
- 1 file changed, 164 insertions(+), 78 deletions(-)
-
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index fd7c37596f21..e2961d8f6e8c 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -134,6 +134,7 @@
+  * @field_fmt_bclk: regmap field to set clk polarity.
+  * @field_fmt_lrclk: regmap field to set frame polarity.
+  * @field_fmt_mode: regmap field to set the operational mode.
++ * @field_fmt_sext: regmap field to set the sign extension.
+  * @field_txchanmap: location of the tx channel mapping register.
+  * @field_rxchanmap: location of the rx channel mapping register.
+  * @field_txchansel: location of the tx channel select bit fields.
+@@ -159,6 +160,7 @@ struct sun4i_i2s_quirks {
+ 	struct reg_field		field_fmt_bclk;
+ 	struct reg_field		field_fmt_lrclk;
+ 	struct reg_field		field_fmt_mode;
++	struct reg_field		field_fmt_sext;
+ 	struct reg_field		field_txchanmap;
+ 	struct reg_field		field_rxchanmap;
+ 	struct reg_field		field_txchansel;
+@@ -183,6 +185,7 @@ struct sun4i_i2s {
+ 	struct regmap_field	*field_fmt_bclk;
+ 	struct regmap_field	*field_fmt_lrclk;
+ 	struct regmap_field	*field_fmt_mode;
++	struct regmap_field	*field_fmt_sext;
+ 	struct regmap_field	*field_txchanmap;
+ 	struct regmap_field	*field_rxchanmap;
+ 	struct regmap_field	*field_txchansel;
+@@ -342,6 +345,9 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 				   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+ 				   SUN8I_I2S_FMT0_LRCK_PERIOD(32));
+ 
++	/* Set sign extension to pad out LSB with 0 */
++	regmap_field_write(i2s->field_fmt_sext, 0);
++
+ 	return 0;
+ }
+ 
+@@ -887,6 +893,7 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
+ 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+ 	.has_slave_select_bit	= true,
+ 	.field_fmt_mode		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
++	.field_fmt_sext		= REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
+ 	.field_txchanmap	= REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+@@ -904,6 +911,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
+ 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+ 	.has_slave_select_bit	= true,
+ 	.field_fmt_mode		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
++	.field_fmt_sext		= REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
+ 	.field_txchanmap	= REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+@@ -944,6 +952,7 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+ 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+ 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 19, 19),
+ 	.field_fmt_mode		= REG_FIELD(SUN4I_I2S_CTRL_REG, 4, 5),
++	.field_fmt_sext		= REG_FIELD(SUN4I_I2S_FMT1_REG, 4, 5),
+ 	.field_txchanmap	= REG_FIELD(SUN8I_I2S_TX_CHAN_MAP_REG, 0, 31),
+ 	.field_rxchanmap	= REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
+@@ -1006,6 +1015,12 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+ 	if (IS_ERR(i2s->field_fmt_mode))
+ 		return PTR_ERR(i2s->field_fmt_mode);
+ 
++	i2s->field_fmt_sext =
++			devm_regmap_field_alloc(dev, i2s->regmap,
++						i2s->variant->field_fmt_sext);
++	if (IS_ERR(i2s->field_fmt_sext))
++		return PTR_ERR(i2s->field_fmt_sext);
++
+ 	i2s->field_txchanmap =
+ 			devm_regmap_field_alloc(dev, i2s->regmap,
+ 						i2s->variant->field_txchanmap);
 -- 
 2.21.0
 
