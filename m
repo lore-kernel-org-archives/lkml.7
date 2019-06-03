@@ -2,116 +2,256 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62523C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE66D27EA8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553140;
-	bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQBE4YKf8DMeNSS3sMcrTZ8yyzF8tBqw5/QgDmdispgPcuOsduHLkjyoU6yy8K8iE
-	 fV3eYmEWerne1XxvKMIpgpnTgx8Cq374rM8QCRtLS4/l0Z56BF5vABJBsYFne6lS1H
-	 SvLcamh1V2dka8HkYuJwZmyasdGYGxJB9oMNRwqs=
+	by mail.kernel.org (Postfix) with ESMTP id 1F17C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="SmF0L0ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfFCJMT (ORCPT
+        id S1728632AbfFCJMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfFCJMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 3 Jun 2019 05:12:22 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:46139 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbfFCJMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:17 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8860627EA5;
-        Mon,  3 Jun 2019 09:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553136;
-        bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XnsCNwFOjME/qB/m55JdgAAvaiy0IZVr+YlrV27gUPEv5pZZgMEUgbCVbIdB2r78B
-         tnGGoEokeB5LVtjcRV32murOMFac44K7r4UiqksOKpj27wkhrA5GOR22DcZLbcrTbP
-         QU39ekrOsRaKSXlgdsm4pj/CN6JZCzE00RHdUBvY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 5.0 34/36] xen/pciback: Dont disable PCI_COMMAND on PCI device reset.
-Date:   Mon,  3 Jun 2019 11:09:22 +0200
-Message-Id: <20190603090523.223934283@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
-References: <20190603090520.998342694@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by alpha.anastas.io (Postfix) with ESMTPSA id 96F27808B8;
+        Mon,  3 Jun 2019 04:12:15 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559553136; bh=qJnfDDzz4DgW5+Ag559cHbbNjOf/DlUtH7AzqY69aiA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SmF0L0dskQ1MJbih5rNVzg+tVHtmU/zlfVvYEUmq92M0OhrXOUy/d5uuQMk+Wmrkx
+         +269Ntl6yHMwBJmUTDbfNbiVEDJmWzTUyQvetEgSF9YNI0nqcdmnes9OqKy73POI5Q
+         pzZ59z6ZMElAapcl+4jKLv31Mq2dxT2WSuRRhOhBV3/FkRiEiffPgtthLhoq4OBnyZ
+         S1RAXEVNL2hZwkQxVRSrdX8IokIk+FnUeyPRpzVpPxVrZTFW82b2Duijb5C1uNMkFs
+         J0Vp95wbcSPb3iFYYBoMS94F1BAHZesbnxCuw9t7i8dnr/3pW6fnqIFC7+x7Kj0h0d
+         5U6IMSUPhWPZg==
+Subject: Re: [PATCH v3 1/3] PCI: Introduce pcibios_ignore_alignment_request
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Oliver <oohall@gmail.com>, Sam Bobroff <sbobroff@linux.ibm.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
+ <bccfec8f-c8a4-fac1-7e96-be84113b9a73@anastas.io>
+ <3e6b9d7d-5d18-645e-5ef9-6b8a77fa62e9@ozlabs.ru>
+ <985681e4-1236-fff7-e9e7-189a340487dd@anastas.io>
+ <81a015ed-2c99-7ca8-c5ad-cede93aeba97@ozlabs.ru>
+ <bdc914aa-9aab-1377-c036-cca4710ef233@anastas.io>
+ <2f4185ac-d19f-6668-7b3e-a300ce3b9e00@ozlabs.ru>
+ <bab59b8e-f1fc-f92a-36bb-4ff471e6da24@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <419bf151-401d-231e-649e-22ddf53c4fcc@anastas.io>
+Date:   Mon, 3 Jun 2019 04:12:14 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <bab59b8e-f1fc-f92a-36bb-4ff471e6da24@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-
-commit 7681f31ec9cdacab4fd10570be924f2cef6669ba upstream.
-
-There is no need for this at all. Worst it means that if
-the guest tries to write to BARs it could lead (on certain
-platforms) to PCI SERR errors.
-
-Please note that with af6fc858a35b90e89ea7a7ee58e66628c55c776b
-"xen-pciback: limit guest control of command register"
-a guest is still allowed to enable those control bits (safely), but
-is not allowed to disable them and that therefore a well behaved
-frontend which enables things before using them will still
-function correctly.
-
-This is done via an write to the configuration register 0x4 which
-triggers on the backend side:
-command_write
-  \- pci_enable_device
-     \- pci_enable_device_flags
-        \- do_pci_enable_device
-           \- pcibios_enable_device
-              \-pci_enable_resourcess
-                [which enables the PCI_COMMAND_MEMORY|PCI_COMMAND_IO]
-
-However guests (and drivers) which don't do this could cause
-problems, including the security issues which XSA-120 sought
-to address.
-
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/xen/xen-pciback/pciback_ops.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- a/drivers/xen/xen-pciback/pciback_ops.c
-+++ b/drivers/xen/xen-pciback/pciback_ops.c
-@@ -127,8 +127,6 @@ void xen_pcibk_reset_device(struct pci_d
- 		if (pci_is_enabled(dev))
- 			pci_disable_device(dev);
- 
--		pci_write_config_word(dev, PCI_COMMAND, 0);
--
- 		dev->is_busmaster = 0;
- 	} else {
- 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
 
 
+On 6/3/19 3:35 AM, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 03/06/2019 15:02, Alexey Kardashevskiy wrote:
+>>
+>>
+>> On 03/06/2019 12:23, Shawn Anastasio wrote:
+>>>
+>>>
+>>> On 5/30/19 10:56 PM, Alexey Kardashevskiy wrote:
+>>>>
+>>>>
+>>>> On 31/05/2019 08:49, Shawn Anastasio wrote:
+>>>>> On 5/29/19 10:39 PM, Alexey Kardashevskiy wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 28/05/2019 17:39, Shawn Anastasio wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 5/28/19 1:27 AM, Alexey Kardashevskiy wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 28/05/2019 15:36, Oliver wrote:
+>>>>>>>>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io>
+>>>>>>>>> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>>>>>>>>> which allows the PCI core to defer to platform-specific code to
+>>>>>>>>>> determine whether or not to ignore alignment requests for PCI
+>>>>>>>>>> resources.
+>>>>>>>>>>
+>>>>>>>>>> The existing behavior is to simply ignore alignment requests when
+>>>>>>>>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>>>>>>>>> default implementation of pcibios_ignore_alignment_request.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>>>>>>>>> ---
+>>>>>>>>>>      drivers/pci/pci.c   | 9 +++++++--
+>>>>>>>>>>      include/linux/pci.h | 1 +
+>>>>>>>>>>      2 files changed, 8 insertions(+), 2 deletions(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>>>>> index 8abc843b1615..8207a09085d1 100644
+>>>>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>>>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak
+>>>>>>>>>> pcibios_default_alignment(void)
+>>>>>>>>>>             return 0;
+>>>>>>>>>>      }
+>>>>>>>>>>
+>>>>>>>>>> +int __weak pcibios_ignore_alignment_request(void)
+>>>>>>>>>> +{
+>>>>>>>>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>      #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>>>>>>>>      static char
+>>>>>>>>>> resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>>>>>>>>      static DEFINE_SPINLOCK(resource_alignment_lock);
+>>>>>>>>>> @@ -5906,9 +5911,9 @@ static resource_size_t
+>>>>>>>>>> pci_specified_resource_alignment(struct pci_dev *dev,
+>>>>>>>>>>             p = resource_alignment_param;
+>>>>>>>>>>             if (!*p && !align)
+>>>>>>>>>>                     goto out;
+>>>>>>>>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>>>>>>>>> +       if (pcibios_ignore_alignment_request()) {
+>>>>>>>>>>                     align = 0;
+>>>>>>>>>> -               pr_info_once("PCI: Ignoring requested alignments
+>>>>>>>>>> (PCI_PROBE_ONLY)\n");
+>>>>>>>>>> +               pr_info_once("PCI: Ignoring requested
+>>>>>>>>>> alignments\n");
+>>>>>>>>>>                     goto out;
+>>>>>>>>>>             }
+>>>>>>>>>
+>>>>>>>>> I think the logic here is questionable to begin with. If the user
+>>>>>>>>> has
+>>>>>>>>> explicitly requested re-aligning a resource via the command line
+>>>>>>>>> then
+>>>>>>>>> we should probably do it even if PCI_PROBE_ONLY is set. When it
+>>>>>>>>> breaks
+>>>>>>>>> they get to keep the pieces.
+>>>>>>>>>
+>>>>>>>>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>>>>>>>>> shouldn't be set under qemu/kvm. Under the other hypervisor
+>>>>>>>>> (PowerVM)
+>>>>>>>>> hotplugged devices are configured by firmware before it's passed to
+>>>>>>>>> the guest and we need to keep the FW assignments otherwise things
+>>>>>>>>> break. QEMU however doesn't do any BAR assignments and relies on
+>>>>>>>>> that
+>>>>>>>>> being handled by the guest. At boot time this is done by SLOF, but
+>>>>>>>>> Linux only keeps SLOF around until it's extracted the device-tree.
+>>>>>>>>> Once that's done SLOF gets blown away and the kernel needs to do
+>>>>>>>>> it's
+>>>>>>>>> own BAR assignments. I'm guessing there's a hack in there to make it
+>>>>>>>>> work today, but it's a little surprising that it works at all...
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> The hack is to run a modified qemu-aware "/usr/sbin/rtas_errd" in the
+>>>>>>>> guest which receives an event from qemu (RAS_EPOW from
+>>>>>>>> /proc/interrupts), fetches device tree chunks (and as I understand
+>>>>>>>> it -
+>>>>>>>> they come with BARs from phyp but without from qemu) and writes
+>>>>>>>> "1" to
+>>>>>>>> "/sys/bus/pci/rescan" which calls pci_assign_resource() eventually:
+>>>>>>>
+>>>>>>> Interesting. Does this mean that the PHYP hotplug path doesn't
+>>>>>>> call pci_assign_resource?
+>>>>>>
+>>>>>>
+>>>>>> I'd expect dlpar_add_slot() to be called under phyp and eventually
+>>>>>> pci_device_add() which (I think) may or may not trigger later
+>>>>>> reassignment.
+>>>>>>
+>>>>>>
+>>>>>>> If so it means the patch may not
+>>>>>>> break that platform after all, though it still may not be
+>>>>>>> the correct way of doing things.
+>>>>>>
+>>>>>>
+>>>>>> We should probably stop enforcing the PCI_PROBE_ONLY flag - it seems
+>>>>>> that (unless resource_alignment= is used) the pseries guest should just
+>>>>>> walk through all allocated resources and leave them unchanged.
+>>>>>
+>>>>> If we add a pcibios_default_alignment() implementation like was
+>>>>> suggested earlier, then it will behave as if the user has
+>>>>> specified resource_alignment= by default and SLOF's assignments
+>>>>> won't be honored (I think).
+>>>>
+>>>>
+>>>> I removed pci_add_flags(PCI_PROBE_ONLY) from pSeries_setup_arch and
+>>>> tried booting with and without pci=resource_alignment= and I can see no
+>>>> difference - BARs are still aligned to 64K as programmed in SLOF; if I
+>>>> hack SLOF to align to 4K or 32K - BARs get packed and the guest leaves
+>>>> them unchanged.
+>>>>
+>>>>
+>>>>> I guess it boils down to one question - is it important that we
+>>>>> observe SLOF's initial BAR assignments?
+>>>>
+>>>> It isn't if it's SLOF but it is if it's phyp. It used to not
+>>>> allow/support BAR reassignment and even if it does not, I'd rather avoid
+>>>> touching them.
+>>>
+>>> A quick update. I tried removing pci_add_flags(PCI_PROBE_ONLY) which
+>>> worked, but if I add an implementation of pcibios_default_alignment
+>>> which simply returns PAGE_SIZE, my VM fails to boot and many errors
+>>> from the virtio disk driver are printed to the console.
+>>>
+>>> After some investigation, it seems that with pcibios_default_alignment
+>>> present, Linux will reallocate all resources provided by SLOF on
+>>> boot. I'm still not sure why exactly this causes the virtio driver
+>>> to fail, but it does indicate that there is a reason to keep
+>>> SLOF's initial assignments.
+>>>
+>>> Anybody have an idea what's causing this?
+>>
+>> With your changes the guest feels the urge to reassign bars (no idea why
+>> but ok), when it does so, it puts both BARs (one is prefetchable) into
+>> the 32bit non-prefetchable window of the PHB (SLOF puts the prefetchable
+>> bar to a 64bit prefetchable window, I have no idea why the guest does it
+>> different either but this must still work) and then qemu does not
+>> emulate something properly - unassigned_mem_accepts() is triggered on
+>> the bar access - no idea why - I am debugging it right now.
+> 
+> 
+> Sooo the problem is that resouce::flags has 2 bits to describe 64bit
+> BARs - PCI_BASE_ADDRESS_MEM_TYPE_64 and IORESOURCE_MEM_64 - and we don't
+> set IORESOURCE_MEM_64 for 64bit BARs when parsing the fdt.
+> 
+> So the BAR reallocator moves the BAR to 32bit window (which is not
+> desirable but permitted, I still have to chase it) and then
+> pci_std_update_resource() writes BAR back but since now it is 32bit BAR,
+> it does not write to the upper 32bits so that half remains 0x2100, QEMU
+> does not move BAR to the right window and the MMIO stops working.
+> 
+> Try this in the guest kernel, it seems to keep bars where they were
+> after slof.
+
+Nice debugging work! With your patch the VM does boot. I'm not sure
+if SLOF's original allocations are being kept or if Linux is redoing
+them (how do you check?), but MMIO works and the system boots anyways.
+
+I've also tested hotplug and the BAR allocations are page-aligned too,
+as expected.
