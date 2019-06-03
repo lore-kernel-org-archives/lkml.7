@@ -2,220 +2,129 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9B7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90F4C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA8827068
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96504270D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Y8xQhEUl"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zyV8dwkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfFCRqW (ORCPT
+        id S1727973AbfFCRrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:46:22 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41139 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfFCRqV (ORCPT
+        Mon, 3 Jun 2019 13:47:09 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40538 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFCRrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:46:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s57so3297132qte.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:46:21 -0700 (PDT)
+        Mon, 3 Jun 2019 13:47:09 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r18so27008209edo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:47:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3YD9QwJxecxdMHZGSRuYOcVyiXHhODdQ+7hG9X3IFEc=;
-        b=Y8xQhEUl5VIp1CHI2GNhUWumFeridnSrDVLR4ophf+TEEqb9RYCBYUuzTaKnpS0N95
-         PodsZw5QrRzXwcVAdLU8QbPx8UtppQyKINjpafz63KgI0mbZL1RBR/HG+Aw16qS1mL8x
-         GbfoGarwImiN/E4mJOvSlkb1cLIeV/RY7kSfMlxm7UZhj+NafqRJ9xFMGOVfHXfBQNL8
-         3KhvQIu3nzrYZ9gVumHcKZbTTOBDGZbVoC0PmchuHZfBO5itRE+CWVGivs8JV9Bdb68S
-         oKMm5wdMIjQdNVuG5jJ5CkpKuMh+/TZa/xggfv/76T6HlvfgScQBIZzwwZTZ5LwtflBg
-         nfEg==
+        bh=dXNJh93VKnrDRoV3p7QeHW/6uh2W1UxKfkBC3L76x5Y=;
+        b=zyV8dwkC82UjElwqhhNjiSRV3X89XUMQWmNIMYTdd6EyIBa1IFcNKjF7ZAXDYGRZfk
+         tfc5lTMfAnYU0qTOOqK9kfJovtKnJhFX6D6BX0YOHAJ3LBeVRXL7Nr1VH/QZB7Q3WCnu
+         hELQcbnUz1l/ZAcBillS1G3mHzX7MYKFGj5pSWqhtBN3WDd704uw6cBBs7ftJHxd37DI
+         zXkHPUwknm1r8pGxDYgOFbH9rfEgcEgRipNQqvtbA49GiP1HZ8ebvVG272SxMRQNQrM2
+         2v3A3zxoOLhUdg7w9CnnbEVubXFowGKItH98uxZff6gHcM/+InqD/hvOwkaTGOoN8Iql
+         HxTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3YD9QwJxecxdMHZGSRuYOcVyiXHhODdQ+7hG9X3IFEc=;
-        b=mAMLRKOca8LnB5pcBJE12pUeh39cep/rbKJYu54ypmz/3qI6DJlyNZI/gLhuNaQrnN
-         0oexlXMMqFk3t7OooEHR9kY617H89DGciTpufLbLW21cnOlDEmiHBxtrbLijNJzGhGyr
-         du7i3gswYnIuflVlFv5R3A/32d4Ecfxb5iZkMvIugYYrrZkAmCK9zRDq4tR9jQQV66fL
-         9katHqT2x/tCxg1e/1+npqlSSvvHBJVrZOePaGimvcXnoHITmrcO/br3dmiB12fRpk+v
-         djgc3wo6FRU3CsgxCM1ymJVo3dGSRMPpJbws1ZmtW2VuLGw12JKVNfdxg/AQx+Kl1UkI
-         e6IQ==
-X-Gm-Message-State: APjAAAXATdxHATE9m3RSDYbaGBWo6zR0ghWALgDzv280OLVIDMGczn/S
-        7dh4vbE+9IIMIoCW6bFP0ODNoQ==
-X-Google-Smtp-Source: APXvYqx+ClbIfZmOUdY0b04TFbjW+3r9mnjIe7N0zaIfZmDOHWubw4QUOroagi67b9WugppzpkzydA==
-X-Received: by 2002:ac8:7381:: with SMTP id t1mr24802701qtp.387.1559583980558;
-        Mon, 03 Jun 2019 10:46:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id m40sm12874710qtm.2.2019.06.03.10.46.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 10:46:19 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hXr2J-00032t-AT; Mon, 03 Jun 2019 14:46:19 -0300
-Date:   Mon, 3 Jun 2019 14:46:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 12/16] IB, arm64: untag user pointers in
- ib_uverbs_(re)reg_mr()
-Message-ID: <20190603174619.GC11474@ziepe.ca>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <c829f93b19ad6af1b13be8935ce29baa8e58518f.1559580831.git.andreyknvl@google.com>
+        bh=dXNJh93VKnrDRoV3p7QeHW/6uh2W1UxKfkBC3L76x5Y=;
+        b=Go3/ZcRZ6hpTVB+EoHhrKtEnV3j9bhiD4/wYCKhuKdVBFuZoMN2I8BWaAr/Ay8tG5u
+         Fc07IEmY9yxRzxbDods7JESnNU/TZNttCIMS99WaMFurXyHMKGVYxX4TaJhCs8Ubqx6l
+         pYx9bLSdWufZJmnGg9XyRuwDoElhNTSv7RSq9iv5ecdWtPBT2yPG2VxX4/I/Pozvedbf
+         MHOnt7Jle/b+NlXb7xb0n6RkqUIt4RR2Nn/ZiK2U2fPOwE/dycI3h5cWtEKr81YLXiCW
+         pdgYDt7c/js25u13yTMVqXsmZUDPhxGHr9EFO3XOGJlXRdKnTf4rn9o4ez452w6qxwho
+         /DzQ==
+X-Gm-Message-State: APjAAAWdF0r8hbVrYJ3baEFRXqbCaWlD9V32FhLJNZgWmTQfXfJTQeS/
+        TF50JeNKnDvi+nNxV6AHkHEHeg==
+X-Google-Smtp-Source: APXvYqzchOzG2a90eyb97gNmeNZ+rcpDZlbNkRv/65YitVUDISDtqqNHz7rRPcSXIJV7hRryVBAxnw==
+X-Received: by 2002:a17:906:63c1:: with SMTP id u1mr24787573ejk.173.1559584027481;
+        Mon, 03 Jun 2019 10:47:07 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d20sm2697588ejr.21.2019.06.03.10.47.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 10:47:06 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 0E37C10406D; Mon,  3 Jun 2019 20:47:06 +0300 (+03)
+Date:   Mon, 3 Jun 2019 20:47:06 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        mhocko@suse.com, keith.busch@intel.com,
+        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+Message-ID: <20190603174706.t4cby7f5ni4gvvom@box>
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <20190522152254.5cyxhjizuwuojlix@box>
+ <4228b541-d31c-b76a-2570-1924df0d4724@virtuozzo.com>
+ <5ae7e3c1-3875-ea1e-54b3-ac3c493a11f0@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c829f93b19ad6af1b13be8935ce29baa8e58518f.1559580831.git.andreyknvl@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5ae7e3c1-3875-ea1e-54b3-ac3c493a11f0@virtuozzo.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:55:14PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
+On Mon, Jun 03, 2019 at 05:56:32PM +0300, Kirill Tkhai wrote:
+> On 03.06.2019 17:38, Kirill Tkhai wrote:
+> > On 22.05.2019 18:22, Kirill A. Shutemov wrote:
+> >> On Mon, May 20, 2019 at 05:00:01PM +0300, Kirill Tkhai wrote:
+> >>> This patchset adds a new syscall, which makes possible
+> >>> to clone a VMA from a process to current process.
+> >>> The syscall supplements the functionality provided
+> >>> by process_vm_writev() and process_vm_readv() syscalls,
+> >>> and it may be useful in many situation.
+> >>
+> >> Kirill, could you explain how the change affects rmap and how it is safe.
+> >>
+> >> My concern is that the patchset allows to map the same page multiple times
+> >> within one process or even map page allocated by child to the parrent.
+> > 
+> > Speaking honestly, we already support this model, since ZERO_PAGE() may
+> > be mapped multiply times in any number of mappings.
 > 
-> ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
-> e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
+> Picking of huge_zero_page and mremapping its VMA to unaligned address also gives
+> the case, when the same huge page is mapped as huge page and as set of ordinary
+> pages in the same process.
 > 
-> Untag user pointers in these functions.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
->  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-> index 5a3a1780ceea..f88ee733e617 100644
-> +++ b/drivers/infiniband/core/uverbs_cmd.c
-> @@ -709,6 +709,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
->  	if (ret)
->  		return ret;
->  
-> +	cmd.start = untagged_addr(cmd.start);
-> +
->  	if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
->  		return -EINVAL;
+> Summing up two above cases, is there really a fundamental problem with
+> the functionality the patch set introduces? It looks like we already have
+> these cases in stable kernel supported.
 
-I feel like we shouldn't thave to do this here, surely the cmd.start
-should flow unmodified to get_user_pages, and gup should untag it?
+It *might* work. But it requires a lot of audit to prove that it actually
+*does* work.
 
-ie, this sort of direction for the IB code (this would be a giant
-patch, so I didn't have time to write it all, but I think it is much
-saner):
+For instance, are you sure it will not break KSM? What does it mean for
+memory accounting? memcg?
 
-diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-index 54628ef879f0ce..7b3b736c87c253 100644
---- a/drivers/infiniband/core/umem.c
-+++ b/drivers/infiniband/core/umem.c
-@@ -193,7 +193,7 @@ EXPORT_SYMBOL(ib_umem_find_best_pgsz);
-  * @access: IB_ACCESS_xxx flags for memory being pinned
-  * @dmasync: flush in-flight DMA when the memory region is written
-  */
--struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
-+struct ib_umem *ib_umem_get(struct ib_udata *udata, void __user *addr,
- 			    size_t size, int access, int dmasync)
- {
- 	struct ib_ucontext *context;
-@@ -201,7 +201,7 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
- 	struct page **page_list;
- 	unsigned long lock_limit;
- 	unsigned long new_pinned;
--	unsigned long cur_base;
-+	void __user *cur_base;
- 	struct mm_struct *mm;
- 	unsigned long npages;
- 	int ret;
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index 5a3a1780ceea4d..94389e7f12371f 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -735,7 +735,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
- 		}
- 	}
- 
--	mr = pd->device->ops.reg_user_mr(pd, cmd.start, cmd.length, cmd.hca_va,
-+	mr = pd->device->ops.reg_user_mr(pd, u64_to_user_ptr(cmd.start),
-+					 cmd.length, cmd.hca_va,
- 					 cmd.access_flags,
- 					 &attrs->driver_udata);
- 	if (IS_ERR(mr)) {
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index 4d033796dcfcc2..bddbb952082fc5 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -786,7 +786,7 @@ static int mr_cache_max_order(struct mlx5_ib_dev *dev)
- }
- 
- static int mr_umem_get(struct mlx5_ib_dev *dev, struct ib_udata *udata,
--		       u64 start, u64 length, int access_flags,
-+		       void __user *start, u64 length, int access_flags,
- 		       struct ib_umem **umem, int *npages, int *page_shift,
- 		       int *ncont, int *order)
- {
-@@ -1262,8 +1262,8 @@ struct ib_mr *mlx5_ib_reg_dm_mr(struct ib_pd *pd, struct ib_dm *dm,
- 				 attr->access_flags, mode);
- }
- 
--struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
--				  u64 virt_addr, int access_flags,
-+struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, void __user *start,
-+				  u64 length, u64 virt_addr, int access_flags,
- 				  struct ib_udata *udata)
- {
- 	struct mlx5_ib_dev *dev = to_mdev(pd->device);
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index ec6446864b08e9..b3c8eaaa35c760 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -2464,8 +2464,8 @@ struct ib_device_ops {
- 	struct ib_mr *(*reg_user_mr)(struct ib_pd *pd, u64 start, u64 length,
- 				     u64 virt_addr, int mr_access_flags,
- 				     struct ib_udata *udata);
--	int (*rereg_user_mr)(struct ib_mr *mr, int flags, u64 start, u64 length,
--			     u64 virt_addr, int mr_access_flags,
-+	int (*rereg_user_mr)(struct ib_mr *mr, int flags, void __user *start,
-+			     u64 length, u64 virt_addr, int mr_access_flags,
- 			     struct ib_pd *pd, struct ib_udata *udata);
- 	int (*dereg_mr)(struct ib_mr *mr, struct ib_udata *udata);
- 	struct ib_mr *(*alloc_mr)(struct ib_pd *pd, enum ib_mr_type mr_type,
+My point is that you breaking long standing invariant in Linux MM and it
+has to be properly justified.
+
+I would expect to see some strange deadlocks or permanent trylock failure
+as result of such change.
+
+-- 
+ Kirill A. Shutemov
