@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7EAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A351C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F8E261AB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39ED4273F3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="g/AtBERZ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eX+al6lD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfFCNYD (ORCPT
+        id S1728666AbfFCNYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:24:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38925 "EHLO
+        Mon, 3 Jun 2019 09:24:05 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50243 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728136AbfFCNYC (ORCPT
+        with ESMTP id S1728136AbfFCNYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:24:02 -0400
+        Mon, 3 Jun 2019 09:24:03 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DN8FF607237
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DNrgr607286
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:23:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DN8FF607237
+        Mon, 3 Jun 2019 06:23:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DNrgr607286
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559568189;
-        bh=nSuYddbevhmED+nMbEBKkc/LPaP5S4tg5oR9ZJ5p/og=;
+        s=2019051801; t=1559568234;
+        bh=3rOCBD0pYnGngLUkGvdos89p0/HPicH6N8xdKlpmWt4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=g/AtBERZjvmZhpLO+ZDvyDMcL1P79P7V6lp4LWeV7+yLtBwvukZrsHqnbaJolZQyk
-         88RYUUB5N1rHhxqSiHzCwORoCr8s1/oFQgPd4K07cq94K8vySagH91ww7uuz4IjfOz
-         H4Ce7M9jL7fatDkF2rWwoUYxPxOsvVBF7OiFn3fLudp/c90HUSOaXovl4Txb2Q0eR1
-         nGG2IzXpRpoww+sSENsnOSA0va0kZbRv47vVDgveFHWS89xoDSqVy3UBcp8l1V4h9n
-         atP4ga0qzR2Iu5T5aOlJDkFH9bhEK5+9QR66LMF2ZJ7OKix5OghqLeDnLXywU22T7J
-         cutJwT+M2VMzA==
+        b=eX+al6lDwLmCEq7YdnGi1HL14B9UabCd0RYfzPYf2wc78rQ2VZyoZ9ChoQjXB8E0Y
+         zL2zUor/Y+Ktwr6IL9HTRjihKUvwZJ+lba5aSAb/jp3nprt1FWqxTclSf0pkbeDgZm
+         KgQKNdoVyNH4ZeGEqZOngwRU7WD6pPH+nDRm3N4kIlnEzh6hCQsf9/U0SkiRsI7wF+
+         wxL7OeVTy8Rk0ux7+/MG1TUfxk+5nwo6XrNnt89WfnzZupgzHdL+xNVw0ZtfQz/GiC
+         x7WILDrFZb3lvxyVDbaZxOQBWReJvTV5ym8wnrYubSaYA7ZTJQRoR8UIOoj/e5t4PW
+         eSBmKHUa0OMAQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DN8mS607234;
-        Mon, 3 Jun 2019 06:23:08 -0700
-Date:   Mon, 3 Jun 2019 06:23:08 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DNq1r607283;
+        Mon, 3 Jun 2019 06:23:52 -0700
+Date:   Mon, 3 Jun 2019 06:23:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Song Liu <tipbot@zytor.com>
-Message-ID: <tip-9fd2e48b9ae17978b2c2a98c055c774d5d90bce8@git.kernel.org>
-Cc:     tglx@linutronix.de, mingo@kernel.org,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        acme@kernel.org, songliubraving@fb.com, jolsa@redhat.com,
-        kernel-team@fb.com, hpa@zytor.com, peterz@infradead.org
-Reply-To: torvalds@linux-foundation.org, mingo@kernel.org,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          acme@kernel.org, songliubraving@fb.com, hpa@zytor.com,
-          kernel-team@fb.com, jolsa@redhat.com, peterz@infradead.org
-In-Reply-To: <20190507161545.788381-1-songliubraving@fb.com>
-References: <20190507161545.788381-1-songliubraving@fb.com>
+From:   tip-bot for Gayatri Kammela <tipbot@zytor.com>
+Message-ID: <tip-76a16b217a7f086c1c7c2d5f52efddb0c855b278@git.kernel.org>
+Cc:     peterz@infradead.org, torvalds@linux-foundation.org, hpa@zytor.com,
+        gayatri.kammela@intel.com, mingo@kernel.org, kan.liang@intel.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        charles.d.prestopine@intel.com
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          charles.d.prestopine@intel.com, kan.liang@intel.com,
+          mingo@kernel.org, gayatri.kammela@intel.com,
+          torvalds@linux-foundation.org, peterz@infradead.org,
+          hpa@zytor.com
+In-Reply-To: <20190511000311.20733-1-gayatri.kammela@intel.com>
+References: <20190511000311.20733-1-gayatri.kammela@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/core: Allow non-privileged uprobe for user
- processes
-Git-Commit-ID: 9fd2e48b9ae17978b2c2a98c055c774d5d90bce8
+Subject: [tip:perf/core] perf/x86/intel/uncore: Add tabs to Uncore IMC PCI
+ IDs
+Git-Commit-ID: 76a16b217a7f086c1c7c2d5f52efddb0c855b278
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,87 +73,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9fd2e48b9ae17978b2c2a98c055c774d5d90bce8
-Gitweb:     https://git.kernel.org/tip/9fd2e48b9ae17978b2c2a98c055c774d5d90bce8
-Author:     Song Liu <songliubraving@fb.com>
-AuthorDate: Tue, 7 May 2019 09:15:45 -0700
+Commit-ID:  76a16b217a7f086c1c7c2d5f52efddb0c855b278
+Gitweb:     https://git.kernel.org/tip/76a16b217a7f086c1c7c2d5f52efddb0c855b278
+Author:     Gayatri Kammela <gayatri.kammela@intel.com>
+AuthorDate: Fri, 10 May 2019 17:03:10 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:58:18 +0200
+CommitDate: Mon, 3 Jun 2019 11:58:19 +0200
 
-perf/core: Allow non-privileged uprobe for user processes
+perf/x86/intel/uncore: Add tabs to Uncore IMC PCI IDs
 
-Currently, non-privileged user could only use uprobe with
+Improve code readability by adding tabs after #define macros
 
-    kernel.perf_event_paranoid = -1
-
-However, setting perf_event_paranoid to -1 leaks other users' processes to
-non-privileged uprobes.
-
-To introduce proper permission control of uprobes, we are building the
-following system:
-
-  A daemon with CAP_SYS_ADMIN is in charge to create uprobes via tracefs;
-  Users asks the daemon to create uprobes;
-  Then user can attach uprobe only to processes owned by the user.
-
-This patch allows non-privileged user to attach uprobe to processes owned
-by the user.
-
-The following example shows how to use uprobe with non-privileged user.
-This is based on Brendan's blog post [1]
-
-1. Create uprobe with root:
-
-  sudo perf probe -x 'readline%return +0($retval):string'
-
-2. Then non-root user can use the uprobe as:
-
-  perf record -vvv -e probe_bash:readline__return -p <pid> sleep 20
-  perf script
-
-[1] http://www.brendangregg.com/blog/2015-06-28/linux-ftrace-uprobe.html
-
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <kernel-team@fb.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Charles Prestopine <charles.d.prestopine@intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190507161545.788381-1-songliubraving@fb.com
+Link: https://lkml.kernel.org/r/20190511000311.20733-1-gayatri.kammela@intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/events/core.c        | 4 ++--
- kernel/trace/trace_uprobe.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/uncore_snb.c | 42 +++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index abbd4b3b96c2..3005c80f621d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8532,9 +8532,9 @@ static int perf_tp_event_match(struct perf_event *event,
- 	if (event->hw.state & PERF_HES_STOPPED)
- 		return 0;
- 	/*
--	 * All tracepoints are from kernel-space.
-+	 * If exclude_kernel, only trace user-space tracepoints (uprobes)
- 	 */
--	if (event->attr.exclude_kernel)
-+	if (event->attr.exclude_kernel && !user_mode(regs))
- 		return 0;
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index f8431819b3e1..db9eb64ce756 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -3,27 +3,27 @@
+ #include "uncore.h"
  
- 	if (!perf_tp_filter_match(event, data))
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index eb7e06b54741..0d60d6856de5 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1331,7 +1331,7 @@ static inline void init_trace_event_call(struct trace_uprobe *tu,
- 	call->event.funcs = &uprobe_funcs;
- 	call->class->define_fields = uprobe_event_define_fields;
- 
--	call->flags = TRACE_EVENT_FL_UPROBE;
-+	call->flags = TRACE_EVENT_FL_UPROBE | TRACE_EVENT_FL_CAP_ANY;
- 	call->class->reg = trace_uprobe_register;
- 	call->data = tu;
- }
+ /* Uncore IMC PCI IDs */
+-#define PCI_DEVICE_ID_INTEL_SNB_IMC	0x0100
+-#define PCI_DEVICE_ID_INTEL_IVB_IMC	0x0154
+-#define PCI_DEVICE_ID_INTEL_IVB_E3_IMC	0x0150
+-#define PCI_DEVICE_ID_INTEL_HSW_IMC	0x0c00
+-#define PCI_DEVICE_ID_INTEL_HSW_U_IMC	0x0a04
+-#define PCI_DEVICE_ID_INTEL_BDW_IMC	0x1604
+-#define PCI_DEVICE_ID_INTEL_SKL_U_IMC	0x1904
+-#define PCI_DEVICE_ID_INTEL_SKL_Y_IMC	0x190c
+-#define PCI_DEVICE_ID_INTEL_SKL_HD_IMC	0x1900
+-#define PCI_DEVICE_ID_INTEL_SKL_HQ_IMC	0x1910
+-#define PCI_DEVICE_ID_INTEL_SKL_SD_IMC	0x190f
+-#define PCI_DEVICE_ID_INTEL_SKL_SQ_IMC	0x191f
+-#define PCI_DEVICE_ID_INTEL_KBL_Y_IMC	0x590c
+-#define PCI_DEVICE_ID_INTEL_KBL_U_IMC	0x5904
+-#define PCI_DEVICE_ID_INTEL_KBL_UQ_IMC	0x5914
+-#define PCI_DEVICE_ID_INTEL_KBL_SD_IMC	0x590f
+-#define PCI_DEVICE_ID_INTEL_KBL_SQ_IMC	0x591f
+-#define PCI_DEVICE_ID_INTEL_CFL_2U_IMC	0x3ecc
+-#define PCI_DEVICE_ID_INTEL_CFL_4U_IMC	0x3ed0
+-#define PCI_DEVICE_ID_INTEL_CFL_4H_IMC	0x3e10
+-#define PCI_DEVICE_ID_INTEL_CFL_6H_IMC	0x3ec4
++#define PCI_DEVICE_ID_INTEL_SNB_IMC		0x0100
++#define PCI_DEVICE_ID_INTEL_IVB_IMC		0x0154
++#define PCI_DEVICE_ID_INTEL_IVB_E3_IMC		0x0150
++#define PCI_DEVICE_ID_INTEL_HSW_IMC		0x0c00
++#define PCI_DEVICE_ID_INTEL_HSW_U_IMC		0x0a04
++#define PCI_DEVICE_ID_INTEL_BDW_IMC		0x1604
++#define PCI_DEVICE_ID_INTEL_SKL_U_IMC		0x1904
++#define PCI_DEVICE_ID_INTEL_SKL_Y_IMC		0x190c
++#define PCI_DEVICE_ID_INTEL_SKL_HD_IMC		0x1900
++#define PCI_DEVICE_ID_INTEL_SKL_HQ_IMC		0x1910
++#define PCI_DEVICE_ID_INTEL_SKL_SD_IMC		0x190f
++#define PCI_DEVICE_ID_INTEL_SKL_SQ_IMC		0x191f
++#define PCI_DEVICE_ID_INTEL_KBL_Y_IMC		0x590c
++#define PCI_DEVICE_ID_INTEL_KBL_U_IMC		0x5904
++#define PCI_DEVICE_ID_INTEL_KBL_UQ_IMC		0x5914
++#define PCI_DEVICE_ID_INTEL_KBL_SD_IMC		0x590f
++#define PCI_DEVICE_ID_INTEL_KBL_SQ_IMC		0x591f
++#define PCI_DEVICE_ID_INTEL_CFL_2U_IMC		0x3ecc
++#define PCI_DEVICE_ID_INTEL_CFL_4U_IMC		0x3ed0
++#define PCI_DEVICE_ID_INTEL_CFL_4H_IMC		0x3e10
++#define PCI_DEVICE_ID_INTEL_CFL_6H_IMC		0x3ec4
+ #define PCI_DEVICE_ID_INTEL_CFL_2S_D_IMC	0x3e0f
+ #define PCI_DEVICE_ID_INTEL_CFL_4S_D_IMC	0x3e1f
+ #define PCI_DEVICE_ID_INTEL_CFL_6S_D_IMC	0x3ec2
