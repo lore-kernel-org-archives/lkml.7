@@ -2,660 +2,170 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AA9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E50C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365C027B72
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED66C23B3E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=utc.com header.i=@utc.com header.b="ZTRbfD5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfFCPLz (ORCPT
+        id S1729293AbfFCPM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:11:55 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:46763 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbfFCPLz (ORCPT
+        Mon, 3 Jun 2019 11:12:28 -0400
+Received: from mx0a-00105401.pphosted.com ([67.231.144.184]:42402 "EHLO
+        mx0a-00105401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729038AbfFCPM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:11:55 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BCE324001B;
-        Mon,  3 Jun 2019 15:11:49 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Konstantin Porotchkin <kostap@marvell.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: marvell: add ESPRESSObin variants
-In-Reply-To: <20190527111156.3539-1-tmn505@gmail.com>
-References: <20190527111156.3539-1-tmn505@gmail.com>
-Date:   Mon, 03 Jun 2019 17:11:49 +0200
-Message-ID: <87ef4ak8ju.fsf@FE-laptop>
+        Mon, 3 Jun 2019 11:12:27 -0400
+Received: from pps.filterd (m0078137.ppops.net [127.0.0.1])
+        by mx0a-00105401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53FB3dQ040125;
+        Mon, 3 Jun 2019 11:12:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=utc.com; h=from : to : cc : subject
+ : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=POD040618;
+ bh=GVY5gYtm8GBhiLRqXu+3FbYaq7pwf7FHLL/FoCy0MYw=;
+ b=ZTRbfD5RyCngQJDIEyWH/7gG4tTwjlMOUm3ReLSkvuIPEcXfYMCoBTHnlwn5U7TU9JKW
+ wTRw3zGO/ieUMuPN129PxAeS2ZWHrp2aNTJIpUB1O62MLLiuvBreSOTl20DPguyoq4Zx
+ CWwEZ/3rxrAoZ0H5gkOwCfkcBCUX7XzhHJdpTRcBkDR7rLRLhsEAjltAfYaz7SxNnzCa
+ fXKqWIGi9iGZPKltgMwxBVQZLtF6j3+Lm0SsjkMXwfAbAJKH+VBVDJmcOdWVCUS0GRyM
+ 1Sz4k6yeuAImmXBwKQIOnaL0ZsVrTwnCegnXHBaYucaJQ1cOXFwpSKNOIqvnPOrIa7zD kQ== 
+Received: from xmnpv39.utc.com ([167.17.255.19])
+        by mx0a-00105401.pphosted.com with ESMTP id 2sw4nbt9w2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 03 Jun 2019 11:12:20 -0400
+Received: from uusmna1q.utc.com (uusmna1q.utc.com [159.82.219.65])
+        by xmnpv39.utc.com (8.16.0.27/8.16.0.27) with ESMTPS id x53FCJjk147790
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 11:12:19 -0400
+Received: from UUSTOE13.utcmail.com (UUSTOE13.utcmail.com [10.221.3.20])
+        by uusmna1q.utc.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x53FCI5W020052
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 11:12:18 -0400
+Received: from UUSALE1A.utcmail.com (10.220.3.27) by UUSTOE13.utcmail.com
+ (10.221.3.20) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Jun
+ 2019 10:12:17 -0500
+Received: from UUSALE1A.utcmail.com ([10.220.5.27]) by UUSALE1A.utcmail.com
+ ([10.220.5.27]) with mapi id 15.00.1473.003; Mon, 3 Jun 2019 11:12:17 -0400
+From:   "Nagal, Amit               UTC CCS" <Amit.Nagal@utc.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "CHAWLA, RITU UTC CCS" <RITU.CHAWLA@utc.com>,
+        "Netter, Christian M UTC CCS" <christian.Netter@fs.UTC.COM>
+Subject: RE: [External] Re: linux kernel page allocation failure and tuning of
+ page cache
+Thread-Topic: [External] Re: linux kernel page allocation failure and tuning
+ of page cache
+Thread-Index: AdUXwJaEVv2cRvqaQPqGQFhwqLYB3QAWIwGAAGydulAAFtsUAAADqGyAAAXvgBA=
+Date:   Mon, 3 Jun 2019 15:12:17 +0000
+Message-ID: <8e23b0efaf0e43f2aa0a1fc4846f6b02@UUSALE1A.utcmail.com>
+References: <09c5d10e9d6b4c258b22db23e7a17513@UUSALE1A.utcmail.com>
+ <CAKgT0UfoLDxL_8QkF_fuUK-2-6KGFr5y=2_nRZCNc_u+d+LCrg@mail.gmail.com>
+ <6ec47a90f5b047dabe4028ca90bb74ab@UUSALE1A.utcmail.com>
+ <20190603121138.GC23346@bombadil.infradead.org> 
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.220.35.246]
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=outbound_default_notspam policy=outbound_default score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz Maciej Nowak,
 
-> This commit adds dts for different variants of ESPRESSObin board:
->
-> ESPRESSObin with soldered eMMC,
->
-> ESPRESSObin V7, compared to prior versions some passive elements changed
-> and ethernet ports labels positions have been reversed,
->
-> ESPRESSObin V7 with soldered eMMC.
->
-> Since most of elements are the same, one common dtsi is created and
-> referenced in each dts of particular variant.
->
-> Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 
-With your patch "arm64: dts: armada-3720-espressobin: correct spi node"
-applied this one don't apply anymore.
+From: Matthew Wilcox [mailto:willy@infradead.org]
+Sent: Monday, June 3, 2019 5:42 PM
+To: Nagal, Amit UTC CCS <Amit.Nagal@utc.com>
+On Mon, Jun 03, 2019 at 05:30:57AM +0000, Nagal, Amit               UTC CCS=
+ wrote:
+> > [  776.174308] Mem-Info:
+> > [  776.176650] active_anon:2037 inactive_anon:23 isolated_anon:0 [=20
+> > 776.176650]  active_file:2636 inactive_file:7391 isolated_file:32 [=20
+> > 776.176650]  unevictable:0 dirty:1366 writeback:1281 unstable:0 [=20
+> > 776.176650]  slab_reclaimable:719 slab_unreclaimable:724 [=20
+> > 776.176650]  mapped:1990 shmem:26 pagetables:159 bounce:0 [=20
+> > 776.176650]  free:373 free_pcp:6 free_cma:0 [  776.209062] Node 0=20
+> > active_anon:8148kB inactive_anon:92kB active_file:10544kB=20
+> > inactive_file:29564kB unevictable:0kB isolated(anon):0kB=20
+> > isolated(file):128kB mapped:7960kB dirty:5464kB writeback:5124kB=20
+> > shmem:104kB writeback_tmp:0kB unstable:0kB pages_scanned:0=20
+> > all_unreclaimable? no [  776.233602] Normal free:1492kB min:964kB=20
+> > low:1204kB high:1444kB active_anon:8148kB inactive_anon:92kB=20
+> > active_file:10544kB inactive_file:29564kB unevictable:0kB=20
+> > writepending:10588kB present:65536kB managed:59304kB mlocked:0kB=20
+> > slab_reclaimable:2876kB slab_unreclaimable:2896kB=20
+> > kernel_stack:1152kB pagetables:636kB bounce:0kB free_pcp:24kB=20
+> > local_pcp:24kB free_cma:0kB [  776.265406] lowmem_reserve[]: 0 0 [=20
+> > 776.268761] Normal: 7*4kB (H) 5*8kB (H) 7*16kB (H) 5*32kB (H) 6*64kB
+> > (H) 2*128kB (H) 2*256kB (H) 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D=20
+> > 1492kB
+> > 10071 total pagecache pages
+> > [  776.284124] 0 pages in swap cache [  776.287446] Swap cache
+> > stats: add 0, delete 0, find 0/0 [ 776.292645] Free swap  =3D 0kB [=20
+> > 776.295532] Total swap =3D 0kB [ 776.298421] 16384 pages RAM [=20
+> > 776.301224] 0 pages HighMem/MovableOnly [  776.305052] 1558 pages=20
+> > reserved
+> >
+> > 6) we have certain questions as below :
+> > a) how the kernel memory got exhausted ? at the time of low memory cond=
+itions in kernel , are the kernel page flusher threads , which should have =
+written dirty pages from page cache to flash disk , not > >executing at rig=
+ht time ? is the kernel page reclaim mechanism not executing at right time =
+?
+>=20
+> >I suspect the pages are likely stuck in a state of buffering. In the cas=
+e of sockets the packets will get queued up until either they can be servic=
+ed or the maximum size of the receive buffer as been exceeded >and they are=
+ dropped.
+>=20
+> My concern here is that why the reclaim procedure has not triggered ?
 
-Could you rebase it?
+>It has triggered.  1281 pages are under writeback.
+Thanks for the reply .
 
-Thanks,
+Also , on target , cat /proc/sys/vm/min_free_kbytes =3D 965 .  As per https=
+://www.kernel.org/doc/Documentation/sysctl/vm.txt  , the minimum value min_=
+free_kbytes  should be set must be 1024 .=20
+is this min_free_kbytes setting creating the problem ?
 
-Gregory
+Target is having 64MB memory  , what value is recommended for setting min_f=
+ree_kbytes  ?
 
-> ---
->  .../marvell/armada-3720-espressobin-emmc.dts  |  42 ++++
->  .../armada-3720-espressobin-v7-emmc.dts       |  59 ++++++
->  .../marvell/armada-3720-espressobin-v7.dts    |  36 ++++
->  .../dts/marvell/armada-3720-espressobin.dts   | 200 +-----------------
->  .../dts/marvell/armada-3720-espressobin.dtsi  | 193 +++++++++++++++++
->  5 files changed, 331 insertions(+), 199 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
-> new file mode 100644
-> index 000000000000..bd9ed9dc9c3e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board with eMMC
-> + * Copyright (C) 2018 Marvell
-> + *
-> + * Romain Perier <romain.perier@free-electrons.com>
-> + * Konstantin Porotchkin <kostap@marvell.com>
-> + *
-> + */
-> +/*
-> + * Schematic available at http://espressobin.net/wp-content/uploads/2017/08/ESPRESSObin_V5_Schematics.pdf
-> + */
-> +
-> +#include "armada-3720-espressobin.dtsi"
-> +
-> +/ {
-> +	model = "Globalscale Marvell ESPRESSOBin Board (eMMC)";
-> +	compatible = "globalscale,espressobin-emmc", "globalscale,espressobin",
-> +		     "marvell,armada3720", "marvell,armada3710";
-> +};
-> +
-> +/* U11 */
-> +&sdhci0 {
-> +	non-removable;
-> +	bus-width = <8>;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs400-1_8v;
-> +	marvell,xenon-emmc;
-> +	marvell,xenon-tun-count = <9>;
-> +	marvell,pad-type = "fixed-1-8v";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc_pins>;
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	mmccard: mmccard@0 {
-> +		compatible = "mmc-card";
-> +		reg = <0>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> new file mode 100644
-> index 000000000000..6e876a6d9532
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> @@ -0,0 +1,59 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7 with eMMC
-> + * Copyright (C) 2018 Marvell
-> + *
-> + * Romain Perier <romain.perier@free-electrons.com>
-> + * Konstantin Porotchkin <kostap@marvell.com>
-> + *
-> + */
-> +/*
-> + * Schematic available at http://wiki.espressobin.net/tiki-download_file.php?fileId=200
-> + */
-> +
-> +#include "armada-3720-espressobin.dtsi"
-> +
-> +/ {
-> +	model = "Globalscale Marvell ESPRESSOBin Board V7 (eMMC)";
-> +	compatible = "globalscale,espressobin-v7-emmc", "globalscale,espressobin-v7",
-> +		     "globalscale,espressobin", "marvell,armada3720",
-> +		     "marvell,armada3710";
-> +};
-> +
-> +&switch0 {
-> +	ports {
-> +		port@1 {
-> +			reg = <1>;
-> +			label = "lan1";
-> +			phy-handle = <&switch0phy0>;
-> +		};
-> +
-> +		port@3 {
-> +			reg = <3>;
-> +			label = "wan";
-> +			phy-handle = <&switch0phy2>;
-> +		};
-> +	};
-> +};
-> +
-> +/* U11 */
-> +&sdhci0 {
-> +	non-removable;
-> +	bus-width = <8>;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs400-1_8v;
-> +	marvell,xenon-emmc;
-> +	marvell,xenon-tun-count = <9>;
-> +	marvell,pad-type = "fixed-1-8v";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc_pins>;
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	mmccard: mmccard@0 {
-> +		compatible = "mmc-card";
-> +		reg = <0>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> new file mode 100644
-> index 000000000000..0f8405d085fd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7
-> + * Copyright (C) 2018 Marvell
-> + *
-> + * Romain Perier <romain.perier@free-electrons.com>
-> + * Konstantin Porotchkin <kostap@marvell.com>
-> + *
-> + */
-> +/*
-> + * Schematic available at http://wiki.espressobin.net/tiki-download_file.php?fileId=200
-> + */
-> +
-> +#include "armada-3720-espressobin.dtsi"
-> +
-> +/ {
-> +	model = "Globalscale Marvell ESPRESSOBin Board V7";
-> +	compatible = "globalscale,espressobin-v7", "globalscale,espressobin",
-> +		     "marvell,armada3720", "marvell,armada3710";
-> +};
-> +
-> +&switch0 {
-> +	ports {
-> +		port@1 {
-> +			reg = <1>;
-> +			label = "lan1";
-> +			phy-handle = <&switch0phy0>;
-> +		};
-> +
-> +		port@3 {
-> +			reg = <3>;
-> +			label = "wan";
-> +			phy-handle = <&switch0phy2>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> index 6be019e1888e..1542d836c090 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -12,207 +12,9 @@
->  
->  /dts-v1/;
->  
-> -#include <dt-bindings/gpio/gpio.h>
-> -#include "armada-372x.dtsi"
-> +#include "armada-3720-espressobin.dtsi"
->  
->  / {
->  	model = "Globalscale Marvell ESPRESSOBin Board";
->  	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
-> -
-> -	chosen {
-> -		stdout-path = "serial0:115200n8";
-> -	};
-> -
-> -	memory@0 {
-> -		device_type = "memory";
-> -		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-> -	};
-> -
-> -	vcc_sd_reg1: regulator {
-> -		compatible = "regulator-gpio";
-> -		regulator-name = "vcc_sd1";
-> -		regulator-min-microvolt = <1800000>;
-> -		regulator-max-microvolt = <3300000>;
-> -		regulator-boot-on;
-> -
-> -		gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
-> -		gpios-states = <0>;
-> -		states = <1800000 0x1
-> -			  3300000 0x0>;
-> -		enable-active-high;
-> -	};
-> -};
-> -
-> -/* J9 */
-> -&pcie0 {
-> -	status = "okay";
-> -	phys = <&comphy1 0>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-> -};
-> -
-> -/* J6 */
-> -&sata {
-> -	status = "okay";
-> -	phys = <&comphy2 0>;
-> -	phy-names = "sata-phy";
-> -};
-> -
-> -/* J1 */
-> -&sdhci1 {
-> -	wp-inverted;
-> -	bus-width = <4>;
-> -	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
-> -	marvell,pad-type = "sd";
-> -	vqmmc-supply = <&vcc_sd_reg1>;
-> -
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&sdio_pins>;
-> -	status = "okay";
-> -};
-> -
-> -/* U11 */
-> -&sdhci0 {
-> -	non-removable;
-> -	bus-width = <8>;
-> -	mmc-ddr-1_8v;
-> -	mmc-hs400-1_8v;
-> -	marvell,xenon-emmc;
-> -	marvell,xenon-tun-count = <9>;
-> -	marvell,pad-type = "fixed-1-8v";
-> -
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&mmc_pins>;
-> -/*
-> - * This eMMC is not populated on all boards, so disable it by
-> - * default and let the bootloader enable it, if it is present
-> - */
-> -	status = "disabled";
-> -};
-> -
-> -&spi0 {
-> -	status = "okay";
-> -
-> -	flash@0 {
-> -		reg = <0>;
-> -		compatible = "winbond,w25q32dw", "jedec,spi-flash";
-> -		spi-max-frequency = <104000000>;
-> -		m25p,fast-read;
-> -
-> -		partitions {
-> -			compatible = "fixed-partitions";
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -
-> -			partition@0 {
-> -				label = "uboot";
-> -				reg = <0 0x180000>;
-> -			};
-> -
-> -			partition@180000 {
-> -				label = "ubootenv";
-> -				reg = <0x180000 0x10000>;
-> -			};
-> -		};
-> -	};
-> -};
-> -
-> -/* Exported on the micro USB connector J5 through an FTDI */
-> -&uart0 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&uart1_pins>;
-> -	status = "okay";
-> -};
-> -
-> -/*
-> - * Connector J17 and J18 expose a number of different features. Some pins are
-> - * multiplexed. This is the case for instance for the following features:
-> - * - UART1 (pin 24 = RX, pin 26 = TX). See armada-3720-db.dts for an example of
-> - *   how to enable it. Beware that the signals are 1.8V TTL.
-> - * - I2C
-> - * - SPI
-> - * - MMC
-> - */
-> -
-> -/* J7 */
-> -&usb3 {
-> -	status = "okay";
-> -};
-> -
-> -/* J8 */
-> -&usb2 {
-> -	status = "okay";
-> -};
-> -
-> -&mdio {
-> -	switch0: switch0@1 {
-> -		compatible = "marvell,mv88e6085";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		reg = <1>;
-> -
-> -		dsa,member = <0 0>;
-> -
-> -		ports {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			port@0 {
-> -				reg = <0>;
-> -				label = "cpu";
-> -				ethernet = <&eth0>;
-> -				phy-mode = "rgmii-id";
-> -				fixed-link {
-> -					speed = <1000>;
-> -					full-duplex;
-> -				};
-> -			};
-> -
-> -			port@1 {
-> -				reg = <1>;
-> -				label = "wan";
-> -				phy-handle = <&switch0phy0>;
-> -			};
-> -
-> -			port@2 {
-> -				reg = <2>;
-> -				label = "lan0";
-> -				phy-handle = <&switch0phy1>;
-> -			};
-> -
-> -			port@3 {
-> -				reg = <3>;
-> -				label = "lan1";
-> -				phy-handle = <&switch0phy2>;
-> -			};
-> -
-> -		};
-> -
-> -		mdio {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			switch0phy0: switch0phy0@11 {
-> -				reg = <0x11>;
-> -			};
-> -			switch0phy1: switch0phy1@12 {
-> -				reg = <0x12>;
-> -			};
-> -			switch0phy2: switch0phy2@13 {
-> -				reg = <0x13>;
-> -			};
-> -		};
-> -	};
-> -};
-> -
-> -&eth0 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
-> -	phy-mode = "rgmii-id";
-> -	status = "okay";
-> -
-> -	fixed-link {
-> -		speed = <1000>;
-> -		full-duplex;
-> -	};
->  };
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-> new file mode 100644
-> index 000000000000..4a114db76bf9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-> @@ -0,0 +1,193 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree file for Globalscale Marvell ESPRESSOBin Board
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Romain Perier <romain.perier@free-electrons.com>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "armada-372x.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-> +	};
-> +
-> +	vcc_sd_reg1: regulator {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "vcc_sd1";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +
-> +		gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
-> +		gpios-states = <0>;
-> +		states = <1800000 0x1
-> +			  3300000 0x0>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +/* J9 */
-> +&pcie0 {
-> +	status = "okay";
-> +	phys = <&comphy1 0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-> +};
-> +
-> +/* J6 */
-> +&sata {
-> +	status = "okay";
-> +	phys = <&comphy2 0>;
-> +	phy-names = "sata-phy";
-> +};
-> +
-> +/* J1 */
-> +&sdhci1 {
-> +	wp-inverted;
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
-> +	marvell,pad-type = "sd";
-> +	vqmmc-supply = <&vcc_sd_reg1>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&spi0 {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		reg = <0>;
-> +		compatible = "winbond,w25q32dw", "jedec,spi-flash";
-> +		spi-max-frequency = <104000000>;
-> +		m25p,fast-read;
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			partition@0 {
-> +				label = "uboot";
-> +				reg = <0 0x180000>;
-> +			};
-> +
-> +			partition@180000 {
-> +				label = "ubootenv";
-> +				reg = <0x180000 0x10000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +/* Exported on the micro USB connector J5 through an FTDI */
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_pins>;
-> +	status = "okay";
-> +};
-> +
-> +/*
-> + * Connector J17 and J18 expose a number of different features. Some pins are
-> + * multiplexed. This is the case for instance for the following features:
-> + * - UART1 (pin 24 = RX, pin 26 = TX). See armada-3720-db.dts for an example of
-> + *   how to enable it. Beware that the signals are 1.8V TTL.
-> + * - I2C
-> + * - SPI
-> + * - MMC
-> + */
-> +
-> +/* J7 */
-> +&usb3 {
-> +	status = "okay";
-> +};
-> +
-> +/* J8 */
-> +&usb2 {
-> +	status = "okay";
-> +};
-> +
-> +&mdio {
-> +	switch0: switch0@1 {
-> +		compatible = "marvell,mv88e6085";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <1>;
-> +
-> +		dsa,member = <0 0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				label = "cpu";
-> +				ethernet = <&eth0>;
-> +				phy-mode = "rgmii-id";
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				label = "wan";
-> +				phy-handle = <&switch0phy0>;
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				label = "lan0";
-> +				phy-handle = <&switch0phy1>;
-> +			};
-> +
-> +			port@3 {
-> +				reg = <3>;
-> +				label = "lan1";
-> +				phy-handle = <&switch0phy2>;
-> +			};
-> +
-> +		};
-> +
-> +		mdio {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			switch0phy0: switch0phy0@11 {
-> +				reg = <0x11>;
-> +			};
-> +			switch0phy1: switch0phy1@12 {
-> +				reg = <0x12>;
-> +			};
-> +			switch0phy2: switch0phy2@13 {
-> +				reg = <0x13>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&eth0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
-> +	phy-mode = "rgmii-id";
-> +	status = "okay";
-> +
-> +	fixed-link {
-> +		speed = <1000>;
-> +		full-duplex;
-> +	};
-> +};
-> -- 
-> 2.21.0
->
+also is this a problem if the process receiving socket data is run at eleva=
+ted priority ( we set it firstly  chrt -r 20 and then changed it later to r=
+enice -n -20) I observed lru-add-drain , writeback threads were executing a=
+t normal priority .
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+what I mean above is 2 separate iterations for process priority settings ( =
+1st iteration :: chrt -r 20  , 2nd iteration : renice -n -20 , there was no=
+ iteration in which both chrt and renice were used together) .=20
+although in  both priority settings , we got the page allocation failure pr=
+oblem .
+
+
+
+
+
+
+
+
+
+
+
