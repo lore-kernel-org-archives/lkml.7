@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE933C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE1327E78
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C4227E66
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553118;
-	bh=+9FvUUl097hlFjRGGEZfiRxbpeiccsHlXb1z5QkWtc8=;
+	s=default; t=1559553121;
+	bh=WErwZMQyPgreMbLYiOkZR0ikTQOzKpZqE6LfbGPexJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0V0tycwGXkZyY+0qFu0vvpUwbdy8JThFHkbIK/2Qxf03H5TUgu27PlQod1U5FKqj
-	 VUb2hpNtDN3J1WWGCvTsQEIa++whMbfEyae/kkE01q7WRtdKOX+8ogtah35Rtc6X/v
-	 pfRXrCq7ejEru6ozYFX6N1hAnAFgZanzH3nVSyPQ=
+	b=zPyPD7RlkZJXTjTGJwGwu2CUw/ZvHKaE97imLXb9RdK+RSIJoTPgya6AnJhafK7PA
+	 9XX3PSCZ5EoCZCrn7NQc++i24R1e/6l6I6m6BZAcbUi3IRo68uUzyWhWMz2KPTajT6
+	 LtYFdgPin9wXUhsR9FQrc7BvEbRL2I0SJvUNATmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfFCJL5 (ORCPT
+        id S1728076AbfFCJMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbfFCJLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:54 -0400
+        id S1728546AbfFCJL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD9B27E66;
-        Mon,  3 Jun 2019 09:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F8327E78;
+        Mon,  3 Jun 2019 09:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553114;
-        bh=+9FvUUl097hlFjRGGEZfiRxbpeiccsHlXb1z5QkWtc8=;
+        s=default; t=1559553116;
+        bh=WErwZMQyPgreMbLYiOkZR0ikTQOzKpZqE6LfbGPexJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFrGuZnTZTGwAIYLVJFHGCWa/7rGuTLsmopCPaKn8lDYedTwTq/YuLqNnZ46xTuIU
-         ZidrDIWgxy5yPBVQ0Qu5EZk8Y6VI/uEdEk/1oNOVpPROhRgUwSTRAhfyBstNTVgXxW
-         zUjvw/Ja9OYk5jaeDWsJJXV3b4FrxZcjCQwopkcA=
+        b=Hqlvgcs1hv+QqvqKEwbRVc6qqFTkTLIpeGVMIZ4JKT+AGg+eQtd8F9oUfDIbqrr7o
+         o6OV60jLLFZL38IimT96ESznxL/jXCkJfGMM/i/OIFXYL660HBenJgqaE0pa2Xaumj
+         TPbdeqT4Gsy/y64/kLtsEawDPVn1G811ZH05NGmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 06/36] ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
-Date:   Mon,  3 Jun 2019 11:08:54 +0200
-Message-Id: <20190603090521.372530333@linuxfoundation.org>
+Subject: [PATCH 5.0 07/36] ipv6: Fix redirect with VRF
+Date:   Mon,  3 Jun 2019 11:08:55 +0200
+Message-Id: <20190603090521.437510938@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -61,37 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Manning <mmanning@vyatta.att-mail.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 72f7cfab6f93a8ea825fab8ccfb016d064269f7f ]
+[ Upstream commit 31680ac265802397937d75461a2809a067b9fb93 ]
 
-IPv6 does not consider if the socket is bound to a device when binding
-to an address. The result is that a socket can be bound to eth0 and
-then bound to the address of eth1. If the device is a VRF, the result
-is that a socket can only be bound to an address in the default VRF.
+IPv6 redirect is broken for VRF. __ip6_route_redirect walks the FIB
+entries looking for an exact match on ifindex. With VRF the flowi6_oif
+is updated by l3mdev_update_flow to the l3mdev index and the
+FLOWI_FLAG_SKIP_NH_OIF set in the flags to tell the lookup to skip the
+device match. For redirects the device match is requires so use that
+flag to know when the oif needs to be reset to the skb device index.
 
-Resolve by considering the device if sk_bound_dev_if is set.
-
-Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Tested-by: David Ahern <dsahern@gmail.com>
+Fixes: ca254490c8df ("net: Add VRF support to IPv6 stack")
+Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/raw.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv6/route.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -287,7 +287,9 @@ static int rawv6_bind(struct sock *sk, s
- 			/* Binding to link-local address requires an interface */
- 			if (!sk->sk_bound_dev_if)
- 				goto out_unlock;
-+		}
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2448,6 +2448,12 @@ static struct rt6_info *__ip6_route_redi
+ 	struct fib6_info *rt;
+ 	struct fib6_node *fn;
  
-+		if (sk->sk_bound_dev_if) {
- 			err = -ENODEV;
- 			dev = dev_get_by_index_rcu(sock_net(sk),
- 						   sk->sk_bound_dev_if);
++	/* l3mdev_update_flow overrides oif if the device is enslaved; in
++	 * this case we must match on the real ingress device, so reset it
++	 */
++	if (fl6->flowi6_flags & FLOWI_FLAG_SKIP_NH_OIF)
++		fl6->flowi6_oif = skb->dev->ifindex;
++
+ 	/* Get the "current" route for this destination and
+ 	 * check if the redirect has come from appropriate router.
+ 	 *
 
 
