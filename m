@@ -2,119 +2,83 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA79C46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74244C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A2C2760A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E0127B51
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfFCERq (ORCPT
+        id S1726573AbfFCEZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:17:46 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:48338 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfFCERp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:17:45 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hXePg-0000Ph-O8; Mon, 03 Jun 2019 12:17:36 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hXePb-00028Y-Ix; Mon, 03 Jun 2019 12:17:31 +0800
-Date:   Mon, 3 Jun 2019 12:17:31 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        Mon, 3 Jun 2019 00:25:17 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18069 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726221AbfFCEZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 00:25:16 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B75B932B97CFF4679957;
+        Mon,  3 Jun 2019 12:25:14 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 3 Jun 2019
+ 12:25:09 +0800
+Subject: Re: [PATCH] sched/core: add __sched tag for io_schedule()
+To:     Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Ingo Molnar <mingo@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Message-ID: <20190603041731.m6rvcaivgeh4iw4g@gondor.apana.org.au>
-References: <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
- <20150910171649.GE4029@linux.vnet.ibm.com>
- <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
- <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
- <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
- <20190603034707.GG28207@linux.ibm.com>
- <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
+        "Peter Zijlstra" <peterz@infradead.org>, <stable@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <koujilong@huawei.com>
+References: <20190531082912.80724-1-gaoxiang25@huawei.com>
+ <20190531143759.GD374014@devbig004.ftw2.facebook.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <b95526a4-33cc-12df-020c-011d67ca797b@huawei.com>
+Date:   Mon, 3 Jun 2019 12:25:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603040114.st646bujtgyu7adn@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190531143759.GD374014@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 12:01:14PM +0800, Herbert Xu wrote:
-> On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
-> >
-> > 	CPU2:         if (b != 1)
-> > 	CPU2:                 b = 1;
+
+
+On 2019/5/31 22:37, Tejun Heo wrote:
+> On Fri, May 31, 2019 at 04:29:12PM +0800, Gao Xiang wrote:
+>> non-inline io_schedule() was introduced in
+>> commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+>> Keep in line with io_schedule_timeout, Otherwise
+>> "/proc/<pid>/wchan" will report io_schedule()
+>> rather than its callers when waiting io.
+>>
+>> Reported-by: Jilong Kou <koujilong@huawei.com>
+>> Cc: Tejun Heo <tj@kernel.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > 
-> Stop right there.  The kernel is full of code that assumes that
-> assignment to an int/long is atomic.  If your compiler breaks this
-> assumption that we can kiss the kernel good-bye.
+> Acked-by: Tejun Heo <tj@kernel.org>
 
-The slippery slope apparently started here:
+Cc: <stable@vger.kernel.org> # 4.11+
 
-: commit ea435467500612636f8f4fb639ff6e76b2496e4b
-: Author: Matthew Wilcox <matthew@wil.cx>
-: Date:   Tue Jan 6 14:40:39 2009 -0800
-: 
-:     atomic_t: unify all arch definitions
-:
-: diff --git a/arch/x86/include/asm/atomic_32.h b/arch/x86/include/asm/atomic_32.h
-: index ad5b9f6ecddf..85b46fba4229 100644
-: --- a/arch/x86/include/asm/atomic_32.h
-: +++ b/arch/x86/include/asm/atomic_32.h
-: ...
-: @@ -10,15 +11,6 @@
-:   * resource counting etc..
-:   */
-:
-: -/*
-: - * Make sure gcc doesn't try to be clever and move things around
-: - * on us. We need to use _exactly_ the address the user gave us,
-: - * not some alias that contains the same information.
-: - */
-: -typedef struct {
-: -       int counter;
-: -} atomic_t;
-:
-: diff --git a/include/linux/types.h b/include/linux/types.h
-: index 121f349cb7ec..3b864f2d9560 100644
-: --- a/include/linux/types.h
-: +++ b/include/linux/types.h
-: @@ -195,6 +195,16 @@ typedef u32 phys_addr_t;
-:  
-:  typedef phys_addr_t resource_size_t;
-:
-: +typedef struct {
-: +       volatile int counter;
-: +} atomic_t;
-: +
+Thanks Tejun. This patch will be needed for io performance analysis
+since we found that Android systrace tool cannot show the callers of
+iowait raised from io_schedule() on linux-4.14 LTS kernel.
 
-Before evolving into the READ_ONCE/WRITE_ONCE that we have now.
+Hi Andrew, could you kindly take this patch?
 
-Linus, are we now really supporting a compiler where an assignment
-(or a read) from an int/long/pointer can be non-atomic without the
-volatile marker? Because if that's the case then we have a lot of
-code to audit.
+Thanks,
+Gao Xiang
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
+> Thanks.
+> 
