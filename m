@@ -2,120 +2,144 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66581C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69213C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DC827C1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493152455A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfFCGmT (ORCPT
+        id S1727178AbfFCGmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:42:19 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53347 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfFCGmQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:42:16 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 72C3D80295; Mon,  3 Jun 2019 08:42:03 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 08:42:12 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Pavel Machek <pavel@denx.de>, LKML <linux-kernel@vger.kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Neil Brown <neilb@suse.com>, netdev <netdev@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zilstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 2/6] ipv4: add lockdep condition to fix for_each_entry
-Message-ID: <20190603064212.GA7400@amd>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-3-joel@joelfernandes.org>
- <20190602070014.GA543@amd>
- <CAEXW_YT3t4Hb6wKsjXPGng+YbA5rhNRa7OSdZwdN4AKGfVkX3g@mail.gmail.com>
- <CAEXW_YSM2wwah2Q7LKmUO1Dp7GG62ciQA1nZ7GLw3m6cyuXXTw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
-In-Reply-To: <CAEXW_YSM2wwah2Q7LKmUO1Dp7GG62ciQA1nZ7GLw3m6cyuXXTw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 3 Jun 2019 02:42:11 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45026 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfFCGmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 02:42:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C95215AB;
+        Sun,  2 Jun 2019 23:42:09 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E1A13F5AF;
+        Sun,  2 Jun 2019 23:42:06 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH V2 3/4] arm64/mm: Consolidate page fault information capture
+Date:   Mon,  3 Jun 2019 12:11:24 +0530
+Message-Id: <1559544085-7502-4-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
+References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This consolidates page fault information capture and move them bit earlier.
+While here it also adds an wrapper is_el0_write_abort(). It also saves some
+cycles by replacing multiple user_mode() calls into a single one earlier
+during the fault.
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+---
+ arch/arm64/mm/fault.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-On Sun 2019-06-02 08:24:35, Joel Fernandes wrote:
-> On Sun, Jun 2, 2019 at 8:20 AM Joel Fernandes <joel@joelfernandes.org> wr=
-ote:
-> >
-> > On Sun, Jun 2, 2019 at 3:00 AM Pavel Machek <pavel@denx.de> wrote:
-> > >
-> > > On Sat 2019-06-01 18:27:34, Joel Fernandes (Google) wrote:
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > >
-> > > This really needs to be merged to previous patch, you can't break
-> > > compilation in middle of series...
-> > >
-> > > Or probably you need hlist_for_each_entry_rcu_lockdep() macro with
-> > > additional argument, and switch users to it.
-> >
-> > Good point. I can also just add a temporary transition macro, and then
-> > remove it in the last patch. That way no new macro is needed.
->=20
-> Actually, no. There is no compilation break so I did not follow what
-> you mean. The fourth argument to the hlist_for_each_entry_rcu is
-> optional. The only thing that happens is new lockdep warnings will
-> arise which later parts of the series fix by passing in that fourth
-> argument.
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index da02678..4bb65f3 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -435,6 +435,14 @@ static bool is_el0_instruction_abort(unsigned int esr)
+ 	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
+ }
+ 
++/*
++ * This is applicable only for EL0 write aborts.
++ */
++static bool is_el0_write_abort(unsigned int esr)
++{
++	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
++}
++
+ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 				   struct pt_regs *regs)
+ {
+@@ -443,6 +451,9 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	vm_fault_t fault, major = 0;
+ 	unsigned long vm_flags = VM_READ | VM_WRITE;
+ 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
++	bool is_user = user_mode(regs);
++	bool is_el0_exec = is_el0_instruction_abort(esr);
++	bool is_el0_write = is_el0_write_abort(esr);
+ 
+ 	if (notify_page_fault(regs, esr))
+ 		return 0;
+@@ -454,12 +465,12 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	if (faulthandler_disabled() || !mm)
+ 		goto no_context;
+ 
+-	if (user_mode(regs))
++	if (is_user)
+ 		mm_flags |= FAULT_FLAG_USER;
+ 
+-	if (is_el0_instruction_abort(esr)) {
++	if (is_el0_exec) {
+ 		vm_flags = VM_EXEC;
+-	} else if ((esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM)) {
++	} else if (is_el0_write) {
+ 		vm_flags = VM_WRITE;
+ 		mm_flags |= FAULT_FLAG_WRITE;
+ 	}
+@@ -487,7 +498,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	 * we can bug out early if this is from code which shouldn't.
+ 	 */
+ 	if (!down_read_trylock(&mm->mmap_sem)) {
+-		if (!user_mode(regs) && !search_exception_tables(regs->pc))
++		if (!is_user && !search_exception_tables(regs->pc))
+ 			goto no_context;
+ retry:
+ 		down_read(&mm->mmap_sem);
+@@ -498,7 +509,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 		 */
+ 		might_sleep();
+ #ifdef CONFIG_DEBUG_VM
+-		if (!user_mode(regs) && !search_exception_tables(regs->pc)) {
++		if (!is_user && !search_exception_tables(regs->pc)) {
+ 			up_read(&mm->mmap_sem);
+ 			goto no_context;
+ 		}
+@@ -516,7 +527,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 		 * in __lock_page_or_retry in mm/filemap.c.
+ 		 */
+ 		if (fatal_signal_pending(current)) {
+-			if (!user_mode(regs))
++			if (!is_user)
+ 				goto no_context;
+ 			return 0;
+ 		}
+@@ -561,7 +572,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	 * If we are in kernel mode at this point, we have no context to
+ 	 * handle this fault with.
+ 	 */
+-	if (!user_mode(regs))
++	if (!is_user)
+ 		goto no_context;
+ 
+ 	if (fault & VM_FAULT_OOM) {
+-- 
+2.7.4
 
-Sorry, I missed that subtlety. Might be worth it enabling the lockdep
-warning last in the series...
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz0wUQACgkQMOfwapXb+vJZhACeMv6qy1KMl8fpAmSRbXsFU5yP
-LY8Ani5H9/TBihxu13cOJbn7mJJ9RWkQ
-=hotv
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
