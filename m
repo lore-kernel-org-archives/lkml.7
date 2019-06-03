@@ -2,135 +2,136 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE20C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03E527F5E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2209827FD9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V+FTL4Ja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfFCNFm (ORCPT
+        id S1728276AbfFCNF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:05:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33496 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbfFCNFm (ORCPT
+        Mon, 3 Jun 2019 09:05:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38287 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfFCNF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:05:42 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BDC3D285189;
-        Mon,  3 Jun 2019 14:05:39 +0100 (BST)
-Date:   Mon, 3 Jun 2019 15:05:37 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Yixun Lan <yixun.lan@amlogic.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 04/12] mtd: rawnand: introduce struct onfi_helper
-Message-ID: <20190603150537.3ca5ca8a@collabora.com>
-In-Reply-To: <MN2PR08MB5951E35FED92DD502F57B590B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
-References: <MN2PR08MB5951E35FED92DD502F57B590B8140@MN2PR08MB5951.namprd08.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 3 Jun 2019 09:05:58 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D5epf604292
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:05:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D5epf604292
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559567141;
+        bh=ziOCPvfE6TBUUfAhHTQ2jx6jP/6NC/Buj7SN0rRArlg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=V+FTL4JakcYriOKzxkBUVcFWIfBNKgA5/iqq3WcD7SEcdoMLSf6MLl8tfup8yYF2X
+         hDL9z72j5S99iyTOV1KFcvpquzbxrhjI7TmV0RAnBgJ+vqnbRHWodg/VyOW9msJodC
+         Qz9Xpxc4a7o3PjISPqXPYdY3mzbWSyFd0a+0mYxgziCu6W2/qe3glavmZK3raP7uCe
+         wjWBxhLxX8z7dCfKa1V1O+bS+MoUMasZohjQu5ZxJYno6WFpNusgWmOXWmc7+nZupq
+         jPtDSiO7PSaehSWGAAN5F0fbD/l18w4uyDmif54vTWWcx2zxtySsBWszzuEdenQ1NS
+         S/BTd2OZr4BPQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D5eDE604289;
+        Mon, 3 Jun 2019 06:05:40 -0700
+Date:   Mon, 3 Jun 2019 06:05:40 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
+Message-ID: <tip-af75d1a9a9f75bf030c2f35705f1ff6d226f96fe@git.kernel.org>
+Cc:     quentin.perret@arm.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        patrick.bellasi@arm.com, dietmar.eggemann@arm.com, hpa@zytor.com,
+        mingo@kernel.org, morten.rasmussen@arm.com, peterz@infradead.org,
+        riel@surriel.com, fweisbec@gmail.com, valentin.schneider@arm.com,
+        vincent.guittot@linaro.org
+Reply-To: vincent.guittot@linaro.org, valentin.schneider@arm.com,
+          fweisbec@gmail.com, riel@surriel.com, peterz@infradead.org,
+          mingo@kernel.org, morten.rasmussen@arm.com,
+          patrick.bellasi@arm.com, torvalds@linux-foundation.org,
+          dietmar.eggemann@arm.com, hpa@zytor.com, tglx@linutronix.de,
+          quentin.perret@arm.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20190527062116.11512-7-dietmar.eggemann@arm.com>
+References: <20190527062116.11512-7-dietmar.eggemann@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/fair: Remove sgs->sum_weighted_load
+Git-Commit-ID: af75d1a9a9f75bf030c2f35705f1ff6d226f96fe
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shivamurthy,
+Commit-ID:  af75d1a9a9f75bf030c2f35705f1ff6d226f96fe
+Gitweb:     https://git.kernel.org/tip/af75d1a9a9f75bf030c2f35705f1ff6d226f96fe
+Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate: Mon, 27 May 2019 07:21:15 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:49:41 +0200
 
-On Mon, 3 Jun 2019 12:43:28 +0000
-"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
+sched/fair: Remove sgs->sum_weighted_load
 
-> Create onfi_helper object. This is base to turn ONFI code to generic.
-> 
-> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-> ---
->  include/linux/mtd/nand.h | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index 3cdf06cae8b6..645dde4c5797 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -11,6 +11,7 @@
->  #define __LINUX_MTD_NAND_H
->  
->  #include <linux/mtd/mtd.h>
-> +#include <linux/mtd/onfi.h>
->  
->  /**
->   * struct nand_memory_organization - Memory organization structure
-> @@ -157,6 +158,24 @@ struct nand_ops {
->  	bool (*isbad)(struct nand_device *nand, const struct nand_pos *pos);
->  };
->  
-> +/**
-> + * struct onfi_helper - ONFI helper functions that should be implemented by
-> + * specialized layers (raw NAND, SPI NAND, etc.)
-> + * @page: Page number for ONFI parameter table
-> + * @check_revision: Check ONFI revision number
-> + * @parameter_page_read: Function to read parameter pages
-> + * @init_intf_data: Initialize interface specific data or fixups
-> + */
-> +struct onfi_helper {
-> +	u8 page;
-> +	int (*check_revision)(struct nand_device *base,
-> +			      struct nand_onfi_params *p, int *onfi_version);
-> +	int (*parameter_page_read)(struct nand_device *base, u8 page,
-> +				   void *buf, unsigned int len);
-> +	int (*init_intf_data)(struct nand_device *base,
-> +			      struct nand_onfi_params *p);
-> +};
-> +
->  /**
->   * struct nand_device - NAND device
->   * @mtd: MTD instance attached to the NAND device
-> @@ -165,6 +184,7 @@ struct nand_ops {
->   * @rowconv: position to row address converter
->   * @bbt: bad block table info
->   * @ops: NAND operations attached to the NAND device
-> + * @helper: Helper functions to detect and initialize ONFI NAND
->   *
->   * Generic NAND object. Specialized NAND layers (raw NAND, SPI NAND, OneNAND)
->   * should declare their own NAND object embedding a nand_device struct (that's
-> @@ -183,6 +203,7 @@ struct nand_device {
->  	struct nand_row_converter rowconv;
->  	struct nand_bbt bbt;
->  	const struct nand_ops *ops;
-> +	struct onfi_helper helper;
+Since sg_lb_stats::sum_weighted_load is now identical with
+sg_lb_stats::group_load remove it and replace its use case
+(calculating load per task) with the latter.
 
-Sorry, but I don't think that's the right solution. When I said we
-should have ONFI code shared I was thinking about the code that parses
-the ONFI struct/data to extract nand_memory_organization bits or other
-generic info, not something that would abstract how to retrieve the
-ONFI param page. Clearly, the generic NAND layer is not supposed to
-handle such protocol/low-level details.
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rik van Riel <riel@surriel.com>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20190527062116.11512-7-dietmar.eggemann@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Regards,
-
-Boris
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5b9691e5ea59..7f8d477f90fe 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7577,7 +7577,6 @@ static unsigned long task_h_load(struct task_struct *p)
+ struct sg_lb_stats {
+ 	unsigned long avg_load; /*Avg load across the CPUs of the group */
+ 	unsigned long group_load; /* Total load over the CPUs of the group */
+-	unsigned long sum_weighted_load; /* Weighted load of group's tasks */
+ 	unsigned long load_per_task;
+ 	unsigned long group_capacity;
+ 	unsigned long group_util; /* Total utilization of the group */
+@@ -7944,7 +7943,6 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 		sgs->nr_numa_running += rq->nr_numa_running;
+ 		sgs->nr_preferred_running += rq->nr_preferred_running;
+ #endif
+-		sgs->sum_weighted_load += weighted_cpuload(rq);
+ 		/*
+ 		 * No need to call idle_cpu() if nr_running is not 0
+ 		 */
+@@ -7963,7 +7961,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 	sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) / sgs->group_capacity;
+ 
+ 	if (sgs->sum_nr_running)
+-		sgs->load_per_task = sgs->sum_weighted_load / sgs->sum_nr_running;
++		sgs->load_per_task = sgs->group_load / sgs->sum_nr_running;
+ 
+ 	sgs->group_weight = group->group_weight;
+ 
