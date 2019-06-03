@@ -2,109 +2,279 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626EEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5412DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E3A270A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BCD270E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cPJC4bgb"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DFS2Y02s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfFCSna (ORCPT
+        id S1726714AbfFCSoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:43:30 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42344 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726055AbfFCSn3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:43:29 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CCF8FC1E03;
-        Mon,  3 Jun 2019 18:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559587419; bh=CHQdvmHpZ+nNkXgwTaRppfMOKNBm5bThrSa4Dlvw3O4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=cPJC4bgbctAhHRufhBWEQXyiDzTNCOD1l1jtppO66BWIaTQN0sf6BCC3kZW8KN1O0
-         0P4YknM0CEwgY371CHazcYw76x7cGgQ9SxsHRdgM1c2byC1lJsoepTcvO/SkDWtJQ3
-         8ifCYP1JHYcimcmwXPn0JJq9wo9rSqrsMg7/ncFdRP+Huqmk6gkW41O6u19J8YLjjj
-         UYBESk46oqCN40ZL62jb92maAyL1hiYwuZmSB4GL8NlH+FBVfAWqV6W6YZJGVh9zuk
-         rCI6peCKbt7PHHPfGJIBlq9bZRMRO43koCpnKtkhbqSv3eK9CkAKq8npgP9BNA4CZK
-         B38HfFTgkNE5Q==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 8E8FEA005D;
-        Mon,  3 Jun 2019 18:43:28 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Jun 2019 11:43:28 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 4 Jun 2019 00:13:25 +0530
-Received: from [10.10.161.35] (10.10.161.35) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 4 Jun 2019 00:13:37 +0530
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Will Deacon <Will.Deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.arc,gmane.linux.kernel.cross-arch
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <20190531082112.GH2623@hirez.programming.kicks-ass.net>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <77b30ed2-3211-222b-1342-051a6cde4f77@synopsys.com>
-Date:   Mon, 3 Jun 2019 11:43:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190531082112.GH2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 3 Jun 2019 14:44:22 -0400
+Received: from mail-eopbgr00043.outbound.protection.outlook.com ([40.107.0.43]:23953
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726055AbfFCSoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:44:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xUjFXjbaim9xj/aKjNKTBpjR5tGoRGj3DC2bQ1iR0JU=;
+ b=DFS2Y02sRq0/8ANQ4aoJ4GDQnS8QP/uXnaqM29BkCaavwK6DCQzkd+C2of/IQcSxj9akq9AsEQhX34VWcS99WHILcwiYtFnVvHM15PYCrutVB67fVPbpC2X6QycEKomscna5K+3Ni4DTnG7p+jLpqx66d5fQe2cKyeJotlh/DUk=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
+ VI1PR0501MB2464.eurprd05.prod.outlook.com (10.168.139.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.17; Mon, 3 Jun 2019 18:44:14 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0%6]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 18:44:14 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCHv5 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Topic: [PATCHv5 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Index: AQHVFsjbfUPxgyyRf0a+J6whmOA1uKaKOiIAgAAQWfA=
+Date:   Mon, 3 Jun 2019 18:44:14 +0000
+Message-ID: <VI1PR0501MB227134DAB079D7BA2FB3A9C3D1140@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190530091928.49724-1-parav@mellanox.com>
+        <20190530091928.49724-4-parav@mellanox.com>
+ <20190603194328.135205a4.cohuck@redhat.com>
+In-Reply-To: <20190603194328.135205a4.cohuck@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.35]
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.21.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f9047ba-1923-43c7-a277-08d6e8537a12
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2464;
+x-ms-traffictypediagnostic: VI1PR0501MB2464:
+x-microsoft-antispam-prvs: <VI1PR0501MB24640E665725599ADDC1AB7AD1140@VI1PR0501MB2464.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(346002)(396003)(199004)(13464003)(189003)(54906003)(76116006)(478600001)(66446008)(64756008)(446003)(76176011)(6506007)(53546011)(2906002)(99286004)(74316002)(186003)(53936002)(7696005)(3846002)(6116002)(486006)(14454004)(11346002)(476003)(66556008)(52536014)(26005)(66476007)(66946007)(73956011)(6436002)(229853002)(78486014)(305945005)(71190400001)(14444005)(256004)(55236004)(102836004)(86362001)(71200400001)(54075001)(316002)(55016002)(5660300002)(9686003)(8676002)(81156014)(81166006)(68736007)(9456002)(7736002)(6246003)(8936002)(4326008)(33656002)(25786009)(66066001)(6916009)(11771555001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2464;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: d3k2ehqe33sNuF77E8uiEl9G3eWIKtV8daDNTk2qOTZGMawek5/+9KUma2Vf1BQzdL3mkNXeVp1cZZZVN5TGgzu1aBjckZ8DEPp7HKR8zLCg1Yeu7wuF67cEqL5kU4rh3huotATMx0dlwd+pQmd4UwJvY+q7Xejsn/AgHSvSe3iOpSjB8Tgo1BKp0XwILWHNIAczsMutA38Kmo/wQzEys5EEJCA3/gCcoUY1K7hXw07JDp8AveuMKjgZy0Mk8nfnJxm4qEAUG+GjZ19OwXfq+u9/X52Jvv7FVOicIwyJsDcWfWXvNXhYmAbqhV2NgHf1zKND8QoWTH3V7DB9RlMGA/Ja7FnbxQQNmOzjuGOh2FrBghAuLNmipLNHHNemF2FBg3Lvq1Hi5vljgZxgNF547v6fQ/NXW8RhWjoYbBjQloE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f9047ba-1923-43c7-a277-08d6e8537a12
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 18:44:14.5663
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 1:21 AM, Peter Zijlstra wrote:
-> And I'll stand by my earlier conviction that any architecture that has a
-> native u64 (be it a 64bit arch or a 32bit with double-width
-> instructions) but has an ABI that allows u32 alignment on them is daft.
 
-Why ? For 64-bit data on 32-bit systems, hardware doesn't claim to provide any
-single-copy atomicity for such data and software doesn't expect either.
 
+> -----Original Message-----
+> From: Cornelia Huck <cohuck@redhat.com>
+> Sent: Monday, June 3, 2019 11:13 PM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
+> Subject: Re: [PATCHv5 3/3] vfio/mdev: Synchronize device create/remove wi=
+th
+> parent removal
+>=20
+> On Thu, 30 May 2019 04:19:28 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > In following sequences, child devices created while removing mdev
+> > parent device can be left out, or it may lead to race of removing half
+> > initialized child mdev devices.
+> >
+> > issue-1:
+> > --------
+> >        cpu-0                         cpu-1
+> >        -----                         -----
+> >                                   mdev_unregister_device()
+> >                                     device_for_each_child()
+> >                                       mdev_device_remove_cb()
+> >                                         mdev_device_remove()
+> > create_store()
+> >   mdev_device_create()                   [...]
+> >     device_add()
+> >                                   parent_remove_sysfs_files()
+> >
+> > /* BUG: device added by cpu-0
+> >  * whose parent is getting removed
+> >  * and it won't process this mdev.
+> >  */
+> >
+> > issue-2:
+> > --------
+> > Below crash is observed when user initiated remove is in progress and
+> > mdev_unregister_driver() completes parent unregistration.
+> >
+> >        cpu-0                         cpu-1
+> >        -----                         -----
+> > remove_store()
+> >    mdev_device_remove()
+> >    active =3D false;
+> >                                   mdev_unregister_device()
+> >                                   parent device removed.
+> >    [...]
+> >    parents->ops->remove()
+> >  /*
+> >   * BUG: Accessing invalid parent.
+> >   */
+> >
+> > This is similar race like create() racing with mdev_unregister_device()=
+.
+> >
+> > BUG: unable to handle kernel paging request at ffffffffc0585668 PGD
+> > e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
+> > Oops: 0000 [#1] SMP PTI
+> > CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted
+> > 5.1.0-rc6-vdevbus+ #6 Hardware name: Supermicro
+> > SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> > RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev] Call Trace:
+> >  remove_store+0x71/0x90 [mdev]
+> >  kernfs_fop_write+0x113/0x1a0
+> >  vfs_write+0xad/0x1b0
+> >  ksys_write+0x5a/0xe0
+> >  do_syscall_64+0x5a/0x210
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Therefore, mdev core is improved as below to overcome above issues.
+> >
+> > Wait for any ongoing mdev create() and remove() to finish before
+> > unregistering parent device.
+> > This continues to allow multiple create and remove to progress in
+> > parallel for different mdev devices as most common case.
+> > At the same time guard parent removal while parent is being access by
+>=20
+> s/access/accessed/
+>
+Done.
+=20
+> > create() and remove callbacks.
+>=20
+> s/remove/remove()/ (just to make it consistent)
+>=20
+Done.
+
+> > create()/remove() and unregister_device() are synchronized by the rwsem=
+.
+> >
+> > Refactor device removal code to mdev_device_remove_common() to avoid
+> > acquiring unreg_sem of the parent.
+> >
+> > Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > ---
+> >  drivers/vfio/mdev/mdev_core.c    | 60 ++++++++++++++++++++++++--------
+> >  drivers/vfio/mdev/mdev_private.h |  2 ++
+> >  2 files changed, 48 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > b/drivers/vfio/mdev/mdev_core.c index 0bef0cae1d4b..62be131a22a1
+> > 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+>=20
+> (...)
+>=20
+> > @@ -265,6 +294,12 @@ int mdev_device_create(struct kobject *kobj,
+> >
+> >  	mdev->parent =3D parent;
+> >
+>=20
+> /* Check if parent unregistration has started */
+>=20
+> > +	ret =3D down_read_trylock(&parent->unreg_sem);
+> > +	if (!ret) {
+>=20
+> Maybe write this as
+>=20
+> if (!down_read_trylock(&parent->unreg_sem)) {
+>=20
+> > +		ret =3D -ENODEV;
+> > +		goto mdev_fail;
+>=20
+Done.
+
+> I think this leaves a stale mdev device around (and on the mdev list).
+> Normally, giving up the last reference to the mdev will call the release =
+callback
+> (which will remove it from the mdev list and free it), but the device is =
+not yet
+> initialized here. I think you either have to remove it from the list and =
+free the
+> memory manually, or move trying to get the lock just before calling ->cre=
+ate().
+>
+Ah, I missed it.
+Fixed. Removing from list and freeing the device.
+
+> > +	}
+> > +
+> >  	device_initialize(&mdev->dev);
+> >  	mdev->dev.parent  =3D dev;
+> >  	mdev->dev.bus     =3D &mdev_bus_type;
+>=20
+> (...)
+>=20
+> > @@ -329,18 +365,14 @@ int mdev_device_remove(struct device *dev)
+> >  	mdev->active =3D false;
+> >  	mutex_unlock(&mdev_list_lock);
+> >
+> > -	type =3D to_mdev_type(mdev->type_kobj);
+> > -	mdev_remove_sysfs_files(dev, type);
+> > -	device_del(&mdev->dev);
+> >  	parent =3D mdev->parent;
+> > -	ret =3D parent->ops->remove(mdev);
+> > -	if (ret)
+> > -		dev_err(&mdev->dev, "Remove failed: err=3D%d\n", ret);
+> > -
+> > -	/* Balances with device_initialize() */
+> > -	put_device(&mdev->dev);
+> > -	mdev_put_parent(parent);
+> > +	/* Check if parent unregistration has started */
+> > +	ret =3D down_read_trylock(&parent->unreg_sem);
+> > +	if (!ret)
+> > +		return -ENODEV;
+>=20
+> Maybe also condense this one to
+>=20
+> if (!down_read_trylock(&parent->unreg_sem))
+> 	return -ENODEV;
+>=20
+Done.
+
+> >
+> > +	mdev_device_remove_common(mdev);
+> > +	up_read(&parent->unreg_sem);
+> >  	return 0;
+> >  }
+> >
+>=20
+> Otherwise, looks good to me.
+Thanks sending v6.
