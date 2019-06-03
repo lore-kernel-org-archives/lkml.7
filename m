@@ -2,152 +2,128 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CABC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B37DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15DD26E66
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC0127C3C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6ER9IEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfFCGv6 (ORCPT
+        id S1727256AbfFCGwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 3 Jun 2019 02:52:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37665 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfFCGv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Jun 2019 02:51:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39431 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfFCGv5 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:51:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jun 2019 23:51:56 -0700
-X-ExtLoop1: 1
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.112]) ([10.239.196.112])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jun 2019 23:51:55 -0700
-Subject: Re: [PATCH v2 0/7] perf diff: diff cycles at basic block level
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <e0c769be-f548-f6ef-3667-118d37fe888c@linux.intel.com>
-Date:   Mon, 3 Jun 2019 14:51:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Received: by mail-pg1-f194.google.com with SMTP id 20so7715255pgr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 23:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FNUoc3EO/BJ3F1Vcs9cRrfhxm+rGxZRQNrf7L+HUo8w=;
+        b=H6ER9IEGx++OKxx8gxUH0k86zFrw5mTqHdkg1vDOWjFbaNN6Os0QQCCZ8RrISec+sM
+         nRz4xsthgpb8Q/54x4oa0bMXEQuU94ZclFheWE3gp7S5Pqx5RwXu+EemYgzjHuys9uIl
+         EPLIdtLDZuTcdAO+aLQOo1rFBX9ojbRRY1iJgpBzrBHyD5OjkGD33SnpGtzfqcHbulPR
+         49SNghhrtfYj8O6GAAgmoKoe2cTZuzDcRLPVk2ldIf7DjiZ6URgXMYiBuJ0Ug2E+JKWj
+         tsw8AXsZUFNF7xRp8XI+m78xFoRey3ePJCs+V5KViyYCfZ4Mz+/fFWu+OzJKlEAW31y6
+         /tww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FNUoc3EO/BJ3F1Vcs9cRrfhxm+rGxZRQNrf7L+HUo8w=;
+        b=QBPWtOE15GEnztIy6Zo76yuORaGLe8wPs3m/v07upj82Cfg19Wq2/yavsTk8pot6r2
+         VUTDLBSwVZmRBdy8Kqy4/HbwMtEWjNkaKj0Z4c92msgGASC85vvEsDnE0JWqwRsU0pBs
+         vvSiTEIj7hmCUYyw6iFr9p6921J/qzprsogcKZ7I3kvGnyWrr2EgTjTx58rmUVN7hm2D
+         KzGykVjdPavOmID2c7BOBOgh9RKqporNQ0BbqLuCzjUxJ+tOHPO++sOl/ujRY7yZTA57
+         3TmbSvpXdsxq5n5EwUJVl8nVdVqBIgmZoeX/L0cgERQOZ8EsBTcKKtt7A+2L18EimGJ1
+         q5/Q==
+X-Gm-Message-State: APjAAAVOC7QhRMZ9+49pw4OYLegj8DcC5D+HhseSYXV78kGbUMiCl+lq
+        FdfAR5v80aR1CI2hlQk2+U4=
+X-Google-Smtp-Source: APXvYqxeX2GmESpc0G9DhSTChfg5BjfqOy4jkdIaNOWkzWhYsyu0Wp/pVgO7w0MIvU03OKkSinPIvg==
+X-Received: by 2002:a17:90a:1706:: with SMTP id z6mr7410125pjd.108.1559544717952;
+        Sun, 02 Jun 2019 23:51:57 -0700 (PDT)
+Received: from localhost ([110.70.56.170])
+        by smtp.gmail.com with ESMTPSA id 124sm15095264pfe.124.2019.06.02.23.51.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 02 Jun 2019 23:51:56 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 15:51:53 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+Message-ID: <20190603065153.GA13072@jagdpanzerIV>
+References: <20190528002412.1625-1-dima@arista.com>
+ <20190528041500.GB26865@jagdpanzerIV>
+ <20190528044619.GA3429@jagdpanzerIV>
+ <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (05/28/19 15:42), Petr Mladek wrote:
+> On Tue 2019-05-28 13:46:19, Sergey Senozhatsky wrote:
+> > On (05/28/19 13:15), Sergey Senozhatsky wrote:
+> > > On (05/28/19 01:24), Dmitry Safonov wrote:
+> > > [..]
+> > > > While handling sysrq the console_loglevel is bumped to default to print
+> > > > sysrq headers. It's done to print sysrq messages with WARNING level for
+> > > > consumers of /proc/kmsg, though it sucks by the following reasons:
+> > > > - changing console_loglevel may produce tons of messages (especially on
+> > > >   bloated with debug/info prints systems)
+> > > > - it doesn't guarantee that the message will be printed as printk may
+> > > >   deffer the actual console output from buffer (see the comment near
+> > > >   printk() in kernel/printk/printk.c)
+> > > > 
+> > > > Provide KERN_UNSUPPRESSED printk() annotation for such legacy places.
+> > > > Make sysrq print the headers unsuppressed instead of changing
+> > > > console_loglevel.
+> 
+> I like this idea. console_loglevel is temporary manipulated only
+> when some messages should or should never appear on the console.
+> Storing this information in the message flags would help
+> to solve all the related races.
 
+I don't really like the whole system-wide console_loglevel manipulation
+thing, expect for console_verbose(), which seems the be the only legit
+case. Maybe we better do something about it. I like the idea of
+KERN_UNSUPPRESSED, especially if it will let us to completely remove
+those console_loglevel manipulations.
+E.g.
 
-On 6/3/2019 10:36 PM, Jin Yao wrote:
-> In some cases small changes in hot loops can show big differences.
-> But it's difficult to identify these differences.
-> 
-> perf diff currently can only diff symbols (functions). We can also expand
-> it to diff cycles of individual programs blocks as reported by timed LBR.
-> This would allow to identify changes in specific code accurately.
-> 
-> With this patch set, for example,
-> 
->   # perf record -b ./div
->   # perf record -b ./div
->   # perf diff -s cycles
-> 
+	console_loglevel = NEW;
+	foo()
+	 bar()
+	  dump_stack();
+	  ....
+        console_loglevel = OLD;
 
-Sorry, the command line should be perf diff -c cycles.
+    I understand the intent, but printk() is deferred (not always but still),
+    so this code is not really expected to do the same thing all the time.
+    Especially when it comes to NMI, etc.
 
-Thanks
-Jin Yao
+If KERN_UNSUPPRESSED is going to be yet-another-way-to-print-important-messages
+then I'm slightly less excited.
 
->   # Event 'cycles'
->   #
->   # Baseline         Block cycles diff [start:end]  Shared Object     Symbol
->   # ........  ....................................  ................  ....................................
->   #
->       49.03%        -9 [         4ef:         520]  div               [.] main
->       49.03%         0 [         4e8:         4ea]  div               [.] main
->       49.03%         0 [         4ef:         500]  div               [.] main
->       49.03%         0 [         4ef:         51c]  div               [.] main
->       49.03%         0 [         4ef:         535]  div               [.] main
->       18.82%         0 [       3ac40:       3ac4d]  libc-2.23.so      [.] __random_r
->       18.82%         0 [       3ac40:       3ac5c]  libc-2.23.so      [.] __random_r
->       18.82%         0 [       3ac40:       3ac76]  libc-2.23.so      [.] __random_r
->       18.82%         0 [       3ac40:       3ac88]  libc-2.23.so      [.] __random_r
->       18.82%         0 [       3ac90:       3ac9c]  libc-2.23.so      [.] __random_r
->       16.29%        -8 [       3aac0:       3aac0]  libc-2.23.so      [.] __random
->       16.29%         0 [       3aac0:       3aad2]  libc-2.23.so      [.] __random
->       16.29%         0 [       3aae0:       3aae7]  libc-2.23.so      [.] __random
->       16.29%         0 [       3ab03:       3ab0f]  libc-2.23.so      [.] __random
->       16.29%         0 [       3ab14:       3ab1b]  libc-2.23.so      [.] __random
->       16.29%         0 [       3ab28:       3ab2e]  libc-2.23.so      [.] __random
->       16.29%         0 [       3ab4a:       3ab53]  libc-2.23.so      [.] __random
->        8.11%         0 [         640:         644]  div               [.] compute_flag
->        8.11%         0 [         649:         659]  div               [.] compute_flag
->        5.46%         0 [       3af60:       3af60]  libc-2.23.so      [.] rand
->        5.46%         0 [       3af60:       3af64]  libc-2.23.so      [.] rand
->        2.25%         0 [         490:         490]  div               [.] rand@plt
->        0.01%        26 [      c00a27:      c00a27]  [kernel.vmlinux]  [k] native_irq_return_iret
->        0.00%      -157 [      2bf9f2:      2bfa63]  [kernel.vmlinux]  [k] update_blocked_averages
->        0.00%       -56 [      2bf980:      2bf9d3]  [kernel.vmlinux]  [k] update_blocked_averages
->        0.00%        48 [      2bf934:      2bf942]  [kernel.vmlinux]  [k] update_blocked_averages
->        0.00%         3 [      2bfb38:      2bfb67]  [kernel.vmlinux]  [k] update_blocked_averages
-> 
-> The 'cycles' is a new perf-diff computation selection, which enables
-> the displaying of cycles difference of same program basic block amongst
-> two perf.data. The program basic block is the code block between two
-> branches in a function.
-> 
->   v2:
->   ---
->   Keep standard perf diff format.
-> 
->   Following is the v1 output.
-> 
->   # perf diff --basic-block
-> 
->   # Cycles diff  Basic block (start:end)
->   # ...........  .......................
->   #
->            -208  hrtimer_interrupt (30b9e0:30ba42)
->            -157  update_blocked_averages (2bf9f2:2bfa63)
->            -126  interrupt_entry (c00880:c0093a)
->             -86  hrtimer_interrupt (30bb29:30bb32)
->             -74  hrtimer_interrupt (30ba65:30bac4)
->             -56  update_blocked_averages (2bf980:2bf9d3)
->              48  update_blocked_averages (2bf934:2bf942)
->             -35  native_write_msr (267900:26790b)
->              26  native_irq_return_iret (c00a27:c00a27)
->              22  rcu_check_callbacks (2febb6:2febdc)
->             -21  __hrtimer_run_queues (30b220:30b2a3)
->              19  pvclock_gtod_notify (14ba0:14c1b)
->             -18  task_tick_fair (2c5d29:2c5d41)
-> 
-> Jin Yao (7):
->    perf util: Create block_info structure
->    perf util: Add block_info in hist_entry
->    perf diff: Check if all data files with branch stacks
->    perf diff: Use hists to manage basic blocks per symbol
->    perf diff: Link same basic blocks among different data files
->    perf diff: Print the basic block cycles diff
->    perf diff: Documentation -c cycles option
-> 
->   tools/perf/Documentation/perf-diff.txt |  14 +-
->   tools/perf/builtin-diff.c              | 373 ++++++++++++++++++++++++++++++++-
->   tools/perf/ui/stdio/hist.c             |  26 +++
->   tools/perf/util/hist.c                 |  42 +++-
->   tools/perf/util/hist.h                 |   9 +
->   tools/perf/util/sort.h                 |   8 +
->   tools/perf/util/symbol.c               |  22 ++
->   tools/perf/util/symbol.h               |  23 ++
->   8 files changed, 509 insertions(+), 8 deletions(-)
-> 
+	-ss
