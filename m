@@ -2,373 +2,127 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0F4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C12DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F43427C83
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:06:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jT+2W/Wz"
+	by mail.kernel.org (Postfix) with ESMTP id 0800F27C77
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfFCHGp (ORCPT
+        id S1727024AbfFCHIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:06:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56233 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfFCHGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:06:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45HR1T5ts5z9v0Y5;
-        Mon,  3 Jun 2019 09:06:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jT+2W/Wz; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tjgsNbk0AB5p; Mon,  3 Jun 2019 09:06:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45HR1T4c8Cz9v0Xt;
-        Mon,  3 Jun 2019 09:06:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1559545597; bh=TC6QmhQY0SmiltKr9v5TB3XVNP5MrNYwND4rHdTmvjk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jT+2W/WzsIbJ/ZKXYgErTK0Iskxwp7f2O0hZxeEgqEvfPHWGnTMYZPhg5iYLFQ5WZ
-         nbnkKNs1Uy1Kts2uUWEepKBFYXvvwmgcu4s2kRdLsX06NXVg2rd6+x1QPnKT3C2y9v
-         Jid+nI7vA04PYNdQZqVHEXyjTk+aL0LpOjRGSMWg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37F9E8B7B1;
-        Mon,  3 Jun 2019 09:06:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YtoxeglRdgkU; Mon,  3 Jun 2019 09:06:42 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0D1408B7A1;
-        Mon,  3 Jun 2019 09:06:42 +0200 (CEST)
-Subject: Re: [RFC PATCH] powerpc/book3e: KASAN Full support for 64bit
-To:     Daniel Axtens <dja@axtens.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <3401648225001077db54172ee87573b21e1cfa38.1553782837.git.christophe.leroy@c-s.fr>
- <877ea7za12.fsf@dja-thinkpad.axtens.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <028d7332-57e0-bbec-1843-29f87b33a1d4@c-s.fr>
-Date:   Mon, 3 Jun 2019 09:06:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 03:08:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36973 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfFCHIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:08:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so2550907ljf.4;
+        Mon, 03 Jun 2019 00:08:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WQJinh/xC2bOeYFsYlUlkNYdlsn0JSMzJ6+7ugAlLz8=;
+        b=QZZQgoLbbQc0jrkVDfSpuzJpgIayaXHNRgSjaSbQdmowgI1JNqXl47Wfu0zLb8DFca
+         X3+uh5fbMFeyVbLsukRUfCEF0iWzY/8W+Fl6fkASVKi+IFM8vmBIVJJ396/+MGD41L+e
+         mP/jf2ZiiNIll9kzGPJEwCl0r/IJWNWZa4snnakIQkEo1a7XZ4ueBResvFcmWdbwKqRq
+         0WGd6MtPvNs7DMAYiKphJXQl5i0GbbuuG7sCJUCJ6e5XI7xq0HxqJ39IvEXk6WRhSUOk
+         AvkSV6huBvXj73U5hz4fyCmCIypibf8Ws9K3uxefBseq2UY4MjySworHalZ+x78AvTPY
+         llYQ==
+X-Gm-Message-State: APjAAAXLP5JkiB0ql/R2W5DaNVzUGeaHJYe5BRQCvePB/pBByRpVy59Q
+        V+N9iqXT2lxp1LHRiSAiKFPWKJm4geYM50niJAg=
+X-Google-Smtp-Source: APXvYqypxYOxQMw1wVILyzLBXGz+DJuPq5TH5W+toycfqpB93xioye3d2NaNp9HP84cOJVmXrpIamDZiegLE7qs7sEM=
+X-Received: by 2002:a2e:91c5:: with SMTP id u5mr1410332ljg.65.1559545686497;
+ Mon, 03 Jun 2019 00:08:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <877ea7za12.fsf@dja-thinkpad.axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190601032242.10405-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190601032242.10405-1-yamada.masahiro@socionext.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Jun 2019 09:07:54 +0200
+Message-ID: <CAMuHMdXXbEr=oU0amKLbEkTm3cZ=jyQuk1-aZa5L4JL_dUmYMw@mail.gmail.com>
+Subject: Re: [PATCH] treewide: fix typos of SPDX-License-Identifier
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Kees Cook <keescook@chromium.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Joe Perches <joe@perches.com>, linux-spdx@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Yamada-san,
 
-Ok, can you share your .config ?
+On Sat, Jun 1, 2019 at 5:24 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Prior to the adoption of SPDX, it was difficult for tools to determine
+> the correct license due to incomplete or badly formatted license text.
+> The SPDX solves this issue, assuming people can correctly spell
+> "SPDX-License-Identifier" although this assumption is broken in some
+> places.
+>
+> Since scripts/spdxcheck.py parses only lines that exactly matches to
+> the correct tag, it cannot (should not) detect this kind of error.
+>
+> If the correct tag is missing, scripts/checkpatch.pl warns like this:
+>
+>  WARNING: Missing or malformed SPDX-License-Identifier tag in line *
+>
+> So, people should notice it before the patch submission, but in reality
+> broken tags sometimes slip in. The checkpatch warning is not useful for
+> checking the committed files globally since large number of files still
+> have no SPDX tag.
+>
+> Also, I am not sure about the legal effect when the SPDX tag is broken.
+>
+> Anyway, these typos are absolutely worth fixing. It is pretty easy to
+> find suspicious lines by grep.
+>
+>   $ git grep --not -e SPDX-License-Identifier --and -e SPDX- -- \
+>     :^LICENSES :^scripts/spdxcheck.py :^*/license-rules.rst
+>   arch/arm/kernel/bugs.c:// SPDX-Identifier: GPL-2.0
+>   drivers/phy/st/phy-stm32-usbphyc.c:// SPDX-Licence-Identifier: GPL-2.0
+>   drivers/pinctrl/sh-pfc/pfc-r8a77980.c:// SPDX-Lincense-Identifier: GPL 2.0
+>   lib/test_stackinit.c:// SPDX-Licenses: GPLv2
+>   sound/soc/codecs/max9759.c:// SPDX-Licence-Identifier: GPL-2.0
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Christophe
+Thanks for your patch!
 
-Le 31/05/2019 à 03:29, Daniel Axtens a écrit :
-> Hi Christophe,
-> 
-> I tried this on the t4240rdb and it fails to boot if KASAN is
-> enabled. It does boot with the patch applied but KASAN disabled, so that
-> narrows it down a little bit.
-> 
-> I need to focus on 3s first so I'll just drop 3e from my patch set for
-> now.
-> 
-> Regards,
-> Daniel
-> 
->> The KASAN shadow area is mapped into vmemmap space:
->> 0x8000 0400 0000 0000 to 0x8000 0600 0000 0000.
->> For this vmemmap has to be disabled.
->>
->> Cc: Daniel Axtens <dja@axtens.net>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/Kconfig                  |   1 +
->>   arch/powerpc/Kconfig.debug            |   3 +-
->>   arch/powerpc/include/asm/kasan.h      |  11 +++
->>   arch/powerpc/kernel/Makefile          |   2 +
->>   arch/powerpc/kernel/head_64.S         |   3 +
->>   arch/powerpc/kernel/setup_64.c        |  20 +++---
->>   arch/powerpc/mm/kasan/Makefile        |   1 +
->>   arch/powerpc/mm/kasan/kasan_init_64.c | 129 ++++++++++++++++++++++++++++++++++
->>   8 files changed, 159 insertions(+), 11 deletions(-)
->>   create mode 100644 arch/powerpc/mm/kasan/kasan_init_64.c
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 1a2fb50126b2..e0b7c45e4dc7 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -174,6 +174,7 @@ config PPC
->>   	select HAVE_ARCH_AUDITSYSCALL
->>   	select HAVE_ARCH_JUMP_LABEL
->>   	select HAVE_ARCH_KASAN			if PPC32
->> +	select HAVE_ARCH_KASAN			if PPC_BOOK3E_64 && !SPARSEMEM_VMEMMAP
->>   	select HAVE_ARCH_KGDB
->>   	select HAVE_ARCH_MMAP_RND_BITS
->>   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
->> diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
->> index 61febbbdd02b..b4140dd6b4e4 100644
->> --- a/arch/powerpc/Kconfig.debug
->> +++ b/arch/powerpc/Kconfig.debug
->> @@ -370,4 +370,5 @@ config PPC_FAST_ENDIAN_SWITCH
->>   config KASAN_SHADOW_OFFSET
->>   	hex
->>   	depends on KASAN
->> -	default 0xe0000000
->> +	default 0xe0000000 if PPC32
->> +	default 0x6800040000000000 if PPC64
->> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
->> index 296e51c2f066..756b3d58f921 100644
->> --- a/arch/powerpc/include/asm/kasan.h
->> +++ b/arch/powerpc/include/asm/kasan.h
->> @@ -23,10 +23,21 @@
->>   
->>   #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
->>   
->> +#ifdef CONFIG_PPC32
->>   #define KASAN_SHADOW_END	0UL
->>   
->>   #define KASAN_SHADOW_SIZE	(KASAN_SHADOW_END - KASAN_SHADOW_START)
->>   
->> +#else
->> +
->> +#include <asm/pgtable.h>
->> +
->> +#define KASAN_SHADOW_SIZE	(KERN_VIRT_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
->> +
->> +#define KASAN_SHADOW_END	(KASAN_SHADOW_START + KASAN_SHADOW_SIZE)
->> +
->> +#endif /* CONFIG_PPC32 */
->> +
->>   #ifdef CONFIG_KASAN
->>   void kasan_early_init(void);
->>   void kasan_mmu_init(void);
->> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
->> index 0ea6c4aa3a20..7f232c06f11d 100644
->> --- a/arch/powerpc/kernel/Makefile
->> +++ b/arch/powerpc/kernel/Makefile
->> @@ -35,6 +35,8 @@ KASAN_SANITIZE_early_32.o := n
->>   KASAN_SANITIZE_cputable.o := n
->>   KASAN_SANITIZE_prom_init.o := n
->>   KASAN_SANITIZE_btext.o := n
->> +KASAN_SANITIZE_paca.o := n
->> +KASAN_SANITIZE_setup_64.o := n
->>   
->>   ifdef CONFIG_KASAN
->>   CFLAGS_early_32.o += -DDISABLE_BRANCH_PROFILING
->> diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
->> index 3fad8d499767..80fbd8024fb2 100644
->> --- a/arch/powerpc/kernel/head_64.S
->> +++ b/arch/powerpc/kernel/head_64.S
->> @@ -966,6 +966,9 @@ start_here_multiplatform:
->>   	 * and SLB setup before we turn on relocation.
->>   	 */
->>   
->> +#ifdef CONFIG_KASAN
->> +	bl	kasan_early_init
->> +#endif
->>   	/* Restore parameters passed from prom_init/kexec */
->>   	mr	r3,r31
->>   	bl	early_setup		/* also sets r13 and SPRG_PACA */
->> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
->> index ba404dd9ce1d..d2bf860dd966 100644
->> --- a/arch/powerpc/kernel/setup_64.c
->> +++ b/arch/powerpc/kernel/setup_64.c
->> @@ -311,6 +311,16 @@ void __init early_setup(unsigned long dt_ptr)
->>    	DBG(" -> early_setup(), dt_ptr: 0x%lx\n", dt_ptr);
->>   
->>   	/*
->> +	 * Configure exception handlers. This include setting up trampolines
->> +	 * if needed, setting exception endian mode, etc...
->> +	 */
->> +	configure_exceptions();
->> +
->> +	/* Apply all the dynamic patching */
->> +	apply_feature_fixups();
->> +	setup_feature_keys();
->> +
->> +	/*
->>   	 * Do early initialization using the flattened device
->>   	 * tree, such as retrieving the physical memory map or
->>   	 * calculating/retrieving the hash table size.
->> @@ -325,16 +335,6 @@ void __init early_setup(unsigned long dt_ptr)
->>   	setup_paca(paca_ptrs[boot_cpuid]);
->>   	fixup_boot_paca();
->>   
->> -	/*
->> -	 * Configure exception handlers. This include setting up trampolines
->> -	 * if needed, setting exception endian mode, etc...
->> -	 */
->> -	configure_exceptions();
->> -
->> -	/* Apply all the dynamic patching */
->> -	apply_feature_fixups();
->> -	setup_feature_keys();
->> -
->>   	/* Initialize the hash table or TLB handling */
->>   	early_init_mmu();
->>   
->> diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
->> index 6577897673dd..0bfbe3892808 100644
->> --- a/arch/powerpc/mm/kasan/Makefile
->> +++ b/arch/powerpc/mm/kasan/Makefile
->> @@ -3,3 +3,4 @@
->>   KASAN_SANITIZE := n
->>   
->>   obj-$(CONFIG_PPC32)           += kasan_init_32.o
->> +obj-$(CONFIG_PPC64)	+= kasan_init_64.o
->> diff --git a/arch/powerpc/mm/kasan/kasan_init_64.c b/arch/powerpc/mm/kasan/kasan_init_64.c
->> new file mode 100644
->> index 000000000000..7fd71b8e883b
->> --- /dev/null
->> +++ b/arch/powerpc/mm/kasan/kasan_init_64.c
->> @@ -0,0 +1,129 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#define DISABLE_BRANCH_PROFILING
->> +
->> +#include <linux/kasan.h>
->> +#include <linux/printk.h>
->> +#include <linux/memblock.h>
->> +#include <linux/sched/task.h>
->> +#include <asm/pgalloc.h>
->> +
->> +static void __init kasan_populate_pte(pte_t *ptep, pgprot_t prot)
->> +{
->> +	unsigned long va = (unsigned long)kasan_early_shadow_page;
->> +	phys_addr_t pa = __pa(kasan_early_shadow_page);
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PTE; i++, ptep++)
->> +		__set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
->> +}
->> +
->> +static void __init kasan_populate_pmd(pmd_t *pmdp)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PMD; i++)
->> +		pmd_populate_kernel(&init_mm, pmdp + i, kasan_early_shadow_pte);
->> +}
->> +
->> +static void __init kasan_populate_pud(pud_t *pudp)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PUD; i++)
->> +		pud_populate(&init_mm, pudp + i, kasan_early_shadow_pmd);
->> +}
->> +
->> +static void __init *kasan_alloc_pgtable(unsigned long size)
->> +{
->> +	void *ptr = memblock_alloc_try_nid(size, size, MEMBLOCK_LOW_LIMIT,
->> +					   __pa(MAX_DMA_ADDRESS), NUMA_NO_NODE);
->> +
->> +	if (!ptr)
->> +		panic("%s: Failed to allocate %lu bytes align=0x%lx max_addr=%lx\n",
->> +		      __func__, size, size, __pa(MAX_DMA_ADDRESS));
->> +
->> +	return ptr;
->> +}
->> +
->> +static int __init kasan_map_page(unsigned long va, unsigned long pa, pgprot_t prot)
->> +{
->> +	pgd_t *pgdp = pgd_offset_k(va);
->> +	pud_t *pudp;
->> +	pmd_t *pmdp;
->> +	pte_t *ptep;
->> +
->> +	if (pgd_none(*pgdp) || (void *)pgd_page_vaddr(*pgdp) == kasan_early_shadow_pud) {
->> +		pudp = kasan_alloc_pgtable(PUD_TABLE_SIZE);
->> +		kasan_populate_pud(pudp);
->> +		pgd_populate(&init_mm, pgdp, pudp);
->> +	}
->> +	pudp = pud_offset(pgdp, va);
->> +	if (pud_none(*pudp) || (void *)pud_page_vaddr(*pudp) == kasan_early_shadow_pmd) {
->> +		pmdp = kasan_alloc_pgtable(PMD_TABLE_SIZE);
->> +		kasan_populate_pmd(pmdp);
->> +		pud_populate(&init_mm, pudp, pmdp);
->> +	}
->> +	pmdp = pmd_offset(pudp, va);
->> +	if (!pmd_present(*pmdp) || (void *)pmd_page_vaddr(*pmdp) == kasan_early_shadow_pte) {
->> +		ptep = kasan_alloc_pgtable(PTE_TABLE_SIZE);
->> +		kasan_populate_pte(ptep, PAGE_KERNEL);
->> +		pmd_populate_kernel(&init_mm, pmdp, ptep);
->> +	}
->> +	ptep = pte_offset_kernel(pmdp, va);
->> +
->> +	__set_pte_at(&init_mm, va, ptep, pfn_pte(pa >> PAGE_SHIFT, prot), 0);
->> +
->> +	return 0;
->> +}
->> +
->> +static void __init kasan_init_region(struct memblock_region *reg)
->> +{
->> +	void *start = __va(reg->base);
->> +	void *end = __va(reg->base + reg->size);
->> +	unsigned long k_start, k_end, k_cur;
->> +
->> +	if (start >= end)
->> +		return;
->> +
->> +	k_start = (unsigned long)kasan_mem_to_shadow(start);
->> +	k_end = (unsigned long)kasan_mem_to_shadow(end);
->> +
->> +	for (k_cur = k_start; k_cur < k_end; k_cur += PAGE_SIZE) {
->> +		void *va = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
->> +
->> +		kasan_map_page(k_cur, __pa(va), PAGE_KERNEL);
->> +	}
->> +	flush_tlb_kernel_range(k_start, k_end);
->> +}
->> +
->> +void __init kasan_init(void)
->> +{
->> +	struct memblock_region *reg;
->> +
->> +	for_each_memblock(memory, reg)
->> +		kasan_init_region(reg);
->> +
->> +	/* It's too early to use clear_page() ! */
->> +	memset(kasan_early_shadow_page, 0, sizeof(kasan_early_shadow_page));
->> +
->> +	/* Enable error messages */
->> +	init_task.kasan_depth = 0;
->> +	pr_info("KASAN init done\n");
->> +}
->> +
->> +/* The early shadow maps everything to a single page of zeroes */
->> +asmlinkage void __init kasan_early_init(void)
->> +{
->> +	unsigned long addr = KASAN_SHADOW_START;
->> +	unsigned long end = KASAN_SHADOW_END;
->> +	pgd_t *pgdp = pgd_offset_k(addr);
->> +
->> +	kasan_populate_pte(kasan_early_shadow_pte, PAGE_KERNEL);
->> +	kasan_populate_pmd(kasan_early_shadow_pmd);
->> +	kasan_populate_pud(kasan_early_shadow_pud);
->> +
->> +	do {
->> +		pgd_populate(&init_mm, pgdp, kasan_early_shadow_pud);
->> +	} while (pgdp++, addr = pgd_addr_end(addr, end), addr != end);
->> +}
->> -- 
->> 2.13.3
+>  drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
+
+For the sh-pfc change:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
