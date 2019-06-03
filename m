@@ -2,176 +2,181 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076A0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8589EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AA423407
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEED24E42
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NDEd435r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfFCNDP (ORCPT
+        id S1728091AbfFCNDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:03:15 -0400
-Received: from mga01.intel.com ([192.55.52.88]:50872 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfFCNDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:03:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 06:03:14 -0700
-X-ExtLoop1: 1
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2019 06:03:09 -0700
-Subject: Re: [PATCH 8/9] mmc: sdhci-sprd: Add PHY DLL delay configuration
-To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
-Cc:     vincent.guittot@linaro.org, arm@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1558346019.git.baolin.wang@linaro.org>
- <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6b539c8b-c2fd-6c37-d645-ef714c0e29c9@intel.com>
-Date:   Mon, 3 Jun 2019 16:01:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 09:03:48 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54705 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfFCNDs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:03:48 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D3UMd602412
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:03:31 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D3UMd602412
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559567011;
+        bh=sfc0k++Mi1BMilo2QMC3tOzYzrbD88d5pwRgZ9GEWAM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=NDEd435rXjA1WClnJTLLyzX27nbarhaadr8SURYYfjN0K2iVA+Ux9WrHxjmdyv6tf
+         HYbzkQLeJRHQxH3Ru/QMZ/w8FqBYPPdZ9nXRALk5Hl4WShPB82LiNN7c++F5QEidn3
+         Cx3uJ8nUmcLSXxqFV6aBiG0Bkwe9BED8Zof6QdfFEvR7xO2AuPiDAlPFoHZRXe2d/G
+         9VeXRflwnu6HavrUKE6hBVgOFok3lMc7OBq/gt21jiGwGV4hXCjOqNo4vOtgq2HC42
+         TfJkGlC1jFKAOfJFrS4ypnMSY236kNl2c7cx5OkibsSCFnw9vIS1yNk+aLWhj/NWBl
+         Y0GSa2WbAiE5Q==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D3T7f602409;
+        Mon, 3 Jun 2019 06:03:29 -0700
+Date:   Mon, 3 Jun 2019 06:03:29 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
+Message-ID: <tip-3d8d53554405952993bb0279ef3ebebc51740074@git.kernel.org>
+Cc:     tglx@linutronix.de, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, hpa@zytor.com, patrick.bellasi@arm.com,
+        peterz@infradead.org, riel@surriel.com, quentin.perret@arm.com,
+        torvalds@linux-foundation.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, valentin.schneider@arm.com,
+        fweisbec@gmail.com, vincent.guittot@linaro.org
+Reply-To: peterz@infradead.org, riel@surriel.com, quentin.perret@arm.com,
+          mingo@kernel.org, torvalds@linux-foundation.org,
+          linux-kernel@vger.kernel.org, valentin.schneider@arm.com,
+          fweisbec@gmail.com, vincent.guittot@linaro.org,
+          tglx@linutronix.de, morten.rasmussen@arm.com,
+          dietmar.eggemann@arm.com, hpa@zytor.com, patrick.bellasi@arm.com
+In-Reply-To: <20190527062116.11512-4-dietmar.eggemann@arm.com>
+References: <20190527062116.11512-4-dietmar.eggemann@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/debug: Remove sd->*_idx range on sysctl
+Git-Commit-ID: 3d8d53554405952993bb0279ef3ebebc51740074
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/19 1:12 PM, Baolin Wang wrote:
-> Set the PHY DLL delay for each timing mode, which is used to sample the clock
-> accurately and make the clock more stable.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Commit-ID:  3d8d53554405952993bb0279ef3ebebc51740074
+Gitweb:     https://git.kernel.org/tip/3d8d53554405952993bb0279ef3ebebc51740074
+Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate: Mon, 27 May 2019 07:21:12 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:49:39 +0200
 
-One comment, nevertheless:
+sched/debug: Remove sd->*_idx range on sysctl
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+This reverts:
 
-> ---
->  drivers/mmc/host/sdhci-sprd.c |   51 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-> index e6eda13..911a09b 100644
-> --- a/drivers/mmc/host/sdhci-sprd.c
-> +++ b/drivers/mmc/host/sdhci-sprd.c
-> @@ -29,6 +29,8 @@
->  #define  SDHCI_SPRD_DLL_INIT_COUNT	0xc00
->  #define  SDHCI_SPRD_DLL_PHASE_INTERNAL	0x3
->  
-> +#define SDHCI_SPRD_REG_32_DLL_DLY	0x204
-> +
->  #define SDHCI_SPRD_REG_32_DLL_DLY_OFFSET	0x208
->  #define  SDHCIBSPRD_IT_WR_DLY_INV		BIT(5)
->  #define  SDHCI_SPRD_BIT_CMD_DLY_INV		BIT(13)
-> @@ -72,6 +74,24 @@ struct sdhci_sprd_host {
->  	struct clk *clk_2x_enable;
->  	u32 base_rate;
->  	int flags; /* backup of host attribute */
-> +	u32 phy_delay[MMC_TIMING_MMC_HS400 + 2];
-> +};
-> +
-> +struct sdhci_sprd_phy_cfg {
-> +	const char *property;
-> +	u8 timing;
-> +};
-> +
-> +static const struct sdhci_sprd_phy_cfg sdhci_sprd_phy_cfgs[] = {
-> +	{ "sprd,phy-delay-legacy", MMC_TIMING_LEGACY, },
-> +	{ "sprd,phy-delay-sd-highspeed", MMC_TIMING_MMC_HS, },
+  commit 201c373e8e48 ("sched/debug: Limit sd->*_idx range on sysctl")
 
-Did you mean MMC_TIMING_SD_HS
+Load indexes (sd->*_idx) are no longer needed without rq->cpu_load[].
+The range check for load indexes can be removed as well. Get rid of it
+before the rq->cpu_load[] since it uses CPU_LOAD_IDX_MAX.
 
-> +	{ "sprd,phy-delay-sd-uhs-sdr50", MMC_TIMING_UHS_SDR50, },
-> +	{ "sprd,phy-delay-sd-uhs-sdr104", MMC_TIMING_UHS_SDR104, },
-> +	{ "sprd,phy-delay-mmc-highspeed", MMC_TIMING_MMC_HS, },
-> +	{ "sprd,phy-delay-mmc-ddr52", MMC_TIMING_MMC_DDR52, },
-> +	{ "sprd,phy-delay-mmc-hs200", MMC_TIMING_MMC_HS200, },
-> +	{ "sprd,phy-delay-mmc-hs400", MMC_TIMING_MMC_HS400, },
-> +	{ "sprd,phy-delay-mmc-hs400es", MMC_TIMING_MMC_HS400 + 1, },
->  };
->  
->  #define TO_SPRD_HOST(host) sdhci_pltfm_priv(sdhci_priv(host))
-> @@ -276,6 +296,9 @@ static unsigned int sdhci_sprd_get_min_clock(struct sdhci_host *host)
->  static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
->  					 unsigned int timing)
->  {
-> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-> +	struct mmc_host *mmc = host->mmc;
-> +	u32 *p = sprd_host->phy_delay;
->  	u16 ctrl_2;
->  
->  	if (timing == host->timing)
-> @@ -314,6 +337,9 @@ static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
->  	}
->  
->  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
-> +
-> +	if (!mmc->ios.enhanced_strobe)
-> +		sdhci_writel(host, p[timing], SDHCI_SPRD_REG_32_DLL_DLY);
->  }
->  
->  static void sdhci_sprd_hw_reset(struct sdhci_host *host)
-> @@ -381,6 +407,8 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
->  					     struct mmc_ios *ios)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-> +	u32 *p = sprd_host->phy_delay;
->  	u16 ctrl_2;
->  
->  	if (!ios->enhanced_strobe)
-> @@ -395,6 +423,28 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
->  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
->  
->  	sdhci_sprd_sd_clk_on(host);
-> +
-> +	/* Set the PHY DLL delay value for HS400 enhanced strobe mode */
-> +	sdhci_writel(host, p[MMC_TIMING_MMC_HS400 + 1],
-> +		     SDHCI_SPRD_REG_32_DLL_DLY);
-> +}
-> +
-> +static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
-> +				       struct device_node *np)
-> +{
-> +	u32 *p = sprd_host->phy_delay;
-> +	int ret, i, index;
-> +	u32 val[4];
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sdhci_sprd_phy_cfgs); i++) {
-> +		ret = of_property_read_u32_array(np,
-> +				sdhci_sprd_phy_cfgs[i].property, val, 4);
-> +		if (ret)
-> +			continue;
-> +
-> +		index = sdhci_sprd_phy_cfgs[i].timing;
-> +		p[index] = val[0] | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
-> +	}
->  }
->  
->  static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
-> @@ -428,6 +478,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
->  		goto pltfm_free;
->  
->  	sprd_host = TO_SPRD_HOST(host);
-> +	sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
->  
->  	clk = devm_clk_get(&pdev->dev, "sdio");
->  	if (IS_ERR(clk)) {
-> 
+At the same time, fix the following coding style issues detected by
+scripts/checkpatch.pl:
 
+  ERROR: space prohibited before that ','
+  ERROR: space prohibited before that close parenthesis ')'
+
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rik van Riel <riel@surriel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20190527062116.11512-4-dietmar.eggemann@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/debug.c | 37 ++++++++++++++-----------------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
+
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 150043e1d716..5c7b066d7de6 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -236,25 +236,16 @@ static void sd_free_ctl_entry(struct ctl_table **tablep)
+ 	*tablep = NULL;
+ }
+ 
+-static int min_load_idx = 0;
+-static int max_load_idx = CPU_LOAD_IDX_MAX-1;
+-
+ static void
+ set_table_entry(struct ctl_table *entry,
+ 		const char *procname, void *data, int maxlen,
+-		umode_t mode, proc_handler *proc_handler,
+-		bool load_idx)
++		umode_t mode, proc_handler *proc_handler)
+ {
+ 	entry->procname = procname;
+ 	entry->data = data;
+ 	entry->maxlen = maxlen;
+ 	entry->mode = mode;
+ 	entry->proc_handler = proc_handler;
+-
+-	if (load_idx) {
+-		entry->extra1 = &min_load_idx;
+-		entry->extra2 = &max_load_idx;
+-	}
+ }
+ 
+ static struct ctl_table *
+@@ -265,19 +256,19 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ 	if (table == NULL)
+ 		return NULL;
+ 
+-	set_table_entry(&table[0] , "min_interval",	   &sd->min_interval,	     sizeof(long), 0644, proc_doulongvec_minmax, false);
+-	set_table_entry(&table[1] , "max_interval",	   &sd->max_interval,	     sizeof(long), 0644, proc_doulongvec_minmax, false);
+-	set_table_entry(&table[2] , "busy_idx",		   &sd->busy_idx,	     sizeof(int) , 0644, proc_dointvec_minmax,   true );
+-	set_table_entry(&table[3] , "idle_idx",		   &sd->idle_idx,	     sizeof(int) , 0644, proc_dointvec_minmax,   true );
+-	set_table_entry(&table[4] , "newidle_idx",	   &sd->newidle_idx,	     sizeof(int) , 0644, proc_dointvec_minmax,   true );
+-	set_table_entry(&table[5] , "wake_idx",		   &sd->wake_idx,	     sizeof(int) , 0644, proc_dointvec_minmax,   true );
+-	set_table_entry(&table[6] , "forkexec_idx",	   &sd->forkexec_idx,	     sizeof(int) , 0644, proc_dointvec_minmax,   true );
+-	set_table_entry(&table[7] , "busy_factor",	   &sd->busy_factor,	     sizeof(int) , 0644, proc_dointvec_minmax,   false);
+-	set_table_entry(&table[8] , "imbalance_pct",	   &sd->imbalance_pct,	     sizeof(int) , 0644, proc_dointvec_minmax,   false);
+-	set_table_entry(&table[9] , "cache_nice_tries",	   &sd->cache_nice_tries,    sizeof(int) , 0644, proc_dointvec_minmax,   false);
+-	set_table_entry(&table[10], "flags",		   &sd->flags,		     sizeof(int) , 0644, proc_dointvec_minmax,   false);
+-	set_table_entry(&table[11], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax, false);
+-	set_table_entry(&table[12], "name",		   sd->name,		CORENAME_MAX_SIZE, 0444, proc_dostring,		 false);
++	set_table_entry(&table[0],  "min_interval",	   &sd->min_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[1],  "max_interval",	   &sd->max_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[2],  "busy_idx",		   &sd->busy_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[3],  "idle_idx",		   &sd->idle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[4],  "newidle_idx",	   &sd->newidle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[5],  "wake_idx",		   &sd->wake_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[6],  "forkexec_idx",	   &sd->forkexec_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[7],  "busy_factor",	   &sd->busy_factor,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[8],  "imbalance_pct",	   &sd->imbalance_pct,	     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[9],  "cache_nice_tries",	   &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[10], "flags",		   &sd->flags,		     sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[11], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[12], "name",		   sd->name,		CORENAME_MAX_SIZE, 0444, proc_dostring);
+ 	/* &table[13] is terminator */
+ 
+ 	return table;
