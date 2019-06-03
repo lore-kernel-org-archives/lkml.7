@@ -3,161 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FA8C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A600D25D50
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795DE26329
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfFCXpy convert rfc822-to-8bit (ORCPT
+        id S1726369AbfFCXsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:45:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3668 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfFCXpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:45:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 16:45:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,548,1549958400"; 
-   d="scan'208";a="181334111"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 16:45:51 -0700
-Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 3 Jun 2019 16:45:46 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX123.amr.corp.intel.com ([169.254.1.141]) with mapi id 14.03.0415.000;
- Mon, 3 Jun 2019 16:45:46 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
- in single ioctl()
-Thread-Topic: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
- in single ioctl()
-Thread-Index: AQHVGAki7TYpY4ZsUk+m4jTej+khLaaJYAJQgAF1XwCAAAjgAP//veIw
-Date:   Mon, 3 Jun 2019 23:45:45 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654ED478@ORSMSX116.amr.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-4-sean.j.christopherson@intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F654ECBBD@ORSMSX116.amr.corp.intel.com>
- <20190603200804.GG13384@linux.intel.com>
- <20190603203950.GJ13384@linux.intel.com>
-In-Reply-To: <20190603203950.GJ13384@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTEzYzAxMTAtYzhkNC00MDZhLWFmMjEtMzY1OTQ4YzBhMWRiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibkE2Rm5qdWZyak14eVpBbHk3QUlrYlQreE4wWFVSNE9GclBmWU5zcjhiYlQ5dEVxelJyam9VdDZYalVMMjlpRSJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 3 Jun 2019 19:48:25 -0400
+Received: from www62.your-server.de ([213.133.104.62]:46692 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfFCXsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:48:25 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hXwgf-00010o-Eh; Tue, 04 Jun 2019 01:48:21 +0200
+Received: from [178.197.249.21] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hXwgf-000Lnk-48; Tue, 04 Jun 2019 01:48:21 +0200
+Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matt Mullins <mmullins@fb.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Andrew Hall <hall@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+References: <20190531223735.4998-1-mmullins@fb.com>
+ <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
+ <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net>
+ <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
+ <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
+Date:   Tue, 4 Jun 2019 01:48:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
+In-Reply-To: <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Christopherson, Sean J
-> Sent: Monday, June 03, 2019 1:40 PM
+On 06/04/2019 01:27 AM, Alexei Starovoitov wrote:
+> On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
+>>
+>> If these are invariably non-nested, I can easily keep bpf_misc_sd when
+>> I resubmit.  There was no technical reason other than keeping the two
+>> codepaths as similar as possible.
+>>
+>> What resource gives you worry about doing this for the networking
+>> codepath?
 > 
-> On Mon, Jun 03, 2019 at 01:08:04PM -0700, Sean Christopherson wrote:
-> > On Sun, Jun 02, 2019 at 11:26:09PM -0700, Xing, Cedric wrote:
-> > > > From: Christopherson, Sean J
-> > > > Sent: Friday, May 31, 2019 4:32 PM
-> > > >
-> > > > +/**
-> > > > + * sgx_ioc_enclave_add_pages - handler for
-> > > > +%SGX_IOC_ENCLAVE_ADD_PAGES
-> > > > + *
-> > > > + * @filep:	open file to /dev/sgx
-> > > > + * @cmd:	the command value
-> > > > + * @arg:	pointer to an &sgx_enclave_add_page instance
-> > > > + *
-> > > > + * Add a range of pages to an uninitialized enclave (EADD), and
-> > > > +optionally
-> > > > + * extend the enclave's measurement with the contents of the page
-> (EEXTEND).
-> > > > + * The range of pages must be virtually contiguous.  The SECINFO
-> > > > +and
-> > > > + * measurement maskare applied to all pages, i.e. pages with
-> > > > +different
-> > > > + * properties must be added in separate calls.
-> > > > + *
-> > > > + * EADD and EEXTEND are done asynchronously via worker threads.
-> > > > +A successful
-> > > > + * sgx_ioc_enclave_add_page() only indicates the pages have been
-> > > > +added to the
-> > > > + * work queue, it does not guarantee adding the pages to the
-> > > > +enclave will
-> > > > + * succeed.
-> > > > + *
-> > > > + * Return:
-> > > > + *   0 on success,
-> > > > + *   -errno otherwise
-> > > > + */
-> > > > +static long sgx_ioc_enclave_add_pages(struct file *filep,
-> unsigned int cmd,
-> > > > +				      unsigned long arg)
-> > > > +{
-> > > > +	struct sgx_enclave_add_pages *addp = (void *)arg;
-> > > > +	struct sgx_encl *encl = filep->private_data;
-> > > > +	struct sgx_secinfo secinfo;
-> > > > +	unsigned int i;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (copy_from_user(&secinfo, (void __user *)addp->secinfo,
-> > > > +			   sizeof(secinfo)))
-> > > > +		return -EFAULT;
-> > > > +
-> > > > +	for (i = 0, ret = 0; i < addp->nr_pages && !ret; i++) {
-> > > > +		if (signal_pending(current))
-> > > > +			return -ERESTARTSYS;
-> > >
-> > > If interrupted, how would user mode code know how many pages have
-> been EADD'ed?
-> >
-> > Hmm, updating nr_pages would be fairly simple and shouldn't confuse
-> > userspace, e.g. as opposed to overloading the return value.
+> my preference would be to keep tracing and networking the same.
+> there is already minimal nesting in networking and probably we see
+> more when reuseport progs will start running from xdp and clsbpf
 > 
-> Or maybe update @addr and @src as well?  That would allow userspace to
-> re-invoke the ioctl() without having to modify the struct.
+>>> Aside from that it's also really bad to miss events like this as exporting
+>>> through rb is critical. Why can't you have a per-CPU counter that selects a
+>>> sample data context based on nesting level in tracing? (I don't see a discussion
+>>> of this in your commit message.)
+>>
+>> This change would only drop messages if the same perf_event is
+>> attempted to be used recursively (i.e. the same CPU on the same
+>> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
+>> BPF_F_CURRENT_CPU in testing).
+>>
+>> I'll try to accomplish the same with a percpu nesting level and
+>> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
+>> same problem -- a local patch keeping track of the nesting level is how
+>> I got the above stack trace, too.
+> 
+> I don't think counter approach works. The amount of nesting is unknown.
+> imo the approach taken in this patch is good.
+> I don't see any issue when event_outputs will be dropped for valid progs.
+> Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
+> But that's an error anyway.
 
-How about returning the number of pages (or bytes) EADD'ed, similar to write() syscall? 
+My main worry with this xchg() trick is that we'll miss to export crucial
+data with the EBUSY bailing out especially given nesting could increase in
+future as you state, so users might have a hard time debugging this kind of
+issue if they share the same perf event map among these programs, and no
+option to get to this data otherwise. Supporting nesting up to a certain
+level would still be better than a lost event which is also not reported
+through the usual way aka perf rb.
