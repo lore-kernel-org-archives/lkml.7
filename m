@@ -2,464 +2,432 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948DEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02E2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C84E206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7068227FA7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iEYUldxO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qzFQ9aAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfFCNCW (ORCPT
+        id S1728040AbfFCNCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:02:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47619 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfFCNCV (ORCPT
+        Mon, 3 Jun 2019 09:02:40 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43965 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfFCNCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:02:21 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53D22mu602037
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:02:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53D22mu602037
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559566923;
-        bh=1yxrG+MTFWj3X5ypgdDdIvx24h1C9nVN55UCZyf4D9s=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=iEYUldxObyoHP9oJvww2BRZpBXeJeaKyYVF+Qwxf50jm8EvAliQTr3uoQ76fNKygG
-         9jh1Tu6LHaa7TNYOxWlbsrIhYaSdoInbKfoeJqXoUHoYYZGl2r6+ArLoa0mYfZHf+e
-         t9smjJd8rC+d0Nm6bFudQM7m5AGzC+TPhrH5O31A5sZr3S5H3ssNFCek0/i2jdcIyB
-         EZOnPawFw3ithRtTOudtqD8FuB4+bg1qpjteFEfx4lNiKONmm1Tk7IgfUaB1dzxCP5
-         t4J9kXJmBNtG1NnpcIKV5IhQYTwTOScLlCr2nz0hX/fzV1G4oeCNqkeYTI6mWfaM7j
-         JL6dAlqxxa/sQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D223D602034;
-        Mon, 3 Jun 2019 06:02:02 -0700
-Date:   Mon, 3 Jun 2019 06:02:02 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
-Message-ID: <tip-5e83eafbfd3b351537c0d74467fc43e8a88f4ae4@git.kernel.org>
-Cc:     fweisbec@gmail.com, mingo@kernel.org, patrick.bellasi@arm.com,
-        hpa@zytor.com, torvalds@linux-foundation.org,
-        vincent.guittot@linaro.org, valentin.schneider@arm.com,
-        tglx@linutronix.de, morten.rasmussen@arm.com, peterz@infradead.org,
-        dietmar.eggemann@arm.com, quentin.perret@arm.com,
-        linux-kernel@vger.kernel.org, riel@surriel.com
-Reply-To: dietmar.eggemann@arm.com, peterz@infradead.org,
-          morten.rasmussen@arm.com, tglx@linutronix.de, riel@surriel.com,
-          linux-kernel@vger.kernel.org, quentin.perret@arm.com,
-          hpa@zytor.com, patrick.bellasi@arm.com, mingo@kernel.org,
-          fweisbec@gmail.com, vincent.guittot@linaro.org,
-          valentin.schneider@arm.com, torvalds@linux-foundation.org
-In-Reply-To: <20190527062116.11512-2-dietmar.eggemann@arm.com>
-References: <20190527062116.11512-2-dietmar.eggemann@arm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Remove the rq->cpu_load[] update code
-Git-Commit-ID: 5e83eafbfd3b351537c0d74467fc43e8a88f4ae4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:02:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r18so2967689wrm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=t3jRkmMvvYUcX38p0+CSbqABbIMO7QDuY4PJUMhyIbw=;
+        b=qzFQ9aArsHHHBZ/mbraHZgLRH5x2McZK08kpYO8261hOGCRXxavE+Za4/jmUl6CW68
+         mJ5+RW1zfpkt1QtAyDEeIyM8jjyUDNXKS03IG1SrLVdN/rSj1NFFQFtaYGw1rS7wutd1
+         GBBOj3TQ3pI8JcJbr1yvOl/Y8AMyB/H7pE4GEP042iwkG4NCSEVZXVVS8Zd+8hXSEmVe
+         BlE2X5nvJvBI0iq+OoZ7bZIVdzHDwhbEhUYL3sDgQgGApVXFt9Eux4ue4VlbPXTm05gY
+         fsLrsxgz7erUM/rJRj0YmvlsL7WXFEd/d2GClyRk6jsErMyLNCovQbXLSgGwNvBSA8lG
+         bO4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=t3jRkmMvvYUcX38p0+CSbqABbIMO7QDuY4PJUMhyIbw=;
+        b=NZNl1s54eYsU5cP29Fou2lD+8bJHzDwfsbd7Yh8/bUAa/dbFU/tAFIuTa/ZQh7Qbyi
+         /43ZcMsBClnFNuTFS9RP3Vfq6cx77RDOpZgg15VEUssC+7vPxQT9VI0jmwuMrUAv+q+7
+         Dlfq4NaoAejRufr8vr4RzYC/ByGONDhrCvzJJpseIjnM3TIW2ordz+Tx0gYs61gJ2QXn
+         8ho94Ko51PZG4idEp4MrUQUnaRpC1Pn4zVfpqWE0HMxbLnsp5WdCQou0ggnDSOok4tDN
+         Ljyl60/PFpksHCsNEAG38R3CqXf8gmf8KBIerdsJtUGe7/lSiSN06sKhi8uwr6MhvVR0
+         CdWQ==
+X-Gm-Message-State: APjAAAVePyOUs54Zygss1o8owEvircpj2xNxM/m5G8Wlrcx6buYnOg/D
+        xoOu5TBcP2ROVvTZgixUbHSl4g==
+X-Google-Smtp-Source: APXvYqzmN6YtUszstuU6HNSExQmNkMFWRqO8a+47RdwCdbB5V3utY9lcpOVdCFjFH27PZnXzYPjm9A==
+X-Received: by 2002:adf:ee0e:: with SMTP id y14mr15441018wrn.275.1559566958095;
+        Mon, 03 Jun 2019 06:02:38 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id l8sm10485193wrw.56.2019.06.03.06.02.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 06:02:37 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 14:02:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        miquel.raynal@bootlin.com
+Subject: Re: [PATCH v13 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+Message-ID: <20190603130235.GW4797@dell>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
+ <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5e83eafbfd3b351537c0d74467fc43e8a88f4ae4
-Gitweb:     https://git.kernel.org/tip/5e83eafbfd3b351537c0d74467fc43e8a88f4ae4
-Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-AuthorDate: Mon, 27 May 2019 07:21:10 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:49:38 +0200
+On Tue, 21 May 2019, Mason Yang wrote:
 
-sched/fair: Remove the rq->cpu_load[] update code
+> Add a driver for Renesas R-Car Gen3 RPC-IF MFD
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/mfd/Kconfig             |   9 +++
+>  drivers/mfd/Makefile            |   1 +
+>  drivers/mfd/renesas-rpc.c       | 125 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/renesas-rpc.h | 141 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 276 insertions(+)
+>  create mode 100644 drivers/mfd/renesas-rpc.c
+>  create mode 100644 include/linux/mfd/renesas-rpc.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 294d956..cdbde79 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1002,6 +1002,15 @@ config MFD_RDC321X
+>  	  southbridge which provides access to GPIOs and Watchdog using the
+>  	  southbridge PCI device configuration space.
+>  
+> +config MFD_RENESAS_RPC
+> +	tristate "Renesas R-Car Gen3 RPC-IF controller driver"
 
-With LB_BIAS disabled, there is no need to update the rq->cpu_load[idx]
-any more.
+Please expand these short-forms, either here or in the help.
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Patrick Bellasi <patrick.bellasi@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20190527062116.11512-2-dietmar.eggemann@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/sched/nohz.h |   8 --
- kernel/sched/core.c        |   1 -
- kernel/sched/fair.c        | 255 ---------------------------------------------
- kernel/sched/sched.h       |   6 --
- kernel/time/tick-sched.c   |   2 -
- 5 files changed, 272 deletions(-)
+> +	select MFD_CORE
+> +	depends on ARCH_RENESAS
+> +	help
+> +	  This supports Renesas R-Car Gen3 RPC-IF controller which provides
+> +	  either SPI host or HyperFlash.
+> +	  You have to select individual components under the corresponding menu.
+> +
+>  config MFD_RT5033
+>  	tristate "Richtek RT5033 Power Management IC"
+>  	depends on I2C
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 52b1a90..459eb2f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -184,6 +184,7 @@ obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
+>  obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
+>  obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
+>  obj-$(CONFIG_MFD_RDC321X)	+= rdc321x-southbridge.o
+> +obj-$(CONFIG_MFD_RENESAS_RPC)	+= renesas-rpc.o
+>  obj-$(CONFIG_MFD_JANZ_CMODIO)	+= janz-cmodio.o
+>  obj-$(CONFIG_MFD_JZ4740_ADC)	+= jz4740-adc.o
+>  obj-$(CONFIG_MFD_TPS6586X)	+= tps6586x.o
+> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
+> new file mode 100644
+> index 0000000..c80c8d1
+> --- /dev/null
+> +++ b/drivers/mfd/renesas-rpc.c
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
 
-diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
-index b36f4cf38111..1abe91ff6e4a 100644
---- a/include/linux/sched/nohz.h
-+++ b/include/linux/sched/nohz.h
-@@ -6,14 +6,6 @@
-  * This is the interface between the scheduler and nohz/dynticks:
-  */
- 
--#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
--extern void cpu_load_update_nohz_start(void);
--extern void cpu_load_update_nohz_stop(void);
--#else
--static inline void cpu_load_update_nohz_start(void) { }
--static inline void cpu_load_update_nohz_stop(void) { }
--#endif
--
- #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
- extern void nohz_balance_enter_idle(int cpu);
- extern int get_nohz_timer_target(void);
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 93ab85f0d076..00b8966802a8 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3033,7 +3033,6 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	curr->sched_class->task_tick(rq, curr, 0);
--	cpu_load_update_active(rq);
- 	calc_global_load_tick(rq);
- 	psi_task_tick(rq);
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08b1cb06f968..1aab323f1b4b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5322,71 +5322,6 @@ DEFINE_PER_CPU(cpumask_var_t, load_balance_mask);
- DEFINE_PER_CPU(cpumask_var_t, select_idle_mask);
- 
- #ifdef CONFIG_NO_HZ_COMMON
--/*
-- * per rq 'load' arrray crap; XXX kill this.
-- */
--
--/*
-- * The exact cpuload calculated at every tick would be:
-- *
-- *   load' = (1 - 1/2^i) * load + (1/2^i) * cur_load
-- *
-- * If a CPU misses updates for n ticks (as it was idle) and update gets
-- * called on the n+1-th tick when CPU may be busy, then we have:
-- *
-- *   load_n   = (1 - 1/2^i)^n * load_0
-- *   load_n+1 = (1 - 1/2^i)   * load_n + (1/2^i) * cur_load
-- *
-- * decay_load_missed() below does efficient calculation of
-- *
-- *   load' = (1 - 1/2^i)^n * load
-- *
-- * Because x^(n+m) := x^n * x^m we can decompose any x^n in power-of-2 factors.
-- * This allows us to precompute the above in said factors, thereby allowing the
-- * reduction of an arbitrary n in O(log_2 n) steps. (See also
-- * fixed_power_int())
-- *
-- * The calculation is approximated on a 128 point scale.
-- */
--#define DEGRADE_SHIFT		7
--
--static const u8 degrade_zero_ticks[CPU_LOAD_IDX_MAX] = {0, 8, 32, 64, 128};
--static const u8 degrade_factor[CPU_LOAD_IDX_MAX][DEGRADE_SHIFT + 1] = {
--	{   0,   0,  0,  0,  0,  0, 0, 0 },
--	{  64,  32,  8,  0,  0,  0, 0, 0 },
--	{  96,  72, 40, 12,  1,  0, 0, 0 },
--	{ 112,  98, 75, 43, 15,  1, 0, 0 },
--	{ 120, 112, 98, 76, 45, 16, 2, 0 }
--};
--
--/*
-- * Update cpu_load for any missed ticks, due to tickless idle. The backlog
-- * would be when CPU is idle and so we just decay the old load without
-- * adding any new load.
-- */
--static unsigned long
--decay_load_missed(unsigned long load, unsigned long missed_updates, int idx)
--{
--	int j = 0;
--
--	if (!missed_updates)
--		return load;
--
--	if (missed_updates >= degrade_zero_ticks[idx])
--		return 0;
--
--	if (idx == 1)
--		return load >> missed_updates;
--
--	while (missed_updates) {
--		if (missed_updates % 2)
--			load = (load * degrade_factor[idx][j]) >> DEGRADE_SHIFT;
--
--		missed_updates >>= 1;
--		j++;
--	}
--	return load;
--}
- 
- static struct {
- 	cpumask_var_t idle_cpus_mask;
-@@ -5398,201 +5333,12 @@ static struct {
- 
- #endif /* CONFIG_NO_HZ_COMMON */
- 
--/**
-- * __cpu_load_update - update the rq->cpu_load[] statistics
-- * @this_rq: The rq to update statistics for
-- * @this_load: The current load
-- * @pending_updates: The number of missed updates
-- *
-- * Update rq->cpu_load[] statistics. This function is usually called every
-- * scheduler tick (TICK_NSEC).
-- *
-- * This function computes a decaying average:
-- *
-- *   load[i]' = (1 - 1/2^i) * load[i] + (1/2^i) * load
-- *
-- * Because of NOHZ it might not get called on every tick which gives need for
-- * the @pending_updates argument.
-- *
-- *   load[i]_n = (1 - 1/2^i) * load[i]_n-1 + (1/2^i) * load_n-1
-- *             = A * load[i]_n-1 + B ; A := (1 - 1/2^i), B := (1/2^i) * load
-- *             = A * (A * load[i]_n-2 + B) + B
-- *             = A * (A * (A * load[i]_n-3 + B) + B) + B
-- *             = A^3 * load[i]_n-3 + (A^2 + A + 1) * B
-- *             = A^n * load[i]_0 + (A^(n-1) + A^(n-2) + ... + 1) * B
-- *             = A^n * load[i]_0 + ((1 - A^n) / (1 - A)) * B
-- *             = (1 - 1/2^i)^n * (load[i]_0 - load) + load
-- *
-- * In the above we've assumed load_n := load, which is true for NOHZ_FULL as
-- * any change in load would have resulted in the tick being turned back on.
-- *
-- * For regular NOHZ, this reduces to:
-- *
-- *   load[i]_n = (1 - 1/2^i)^n * load[i]_0
-- *
-- * see decay_load_misses(). For NOHZ_FULL we get to subtract and add the extra
-- * term.
-- */
--static void cpu_load_update(struct rq *this_rq, unsigned long this_load,
--			    unsigned long pending_updates)
--{
--	unsigned long __maybe_unused tickless_load = this_rq->cpu_load[0];
--	int i, scale;
--
--	this_rq->nr_load_updates++;
--
--	/* Update our load: */
--	this_rq->cpu_load[0] = this_load; /* Fasttrack for idx 0 */
--	for (i = 1, scale = 2; i < CPU_LOAD_IDX_MAX; i++, scale += scale) {
--		unsigned long old_load, new_load;
--
--		/* scale is effectively 1 << i now, and >> i divides by scale */
--
--		old_load = this_rq->cpu_load[i];
--#ifdef CONFIG_NO_HZ_COMMON
--		old_load = decay_load_missed(old_load, pending_updates - 1, i);
--		if (tickless_load) {
--			old_load -= decay_load_missed(tickless_load, pending_updates - 1, i);
--			/*
--			 * old_load can never be a negative value because a
--			 * decayed tickless_load cannot be greater than the
--			 * original tickless_load.
--			 */
--			old_load += tickless_load;
--		}
--#endif
--		new_load = this_load;
--		/*
--		 * Round up the averaging division if load is increasing. This
--		 * prevents us from getting stuck on 9 if the load is 10, for
--		 * example.
--		 */
--		if (new_load > old_load)
--			new_load += scale - 1;
--
--		this_rq->cpu_load[i] = (old_load * (scale - 1) + new_load) >> i;
--	}
--}
--
- /* Used instead of source_load when we know the type == 0 */
- static unsigned long weighted_cpuload(struct rq *rq)
- {
- 	return cfs_rq_runnable_load_avg(&rq->cfs);
- }
- 
--#ifdef CONFIG_NO_HZ_COMMON
--/*
-- * There is no sane way to deal with nohz on smp when using jiffies because the
-- * CPU doing the jiffies update might drift wrt the CPU doing the jiffy reading
-- * causing off-by-one errors in observed deltas; {0,2} instead of {1,1}.
-- *
-- * Therefore we need to avoid the delta approach from the regular tick when
-- * possible since that would seriously skew the load calculation. This is why we
-- * use cpu_load_update_periodic() for CPUs out of nohz. However we'll rely on
-- * jiffies deltas for updates happening while in nohz mode (idle ticks, idle
-- * loop exit, nohz_idle_balance, nohz full exit...)
-- *
-- * This means we might still be one tick off for nohz periods.
-- */
--
--static void cpu_load_update_nohz(struct rq *this_rq,
--				 unsigned long curr_jiffies,
--				 unsigned long load)
--{
--	unsigned long pending_updates;
--
--	pending_updates = curr_jiffies - this_rq->last_load_update_tick;
--	if (pending_updates) {
--		this_rq->last_load_update_tick = curr_jiffies;
--		/*
--		 * In the regular NOHZ case, we were idle, this means load 0.
--		 * In the NOHZ_FULL case, we were non-idle, we should consider
--		 * its weighted load.
--		 */
--		cpu_load_update(this_rq, load, pending_updates);
--	}
--}
--
--/*
-- * Called from nohz_idle_balance() to update the load ratings before doing the
-- * idle balance.
-- */
--static void cpu_load_update_idle(struct rq *this_rq)
--{
--	/*
--	 * bail if there's load or we're actually up-to-date.
--	 */
--	if (weighted_cpuload(this_rq))
--		return;
--
--	cpu_load_update_nohz(this_rq, READ_ONCE(jiffies), 0);
--}
--
--/*
-- * Record CPU load on nohz entry so we know the tickless load to account
-- * on nohz exit. cpu_load[0] happens then to be updated more frequently
-- * than other cpu_load[idx] but it should be fine as cpu_load readers
-- * shouldn't rely into synchronized cpu_load[*] updates.
-- */
--void cpu_load_update_nohz_start(void)
--{
--	struct rq *this_rq = this_rq();
--
--	/*
--	 * This is all lockless but should be fine. If weighted_cpuload changes
--	 * concurrently we'll exit nohz. And cpu_load write can race with
--	 * cpu_load_update_idle() but both updater would be writing the same.
--	 */
--	this_rq->cpu_load[0] = weighted_cpuload(this_rq);
--}
--
--/*
-- * Account the tickless load in the end of a nohz frame.
-- */
--void cpu_load_update_nohz_stop(void)
--{
--	unsigned long curr_jiffies = READ_ONCE(jiffies);
--	struct rq *this_rq = this_rq();
--	unsigned long load;
--	struct rq_flags rf;
--
--	if (curr_jiffies == this_rq->last_load_update_tick)
--		return;
--
--	load = weighted_cpuload(this_rq);
--	rq_lock(this_rq, &rf);
--	update_rq_clock(this_rq);
--	cpu_load_update_nohz(this_rq, curr_jiffies, load);
--	rq_unlock(this_rq, &rf);
--}
--#else /* !CONFIG_NO_HZ_COMMON */
--static inline void cpu_load_update_nohz(struct rq *this_rq,
--					unsigned long curr_jiffies,
--					unsigned long load) { }
--#endif /* CONFIG_NO_HZ_COMMON */
--
--static void cpu_load_update_periodic(struct rq *this_rq, unsigned long load)
--{
--#ifdef CONFIG_NO_HZ_COMMON
--	/* See the mess around cpu_load_update_nohz(). */
--	this_rq->last_load_update_tick = READ_ONCE(jiffies);
--#endif
--	cpu_load_update(this_rq, load, 1);
--}
--
--/*
-- * Called from scheduler_tick()
-- */
--void cpu_load_update_active(struct rq *this_rq)
--{
--	unsigned long load = weighted_cpuload(this_rq);
--
--	if (tick_nohz_tick_stopped())
--		cpu_load_update_nohz(this_rq, READ_ONCE(jiffies), load);
--	else
--		cpu_load_update_periodic(this_rq, load);
--}
--
- /*
-  * Return a low guess at the load of a migration-source CPU weighted
-  * according to the scheduling class and "nice" value.
-@@ -9876,7 +9622,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 
- 			rq_lock_irqsave(rq, &rf);
- 			update_rq_clock(rq);
--			cpu_load_update_idle(rq);
- 			rq_unlock_irqrestore(rq, &rf);
- 
- 			if (flags & NOHZ_BALANCE_KICK)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c308410675ed..3750b5e53792 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -96,12 +96,6 @@ extern atomic_long_t calc_load_tasks;
- extern void calc_global_load_tick(struct rq *this_rq);
- extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- 
--#ifdef CONFIG_SMP
--extern void cpu_load_update_active(struct rq *this_rq);
--#else
--static inline void cpu_load_update_active(struct rq *this_rq) { }
--#endif
--
- /*
-  * Helpers for converting nanosecond timing to jiffy resolution
-  */
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index f4ee1a3428ae..be9707f68024 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -782,7 +782,6 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	 */
- 	if (!ts->tick_stopped) {
- 		calc_load_nohz_start();
--		cpu_load_update_nohz_start();
- 		quiet_vmstat();
- 
- 		ts->last_tick = hrtimer_get_expires(&ts->sched_timer);
-@@ -829,7 +828,6 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
- {
- 	/* Update jiffies first */
- 	tick_do_update_jiffies64(now);
--	cpu_load_update_nohz_stop();
- 
- 	/*
- 	 * Clear the timer idle flag, so we avoid IPIs on remote queueing and
+Expand this.
+
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+
+Why do you have blank commented line here?
+
+By the way, is C++ style throughout the new format?
+
+> +#include <linux/clk.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/renesas-rpc.h>
+> +#include <linux/reset.h>
+
+Alphabetical.
+
+> +static const struct mfd_cell rpc_hf_ctlr = {
+> +	.name = "rpc-hf",
+> +};
+> +
+> +static const struct mfd_cell rpc_spi_ctlr = {
+> +	.name = "rpc-spi",
+> +};
+> +
+> +static const struct regmap_range rpc_mfd_volatile_ranges[] = {
+> +	regmap_reg_range(RPC_SMRDR0, RPC_SMRDR1),
+> +	regmap_reg_range(RPC_SMWDR0, RPC_SMWDR1),
+> +	regmap_reg_range(RPC_CMNSR, RPC_CMNSR),
+> +};
+> +
+> +static const struct regmap_access_table rpc_mfd_volatile_table = {
+> +	.yes_ranges	= rpc_mfd_volatile_ranges,
+> +	.n_yes_ranges	= ARRAY_SIZE(rpc_mfd_volatile_ranges),
+> +};
+> +
+> +static const struct regmap_config rpc_mfd_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.fast_io = true,
+> +	.max_register = RPC_PHYOFFSET2,
+> +	.volatile_table = &rpc_mfd_volatile_table,
+> +};
+> +
+> +static int rpc_mfd_probe(struct platform_device *pdev)
+
+Remove the "mfd" from the nomenclature.
+
+> +	struct device_node *flash;
+> +	const struct mfd_cell *cell;
+> +	struct resource *res;
+> +	struct rpc_mfd *rpc;
+> +	void __iomem *base;
+> +
+> +	flash = of_get_next_child(pdev->dev.of_node, NULL);
+> +	if (!flash) {
+> +		dev_warn(&pdev->dev, "no flash node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (of_device_is_compatible(flash, "jedec,spi-nor")) {
+> +		cell = &rpc_spi_ctlr;
+> +	} else if (of_device_is_compatible(flash, "cfi-flash")) {
+> +		cell = &rpc_hf_ctlr;
+> +	} else {
+> +		dev_warn(&pdev->dev, "unknown flash type\n");
+> +		return -ENODEV;
+> +	}
+
+Are there going to be more children coming?
+
+If not, I'd argue that this is not an MFD.
+
+> +	rpc = devm_kzalloc(&pdev->dev, sizeof(*rpc), GFP_KERNEL);
+> +	if (!rpc)
+> +		return -ENOMEM;
+> +
+> +	rpc->clk_rpc = devm_clk_get(&pdev->dev, "rpc");
+> +	if (IS_ERR(rpc->clk_rpc))
+> +		return PTR_ERR(rpc->clk_rpc);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	rpc->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+> +					    &rpc_mfd_regmap_config);
+> +	if (IS_ERR(rpc->regmap)) {
+> +		dev_err(&pdev->dev,
+> +			"failed to init regmap for rpc-mfd, error %ld\n",
+> +			PTR_ERR(rpc->regmap));
+> +		return PTR_ERR(rpc->regmap);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirmap");
+> +	rpc->dirmap = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(rpc->dirmap))
+> +		rpc->dirmap = NULL;
+> +
+> +	rpc->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	if (IS_ERR(rpc->rstc))
+> +		return PTR_ERR(rpc->rstc);
+> +
+> +	platform_set_drvdata(pdev, rpc);
+> +
+> +	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
+> +}
+> +
+> +static const struct of_device_id rpc_mfd_of_match[] = {
+> +	{ .compatible = "renesas,rcar-gen3-rpc", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, rpc_mfd_of_match);
+> +
+> +static struct platform_driver rpc_mfd_driver = {
+> +	.probe = rpc_mfd_probe,
+> +	.driver = {
+> +		.name =	"rpc-mfd",
+> +		.of_match_table = rpc_mfd_of_match,
+> +	},
+> +};
+> +module_platform_driver(rpc_mfd_driver);
+> +
+> +MODULE_AUTHOR("Mason Yang <masonccyang@mxic.com.tw>");
+> +MODULE_DESCRIPTION("Renesas R-Car Gen3 RPC MFD driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
+> new file mode 100644
+> index 0000000..bc53d02
+> --- /dev/null
+> +++ b/include/linux/mfd/renesas-rpc.h
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
+> +//
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+> +
+> +#ifndef __MFD_RENESAS_RPC_H
+> +#define __MFD_RENESAS_RPC_H
+> +
+> +#define RPC_CMNCR		0x0000	// R/W
+> +#define RPC_CMNCR_MD		BIT(31)
+> +#define RPC_CMNCR_SFDE		BIT(24) // undocumented bit but must be set
+> +#define RPC_CMNCR_MOIIO3(val)	(((val) & 0x3) << 22)
+> +#define RPC_CMNCR_MOIIO2(val)	(((val) & 0x3) << 20)
+> +#define RPC_CMNCR_MOIIO1(val)	(((val) & 0x3) << 18)
+> +#define RPC_CMNCR_MOIIO0(val)	(((val) & 0x3) << 16)
+> +#define RPC_CMNCR_MOIIO_HIZ	(RPC_CMNCR_MOIIO0(3) | RPC_CMNCR_MOIIO1(3) | \
+> +				 RPC_CMNCR_MOIIO2(3) | RPC_CMNCR_MOIIO3(3))
+> +#define RPC_CMNCR_IO3FV(val)	(((val) & 0x3) << 14) // undocumented
+> +#define RPC_CMNCR_IO2FV(val)	(((val) & 0x3) << 12) // undocumented
+> +#define RPC_CMNCR_IO0FV(val)	(((val) & 0x3) << 8)
+> +#define RPC_CMNCR_IOFV_HIZ	(RPC_CMNCR_IO0FV(3) | RPC_CMNCR_IO2FV(3) | \
+> +				 RPC_CMNCR_IO3FV(3))
+> +#define RPC_CMNCR_BSZ(val)	(((val) & 0x3) << 0)
+> +
+> +#define RPC_SSLDR		0x0004	// R/W
+> +#define RPC_SSLDR_SPNDL(d)	(((d) & 0x7) << 16)
+> +#define RPC_SSLDR_SLNDL(d)	(((d) & 0x7) << 8)
+> +#define RPC_SSLDR_SCKDL(d)	(((d) & 0x7) << 0)
+> +
+> +#define RPC_DRCR		0x000C	// R/W
+> +#define RPC_DRCR_SSLN		BIT(24)
+> +#define RPC_DRCR_RBURST(v)	((((v) - 1) & 0x1F) << 16)
+> +#define RPC_DRCR_RCF		BIT(9)
+> +#define RPC_DRCR_RBE		BIT(8)
+> +#define RPC_DRCR_SSLE		BIT(0)
+> +
+> +#define RPC_DRCMR		0x0010	// R/W
+> +#define RPC_DRCMR_CMD(c)	(((c) & 0xFF) << 16)
+> +#define RPC_DRCMR_OCMD(c)	(((c) & 0xFF) << 0)
+> +
+> +#define RPC_DREAR		0x0014	// R/W
+> +#define RPC_DREAR_EAV(c)	(((c) & 0xf) << 16)
+> +#define RPC_DREAR_EAC(c)	(((c) & 0x7) << 0)
+> +
+> +#define RPC_DROPR		0x0018	// R/W
+> +
+> +#define RPC_DRENR		0x001C	// R/W
+> +#define RPC_DRENR_CDB(o)	(u32)((((o) & 0x3) << 30))
+> +#define RPC_DRENR_OCDB(o)	(((o) & 0x3) << 28)
+> +#define RPC_DRENR_ADB(o)	(((o) & 0x3) << 24)
+> +#define RPC_DRENR_OPDB(o)	(((o) & 0x3) << 20)
+> +#define RPC_DRENR_DRDB(o)	(((o) & 0x3) << 16)
+> +#define RPC_DRENR_DME		BIT(15)
+> +#define RPC_DRENR_CDE		BIT(14)
+> +#define RPC_DRENR_OCDE		BIT(12)
+> +#define RPC_DRENR_ADE(v)	(((v) & 0xF) << 8)
+> +#define RPC_DRENR_OPDE(v)	(((v) & 0xF) << 4)
+> +
+> +#define RPC_SMCR		0x0020	// R/W
+> +#define RPC_SMCR_SSLKP		BIT(8)
+> +#define RPC_SMCR_SPIRE		BIT(2)
+> +#define RPC_SMCR_SPIWE		BIT(1)
+> +#define RPC_SMCR_SPIE		BIT(0)
+> +
+> +#define RPC_SMCMR		0x0024	// R/W
+> +#define RPC_SMCMR_CMD(c)	(((c) & 0xFF) << 16)
+> +#define RPC_SMCMR_OCMD(c)	(((c) & 0xFF) << 0)
+> +
+> +#define RPC_SMADR		0x0028	// R/W
+> +#define RPC_SMOPR		0x002C	// R/W
+> +#define RPC_SMOPR_OPD3(o)	(((o) & 0xFF) << 24)
+> +#define RPC_SMOPR_OPD2(o)	(((o) & 0xFF) << 16)
+> +#define RPC_SMOPR_OPD1(o)	(((o) & 0xFF) << 8)
+> +#define RPC_SMOPR_OPD0(o)	(((o) & 0xFF) << 0)
+> +
+> +#define RPC_SMENR		0x0030	// R/W
+> +#define RPC_SMENR_CDB(o)	(((o) & 0x3) << 30)
+> +#define RPC_SMENR_OCDB(o)	(((o) & 0x3) << 28)
+> +#define RPC_SMENR_ADB(o)	(((o) & 0x3) << 24)
+> +#define RPC_SMENR_OPDB(o)	(((o) & 0x3) << 20)
+> +#define RPC_SMENR_SPIDB(o)	(((o) & 0x3) << 16)
+> +#define RPC_SMENR_DME		BIT(15)
+> +#define RPC_SMENR_CDE		BIT(14)
+> +#define RPC_SMENR_OCDE		BIT(12)
+> +#define RPC_SMENR_ADE(v)	(((v) & 0xF) << 8)
+> +#define RPC_SMENR_OPDE(v)	(((v) & 0xF) << 4)
+> +#define RPC_SMENR_SPIDE(v)	(((v) & 0xF) << 0)
+> +
+> +#define RPC_SMRDR0		0x0038	// R
+> +#define RPC_SMRDR1		0x003C	// R
+> +#define RPC_SMWDR0		0x0040	// W
+> +#define RPC_SMWDR1		0x0044	// W
+> +
+> +#define RPC_CMNSR		0x0048	// R
+> +#define RPC_CMNSR_SSLF		BIT(1)
+> +#define RPC_CMNSR_TEND		BIT(0)
+> +
+> +#define RPC_DRDMCR		0x0058	// R/W
+> +#define RPC_DRDRENR		0x005C	// R/W
+> +
+> +#define RPC_SMDMCR		0x0060	// R/W
+> +#define RPC_SMDMCR_DMCYC(v)	((((v) - 1) & 0x1F) << 0)
+> +
+> +#define RPC_SMDRENR		0x0064	// R/W
+> +#define RPC_SMDRENR_HYPE	(0x7 << 12)
+> +#define RPC_SMDRENR_ADDRE	BIT(8)
+> +#define RPC_SMDRENR_OPDRE	BIT(4)
+> +#define RPC_SMDRENR_SPIDRE	BIT(0)
+> +
+> +#define RPC_PHYCNT		0x007C	// R/W
+> +#define RPC_PHYCNT_CAL		BIT(31)
+> +#define PRC_PHYCNT_OCTA_AA	BIT(22)
+> +#define PRC_PHYCNT_OCTA_SA	BIT(23)
+> +#define PRC_PHYCNT_EXDS		BIT(21)
+> +#define RPC_PHYCNT_OCT		BIT(20)
+> +#define RPC_PHYCNT_STRTIM(v)	(((v) & 0x7) << 15)
+> +#define RPC_PHYCNT_WBUF2	BIT(4)
+> +#define RPC_PHYCNT_WBUF		BIT(2)
+> +#define RPC_PHYCNT_PHYMEM(v)	(((v) & 0x3) << 0)
+> +
+> +#define RPC_PHYOFFSET1		0x0080	// R/W
+> +#define RPC_PHYOFFSET1_DDRTMG(v) (((v) & 0x3) << 28)
+> +#define RPC_PHYOFFSET2		0x0084	// R/W
+> +#define RPC_PHYOFFSET2_OCTTMG(v) (((v) & 0x7) << 8)
+> +
+> +#define RPC_DIRMAP_SIZE		0x4000000
+> +
+> +struct rpc_mfd {
+> +	struct clk *clk_rpc;
+> +	void __iomem *dirmap;
+> +	struct regmap *regmap;
+> +	struct reset_control *rstc;
+> +};
+> +
+> +#endif // __MFD_RENESAS_RPC_H
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
