@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB9EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667DFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1D227930
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46733217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfFCPwV (ORCPT
+        id S1729613AbfFCPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:21 -0400
-Received: from foss.arm.com ([217.140.101.70]:54082 "EHLO foss.arm.com"
+        Mon, 3 Jun 2019 11:52:23 -0400
+Received: from foss.arm.com ([217.140.101.70]:54098 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbfFCPwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:52:19 -0400
+        id S1729600AbfFCPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3ACF15AB;
-        Mon,  3 Jun 2019 08:52:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D68A1AED;
+        Mon,  3 Jun 2019 08:52:21 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 877233F246;
-        Mon,  3 Jun 2019 08:52:17 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 623E43F246;
+        Mon,  3 Jun 2019 08:52:20 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [RFC PATCH 52/57] drivers: tegra: Use driver_find_device_by_of_node() helper
-Date:   Mon,  3 Jun 2019 16:50:18 +0100
-Message-Id: <1559577023-558-53-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [RFC PATCH 54/57] drivers: pci: Use bus_find_next_device() helper
+Date:   Mon,  3 Jun 2019 16:50:20 +0100
+Message-Id: <1559577023-558-55-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -41,43 +40,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to using the new helper driver_find_device_by_of_node().
+Reuse the generic helper to find the next device on bus.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/amba/tegra-ahb.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/pci/probe.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-index 42175a6..5ce0f66 100644
---- a/drivers/amba/tegra-ahb.c
-+++ b/drivers/amba/tegra-ahb.c
-@@ -143,22 +143,13 @@ static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index f9ef7ad..3504695 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -64,11 +64,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
+ 	return &r->res;
  }
  
- #ifdef CONFIG_TEGRA_IOMMU_SMMU
--static int tegra_ahb_match_by_smmu(struct device *dev, const void *data)
+-static int find_anything(struct device *dev, const void *data)
 -{
--	struct tegra_ahb *ahb = dev_get_drvdata(dev);
--	const struct device_node *dn = data;
--
--	return (ahb->dev->of_node == dn) ? 1 : 0;
+-	return 1;
 -}
 -
- int tegra_ahb_enable_smmu(struct device_node *dn)
- {
+ /*
+  * Some device drivers need know if PCI is initiated.
+  * Basically, we think PCI is not initiated when there
+@@ -79,7 +74,7 @@ int no_pci_devices(void)
  	struct device *dev;
- 	u32 val;
- 	struct tegra_ahb *ahb;
+ 	int no_devices;
  
--	dev = driver_find_device(&tegra_ahb_driver.driver, NULL, dn,
--				 tegra_ahb_match_by_smmu);
-+	dev = driver_find_device_by_of_node(&tegra_ahb_driver.driver, NULL, dn);
- 	if (!dev)
- 		return -EPROBE_DEFER;
- 	ahb = dev_get_drvdata(dev);
+-	dev = bus_find_device(&pci_bus_type, NULL, NULL, find_anything);
++	dev = bus_find_next_device(&pci_bus_type, NULL);
+ 	no_devices = (dev == NULL);
+ 	put_device(dev);
+ 	return no_devices;
 -- 
 2.7.4
 
