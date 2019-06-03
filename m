@@ -7,97 +7,452 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E51C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A20C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7182F27CDA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276F827CDA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enpEKMCr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="llOF4BIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfFCHfG (ORCPT
+        id S1726803AbfFCHfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:35:06 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43788 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFCHfG (ORCPT
+        Mon, 3 Jun 2019 03:35:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45366 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfFCHfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:35:06 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so1532124plb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 00:35:06 -0700 (PDT)
+        Mon, 3 Jun 2019 03:35:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w34so7754286pga.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 00:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WeJByq3I424RHBGjH32sFcsG6B+iqGeZ0ID7b3v4bBs=;
-        b=enpEKMCrOjQNrqE7jiuWbbNkwP0ud8MaKH14i8OrVQdQkjM6brJwG40pVUfM0RwkKL
-         68yUG4qsPrqXI0ArlfjwfzSjkInEtjsdwuEpLzFD7D0MCnIrzjmPf6dgC3zWZaaJmwPv
-         h/NbUExPFELpfROE1t7Dotty0yv+AcU7ZYMTzb1s8XITgy/13vWxGI9wDHzD4BiD81J+
-         simnyIg13cGrzldq0M4tWWC9TyQwrqIW8+pGo127SxZaAGaMY8gdHl5BwNe3RjYRv/bK
-         kyBXyTjAOFMxQSFlNPo5i8qODbxsOZHG7GrrqsU0LqvYW1hldrqVhIW/rE67QlIL5yI9
-         V+Fw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3QNw8nhaZHDfKLrM0rv9vo2EpHsekryGUP7JjhXswAQ=;
+        b=llOF4BIuNJVs6GZM6jHa50wWVhu2+prvVN55nttzggTtirL9mkyR79tSCkK0F1r2JC
+         zTuErus7hyjRG/rhqILe2Xgapbe45GSvYw36o1+Bk7MQptFO97IcXFmuIAxBLLF7rZJv
+         OorL9OtrLD/UcBR/42PN6cJ7ChB8WwtQ5UY+nSXRWVvLVHQAPXFAxieSMt8b+ViBBob6
+         6WQO3f/aqEFVMlZKOqOmSap/GEEN6oCP3O3cM3ZBCboORm+tflyIyBXIzH3Oof0Cbk2i
+         haxhSAZJg4ygfOxrLLWdestnBCgIgc2ER0RtvDUrHaiYcnZIC1uohCDUZwplqlXAg+hW
+         3Txw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WeJByq3I424RHBGjH32sFcsG6B+iqGeZ0ID7b3v4bBs=;
-        b=pXVOiGGKgcx6TTj4We49PozxlhmFXGUDA7gkrbtndfkdxedtYgatJIfmbxC3asO62w
-         gEmbOkxaBxBQrNb6oYV9KFNeGmVeLV9dA4J8TIm1ol/yPi9PVYxnBVTVNmOKPbfeBFAe
-         UR+AZu5BrSmADYZGysyVRpwY5Dsbaq4vApznpXzcQ4+Nl4Pl62SqYkbbUY66/H09R2cu
-         nEyYaMYtcwh48+7E9dX2lzeFUtwG917QttafhwveNwN1Zpb/ZzDfDp7pLzQ3deDidBhZ
-         TnTqdP+eTMGrS8ST1GvMe7YCQLL4RWfv7b24Zr7cy49rrrw8KWgkHDdNKPO2ZYoRVZtH
-         7mGg==
-X-Gm-Message-State: APjAAAUNe0UBsTz0fSW0rHaGgIKdpxWQSLMCCVn3jDooGAg3Qw6yzmsl
-        U5UPclqgb0Ojzul2IkcWDXvX
-X-Google-Smtp-Source: APXvYqyxseq8SM9ECcOqRnX6oty4StRUPv4eRvJ1hr3jIJdHE4lBzanEiyCyn5lhDdUKP5FuE34oGA==
-X-Received: by 2002:a17:902:b084:: with SMTP id p4mr29165367plr.59.1559547305839;
-        Mon, 03 Jun 2019 00:35:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3QNw8nhaZHDfKLrM0rv9vo2EpHsekryGUP7JjhXswAQ=;
+        b=N7at9XNKbaxrsNrg/WU3vKMwHLAKMfa2c5qipE+Nox2y6z5v/7T5cPtnPeS8u+6VRV
+         +ZW72FH2dF0l0WiN2uhYCumLpk2vJ4JzU59udDVoOxnaYPySlaB8ryb6OKRyn6blV2bF
+         U17PLPr6xOPoLoiquJ7qLmBGQR0XFt4u/5B8y81RKoHJWVciPWRV+sxxqfUeMrAH/bJR
+         q1GWm+8SvGd9YOn4eT65g8dbWJsFoMFDsJTASsyzmBmWXcXKcYDP9efzdYuy0s/4MaOS
+         cmThY2So4MGfrSkCSPoPM8AVsT4rIbiwiBpn3B/uyN3B/tDhqnEzKeOH/53C4Gx5/bGu
+         Klgg==
+X-Gm-Message-State: APjAAAXOyRrbvTxfjL2lX719l4pawHN+qUgbLG0P2aSwf7m1n+4asd6X
+        2Mhldu1XP+RF7pFO6cEgoVTv
+X-Google-Smtp-Source: APXvYqzT4SOCES3EtOazssZ500M5Rx6RROevM/d2u42V7d6omrpIcPcrQfFsubZVlEu28rAD7ApHbw==
+X-Received: by 2002:a62:764d:: with SMTP id r74mr5369615pfc.110.1559547310720;
+        Mon, 03 Jun 2019 00:35:10 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:716:e714:cd5e:23ab:e451:ee6a])
-        by smtp.gmail.com with ESMTPSA id r64sm17547366pfr.58.2019.06.03.00.35.00
+        by smtp.gmail.com with ESMTPSA id r64sm17547366pfr.58.2019.06.03.00.35.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 00:35:05 -0700 (PDT)
+        Mon, 03 Jun 2019 00:35:10 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linus.walleij@linaro.org, robh+dt@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         haitao.suo@bitmain.com, darren.tsao@bitmain.com,
         linux-gpio@vger.kernel.org, alec.lin@bitmain.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: Document drive strength settings for BM1880 SoC
-Date:   Mon,  3 Jun 2019 13:04:20 +0530
-Message-Id: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/2] pinctrl: Add drive strength support for BM1880 SoC
+Date:   Mon,  3 Jun 2019 13:04:21 +0530
+Message-Id: <20190603073421.10314-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
+References: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document drive strength settings for Bitmain BM1880 SoC.
+Add drive strength support for Bitmain BM1880 SoC.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../bindings/pinctrl/bitmain,bm1880-pinctrl.txt       | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/pinctrl/pinctrl-bm1880.c | 290 ++++++++++++++++++++++++++++++-
+ 1 file changed, 287 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-index 4eb089bcb5f3..4980776122cc 100644
---- a/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-@@ -100,6 +100,17 @@ Optional Properties:
-                   Valid values are:
-                   <0>  - Slow
-                   <1>  - Fast
-+- drive-strength: Integer. Selects the drive strength for the specified
-+                  pins in mA.
-+                  Valid values are:
-+                  <4>
-+                  <8>
-+                  <12>
-+                  <16>
-+                  <20>
-+                  <24>
-+                  <28>
-+                  <32>
+diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+index 1aaed46d5c30..63b130cb1ffb 100644
+--- a/drivers/pinctrl/pinctrl-bm1880.c
++++ b/drivers/pinctrl/pinctrl-bm1880.c
+@@ -4,8 +4,6 @@
+  *
+  * Copyright (c) 2019 Linaro Ltd.
+  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+- *
+- * TODO: Drive strength support
+  */
  
- Example:
-         pinctrl: pinctrl@400 {
+ #include <linux/io.h>
+@@ -29,6 +27,7 @@
+  * @ngroups:	Number of @groups
+  * @funcs:	Pinmux functions
+  * @nfuncs:	Number of @funcs
++ * @pconf:	Pinconf data
+  */
+ struct bm1880_pinctrl {
+ 	void __iomem *base;
+@@ -37,6 +36,7 @@ struct bm1880_pinctrl {
+ 	unsigned int ngroups;
+ 	const struct bm1880_pinmux_function *funcs;
+ 	unsigned int nfuncs;
++	const struct bm1880_pinconf_data *pinconf;
+ };
+ 
+ /**
+@@ -69,6 +69,14 @@ struct bm1880_pinmux_function {
+ 	u8 mux_shift;
+ };
+ 
++/**
++ * struct bm1880_pinconf_data - pinconf data
++ * @drv_bits:	Drive strength bit width
++ */
++struct bm1880_pinconf_data {
++	u32 drv_bits;
++};
++
+ static const struct pinctrl_pin_desc bm1880_pins[] = {
+ 	PINCTRL_PIN(0,   "MIO0"),
+ 	PINCTRL_PIN(1,   "MIO1"),
+@@ -785,6 +793,126 @@ static const struct bm1880_pinmux_function bm1880_pmux_functions[] = {
+ 	BM1880_PINMUX_FUNCTION(spi0, 1),
+ };
+ 
++#define BM1880_PINCONF_DAT(_width)		\
++	{					\
++		.drv_bits = _width,		\
++	}
++
++static const struct bm1880_pinconf_data bm1880_pinconf[] = {
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x03),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++	BM1880_PINCONF_DAT(0x02),
++};
++
+ static int bm1880_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+ 	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+@@ -878,9 +1006,145 @@ static int bm1880_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ #define BM1880_PINCONF_PULLCTRL(pin)	BM1880_PINCONF(pin, 0)
+ #define BM1880_PINCONF_PULLUP(pin)	BM1880_PINCONF(pin, 1)
+ #define BM1880_PINCONF_PULLDOWN(pin)	BM1880_PINCONF(pin, 2)
++#define BM1880_PINCONF_DRV(pin)		BM1880_PINCONF(pin, 6)
+ #define BM1880_PINCONF_SCHMITT(pin)	BM1880_PINCONF(pin, 9)
+ #define BM1880_PINCONF_SLEW(pin)	BM1880_PINCONF(pin, 10)
+ 
++static int bm1880_pinconf_drv_set(unsigned int mA, u32 width,
++				  u32 *regval, u32 bit_offset)
++{
++	u32 _regval;
++
++	_regval = *regval;
++
++	/*
++	 * There are two sets of drive strength bit width exposed by the
++	 * SoC at 4mA step, hence we need to handle them separately.
++	 */
++	if (width == 0x03) {
++		switch (mA) {
++		case 4:
++			_regval &= ~(width << bit_offset);
++			_regval |= (0 << bit_offset);
++			break;
++		case 8:
++			_regval &= ~(width << bit_offset);
++			_regval |= (1 << bit_offset);
++			break;
++		case 12:
++			_regval &= ~(width << bit_offset);
++			_regval |= (2 << bit_offset);
++			break;
++		case 16:
++			_regval &= ~(width << bit_offset);
++			_regval |= (3 << bit_offset);
++			break;
++		case 20:
++			_regval &= ~(width << bit_offset);
++			_regval |= (4 << bit_offset);
++			break;
++		case 24:
++			_regval &= ~(width << bit_offset);
++			_regval |= (5 << bit_offset);
++			break;
++		case 28:
++			_regval &= ~(width << bit_offset);
++			_regval |= (6 << bit_offset);
++			break;
++		case 32:
++			_regval &= ~(width << bit_offset);
++			_regval |= (7 << bit_offset);
++			break;
++		default:
++			return -EINVAL;
++		}
++	} else {
++		switch (mA) {
++		case 4:
++			_regval &= ~(width << bit_offset);
++			_regval |= (0 << bit_offset);
++			break;
++		case 8:
++			_regval &= ~(width << bit_offset);
++			_regval |= (1 << bit_offset);
++			break;
++		case 12:
++			_regval &= ~(width << bit_offset);
++			_regval |= (2 << bit_offset);
++			break;
++		case 16:
++			_regval &= ~(width << bit_offset);
++			_regval |= (3 << bit_offset);
++			break;
++		default:
++			return -EINVAL;
++		}
++	}
++
++	*regval = _regval;
++
++	return 0;
++}
++
++static int bm1880_pinconf_drv_get(u32 width, u32 drv)
++{
++	int ret = -ENOTSUPP;
++
++	/*
++	 * There are two sets of drive strength bit width exposed by the
++	 * SoC at 4mA step, hence we need to handle them separately.
++	 */
++	if (width == 0x03) {
++		switch (drv) {
++		case 0:
++			ret  = 4;
++			break;
++		case 1:
++			ret  = 8;
++			break;
++		case 2:
++			ret  = 12;
++			break;
++		case 3:
++			ret  = 16;
++			break;
++		case 4:
++			ret  = 20;
++			break;
++		case 5:
++			ret  = 24;
++			break;
++		case 6:
++			ret  = 28;
++			break;
++		case 7:
++			ret  = 32;
++			break;
++		default:
++			break;
++		}
++	} else {
++		switch (drv) {
++		case 0:
++			ret  = 4;
++			break;
++		case 1:
++			ret  = 8;
++			break;
++		case 2:
++			ret  = 12;
++			break;
++		case 3:
++			ret  = 16;
++			break;
++		default:
++			break;
++		}
++	}
++
++	return ret;
++}
++
+ static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
+ 				  unsigned int pin,
+ 				  unsigned long *config)
+@@ -889,6 +1153,7 @@ static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
+ 	unsigned int param = pinconf_to_config_param(*config);
+ 	unsigned int arg = 0;
+ 	u32 regval, offset, bit_offset;
++	int ret;
+ 
+ 	offset = (pin >> 1) << 2;
+ 	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
+@@ -914,6 +1179,15 @@ static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
+ 		bit_offset = BM1880_PINCONF_SLEW(pin);
+ 		arg = !!(regval & BIT(bit_offset));
+ 		break;
++	case PIN_CONFIG_DRIVE_STRENGTH:
++		bit_offset = BM1880_PINCONF_DRV(pin);
++		ret = bm1880_pinconf_drv_get(pctrl->pinconf[pin].drv_bits,
++					     !!(regval & BIT(bit_offset)));
++		if (ret < 0)
++			return ret;
++
++		arg = ret;
++		break;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
+@@ -930,7 +1204,7 @@ static int bm1880_pinconf_cfg_set(struct pinctrl_dev *pctldev,
+ {
+ 	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	u32 regval, offset, bit_offset;
+-	int i;
++	int i, ret;
+ 
+ 	offset = (pin >> 1) << 2;
+ 	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
+@@ -966,6 +1240,15 @@ static int bm1880_pinconf_cfg_set(struct pinctrl_dev *pctldev,
+ 			else
+ 				regval &= ~BIT(bit_offset);
+ 			break;
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			bit_offset = BM1880_PINCONF_DRV(pin);
++			ret = bm1880_pinconf_drv_set(arg,
++						pctrl->pinconf[pin].drv_bits,
++						&regval, bit_offset);
++			if (ret < 0)
++				return ret;
++
++			break;
+ 		default:
+ 			dev_warn(pctldev->dev,
+ 				 "unsupported configuration parameter '%u'\n",
+@@ -1041,6 +1324,7 @@ static int bm1880_pinctrl_probe(struct platform_device *pdev)
+ 	pctrl->ngroups = ARRAY_SIZE(bm1880_pctrl_groups);
+ 	pctrl->funcs = bm1880_pmux_functions;
+ 	pctrl->nfuncs = ARRAY_SIZE(bm1880_pmux_functions);
++	pctrl->pinconf = bm1880_pinconf;
+ 
+ 	pctrl->pctrldev = devm_pinctrl_register(&pdev->dev, &bm1880_desc,
+ 						pctrl);
 -- 
 2.17.1
 
