@@ -6,32 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7359C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48514C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7D627984
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB1D27984
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfFCPvz (ORCPT
+        id S1729413AbfFCPvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:51:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:53900 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfFCPvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:51:53 -0400
+        Mon, 3 Jun 2019 11:51:50 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53852 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729375AbfFCPvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:51:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDB521A25;
-        Mon,  3 Jun 2019 08:51:52 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D424915AB;
+        Mon,  3 Jun 2019 08:51:46 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C8F323F246;
-        Mon,  3 Jun 2019 08:51:51 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 720923F246;
+        Mon,  3 Jun 2019 08:51:45 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com
-Subject: [RFC PATCH 35/57] drivers: core: Reuse generic match by device type helper
-Date:   Mon,  3 Jun 2019 16:50:01 +0100
-Message-Id: <1559577023-558-36-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Subject: [RFC PATCH 31/57] drivers: rtc: Use class_find_device_by_name() helper
+Date:   Mon,  3 Jun 2019 16:49:57 +0100
+Message-Id: <1559577023-558-32-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -40,42 +42,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic helper to match the device type of a given device.
+Use the new class_find_device_by_name() helper.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/base/core.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/rtc/interface.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 731baac..69cba57 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2839,13 +2839,6 @@ struct device *device_create_with_groups(struct class *class,
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index 4124f4d..307dbc6 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -663,21 +663,12 @@ void rtc_update_irq(struct rtc_device *rtc,
  }
- EXPORT_SYMBOL_GPL(device_create_with_groups);
+ EXPORT_SYMBOL_GPL(rtc_update_irq);
  
--static int __match_devt(struct device *dev, const void *data)
+-static int __rtc_match(struct device *dev, const void *data)
 -{
--	const dev_t *devt = data;
+-	const char *name = data;
 -
--	return dev->devt == *devt;
+-	if (strcmp(dev_name(dev), name) == 0)
+-		return 1;
+-	return 0;
 -}
 -
- /**
-  * device_destroy - removes a device that was created with device_create()
-  * @class: pointer to the struct class that this device was registered with
-@@ -2858,7 +2851,7 @@ void device_destroy(struct class *class, dev_t devt)
+ struct rtc_device *rtc_class_open(const char *name)
  {
  	struct device *dev;
+ 	struct rtc_device *rtc = NULL;
  
--	dev = class_find_device(class, NULL, &devt, __match_devt);
-+	dev = class_find_device_by_devt(class, NULL, devt);
- 	if (dev) {
- 		put_device(dev);
- 		device_unregister(dev);
+-	dev = class_find_device(rtc_class, NULL, name, __rtc_match);
++	dev = class_find_device_by_name(rtc_class, NULL, name);
+ 	if (dev)
+ 		rtc = to_rtc_device(dev);
+ 
 -- 
 2.7.4
 
