@@ -2,159 +2,172 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB0BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF79C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5D32776C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9Kkj17D"
+	by mail.kernel.org (Postfix) with ESMTP id 6100B277BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfFCP2w (ORCPT
+        id S1727389AbfFCPau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:28:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45916 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbfFCP2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:28:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b18so12515972wrq.12;
-        Mon, 03 Jun 2019 08:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R0W4k3BICJ2WutXYH9IGV5/N63dSSF//OiRLIaj1e9Y=;
-        b=S9Kkj17DDzDE5Z7XeeEr+Rzf+HfZirV7k6u/QNk25GVYowii2mVqhnbBb7z9YBCNLf
-         qSHAIPSfiBDzhIHa2Hluko5PH5p3lXrLHkYVAB0AtRMcEyGvWyUYIfascea08kABZeAO
-         7febfroAd6uFY+EnOPYO4ONxC9tlnyXvy6w1iRj9IAjZUoUxUrQ2R4x9JKM1ZQOd43qg
-         ggW7PaIC5ZNy+QpYN0QI5xBoJbBNX00qgdnpwU+REWtcLWHhPgqz6fTIEgvCRSLpAwLx
-         EQxYgYvZtkVdLzGiYpGK/ii1i4B0MyefEoLPhUP266vd+Yc0GFzH5K4e88Ddgo3x0oEc
-         /WHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R0W4k3BICJ2WutXYH9IGV5/N63dSSF//OiRLIaj1e9Y=;
-        b=Bj+873IZEFJY374Kkrh7YnYK9UkdWlxUQezY647F5HYPL3Bo9CSDBOxJEQpqK11tas
-         voFJnaIpvnUa1MWqfxd6emsHYy2rH0eQLi9uUUXdJ/63CmL09E1L5uLR+P48QyaOvSD7
-         ZS+5EGumxjgsRuKqrTXQgwDeEJZh0NEnCZXik5L2D4qEiNh1+xJHNLz6UIGe3Q0n95hq
-         AcAXrUYeqKqn1fCQ0QtJcKTx4XzqUPYbZlOrZbcUpKcR7ouh6ddoUZQ5G6M+b69s+0CS
-         EktMB9s1Pwds0CUbp5RQUjkcFQ9jjAilFsB+rqjtssj9RkKKU1/i5oFWZh2ZdIhY9jh1
-         L1cg==
-X-Gm-Message-State: APjAAAU5JJKTPEH4ZUm9GjGmoojCdlpegTU2Ko4GKL74zgyGSwVO3eQa
-        b8IYFkBLG1M62+QxeEGR1kk=
-X-Google-Smtp-Source: APXvYqxNjelk8UuA5p+0R6FFQve85Va22YZnaVsDYbsKcbDvsVP02pGq0aCY6v8Q0G/y3TqkgdKYnQ==
-X-Received: by 2002:adf:8367:: with SMTP id 94mr17313992wrd.179.1559575730576;
-        Mon, 03 Jun 2019 08:28:50 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id f197sm15425228wme.39.2019.06.03.08.28.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 08:28:49 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 17:28:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190603152848.GA23747@ulmo>
-References: <20190529145322.20630-1-thierry.reding@gmail.com>
- <20190529145322.20630-2-thierry.reding@gmail.com>
- <CACRpkdb5vB6OwcAxtjsKLzHt9V27juEOEEDqqQczKT-3r+7X-g@mail.gmail.com>
- <20190603075324.GA27753@ulmo>
- <CACRpkda47EX981Dw=jLrU=PHn50+AQhJmpVRWJ9uJEQdcAsrTw@mail.gmail.com>
- <20190603121227.GB30132@ulmo>
+        Mon, 3 Jun 2019 11:30:50 -0400
+Received: from foss.arm.com ([217.140.101.70]:53096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbfFCPau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:30:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A80CD80D;
+        Mon,  3 Jun 2019 08:30:49 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C4453F246;
+        Mon,  3 Jun 2019 08:30:47 -0700 (PDT)
+Subject: Re: [PATCH] arm: fix using smp_processor_id() in preemptible context
+To:     gaoyongliang <gaoyongliang@huawei.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "punitagrawal@gmail.com" <punitagrawal@gmail.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Chenjie (K)" <chenjie6@huawei.com>,
+        Nixiaoming <nixiaoming@huawei.com>,
+        Zengweilin <zengweilin@huawei.com>,
+        Shiwenlu <shiwenlu@huawei.com>
+References: <d003bd4642aa44e1a51b83cd0bf1f04e@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <a66ef5b9-19d0-2c02-8d1b-7e9c90067a76@arm.com>
+Date:   Mon, 3 Jun 2019 16:30:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-In-Reply-To: <20190603121227.GB30132@ulmo>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <d003bd4642aa44e1a51b83cd0bf1f04e@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/06/2019 15:44, gaoyongliang wrote:
+> Hi Marc,
+> 
+> On 2019/6/3 18:17, Marc Zyngier wrote:
+>> On 27/05/2019 10:39, Yongliang Gao wrote:
+>>> harden_branch_predictor() call smp_processor_id() in preemptible
+>>> context, this would cause a bug messages.
+>>>
+>>> The bug messages is as follows:
+>>> BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor0/17992
+>>> caller is harden_branch_predictor arch/arm/include/asm/system_misc.h:27 [inline]
+>>> caller is __do_user_fault+0x34/0x114 arch/arm/mm/fault.c:200
+>>> CPU: 1 PID: 17992 Comm: syz-executor0 Tainted: G O 4.4.176 #1
+>>> Hardware name: Hisilicon A9
+>>> [<c0114ae4>] (unwind_backtrace) from [<c010e6fc>] (show_stack+0x18/0x1c)
+>>> [<c010e6fc>] (show_stack) from [<c0379514>] (dump_stack+0xc8/0x118)
+>>> [<c0379514>] (dump_stack) from [<c039b5a0>] (check_preemption_disabled+0xf4/0x138)
+>>> [<c039b5a0>] (check_preemption_disabled) from [<c011abe4>] (__do_user_fault+0x34/0x114)
+>>> [<c011abe4>] (__do_user_fault) from [<c053b0d0>] (do_page_fault+0x3b4/0x3d8)
+>>> [<c053b0d0>] (do_page_fault) from [<c01013dc>] (do_DataAbort+0x58/0xf8)
+>>> [<c01013dc>] (do_DataAbort) from [<c053a880>] (__dabt_usr+0x40/0x60)
+>>>
+>>> Reported-by: Jingwen Qiu <qiujingwen@huawei.com>
+>>> Signed-off-by: Yongliang Gao <gaoyongliang@huawei.com>
+>>> Cc: <stable@vger.kernel.org>
+>>> ---
+>>>  arch/arm/include/asm/system_misc.h | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/include/asm/system_misc.h b/arch/arm/include/asm/system_misc.h
+>>> index 66f6a3a..4a55cfb 100644
+>>> --- a/arch/arm/include/asm/system_misc.h
+>>> +++ b/arch/arm/include/asm/system_misc.h
+>>> @@ -22,9 +22,10 @@
+>>>  static inline void harden_branch_predictor(void)
+>>>  {
+>>>  	harden_branch_predictor_fn_t fn = per_cpu(harden_branch_predictor_fn,
+>>> -						  smp_processor_id());
+>>> +						  get_cpu());
+>>>  	if (fn)
+>>>  		fn();
+>>> +	put_cpu();
+>>>  }
+>>>  #else
+>>>  #define harden_branch_predictor() do { } while (0)
+>>>
+>>
+>> This doesn't look like the right fix. If we're in a preemptible context,
+>> then we could invalidate the branch predictor on the wrong CPU.
+> 
+> Sorry, my bad, thanks a lot for the good catch.
+> 
+>>
+>> The right fix would be to move the call to a point where we haven't
+>> enabled preemption yet.
+> 
+> I took a look at the code, and find out that the caller of
+> harden_branch_predictor(), __do_user_fault(), is called by do_page_fault()
+> and do_bad_area(), those two function's context are both running with
+> preemption enabled, so I didn't find a good place to move the call,
+> could you please give some suggestion for my next step?
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since we land here from do_page_fault, it seems natural to move the
+invalidation up there, probably before we re-enable interrupts.
 
-On Mon, Jun 03, 2019 at 02:12:27PM +0200, Thierry Reding wrote:
-> On Mon, Jun 03, 2019 at 12:58:02PM +0200, Linus Walleij wrote:
-> > On Mon, Jun 3, 2019 at 9:53 AM Thierry Reding <thierry.reding@gmail.com=
-> wrote:
-> > > Me
-> >=20
-> > > > Please drop this. The default .to_irq() should be good for everyone.
-> > > > Also patch 2/2 now contains a identical copy of the gpiolib
-> > > > .to_irq() which I suspect you indended to drop, actually.
-> > >
-> > > It's not actually identical to the gpiolib implementation. There's st=
-ill
-> > > the conversion to the non-linear DT representation for GPIO specifiers
-> > > from the linear GPIO number space, which is not taken care of by the
-> > > gpiolib variant. That's precisely the point why this patch makes it
-> > > possible to let the driver override things.
-> >=20
-> > OK something is off here, because the purpose of the irqdomain
-> > is exactly to translate between different number spaces, so it should
-> > not happen in the .to_irq() function at all.
-> >=20
-> > Irqdomain uses .map() in the old variant and .translate() in the
-> > hierarchical variant to do this, so something is skewed.
-> >=20
-> > All .to_irq() should ever do is just call the irqdomain to do the
-> > translation, no other logic (unless I am mistaken) so we should
-> > be able to keep the simple .to_irq() logic inside gpiolib.
->=20
-> Well, that's exactly the problem that I'm trying to solve. The problem
-> is that .translate() translates from the DT number space to the GPIO or
-> IRQ number space. However, since gpiochip_to_irq() now wants to call the
-> irq_create_fwspec_mapping() interface, it must convert from the offset
-> (in GPIO space) into the DT number space, which is what that function
-> expects.
+Thanks,
 
-Hm... I wonder if we even need this irq_create_fwspec_mapping() there.
-Couldn't we just do an irq_create_mapping() since we already know which
-one of the GPIO IRQ controller's interrupts we want to create a mapping
-for? If we already convert to the GPIO number space in the .translate()
-then the offset already corresponds to the one that we need to map, no?
-
-I'll make a note to try that tomorrow.
-
-Thierry
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz1PKwACgkQ3SOs138+
-s6EvrxAAhvVOkUGVn6WQQ2jnZM1b0tya6pzAhUw11OYc7Ub6nc6yFaiQ8wE0pbcG
-cAApoHS1T00Yj8qHqUQHieIVRAEE0dpWheKOs4hNsWHu/SlYW0l19EbfYOFBqo+n
-iQje2Vtmc2/eYSwHmE1ggqbX2OO9MtvxQ7oyKCPxXzDlXOO0c7zEMKvHmZpEp4zy
-RBNCQAcqUR3JbUgMVd4qvxytWjxhJo/AscOJ2754Wvd7Ut6FpO0qIJsTCcOCMaua
-6le5HOOYVEgj0Wd/3CFJUrpQWlikVPRUHVCZECieBoruv2IcffHC/zxDlYpMTRdV
-+9OLds+6TRf1R6AiIPiAm/tcRpG+D30RoR8AsruR+9GuVZoRQf21Pr+pTT4WhWRT
-NPYRVSxe+mAMXgCjoWcu5qWYkweMsCxUVFhGWyoe0tRlxV3t0BJf6Rd+69SgbMmd
-RTJtLY/3vGkNkI7iXFEJgH8iBr0mPLCBMG6SwcA7E3xopVqhzHU2lsSNUEG5x6nz
-z09tzO1Bsr2RNAz5j5mPxJPUdbcUwE3dHnRB4XG99vCBxsPoPNShHir/9ygUg2tM
-sFLPLcMvHJfNe/jukF+3C0jLVVs8ZYY4yDfJtltKDwhoBeiS1+T7hocMlsohM8VG
-Mmsv1050gE6pzqQKF4sxEhqNO8vuh4gbOyX8cYThMdtkBic2aFQ=
-=IpuP
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
