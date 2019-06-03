@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A07C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE850C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7512126F1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D8B26E66
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jzLnNqUS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OGHKEUdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfFCSfs (ORCPT
+        id S1726465AbfFCSfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:35:48 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42880 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfFCSeu (ORCPT
+        Mon, 3 Jun 2019 14:35:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45513 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfFCSep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:34:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go2so7293828plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:49 -0700 (PDT)
+        Mon, 3 Jun 2019 14:34:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w34so8748101pga.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gs3RkhSChaOfEUoWHB9Wz2G7G555U9/P3rBO605JBRM=;
-        b=jzLnNqUS1j/McakM7dg5wqpGsZjd5lvealKhrH4q5I1IIhBtPcIlxlaBPTEedX6adW
-         GzH72gNQOZ1KJE6gr2mbOcPyeW7bR/sY5i/w9aBB4ooOFORL6rKUprtreKDSfkwOgBi5
-         voW3FV0wNq8EN/qc3z2pFHS2adS7OmK0zyQH4=
+        bh=NaNtriandagKTH+nKDm0iG18Zrt/l9rmC8aTpCwi3m0=;
+        b=OGHKEUdhveeHs3KKm9jsMUUqV3TljN9BF6iAyRlHPGgaEaNKf+wsSy0rrxeYx1IquL
+         W1Yksoj0D7V9psraLBm7Taq6Icr47mJw8xZildScfr8WO988FbWVy33YFyIPTHxImauI
+         f7c1jfLYFPo5PB3z3gR00r0pTh28T526nOdg4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gs3RkhSChaOfEUoWHB9Wz2G7G555U9/P3rBO605JBRM=;
-        b=DQXxRwuNA0NvFdXZ//57v5/er0LVNHxG0rgnAmW1YavZZ6qZfwtmQQ3nZaH1utRpF8
-         HDPoFFRKiMjv2aiCbbAfP5SZ9NcJJ8DHFljXcM8c1ghk9/NPakWXWpUFuAQzQgB3BRQP
-         fkmo7aTOHBS/zAEN1BiQrrTKaZS5CqBHlk11n66MwUOzlHc5r7etLABka81JzqHhUJTH
-         IALplP07gsn6beJmZIG7VmpX+I2Y5yNH/cp4cRMaUEDx6dYNTWTR+uabtcUTLYYDr9EL
-         9CaoIaIajHVjR8G5ZqF+CvW9EjVlMTCSVPTg7VzfXX/4tHT+Oc0QS9IrV21IFVJTHVTV
-         6ttg==
-X-Gm-Message-State: APjAAAVHq0wNvAHOR0U4jLn70V+8+1CdLuawwz5FtJsEqiKiv5Ab/Wgx
-        gMPn3r0EJQh1E7tH3PIeY1wIaQ==
-X-Google-Smtp-Source: APXvYqxq8uujpPU3jbwev5Ux1pYfEvT9ZB98ctNiwsVil0Ysy3tky345FtKg8p3JCm6w7b44q+kQqw==
-X-Received: by 2002:a17:902:934b:: with SMTP id g11mr18872897plp.245.1559586889595;
-        Mon, 03 Jun 2019 11:34:49 -0700 (PDT)
+        bh=NaNtriandagKTH+nKDm0iG18Zrt/l9rmC8aTpCwi3m0=;
+        b=oCxEgesOUa8yOappz4I5UkXB1BtMWWonLHXgx/pmNSa0v1pWfQ5kpQyzBlMvfdz7o5
+         53bUneiWC/4rbiSXl8XwhZp9yDewlhNdPyFkimNPwC0VQ6mrVqKANGH0JbUgne/WaMC0
+         cJidacwJZ1vkxwS0G+vdEm9ibd6ExCEpNf/Poh+E7NQAf8ywkjjP9Eel6eIYhPN3Hhdr
+         sXV4WN0Lo+z3ObJT3b+3KgLf7+9F8gMVH2dYhUnDiKTygRGPzcFd45bYbDhe+CheX5V/
+         jXcU7YWzd8Tiq9WpxkxyM18hAxeVV8okXLexHCVuAsviW6H3W7afOGdYQda0kKzww7xN
+         Eebw==
+X-Gm-Message-State: APjAAAXg6pzctH8iHCyE1p5XaEvNxd7Dv9KiwNkEewOgFEKDidy8Y7MH
+        qqsrnz1QLDiQYRtxbBE1V/CkUw==
+X-Google-Smtp-Source: APXvYqw02F/8+mcF+7TMVGY3mnFmSOL1CqYIDjvPQDFSSjVFvMq6Q0dTaZKJw5mvCLSVQDGJ5ugDFA==
+X-Received: by 2002:a63:9548:: with SMTP id t8mr30121025pgn.256.1559586884983;
+        Mon, 03 Jun 2019 11:34:44 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id g9sm12570406pgs.78.2019.06.03.11.34.48
+        by smtp.gmail.com with ESMTPSA id w62sm2394356pfw.132.2019.06.03.11.34.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 11:34:49 -0700 (PDT)
+        Mon, 03 Jun 2019 11:34:44 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -61,9 +61,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [RESEND PATCH v3 27/30] mfd: cros_ec: Add API for rwsig
-Date:   Mon,  3 Jun 2019 11:33:58 -0700
-Message-Id: <20190603183401.151408-28-gwendal@chromium.org>
+Subject: [RESEND PATCH v3 24/30] mfd: cros_ec: Add API for EC-EC communication
+Date:   Mon,  3 Jun 2019 11:33:55 -0700
+Message-Id: <20190603183401.151408-25-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
 References: <20190603183401.151408-1-gwendal@chromium.org>
@@ -74,54 +74,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add command to retrieve signature of image stored in the RW memory
-slot(s).
+Allow EC to talk to other ECs that are not presented to the host.
+Neeed when EC are present in detachable keyboard.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Reviewed-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/linux/mfd/cros_ec_commands.h | 95 ++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 4a9ac3861bdd..3d3a37b11002 100644
+index 59ad6bae3f9b..52fd9bfafc7f 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -5043,6 +5043,32 @@ struct ec_response_pd_chip_info_v1 {
+@@ -5043,6 +5043,101 @@ struct ec_response_pd_chip_info_v1 {
  	};
  } __ec_align2;
  
-+/* Run RW signature verification and get status */
-+#define EC_CMD_RWSIG_CHECK_STATUS	0x011C
++/*****************************************************************************/
++/* EC-EC communication commands: range 0x0600-0x06FF */
 +
-+struct ec_response_rwsig_check_status {
-+	uint32_t status;
++#define EC_COMM_TEXT_MAX 8
++
++/*
++ * Get battery static information, i.e. information that never changes, or
++ * very infrequently.
++ */
++#define EC_CMD_BATTERY_GET_STATIC 0x0600
++
++/**
++ * struct ec_params_battery_static_info - Battery static info parameters
++ * @index: Battery index.
++ */
++struct ec_params_battery_static_info {
++	uint8_t index;
++} __ec_align_size1;
++
++/**
++ * struct ec_response_battery_static_info - Battery static info response
++ * @design_capacity: Battery Design Capacity (mAh)
++ * @design_voltage: Battery Design Voltage (mV)
++ * @manufacturer: Battery Manufacturer String
++ * @model: Battery Model Number String
++ * @serial: Battery Serial Number String
++ * @type: Battery Type String
++ * @cycle_count: Battery Cycle Count
++ */
++struct ec_response_battery_static_info {
++	uint16_t design_capacity;
++	uint16_t design_voltage;
++	char manufacturer[EC_COMM_TEXT_MAX];
++	char model[EC_COMM_TEXT_MAX];
++	char serial[EC_COMM_TEXT_MAX];
++	char type[EC_COMM_TEXT_MAX];
++	/* TODO(crbug.com/795991): Consider moving to dynamic structure. */
++	uint32_t cycle_count;
 +} __ec_align4;
 +
-+/* For controlling RWSIG task */
-+#define EC_CMD_RWSIG_ACTION	0x011D
++/*
++ * Get battery dynamic information, i.e. information that is likely to change
++ * every time it is read.
++ */
++#define EC_CMD_BATTERY_GET_DYNAMIC 0x0601
 +
-+enum rwsig_action {
-+	RWSIG_ACTION_ABORT = 0,		/* Abort RWSIG and prevent jumping */
-+	RWSIG_ACTION_CONTINUE = 1,	/* Jump to RW immediately */
-+};
++/**
++ * struct ec_params_battery_dynamic_info - Battery dynamic info parameters
++ * @index: Battery index.
++ */
++struct ec_params_battery_dynamic_info {
++	uint8_t index;
++} __ec_align_size1;
 +
-+struct ec_params_rwsig_action {
-+	uint32_t action;
-+} __ec_align4;
++/**
++ * struct ec_response_battery_dynamic_info - Battery dynamic info response
++ * @actual_voltage: Battery voltage (mV)
++ * @actual_current: Battery current (mA); negative=discharging
++ * @remaining_capacity: Remaining capacity (mAh)
++ * @full_capacity: Capacity (mAh, might change occasionally)
++ * @flags: Flags, see EC_BATT_FLAG_*
++ * @desired_voltage: Charging voltage desired by battery (mV)
++ * @desired_current: Charging current desired by battery (mA)
++ */
++struct ec_response_battery_dynamic_info {
++	int16_t actual_voltage;
++	int16_t actual_current;
++	int16_t remaining_capacity;
++	int16_t full_capacity;
++	int16_t flags;
++	int16_t desired_voltage;
++	int16_t desired_current;
++} __ec_align2;
 +
-+/* Run verification on a slot */
-+#define EC_CMD_EFS_VERIFY	0x011E
++/*
++ * Control charger chip. Used to control charger chip on the slave.
++ */
++#define EC_CMD_CHARGER_CONTROL 0x0602
 +
-+struct ec_params_efs_verify {
-+	uint8_t region;		/* enum ec_flash_region */
-+} __ec_align1;
++/**
++ * struct ec_params_charger_control - Charger control parameters
++ * @max_current: Charger current (mA). Positive to allow base to draw up to
++ *     max_current and (possibly) charge battery, negative to request current
++ *     from base (OTG).
++ * @otg_voltage: Voltage (mV) to use in OTG mode, ignored if max_current is
++ *     >= 0.
++ * @allow_charging: Allow base battery charging (only makes sense if
++ *     max_current > 0).
++ */
++struct ec_params_charger_control {
++	int16_t max_current;
++	uint16_t otg_voltage;
++	uint8_t allow_charging;
++} __ec_align_size1;
 +
  /*****************************************************************************/
- /* Fingerprint MCU commands: range 0x0400-0x040x */
- 
+ /*
+  * Reserve a range of host commands for board-specific, experimental, or
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
