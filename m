@@ -2,236 +2,278 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECA3C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCA0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A881027D2D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gA3FAsnS"
+	by mail.kernel.org (Postfix) with ESMTP id 341E827D34
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfFCIA7 (ORCPT
+        id S1727529AbfFCIBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:00:59 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9477 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFCIA6 (ORCPT
+        Mon, 3 Jun 2019 04:01:37 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36174 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725975AbfFCIBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:00:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf4d3b60000>; Mon, 03 Jun 2019 01:00:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 03 Jun 2019 01:00:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 03 Jun 2019 01:00:56 -0700
-Received: from [10.24.216.245] (172.20.13.39) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Jun
- 2019 08:00:54 +0000
-Subject: Re: [PATCH 2/2] PCI: Create device link for NVIDIA GPU
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        <linux-pci@vger.kernel.org>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-3-abhsahu@nvidia.com>
- <20190531203908.GA58810@google.com>
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d0824334-99f2-d42e-3a5e-3bdc4c1c37c8@nvidia.com>
-Date:   Mon, 3 Jun 2019 13:30:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190531203908.GA58810@google.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL108.nvidia.com (172.18.146.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Mon, 3 Jun 2019 04:01:37 -0400
+X-UUID: d6559528fade49c5a60c880ad2a7a20a-20190603
+X-UUID: d6559528fade49c5a60c880ad2a7a20a-20190603
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1299333839; Mon, 03 Jun 2019 16:01:28 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 3 Jun
+ 2019 16:01:26 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 3 Jun 2019 16:01:25 +0800
+Message-ID: <1559548885.13732.28.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+From:   Chuanjia Liu <Chuanjia.Liu@mediatek.com>
+To:     Evan Green <evgreen@chromium.org>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-gpio@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Mon, 3 Jun 2019 16:01:25 +0800
+In-Reply-To: <CAE=gft7YOVFUiWD=u39xSPVFUtiqb7m93sMGBFb7Ufn2RB+B_g@mail.gmail.com>
+References: <20190429035515.73611-1-drinkcat@chromium.org>
+         <20190429035515.73611-3-drinkcat@chromium.org>
+         <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
+         <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com>
+         <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com>
+         <CANMq1KCNzn-5sYJZGivUedsNaQfVW_MjgDZn27W6sz8Fk3beNA@mail.gmail.com>
+         <CAE=gft6jxR9Lt7tLwm6VKy9_shMVW7wf3g6rBGEqtB7oNH0hUA@mail.gmail.com>
+         <1559289956.13732.17.camel@mhfsdcap03>
+         <CAE=gft7YOVFUiWD=u39xSPVFUtiqb7m93sMGBFb7Ufn2RB+B_g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559548855; bh=p+xegJbC84egOu+mcFTbHds+0MLhlADR+aBmh+MBItc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gA3FAsnSDFeIHk78Hb2XWwzultzpUyaWf5DQQBsKwEi5I4soVfDuY4LfEye0NSaJ3
-         lV3BpPM2Pif86qplRaglbVkwPjPmoxvSsg01yaXid3I9Ji10rQdbz8mSKuZbLlDbRG
-         0YFt5F5UOWg53v4ePWsq5uktJQVyqsqoWV31YU8dRw3IVjiKFDOaZcwSmGRhAyZ8HA
-         5AU9+IqsJN0swCEP/oHpjJYtK1H5ckehGdvRfeDrkWGVio/u+d6CaM+nSyU5ksFk4k
-         gB60ezJDc4WCKLRsNOQWXHX3OdAmnXmh4coIUdQRSYQm7+Qu7Id1ohK9yEOpK04fTy
-         jxnzHfjOxwccA==
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 2C14DE7CA442EC2F710E1EF29AFDD501DEEBC05FC271561E76C5DBCCDCA3DF262000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Thanks Bjorn for your review.
-
-On 6/1/2019 2:09 AM, Bjorn Helgaas wrote:
-> [+cc Lukas, author of 07f4f97d7b4b ("vga_switcheroo: Use device link
-> for HDA controller")]
+On Fri, 2019-05-31 at 10:17 -0700, Evan Green wrote:
+> On Fri, May 31, 2019 at 1:06 AM Chuanjia Liu <Chuanjia.Liu@mediatek.com> wrote:
+> >
+> > On Thu, 2019-05-30 at 10:12 -0700, Evan Green wrote:
+> > > On Wed, May 15, 2019 at 1:05 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > On Wed, May 15, 2019 at 4:14 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > > >
+> > > > > Quoting Nicolas Boichat (2019-05-13 18:37:58)
+> > > > > > On Tue, May 14, 2019 at 6:29 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > > > > >
+> > > > > > > Quoting Nicolas Boichat (2019-04-28 20:55:15)
+> > > > > > > > During suspend/resume, mtk_eint_mask may be called while
+> > > > > > > > wake_mask is active. For example, this happens if a wake-source
+> > > > > > > > with an active interrupt handler wakes the system:
+> > > > > > > > irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> > > > > > > > that it can be handled later on in the resume flow.
+> > > > > > > >
+> > > > > > > > However, this may happen before mtk_eint_do_resume is called:
+> > > > > > > > in this case, wake_mask is loaded, and cur_mask is restored
+> > > > > > > > from an older copy, re-enabling the interrupt, and causing
+> > > > > > > > an interrupt storm (especially for level interrupts).
+> > > > > > > >
+> > > > > > > > Instead, we just record mask/unmask changes in cur_mask. This
+> > > > > > > > also avoids the need to read the current mask in eint_do_suspend,
+> > > > > > > > and we can remove mtk_eint_chip_read_mask function.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > > > >
+> > > > > > > It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
+> > > > > > > here. Isn't that what's happening? All non-wake irqs should be masked at
+> > > > > > > the hardware level so they can't cause a wakeup during suspend and on
+> > > > > > > resume they can be unmasked?
+> > > > > >
+> > > > > > No, this is for an line that has both wake and interrupt enabled. To
+> > > > > > reword the commit message above:
+> > > > >
+> > > > > Is my understanding correct that there isn't a different "wake up"
+> > > > > register that can be written to cause a GPIO to be configured to wake
+> > > > > the system from suspend? The only way to do so is to leave the GPIO
+> > > > > unmasked in the hardware by having EINT_EN[irq] = 1? And thus any
+> > > > > interrupts that we don't want to wake us up during suspend should be
+> > > > > masked in the hardware?
+> > > >
+> > > > Yes, that's my understanding as well.
+> > > >
+> > > > And then, what this driver does is to emulate the behaviour of a
+> > > > controller that would actually have separate irq and wake enable
+> > > > registers.
+> > > >
+> > > > > If that's true, the code here that's trying to keep track of enabled
+> > > > > irqs and wakeup enabled irqs can be replaced with the irqchip flag so
+> > > > > that wakeup irqs are not masked while non-wakeups are masked.
+> > > >
+> > > > Correct, but with the caveat that I don't see anything that definitely
+> > > > requires an interrupt to be enabled to be a wake source. See below...
+> > > >
+> > > > >
+> > > > > >  1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+> > > > > > enabled at hardware level)
+> > > > > >  2. System suspends, resumes due to that line (at this stage EINT_HW
+> > > > > > == wake_mask)
+> > > > > >  3. irq_pm_check_wakeup is called, and disables the interrupt =>
+> > > > > > EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+> > > > > >  4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+> > > > > > it reenables EINT_EN[irq] = 1 => interrupt storm.
+> > > > > >
+> > > > > > This patch fixes the issue in step 3. So that the interrupt can be
+> > > > > > re-enabled properly later on, sometimes after mtk_eint_do_resume, when
+> > > > > > the driver is ready to handle it.
+> > > > >
+> > > > > Right, we'd rather not see irqchip drivers working around the genirq
+> > > > > layer to do these things like tracking cur_mask and wake_mask. That
+> > > > > leads to subtle bugs and makes the driver maintain state across the
+> > > > > irqchip callbacks and system suspend/resume.
+> > > > >
+> > > > > >
+> > > > > > Also, IRQCHIP_MASK_ON_SUSPEND does not handle lines that are enabled
+> > > > > > as a wake source, but without interrupt enabled (e.g. cros_ec driver
+> > > > > > does that), which we do want to support.
+> > > > >
+> > > > > Hmm. I thought that even if the irq is disabled by a driver, that would
+> > > > > be a lazy disable so it isn't really masked in the hardware. Then if an
+> > > > > interrupt comes in during suspend on a wake configured irq line, the
+> > > > > hardware will have left it unmasked because IRQCHIP_MASK_ON_SUSPEND in
+> > > > > combination with lazy disable would mean that the line is left unmasked
+> > > > > (ignoring whatever this mediatek driver is doing to mask and unmask in
+> > > > > PM hooks).
+> > > >
+> > > > At the very least, that's not what happens with this system. The
+> > > > interrupt is definitely not kept enabled in suspend, and the system
+> > > > would not wake from an EC interrupt. (see also this series, BTW:
+> > > > https://patchwork.kernel.org/cover/10921121/).
+> > > >
+> > > > > Just reading Documentation/power/suspend-and-interrupts.txt I'm led to
+> > > > > believe that the cros_ec driver shouldn't call disable_irq() on the
+> > > > > interrupt if it wants to wakeup from it:
+> > > > >
+> > > > > "Calling enable_irq_wake() causes suspend_device_irqs() to treat the
+> > > > > given IRQ in a special way.  Namely, the IRQ remains enabled, by on the
+> > > > > first interrupt it will be disabled, marked as pending and "suspended"
+> > > > > so that it will be re-enabled by resume_device_irqs() during the
+> > > > > subsequent system resume.  Also the PM core is notified about the event
+> > > > > which causes the system suspend in progress to be aborted (that doesn't
+> > > > > have to happen immediately, but at one of the points where the suspend
+> > > > > thread looks for pending wakeup events)."
+> > > >
+> > > > I think this describes the behaviour when you keep both enabled.
+> > > >
+> > > > > I suppose the problem is an irq line disabled in hardware that has
+> > > > > wakeup armed on it? Is this even valid? Shouldn't an irq be enabled for
+> > > > > wakeup to work?
+> > > >
+> > > > I couldn't really find a definite answer, but there are a bunch of
+> > > > examples of other drivers in the kernel:
+> > > >  - drivers/extcon/extcon-usb-gpio.c:usb_extcon_suspend
+> > > >  - drivers/hid/i2c-hid/i2c-hid.c:i2c_hid_suspend
+> > > >  - drivers/mfd/max77843.c:max77843_suspend
+> > > > (not exhaustive, this is quite hard to grep for...)
+> > > >
+> > > > > We could immediately unmask those lines in the hardware when the
+> > > > > set_wake() callback is called. That way the genirq layer can use the
+> > > > > driver to do what it wants with the hardware and the driver can make
+> > > > > sure that set_wake() will always cause the wakeup interrupt to be
+> > > > > delivered to genirq even when software has disabled it.
+> > > > >
+> > > > > But I think that there might be a problem with how genirq understands
+> > > > > the masked state of a line when the wakeup implementation conflates
+> > > > > masked state with wakeup armed state. Consider this call-flow:
+> > > > >
+> > > > >         irq masked in hardware, IRQD_IRQ_MASKED is set
+> > > > >         enable_irq_wake()
+> > > > >           unmask_irq in hardware
+> > > > >         IRQD_WAKEUP_ARMED is set
+> > > > >         <suspend and wakeup from irq>
+> > > > >         handle_level_irq()
+> > > > >           mask_ack_irq()
+> > > > >             mask_irq()
+> > > > >               if (irqd_irq_masked()) -> returns true and skips masking!
+> > > > >             if (desc->irq_data.chip->irq_ack)
+> > > > >               ...
+> > > > >           irq_may_run()
+> > > > >             irq_pm_check_wakeup()
+> > > > >               irq_disable()
+> > > > >                 mask_irq() -> does nothing again
+> > > > >
+> > > > > In the above flow, we never mask the irq because we thought it was
+> > > > > already masked when it was disabled, but the irqchip implementation
+> > > > > unmasked it to make wakeup work. Maybe we should always mask the irq if
+> > > > > wakeup is armed and we're trying to call mask_irq()? Looks hacky.
+> > Maybe we can implement irqchip's mask_ack_irq  in mediatek driver to
+> > always mask the irq. Then flow will always call it without judgment
+> > IRQD_IRQ_MASKED.
+> >
+> > diff --git a/drivers/pinctrl/mediatek/mtk-eint.c
+> > b/drivers/pinctrl/mediatek/mtk-
+> > index f464f8c..9f1aae2 100644
+> > --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> > +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> > @@ -272,12 +272,19 @@ static void mtk_eint_irq_release_resources(struct
+> > irq_data
+> >         gpiochip_unlock_as_irq(gpio_c, gpio_n);
+> >  }
+> >
+> > +static void mtk_eint_mask_ack(struct irq_data *d)
+> > +{
+> > +       mtk_eint_mask(d);
+> > +       mtk_eint_ack(d);
+> > +}
+> > +
+> >  static struct irq_chip mtk_eint_irq_chip = {
+> >         .name = "mt-eint",
+> >         .irq_disable = mtk_eint_mask,
+> >         .irq_mask = mtk_eint_mask,
+> >         .irq_unmask = mtk_eint_unmask,
+> >         .irq_ack = mtk_eint_ack,
+> > +       .irq_mask_ack = mtk_eint_mask_ack,
+> >         .irq_set_type = mtk_eint_set_type,
+> >         .irq_set_wake = mtk_eint_irq_set_wake,
+> >         .irq_request_resources = mtk_eint_irq_request_resources,
+> >
+> > This seems like a small change.
+> > thanks.
 > 
-> On Fri, May 31, 2019 at 10:31:09AM +0530, Abhishek Sahu wrote:
->> NVIDIA Turing GPUs include hardware support for USB Type-C and
->> VirtualLink. It helps in delivering the power, display, and data
->> required to power VR headsets through a single USB Type-C connector.
->> The Turing GPU is a multi-function PCI device has the following
->> four functions:
->>
->> 	- VGA display controller (Function 0)
->> 	- Audio controller (Function 1)
->> 	- USB xHCI Host controller (Function 2)
->> 	- USB Type-C USCI controller (Function 3)
->>
->> The function 0 is tightly coupled with other functions in the
->> hardware. When function 0 goes in runtime suspended state,
-> 
-> "Runtime suspended" is a Linux concept, not a PCI concept.  Please
-> replace this with the appropriate PCI term, e.g., "D3hot" or whatever
-> it is.
+> Does this work? My understanding is that Linux thinks the irq is
+> _already_ masked, so it short-circuits in the generic IRQ code and
+> doesn't call mask again.
+> -Evan
 
- Sure. I will change this.
+Yes, you are right.
 
-> 
->> then it will do power gating for most of the hardware blocks.
->> Some of these hardware blocks are used by other functions which
->> leads to functional failure. So if any of these functions (1/2/3)
->> are active, then function 0 should also be in active state.
-> 
-> Instead of "active" and "active state", please use the specific states
-> required in terms of PCI.
+The underlying problem is really that the hardware IRQ enabled state is
+out of sync with what linux thinks.In resume flow,Linux thinks the irq
+is _already_masked, so it short-circuits in the generic IRQ code and
+doesn't call mask again.So in step 3 will have a interrupt storm.
 
- Sure. I will use specific states name.
+But we implement irqchip's mask_ack_irq so that mask_ack_irq() calls
+desc->irq_data.chip->irq_mask_ack instead of mask_irq() that needs to
+judge IRQD_IRQ_MASKED. This will correctly set cur_mask[irq] = 0 to 
+sync with kernel state.
 
-> 
->> 'commit 07f4f97d7b4b ("vga_switcheroo: Use device link for
->> HDA controller")' creates the device link from function 1 to
->> function 0. A similar kind of device link needs to be created
->> between function 0 and functions 2 and 3 for NVIDIA Turing GPU.
-> 
-> I can't point to language that addresses this, but this sounds like a
-> case of the GPU not conforming to the PCI spec.  The general
-> assumption is that the OS should be able to discover everything it
-> needs to do power management directly from the architected PCI config
-> space.
+Also, this patch can solve the issue of [1/2] in this patchset[1] which
+also is the interrupt mask cannot be set correctly due to hardware irq
+state not sync kernel.
 
- The GPU is following PCIe spec but following is the implementation
- from HW side
+[1] https://patchwork.kernel.org/patch/10921143/
 
- Normal GPU has VGA and Audio controller in which Audio is dependent
- upon VGA. For these GPU, the VGA is managed by GPU driver and Audio is
- managed by sound driver. Now the VGA driver can go to D3hot while
- Audio still in D0 if there was no device link (added in commit
- 07f4f97d7b4b). It would lead to Audio functionality failure. The
- device link is making sure that GPU is in D0 while Audio is D0.
 
- Now the NVIDIA Turing GPU has one USB Type-C port mainly to support
- virtual reality headset. With default mode, this USB port will act as
- normal USB port and any USB device can be connected over it. It will
- be managed with PCI xHCI USB controller driver.  Now, to support VR
- headset, This USB Type-C alternate mode is going to be used. This
- alternate mode setting will be managed with [1] and [2] which is part
- of 5.2-rc1. More detail for this is available in [3] and virtual link
- open industry standard [4].  These VR frame-buffers are internally
- going to be rendered by GPU only and managed by function 0 (VGA)
- driver. Now, from HW side, we need to make sure VGA is in D0 while any
- of other functions are in D0.
-
- [1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/typec/altmodes/nvidia.c
- [2]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/i2c/busses/i2c-nvidia-gpu.c
- [3]
-https://fullcirclemagazine.org/2019/04/30/nvidia-creates-free-virtual-link-driver-for-linux/
- [4] https://sites.google.com/view/virtuallink-consortium/home
-
-> 
-> It is definitely not ideal to have to add quirks like this for devices
-> designed this way.  Such quirks force us to do otherwise unnecessary
-> OS updates as new devices are released.
-
- I can understand but this is the HW requirement. To support,
- VR headset in GPU, the HW has provided USB Type-C. Now, from
- SW side, we are working on supporting this with runtime PM.
- Currently runtime PM is not possible without adding the
- dependencies between different functions.
-
-> 
-> If all the devices in a multi-function device were connected
-> intimately enough that they all had to be managed by the same driver,
-> I could imagine putting these non-discoverable dependencies in the
-> driver.  But these devices don't seem to be related in that way.
-> > If there *is* spec language that allows dependencies like this, please
-> include the citation in your commit log.
-> 
-
- The PCIe specification treats each function separately but GPU case is
- different. So, it won't be part of PCIe spec. in GPU, the different
- kind of devices are internally coupled in HW but still needs to be
- managed by different driver.
-
->> This patch does the same and create the required device links. It
->> will make function 0 to be runtime PM active if other functions
->> are still active.
->>
->> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
->> ---
->>  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index a20f7771a323..afdbc199efc5 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -4967,6 +4967,29 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
->>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
->>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
->>  
->> +/* Create device link for NVIDIA GPU with integrated USB controller to VGA. */
->> +static void quirk_gpu_usb(struct pci_dev *usb)
->> +{
->> +	pci_create_device_link_with_vga(usb, 2);
->> +}
->> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
->> +			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
->> +
->> +/*
->> + * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
->> + * to VGA. Currently there is no class code defined for UCSI device over PCI
->> + * so using UNKNOWN class for now and it will be updated when UCSI
->> + * over PCI gets a class code.
-> 
-> Ugh.  Here's a good example of having to do yet another OS update.
-> 
-
- Correct. But currently we don't have any other way.
- Same thing we did for
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/i2c/busses/i2c-nvidia-gpu.c#n248
-
- Once it gets a class code then we can replace at all the places.
-
- Regards,
- Abhishek
-
->> + */
->> +#define PCI_CLASS_SERIAL_UNKNOWN	0x0c80
->> +static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
->> +{
->> +	pci_create_device_link_with_vga(ucsi, 3);
->> +}
->> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
->> +			      PCI_CLASS_SERIAL_UNKNOWN, 8,
->> +			      quirk_gpu_usb_typec_ucsi);
->> +
->>  /*
->>   * Some IDT switches incorrectly flag an ACS Source Validation error on
->>   * completions for config read requests even though PCIe r4.0, sec
->> -- 
->> 2.17.1
->>
