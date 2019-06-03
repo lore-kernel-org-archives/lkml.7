@@ -2,157 +2,89 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30FAC282DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6D1C282DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3B1261F9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7975024689
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 01:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfFCBhc (ORCPT
+        id S1726820AbfFCBm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Jun 2019 21:37:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbfFCBhc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Jun 2019 21:37:32 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x531aaD2020115
-        for <linux-kernel@vger.kernel.org>; Sun, 2 Jun 2019 21:37:31 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2svs7y9dt8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2019 21:37:31 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 3 Jun 2019 02:37:30 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Jun 2019 02:37:25 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x531bOTL10617208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 01:37:24 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CA60B206B;
-        Mon,  3 Jun 2019 01:37:24 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 38429B2067;
-        Mon,  3 Jun 2019 01:37:24 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.136.155])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 01:37:24 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 5467E16C37A7; Sun,  2 Jun 2019 17:06:17 -0700 (PDT)
-Date:   Sun, 2 Jun 2019 17:06:17 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Reply-To: paulmck@linux.ibm.com
-References: <20150910005708.GA23369@wfg-t540p.sh.intel.com>
- <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
- <20150910171649.GE4029@linux.vnet.ibm.com>
- <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+        Sun, 2 Jun 2019 21:42:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17646 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726270AbfFCBm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Jun 2019 21:42:28 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DA7CE301CF5EBFE41DCA;
+        Mon,  3 Jun 2019 09:42:25 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Jun 2019
+ 09:42:15 +0800
+Subject: Re: [PATCH net-next 00/12] code optimizations & bugfixes for HNS3
+ driver
+To:     David Miller <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>
+References: <1559292898-64090-1-git-send-email-tanhuazhong@huawei.com>
+ <20190531.171529.1003718945482922118.davem@davemloft.net>
+ <20190531.171819.1461966494167760290.davem@davemloft.net>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <b0b2c1ce-9b2b-2db5-d703-870176be27b3@huawei.com>
+Date:   Mon, 3 Jun 2019 09:42:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060301-0072-0000-0000-000004369950
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011206; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01212416; UDB=6.00637148; IPR=6.00993472;
- MB=3.00027158; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-03 01:37:28
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060301-0073-0000-0000-00004C762ED8
-Message-Id: <20190603000617.GD28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-02_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=590 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030009
+In-Reply-To: <20190531.171819.1461966494167760290.davem@davemloft.net>
+Content-Type: text/plain; charset="iso-8859-7"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 01:56:07PM +0800, Herbert Xu wrote:
-> Digging up an old email because I was not aware of this previously
-> but Paul pointed me to it during another discussion.
+
+
+On 2019/6/1 8:18, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Fri, 31 May 2019 17:15:29 -0700 (PDT)
 > 
-> On Mon, Sep 21, 2015 at 01:43:27PM -0700, Paul E. McKenney wrote:
-> > On Mon, Sep 21, 2015 at 09:30:49PM +0200, Frederic Weisbecker wrote:
-> >
-> > > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > > > index d63bb77..6c3cece 100644
-> > > > --- a/include/linux/rcupdate.h
-> > > > +++ b/include/linux/rcupdate.h
-> > > > @@ -297,12 +297,14 @@ void synchronize_rcu(void);
-> > > >  
-> > > >  static inline void __rcu_read_lock(void)
-> > > >  {
-> > > > -	preempt_disable();
-> > > > +	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
-> > > > +		preempt_disable();
-> > > 
-> > > preempt_disable() is a no-op when !CONFIG_PREEMPT_COUNT, right?
-> > > Or rather it's a barrier(), which is anyway implied by rcu_read_lock().
-> > > 
-> > > So perhaps we can get rid of the IS_ENABLED() check?
-> > 
-> > Actually, barrier() is not intended to be implied by rcu_read_lock().
-> > In a non-preemptible RCU implementation, it doesn't help anything
-> > to have the compiler flush its temporaries upon rcu_read_lock()
-> > and rcu_read_unlock().
+>> From: Huazhong Tan <tanhuazhong@huawei.com>
+>> Date: Fri, 31 May 2019 16:54:46 +0800
+>>
+>>> This patch-set includes code optimizations and bugfixes for the HNS3
+>>> ethernet controller driver.
+>>>
+>>> [patch 1/12] removes the redundant core reset type
+>>>
+>>> [patch 2/12 - 3/12] fixes two VLAN related issues
+>>>
+>>> [patch 4/12] fixes a TM issue
+>>>
+>>> [patch 5/12 - 12/12] includes some patches related to RAS & MSI-X error
+>>
+>> Series applied.
 > 
-> This is seriously broken.  RCU has been around for years and is
-> used throughout the kernel while the compiler barrier existed.
-
-Please note that preemptible Tree RCU has lacked the compiler barrier on
-all but the outermost rcu_read_unlock() for years before Boqun's patch.
-
-So exactly where in the code that we are currently discussing
-are you relying on compiler barriers in either rcu_read_lock() or
-rcu_read_unlock()?
-
-The grace-period guarantee allows the compiler ordering to be either in
-the readers (SMP&&PREEMPT), in the grace-period mechanism (SMP&&!PREEMPT),
-or both (SRCU).
-
-> You can't then go and decide to remove the compiler barrier!  To do
-> that you'd need to audit every single use of rcu_read_lock in the
-> kernel to ensure that they're not depending on the compiler barrier.
+> I reverted, you need to actually build test the infiniband side of your
+> driver.
 > 
-> This is also contrary to the definition of almost every other
-> *_lock primitive in the kernel where the compiler barrier is
-> included.
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function ¡hns_roce_v2_msix_interrupt_abn¢:
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5032:14: warning: passing argument 2 of ¡ops->set_default_reset_request¢ makes pointer from integer without a cast [-Wint-conversion]
+>                HNAE3_FUNC_RESET);
+>                ^~~~~~~~~~~~~~~~
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5032:14: note: expected ¡long unsigned int *¢ but argument is of type ¡int¢
+>    C-c C-cmake[5]: *** Deleting file 'drivers/net/wireless/ath/carl9170/cmd.o'
 > 
-> So please revert this patch.
 
-I do not believe that reverting that patch will help you at all.
-
-But who knows?  So please point me at the full code body that was being
-debated earlier on this thread.  It will no doubt take me quite a while to
-dig through it, given my being on the road for the next couple of weeks,
-but so it goes.
-
-							Thanx, Paul
+Sorry, I will remove [10/12 - 11/12] for V2, these two patches needs to 
+modify HNS's infiniband driver at the same time, so they will be 
+upstreamed later with the infiniband's one.
 
