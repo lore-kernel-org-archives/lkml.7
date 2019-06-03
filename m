@@ -2,98 +2,75 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B079CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02B8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B9B27A83
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00EB27A8E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfFCOeW (ORCPT
+        id S1729033AbfFCOfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:34:22 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:61319 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfFCOeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:34:22 -0400
-Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hXo2W-0004B8-6v from George_Davis@mentor.com ; Mon, 03 Jun 2019 07:34:20 -0700
-Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
- (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Mon, 3 Jun
- 2019 07:34:18 -0700
-Date:   Mon, 3 Jun 2019 10:34:17 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-CC:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH] Makefile: Fix checkstack.pl arm64 wrong or unknown
- architecture
-Message-ID: <20190603143416.GA17299@mam-gdavis-lt>
-References: <1559316388-19565-1-git-send-email-george_davis@mentor.com>
- <CAK7LNATXzLzttF_gLA4wdfE1ue+bLPhvDZVsTKbB5K3nrN3jng@mail.gmail.com>
- <20190531163908.GB10644@mam-gdavis-lt>
- <CAK7LNASq8eW0D8fpbxFGhAgR5D158emTR2quCD5ufyC+kK-2GQ@mail.gmail.com>
- <20190531174506.GC10644@mam-gdavis-lt>
- <CAK7LNASazA2496=GkJdJFVw3S7mQ8LaVqHc6dX=FU0DGYtRTBg@mail.gmail.com>
+        Mon, 3 Jun 2019 10:35:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54862 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728998AbfFCOfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:35:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EC697ACCE;
+        Mon,  3 Jun 2019 14:35:11 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 0/3] debug_pagealloc improvements
+Date:   Mon,  3 Jun 2019 16:34:48 +0200
+Message-Id: <20190603143451.27353-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASazA2496=GkJdJFVw3S7mQ8LaVqHc6dX=FU0DGYtRTBg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Masahiro,
+I have been recently debugging some pcplist corruptions, where it would be
+useful to perform struct page checks immediately as pages are allocated from
+and freed to pcplists, which is now only possible by rebuilding the kernel with
+CONFIG_DEBUG_VM (details in Patch 2 changelog).
 
-On Sat, Jun 01, 2019 at 11:09:15AM +0900, Masahiro Yamada wrote:
-> On Sat, Jun 1, 2019 at 2:45 AM George G. Davis <george_davis@mentor.com> wrote:
-> > > Following this pattern, does this work for you?
-> > >
-> > > diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-> > > index 122aef5e4e14..371bd17a4983 100755
-> > > --- a/scripts/checkstack.pl
-> > > +++ b/scripts/checkstack.pl
-> > > @@ -46,7 +46,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
-> > >         $x      = "[0-9a-f]";   # hex character
-> > >         $xs     = "[0-9a-f ]";  # hex character or space
-> > >         $funcre = qr/^$x* <(.*)>:$/;
-> > > -       if ($arch eq 'aarch64') {
-> > > +       if ($arch =~ '^(aarch|arm)64$') {
-> >
-> > Yes, that works, thanks!
-> >
-> > Will you submit a fix or would you like me to resubmit with the above suggested
-> > fix?
-> 
-> Please send v2.
+To make this kind of debugging simpler in future on a distro kernel, I have
+improved CONFIG_DEBUG_PAGEALLOC so that it has even smaller overhead when not
+enabled at boot time (Patch 1) and also when enabled (Patch 3), and extended it
+to perform the struct page checks more often when enabled (Patch 2). Now it can
+be configured in when building a distro kernel without extra overhead, and
+debugging page use after free or double free can be enabled simply by rebooting
+with debug_pagealloc=on.
 
-Done:
+Vlastimil Babka (3):
+  mm, debug_pagelloc: use static keys to enable debugging
+  mm, page_alloc: more extensive free page checking with debug_pagealloc
+  mm, debug_pagealloc: use a page type instead of page_ext flag
 
-https://patchwork.kernel.org/patch/10972965/
-
-Thanks!
-
-> 
-> Thanks.
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
+ .../admin-guide/kernel-parameters.txt         |  10 +-
+ include/linux/mm.h                            |  25 ++--
+ include/linux/page-flags.h                    |   6 +
+ include/linux/page_ext.h                      |   1 -
+ mm/Kconfig.debug                              |  14 ++-
+ mm/page_alloc.c                               | 114 ++++++++++--------
+ mm/page_ext.c                                 |   3 -
+ 7 files changed, 96 insertions(+), 77 deletions(-)
 
 -- 
-Regards,
-George
+2.21.0
+
