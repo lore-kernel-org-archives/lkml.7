@@ -2,90 +2,122 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CAEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494CEC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC38D28166
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2110028160
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 11:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vD2ZSXIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfFCLpe (ORCPT
+        id S1727794AbfFCLqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 07:45:34 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:48453 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726561AbfFCLpd (ORCPT
+        Mon, 3 Jun 2019 07:46:04 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:43326 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCLqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:45:33 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id XlP5hL7kAsDWyXlP8hsryq; Mon, 03 Jun 2019 13:45:31 +0200
-Subject: Re: [PATCH] media: stm32-dcmi: fix irq = 0 case
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Pavel Machek <pavel@denx.de>, linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <46944972-1f88-ef3b-fef9-8e37753c0ffe@xs4all.nl>
-Date:   Mon, 3 Jun 2019 13:45:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 07:46:04 -0400
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x53BjrOD005594;
+        Mon, 3 Jun 2019 20:45:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x53BjrOD005594
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559562354;
+        bh=xcdVS2lZM1a48jGewJjV7DieZdVaVvo2sv103QVTF4A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vD2ZSXItTjKjdiNBHbKw3ZwxymGkS+mFzGNJdILthjozmnTu79/V5i1V8R22/nnLr
+         3Bw8q1gvPjzDonVsJOuFRSuMKPvOQAUdQaZmuCbo0GRiGSBfxaddMQx1ahOH8UJqTx
+         YfHiSmxDHnUIL+meK6FxxCOVklZh415UQpOq1Dp0zXb3EiK/jpR2st9Kjvipf0isXu
+         A5q5swRbapK7hp912uNtA2dqkyZEP2HMa1B5c0V0HrNiot0WqaCOeKEbm0bkGoddoU
+         csou2T6LFFYdEKH87VrsG7p35LArxmFUjTiFl5fSqOU9j7jWNvgLKYgGp4n52MswfN
+         ml+ums0o22Y+Q==
+X-Nifty-SrcIP: [209.85.221.180]
+Received: by mail-vk1-f180.google.com with SMTP id k1so2803503vkb.2;
+        Mon, 03 Jun 2019 04:45:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAW2o2ixN0XDlOCxvgENyQLU56pos+NFFWK8eeRKkM8sW1+L1gAb
+        Dla9sbdsjNZeex+fZGoENQmmtTBpcODboDmwks8=
+X-Google-Smtp-Source: APXvYqxzUHPoQIku6KGXaYa9Qp+9KgMH/y/NROsn43MQouSz1p//qa19a5lw5lYTcOIKJq2hnfSJHM9bQSGQoQwpkgs=
+X-Received: by 2002:ac5:c215:: with SMTP id m21mr8858804vkk.84.1559562352459;
+ Mon, 03 Jun 2019 04:45:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559294295-20573-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCN0MWjkjUyGzp6RpvMIZ2ZANeW2kYEP03Lpq3iqxfDwME2NkMqcJ+4u8wJA/QHfTb1eUz+uisc7OqX0O7kndwdR0ZVW6uYMPcB/P15b1VaJn538Lf+x
- NpoGEuGPiPtkBx9DsS6X0tLYlnRiI7z09uP0CoCsy8Xjtn42bpslVuei6PSli3eMoap5saASbpiDX6XpET+OFtD9B3RPXBwVdY8s8ZorQPRjKWBS+iFs5tU5
- JcyHlEgjEwFC3lQWFrLx7IKttSJSdQhzLTcFNI4C/GGkE2trkxzNun+9+Ruulo+8qY9ak+/SmKIQ+kgTg7xKgQBhwcWRnLRBWT55TpNhtogX6wNgZDrHA6R+
- DP8O8sDZLy5bkdDBxfik+WTTyrM7PXg/048e9w11h0IqIIlGhif1381FUXcLSGcLziyMd6bFNfwfgVfEUgK16hHn9FgCB4acy5ykhFHypGJ47adWQgK/dE6G
- 9TJhkrGyPEBntvMjPZ9BgUNRVSNLdIIqLJzmuyPjIYgbtaRxjKOprgUXnCZ2Mg+Lh4zk3jdL6wiFvQH6IqSYwOZc/HHUQ3Mu+pq0ncGcj1p4oBZbHedZLcz6
- 1ZXK7+Aa9y7T7q16w8DCGy61
+References: <20190603104902.23799-1-yamada.masahiro@socionext.com> <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
+In-Reply-To: <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 3 Jun 2019 20:45:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
+Message-ID: <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: use more portable 'command -v' for cc-cross-prefix
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 11:18 AM, Fabien Dessenne wrote:
-> Manage the irq = 0 case, where we shall return an error.
-> 
-> Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
->  drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-> index b9dad0a..d855e9c 100644
-> --- a/drivers/media/platform/stm32/stm32-dcmi.c
-> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-> @@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_device *pdev)
->  	if (irq <= 0) {
+On Mon, Jun 3, 2019 at 8:16 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Masahiro Yamada
+> > Sent: 03 June 2019 11:49
+> >
+> > To print the pathname that will be used by shell in the current
+> > environment, 'command -v' is a standardized way. [1]
+> >
+> > 'which' is also often used in scripting, but it is not portable.
+>
+> All uses of 'which' should be expunged.
+> It is a bourne shell script that is trying to emulate a csh builtin.
+> It is doomed to fail in corner cases.
+> ISTR it has serious problems with shell functions and aliases.
 
-Shouldn't this be 'irq < 0' instead of '<=' ?
+OK, I do not have time to check it treewide.
+I expect somebody will contribute to it.
 
-AFAICT irq == 0 can be a valid irq and isn't an error.
 
-Regards,
 
-	Hans
+BTW, I see yet another way to get the command path.
 
->  		if (irq != -EPROBE_DEFER)
->  			dev_err(&pdev->dev, "Could not get irq\n");
-> -		return irq;
-> +		return irq ? irq : -ENXIO;
->  	}
->  
->  	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> 
+'type -path' is bash-specific.
 
+Maybe, we should do this too:
+
+diff --git a/scripts/mkuboot.sh b/scripts/mkuboot.sh
+index 4b1fe09e9042..77829ee4268e 100755
+--- a/scripts/mkuboot.sh
++++ b/scripts/mkuboot.sh
+@@ -1,14 +1,14 @@
+-#!/bin/bash
++#!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+
+ #
+ # Build U-Boot image when `mkimage' tool is available.
+ #
+
+-MKIMAGE=$(type -path "${CROSS_COMPILE}mkimage")
++MKIMAGE=$(command -v "${CROSS_COMPILE}mkimage")
+
+ if [ -z "${MKIMAGE}" ]; then
+-       MKIMAGE=$(type -path mkimage)
++       MKIMAGE=$(command -v mkimage)
+        if [ -z "${MKIMAGE}" ]; then
+                # Doesn't exist
+                echo '"mkimage" command not found - U-Boot images will
+not be built' >&2
+
+
+-- 
+Best Regards
+Masahiro Yamada
