@@ -2,116 +2,126 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B09AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4EFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0430D27FCB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553540;
-	bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3KQ+EUZCaagiXKv2Shb023z7soBhSLt+XjinkOjB8itVHqj1jVkWZ+cAe4U/DgI8
-	 bo/Vd/Gjnkzj1lw116+85JA504qKYdveHklQ3VRH+Af/7mU+sO+jpCA4ztBvt2Yihz
-	 8Ar5XvXNkmS6uQ72NrUo8O3OjJKn7aeGz0+5mpLY=
+	by mail.kernel.org (Postfix) with ESMTP id 35B7327FB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:20:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HFaqQm0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfFCJS7 (ORCPT
+        id S1728062AbfFCJUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfFCJJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:09:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC3927E18;
-        Mon,  3 Jun 2019 09:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559552991;
-        bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZGd9qGuspNxnwvMKx0o+gBJACgB5Ji9/AnvmKZ/WxxsyAnmtv3OArwb+iS6TWo5G
-         Bm+2QREqbi7b+sS8DYchhCdbMwRz8Ekt7OtcfZfrb2XmS0VskRhQJqxw5CNYPfcLcu
-         SWJh79o7b0vhFw7XK9kcHxmMNOY014xoVvNC4K3w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 05/32] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
-Date:   Mon,  3 Jun 2019 11:07:59 +0200
-Message-Id: <20190603090309.928015545@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
-References: <20190603090308.472021390@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Jun 2019 05:20:12 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56047 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbfFCJUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:20:11 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x539G8qF016966;
+        Mon, 3 Jun 2019 11:20:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=KP1E2smY61q6p4hXM1Poa06ylj50nuS1wWa3VqF16Hw=;
+ b=HFaqQm0fM+7F/PSlDShv3fAXd4tCEhioUJFUpktHYtv5ej4P2yund40IoGpbUy3RoFb7
+ y0KYACDxLfOLieIn71YtUCyn3sg1J+h0P6BoP3KWybqkqDw6789aMJoyimNIyvCB5A6j
+ cGgA1yvkQeL3kDgm8jljxHwkrMvpDMjBKH34jqNl/MKvcfF9efDOPUixbGVrf22WLZpD
+ kdmPChZA45thqjZeUYsc6jP6rbJSEURQwiEmpV10l+ZifMbj+VGp4dSP4kBuHRjlMv1f
+ 3D6eEGaXbd6UugL8HuNQXoNLkh5oRWtpJdHV0ZnHtwcNhu7TTRYy5rhF4rb4nQetXSjj Kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2sunmc13fk-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 03 Jun 2019 11:20:03 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 939683F;
+        Mon,  3 Jun 2019 09:20:02 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3B8BC2619;
+        Mon,  3 Jun 2019 09:20:02 +0000 (GMT)
+Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Jun
+ 2019 11:20:02 +0200
+Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
+ SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
+ 15.00.1347.000; Mon, 3 Jun 2019 11:20:01 +0200
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] mfd: stmfx: Uninitialized variable in stmfx_irq_handler()
+Thread-Topic: [PATCH] mfd: stmfx: Uninitialized variable in
+ stmfx_irq_handler()
+Thread-Index: AQHVCwEO/u3xED8wwkiZua0lI4uaJqaJo4GA
+Date:   Mon, 3 Jun 2019 09:20:01 +0000
+Message-ID: <ccefbd0b-3397-a26e-95e7-059fcced9154@st.com>
+References: <20190515093141.GA3409@mwanda>
+In-Reply-To: <20190515093141.GA3409@mwanda>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DC5391FCB7987D46B2273D74DD2C441A@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
-
-[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
-
-ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
-
-Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/igmp.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -190,6 +190,17 @@ static void ip_ma_put(struct ip_mc_list
- 	     pmc != NULL;					\
- 	     pmc = rtnl_dereference(pmc->next_rcu))
- 
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
-+
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
-+	}
-+}
-+
- #ifdef CONFIG_IP_MULTICAST
- 
- /*
-@@ -635,17 +646,6 @@ static void igmpv3_clear_zeros(struct ip
- 	}
- }
- 
--static void ip_sf_list_clear_all(struct ip_sf_list *psf)
--{
--	struct ip_sf_list *next;
--
--	while (psf) {
--		next = psf->sf_next;
--		kfree(psf);
--		psf = next;
--	}
--}
--
- static void kfree_pmc(struct ip_mc_list *pmc)
- {
- 	ip_sf_list_clear_all(pmc->sources);
-
-
+SGkgRGFuLA0KDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2guIE9uZSBtaW5vciBjb21tZW50Og0KDQpP
+biA1LzE1LzE5IDExOjMxIEFNLCBEYW4gQ2FycGVudGVyIHdyb3RlOg0KPiBUaGUgcHJvYmxlbSBp
+cyB0aGF0IG9uIDY0Yml0IHN5c3RlbXMgdGhlbiB3ZSBkb24ndCBjbGVhciB0aGUgaGlnaGVyDQo+
+IGJpdHMgb2YgdGhlICJwZW5kaW5nIiB2YXJpYWJsZS4gIFNvIHdoZW4gd2UgZG86DQo+IA0KPiAJ
+YWNrID0gcGVuZGluZyAmIH5CSVQoU1RNRlhfUkVHX0lSUV9TUkNfRU5fR1BJTyk7DQo+IAlpZiAo
+YWNrKSB7DQo+IA0KPiB0aGUgaWYgKGFjaykgY29uZGl0aW9uIHJlbGllcyBvbiB1bmluaXRpYWxp
+emVkIGRhdGEuICBUaGUgZml4IGl0IHRoYXQNCj4gSSd2ZSBjaGFuZ2VkICJwZW5kaW5nIiBmcm9t
+IGFuIHVuc2lnbmVkIGxvbmcgdG8gYSB1MzIuICBJIGNoYW5nZWQgIm4iIGFzDQo+IHdlbGwsIGJl
+Y2F1c2UgdGhhdCdzIGEgbnVtYmVyIGluIHRoZSAwLTEwIHJhbmdlIGFuZCBpdCBmaXRzIGVhc2ls
+eQ0KPiBpbnNpZGUgYW4gaW50LiAgV2UgZG8gbmVlZCB0byBhZGQgYSBjYXN0IHRvICJwZW5kaW5n
+IiB3aGVuIHdlIHVzZSBpdCBpbg0KPiB0aGUgZm9yX2VhY2hfc2V0X2JpdCgpIGxvb3AsIGJ1dCB0
+aGF0IGRvZXNuJ3QgY2F1c2UgYSBwcm9ibGUsIGl0J3MNCj4gZmluZS4NCj4gDQo+IEZpeGVzOiAw
+NjI1MmFkZTkxNTYgKCJtZmQ6IEFkZCBTVCBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgp
+IGNvcmUgZHJpdmVyIikNCj4gU2lnbmVkLW9mZi1ieTogRGFuIENhcnBlbnRlciA8ZGFuLmNhcnBl
+bnRlckBvcmFjbGUuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL21mZC9zdG1meC5jIHwgOCArKysr
+LS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvc3RtZnguYyBiL2RyaXZlcnMvbWZkL3N0
+bWZ4LmMNCj4gaW5kZXggZmU4ZWZiYTJkNDVmLi5mZWU3NWI1ZDA5OGUgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvbWZkL3N0bWZ4LmMNCj4gKysrIGIvZHJpdmVycy9tZmQvc3RtZnguYw0KPiBAQCAt
+MjA0LDEyICsyMDQsMTIgQEAgc3RhdGljIHN0cnVjdCBpcnFfY2hpcCBzdG1meF9pcnFfY2hpcCA9
+IHsNCj4gICBzdGF0aWMgaXJxcmV0dXJuX3Qgc3RtZnhfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9p
+ZCAqZGF0YSkNCj4gICB7DQo+ICAgCXN0cnVjdCBzdG1meCAqc3RtZnggPSBkYXRhOw0KPiAtCXVu
+c2lnbmVkIGxvbmcgbiwgcGVuZGluZzsNCj4gKwl1MzIgcGVuZGluZzsNCj4gICAJdTMyIGFjazsN
+Cj4gKwlpbnQgbjsNCj4gICAJaW50IHJldDsNCg0KQ291bGQgeW91IGdyb3VwOg0KDQp1MzIgcGVu
+ZGluZywgYWNrOw0KaW50IG4sIHJldDsNCg0KPiAgIA0KPiAtCXJldCA9IHJlZ21hcF9yZWFkKHN0
+bWZ4LT5tYXAsIFNUTUZYX1JFR19JUlFfUEVORElORywNCj4gLQkJCSAgKHUzMiAqKSZwZW5kaW5n
+KTsNCj4gKwlyZXQgPSByZWdtYXBfcmVhZChzdG1meC0+bWFwLCBTVE1GWF9SRUdfSVJRX1BFTkRJ
+TkcsICZwZW5kaW5nKTsNCj4gICAJaWYgKHJldCkNCj4gICAJCXJldHVybiBJUlFfTk9ORTsNCj4g
+ICANCj4gQEAgLTIyNCw3ICsyMjQsNyBAQCBzdGF0aWMgaXJxcmV0dXJuX3Qgc3RtZnhfaXJxX2hh
+bmRsZXIoaW50IGlycSwgdm9pZCAqZGF0YSkNCj4gICAJCQlyZXR1cm4gSVJRX05PTkU7DQo+ICAg
+CX0NCj4gICANCj4gLQlmb3JfZWFjaF9zZXRfYml0KG4sICZwZW5kaW5nLCBTVE1GWF9SRUdfSVJR
+X1NSQ19NQVgpDQo+ICsJZm9yX2VhY2hfc2V0X2JpdChuLCAodW5zaWduZWQgbG9uZyAqKSZwZW5k
+aW5nLCBTVE1GWF9SRUdfSVJRX1NSQ19NQVgpDQo+ICAgCQloYW5kbGVfbmVzdGVkX2lycShpcnFf
+ZmluZF9tYXBwaW5nKHN0bWZ4LT5pcnFfZG9tYWluLCBuKSk7DQo+ICAgDQo+ICAgCXJldHVybiBJ
+UlFfSEFORExFRDsNCj4gDQoNCkkndmUgdGVzdGVkIGl0IG9uIHN0bTMybXAxNTdjLWV2MSwgc28g
+eW91IGNhbiBhZGQgbXkNClRlc3RlZC1ieTogQW1lbGllIERlbGF1bmF5IDxhbWVsaWUuZGVsYXVu
+YXlAc3QuY29tPg0KDQpSZWdhcmRzLA0KQW1lbGll
