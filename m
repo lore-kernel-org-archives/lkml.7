@@ -2,124 +2,154 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524AFC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3DDC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1608524E25
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA03325CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Fvl/CFjl";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Fvl/CFjl"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LQahd2Da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFCNn1 (ORCPT
+        id S1728724AbfFCNnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:43:27 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59884 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbfFCNn1 (ORCPT
+        Mon, 3 Jun 2019 09:43:32 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55645 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfFCNnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:43:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 88A478EE20E;
-        Mon,  3 Jun 2019 06:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1559569406;
-        bh=rv5eMt5Ox6SWl5IiEKSRvT+Pe1LbZFvSuMV58bVcP4s=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Fvl/CFjlqfGEV86Y6Dvfeh0Fi2OHeNLIBKAoy0lzO3u0OpPPytvgjdzhAhXamVqBl
-         hdxinz2VSVquIOiRulZOr7pfHlyIQC6RuoDTeETE/7OpIiwdSOIJ7+BBq0lR0LSVmm
-         s6tr1ApF0LKH7SpXLATR0Q19Yg3uC9DpA7dAWMaQ=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SvxauTeMytyA; Mon,  3 Jun 2019 06:43:26 -0700 (PDT)
-Received: from jarvis.guest.haifa.ibm.com (unknown [195.110.41.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B387E8EE104;
-        Mon,  3 Jun 2019 06:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1559569406;
-        bh=rv5eMt5Ox6SWl5IiEKSRvT+Pe1LbZFvSuMV58bVcP4s=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Fvl/CFjlqfGEV86Y6Dvfeh0Fi2OHeNLIBKAoy0lzO3u0OpPPytvgjdzhAhXamVqBl
-         hdxinz2VSVquIOiRulZOr7pfHlyIQC6RuoDTeETE/7OpIiwdSOIJ7+BBq0lR0LSVmm
-         s6tr1ApF0LKH7SpXLATR0Q19Yg3uC9DpA7dAWMaQ=
-Message-ID: <1559569401.5052.17.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, dmitry.kasatkin@huawei.com,
-        mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Mon, 03 Jun 2019 16:43:21 +0300
-In-Reply-To: <e6b31aa9-0319-1805-bdfc-3ddde5884494@huawei.com>
-References: <20190529133035.28724-1-roberto.sassu@huawei.com>
-         <20190529133035.28724-3-roberto.sassu@huawei.com>
-         <1559217621.4008.7.camel@linux.ibm.com>
-         <e6b31aa9-0319-1805-bdfc-3ddde5884494@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Jun 2019 09:43:31 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DhH8i612324
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:43:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DhH8i612324
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559569398;
+        bh=YGtaM+V3pbGIkGEIPGitEElsGDkhauWGMuFfH+iKewk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=LQahd2DaQTxLSMgbPGsY5h0mTGQechgxn35WPKb0+9B8Ok4U7vsFh5qHgNlzU/6G3
+         ze0ZAkf5z6tWLMgg/dBtGcoHkP41CyxYDXoLqXLH3aKRB9XQYYyadexXSRy63Bj2ff
+         vd4gA/Wv4T8GxMLjNaBsyoEnqjr9oTjPJMiaagGUjQMG62o+XO1GR5NpXEej4BvxEd
+         ya6nWBghVGgQCh/9RRsR3dnxSOkp/jROj02kZBddtbKuUMAyIzxRRDjBkFQ+/OYgdq
+         Fm/fsUn4i+JOLTvoY/+5Z/2ZnPcvP4kaxGmUV0YgFeEfGKPO2N4bwjv2503zJCg5+H
+         c+0+uB8DhUykg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DhHm8612321;
+        Mon, 3 Jun 2019 06:43:17 -0700
+Date:   Mon, 3 Jun 2019 06:43:17 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Mark Rutland <tipbot@zytor.com>
+Message-ID: <tip-04e8851af767153c0878cc79ce30c0d8806eec43@git.kernel.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
+        mingo@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        will.deacon@arm.com, mark.rutland@arm.com
+Reply-To: will.deacon@arm.com, mark.rutland@arm.com, davem@davemloft.net,
+          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+          tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
+          hpa@zytor.com
+In-Reply-To: <20190522132250.26499-15-mark.rutland@arm.com>
+References: <20190522132250.26499-15-mark.rutland@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/atomic, sparc: Use s64 for atomic64
+Git-Commit-ID: 04e8851af767153c0878cc79ce30c0d8806eec43
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-03 at 11:25 +0200, Roberto Sassu wrote:
-> On 5/30/2019 2:00 PM, Mimi Zohar wrote:
-> > On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
-> > > Currently, ima_appraise_measurement() ignores the EVM status when
-> > > evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a
-> > > valid security.ima xattr with type IMA_XATTR_DIGEST or
-> > > IMA_XATTR_DIGEST_NG, ima_appraise_measurement() returns
-> > > INTEGRITY_PASS regardless of the EVM status. The problem is that
-> > > the EVM status is overwritten with the appraisal statu
-> > 
-> > Roberto, your framing of this problem is harsh and misleading.  IMA
-> > and EVM are intentionally independent of each other and can be
-> > configured independently of each other.  The intersection of the
-> > two is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is
-> > returned for a number of reasons - when EVM is not configured, the
-> > EVM hmac key has not yet been loaded, the protected security
-> > attribute is unknown, or the file is not in policy.
-> > 
-> > This patch does not differentiate between any of the above cases,
-> > requiring mutable files to always be protected by EVM, when
-> > specified as an "ima_appraise=" option on the boot command line.
-> > 
-> > IMA could be extended to require EVM on a per IMA policy rule
-> > basis. Instead of framing allowing IMA file hashes without EVM as a
-> > bug that has existed from the very beginning, now that IMA/EVM have
-> > matured and is being used, you could frame it as extending IMA
-> > or hardening.
-> 
-> I'm seeing it from the perspective of an administrator that manages
-> an already hardened system, and expects that the system only grants
-> access to files with a valid signature/HMAC. That system would not
-> enforce this behavior if EVM keys are removed and the digest in
-> security.ima is set to the actual file digest.
-> 
-> Framing it as a bug rather than an extension would in my opinion help
-> to convince people about the necessity to switch to the safe mode, if
-> their system is already hardened.
+Commit-ID:  04e8851af767153c0878cc79ce30c0d8806eec43
+Gitweb:     https://git.kernel.org/tip/04e8851af767153c0878cc79ce30c0d8806eec43
+Author:     Mark Rutland <mark.rutland@arm.com>
+AuthorDate: Wed, 22 May 2019 14:22:46 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 12:32:56 +0200
 
-I have a use case for IMA where I use it to enforce immutability of
-containers.  In this use case, the cluster admin places hashes on
-executables as the image is unpacked so that if an executable file is
-changed, IMA will cause an execution failure.  For this use case, I
-don't care about the EVM, in fact we don't use it, because the only
-object is to fail execution if a binary is mutated.
+locking/atomic, sparc: Use s64 for atomic64
 
-So I can see your use case requires IMA+EVM, but requiring it would
-cause more complexity for my use case.
+As a step towards making the atomic64 API use consistent types treewide,
+let's have the sparc atomic64 implementation use s64 as the underlying
+type for atomic64_t, rather than long, matching the generated headers.
 
-James
+As atomic64_read() depends on the generic defintion of atomic64_t, this
+still returns long. This will be converted in a subsequent patch.
 
+Otherwise, there should be no functional change as a result of this patch.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: aou@eecs.berkeley.edu
+Cc: arnd@arndb.de
+Cc: bp@alien8.de
+Cc: catalin.marinas@arm.com
+Cc: fenghua.yu@intel.com
+Cc: heiko.carstens@de.ibm.com
+Cc: herbert@gondor.apana.org.au
+Cc: ink@jurassic.park.msu.ru
+Cc: jhogan@kernel.org
+Cc: linux@armlinux.org.uk
+Cc: mattst88@gmail.com
+Cc: mpe@ellerman.id.au
+Cc: palmer@sifive.com
+Cc: paul.burton@mips.com
+Cc: paulus@samba.org
+Cc: ralf@linux-mips.org
+Cc: rth@twiddle.net
+Cc: tony.luck@intel.com
+Cc: vgupta@synopsys.com
+Link: https://lkml.kernel.org/r/20190522132250.26499-15-mark.rutland@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/sparc/include/asm/atomic_64.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/sparc/include/asm/atomic_64.h b/arch/sparc/include/asm/atomic_64.h
+index 6963482c81d8..b60448397d4f 100644
+--- a/arch/sparc/include/asm/atomic_64.h
++++ b/arch/sparc/include/asm/atomic_64.h
+@@ -23,15 +23,15 @@
+ 
+ #define ATOMIC_OP(op)							\
+ void atomic_##op(int, atomic_t *);					\
+-void atomic64_##op(long, atomic64_t *);
++void atomic64_##op(s64, atomic64_t *);
+ 
+ #define ATOMIC_OP_RETURN(op)						\
+ int atomic_##op##_return(int, atomic_t *);				\
+-long atomic64_##op##_return(long, atomic64_t *);
++s64 atomic64_##op##_return(s64, atomic64_t *);
+ 
+ #define ATOMIC_FETCH_OP(op)						\
+ int atomic_fetch_##op(int, atomic_t *);					\
+-long atomic64_fetch_##op(long, atomic64_t *);
++s64 atomic64_fetch_##op(s64, atomic64_t *);
+ 
+ #define ATOMIC_OPS(op) ATOMIC_OP(op) ATOMIC_OP_RETURN(op) ATOMIC_FETCH_OP(op)
+ 
+@@ -61,7 +61,7 @@ static inline int atomic_xchg(atomic_t *v, int new)
+ 	((__typeof__((v)->counter))cmpxchg(&((v)->counter), (o), (n)))
+ #define atomic64_xchg(v, new) (xchg(&((v)->counter), new))
+ 
+-long atomic64_dec_if_positive(atomic64_t *v);
++s64 atomic64_dec_if_positive(atomic64_t *v);
+ #define atomic64_dec_if_positive atomic64_dec_if_positive
+ 
+ #endif /* !(__ARCH_SPARC64_ATOMIC__) */
