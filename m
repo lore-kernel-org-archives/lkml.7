@@ -4,72 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E16C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06FF27A7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6458824367
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbfFCOVK (ORCPT
+        id S1729001AbfFCOW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:21:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54005 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfFCOVJ (ORCPT
+        Mon, 3 Jun 2019 10:22:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34446 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbfFCOW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:21:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hXnpe-0002aE-GG; Mon, 03 Jun 2019 14:21:02 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jyri Sarha <jsarha@ti.com>, Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/bridge: sii902x: fix comparision of u32 with less than zero
-Date:   Mon,  3 Jun 2019 15:21:02 +0100
-Message-Id: <20190603142102.27191-1-colin.king@canonical.com>
+        Mon, 3 Jun 2019 10:22:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id A1E642639EE
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     kernel@collabora.com, ezequiel@collabora.com,
+        laurent.pinchart@ideasonboard.com,
+        manivannan.sadhasivam@linaro.org,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power domain
+Date:   Mon,  3 Jun 2019 11:22:15 -0300
+Message-Id: <20190603142214.24686-1-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+isp iommu requires wrapper variants of the clocks.
+noc variants are always on and using the wrapper variants will activate
+{A,H}CLK_ISP{0,1} due to the hierarchy.
 
-The less than check for the variable num_lanes is always going to be
-false because the variable is a u32.  Fix this by making num_lanes an
-int and also make loop index i an int too.
+Also add the respective power domain.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Refer:
+ RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
+ RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
+
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
 ---
- drivers/gpu/drm/bridge/sii902x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello,
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index d6f98d388ac2..21a947603c88 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -719,7 +719,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
- 		.max_i2s_channels = 0,
+I tested this using the isp patch set (which is not upstream
+yet). Without this patch, streaming from the isp stalls.
+
+I'm also enabling the power domain and removing the disable status,
+please let me know if this should be done in a separated patch.
+
+Thanks
+Helen
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 196ac9b78076..89594a7276f4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1706,11 +1706,11 @@
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp0_mmu";
+-		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
++		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP0>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
  	};
- 	u8 lanes[4];
--	u32 num_lanes, i;
-+	int num_lanes, i;
  
- 	if (!of_property_read_bool(dev->of_node, "#sound-dai-cells")) {
- 		dev_dbg(dev, "%s: No \"#sound-dai-cells\", no audio\n",
+ 	isp1_mmu: iommu@ff924000 {
+@@ -1718,11 +1718,11 @@
+ 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp1_mmu";
+-		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
++		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP1>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
+ 	};
+ 
+ 	hdmi_sound: hdmi-sound {
 -- 
 2.20.1
 
