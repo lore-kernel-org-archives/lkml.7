@@ -2,102 +2,68 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865B7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE90C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCD6270FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A5B263A6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 06:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfFCGsA (ORCPT
+        id S1727227AbfFCGtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 02:48:00 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:43713 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727268AbfFCGrj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 02:47:39 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0843899|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.425534-0.023847-0.550619;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.EglnAtr_1559544454;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EglnAtr_1559544454)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Mon, 03 Jun 2019 14:47:34 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Rob Herring <robh+dt@kernel.org>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH V3 4/6] dt-bindings: csky: Add csky PMU bindings
-Date:   Mon,  3 Jun 2019 14:46:23 +0800
-Message-Id: <bb3a684599185ff30e11fa6cd82a44932e61e9ef.1559544301.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1559544301.git.han_mao@c-sky.com>
-References: <cover.1559544301.git.han_mao@c-sky.com>
-In-Reply-To: <cover.1559544301.git.han_mao@c-sky.com>
-References: <cover.1559544301.git.han_mao@c-sky.com>
+        Mon, 3 Jun 2019 02:49:23 -0400
+Received: from verein.lst.de ([213.95.11.211]:54901 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbfFCGtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 02:49:22 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 9F53A68B05; Mon,  3 Jun 2019 08:48:55 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 08:48:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH 5/7 v2] MIPS: use the generic uncached segment support
+ in dma-direct
+Message-ID: <20190603064855.GA22023@lst.de>
+References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-6-hch@lst.de> <20190430201041.536amvinrcvd2wua@pburton-laptop> <20190430202947.GA30262@lst.de> <20190430211105.ielntedm46uqamca@pburton-laptop> <20190501131339.GA890@lst.de> <20190501171355.7wnrutfnax5djkpx@pburton-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501171355.7wnrutfnax5djkpx@pburton-laptop>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the documentation to describe that how to add pmu node in
-dts.
+On Wed, May 01, 2019 at 05:13:57PM +0000, Paul Burton wrote:
+> Hi Christoph,
+> 
+> On Wed, May 01, 2019 at 03:13:39PM +0200, Christoph Hellwig wrote:
+> > Stop providing our arch alloc/free hooks and just expose the segment
+> > offset instead.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/mips/Kconfig              |  1 +
+> >  arch/mips/include/asm/page.h   |  3 ---
+> >  arch/mips/jazz/jazzdma.c       |  6 ------
+> >  arch/mips/mm/dma-noncoherent.c | 26 +++++++++-----------------
+> >  4 files changed, 10 insertions(+), 26 deletions(-)
+> 
+> This one looks good to me now, for patches 1 & 5:
+> 
+>   Acked-by: Paul Burton <paul.burton@mips.com>
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Guo Ren <guoren@kernel.org>
-CC: linux-csky@vger.kernel.org
----
- Documentation/devicetree/bindings/csky/pmu.txt | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/csky/pmu.txt
-
-diff --git a/Documentation/devicetree/bindings/csky/pmu.txt b/Documentation/devicetree/bindings/csky/pmu.txt
-new file mode 100644
-index 0000000..4046b3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/csky/pmu.txt
-@@ -0,0 +1,38 @@
-+============================
-+C-SKY Performance Monitor Units
-+============================
-+
-+C-SKY 8xx series cores often have a PMU for counting cpu and cache events.
-+The C-SKY PMU representation in the device tree should be done as under:
-+
-+==============================
-+PMU node bindings definition
-+==============================
-+
-+	Description: Describes PMU
-+
-+	PROPERTIES
-+
-+	- compatible
-+		Usage: required
-+		Value type: <string>
-+		Definition: must be "csky,csky-pmu"
-+	- interrupts
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be pmu irq num defined by soc
-+	- reg-io-width
-+		Usage: optional
-+		Value type: <u32>
-+		Definition: the width of pmu counter
-+
-+Examples:
-+---------
-+
-+        pmu {
-+                compatible = "csky,csky-pmu";
-+                interrupts = <0x17 IRQ_TYPE_EDGE_RISING>;
-+                interrupt-parent = <&intc>;
-+		reg-io-width = <0x30>;
-+        };
-+
--- 
-2.7.4
-
+Thanks, I've merged thos into the dma-mapping tree.
