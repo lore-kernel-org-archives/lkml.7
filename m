@@ -2,152 +2,78 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DB0C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D339CC28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6613628009
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AD128008
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559554318;
+	bh=EMN8Iq59ijXBnEHjrjBo+85LTiDDMfUpO35bS9zD+hA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i9vAykWhtf1G00MdYoub51tbeCTl93+8bokutjnJAKLcjHHDSv12BRtyFS7AIYuls
+	 /teRzGWDCfNLfmHsSnlWNMc91DZEawcqlPJfyk0Y3yk1mU5Id27VGf82uYkV40FyjG
+	 PM64Z93dEU55bNjjT2vc42QWh83kfjxj6b7vVCug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfFCJbq (ORCPT
+        id S1727875AbfFCJb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:31:46 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32978 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727107AbfFCJbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:31:45 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 36796E74BD119818074D;
-        Mon,  3 Jun 2019 10:31:44 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 3 Jun
- 2019 10:31:34 +0100
-Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     <viro@zeniv.linux.org.uk>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bug-cpio@gnu.org>,
-        <zohar@linux.vnet.ibm.com>, <silviu.vlasceanu@huawei.com>,
-        <dmitry.kasatkin@huawei.com>, <takondra@cisco.com>,
-        <kamensky@cisco.com>, <hpa@zytor.com>, <arnd@arndb.de>,
-        <rob@landley.net>, <james.w.mcmechan@gmail.com>,
-        <niveditas98@gmail.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
-Date:   Mon, 3 Jun 2019 11:31:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 3 Jun 2019 05:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726555AbfFCJb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:31:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D67228006;
+        Mon,  3 Jun 2019 09:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559554317;
+        bh=EMN8Iq59ijXBnEHjrjBo+85LTiDDMfUpO35bS9zD+hA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S+FM+LyaDtTO9EKGzJuxtIkNDUabPe0tJvMKkEUDdOe4Nm5SoFmNliu7cmoDPRXir
+         BA/Txj7hGqIEzAhO2Vat8/5P2GGHHms8+HAX/bFc1mkNgNF7HtZUIhQVnf8ugoMxSB
+         ek+G0XoWMjgCmdTS8UASEtCUMf3ulub46wFJdFgY=
+Date:   Mon, 3 Jun 2019 11:31:54 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v4 1/2] drivers: base: cacheinfo: Add variable to record
+ max cache line size
+Message-ID: <20190603093154.GA29175@kroah.com>
+References: <1559009814-17004-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523121803.21638-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559009814-17004-1-git-send-email-zhangshaokun@hisilicon.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any opinion on this patch set?
+On Tue, May 28, 2019 at 10:16:53AM +0800, Shaokun Zhang wrote:
+> Add coherency_max_size variable to record the maximum cache line size
+> for different cache levels. If it is available, we will synchronize
+> it as cache line size, otherwise we will use CTR_EL0.CWG reporting
+> in cache_line_size() for arm64.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Jeremy Linton <jeremy.linton@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-Thanks
-
-Roberto
-
-
-On 5/23/2019 2:18 PM, Roberto Sassu wrote:
-> This patch set aims at solving the following use case: appraise files from
-> the initial ram disk. To do that, IMA checks the signature/hash from the
-> security.ima xattr. Unfortunately, this use case cannot be implemented
-> currently, as the CPIO format does not support xattrs.
-> 
-> This proposal consists in including file metadata as additional files named
-> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
-> kernel recognizes these special files from the file name, and calls the
-> appropriate parser to add metadata to the previously extracted file. It has
-> been proposed to use bit 17:16 of the file mode as a way to recognize files
-> with metadata, but both the kernel and the cpio tool declare the file mode
-> as unsigned short.
-> 
-> The difference from v2, v3 (https://lkml.org/lkml/2019/5/9/230,
-> https://lkml.org/lkml/2019/5/17/466) is that file metadata are stored in
-> separate files instead of a single file. Given that files with metadata
-> must immediately follow the files metadata will be added to, image
-> generators have to be modified in this version.
-> 
-> The difference from v1 (https://lkml.org/lkml/2018/11/22/1182) is that
-> all files have the same name. The file metadata are added to is always the
-> previous one, and the image generator in user space will make sure that
-> files are in the correct sequence.
-> 
-> The difference with another proposal
-> (https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
-> included in an image without changing the image format. Files with metadata
-> will appear as regular files. It will be task of the parser in the kernel
-> to process them.
-> 
-> This patch set extends the format of data defined in patch 9/15 of the last
-> proposal. It adds header version and type, so that new formats can be
-> defined and arbitrary metadata types can be processed.
-> 
-> The changes introduced by this patch set don't cause any compatibility
-> issue: kernels without the metadata parser simply extract the special files
-> and don't process metadata; kernels with the metadata parser don't process
-> metadata if the special files are not included in the image.
-> 
->  From the kernel space perspective, backporting this functionality to older
-> kernels should be very easy. It is sufficient to add two calls to the new
-> function do_process_metadata() in do_copy(), and to check the file name in
-> do_name(). From the user space perspective, unlike the previous version of
-> the patch set, it is required to modify the image generators in order to
-> include metadata as separate files.
-> 
-> Changelog
-> 
-> v3:
-> - include file metadata as separate files named METADATA!!!
-> - add the possibility to include in the ram disk arbitrary metadata types
-> 
-> v2:
-> - replace ksys_lsetxattr() with kern_path() and vfs_setxattr()
->    (suggested by Jann Horn)
-> - replace ksys_open()/ksys_read()/ksys_close() with
->    filp_open()/kernel_read()/fput()
->    (suggested by Jann Horn)
-> - use path variable instead of name_buf in do_readxattrs()
-> - set last byte of str to 0 in do_readxattrs()
-> - call do_readxattrs() in do_name() before replacing an existing
->    .xattr-list
-> - pass pathname to do_setxattrs()
-> 
-> v1:
-> - move xattr unmarshaling to CPIO parser
-> 
-> 
-> Mimi Zohar (1):
->    initramfs: add file metadata
-> 
-> Roberto Sassu (2):
->    initramfs: read metadata from special file METADATA!!!
->    gen_init_cpio: add support for file metadata
-> 
->   include/linux/initramfs.h |  21 ++++++
->   init/initramfs.c          | 137 +++++++++++++++++++++++++++++++++++++-
->   usr/Kconfig               |   8 +++
->   usr/Makefile              |   4 +-
->   usr/gen_init_cpio.c       | 137 ++++++++++++++++++++++++++++++++++++--
->   usr/gen_initramfs_list.sh |  10 ++-
->   6 files changed, 305 insertions(+), 12 deletions(-)
->   create mode 100644 include/linux/initramfs.h
-> 
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
