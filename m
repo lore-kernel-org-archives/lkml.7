@@ -2,113 +2,102 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10B1C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B900C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98A126E93
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EHU5AK+M"
+	by mail.kernel.org (Postfix) with ESMTP id 6A80826EBD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfFCU2y (ORCPT
+        id S1726663AbfFCU3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:28:54 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41010 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfFCU2x (ORCPT
+        Mon, 3 Jun 2019 16:29:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726055AbfFCU3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:28:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s57so3960779qte.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 13:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+KFBFAnU1kNLS5/DKe/r6zwMtKjfn/DnI3zFYfYxNlc=;
-        b=EHU5AK+Mj4qB5AL0E/JcoWO3o2cvb7UDAagbWP93F6gd9CE1lBLezG4yQsZYIPaS+V
-         Wn9RpyQTGwzMLyh8hwvkDLrpRa+t/w51hbLVk4UfRTMFZ0sX4fSYH8EvMgZ7RTguxaxP
-         jRuEv1fBp76DSqLQisjvbdgA1TV2HgMvbvGlIrVHwLg2jFGOJuxOslmXxmk8ADXlo1Gr
-         B5HM7/M+TELtie0dDrM2syZO//4NzDIJancg+Vnc5LC7xW7kGR8iygtW0whg94eX8NrG
-         +jwMCSIROkXipjWdfUExtXt7YQ8ZzpP9RN6SLACKuDdsUpf+mAWv967wXR62TjV+IZVW
-         5LsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+KFBFAnU1kNLS5/DKe/r6zwMtKjfn/DnI3zFYfYxNlc=;
-        b=QBkfzTaBmJoJuYWujoWjXTfQBs8lkZJ8O6F4XjLoXAXXjJF1IObi2abCDjkoxbgjxv
-         yk9PUcsvjjgQMliRLafA/Q8PdzzVz91geNBztOw8+70nvwKvt3NdFDY1F/PwVFlOgQPf
-         csnDBycQs0W2ZUVaLQM6JSqlsRRYp9u3LqIZbMEmw47j9Q+xJQ7joYCUIXmyLESvzLcY
-         o2f715BMO5ToIDZIepmuQwe8kXxefrrAW8+qxuIIgq9BfH+7k2i9mfZkWjl78iVAXv7H
-         6x/lVphPusq9TQI05aP4VR7ToC5YaG5VGQ+ZDm3eMbSKKvTt9yHjWNM1Ea3dToj7Y8K5
-         DNsA==
-X-Gm-Message-State: APjAAAXTe4XGdV2rPzLJGZ5tSEin2mhAO5vS3rTLg3bqaMujdJysIx0T
-        Sr0P4UK4i6D2ZuFJoVU2sa+1qzprvDM=
-X-Google-Smtp-Source: APXvYqxjN3irkpRozi2atJyefD1tbFlAgV1wX/NN8oMIDX/KEd/3kvHqEeBXE9FRLWN+X/Vq78i54Q==
-X-Received: by 2002:ac8:21bc:: with SMTP id 57mr24334342qty.73.1559593732486;
-        Mon, 03 Jun 2019 13:28:52 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id s35sm9488675qth.79.2019.06.03.13.28.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 13:28:51 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     rjw@rjwysocki.net, lenb@kernel.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] acpi/osl: fix a W=1 kernel-doc warning
-Date:   Mon,  3 Jun 2019 16:28:35 -0400
-Message-Id: <1559593715-29599-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 3 Jun 2019 16:29:15 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53KLmHe107402;
+        Mon, 3 Jun 2019 16:29:04 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw9kxjs3a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 16:29:04 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x53ESVIQ011007;
+        Mon, 3 Jun 2019 14:34:05 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 2suh092qdy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 14:34:05 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53KT2hU19267592
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 20:29:02 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDA4FAC060;
+        Mon,  3 Jun 2019 20:29:02 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29472AC05E;
+        Mon,  3 Jun 2019 20:29:02 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.85.191.102])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 20:29:01 +0000 (GMT)
+Subject: Re: linux-next: build warning after merge of the scsi tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <20190531133612.35276ad9@canb.auug.org.au>
+From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Message-ID: <4029bacf-3b74-b54c-ad52-42a67a6c13f9@linux.vnet.ibm.com>
+Date:   Mon, 3 Jun 2019 13:29:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190531133612.35276ad9@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that kernel-doc does not understand the return type *__ref,
+On 05/30/2019 08:36 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the scsi tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+> 
+> drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_work':
+> drivers/scsi/ibmvscsi/ibmvscsi.c:2151:5: warning: 'rc' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   if (rc) {
+>      ^
+> drivers/scsi/ibmvscsi/ibmvscsi.c:2121:6: note: 'rc' was declared here
+>   int rc;
+>       ^~
+> 
+> Introduced by commit
+> 
+>   035a3c4046b5 ("scsi: ibmvscsi: redo driver work thread to use enum action states")
+> 
 
-drivers/acpi/osl.c:306: warning: cannot understand function prototype:
-'void __iomem *__ref acpi_os_map_iomem(acpi_physical_address phys,
-acpi_size size)
+Oof, looks like I didn't compile with pedantic enough options, or just didn't
+notice the warning. Declaration should be "int rc = 0;". I can send a follow on
+patch.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/acpi/osl.c     | 4 ++--
- include/acpi/acpi_io.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index cc7507091dec..9c0edf2fc0dd 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -301,8 +301,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
-  * During early init (when acpi_permanent_mmap has not been set yet) this
-  * routine simply calls __acpi_map_table() to get the job done.
-  */
--void __iomem *__ref
--acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
-+void __iomem __ref
-+*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 	void __iomem *virt;
-diff --git a/include/acpi/acpi_io.h b/include/acpi/acpi_io.h
-index d0633fc1fc15..12d8bd333fe7 100644
---- a/include/acpi/acpi_io.h
-+++ b/include/acpi/acpi_io.h
-@@ -16,8 +16,8 @@ static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
- 
- extern bool acpi_permanent_mmap;
- 
--void __iomem *__ref
--acpi_os_map_iomem(acpi_physical_address phys, acpi_size size);
-+void __iomem __ref
-+*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size);
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size);
- void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size);
- 
--- 
-1.8.3.1
-
+-Tyrel
