@@ -2,149 +2,151 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1ECC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860E1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C112427D13
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C7427D12
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h35yfEjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFCHxj (ORCPT
+        id S1727430AbfFCHyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:53:39 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46915 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfFCHxj (ORCPT
+        Mon, 3 Jun 2019 03:54:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41918 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfFCHyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:53:39 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m15so6911985ljg.13;
-        Mon, 03 Jun 2019 00:53:37 -0700 (PDT)
+        Mon, 3 Jun 2019 03:54:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so10908832wrm.8;
+        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
+        b=h35yfEjrY2vvw99MwIpgXVkJ5IJiLh3ia6b0guwVdc3G0+xJ2Lb1yR3zklGwbM3WxX
+         BL9Uh2FU37IOo8En3rj1xsbbk36A6TTZfUw4xW57Z8D4k/Q2kj+3vzrADUe2RP1a9hCO
+         T9fGLYAcz6iENTagpLuICFPOUeCyAy/nn8b1w+H/1W6eg/2/WStqBy9DteoE/WgKHgWY
+         6vkKgvCshlq7vF3eyL1FKkaybSVOorAkVs3CqUusi+kl0gF0uAgbYLTrBjX/QsDcagNd
+         brUWJdFilFSI2qHU4us+OZ95q9iLISWkqoeRjL1oxvn1boPXwPFTZho2AyjZ9TheB+4D
+         DrKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lzAu1h4ws8etdnR0vU/6kchHWm+HERlVg4Pmf8ziv2U=;
-        b=A97aK9G6Hq9dQ0cvsetYkFPpfiU6T3l00Rh9NBc+1G8HKjbuqe0iHziPoJqp22tclA
-         SqlgHnmBR8YX4xLdUD1ewVuJJlswtcInr6VY4mqEeI8obYoD4caMzZXqWZEFtRmAHGIZ
-         7AWj5sLzVm0q2fuw2f2cBwGvI0osMpVY6RqRfUJdDtlqLsVKUayNAv4T3qUdvQXmTXOI
-         OyO+ASLdHdJTQL4axKSNvyV3BmKqMUMN2MG6LQLCMiYDyVY4TDHXGjANiyi7xT0rJj66
-         lAhrGfMmqjlGY5LWirbRh7tI8bzhvUpdSzGKjEuzUd09m38JOZ3csmVmPOGPR7cDmU0q
-         hh+g==
-X-Gm-Message-State: APjAAAWISBy3txLBxMBhuEhx9lbf+seTJdS76ueImSv2Xum7ZV+biout
-        TmDjZaFN2G1Sjv9pEqWiqrHDNVKXPr6JeGA4WgY=
-X-Google-Smtp-Source: APXvYqx+a8Vn6llNZaSeUiwhPpGeG7DsGesioGycPlDZreFw3MX3k5wLMh4T4QIhDHY2JgclwMbqAbNpr2tRxmlxJVs=
-X-Received: by 2002:a2e:9185:: with SMTP id f5mr10007939ljg.51.1559548416410;
- Mon, 03 Jun 2019 00:53:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
+        b=c959ET3jhdje8pI85lQp7zFmLItbZ7cU13rue6w5pSllvXUoDWJDxSEOHWk442gx4G
+         pAeRvTPs9YMoJ7M+OdEfScgRDaCOgg2mSEG8WypgCtyRaE4ibOkhyHaHp4zLNpXNDtzN
+         +HIdKVUlVJ8qw2Zj4cpd9q5R/XOockDsiRSlpcDaPDZeLqpvffecWQO4j1V7/rJmLe54
+         kQV9++9InlcjvJrZSlpvlKhtU8cldrhvVnWZNZb4zrNX7u/pgQutA/JXaVaDQqfXN/Vc
+         Ijc2iiNuFZTQ1ty4kEbQlgJxnhHY5GvZ3mfbwFtZSjeILURZ+fVFd839AkWSgK8NbO01
+         MYow==
+X-Gm-Message-State: APjAAAVdpZ79b0FNkS5am9QGd8n+PHKh3LP+UGyAhTKZMZ9+AgPasJxo
+        /NIvYdZee5uI1hZBXHwD424=
+X-Google-Smtp-Source: APXvYqxiTSwZLXUULRvAFA/dfGcBZic3OggAmUtZmzPOd/5qOuxPbnrAMWF3IQY0KCa3Np3mjYPxUA==
+X-Received: by 2002:a5d:5390:: with SMTP id d16mr8506962wrv.85.1559548447260;
+        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id c2sm20530611wrf.75.2019.06.03.00.54.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 00:54:06 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 09:54:05 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
+Message-ID: <20190603075405.GB27753@ulmo>
+References: <20190529145322.20630-1-thierry.reding@gmail.com>
+ <20190529145322.20630-2-thierry.reding@gmail.com>
+ <CACRpkda_aK++k0eVHmGszgts86usaxbQ9uU0kqAzAjapK8AOQg@mail.gmail.com>
+ <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1559438652.git.fthain@telegraphics.com.au>
- <c56deeb735545c7942607a93f017bb536f581ae5.1559438652.git.fthain@telegraphics.com.au>
- <CAMuHMdWxRtJU2aRQQjXzR2mvpfpDezCVu42Eo1eXDsQaPb+j6Q@mail.gmail.com>
- <alpine.LNX.2.21.1906030903510.20@nippy.intranet> <CAMuHMdUFxQnmJmkr2qm4waTfFA5yfCHAFngyD37cFH6gbbD-Pg@mail.gmail.com>
- <alpine.LNX.2.21.1906031702220.37@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1906031702220.37@nippy.intranet>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Jun 2019 09:53:24 +0200
-Message-ID: <CAMuHMdXDvrTe09PVFxoDGj6xg-x+99iAhWoM8xXG-7WPKJBZOw@mail.gmail.com>
-Subject: Re: [PATCH 5/7] scsi: mac_scsi: Fix pseudo DMA implementation, take 2
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
 
-On Mon, Jun 3, 2019 at 9:40 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> On Mon, 3 Jun 2019, Geert Uytterhoeven wrote:
-> > On Mon, Jun 3, 2019 at 1:32 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > > On Sun, 2 Jun 2019, Geert Uytterhoeven wrote:
-> > > > On Sun, Jun 2, 2019 at 3:29 AM Finn Thain <fthain@telegraphics.com.au>
-> > > > wrote:
-> > > > > A system bus error during a PDMA transfer can mess up the calculation
-> > > > > of the transfer residual (the PDMA handshaking hardware lacks a byte
-> > > > > counter). This results in data corruption.
-> > > > >
-> > > > > The algorithm in this patch anticipates a bus error by starting each
-> > > > > transfer with a MOVE.B instruction. If a bus error is caught the
-> > > > > transfer will be retried. If a bus error is caught later in the
-> > > > > transfer (for a MOVE.W instruction) the transfer gets failed and
-> > > > > subsequent requests for that target will use PIO instead of PDMA.
-> > > > >
-> > > > > This avoids the "!REQ and !ACK" error so the severity level of that
-> > > > > message is reduced to KERN_DEBUG.
-> > > > >
-> > > > > Cc: Michael Schmitz <schmitzmic@gmail.com>
-> > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > Cc: stable@vger.kernel.org # v4.14+
-> > > > > Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-> > > > > Reported-by: Chris Jones <chris@martin-jones.com>
-> > > > > Tested-by: Stan Johnson <userm57@yahoo.com>
-> > > > > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > > >
-> > > > Thanks for your patch!
-> > > >
-> > > > > ---
-> > > > >  arch/m68k/include/asm/mac_pdma.h | 179 +++++++++++++++++++++++++++
-> > > > >  drivers/scsi/mac_scsi.c          | 201 ++++++++-----------------------
-> > > >
-> > > > Why have you moved the PDMA implementation to a header file under
-> > > > arch/m68k/? Do you intend to reuse it by other drivers?
-> > > >
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jun 02, 2019 at 10:35:22PM +0200, Linus Walleij wrote:
+> On Sun, Jun 2, 2019 at 3:51 PM Linus Walleij <linus.walleij@linaro.org> w=
+rote:
+> > On Wed, May 29, 2019 at 4:53 PM Thierry Reding <thierry.reding@gmail.co=
+m> wrote:
+> >
+> > > From: Thierry Reding <treding@nvidia.com>
 > > >
-> > > There are a couple of reasons: the mac_esp driver also uses PDMA and the
-> > > NuBus PowerMac port also uses mac_scsi.c. OTOH, the NuBus PowerMac port is
-> > > still out-of-tree, and it is unclear whether the mac_esp driver will ever
-> > > benefit from this code.
-> >
-> > So you do have future sharing in mind...
-> >
-> > > > If not, please keep it in the driver, so (a) you don't need an ack from
-> > > > me ;-), and (b) your change may be easier to review.
+> > > Hierarchical IRQ domains can be used to stack different IRQ controlle=
+rs
+> > > on top of each other. One specific use-case where this can be useful =
+is
+> > > if a power management controller has top-level controls for wakeup
+> > > interrupts. In such cases, the power management controller can be a
+> > > parent to other interrupt controllers and program additional registers
+> > > when an IRQ has its wake capability enabled or disabled.
 > > >
-> > > I take your wink to mean that you don't want to ask the SCSI maintainers
-> > > to review m68k asm. Putting aside the code review process for a moment, do
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > > Changes in v3:
+> > > - use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
+> > > - add missing kerneldoc for new parent_domain field
+> > > - keep IRQ_DOMAIN dependency for clarity
 > >
-> > I meant that apart from the code containing m68k assembler source, it is
-> > not related to arch/m68k/, and thus belongs to the driver.
->
-> That criterion seems insufficient. It could describe most of arch/m68k/mac
-> (which has headers in arch/m68k/include).
->
-> > There are several other drivers that contain pieces of assembler code.
-> >
->
-> Does any driver contain assembler code for multiple architectures? I was
-> trying to avoid that -- though admittedly I don't yet have actual code for
-> the PDMA implementation for mac_scsi for Nubus PowerMacs.
->
-> However, the existence of that out-of-tree port suggests to me that
-> arch/powerpc/include/mac_scsi.h and arch/m68k/include/mac_scsi.h would be
-> an appropriate layout.
->
-> But if there's no clear policy then perhaps we should ignore the whole
-> question until the driver code actually becomes shared code. I don't mind
-> re-working the patch to combine the two files.
+> > Actually I applied the patch, and dropped the two lines making
+> > it possible to override .to_irq() for now, so I can illustrate my
+> > idea on top. If I manage.
+>=20
+> Bah I rewrote the whole think as I want it, maybe my ideas are stupid
+> but take a look at it, also very interested in input from the irqchip
+> maintainers.
+>=20
+> Sending it out as RFC in a moment.
 
-Yep, can be handled when the need arises.
+Okay, taking a look.
 
-Gr{oetje,eeting}s,
+Thierry
 
-                        Geert
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz00h0ACgkQ3SOs138+
+s6EZfw/7BJannL3kB1Nh/+VGh/5w17Bx5M9krNi9ZnAdgOmUdIkhU2jgYJeq9rHL
+lL0mqmiTp3kOC/P6UaWZDuP9Ua2c4A4tWyDm1f1/mFntd+jwdf/RCkeeGwlGKeaP
+Hjk+xQLfb+iJGAIDE/yFuObO5/4NbcqtfNr62odpmhy/X2AvZT09bDIRJEtkrPdw
+Eg2QIsO7Y7IQ7FaIpL353upu01V7xgiFxJuTq883zLT7TEF//RxnpYe3KEqAwVA2
+Vj18fFheP0kJbFfsQWeHw7Dald+4pENxQzfq2eohnl2BdwkbFWLEwlNRcozhLgLP
+cT8AX1H1L//+aOSZAnvm2QvVNsvkMyGELs1rznw6+82/BS3+bZctpDXUoJ9gl1Bc
+nvZjzKftd3cUkr10K5tPgXiM/72MqQWflEHhlJ68kA2sJrOuoTEpRyNgXpIBqHuX
+StSVhjqQU3UHP/QgviN1Bp/QpEI+1NPjrO1debtHdiKEa/JcwqGuzl/6bcckBwoC
+0bT1bb/5DE5IFYLixCQndPaX5rWnV6xX7FDttEi7+1f6QtqvH1tkexhddKWNOCOB
+rCMlNgDYTpbV0wVNixKgepiJLbUw3xxX/UMOZV161MQayl9ahIKa1y1zJWTzjlPg
+nc6cNCt8uaYBLH/rm0w4nQ4VN2EypDKEn7fjj3Sk8QqLYz0s3mE=
+=lwgL
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
