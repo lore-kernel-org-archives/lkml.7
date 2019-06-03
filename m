@@ -2,95 +2,102 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D03FC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBE0C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372C127DD7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9970F280FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EvYzUk3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfFCM3h (ORCPT
+        id S1726855AbfFCMbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:29:37 -0400
-Received: from foss.arm.com ([217.140.101.70]:50214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfFCM3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:29:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6E6C15A2;
-        Mon,  3 Jun 2019 05:29:36 -0700 (PDT)
-Received: from darkstar (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 867063F5AF;
-        Mon,  3 Jun 2019 05:29:32 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 13:29:29 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Tejun Heo <tj@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190603122929.GC19426@darkstar>
-References: <20190515094459.10317-1-patrick.bellasi@arm.com>
- <20190515094459.10317-13-patrick.bellasi@arm.com>
- <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+        Mon, 3 Jun 2019 08:31:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41196 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfFCMba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:31:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so11866608wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 05:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4X+BKjND003CtQsEu+k+KAJanuZbQYGlrUQr+5ocFpU=;
+        b=EvYzUk3KxhoDlmZYNnORhdLGXpQ+RTHVmdf6+Pgdw65nQ3NyQdkrMDkRzuUP1fn+I9
+         WPQQZfB9jp3vWgquy9gNfYbRZNQtTpQ8eOVlH/7leSw+/Mq8GG6ttQHxXuew0F3ieBZj
+         s/KM8KMnKwW7uYE4TBZviG9FI4iYnLpJ6d86L+IDFVdwQrAQ2f8kI1ZaWKsfFTaY9NL7
+         lPX8a/eikBLOIU1F/xpaGauI7oS8uXCU2r1qWq64P6ldvea/KEceaQZv1yEiK/0u6IJq
+         EdweNiFBYg9QUNUP1UM69G1dODugi+rNx92C3vtrSrNgy5/80CAtrqlTz0FrNGoVisHY
+         QCrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4X+BKjND003CtQsEu+k+KAJanuZbQYGlrUQr+5ocFpU=;
+        b=dKb1jHCB2HaYxHo9jWHBoSZ8wbVWIBbTt9yEMiHxKDCZYIx03qJaEAYQaHzNScmEGV
+         cLqDcwcjWs1TojC6Q8RqF+6RVFxPpPDN/Z/L9VrGvBevLYwv9FfbSPnUqoaMcBNzxbyD
+         HVFfAfS99zpMHNaflc/+0g04Y23ebQ25hAtAL8+aL+XEG5JWsvsC7rilNzzq0N5Gs5vf
+         g05b9/8VCFJw9uAS0GfsqcixdNdqPFGBgxLMDBCJreFYaOz0AjJ7sRfqzIiG+r+F0HLJ
+         LAeb5A3GpCmWrueANN6EllHbxLKnmu+TurokfWAjqy6Im6L9ubtQKXKMWgX/avjtduLX
+         GBug==
+X-Gm-Message-State: APjAAAX/OFNs2gscNcYT1gM2isDt1BISdvLKfyG2WMZNoDC4Vx2BYSDH
+        mtGjSGwOA6KoptbpBAqtuJYcKg==
+X-Google-Smtp-Source: APXvYqw81sDtsOxKKZ85mVia8pbhoEesE471jLmJbbheZK0UTWnVYLHf4UriX72xynwRi7y/P0FgxA==
+X-Received: by 2002:adf:f3c7:: with SMTP id g7mr15983765wrp.133.1559565089078;
+        Mon, 03 Jun 2019 05:31:29 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id i12sm10373956wrs.43.2019.06.03.05.31.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 05:31:28 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:31:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] mfd: cros_ec: Register cros_ec_lid_angle driver
+ when presented
+Message-ID: <20190603123126.GL4797@dell>
+References: <20190517233856.155793-1-gwendal@chromium.org>
+ <20190517233856.155793-2-gwendal@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190517233856.155793-2-gwendal@chromium.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-May 08:35, Tejun Heo wrote:
-> Hello, Patrick.
+On Fri, 17 May 2019, Gwendal Grignou wrote:
+
+> Register driver when EC indicates has precise lid angle calculation code
+> running.
+> Fix incorrect extra resource allocation in cros_ec_sensors_register().
 > 
-> On Wed, May 15, 2019 at 10:44:55AM +0100, Patrick Bellasi wrote:
-
-[...]
-
-> For proportions (as opposed to weights), we use percentage rational
-> numbers - e.g. 38.44 for 38.44%.  I have parser and doc update commits
-> pending.  I'll put them on cgroup/for-5.3.
-
-That's a point worth discussing with Peter, we already changed one
-time from percentages to 1024 scale.
-
-Utilization clamps are expressed as percentages by definition,
-they are just expressed in a convenient 1024 scale which should not be
-alien to people using those knobs.
-
-If we wanna use a "more specific" name like uclamp.{min,max} then we
-should probably also accept to use a "more specific" metric, don't we?
-
-I personally like the [0..1024] range, but I guess that's really up to
-you and Peter to agree upon.
-
-> Thanks.
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> Changes in v7:
+> - Split patch in two: This is the MFD section.
 > 
-> --
-> tejun
+>  drivers/mfd/cros_ec_dev.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 
-Cheers,
-Patrick
+Applied, thanks.
 
 -- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
