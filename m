@@ -2,114 +2,373 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70669C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D905BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BF127FB1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQWSMaiu"
+	by mail.kernel.org (Postfix) with ESMTP id 95BF427D22
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559553506;
+	bh=a34O6TKGoN+iU8eyd38/ahRLYi1VAHFDW0/FaTBjEnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gHswlJeiBFnIThBV9Bak9g8G76cqLQ78U/0IVbWHxpRqiPG+lSabhSo3rimeUa+7J
+	 TW44Vv+34kybIKq93hlNcYMwSdB888AGwLhWX2LL63t15yraSErUHpwJcTKHFkeX5C
+	 InUCPxiNQDgS7x9P4gMhlPJnQKAr0fEiU8JVK4gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfFCJSV (ORCPT
+        id S1728900AbfFCJSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:18:21 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41584 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbfFCJK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:10:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 136so1456482lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Uxh0FCdCreUcf8edEoivfGm7FzgDoHFgRVdGAU1FrgE=;
-        b=pQWSMaiuB4YPTpJ/jxzXOdfiEwulhfBjsDe1AH0XsM8ITR0LE9Bcq8Mqt8tJCpqT9a
-         QnJy/6ks/G7ewIr4OMXXZMLxZH5SN+8lDFgnDRTnnGBL1QrIKX8i8j0s9dXS4NOfb19x
-         up6RV847HDIar9anNx6PuMX2seb39MVDXlCP1gySCczqYGU6kBzk8fHUCGHaRGOHyf8W
-         yvVD2mGfeXvGO8ZxqbpAF/YgP8IoqY+Cdx7Qk4BpNx6FS1Ir26G5UcAKoQ27J+9rjnPM
-         BcaquYDFucepeZxq9ZXB2pfz6Pa5thNOMaw0kfMCRYqCFveI3YSdYMrwORv9t99PC/4l
-         2Hog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Uxh0FCdCreUcf8edEoivfGm7FzgDoHFgRVdGAU1FrgE=;
-        b=UvLmVQUHnkAhe8tNqp1o4wgD9d44QOnJfYxjSiXA7h8qp85ZjVi/y6Dbj9gRwAkELY
-         CtKrURGawbVV2Np33eThux66pi/eZ6sH94EUTk9UUCc5orVtz5RZdkMxQKf1hhIDjahc
-         NLjq9vzu19gwgYDdAqTu68L/ZEPGVwIrufjWHe084lRjuOJ6AUUHHiDOvCXAjv7s0hTw
-         aXfuJuxYcXcyMZkum3A1hTsXwZ0ymfp9x7RN2mwBBBT9osmsOjhnQKVDbTwPZFdXBg76
-         7+3+VkoiQjY3QgM7i5T5R2KRRkg/948hAS0jNOC5oKlpHIf83kT7wi00w7BNtBjlDHBD
-         HAXg==
-X-Gm-Message-State: APjAAAV1MVi0hNciqSDaSeI6rTiORXU45A/qO5i1we1CQ96zcdywtP5N
-        PTcrXHCHZfnQ4SN1aTLQrmcZ6w==
-X-Google-Smtp-Source: APXvYqwCmrpuIAS0xO3mRLHS0ITDUv3iTe2EbkFf4bmEkVuJBj8IpQOemvvjsbaAcE3uGRZpSFR5SQ==
-X-Received: by 2002:ac2:4c84:: with SMTP id d4mr12944955lfl.1.1559553025224;
-        Mon, 03 Jun 2019 02:10:25 -0700 (PDT)
-Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
-        by smtp.gmail.com with ESMTPSA id g11sm323757lfb.9.2019.06.03.02.10.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 02:10:24 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     will.deacon@arm.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] seqlock: mark raw_read_seqcount and read_seqcount_retry as __always_inline
-Date:   Mon,  3 Jun 2019 11:10:08 +0200
-Message-Id: <20190603091008.24776-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 3 Jun 2019 05:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbfFCJK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:10:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDAD427E3A;
+        Mon,  3 Jun 2019 09:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559553025;
+        bh=a34O6TKGoN+iU8eyd38/ahRLYi1VAHFDW0/FaTBjEnk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AWxgWSrkBJC6dkv/HRxNajGvf2pNIZP6HAtrU6K0KIAeGTzIRgaQ+8VQcAQ+Q2mJj
+         25hfA+kqJWjcR7GyvWMEG0IkSN7gJUhHg0S7hGR1s8D16fyWzlpcbzQRC+rswVzKda
+         OP3smDnoHpfejw2L6P4Mf6wepGMLx6Af7nH3hhq4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 26/32] crypto: vmx - ghash: do nosimd fallback manually
+Date:   Mon,  3 Jun 2019 11:08:20 +0200
+Message-Id: <20190603090315.327048237@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
+References: <20190603090308.472021390@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_FUNCTION_GRAPH_TRACER is enabled function sched_clock() in
-kernel/time/sched_clock.c is marked as notrace. However, functions
-raw_read_seqcount and read_seqcount_retry are marked as inline. If
-CONFIG_OPTIMIZE_INLINING is set that will make the two functions
-tracable which they shouldn't.
+From: Daniel Axtens <dja@axtens.net>
 
-Rework so that functions raw_read_seqcount and read_seqcount_retry are
-marked with __always_inline so they will be inlined even if
-CONFIG_OPTIMIZE_INLINING is turned on.
+commit 357d065a44cdd77ed5ff35155a989f2a763e96ef upstream.
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+VMX ghash was using a fallback that did not support interleaving simd
+and nosimd operations, leading to failures in the extended test suite.
+
+If I understood correctly, Eric's suggestion was to use the same
+data format that the generic code uses, allowing us to call into it
+with the same contexts. I wasn't able to get that to work - I think
+there's a very different key structure and data layout being used.
+
+So instead steal the arm64 approach and perform the fallback
+operations directly if required.
+
+Fixes: cc333cd68dfa ("crypto: vmx - Adding GHASH routines for VMX module")
+Cc: stable@vger.kernel.org # v4.1+
+Reported-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/seqlock.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/crypto/vmx/ghash.c |  212 ++++++++++++++++++---------------------------
+ 1 file changed, 86 insertions(+), 126 deletions(-)
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index bcf4cf26b8c8..1b18e3df186e 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -127,7 +127,7 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
-  * seqcount without any lockdep checking and without checking or
-  * masking the LSB. Calling code is responsible for handling that.
+--- a/drivers/crypto/vmx/ghash.c
++++ b/drivers/crypto/vmx/ghash.c
+@@ -1,22 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
+ /**
+  * GHASH routines supporting VMX instructions on the Power 8
+  *
+- * Copyright (C) 2015 International Business Machines Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 only.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ * Copyright (C) 2015, 2019 International Business Machines Inc.
+  *
+  * Author: Marcelo Henrique Cerri <mhcerri@br.ibm.com>
++ *
++ * Extended by Daniel Axtens <dja@axtens.net> to replace the fallback
++ * mechanism. The new approach is based on arm64 code, which is:
++ *   Copyright (C) 2014 - 2018 Linaro Ltd. <ard.biesheuvel@linaro.org>
   */
--static inline unsigned raw_read_seqcount(const seqcount_t *s)
-+static __always_inline unsigned raw_read_seqcount(const seqcount_t *s)
+ 
+ #include <linux/types.h>
+@@ -39,71 +31,25 @@ void gcm_ghash_p8(u64 Xi[2], const u128
+ 		  const u8 *in, size_t len);
+ 
+ struct p8_ghash_ctx {
++	/* key used by vector asm */
+ 	u128 htable[16];
+-	struct crypto_shash *fallback;
++	/* key used by software fallback */
++	be128 key;
+ };
+ 
+ struct p8_ghash_desc_ctx {
+ 	u64 shash[2];
+ 	u8 buffer[GHASH_DIGEST_SIZE];
+ 	int bytes;
+-	struct shash_desc fallback_desc;
+ };
+ 
+-static int p8_ghash_init_tfm(struct crypto_tfm *tfm)
+-{
+-	const char *alg = "ghash-generic";
+-	struct crypto_shash *fallback;
+-	struct crypto_shash *shash_tfm = __crypto_shash_cast(tfm);
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
+-
+-	fallback = crypto_alloc_shash(alg, 0, CRYPTO_ALG_NEED_FALLBACK);
+-	if (IS_ERR(fallback)) {
+-		printk(KERN_ERR
+-		       "Failed to allocate transformation for '%s': %ld\n",
+-		       alg, PTR_ERR(fallback));
+-		return PTR_ERR(fallback);
+-	}
+-
+-	crypto_shash_set_flags(fallback,
+-			       crypto_shash_get_flags((struct crypto_shash
+-						       *) tfm));
+-
+-	/* Check if the descsize defined in the algorithm is still enough. */
+-	if (shash_tfm->descsize < sizeof(struct p8_ghash_desc_ctx)
+-	    + crypto_shash_descsize(fallback)) {
+-		printk(KERN_ERR
+-		       "Desc size of the fallback implementation (%s) does not match the expected value: %lu vs %u\n",
+-		       alg,
+-		       shash_tfm->descsize - sizeof(struct p8_ghash_desc_ctx),
+-		       crypto_shash_descsize(fallback));
+-		return -EINVAL;
+-	}
+-	ctx->fallback = fallback;
+-
+-	return 0;
+-}
+-
+-static void p8_ghash_exit_tfm(struct crypto_tfm *tfm)
+-{
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
+-
+-	if (ctx->fallback) {
+-		crypto_free_shash(ctx->fallback);
+-		ctx->fallback = NULL;
+-	}
+-}
+-
+ static int p8_ghash_init(struct shash_desc *desc)
  {
- 	unsigned ret = READ_ONCE(s->sequence);
- 	smp_rmb();
-@@ -215,7 +215,8 @@ static inline int __read_seqcount_retry(const seqcount_t *s, unsigned start)
-  * If the critical section was invalid, it must be ignored (and typically
-  * retried).
-  */
--static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
-+static
-+__always_inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
- {
- 	smp_rmb();
- 	return __read_seqcount_retry(s, start);
--- 
-2.20.1
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+ 	dctx->bytes = 0;
+ 	memset(dctx->shash, 0, GHASH_DIGEST_SIZE);
+-	dctx->fallback_desc.tfm = ctx->fallback;
+-	dctx->fallback_desc.flags = desc->flags;
+-	return crypto_shash_init(&dctx->fallback_desc);
++	return 0;
+ }
+ 
+ static int p8_ghash_setkey(struct crypto_shash *tfm, const u8 *key,
+@@ -121,7 +67,51 @@ static int p8_ghash_setkey(struct crypto
+ 	disable_kernel_vsx();
+ 	pagefault_enable();
+ 	preempt_enable();
+-	return crypto_shash_setkey(ctx->fallback, key, keylen);
++
++	memcpy(&ctx->key, key, GHASH_BLOCK_SIZE);
++
++	return 0;
++}
++
++static inline void __ghash_block(struct p8_ghash_ctx *ctx,
++				 struct p8_ghash_desc_ctx *dctx)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_vsx();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				dctx->buffer, GHASH_DIGEST_SIZE);
++		disable_kernel_vsx();
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		crypto_xor((u8 *)dctx->shash, dctx->buffer, GHASH_BLOCK_SIZE);
++		gf128mul_lle((be128 *)dctx->shash, &ctx->key);
++	}
++}
++
++static inline void __ghash_blocks(struct p8_ghash_ctx *ctx,
++				  struct p8_ghash_desc_ctx *dctx,
++				  const u8 *src, unsigned int srclen)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_vsx();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				src, srclen);
++		disable_kernel_vsx();
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		while (srclen >= GHASH_BLOCK_SIZE) {
++			crypto_xor((u8 *)dctx->shash, src, GHASH_BLOCK_SIZE);
++			gf128mul_lle((be128 *)dctx->shash, &ctx->key);
++			srclen -= GHASH_BLOCK_SIZE;
++			src += GHASH_BLOCK_SIZE;
++		}
++	}
+ }
+ 
+ static int p8_ghash_update(struct shash_desc *desc,
+@@ -131,49 +121,33 @@ static int p8_ghash_update(struct shash_
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_update(&dctx->fallback_desc, src,
+-					   srclen);
+-	} else {
+-		if (dctx->bytes) {
+-			if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+-				memcpy(dctx->buffer + dctx->bytes, src,
+-				       srclen);
+-				dctx->bytes += srclen;
+-				return 0;
+-			}
++	if (dctx->bytes) {
++		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+ 			memcpy(dctx->buffer + dctx->bytes, src,
+-			       GHASH_DIGEST_SIZE - dctx->bytes);
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			src += GHASH_DIGEST_SIZE - dctx->bytes;
+-			srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
+-			dctx->bytes = 0;
++				srclen);
++			dctx->bytes += srclen;
++			return 0;
+ 		}
+-		len = srclen & ~(GHASH_DIGEST_SIZE - 1);
+-		if (len) {
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable, src, len);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			src += len;
+-			srclen -= len;
+-		}
+-		if (srclen) {
+-			memcpy(dctx->buffer, src, srclen);
+-			dctx->bytes = srclen;
+-		}
+-		return 0;
++		memcpy(dctx->buffer + dctx->bytes, src,
++			GHASH_DIGEST_SIZE - dctx->bytes);
++
++		__ghash_block(ctx, dctx);
++
++		src += GHASH_DIGEST_SIZE - dctx->bytes;
++		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
++		dctx->bytes = 0;
++	}
++	len = srclen & ~(GHASH_DIGEST_SIZE - 1);
++	if (len) {
++		__ghash_blocks(ctx, dctx, src, len);
++		src += len;
++		srclen -= len;
+ 	}
++	if (srclen) {
++		memcpy(dctx->buffer, src, srclen);
++		dctx->bytes = srclen;
++	}
++	return 0;
+ }
+ 
+ static int p8_ghash_final(struct shash_desc *desc, u8 *out)
+@@ -182,25 +156,14 @@ static int p8_ghash_final(struct shash_d
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_final(&dctx->fallback_desc, out);
+-	} else {
+-		if (dctx->bytes) {
+-			for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
+-				dctx->buffer[i] = 0;
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			dctx->bytes = 0;
+-		}
+-		memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
+-		return 0;
++	if (dctx->bytes) {
++		for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
++			dctx->buffer[i] = 0;
++		__ghash_block(ctx, dctx);
++		dctx->bytes = 0;
+ 	}
++	memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
++	return 0;
+ }
+ 
+ struct shash_alg p8_ghash_alg = {
+@@ -215,11 +178,8 @@ struct shash_alg p8_ghash_alg = {
+ 		 .cra_name = "ghash",
+ 		 .cra_driver_name = "p8_ghash",
+ 		 .cra_priority = 1000,
+-		 .cra_flags = CRYPTO_ALG_NEED_FALLBACK,
+ 		 .cra_blocksize = GHASH_BLOCK_SIZE,
+ 		 .cra_ctxsize = sizeof(struct p8_ghash_ctx),
+ 		 .cra_module = THIS_MODULE,
+-		 .cra_init = p8_ghash_init_tfm,
+-		 .cra_exit = p8_ghash_exit_tfm,
+ 	},
+ };
+
 
