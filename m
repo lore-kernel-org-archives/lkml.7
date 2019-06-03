@@ -2,233 +2,113 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B77C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D259C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB39C244D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C9627433
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IhwpzfJq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXTYdOAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFCQ5t (ORCPT
+        id S1726803AbfFCRBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:57:49 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:32991 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbfFCQzk (ORCPT
+        Mon, 3 Jun 2019 13:01:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41164 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFCRBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:55:40 -0400
-Received: by mail-yw1-f73.google.com with SMTP id j127so17357076ywd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:55:40 -0700 (PDT)
+        Mon, 3 Jun 2019 13:01:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id b21so9436382oic.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=ai2S3fD+fr3rvCBmSGFiSuVAfjaa7sExxiTSFFYH1Fc=;
-        b=IhwpzfJqwE3DvUc/g2ohuoF7FRDSV+OKLdbdm3aHJhyQC5R8qffzGm3GUGDEK5mLGU
-         HwRFraAw3ADQD0MAJJ3addDW9VF2xcSR/1cU+MqYWb30fZYz6OI+lqi9l0mvrBzJRKlx
-         9Jf/vJ7t9tP8BgDAD/yBWpZTteEGqZVu6BQfOgaOZ55GquSpR/7KRV6XVaghO9dlfSJI
-         nnlViXK79lK70wRQBUW327/n/PMH7XujjWiQLfV9EFwKMzG6uOgMIpIPl3C2s4DgbvSu
-         MCtmUckwctT1sQWlCUv7u3dxJmI+R7ltNLatQs+ATRBm1UQXWv9Bi0Pz/MXuzZkI0IoN
-         5eSw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0MLgXQF5vH23h1KYWlPuV0evmen8yKWQSXaDjS7gROU=;
+        b=bXTYdOAOmCBEf4dZJMRmpwMXGA9bG6Ccvf3Tcu0lzgGBdta805U47eXIQFOvzITEwV
+         GzLaA/WMnLuUDj+UfCE7D/ld3YbgmbNotWvVfQstlemsJy4fQieFileAfYeF8dywWKbq
+         OEkl48OlryjHpdlCqQOfH937m1t3uGidXZOVgBOY9WPDhtpp3DZ6m/j6htorHs1IPvc8
+         Tlq7bF8pEf0hohGoT/oFUv/ikU27hMC2Qz+9mnhLii4phXP6GfcVWmPFNmqr5eENrbPM
+         ckZgiCzehhjOKmM7h5n0rEs/6yCuwRbjo6PQe77sedJWVuIHxTkLuB/6gZXqRdq0Q3Pk
+         XLAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ai2S3fD+fr3rvCBmSGFiSuVAfjaa7sExxiTSFFYH1Fc=;
-        b=GQi6WtvGCcr5XCzUMzMsgJK23ivpR7dmLscpSsLR4cUCiullNE3VPUdbuITjjJCniW
-         5G5r2TPHnfLS5Fya7+jC5/iF9uHRZUBmVvxOMVGEakXWSMxRqQVLPzBSQX1z0UO0EKKm
-         uUx+gZfMY2/MuuVKKIH8sPgdXRTfoZQSz3qrVTNM+qujq5OFTKhnE2ioQI2cFj2Jjzhy
-         cg+I4i51IPy3/nmC27Bd0H3G6JSyccRR6mlhp4eQ4ycnLOxTsV5NywP2t68pmNWAvKgr
-         aHiL4VzeKIdcTEsGyLcu3+rwPvN4tVZmvG5GVHnU9XcUeAqwyVEBxtwBROi+mSWTLN4Q
-         RvTw==
-X-Gm-Message-State: APjAAAUQ4EEJwGFdWZzZkb60210hHXVxfvIRPr/KdJfyT6JQj4Kz1Fi0
-        zYvw4h+SOmSf7J9XtcALnH8fl+JNSqdmFTO9
-X-Google-Smtp-Source: APXvYqyU8lBI93nJuhlJYUnIY7lf1oCA3Bdyf6XCo68IA8G3gKcVv3P8yXxzoFzeAZRqfZIBiTZMwuBdZZXNUsQZ
-X-Received: by 2002:a25:bfcf:: with SMTP id q15mr11764130ybm.453.1559580939725;
- Mon, 03 Jun 2019 09:55:39 -0700 (PDT)
-Date:   Mon,  3 Jun 2019 18:55:07 +0200
-In-Reply-To: <cover.1559580831.git.andreyknvl@google.com>
-Message-Id: <045a94326401693e015bf80c444a4d946a5c68ed.1559580831.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: [PATCH v16 05/16] arm64: untag user pointers passed to memory syscalls
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=0MLgXQF5vH23h1KYWlPuV0evmen8yKWQSXaDjS7gROU=;
+        b=LLYJFQhTRjlaFf+d6zynNZUFNuoca7DssoxdEgDfVolpdRj45Jal6+I0tu17ol60G+
+         psUycmNhuoUWJfygEfrdmWVD3BCxj/ui3iXqAlal2FagEBqqAgpEPwQIMzlb38fpN/2r
+         Q1xwDnZzl8HhL+xlAgoG5L3LAHU419FTyzNNfSZRD6zsJTTVAwTv8lATafPINYbK6i2h
+         NqMUeB68guwf86glNAnUVhQgt2AsIwEbQUo47wzrLi9XzVQwPavaVTw2h2993GUnb0bX
+         jFYTlos0ClGcYxsD3Ap190FgjAFs4633YRer8htS1sa8B7a7eUxWQOAjlj0stJkDbhXw
+         QVxQ==
+X-Gm-Message-State: APjAAAXYgk5ULZ4vs6QxO6xwalQMLj7TjYkXLj4nlUKC/l895VIKMuyu
+        71F+F98VjhXXxagVkJjdeA==
+X-Google-Smtp-Source: APXvYqy386isB9eeY65vjp8u9TUF3ySUcf9XTJCl0DyAa6L5k7AmZV9/Y9kS0f3/FDI2KTuXe5FLaw==
+X-Received: by 2002:aca:55d7:: with SMTP id j206mr1646137oib.71.1559581288876;
+        Mon, 03 Jun 2019 10:01:28 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id t206sm1669134oig.30.2019.06.03.10.01.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 10:01:28 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:c2:e16b:3a60:98fc])
+        by serve.minyard.net (Postfix) with ESMTPSA id 81A4C1800CD;
+        Mon,  3 Jun 2019 17:01:27 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 12:01:25 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 02/57] drivers: ipmi: Drop device reference
+Message-ID: <20190603170125.GM2742@minyard.net>
+Reply-To: minyard@acm.org
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-3-git-send-email-suzuki.poulose@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559577023-558-3-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+On Mon, Jun 03, 2019 at 04:49:28PM +0100, Suzuki K Poulose wrote:
+> Drop the reference to a device found via bus_find_device()
 
-This patch allows tagged pointers to be passed to the following memory
-syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprotect,
-mremap, msync, munlock.
+This change is correct, but it probably doesn't belong in this
+series.  Would you like me to take it as a stand-alone change?
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- mm/madvise.c   | 2 ++
- mm/mempolicy.c | 3 +++
- mm/mincore.c   | 2 ++
- mm/mlock.c     | 4 ++++
- mm/mprotect.c  | 2 ++
- mm/mremap.c    | 2 ++
- mm/msync.c     | 2 ++
- 7 files changed, 17 insertions(+)
+-corey
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 628022e674a7..39b82f8a698f 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -810,6 +810,8 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
- 	size_t len;
- 	struct blk_plug plug;
- 
-+	start = untagged_addr(start);
-+
- 	if (!madvise_behavior_valid(behavior))
- 		return error;
- 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 01600d80ae01..78e0a88b2680 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1360,6 +1360,7 @@ static long kernel_mbind(unsigned long start, unsigned long len,
- 	int err;
- 	unsigned short mode_flags;
- 
-+	start = untagged_addr(start);
- 	mode_flags = mode & MPOL_MODE_FLAGS;
- 	mode &= ~MPOL_MODE_FLAGS;
- 	if (mode >= MPOL_MAX)
-@@ -1517,6 +1518,8 @@ static int kernel_get_mempolicy(int __user *policy,
- 	int uninitialized_var(pval);
- 	nodemask_t nodes;
- 
-+	addr = untagged_addr(addr);
-+
- 	if (nmask != NULL && maxnode < nr_node_ids)
- 		return -EINVAL;
- 
-diff --git a/mm/mincore.c b/mm/mincore.c
-index c3f058bd0faf..64c322ed845c 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -249,6 +249,8 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, size_t, len,
- 	unsigned long pages;
- 	unsigned char *tmp;
- 
-+	start = untagged_addr(start);
-+
- 	/* Check the start address: needs to be page-aligned.. */
- 	if (start & ~PAGE_MASK)
- 		return -EINVAL;
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 080f3b36415b..e82609eaa428 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -674,6 +674,8 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
- 	unsigned long lock_limit;
- 	int error = -ENOMEM;
- 
-+	start = untagged_addr(start);
-+
- 	if (!can_do_mlock())
- 		return -EPERM;
- 
-@@ -735,6 +737,8 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
- {
- 	int ret;
- 
-+	start = untagged_addr(start);
-+
- 	len = PAGE_ALIGN(len + (offset_in_page(start)));
- 	start &= PAGE_MASK;
- 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index bf38dfbbb4b4..19f981b733bc 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -465,6 +465,8 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 	const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
- 				(prot & PROT_READ);
- 
-+	start = untagged_addr(start);
-+
- 	prot &= ~(PROT_GROWSDOWN|PROT_GROWSUP);
- 	if (grows == (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
- 		return -EINVAL;
-diff --git a/mm/mremap.c b/mm/mremap.c
-index fc241d23cd97..1d98281f7204 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -606,6 +606,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 	LIST_HEAD(uf_unmap_early);
- 	LIST_HEAD(uf_unmap);
- 
-+	addr = untagged_addr(addr);
-+
- 	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
- 		return ret;
- 
-diff --git a/mm/msync.c b/mm/msync.c
-index ef30a429623a..c3bd3e75f687 100644
---- a/mm/msync.c
-+++ b/mm/msync.c
-@@ -37,6 +37,8 @@ SYSCALL_DEFINE3(msync, unsigned long, start, size_t, len, int, flags)
- 	int unmapped_error = 0;
- 	int error = -EINVAL;
- 
-+	start = untagged_addr(start);
-+
- 	if (flags & ~(MS_ASYNC | MS_INVALIDATE | MS_SYNC))
- 		goto out;
- 	if (offset_in_page(start))
--- 
-2.22.0.rc1.311.g5d7573a151-goog
-
+> 
+> Cc: Corey Minyard <minyard@acm.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/char/ipmi/ipmi_si_platform.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
+> index f2a91c4..ff82353 100644
+> --- a/drivers/char/ipmi/ipmi_si_platform.c
+> +++ b/drivers/char/ipmi/ipmi_si_platform.c
+> @@ -442,6 +442,7 @@ void ipmi_remove_platform_device_by_name(char *name)
+>  				      pdev_match_name))) {
+>  		struct platform_device *pdev = to_platform_device(dev);
+>  
+> +		put_device(dev);
+>  		platform_device_unregister(pdev);
+>  	}
+>  }
+> -- 
+> 2.7.4
+> 
