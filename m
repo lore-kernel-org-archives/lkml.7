@@ -2,94 +2,108 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC9DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0B2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A8B270E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E682731D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="n8bhRenS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlmNNBU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfFCPf3 (ORCPT
+        id S1727826AbfFCPhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:35:29 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58212 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfFCPfX (ORCPT
+        Mon, 3 Jun 2019 11:37:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44267 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbfFCPhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:35:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559576120; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7r5nkRsqjWYhBqtk66cNgvdETdf2nddmTlBNaVS+Hvw=;
-        b=n8bhRenSLUwqZGKRST5uOAdZKmzDRc5PXo2s8jCW/xIXSZPP+3UrbJEDobxr7ZK97m9qay
-        m8XvMNVabHubdQoqxdJoutIWKGfo1AdnjVlEfheehLdSXw+r3i2K645DRs+dwTD7mmS821
-        yWGohoQtlZ0rgj5WiJvHEpLrqSyMY+Y=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Hans Verkuil <hansverk@cisco.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 2/3] media: uapi: Add RGB bus format for the GiantPlus GPM940B0 panel
-Date:   Mon,  3 Jun 2019 17:35:10 +0200
-Message-Id: <20190603153511.24384-2-paul@crapouillou.net>
-In-Reply-To: <20190603153511.24384-1-paul@crapouillou.net>
-References: <20190603153511.24384-1-paul@crapouillou.net>
+        Mon, 3 Jun 2019 11:37:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so9847644qtk.11;
+        Mon, 03 Jun 2019 08:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=rHntYJUbuDaq+hgx/W8n2ZESMDDGCXnZRtFMetN3TC8=;
+        b=XlmNNBU9PdkdMaMNFetESigw2qJNWerg96dKJCPoh7BM92dAbMIDvW5iqVstKUIF/m
+         S3KJRrY+3St7YM1Aby9bA85c+AYI/ZSvn5YVGzL9/VhypuDrS/xGnRGO9G4L4GYst7sM
+         yBXdbK+SzstYCVG/iv1DV0l3PRuHODLcuHgMmvP5Fw67/OnZcMDr1WJXmcrRgO+RQtsk
+         PxuWQtUzDca1DEj2K2ASNpyOMb0TaSK7WDeAqac3E5LjAejN2iEWjcd9HYDNIzaHCfQ2
+         2IyxyznQbR+k/CnvIghUEQQCJtHSwcMG5nZVOUavIQ0ZAKjcQNU4PzeKSMxvoNmcx4xO
+         iCNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=rHntYJUbuDaq+hgx/W8n2ZESMDDGCXnZRtFMetN3TC8=;
+        b=GDgqW+IVnOOTbdRzbCNZRdzhGxIyZipiBFveP3Kaad5WIulSQi95eqHYFStlMQYRIU
+         6BbSMdUkqeK9K7q6hjaubfBH94K7Kgf/nMklNH9MfkorzqRuPHgnYmej0EB0ECcORdky
+         Qb3W+nr91T7gC1gvSUbuzTWdZ41EGJMhsJSAzTPFTa7PVCQDE3hD3YMKtk4zY43qo6Sd
+         OuTXvfl++6WRcBTyMsrqPWPj6H3u36KGvCcl+PgrfNinqaXQcrXO+PUF7IzdHry8N1wr
+         vM3k3h7ZKfwTqaLIDaatPF4DowUpLO9kRG8CaX+YVZw+bbWhBdRWtVq6nQ2+Fa2opNlk
+         az7A==
+X-Gm-Message-State: APjAAAX7kE1VkIYuauyk5V8aS9b7ddk4goaDP54ZJ6bJwGSB61j+h0mz
+        o7sRT2M8uuaj7M0Ph/D2xuo=
+X-Google-Smtp-Source: APXvYqy0IknxALApVjEtsBV9AdMLGg36F2dpjWNa/TKvbUcusEf+PKUzn34Mm46N887BwEy+73MKtA==
+X-Received: by 2002:ac8:525a:: with SMTP id y26mr23858606qtn.297.1559576235773;
+        Mon, 03 Jun 2019 08:37:15 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id q79sm7391803qka.54.2019.06.03.08.37.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 08:37:14 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 11:37:13 -0400
+Message-ID: <20190603113713.GB2789@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 01/10] net: dsa: mv88e6xxx: add
+ mv88e6250_g1_ieee_pri_map
+In-Reply-To: <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
+References: <20190603144112.27713-1-rasmus.villemoes@prevas.dk>
+ <20190603144112.27713-2-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-are transferred sequentially on a 8-bit bus.
+Hi Rasmus,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+On Mon, 3 Jun 2019 14:42:12 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
+> Quite a few of the existing supported chips that use
+> mv88e6085_g1_ieee_pri_map as ->ieee_pri_map (including, incidentally,
+> mv88e6085 itself) actually have a reset value of 0xfa50 in the
+> G1_IEEE_PRI register.
+> 
+> The data sheet for the mv88e6095, however, does describe a reset value
+> of 0xfa41.
+> 
+> So rather than changing the value in the existing callback, introduce
+> a new variant with the 0xfa50 value. That will be used by the upcoming
+> mv88e6250, and existing chips can be switched over one by one,
+> preferably double-checking both the data sheet and actual hardware in
+> each case - if anybody actually feels this is important enough to
+> care.
 
-Notes:
-    v2: New patch
-    
-    v3: No change
-    
-    v4: Add only MEDIA_BUS_FMT_RGB888_3X8, as we don't have to care about
-        endianness
+Given your previous thread on this topic, I'd prefer that you include
+a first patch which implements mv88e6095_g1_ieee_pri_map() using 0xfa41
+and update mv88e{6092,6095}_ops to use it, then a second one which fixes
+mv88e6085_g1_ieee_pri_map to use 0xfa50. Then mv88e6250_ops can use it.
 
- include/uapi/linux/media-bus-format.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-index 2a6b253cfb05..16c1fa2d89a4 100644
---- a/include/uapi/linux/media-bus-format.h
-+++ b/include/uapi/linux/media-bus-format.h
-@@ -34,7 +34,7 @@
- 
- #define MEDIA_BUS_FMT_FIXED			0x0001
- 
--/* RGB - next is	0x101c */
-+/* RGB - next is	0x101d */
- #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-@@ -55,6 +55,7 @@
- #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
- #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
- #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-+#define MEDIA_BUS_FMT_RGB888_3X8		0x101c
- #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
- #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
- #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
--- 
-2.21.0.593.g511ec345e18
-
+Thanks,
+Vivien
