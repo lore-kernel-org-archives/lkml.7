@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FA7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFA7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A9127DC1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A4F27DB3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yUGz4cr5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="k8SJZHGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfFCNbY (ORCPT
+        id S1728731AbfFCNcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:31:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57119 "EHLO
+        Mon, 3 Jun 2019 09:32:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41117 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfFCNbY (ORCPT
+        with ESMTP id S1727506AbfFCNcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:31:24 -0400
+        Mon, 3 Jun 2019 09:32:11 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DVDhL610157
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DVuvt610232
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:31:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DVDhL610157
+        Mon, 3 Jun 2019 06:31:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DVuvt610232
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559568673;
-        bh=A90KpaUzz/Tuu8TgyE2FWyUHZCimw1SzVYqCH4t10uU=;
+        s=2019051801; t=1559568717;
+        bh=tuJUTfZDFkJlyqJAY5AhfeSThTuNHh3cxL+IKwIk6G8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=yUGz4cr5laiZN8eRJF4NKXpvbK5TC3Tm2bMdlDvnGuYHnyyqXq9/kVCUj+6bKCWfJ
-         0l55r7iBS0OJT1CjCN3V0VxRP0vXQEqrd6f/rujsJR8NAFm7bsNcxzdB+OPR9nK5e5
-         evTjrePKDVxYhFXP3Zvrbp7j2OiVlU1NSZ17ihuMbSV4Qt6BW2/ehoEmG0yEpelki0
-         lGTTe4UabfSxZxI4KZq+RfonbCuEdUay1XiVCABeLI+I68heiD9Wtnd3E1v+jNGvLg
-         QRodn4VnzlDKDaKlMJzBGZjRHGB+jTyCU3o2C+vbxwrI372iqEp7cMqW/fVEr05grn
-         JRDDvyX+iP8bQ==
+        b=k8SJZHGeERFrxC+/K+EWLXnirytpVPQWJbi+FIJeIIDpPdB9IOG25ZoKwrQhUWBlg
+         0876zPCGTD3g+KzO9wP2HLSuR5llBoDa1tAG8JFkvhlmBFNrTxHIa0/jmCPq8Ynb+i
+         SGMWyEtMR92ZRgKa1vxAMsyuGAcJ0EYO0V8Y0V3SLAP63P3tH1aYdNaHqnjJc0E0Ip
+         gHIyroVkCMVXVS5xaoJ27FvyuxO/oOVXzuHMHgv3dqyUKKjR649tzAlOOKvpt/zNWV
+         UNE5pxZayla+Ox6OmxapFNN93wQBuy6sim+Nn8pC4IF/r+0JnXQID5lccHU6rtJ5Di
+         fCg603+1l6MIg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DVCZF610153;
-        Mon, 3 Jun 2019 06:31:12 -0700
-Date:   Mon, 3 Jun 2019 06:31:12 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DVuL7610229;
+        Mon, 3 Jun 2019 06:31:56 -0700
+Date:   Mon, 3 Jun 2019 06:31:56 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-6a9f4efe78af6069a11946c64d3d4c86cb42046b@git.kernel.org>
-Cc:     alexander.shishkin@linux.intel.com, hpa@zytor.com, acme@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, namhyung@kernel.org, jolsa@kernel.org,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Reply-To: jolsa@kernel.org, acme@kernel.org,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          hpa@zytor.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          tglx@linutronix.de, torvalds@linux-foundation.org,
-          gregkh@linuxfoundation.org
-In-Reply-To: <20190512155518.21468-10-jolsa@kernel.org>
-References: <20190512155518.21468-10-jolsa@kernel.org>
+From:   tip-bot for Imre Deak <tipbot@zytor.com>
+Message-ID: <tip-8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a@git.kernel.org>
+Cc:     peterz@infradead.org, tglx@linutronix.de, hpa@zytor.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, will.deacon@arm.com, imre.deak@intel.com
+Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de,
+          imre.deak@intel.com, will.deacon@arm.com, mingo@kernel.org
+In-Reply-To: <20190524201509.9199-1-imre.deak@intel.com>
+References: <20190524201509.9199-1-imre.deak@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86: Use update attribute groups for default
- attributes
-Git-Commit-ID: 6a9f4efe78af6069a11946c64d3d4c86cb42046b
+Subject: [tip:locking/core] locking/lockdep: Fix OOO unlock when hlocks need
+ merging
+Git-Commit-ID: 8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,146 +70,235 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6a9f4efe78af6069a11946c64d3d4c86cb42046b
-Gitweb:     https://git.kernel.org/tip/6a9f4efe78af6069a11946c64d3d4c86cb42046b
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 12 May 2019 17:55:18 +0200
+Commit-ID:  8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
+Gitweb:     https://git.kernel.org/tip/8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a
+Author:     Imre Deak <imre.deak@intel.com>
+AuthorDate: Fri, 24 May 2019 23:15:08 +0300
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:58:27 +0200
+CommitDate: Mon, 3 Jun 2019 12:32:29 +0200
 
-perf/x86: Use update attribute groups for default attributes
+locking/lockdep: Fix OOO unlock when hlocks need merging
 
-Using the new pmu::update_attrs attribute group for default
-attributes - freeze_on_smi, allow_tsx_force_abort.
+The sequence
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+	static DEFINE_WW_CLASS(test_ww_class);
+
+	struct ww_acquire_ctx ww_ctx;
+	struct ww_mutex ww_lock_a;
+	struct ww_mutex ww_lock_b;
+	struct mutex lock_c;
+	struct mutex lock_d;
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_c);		(*)
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	ww_acquire_fini(&ww_ctx);
+
+triggers the following WARN in __lock_release() when doing the unlock at *:
+
+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
+
+The problem is that the WARN check doesn't take into account the merging
+of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
+by 2 not only 1.
+
+Note that the following sequence doesn't trigger the WARN, since there
+won't be any hlock merging.
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+	mutex_init(&lock_d);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+	mutex_lock(&lock_d);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_d);
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	mutex_unlock(&lock_c);
+
+	ww_acquire_fini(&ww_ctx);
+
+In general both of the above two sequences are valid and shouldn't
+trigger any lockdep warning.
+
+Fix this by taking the decrement due to the hlock merging into account
+during lock release and hlock class re-setting. Merging can't happen
+during lock downgrading since there won't be a new possibility to merge
+hlocks in that case, so add a WARN if merging still happens then.
+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190512155518.21468-10-jolsa@kernel.org
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: ville.syrjala@linux.intel.com
+Link: https://lkml.kernel.org/r/20190524201509.9199-1-imre.deak@intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/core.c       | 34 ----------------------------------
- arch/x86/events/intel/core.c |  9 +++++----
- arch/x86/events/perf_event.h |  3 ---
- 3 files changed, 5 insertions(+), 41 deletions(-)
+ kernel/locking/lockdep.c | 41 +++++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index dd0996ba75c3..f0e4804515d8 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1618,32 +1618,6 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
- 	.attrs = NULL,
- };
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 2168e94715b9..6c97f67ec321 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3808,7 +3808,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 				hlock->references = 2;
+ 			}
  
--/* Merge two pointer arrays */
--__init struct attribute **merge_attr(struct attribute **a, struct attribute **b)
--{
--	struct attribute **new;
--	int j, i;
--
--	for (j = 0; a && a[j]; j++)
--		;
--	for (i = 0; b && b[i]; i++)
--		j++;
--	j++;
--
--	new = kmalloc_array(j, sizeof(struct attribute *), GFP_KERNEL);
--	if (!new)
--		return NULL;
--
--	j = 0;
--	for (i = 0; a && a[i]; i++)
--		new[j++] = a[i];
--	for (i = 0; b && b[i]; i++)
--		new[j++] = b[i];
--	new[j] = NULL;
--
--	return new;
--}
--
- ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, char *page)
+-			return 1;
++			return 2;
+ 		}
+ 	}
+ 
+@@ -4011,22 +4011,33 @@ out:
+ }
+ 
+ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
+-			      int idx)
++				int idx, unsigned int *merged)
  {
- 	struct perf_pmu_events_attr *pmu_attr = \
-@@ -1824,14 +1798,6 @@ static int __init init_hw_perf_events(void)
- 	if (!x86_pmu.events_sysfs_show)
- 		x86_pmu_events_group.attrs = &empty_attrs;
+ 	struct held_lock *hlock;
++	int first_idx = idx;
  
--	if (x86_pmu.attrs) {
--		struct attribute **tmp;
--
--		tmp = merge_attr(x86_pmu_attr_group.attrs, x86_pmu.attrs);
--		if (!WARN_ON(!tmp))
--			x86_pmu_attr_group.attrs = tmp;
--	}
--
- 	pmu.attr_update = x86_pmu.attr_update;
+ 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
+ 		return 0;
  
- 	pr_info("... version:                %d\n",     x86_pmu.version);
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 3bc967be7c7b..71001f005bfe 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3897,8 +3897,6 @@ static __initconst const struct x86_pmu core_pmu = {
- 	.check_period		= intel_pmu_check_period,
- };
+ 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
+-		if (!__lock_acquire(hlock->instance,
++		switch (__lock_acquire(hlock->instance,
+ 				    hlock_class(hlock)->subclass,
+ 				    hlock->trylock,
+ 				    hlock->read, hlock->check,
+ 				    hlock->hardirqs_off,
+ 				    hlock->nest_lock, hlock->acquire_ip,
+-				    hlock->references, hlock->pin_count))
++				    hlock->references, hlock->pin_count)) {
++		case 0:
+ 			return 1;
++		case 1:
++			break;
++		case 2:
++			*merged += (idx == first_idx);
++			break;
++		default:
++			WARN_ON(1);
++			return 0;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -4037,9 +4048,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 		 unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+ 	struct lock_class *class;
+-	unsigned int depth;
+ 	int i;
  
--static struct attribute *intel_pmu_attrs[];
--
- static __initconst const struct x86_pmu intel_pmu = {
- 	.name			= "Intel",
- 	.handle_irq		= intel_pmu_handle_irq,
-@@ -3930,8 +3928,6 @@ static __initconst const struct x86_pmu intel_pmu = {
- 	.format_attrs		= intel_arch3_formats_attr,
- 	.events_sysfs_show	= intel_event_sysfs_show,
+ 	if (unlikely(!debug_locks))
+@@ -4066,14 +4077,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	curr->lockdep_depth = i;
+ 	curr->curr_chain_key = hlock->prev_chain_key;
  
--	.attrs			= intel_pmu_attrs,
--
- 	.cpu_prepare		= intel_pmu_cpu_prepare,
- 	.cpu_starting		= intel_pmu_cpu_starting,
- 	.cpu_dying		= intel_pmu_cpu_dying,
-@@ -4458,6 +4454,10 @@ static struct attribute_group group_format_extra_skl = {
- 	.is_visible = exra_is_visible,
- };
- 
-+static struct attribute_group group_default = {
-+	.attrs = intel_pmu_attrs,
-+};
-+
- static const struct attribute_group *attr_update[] = {
- 	&group_events_td,
- 	&group_events_mem,
-@@ -4466,6 +4466,7 @@ static const struct attribute_group *attr_update[] = {
- 	&group_caps_lbr,
- 	&group_format_extra,
- 	&group_format_extra_skl,
-+	&group_default,
- 	NULL,
- };
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 1da9b6f0b279..9bcec3f99e4a 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -636,7 +636,6 @@ struct x86_pmu {
- 	const struct attribute_group **attr_update;
- 
- 	unsigned long	attr_freeze_on_smi;
--	struct attribute **attrs;
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
+ 		return 0;
  
  	/*
- 	 * CPU Hotplug hooks
-@@ -903,8 +902,6 @@ static inline void set_linear_ip(struct pt_regs *regs, unsigned long ip)
- ssize_t x86_event_sysfs_show(char *page, u64 config, u64 event);
- ssize_t intel_event_sysfs_show(char *page, u64 config);
+ 	 * I took it apart and put it back together again, except now I have
+ 	 * these 'spare' parts.. where shall I put them.
+ 	 */
+-	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
++	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
+ 		return 0;
+ 	return 1;
+ }
+@@ -4081,8 +4092,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
  
--struct attribute **merge_attr(struct attribute **a, struct attribute **b);
--
- ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr,
- 			  char *page);
- ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
+ 	if (unlikely(!debug_locks))
+@@ -4109,7 +4120,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	hlock->read = 1;
+ 	hlock->acquire_ip = ip;
+ 
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
++		return 0;
++
++	/* Merging can't happen with unchanged classes.. */
++	if (DEBUG_LOCKS_WARN_ON(merged))
+ 		return 0;
+ 
+ 	/*
+@@ -4118,6 +4133,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	 */
+ 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
+ 		return 0;
++
+ 	return 1;
+ }
+ 
+@@ -4132,8 +4148,8 @@ static int
+ __lock_release(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 1;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -4192,14 +4208,15 @@ __lock_release(struct lockdep_map *lock, unsigned long ip)
+ 	if (i == depth-1)
+ 		return 1;
+ 
+-	if (reacquire_held_locks(curr, depth, i + 1))
++	if (reacquire_held_locks(curr, depth, i + 1, &merged))
+ 		return 0;
+ 
+ 	/*
+ 	 * We had N bottles of beer on the wall, we drank one, but now
+ 	 * there's not N-1 bottles of beer left on the wall...
++	 * Pouring two of the bottles together is acceptable.
+ 	 */
+-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
++	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
+ 
+ 	/*
+ 	 * Since reacquire_held_locks() would have called check_chain_key()
