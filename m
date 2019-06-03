@@ -2,201 +2,90 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288B5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637C3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27CA25254
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37909253B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="E5wKX75L"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LzGFxQZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfFCWIZ (ORCPT
+        id S1726754AbfFCWJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:08:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42416 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfFCWIY (ORCPT
+        Mon, 3 Jun 2019 18:09:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45354 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfFCWJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:08:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so1169706pff.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:08:24 -0700 (PDT)
+        Mon, 3 Jun 2019 18:09:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s11so11371787pfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uM4S4y/Y5SrPdENg0QBPLDuc00s8nib+/ajfOkcZMik=;
-        b=E5wKX75LYj21K7r3b5uPvJHFB3a+wonjs7ZsPnT7rqWS2Jj94E45SuqIpvC70AjZgc
-         JIPqfhBiJe5qxRDHnW0a11OgkMQCZGxN/JgMiMb2uO+dp8dsS4hv+h8pIvllW6xzlqex
-         2ajtI1YvJTzHyOEvFyG0WZ424MseQjErWrB1aHCv6+yd8mrPV/JSYvxp5kyasLqQo2Pf
-         RCFBx4MsTkG80s0S4efJn9Fsp/kMF8ETw52Oxn7dHom+bNsgFQe2Z7qz52Aj2oZ8A3IN
-         cQzPnohrFrwqFS/0osPnM8G9h7NO7drtGI+CLw2kKPFUoAAEjC2xRAV9cMROAgznBSCR
-         4Dhg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=jDdg1OwF0FAhl89N9DnPSHZNHtzrEJIzfPoyVuGv+78=;
+        b=LzGFxQZ0HmsQrlNUSQTMFV923mwkZPYwGjfWrL8bk6Qf75flD9EWeDTDtnlRYNUeSX
+         Z6g/fAiv//bzpgk278/+RMf6+0sie1PDBOJDC0NrwjM55QOJBK2hL2XCflc2vZQGv6Zw
+         Jt00ADsRrcrZH4s4HaaGYWtM0Z+5eRuramr2PeArPDnHHWMxxgHM6chzVAzG4iybTVet
+         GcU4AXW65i1dwoBVxDNf1e0OAvSKOmUq5/CU2oKa7Ldmk+/UCFVWFgdD99gJLOt6BW77
+         oXj6E96l0DF1oFOKkz8oPIx2KVMi+1yzMdfGMpVRo6dCXidZbLV4zHvrwhiTpJ80onOb
+         q39A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uM4S4y/Y5SrPdENg0QBPLDuc00s8nib+/ajfOkcZMik=;
-        b=C7u17YW0lCHAL1s6yEv2xdHW3nRRp7LVfEx5fVhjbsghGRuHHq4PWk/JamgFaQFr2V
-         C0o4haZYiwSQPHlcm9uKBMk5tOs3on/XrK/f9LuXc7sIf6R9768x+AD7/7n39eV4RGOb
-         eqg2ofjB6zvQhpQhA8Ja3zOfLyvRyPGaeSP9dzD0aG/q43Dm+4RhcBQFdx20x/EtdHnM
-         kwTYv2tStYQQoOKlAEURvmYsGfwZgVFSK8piO9Ziu4sc2DDyTR+0OXOGrmIUYtdyI/Mv
-         V0Gh6Iw8ipZlr9+E/GzLqxGHfIh9BL+DRLmo1/k0c6CJBLxcz1WZ+c/CU5pyf8QhL8ye
-         lANw==
-X-Gm-Message-State: APjAAAUJZ9M5vrrfzoCLeK8xIw4Ar7UYBqX6jI+QeUSy/vDF0DNXe1rs
-        3CKwIBGiiFJhaSBf81lV173KJLUQv9w=
-X-Google-Smtp-Source: APXvYqwbMD8TVz0HqZSC+oHhO3LjocjnT1Uw0hT+H5KZ3//8wtU6n995qzN2B8+Dl5CLBrRD1SHU2A==
-X-Received: by 2002:a63:c106:: with SMTP id w6mr21948229pgf.422.1559596122497;
-        Mon, 03 Jun 2019 14:08:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:9fa4])
-        by smtp.gmail.com with ESMTPSA id t25sm11786407pgv.30.2019.06.03.14.08.41
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=jDdg1OwF0FAhl89N9DnPSHZNHtzrEJIzfPoyVuGv+78=;
+        b=Wg461Osf5/9SW7bWgNY55GR8NfMzcOevqD2MOvdKWjBjaYq1c05tWlXHaVjsPZ2+Oe
+         XgAhNuVoQ/sV8P3M/QM3RGSL9jo/QKWx330AI4dLfoiM9730dupE5bxueUWUtANYKesH
+         WBMKiqqB9oIYtRrDurFavB/L+QkKPCLvXUsHADyYj3XsHo0GPKDtj/chatNg9XBvA05U
+         9bw6Mf2Lhjum0WlnJbMLsRw7tIySG1j6wMSukLEeBuyZ9rgG447tSr+j/z+M4oXzTnnP
+         pTO3zK+42rKMKwfwepYT+9XPRyvK7KOpqZzXH+VRcbfTtMSD8P4zEJndvCMOPLRht0Mu
+         IjhA==
+X-Gm-Message-State: APjAAAVahfECM3s0sYSj6A3S1wtiJFR7yAiw7jeLsnwm2Px7hll1UqS3
+        OaufxP2aqY/XY7VL6AWSgTCCJQ==
+X-Google-Smtp-Source: APXvYqxg8k7T+sG/qb4J+4RL4O/uO7OVHc+0v4sMYS2wFnS6GZbj06GAxSZ4+jmaEw+VTfJLuCeQSQ==
+X-Received: by 2002:a17:90a:30a1:: with SMTP id h30mr33597503pjb.14.1559599768218;
+        Mon, 03 Jun 2019 15:09:28 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id t7sm13213708pjq.20.2019.06.03.15.09.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 14:08:41 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 09/11] mm: vmscan: move file exhaustion detection to the node level
-Date:   Mon,  3 Jun 2019 17:07:44 -0400
-Message-Id: <20190603210746.15800-10-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603210746.15800-1-hannes@cmpxchg.org>
-References: <20190603210746.15800-1-hannes@cmpxchg.org>
+        Mon, 03 Jun 2019 15:09:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: add dwmac-3.70a to ethmac compatible list
+In-Reply-To: <CAFBinCCKA-15sFwyXpoxmqw5b4=6j1t-fdrHM7CoAojqN+ZGzQ@mail.gmail.com>
+References: <20190524130817.18920-1-jbrunet@baylibre.com> <CAFBinCCKA-15sFwyXpoxmqw5b4=6j1t-fdrHM7CoAojqN+ZGzQ@mail.gmail.com>
+Date:   Mon, 03 Jun 2019 15:09:27 -0700
+Message-ID: <7h4l56jp7s.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When file pages are lower than the watermark on a node, we try to
-force scan anonymous pages to counter-act the balancing algorithms
-preference for new file pages when they are likely thrashing. This is
-node-level decision, but it's currently made each time we look at an
-lruvec. This is unnecessarily expensive and also a layering violation
-that makes the code harder to understand.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Clean this up by making the check once per node and setting a flag in
-the scan_control.
+> Hi Jerome,
+>
+> On Fri, May 24, 2019 at 3:08 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>>
+>> After discussing with Amlogic, the Synopsys GMAC version used by
+>> the gx and axg family is the 3.70a. Set this is in DT
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 80 ++++++++++++++++++++++++++++-------------------------
- 1 file changed, 42 insertions(+), 38 deletions(-)
+Queued for v5.3, w/Martin's tag,
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index eb535c572733..cabf94dfa92d 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -104,6 +104,9 @@ struct scan_control {
- 	/* One of the zones is ready for compaction */
- 	unsigned int compaction_ready:1;
- 
-+	/* The file pages on the current node are dangerously low */
-+	unsigned int file_is_tiny:1;
-+
- 	/* Allocation order */
- 	s8 order;
- 
-@@ -2219,45 +2222,16 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 	}
- 
- 	/*
--	 * Prevent the reclaimer from falling into the cache trap: as
--	 * cache pages start out inactive, every cache fault will tip
--	 * the scan balance towards the file LRU.  And as the file LRU
--	 * shrinks, so does the window for rotation from references.
--	 * This means we have a runaway feedback loop where a tiny
--	 * thrashing file LRU becomes infinitely more attractive than
--	 * anon pages.  Try to detect this based on file LRU size.
-+	 * If the system is almost out of file pages, force-scan anon.
-+	 * But only if there are enough inactive anonymous pages on
-+	 * the LRU. Otherwise, the small LRU gets thrashed.
- 	 */
--	if (!cgroup_reclaim(sc)) {
--		unsigned long pgdatfile;
--		unsigned long pgdatfree;
--		int z;
--		unsigned long total_high_wmark = 0;
--
--		pgdatfree = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
--		pgdatfile = node_page_state(pgdat, NR_ACTIVE_FILE) +
--			   node_page_state(pgdat, NR_INACTIVE_FILE);
--
--		for (z = 0; z < MAX_NR_ZONES; z++) {
--			struct zone *zone = &pgdat->node_zones[z];
--			if (!managed_zone(zone))
--				continue;
--
--			total_high_wmark += high_wmark_pages(zone);
--		}
--
--		if (unlikely(pgdatfile + pgdatfree <= total_high_wmark)) {
--			/*
--			 * Force SCAN_ANON if there are enough inactive
--			 * anonymous pages on the LRU in eligible zones.
--			 * Otherwise, the small LRU gets thrashed.
--			 */
--			if (!inactive_list_is_low(lruvec, false, sc, false) &&
--			    lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
--					>> sc->priority) {
--				scan_balance = SCAN_ANON;
--				goto out;
--			}
--		}
-+	if (sc->file_is_tiny &&
-+	    !inactive_list_is_low(lruvec, false, sc, false) &&
-+	    lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
-+			    sc->reclaim_idx) >> sc->priority) {
-+		scan_balance = SCAN_ANON;
-+		goto out;
- 	}
- 
- 	/*
-@@ -2718,6 +2692,36 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 	nr_reclaimed = sc->nr_reclaimed;
- 	nr_scanned = sc->nr_scanned;
- 
-+	/*
-+	 * Prevent the reclaimer from falling into the cache trap: as
-+	 * cache pages start out inactive, every cache fault will tip
-+	 * the scan balance towards the file LRU.  And as the file LRU
-+	 * shrinks, so does the window for rotation from references.
-+	 * This means we have a runaway feedback loop where a tiny
-+	 * thrashing file LRU becomes infinitely more attractive than
-+	 * anon pages.  Try to detect this based on file LRU size.
-+	 */
-+	if (!cgroup_reclaim(sc)) {
-+		unsigned long file;
-+		unsigned long free;
-+		int z;
-+		unsigned long total_high_wmark = 0;
-+
-+		free = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
-+		file = node_page_state(pgdat, NR_ACTIVE_FILE) +
-+			   node_page_state(pgdat, NR_INACTIVE_FILE);
-+
-+		for (z = 0; z < MAX_NR_ZONES; z++) {
-+			struct zone *zone = &pgdat->node_zones[z];
-+			if (!managed_zone(zone))
-+				continue;
-+
-+			total_high_wmark += high_wmark_pages(zone);
-+		}
-+
-+		sc->file_is_tiny = file + free <= total_high_wmark;
-+	}
-+
- 	shrink_node_memcgs(pgdat, sc);
- 
- 	if (reclaim_state) {
--- 
-2.21.0
+Thanks,
 
+Kevin
