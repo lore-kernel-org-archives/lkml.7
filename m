@@ -2,133 +2,124 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD5CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2DEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E91274E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aMwQlO/u"
+	by mail.kernel.org (Postfix) with ESMTP id AE95A274E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 16:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbfFCQ4S (ORCPT
+        id S1729784AbfFCQ4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 12:56:18 -0400
-Received: from mail-oi1-f202.google.com ([209.85.167.202]:45723 "EHLO
-        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729685AbfFCQ4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:56:10 -0400
-Received: by mail-oi1-f202.google.com with SMTP id v13so5428571oie.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 09:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=UdKHGBZnbXnYOdacGwXVLbo2mp7I3OpbNnEy2rn9dE0=;
-        b=aMwQlO/uqKNquhxQCaOybakc925QpZfJO8wh15xEZQIyCg72vlDGXrUg/ROAuoQDUD
-         yCBHc/elg2gmmBaFllCt7o9fko/cMYEXNqMBN5Ib8jP974H6cgrFWFCLBOtmTziaRGQQ
-         SwI/Xt1vXIDm1HuVmNbFHcArxU2bsmwx6xs/PbNEoDywCtOeBm47QoZ+wae08e7pzq/K
-         a7mRKG2GqnFCVji4AY+94HQ5eVsYgsMp8E/PA4r/OPS0psFqvjDQbyz4YEbR/PgBj2Aq
-         436HnabGuSm3Rvtg2LN9VhA8Rs2mRcn4xgL77EZC0LMuRu0EvZQAUUg9zFkbP9a8AWHr
-         YN2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=UdKHGBZnbXnYOdacGwXVLbo2mp7I3OpbNnEy2rn9dE0=;
-        b=qGQ7wDrQNoAQ6HDt94ARg2SQEiJk2heypKLIPe7GJPmAUvZ2K40c9i5cV5IRRtzALS
-         ksJ/zC30sDmiV9YvCwskIS2xIa8UQzf+A3FBbRLeBfVUzXhOOJ0lXD18Z2Dzb1JZ5vCF
-         wQPA54lte5yNHlRy6ZIqUzNUVcr4BDQQDDYEZKJoHcmy6PB3OSVIs1RKbYPU768drDuv
-         BmOwm2w77SrkZeiE7lsonlMtgGrBEtkqnkzCyAlG1mVSi0NJEciqsPNA/Y++S0+mBCH3
-         WL1iDRNe7JSka1XkDC3nQ5qDm4RomkDjleB3uvlmGjnQ3ZV3lLnpwnZorHWreFW6FGlN
-         QbOA==
-X-Gm-Message-State: APjAAAUgjYvgEJK5t+ooeAzVdbm6Z6VaWk4RAPDHAZNv7HPIFwNk4WMK
-        l5EjCpVN9XdwPUrNZLgbJTgBpo+26qTVJw7q
-X-Google-Smtp-Source: APXvYqxMjN/4yHR2ThXEEFJeDuxNxY18SC+MmNXgYJ7rlNGji/L0sGyo9f6aEs2c6lSgFUC7mMKDb3c6mMlyiMDt
-X-Received: by 2002:a9d:4109:: with SMTP id o9mr1768838ote.353.1559580969728;
- Mon, 03 Jun 2019 09:56:09 -0700 (PDT)
-Date:   Mon,  3 Jun 2019 18:55:16 +0200
-In-Reply-To: <cover.1559580831.git.andreyknvl@google.com>
-Message-Id: <dc3f3092abbc0d48e51b2e2a2ca8f4c4f69fa0f4.1559580831.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: [PATCH v16 14/16] tee, arm64: untag user pointers in tee_shm_register
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Jun 2019 12:56:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58690 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbfFCQ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 12:56:27 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 683FE8B947;
+        Mon,  3 Jun 2019 16:56:22 +0000 (UTC)
+Received: from flask (unknown [10.43.2.83])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 456101017E3E;
+        Mon,  3 Jun 2019 16:56:17 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 03 Jun 2019 18:56:17 +0200
+Date:   Mon, 3 Jun 2019 18:56:17 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation
+ support
+Message-ID: <20190603165616.GA11101@flask>
+References: <20190526133052.4069-1-like.xu@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190526133052.4069-1-like.xu@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 03 Jun 2019 16:56:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+2019-05-26 21:30+0800, Like Xu:
+> Add support to expose Intel V2 Extended Topology Enumeration Leaf for
+> some new systems with multiple software-visible die within each package.
+> 
+> Per Intel's SDM, when CPUID executes with EAX set to 1FH, the processor
+> returns information about extended topology enumeration data. Software
+> must detect the presence of CPUID leaf 1FH by verifying (a) the highest
+> leaf index supported by CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0]
+> reports a non-zero value.
+> 
+> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> ==changelog==
+> v3:
+> - Refine commit message and comment
+> 
+> v2: https://lkml.org/lkml/2019/4/25/1246
+> 
+> - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+> - Add comment to handle 0x1f anf 0xb in common code
+> - Reduce check time in a descending-break style
+> 
+> v1: https://lkml.org/lkml/2019/4/22/28
+> 
+>  arch/x86/kvm/cpuid.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 80a642a0143d..f9b41f0103b3 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -426,6 +426,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  
+>  	switch (function) {
+>  	case 0:
+> +		/* Check if the cpuid leaf 0x1f is actually implemented */
+> +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
+> +			entry->eax = 0x1f;
 
-tee_shm_register()->optee_shm_unregister()->check_mem_type() uses provided
-user pointers for vma lookups (via __check_mem_type()), which can only by
-done with untagged pointers.
+Sorry for my late reply, but I think this check does more harm than
+good.
 
-Untag user pointers in this function.
+We'll need to change it if we ever add leaf above 0x1f, which also puts
+burden on the new submitter to check that exposing it by an unrelated
+feature doesn't break anything.  Just like you had to see whether the
+leaf 0x14 is still ok when exposing it without f_intel_pt.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- drivers/tee/tee_shm.c | 1 +
- 1 file changed, 1 insertion(+)
+Also, I don't see anything that would make 0x1f worthy of protection
+when enabling it also exposes unimplemented leaves (0x14;0x1f).
+Zeroing 0x1f.ebx disables it and that is implicitly being done if the
+presence check above would fail.
 
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index 49fd7312e2aa..96945f4cefb8 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -263,6 +263,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- 	shm->teedev = teedev;
- 	shm->ctx = ctx;
- 	shm->id = -1;
-+	addr = untagged_addr(addr);
- 	start = rounddown(addr, PAGE_SIZE);
- 	shm->offset = addr - start;
- 	shm->size = length;
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+> +			break;
+> +		}
+>  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
 
+Similarly in the existing code.  If we don't have f_intel_pt, then we
+should make sure that leaf 0x14 is not being filled, but we don't really
+have to limit the maximal index.
+
+Adding a single clamping like
+
+		/* Limited to the highest leaf implemented in KVM. */
+		entry->eax = min(entry->eax, 0x1f);
+
+seems sufficient.
+
+(Passing the hardware value is ok in theory, but it is a cheap way to
+ avoid future leaves that cannot be simply zeroed for some weird reason.)
+
+Thanks.
