@@ -2,123 +2,187 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37052C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F011C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCE82800A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773F22802C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Tv/nvtmF"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LklHOXvW";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="dAenBoTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfFCNKN (ORCPT
+        id S1728427AbfFCNKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:10:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60511 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfFCNKM (ORCPT
+        Mon, 3 Jun 2019 09:10:37 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:52480 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726516AbfFCNKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:10:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DA1mR605130
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:10:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DA1mR605130
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559567402;
-        bh=HY6f/+mZ5Od0OcAK8g1VxqUNqDW/sB+3kAXaViohMBY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Tv/nvtmFGB75Zlg6s+sILG6Xs/9BYjYnxv2fisD5thc8j5OopdoUtPW+ORLl4wtmL
-         XWxsPCX2WgoOyPEUa8Z2qWUdgzGKbP8p/UtiUCnbi+zsuhX8EWBIxzH4uLjDeeOSEk
-         /tzlg6hnfkHlQswofyWotw2XZK1iUP/hlh+w9zK1UYY39+HmRsiv74Z/i5oUPZVjnZ
-         ncSCdWCZVrM4Fnn2bZge8riY8YP9VACaiTrGdY95xbwgDDX8Jux2na573274tssCRE
-         9D/rSnT1fRl2q/uBawbZXtgzDTntMh61nanffW8TBizyv+B2l3L7B6d1C/gpE8e4/u
-         /a5Xs0HT31JCw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53D9xnh605127;
-        Mon, 3 Jun 2019 06:09:59 -0700
-Date:   Mon, 3 Jun 2019 06:09:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yuyang Du <tipbot@zytor.com>
-Message-ID: <tip-d16dbd1b8a29bb9f8aca2c2f3bd1a0d2b7621126@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, duyuyang@gmail.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
-Reply-To: tglx@linutronix.de, peterz@infradead.org, duyuyang@gmail.com,
-          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-          hpa@zytor.com, mingo@kernel.org
-In-Reply-To: <20190506081939.74287-7-duyuyang@gmail.com>
-References: <20190506081939.74287-7-duyuyang@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Update obsolete struct field
- description
-Git-Commit-ID: d16dbd1b8a29bb9f8aca2c2f3bd1a0d2b7621126
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 3 Jun 2019 09:10:37 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53D9vcZ019660;
+        Mon, 3 Jun 2019 06:10:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=mMuYUTXxhkvSa7o3KsMxKIeQkGKVvB/3RaY4YQf4/vE=;
+ b=LklHOXvWzRtyoLFcDuy7TATCtPPUPv42MBsIb2GdH5y+cLqHRuvBIuyDy1APvv5ywJ0d
+ m3jRIyEqVSRKpSXH9jX+w7vj3zRuu/eD0tV/zCRBAeH+vV8GROAqMRuPCD3Mpf1+HT9r
+ 5sPQrostqppg7toYE4cXlpuCKlbDRMYgirwgW6LxllI2XwiQdKEzhewR/YXtY8QVQZQ2
+ TLwnwdJmXiV0WqSurBPyVPqzJNtQnNOChTVMtQSoFlzBvInVx5ukCfFTbSH9czFfgF/X
+ Q6ZuTzdcMMT4l8catNPOW5t5358k43ymUIlDVWYzZxfCFnC2+tvmWdBsdjDVVWPhNu39 tA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2survk876a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 06:10:21 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 3 Jun
+ 2019 06:10:19 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.55) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 3 Jun 2019 06:10:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mMuYUTXxhkvSa7o3KsMxKIeQkGKVvB/3RaY4YQf4/vE=;
+ b=dAenBoTR+sPZOfoY5a69WaVFe5Oox1qLoZNeoGPArBKEOR9d0J6hOB8np5/5gU2T02Wuk/vepciT+IOhvks3XIW35MeRda501NtdJd4o1d9i8mvuLxybd/pwhH8Brb+qR2eYPuddHv1M2QRsx4FhT/fhl7ILuBFJqRzi+wDKvYM=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2927.namprd18.prod.outlook.com (20.179.22.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Mon, 3 Jun 2019 13:10:15 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3%4]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 13:10:15 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     James Morse <james.morse@arm.com>
+CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/21] EDAC, ghes: Unify trace_mc_event() code with
+ edac_mc driver
+Thread-Topic: [PATCH 11/21] EDAC, ghes: Unify trace_mc_event() code with
+ edac_mc driver
+Thread-Index: AQHVGg2utY7ow9FP/UmzxlJzP5JN7A==
+Date:   Mon, 3 Jun 2019 13:10:13 +0000
+Message-ID: <20190603131005.e23lovwyvii53vzo@rric.localdomain>
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529084344.28562-12-rrichter@marvell.com>
+ <37d47356-a40b-2739-10df-f5ab83fa2b36@arm.com>
+In-Reply-To: <37d47356-a40b-2739-10df-f5ab83fa2b36@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P194CA0007.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:209:90::20) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.11.168.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68c86029-88a2-4cb9-064a-08d6e824cfbe
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2927;
+x-ms-traffictypediagnostic: MN2PR18MB2927:
+x-microsoft-antispam-prvs: <MN2PR18MB2927AA5F189A6E3E3CC89D55D9140@MN2PR18MB2927.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39850400004)(366004)(136003)(346002)(199004)(189003)(6116002)(3846002)(316002)(68736007)(7736002)(2906002)(73956011)(66946007)(64756008)(66446008)(305945005)(8676002)(476003)(11346002)(66476007)(66556008)(81166006)(81156014)(486006)(446003)(256004)(8936002)(14444005)(53936002)(52116002)(6246003)(76176011)(1076003)(186003)(102836004)(6916009)(4326008)(71190400001)(71200400001)(53546011)(14454004)(386003)(6506007)(66066001)(26005)(6486002)(25786009)(54906003)(6436002)(99286004)(5660300002)(6512007)(229853002)(9686003)(478600001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2927;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vx5D3G6PRGK1CF3kKRzjGvRuTtt7uun+K3UU4VQcl7dMu2c+vW3nvusbsdKcyvEtcQ0PPsYJoirt/Brce4PnJvRlHYiPgBQCP1OtxMPh8YGZqUsKno3fxB4vG9AxUiugisW8O5LpqIhWT6L+0o6m9Y3/anNTVpRDdWPQ6toBgTZIAKWw073zj72A4X+kF5kbFzBUzsDah2hEpBGdMvqSntBXtEbb3g+ZQ5Ey7PejrfgbjWtD3e1n4TiqFfc7g+TKMln3Lu3QnZ+nXr/CkZJ7pGTeVpZ9CV7ILRJiMA+uje9pUkJt0MnFKvUUh8R/J4Df/KOXjoEp/EFjs7GArC+SbyBHnf1Y0LEY4HCApi1pz0fHLw9M8iVZ2ptynJDrZTIeO3bWHGkolEEpr+zJc7YHpY5nQ+DY74YnmLDWaZuczw4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7D6DA12C01431747AEA06792360A13F5@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68c86029-88a2-4cb9-064a-08d6e824cfbe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 13:10:15.0880
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2927
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_10:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d16dbd1b8a29bb9f8aca2c2f3bd1a0d2b7621126
-Gitweb:     https://git.kernel.org/tip/d16dbd1b8a29bb9f8aca2c2f3bd1a0d2b7621126
-Author:     Yuyang Du <duyuyang@gmail.com>
-AuthorDate: Mon, 6 May 2019 16:19:22 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:55:41 +0200
+On 29.05.19 16:12:38, James Morse wrote:
+> Hi Robert,
+>=20
+> On 29/05/2019 09:44, Robert Richter wrote:
+> > Almost duplicate code, remove it.
+>=20
+> almost?
 
-locking/lockdep: Update obsolete struct field description
+The grain ... as noted below.
 
-The lock_chain struct definition has outdated comment, update it and add
-struct member description.
+>=20
+>=20
+> > Note: there is a difference in the calculation of the grain_bits,
+> > using the edac_mc's version here.
+>=20
+> But is it the right thing to do?
+>=20
+> Is this an off-by-one bug being papered over as some cleanup?
+> If so could you post a separate fix that can be picked up for an rc.
+>=20
+> Do Marvell have firmware that populates this field?
+>=20
+> ...
+>=20
+> Unless the argument is no one cares about this...
+>=20
+> >From ghes_edac_report_mem_error():
+> |	/* Error grain */
+> |	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+> |		e->grain =3D ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+>=20
+> Fishy, why would the kernel page-size be relevant here?
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bvanassche@acm.org
-Cc: frederic@kernel.org
-Cc: ming.lei@redhat.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190506081939.74287-7-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/lockdep.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+That looked broken to me too, I did not put to much effort in fixing
+the grain yet. So I just took the edac_mc version first in the
+assumption, that one is working.
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 6e2377e6c1d6..851d44fa5457 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -203,11 +203,17 @@ struct lock_list {
- 	struct lock_list		*parent;
- };
- 
--/*
-- * We record lock dependency chains, so that we can cache them:
-+/**
-+ * struct lock_chain - lock dependency chain record
-+ *
-+ * @irq_context: the same as irq_context in held_lock below
-+ * @depth:       the number of held locks in this chain
-+ * @base:        the index in chain_hlocks for this chain
-+ * @entry:       the collided lock chains in lock_chain hash list
-+ * @chain_key:   the hash key of this lock_chain
-  */
- struct lock_chain {
--	/* see BUILD_BUG_ON()s in lookup_chain_cache() */
-+	/* see BUILD_BUG_ON()s in add_chain_cache() */
- 	unsigned int			irq_context :  2,
- 					depth       :  6,
- 					base	    : 24;
+It looks like the intention here is to limit the grain to the page
+size. But right, the calculation is wrong here. I am also going to
+reply to your patch you sent on this.
+
+>=20
+> If physical_addr_mask were the same as PAGE_MASK this wouldn't this alway=
+s give ~0?
+> (masking logic like this always does my head in)
+>=20
+> /me gives it ago:
+> | {1}[Hardware Error]:   physical_address: 0x00000000deadbeef
+> | {1}[Hardware Error]:   physical_address_mask: 0xffffffffffff0000
+> | {1}[Hardware Error]:   error_type: 6, master abort
+> | EDAC MC0: 1 CE Master abort on unknown label ( page:0xdead offset:0xbee=
+f
+> | grain:-1 syndrome:0x0 - status(0x0000000000000001): reserved)
+>=20
+> That 'grain:-1' is because the calculated e->grain was an unlikely 0xffff=
+ffffffffffff.
+> Patch incoming, if you could test it on your platform that'd be great.
+>=20
+> I don't think ghes_edac.c wants this '+1'.
+
+The +1 looks odd to me also for the edac_mc driver, but I need to take
+a closer look here as well as some logs suggest the grain is
+calculated correctly.
+
+I will do some further examination here and also respond to your
+patch.
+
+Thank you for review.
+
+-Robert
