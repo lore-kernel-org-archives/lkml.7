@@ -4,122 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2964C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9049B24949
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376D227DB1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="s9r/7R8B";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="rXn4imgr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHkL5geT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfFCIlv (ORCPT
+        id S1727797AbfFCImK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:41:51 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:60350 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725856AbfFCIlv (ORCPT
+        Mon, 3 Jun 2019 04:42:10 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39536 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfFCImK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:41:51 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x538ffcu031333;
-        Mon, 3 Jun 2019 01:41:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=fAN7wz+r/otU12EFJyBMj07ScX254+w4tkdhsYuo+PQ=;
- b=s9r/7R8B98UiIJ38sMUWBA70UOvccecjfI32vuBWwmcQ+aAf2Gflc+Puo1iO0buiCZ2A
- YVyB4PsPXnhGKuSh4HY6sgIboOmuVtPqmgbxYYonsXc35iMic53yqSbM28L0PeS2nkHk
- x4YUGYLIJ8yeAkH6vjxALr6JyBAz/J5+wWm3KqbpX4jbPxMQqWVH5McKiT2X2ON+CK/i
- ZNuEQhnzauVA/2rBy6yTFsF6yeEp5tIvk9/CYnOtseE7ONolQKj6GniReQ/7sPjfB11d
- Q8u+yZXp0BX5T3YrI8QnvkB/7gKfMTGBwL4QLs850gZjKfuIob2H42GMrCE0O0iLGBCO sA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2supqm00eu-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 03 Jun 2019 01:41:41 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 3 Jun
- 2019 01:41:24 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.51) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 3 Jun 2019 01:41:24 -0700
+        Mon, 3 Jun 2019 04:42:10 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so2821717otq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 01:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fAN7wz+r/otU12EFJyBMj07ScX254+w4tkdhsYuo+PQ=;
- b=rXn4imgrl4vF25kJUsP5L8EQgVqYul9+njI2mZtDgwUTOJcYVUYinmcGL+SeRV4K8Mnj5fwPCdFlsp+zjf3Q0Y4Co/Kcz4lJYpG0Nh/Euj5zKE+7AtlczBgsAkl/GytPr5q/ankZWz4RiXf2PIW1iiEbxTBWWm55yetDgUAL+Ww=
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) by
- MN2PR18MB2638.namprd18.prod.outlook.com (20.179.84.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Mon, 3 Jun 2019 08:41:22 +0000
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::3c77:9f53:7e47:7eb8]) by MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::3c77:9f53:7e47:7eb8%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 08:41:22 +0000
-From:   Ganapathi Bhat <gbhat@marvell.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
-        "andreyknvl@google.com" <andreyknvl@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "huxinming820@gmail.com" <huxinming820@gmail.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: RE: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Topic: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Index: AQHU8UKXrSaZj3qnvU6hFZ7GfmsosaaHYqxQgAJS84CAADevwA==
-Date:   Mon, 3 Jun 2019 08:41:22 +0000
-Message-ID: <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
-References: <000000000000927a7b0586561537@google.com>
- <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
-In-Reply-To: <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [117.241.205.23]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41adeafe-04c5-4413-9ad7-08d6e7ff4196
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2638;
-x-ms-traffictypediagnostic: MN2PR18MB2638:
-x-microsoft-antispam-prvs: <MN2PR18MB2638BF38FE9A7BD085207B66A0140@MN2PR18MB2638.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(136003)(366004)(346002)(376002)(396003)(199004)(189003)(102836004)(33656002)(6916009)(8936002)(53936002)(74316002)(476003)(86362001)(81166006)(8676002)(81156014)(66476007)(66556008)(64756008)(66446008)(73956011)(305945005)(558084003)(76116006)(14454004)(478600001)(3846002)(66946007)(6116002)(9686003)(25786009)(7736002)(229853002)(256004)(4326008)(6506007)(11346002)(2906002)(66066001)(5660300002)(76176011)(7696005)(6246003)(7416002)(54906003)(71190400001)(446003)(71200400001)(186003)(55016002)(52536014)(486006)(316002)(26005)(6436002)(99286004)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2638;H:MN2PR18MB2637.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nVUTbY43rDr8mmqY48l1I5i3y+DKFng5be5JS3vrS9sl4MgHIAKiCx5L7kklJX3GCs97Sstb+r7btqeDja4R9QVx1c6RvymwKYy0VeTBzQJON/9F4kDAn4H/bspp7WuRcd8/9CRc4udjgrUiGxLKphsWXJ0c7B8J2Vuj2PaLT8T6/Qe/BiLN2CePrQH86+d88LzeK25o0p7WIE80dPKxBqP3U5nOOMjs1uObjAOcfDPjFNk4BqIuWZW2v8ulwmL6fI0Qddpx/Cl1u7PgSvawD5MkGA4ZFrU8XruABfPHbi03NNCDd3JMgYH+8xHtr7moj3FCy9M/Nar+NWtze4ghzNCxh9P4B7bJ6xyThc4SGUCetcW74EGJnzveQHT1lQlbrtZhc6z/NHLMUPUJv/8KFr2/IbJiAogNqpnevg1+vy0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v07iYjGp5nWV9CSxAvLDHJlP76eeAiLKXDinb2hN/Lw=;
+        b=nHkL5geTJxbfuQTgK6/8G88ruDwULcnsHmwJzcmvL2oHp0myFdfE1FhPnKasmXKmIC
+         Wfd3WTWIxsd+dUj98ycDxuRSzGLYPqt/VQNY/7pH+/qeqPhHcOI7KGX/GJ5FajyXLlW1
+         cwF76Go8yIl0bRyDwUgpJp9tHHczY09bKqLsVeOfr9OrUvp6aHIjWYi3ldceuTVP2inL
+         WZE18/rqHWgtq98O/eF6M9w5rWQWMDjCuZcQQtCrEn+iRPN0fjfXIXKdH9E0CUcthvzE
+         kxxLecILJ6UbOTzN0sRITkxwwx6iP1LqU59LacFnojwKM4GslL38Fj+SBrn6mSIKkWV9
+         F3FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v07iYjGp5nWV9CSxAvLDHJlP76eeAiLKXDinb2hN/Lw=;
+        b=QvIHJ7SHgKC1tu5ejJw937ONiMoDnrv6FOqEaevMs9+9URnMjHKCkPkrxoLUrYvSKK
+         jzkhb7908ZmIFHBjPUJXMSxsEHvGs9xEjEsM/FfPxyK/obkVTq+0lXXPKsvGA3k3R3n+
+         me85cwdXzejiePz7I1BuSfBnMzI1eHlbPHis4zQb9DoxBLoD5+J+eWC1POkD2J5KS3KN
+         BrLIKv+ycga0eeGtBI1tXO8cEnpmRwSuzBsxlWhnKaZFPvYFijyd7w6s2mdgl4c25wQT
+         TbZxD8OhsX0MRrkpBfV0+c64KjiEMKbcUtmcp1Kwa7dI6/nwBW3vcqlBSJp2McOjMFcK
+         G3oQ==
+X-Gm-Message-State: APjAAAXJprZ06fNwRsYfT91s0+PWrsFFB/kFr6XJqzoWT3K0HARLyDfR
+        2SAvM6KlmJXbbS+JL8iAUSBMIR2NnYldzmSFqj8k1w==
+X-Google-Smtp-Source: APXvYqwYLd2dpHu6nvkvw3MVvAzbMJxHXUfJpurp+73sDV/UA282/GSNQJj+tD3erUPCO+itTcUjCH4KgWdFE0lty5s=
+X-Received: by 2002:a9d:529:: with SMTP id 38mr328019otw.145.1559551329341;
+ Mon, 03 Jun 2019 01:42:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41adeafe-04c5-4413-9ad7-08d6e7ff4196
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 08:41:22.1080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gbhat@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2638
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_07:,,
- signatures=0
+References: <cover.1558346019.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 3 Jun 2019 16:41:56 +0800
+Message-ID: <CAMz4ku+E=kFgWrvm_wzM2XQQUyYZhc5uokcGEAEbEKpNAYZQ7g@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Add SD host controller support for SC9860 platform
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        arm-soc <arm@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRG1pdHJ5LA0KDQo+IFRoZSAiZml4ZWQiIHN0YXR1cyByZWxhdGVzIHRvIHRoZSBzaW1pbGFy
-IHBhc3QgYnVnIHRoYXQgd2FzIHJlcG9ydGVkIGFuZCBmaXhlZA0KPiBtb3JlIHRoYW4gYSB5ZWFy
-IGFnbzoNCk9oIE9LOyBXZSB1bmRlcnN0b29kIHRoZSBpc3N1ZSwgd29ya2luZyBvbiBhIGNoYW5n
-ZSB0byBmaXggdGhpczsNCg0KVGhhbmtzLA0KR2FuYXBhdGhpDQo=
+Hi Adrian & Ulf,
+
+On Mon, 20 May 2019 at 18:12, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> This patch set adds optional clock support, HS400 enhanced strobe mode support,
+> PHY DLL configuration and other optimization to make the SD host controller
+> can work well on the Spreadtrum SC9860 platform.
+
+Do you have any comments for this patch set? Thanks.
+
+>
+> Baolin Wang (9):
+>   mmc: sdhci-sprd: Check the enable clock's return value correctly
+>   dt-bindings: mmc: sprd: Add another optional clock documentation
+>   mmc: sdhci-sprd: Add optional gate clock support
+>   mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
+>   mmc: sdhci-sprd: Add HS400 enhanced strobe mode
+>   mmc: sdhci-sprd: Enable PHY DLL to make clock stable
+>   dt-bindings: mmc: sprd: Add PHY DLL delay documentation
+>   mmc: sdhci-sprd: Add PHY DLL delay configuration
+>   arm64: dts: sprd: Add Spreadtrum SD host controller support
+>
+>  .../devicetree/bindings/mmc/sdhci-sprd.txt         |   19 +++
+>  arch/arm64/boot/dts/sprd/whale2.dtsi               |   35 ++++
+>  drivers/mmc/host/sdhci-sprd.c                      |  171 +++++++++++++++++++-
+>  3 files changed, 217 insertions(+), 8 deletions(-)
+>
+> --
+> 1.7.9.5
+>
+
+
+-- 
+Baolin Wang
+Best Regards
