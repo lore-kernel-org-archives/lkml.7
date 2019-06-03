@@ -2,164 +2,154 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86D4C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CD3C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CDD27CD8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="REdUpDc6"
+	by mail.kernel.org (Postfix) with ESMTP id 7F52527CD8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559547518;
+	bh=T2JMny2kFt/9IceLjTOY4zcyV5OvxWKmS/QBTDsKWeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LDuYdqGdkS/slH1y6x4paWQdW6q4rwYekF4DNpPotGTox2A5I1dP7ERLGo/iAH0GN
+	 NlcrZyhO0jf/96ln2yARrY0DMfs6C+TQCr3ul2PVE8QiJNTNz6ozdGDtCyyoVPVDAG
+	 O87ZMokQxtd/Nko777WqWva+YZxdVu5iyH4nNGrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfFCHgI (ORCPT
+        id S1726655AbfFCHih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:36:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50602 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfFCHgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:36:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x537a2wt062770;
-        Mon, 3 Jun 2019 02:36:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559547362;
-        bh=J/ejpkPe6HKf7RmhY8bOeErC2DlZumaIg+UR1lXhtrg=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=REdUpDc6JQ2yzTCS2CoagRIqkJuDG7NJ1KQjv6UXMvbdyicw2uvmLD/KYE+ZYEt9x
-         cPuMIy4BhvuQAPCpjU9hMOMCBBtrkST/zZLPRk8LAzYnLci87NirUQnMy2AAeeXQzq
-         iy0t1BYGp+EbotwZqiRgLj6h/WjOfPcHOqtSZpa0=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x537a2Nk041255
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Jun 2019 02:36:02 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 3 Jun
- 2019 02:36:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 3 Jun 2019 02:36:01 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x537ZxEm099881;
-        Mon, 3 Jun 2019 02:35:59 -0500
-Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-To:     Alan Mikhak <alan.mikhak@sifive.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <linux-riscv@lists.infradead.org>, <palmer@sifive.com>,
-        <paul.walmsley@sifive.com>
-References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <00db2302-3260-1cca-5a65-2280881cfc7a@ti.com>
-Date:   Mon, 3 Jun 2019 13:04:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 3 Jun 2019 03:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfFCHih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:38:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB5727C84;
+        Mon,  3 Jun 2019 07:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559547516;
+        bh=T2JMny2kFt/9IceLjTOY4zcyV5OvxWKmS/QBTDsKWeM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uyWte2wXI2BYh317jl8TvSdx+eLeUAOtlGEGOS+j4q/PE/zvsI59CPSEx535xvC7Z
+         5cqpUV721T9PYqd+Z6HrqDT2Hdo5y/ZTuynLCY1n1yw8UbINuPXMvWWNjnS3XW6h5W
+         QjVrkas7Pw/e5mU/MaPqdSw0FDvTp1vM6dk9+rN0=
+Date:   Mon, 3 Jun 2019 09:38:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc3 - round 2
+Message-ID: <20190603073833.GA20329@kroah.com>
+References: <20190602063905.GA14513@kroah.com>
+ <CAK7LNAQf7difmgLo3OmEHCEvODaU3zoXLA8mKcyVL7NdCcZD=w@mail.gmail.com>
+ <20190602171531.GF19671@kroah.com>
+ <CAK7LNARDyZ1pKHwiHsOntbc9oxbGHgbD+tptEF4a0VC3GvAyTA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARDyZ1pKHwiHsOntbc9oxbGHgbD+tptEF4a0VC3GvAyTA@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 03, 2019 at 09:15:08AM +0900, Masahiro Yamada wrote:
+> On Mon, Jun 3, 2019 at 2:15 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Jun 02, 2019 at 09:03:46PM +0900, Masahiro Yamada wrote:
+> > > On Sun, Jun 2, 2019 at 4:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > The following changes since commit 2f4c53349961c8ca480193e47da4d44fdb8335a8:
+> > > >
+> > > >   Merge tag 'spdx-5.2-rc3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core (2019-05-31 08:34:32 -0700)
+> > > >
+> > > > are available in the Git repository at:
+> > > >
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/spdx-5.2-rc3-2
+> > > >
+> > > > for you to fetch changes up to 8e82fe2ab65a80b1526b285c661ab88cc5891e3a:
+> > > >
+> > > >   treewide: fix typos of SPDX-License-Identifier (2019-06-01 18:29:58 +0200)
+> > > >
+> > > > ----------------------------------------------------------------
+> > > > SPDX fixes for 5.2-rc3, round 2
+> > > >
+> > > > Here are just two small patches, that fix up some found SPDX identifier
+> > > > issues.
+> > > >
+> > > > The first patch fixes an error in a previous SPDX fixup patch, that
+> > > > causes build errors when doing 'make clean' on the tree (the fact that
+> > > > almost no one noticed it reflects the fact that kernel developers don't
+> > > > like doing that option very often...)
+> > >
+> > > This paragraph is not precise.
+> > >
+> > > Not only "make clean", but also the normal build is broken.
+> > > In fact, ARCH=arm allmodconfig is broken.
+> > >
+> > >
+> > > $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- allmodconfig
+> > >   [ snip ]
+> > > $ make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+> > >   [ snip ]
+> > > drivers/crypto/ux500/cryp/Makefile:5: *** missing separator.  Stop.
+> > > make[3]: *** [scripts/Makefile.build;489: drivers/crypto/ux500/cryp] Error 2
+> > > make[2]: *** [scripts/Makefile.build;489: drivers/crypto/ux500] Error 2
+> > > make[1]: *** [scripts/Makefile.build;489: drivers/crypto] Error 2
+> > > make[1]: *** Waiting for unfinished jobs....
+> > >
+> > >
+> > >
+> > > The 0-day bot should check allmodconfig for all arches,
+> > > but surprisingly it was not caught before the merge.
+> >
+> > Ah, good catch, odd that 0-day missed it.  Maybe it is not building
+> > 32bit builds these days :(
+> 
+> 
+> I noticed the SPDX patches were submitted to
+> linux-spdx@vger.kernel.org
+> but not to linux-kernel@vger.kernel.org
+> 
+> Maybe, the reason is why 0-day bot is not subscribing to
+> linux-spdx@vger.kernel.org
+> 
+> 
+> You picked up them and sent a pull request immediately,
+> so the 0-day bot was not given time to test your branch either.
 
+No, I got a response from the 0-day bot, it said it tested my branch but
+timed out doing more tests because it was busy.  It seems the bot is not
+working that well at the moment as it is giving me this same "limited"
+testing for all of my trees right now :(
 
-On 24/05/19 3:25 AM, Alan Mikhak wrote:
-> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
-> and pci_epf_test_alloc_space().
+> >> Not all developers run scripts/checkpatch.pl before patch submission.
+> >> Not all maintainers run scripts/checkpatch.pl before commit.
+> >
+> >Very true :(
 > 
-> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
-> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
-> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
-> but leaks on subsequent unbind by not calling pci_epf_free_space().
 > 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+> If we really want to improve the situation,
+> perhaps can we ask Intel to run scripts/checkpatch.pl in the 0-day bot?
+> 
+> checkpatch.pl may warn false positives,
+> but at least "Missing or malformed SPDX-License-Identifier tag"
+> is a good checker.  Just my two cents.
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 27806987e93b..96156a537922 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  
->  static int pci_epf_test_set_bar(struct pci_epf *epf)
->  {
-> -	int bar;
-> +	int bar, add;
->  	int ret;
->  	struct pci_epf_bar *epf_bar;
->  	struct pci_epc *epc = epf->epc;
-> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  
->  	epc_features = epf_test->epc_features;
->  
-> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
-> +	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->  		epf_bar = &epf->bar[bar];
-> +		/*
-> +		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> +		 * if the specific implementation required a 64-bit BAR,
-> +		 * even if we only requested a 32-bit BAR.
-> +		 */
-> +		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
->  
->  		if (!!(epc_features->reserved_bar & (1 << bar)))
->  			continue;
-> @@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  			if (bar == test_reg_bar)
->  				return ret;
->  		}
-> -		/*
-> -		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> -		 * if the specific implementation required a 64-bit BAR,
-> -		 * even if we only requested a 32-bit BAR.
-> -		 */
-> -		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> -			bar++;
->  	}
->  
->  	return 0;
-> @@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  	struct device *dev = &epf->dev;
->  	struct pci_epf_bar *epf_bar;
->  	void *base;
-> -	int bar;
-> +	int bar, add;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->  	const struct pci_epc_features *epc_features;
->  
-> @@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  	}
->  	epf_test->reg[test_reg_bar] = base;
->  
-> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
-> +	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->  		epf_bar = &epf->bar[bar];
-> +		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
-> +
->  		if (bar == test_reg_bar)
->  			continue;
->  
-> @@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  			dev_err(dev, "Failed to allocate space for BAR%d\n",
->  				bar);
->  		epf_test->reg[bar] = base;
-> -		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> -			bar++;
->  	}
->  
->  	return 0;
-> 
+Sounds like something good to be added to 0-day, please propose it to
+the developers.  But let them fix whatever is currently not working with
+it first :)
+
+thanks,
+
+greg k-h
