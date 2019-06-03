@@ -3,177 +3,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3035DC28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE520C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C899218BC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BA8255C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 18:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFCSDD (ORCPT
+        id S1726521AbfFCSEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 14:03:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62804 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfFCSDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 14:03:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 11:03:00 -0700
-X-ExtLoop1: 1
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga001.jf.intel.com with ESMTP; 03 Jun 2019 11:03:00 -0700
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 3 Jun 2019 11:02:59 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX161.amr.corp.intel.com ([169.254.4.187]) with mapi id 14.03.0415.000;
- Mon, 3 Jun 2019 11:03:00 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 0/9] security: x86/sgx: SGX vs. LSM
-Thread-Topic: [RFC PATCH 0/9] security: x86/sgx: SGX vs. LSM
-Thread-Index: AQHVGAkeu//pWDttTk+JsIicrUDwLaaG/FIQgAOxr4D//4xvIA==
-Date:   Mon, 3 Jun 2019 18:02:59 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654ECFEE@ORSMSX116.amr.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F654EC5FD@ORSMSX116.amr.corp.intel.com>
- <e5e1dc77-eb56-bdab-8164-602ea544ea6e@tycho.nsa.gov>
-In-Reply-To: <e5e1dc77-eb56-bdab-8164-602ea544ea6e@tycho.nsa.gov>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzRkYzI0ZmYtOWRhYS00NWE0LWEwMDQtYjA5Y2FiODIzYzhmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVDJBbGtVa1orakFQSnZkMlgxOXlZaFFSa3ZuTjVQWHRQb0d1V0dIUFEwMkdxZnQ3bjFmU2pZWDdLTmZtWitqZiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 3 Jun 2019 14:04:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38898 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFCSEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 14:04:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d17so2765314oth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 11:04:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=i7CBAIV2Ohefbdb54kSsh4/l2MOB+iiXoWyNgvLrvV8=;
+        b=rWaw6NE9i/S7uVfC5U6RFZkbfuplQIV6CKCivrFRoQD1xyBSAqX5wWIRGJueV5/+EQ
+         H6mXE0i2BcZ/6fL+7pXLsmrVvE5yw4uTez3HacFmh3XjYaNWUIQDoPztF27VxwIPIR9k
+         akzvPaL0IC3PLulBRHUiJQK1RKnMzE21ALn6zQ4k54TO0cTeMzpCIj9RCFF1CwmQJdFh
+         9jUWLgPhkO2o3qaBupjaV0nrvb9Ta7s2jGWbDAq7sjjwQYHXB5TEwxcEBg3ycS3YX481
+         JPzjMrBWhT34L7hA6fTXnGpqMxB0pCuybSrxslo5TnlgKroeJj/SMJhWaPEczFaMY2Jv
+         FA+A==
+X-Gm-Message-State: APjAAAV/QMYFP7WHxDnyA3ad8KBrU3uQpkMH+qC54j4EYINCz59LDWtT
+        HYEh8cLuyVLOzL64G5ncuKSzAQ==
+X-Google-Smtp-Source: APXvYqwQCa+jvg/pYHAeb+0CllYaVEIEs8oMSlf3Lhr2c3p9ItC2o/gxlsfkoULnfbMjeqwUEtvFzA==
+X-Received: by 2002:a9d:4803:: with SMTP id c3mr850285otf.18.1559585090749;
+        Mon, 03 Jun 2019 11:04:50 -0700 (PDT)
+Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
+        by smtp.gmail.com with ESMTPSA id s201sm6074034oie.40.2019.06.03.11.04.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 11:04:49 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 14:04:40 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, david@redhat.com, dodgen@google.com,
+        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com
+Subject: Re: [RFC][Patch v10 0/2] mm: Support for page hinting
+Message-ID: <20190603140304-mutt-send-email-mst@kernel.org>
+References: <20190603170306.49099-1-nitesh@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603170306.49099-1-nitesh@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1zZ3gtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtc2d4
-LQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBTdGVwaGVuIFNtYWxsZXkN
-Cj4gU2VudDogTW9uZGF5LCBKdW5lIDAzLCAyMDE5IDEwOjQ3IEFNDQo+IA0KPiBPbiA2LzIvMTkg
-MzoyOSBBTSwgWGluZywgQ2VkcmljIHdyb3RlOg0KPiA+IEhpIFNlYW4sDQo+ID4NCj4gPj4gRnJv
-bTogQ2hyaXN0b3BoZXJzb24sIFNlYW4gSg0KPiA+PiBTZW50OiBGcmlkYXksIE1heSAzMSwgMjAx
-OSA0OjMyIFBNDQo+ID4+DQo+ID4+IFRoaXMgc2VyaWVzIGlzIHRoZSByZXN1bHQgb2YgYSByYXRo
-ZXIgYWJzdXJkIGFtb3VudCBvZiBkaXNjdXNzaW9uDQo+ID4+IG92ZXIgaG93IHRvIGdldCBTR1gg
-dG8gcGxheSBuaWNlIHdpdGggTFNNIHBvbGljaWVzLCB3aXRob3V0IGhhdmluZyB0bw0KPiA+PiBy
-ZXNvcnQgdG8gZXZpbCBzaGVuYW5pZ2FucyBvciBwdXQgdW5kdWUgYnVyZGVuIG9uIHVzZXJzcGFj
-ZS4gIFRoZQ0KPiA+PiBkaXNjdXNzaW9uIGRlZmluaXRlbHkgd2FuZGVyZWQgaW50byBjb21wbGV0
-ZWx5IGluc2FuZSB0ZXJyaXRvcnkgYXQNCj4gdGltZXMsIGJ1dCBJIHRoaW5rL2hvcGUgd2UgZW5k
-ZWQgdXAgd2l0aCBzb21ldGhpbmcgcmVhc29uYWJsZS4NCj4gPj4NCj4gPj4gVGhlIGJhc2ljIGdp
-c3Qgb2YgdGhlIGFwcHJvYWNoIGlzIHRvIHJlcXVpcmUgdXNlcnNwYWNlIHRvIGRlY2xhcmUNCj4g
-Pj4gd2hhdCBwcm90ZWN0aW9ucyBhcmUgbWF4aW1hbGx5IGFsbG93ZWQgZm9yIGFueSBnaXZlbiBw
-YWdlLCBlLmcuIGFkZCBhDQo+ID4+IGZsYWdzIGZpZWxkIGZvciBsb2FkaW5nIGVuY2xhdmUgcGFn
-ZXMgdGhhdCB0YWtlcw0KPiA+PiBBTExPV197UkVBRCxXUklURSxFWEVDfS4gIExTTXMgY2FuIHRo
-ZW4gYWRqdXN0IHRoZSBhbGxvd2VkDQo+ID4+IHByb3RlY3Rpb25zLCBlLmcuIGNsZWFyIEFMTE9X
-X0VYRUMgdG8gcHJldmVudCBldmVyIG1hcHBpbmcgdGhlIHBhZ2UNCj4gd2l0aCBQUk9UX0VYRUMu
-ICBTR1ggZW5mb3JjZXMgdGhlIGFsbG93ZWQgcGVybXMgdmlhIGEgbmV3IG1wcm90ZWN0KCkNCj4g
-dm1fb3BzIGhvb2ssIGUuZy4gbGlrZSByZWd1bGFyIG1wcm90ZWN0KCkgdXNlcyBNQVlfe1JFQUQs
-V1JJVEUsRVhFQ30uDQo+ID4+DQo+ID4+IEFMTE9XX0VYRUMgaXMgdXNlZCB0byBkZW55IGhpbmdz
-IGxpa2UgbG9hZGluZyBhbiBlbmNsYXZlIGZyb20gYQ0KPiA+PiBub2V4ZWMgZmlsZSBzeXN0ZW0g
-b3IgZnJvbSBhIGZpbGUgd2l0aG91dCBFWEVDVVRFIHBlcm1pc3Npb25zLCBlLmcuDQo+ID4+IHdp
-dGhvdXQgdGhlIEFMTE9XX0VYRUMgY29uY2VwdCwgb24gU0dYMiBoYXJkd2FyZSAocmVnYXJkbGVz
-cyBvZg0KPiA+PiBrZXJuZWwgc3VwcG9ydCkgdXNlcnNwYWNlIGNvdWxkIEVBREQgZnJvbSBhIG5v
-ZXhlYyBmaWxlIHVzaW5nIHJlYWQtDQo+IG9ubHkgcGVybWlzc2lvbnMsIGFuZCBsYXRlciB1c2Ug
-bXByb3RlY3QoKSBhbmQgRU5DTFVbRU1PRFBFXSB0byBnYWluDQo+IGV4ZWN1dGUgcGVybWlzc2lv
-bnMuDQo+ID4+DQo+ID4+IEFMTE9XX1dSSVRFIGlzIHVzZWQgaW4gY29uanVjdGlvbiB3aXRoIEFM
-TE9XX0VYRUMgdG8gZW5mb3JjZQ0KPiBTRUxpbnV4J3MgRVhFQ01PRCAob3IgRVhFQ01FTSkuDQo+
-ID4+DQo+ID4+IFRoaXMgaXMgdmVyeSBtdWNoIGFuIFJGQyBzZXJpZXMuICBJdCdzIG9ubHkgY29t
-cGlsZSB0ZXN0ZWQsIGxpa2VseQ0KPiA+PiBoYXMgb2J2aW91cyBidWdzLCB0aGUgU0VMaW51eCBw
-YXRjaCBjb3VsZCBiZSBjb21wbGV0ZWx5IGhhcmVicmFpbmVkLA0KPiBldGMuLi4NCj4gPj4gTXkg
-Z29hbCBhdCB0aGlzIHBvaW50IGlzIHRvIGdldCBmZWVkYmFjayBhdCBhIG1hY3JvIGxldmVsLCBl
-LmcuIGlzDQo+ID4+IHRoZSBjb3JlIGNvbmNlcHQgdmlhYmxlL2FjY2VwdGFibGUsIGFyZSB0aGVy
-ZSBvYmplY3Rpb24gdG8gaG9va2luZw0KPiBtcHJvdGVjdCgpLCBldGMuLi4NCj4gPj4NCj4gPj4g
-QW5keSBhbmQgQ2VkcmljLCBob3BlZnVsbHkgdGhpcyBhbGlnbnMgd2l0aCB5b3VyIGdlbmVyYWwg
-ZXhwZWN0YXRpb25zDQo+ID4+IGJhc2VkIG9uIG91ciBsYXN0IGRpc2N1c3Npb24uDQo+ID4NCj4g
-PiBJIGNvdWxkbid0IHVuZGVyc3RhbmQgdGhlIHJlYWwgaW50ZW50aW9ucyBvZiBBTExPV18qIGZs
-YWdzIHVudGlsIEkgc2F3DQo+ID4gdGhlbSBpbiBjb2RlLiBJIGhhdmUgdG8gc2F5IEMgaXMgbW9y
-ZSBleHByZXNzaXZlIHRoYW4gRW5nbGlzaCBpbiB0aGF0DQo+ID4gcmVnYXJkIDopDQo+ID4NCj4g
-PiBHZW5lcmFsbHkgSSBhZ3JlZSB3aXRoIHlvdXIgZGlyZWN0aW9uIGJ1dCB0aGluayBBTExPV18q
-IGZsYWdzIGFyZQ0KPiBjb21wbGV0ZWx5IGludGVybmFsIHRvIExTTSBiZWNhdXNlIHRoZXkgY2Fu
-IGJlIGJvdGggcHJvZHVjZWQgYW5kDQo+IGNvbnN1bWVkIGluc2lkZSBhbiBMU00gbW9kdWxlLiBT
-byBzcGlsbGluZyB0aGVtIGludG8gU0dYIGRyaXZlciBhbmQgYWxzbw0KPiB1c2VyIG1vZGUgY29k
-ZSBtYWtlcyB0aGUgc29sdXRpb24gdWdseSBhbmQgaW4gc29tZSBjYXNlcyBpbXByYWN0aWNhbA0K
-PiBiZWNhdXNlIG5vdCBldmVyeSBlbmNsYXZlIGhvc3QgcHJvY2VzcyBoYXMgYSBwcmlvcmkga25v
-d2xlZGdlIG9uIHdoZXRoZXINCj4gb3Igbm90IGFuIGVuY2xhdmUgcGFnZSB3b3VsZCBiZSBFTU9E
-UEUnZCBhdCBydW50aW1lLg0KPiA+DQo+ID4gVGhlb3JldGljYWxseSBzcGVha2luZywgd2hhdCB5
-b3UgcmVhbGx5IG5lZWQgaXMgYSBwZXIgcGFnZSBmbGFnIChsZXQncw0KPiBuYW1lIGl0IFdSSVRU
-RU4/KSBpbmRpY2F0aW5nIHdoZXRoZXIgYSBwYWdlIGhhcyBldmVyIGJlZW4gd3JpdHRlbiB0byAo
-b3INCj4gbW9yZSBwcmVjaXNlbHksIGdyYW50ZWQgUFJPVF9XUklURSksIHdoaWNoIHdpbGwgYmUg
-dXNlZCB0byBkZWNpZGUNCj4gd2hldGhlciB0byBncmFudCBQUk9UX0VYRUMgd2hlbiByZXF1ZXN0
-ZWQgaW4gZnV0dXJlLiBHaXZlbiB0aGUgZmFjdCB0aGF0DQo+IGFsbCBtcHJvdGVjdCgpIGdvZXMg
-dGhyb3VnaCBMU00gYW5kIG1tYXAoKSBpcyBsaW1pdGVkIHRvIFBST1RfTk9ORSwgaXQncw0KPiBl
-YXN5IGZvciBMU00gdG8gY2FwdHVyZSB0aGF0IGZsYWcgYnkgaXRzZWxmIGluc3RlYWQgb2YgYXNr
-aW5nIHVzZXIgbW9kZQ0KPiBjb2RlIHRvIHByb3ZpZGUgaXQuDQo+ID4NCj4gPiBUaGF0IHNhaWQs
-IGhlcmUgaXMgdGhlIHN1bW1hcnkgb2Ygd2hhdCBJIHRoaW5rIGlzIGEgYmV0dGVyIGFwcHJvYWNo
-Lg0KPiA+ICogSW4gaG9vayBzZWN1cml0eV9maWxlX2FsbG9jKCksIGlmIEBmaWxlIGlzIGFuIGVu
-Y2xhdmUsIGFsbG9jYXRlIHNvbWUNCj4gZGF0YSBzdHJ1Y3R1cmUgdG8gc3RvcmUgZm9yIGV2ZXJ5
-IHBhZ2UsIHRoZSBXUklUVEVOIGZsYWcgYXMgZGVzY3JpYmVkDQo+IGFib3ZlLiBXUklUVEVOIGlz
-IGNsZWFyZWQgaW5pdGlhbGx5IGZvciBhbGwgcGFnZXMuDQo+ID4gICAgT3BlbjogR2l2ZW4gYSBm
-aWxlIG9mIHR5cGUgc3RydWN0IGZpbGUgKiwgaG93IHRvIHRlbGwgaWYgaXQgaXMgYW4NCj4gZW5j
-bGF2ZSAoaS5lLiAvZGV2L3NneC9lbmNsYXZlKT8NCj4gPiAqIEluIGhvb2sgc2VjdXJpdHlfbW1h
-cF9maWxlKCksIGlmIEBmaWxlIGlzIGFuIGVuY2xhdmUsIG1ha2Ugc3VyZQ0KPiBAcHJvdCBjYW4g
-b25seSBiZSBQUk9UX05PTkUuIFRoaXMgaXMgdG8gZm9yY2UgYWxsIHByb3RlY3Rpb24gY2hhbmdl
-cyB0bw0KPiBnbyB0aHJvdWdoIHNlY3VyaXR5X2ZpbGVfbXByb3RlY3QoKS4NCj4gPiAqIEluIHRo
-ZSBuZXdseSBpbnRyb2R1Y2VkIGhvb2sgc2VjdXJpdHlfZW5jbGF2ZV9sb2FkKCksIHNldCBXUklU
-VEVODQo+IGZvciBwYWdlcyB0aGF0IGFyZSByZXF1ZXN0ZWQgUFJPVF9XUklURS4NCj4gPiAqIElu
-IGhvb2sgc2VjdXJpdHlfZmlsZV9tcHJvdGVjdCgpLCBpZiBAdm1hLT52bV9maWxlIGlzIGFuIGVu
-Y2xhdmUsDQo+ID4gbG9vayB1cCBhbmQgdXNlIFdSSVRURU4gZmxhZ3MgZm9yIGFsbCBwYWdlcyB3
-aXRoaW4gQHZtYSwgYWxvbmcgd2l0aA0KPiA+IG90aGVyIGdsb2JhbCBmbGFncyAoZS5nLiBQUk9D
-RVNTX19FWEVDTUVNL0ZJTEVfX0VYRUNNT0QgaW4gdGhlIGNhc2Ugb2YNCj4gPiBTRUxpbnV4KSB0
-byBkZWNpZGUgb24NCj4gYWxsb3dpbmcvcmVqZWN0aW5nIEBwcm90Lg0KPiANCj4gQXQgdGhpcyBw
-b2ludCB3ZSBoYXZlIG5vIGtub3dsZWRnZSBvZiB0aGUgc291cmNlIHZtYS9maWxlLCByaWdodD8g
-IFNvDQo+IHdoYXQgZG8gd2UgY2hlY2sgRklMRV9fRVhFQ1VURSBhbmQvb3IgRklMRV9fRVhFQ01P
-RCBhZ2FpbnN0Pw0KPiB2bWEtPnZtX2ZpbGUgYXQgdGhpcyBwb2ludCBpcyAvZGV2L3NneC9lbmNs
-YXZlLCByaWdodD8NCg0KTXkgYXBvbG9neSB0byB0aGUgY29uZnVzaW9ucyBoZXJlLg0KDQpZZXMs
-IHZtYS0+dm1fZmlsZSBpcyBhbHdheXMgL2Rldi9zZ3gvZW5jbGF2ZSwgYnV0IGVhY2ggb3Blbigi
-L2Rldi9zZ3gvZW5jbGF2ZSIpIHJldHVybnMgYSAqbmV3KiBmaWxlIHN0cnVjdCAobGV0J3MgZGVu
-b3RlIGl0IGFzIEBlbmNsYXZlX2ZkKSB0aGF0IHVuaXF1ZWx5IGlkZW50aWZpZXMgb25lIGVuY2xh
-dmUgaW5zdGFuY2UsIGFuZCB0aGUgZXhwZWN0YXRpb24gaXMgdGhhdCBAZW5jbGF2ZV9mZC0+Zl9z
-ZWN1cml0eSB3b3VsZCBiZSB1c2VkIGJ5IExTTSB0byBzdG9yZSBlbmNsYXZlIHNwZWNpZmljIGlu
-Zm9ybWF0aW9uLCBpbmNsdWRpbmcgQUxMT1dfKiBmbGFncyBhbmQgd2hhdGV2ZXIgZGVlbWVkIGFw
-cHJvcHJpYXRlIGJ5IGFuIExTTSBtb2R1bGUuDQoNCkluIHRoZSBjYXNlIG9mIFNFTGludXgsIGFu
-ZCBpZiB0aGUgY2hvaWNlIGlzIHRvIHVzZSBGSUxFX19FWEVDTU9EIG9mIC5zaWdzdHJ1Y3QgZmls
-ZSB0byBhdXRob3JpemUgUlctPlJYIGF0IHJ1bnRpbWUsIHRoZW4gU0VMaW51eCBjb3VsZCBjYWNo
-ZSB0aGF0IGZsYWcgaW4gQGVuY2xhdmVfZmQtPmZfc2VjdXJpdHkgdXBvbiBzZWN1cml0eV9lbmNs
-YXZlX2luaXQoKS4NCg==
+On Mon, Jun 03, 2019 at 01:03:04PM -0400, Nitesh Narayan Lal wrote:
+> This patch series proposes an efficient mechanism for communicating free memory
+> from a guest to its hypervisor. It especially enables guests with no page cache
+> (e.g., nvdimm, virtio-pmem) or with small page caches (e.g., ram > disk) to
+> rapidly hand back free memory to the hypervisor.
+> This approach has a minimal impact on the existing core-mm infrastructure.
+
+Could you help us compare with Alex's series?
+What are the main differences?
+
+> Measurement results (measurement details appended to this email):
+> * With active page hinting, 3 more guests could be launched each of 5 GB(total 
+> 5 vs. 2) on a 15GB (single NUMA) system without swapping.
+> * With active page hinting, on a system with 15 GB of (single NUMA) memory and
+> 4GB of swap, the runtime of "memhog 6G" in 3 guests (run sequentially) resulted
+> in the last invocation to only need 37s compared to 3m35s without page hinting.
+> 
+> This approach tracks all freed pages of the order MAX_ORDER - 2 in bitmaps.
+> A new hook after buddy merging is used to set the bits in the bitmap.
+> Currently, the bits are only cleared when pages are hinted, not when pages are
+> re-allocated.
+> 
+> Bitmaps are stored on a per-zone basis and are protected by the zone lock. A
+> workqueue asynchronously processes the bitmaps as soon as a pre-defined memory
+> threshold is met, trying to isolate and report pages that are still free.
+> 
+> The isolated pages are reported via virtio-balloon, which is responsible for
+> sending batched pages to the host synchronously. Once the hypervisor processed
+> the hinting request, the isolated pages are returned back to the buddy.
+> 
+> The key changes made in this series compared to v9[1] are:
+> * Pages only in the chunks of "MAX_ORDER - 2" are reported to the hypervisor to
+> not break up the THP.
+> * At a time only a set of 16 pages can be isolated and reported to the host to
+> avoids any false OOMs.
+> * page_hinting.c is moved under mm/ from virt/kvm/ as the feature is dependent
+> on virtio and not on KVM itself. This would enable any other hypervisor to use
+> this feature by implementing virtio devices.
+> * The sysctl variable is replaced with a virtio-balloon parameter to
+> enable/disable page-hinting.
+> 
+> Pending items:
+> * Test device assigned guests to ensure that hinting doesn't break it.
+> * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side support.
+> * Compare reporting free pages via vring with vhost.
+> * Decide between MADV_DONTNEED and MADV_FREE.
+> * Look into memory hotplug, more efficient locking, possible races when
+> disabling.
+> * Come up with proper/traceable error-message/logs.
+> * Minor reworks and simplifications (e.g., virtio protocol).
+> 
+> Benefit analysis:
+> 1. Use-case - Number of guests that can be launched without swap usage
+> NUMA Nodes = 1 with 15 GB memory
+> Guest Memory = 5 GB
+> Number of cores in guest = 1
+> Workload = test allocation program allocates 4GB memory, touches it via memset
+> and exits.
+> Procedure =
+> The first guest is launched and once its console is up, the test allocation
+> program is executed with 4 GB memory request (Due to this the guest occupies
+> almost 4-5 GB of memory in the host in a system without page hinting). Once
+> this program exits at that time another guest is launched in the host and the
+> same process is followed. It is continued until the swap is not used.
+> 
+> Results:
+> Without hinting = 3, swap usage at the end 1.1GB.
+> With hinting = 5, swap usage at the end 0.
+> 
+> 2. Use-case - memhog execution time
+> Guest Memory = 6GB
+> Number of cores = 4
+> NUMA Nodes = 1 with 15 GB memory
+> Process: 3 Guests are launched and the ‘memhog 6G’ execution time is monitored
+> one after the other in each of them.
+> Without Hinting - Guest1:47s, Guest2:53s, Guest3:3m35s, End swap usage: 3.5G
+> With Hinting - Guest1:40s, Guest2:44s, Guest3:37s, End swap usage: 0
+> 
+> Performance analysis:
+> 1. will-it-scale's page_faul1:
+> Guest Memory = 6GB
+> Number of cores = 24
+> 
+> Without Hinting:
+> tasks,processes,processes_idle,threads,threads_idle,linear
+> 0,0,100,0,100,0
+> 1,315890,95.82,317633,95.83,317633
+> 2,570810,91.67,531147,91.94,635266
+> 3,826491,87.54,713545,88.53,952899
+> 4,1087434,83.40,901215,85.30,1270532
+> 5,1277137,79.26,916442,83.74,1588165
+> 6,1503611,75.12,1113832,79.89,1905798
+> 7,1683750,70.99,1140629,78.33,2223431
+> 8,1893105,66.85,1157028,77.40,2541064
+> 9,2046516,62.50,1179445,76.48,2858697
+> 10,2291171,58.57,1209247,74.99,3176330
+> 11,2486198,54.47,1217265,75.13,3493963
+> 12,2656533,50.36,1193392,74.42,3811596
+> 13,2747951,46.21,1185540,73.45,4129229
+> 14,2965757,42.09,1161862,72.20,4446862
+> 15,3049128,37.97,1185923,72.12,4764495
+> 16,3150692,33.83,1163789,70.70,5082128
+> 17,3206023,29.70,1174217,70.11,5399761
+> 18,3211380,25.62,1179660,69.40,5717394
+> 19,3202031,21.44,1181259,67.28,6035027
+> 20,3218245,17.35,1196367,66.75,6352660
+> 21,3228576,13.26,1129561,66.74,6670293
+> 22,3207452,9.15,1166517,66.47,6987926
+> 23,3153800,5.09,1172877,61.57,7305559
+> 24,3184542,0.99,1186244,58.36,7623192
+> 
+> With Hinting:
+> 0,0,100,0,100,0
+> 1,306737,95.82,305130,95.78,306737
+> 2,573207,91.68,530453,91.92,613474
+> 3,810319,87.53,695281,88.58,920211
+> 4,1074116,83.40,880602,85.48,1226948
+> 5,1308283,79.26,1109257,81.23,1533685
+> 6,1501987,75.12,1093661,80.19,1840422
+> 7,1695300,70.99,1104207,79.03,2147159
+> 8,1901523,66.85,1193613,76.90,2453896
+> 9,2051288,62.73,1200913,76.22,2760633
+> 10,2275771,58.60,1192992,75.66,3067370
+> 11,2435016,54.48,1191472,74.66,3374107
+> 12,2623114,50.35,1196911,74.02,3680844
+> 13,2766071,46.22,1178589,73.02,3987581
+> 14,2932163,42.10,1166414,72.96,4294318
+> 15,3000853,37.96,1177177,72.62,4601055
+> 16,3113738,33.85,1165444,70.54,4907792
+> 17,3132135,29.77,1165055,68.51,5214529
+> 18,3175121,25.69,1166969,69.27,5521266
+> 19,3205490,21.61,1159310,65.65,5828003
+> 20,3220855,17.52,1171827,62.04,6134740
+> 21,3182568,13.48,1138918,65.05,6441477
+> 22,3130543,9.30,1128185,60.60,6748214
+> 23,3087426,5.15,1127912,55.36,7054951
+> 24,3099457,1.04,1176100,54.96,7361688
+> 
+> [1] https://lkml.org/lkml/2019/3/6/413
+> 
