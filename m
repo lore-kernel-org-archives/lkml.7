@@ -2,107 +2,117 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03E7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12777C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818F126DC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E290E26D87
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XRvFg92K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ5Brn47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfFCRah (ORCPT
+        id S1729984AbfFCRaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:30:37 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45766 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbfFCRae (ORCPT
+        Mon, 3 Jun 2019 13:30:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45976 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729937AbfFCRay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:30:34 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f20so27918577edt.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 10:30:33 -0700 (PDT)
+        Mon, 3 Jun 2019 13:30:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x7so6256510plr.12;
+        Mon, 03 Jun 2019 10:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ou7nbKSnWzeuJb0ud+C1KMIknjjtf6JpEdGznfm889o=;
-        b=XRvFg92K9MJE+/snsanTpU1Xdnpb0NRNHT7ExLcvgQdboyR5FHMjR/hC7f8R1gO7iW
-         uYqqg60suaErWHcdMrnieaDGtufM5FGiJCI2O2TYx5rUpd8ZLtSBOEE69tYIQ6tDxenc
-         WEJnE5QSwH+b7YmHJlFYI8IrGIxI92lmAKF+/S2kOTOFF/hc1KT0I1V7+2fUBLhKloV+
-         UTDZiJvLzj5z93XBGXVU1Wr5wnq/KO/bzX97bYXEoFO5KkPOqxTv8X4YqmdoULqoXJx6
-         zOpfE+vdadaCg6sou0U5/XFLR8PwpIYwiHePvxzvmP/jezse24GN+6RPCFPmGUZUe6IL
-         +suA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x6LxCMvNbKAvwufPMN7pUEzpJTJQGX+IjHaO61nLrhc=;
+        b=YQ5Brn47WmIUvxHa11mrJMb/bYejP+FD0Afb7Ey8tTnpBdSokXokZ656J9Dv0WB6fL
+         eAoGRSTdY9915p9+DzDT9HOGN+1WUbigkCkoAC4T4v2GILXJbDiaUdeMLNPG3cmj1xBe
+         yaT0UW6KJ1dcxKlsYtE5Ano6R83qTneWrr+e4azAn3W7Z3bReHBbjnlHpwNmaM27mlKB
+         a6L3wQwzJ8tIGXul6Zgw5MwDR7fALBF47i5TKHs0FdDVWFnPO41Qw+K/BfSEZosMot+y
+         id/pHJXOhEhWAJpJZZxut2ZvqHa09UGKPBiuP7kbz8Y1rzC/QKqLOvc8QqjSqpUNnDWb
+         bKfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ou7nbKSnWzeuJb0ud+C1KMIknjjtf6JpEdGznfm889o=;
-        b=HcQ6OR6l1AdzZXlSOAMlCFXfQSEL96oh+uD++TN4gAlbdUywieiPxE39NMq8Qj14Gu
-         foWztcdM7W3rkwdSpdyHpSvnZeZg1IUFgFSUW8hgqOJTC+kNQJOoheX6rQNeeIa+W1lY
-         yUHNLtc7IAYOujoA8ujbgiybFCAWnwAbPl5SsKIQMXrL86cV1I+YxHZcIq+6/QoQ4Nmz
-         EFxv4ognicAxzg7orggadkILb3V0M+amjbSOAbBXw0jfdaLWzQW9h/GuYyTHThv5EOHr
-         KPe8+BpGcSJkBr/jeQo33ikSdVjdFnZti0zeHWuD97ZOQHEanZf1x4cNh5wsDfeggJtR
-         dyYQ==
-X-Gm-Message-State: APjAAAXuCwAu4LN0+mhbNef7l9JgLi2cyMyyPOr5wv2kvxgKichHacJd
-        ki9NC1GSy0VrjLQKETnVVUIu3l04oxCSBVGdIvYqNw==
-X-Google-Smtp-Source: APXvYqyyzQEZJ7Lgq+NCeiqX/TahBk6T/cpgdRssAXOY6KVqhmwwIa6fKnhH+hvWKMEFq+m81C+//5OWgsFx6UqGlWw=
-X-Received: by 2002:a50:be03:: with SMTP id a3mr30015391edi.5.1559583032398;
- Mon, 03 Jun 2019 10:30:32 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x6LxCMvNbKAvwufPMN7pUEzpJTJQGX+IjHaO61nLrhc=;
+        b=tQhZyjG39leZ+GOHbH900qqT8j3LasXvCsd49JWqXvnqCNYfouuRpPXHUCeEOi5p4h
+         i40OIAmsfuLWdyJM0v8+3HtA+KYMVeOe9DA4VczPedzgeaP/DcXrNZ/rksXGmZnMnnRv
+         oHkazxH7qh/z1/Nb9tEpk6Zok8ph4ZRzs8pAMS568lxqxdL3F0AkisZ7f9rRBcoZlbn6
+         drbaEbniaj71u2dMTIarCZ4ANjkXpR1xxy6vtHvfir/5MDrZiJ5XHiXZF1kI6JRK8vZY
+         t3N/iFB63M1kXFJDcxOm8pwU70kFrPYu2pCBEbPY54v2awIrDFXZ1Q4D9+RSUkMEBaUH
+         Orkg==
+X-Gm-Message-State: APjAAAUMvNlKZXZ4b5TLXTBfFQq4x5rMVjYr1XouIg6Mh/URqtWuv+j/
+        3wMAtG7Xw+6Iexj/9Z8i2z4=
+X-Google-Smtp-Source: APXvYqzNjxQ4dQJciaN24y3Z8GJOIyhK6apkaM3QDoPTxdGJ6+DnNvx6wBHVXO0NkrbcjcGU+HaT+Q==
+X-Received: by 2002:a17:902:8c8f:: with SMTP id t15mr31739499plo.87.1559583054215;
+        Mon, 03 Jun 2019 10:30:54 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d3sm10724873pfa.176.2019.06.03.10.30.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 10:30:53 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:30:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] power: supply: ucs1002: Add HWMON interface
+Message-ID: <20190603173052.GB5220@roeck-us.net>
+References: <20190531011620.9383-1-andrew.smirnov@gmail.com>
+ <20190531011620.9383-3-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
- <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com>
- <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
- <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
- <5CF2599B.3030001@intel.com>
-In-Reply-To: <5CF2599B.3030001@intel.com>
-From:   Eric Hankland <ehankland@google.com>
-Date:   Mon, 3 Jun 2019 10:30:20 -0700
-Message-ID: <CAOyeoRWuHyhoy6NB=O+ekQMhBFngozKoanWzArxgBk4DH2hdtg@mail.gmail.com>
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531011620.9383-3-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 3:50 AM Wei Wang <wei.w.wang@intel.com> wrote:
->
-> My question is that have we proved that this indirect info leakage
-> indeed happens?
-> The spec states that the counter will count the related events generated by
-> the logical CPU with AnyThread=0. I would be inclined to trust the
-> hardware behavior
-> documented in the spec unless we could prove there is a problem.
+On Thu, May 30, 2019 at 06:16:20PM -0700, Andrey Smirnov wrote:
+> Expose current sensors found on UCS1002 via HWMON.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
 
-I'm not disputing the spec with regards to AnyThread=0; my point is
-that LLC contention can be quantified using the PMU regardless of
-whether or not you are measuring only the logical CPU you are running
-on.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
->  From the guest point of view, returning 0 means that the event counting
-> is running well.
-> That is, the guest is expecting to get some count numbers. So better not
-> to zero the value
-> when the guest does rdpmc/rdmsr to get the count in this case.
->
-> I think we could just ensure "AnyThread=0" in the config, and create the
-> kernel
-> counter as usual.
-
-If you return non-zero in intel_pmu_set_msr(), KVM emulates a gp
-fault. Which as you said signals that something went wrong to the
-guest. However, older guests with panic_on_oops=1 (which is apparently
-default on RHEL 6) will panic if they get a gpfault while trying to do
-a wrmsr (see the "Carry on after a non-"safe" MSR access fails without
-!panic_on_oops" patch). I think that not panicking guests is probably
-preferable to communicating that we weren't able to program the event.
-
-
-Eric
+> ---
+>  drivers/power/supply/ucs1002_power.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
+> index 1c89d030c045..ebe84f1ca42f 100644
+> --- a/drivers/power/supply/ucs1002_power.c
+> +++ b/drivers/power/supply/ucs1002_power.c
+> @@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> +	ret = devm_power_supply_add_hwmon_sysfs(info->charger);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to add hmwon attributes: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to read pin status: %d\n", ret);
+> -- 
+> 2.21.0
+> 
