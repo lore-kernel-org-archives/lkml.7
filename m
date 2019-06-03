@@ -2,146 +2,193 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93737C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE3624830
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB6A24866
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:17:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LDRhQ0Gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfFCOR1 (ORCPT
+        id S1728974AbfFCORx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:17:27 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39554 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727415AbfFCOR1 (ORCPT
+        Mon, 3 Jun 2019 10:17:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45811 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfFCORx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:17:27 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m10so1639398edv.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:17:26 -0700 (PDT)
+        Mon, 3 Jun 2019 10:17:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b18so12237991wrq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KAC1TPImFCotEdm440j6roz5khMTaZly6qZwqAJTL0A=;
+        b=LDRhQ0GxAoaa1xYNU4bz3whjgV7vMOulgp/7oUEDzyvF8DLe0pfMjqEe10lV/lqUfc
+         +ZtEDT0u7T9s83JNDJ0F7oq2faHUKT2SJnyTvYAMtKVHFIZgqU0TLgoMiy0SrxLqhpa2
+         n4tdIntutujIZ0gsJLtaZP0/sTaaAJoVnBYqbpKf0Rirrqeb7upWpqbGufFLtWmr9Ob6
+         6HmRtxjPOR/K6t0jSclptjufcYSPAZNeQCygRFuViBMTAnbO5I0rjjorjjb1oEgFR2F+
+         fVpeuegHf3KL00J9pNVBRw/C4MVmQ6Xp36Dut5b5bUBDStdWjrGHFse6XS8xFCX1hxuX
+         KfNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l4Qv4hFPuG2dV+d37O9UvLJnGAcWEQaTt9nnKVcuDC4=;
-        b=CLKZizbzQuKxXgz02JV3Z2NGf96luFjxd+hy/dusiqoZtvvcgsAZCUX3gCLLDpZ7dZ
-         KfHSVQVSbQI+tQIYaplEb9gOMhSB9f2XIU7hGEiRC929UlyzCPZnofLPpfaYg/odYqGY
-         HbDro97PV5GhCXl7WZ34+PHlo/91hqO+al7gESFE1isAb4of1NwhdMtYnf/o9OzgyQfk
-         3oagsklkOHPyD9ctDXJ7jN05cVwzH+NF6I+Au3vbkTOTEFOGX14uy1MYRZlsuyX87njB
-         JJ8s3cCz7adpRhTQcWGR8TaETzglOuFmbS6yCMpHhFAUw1vdRVYvsEVkkLI0Wm2vn/GR
-         /eVw==
-X-Gm-Message-State: APjAAAUZdq+SiAIgB017xCyZCS8m0bxvxxseYmXUFKZCiajsQ2uM9cj7
-        htXNg9R4BpbPNcBtVZHHhTxWIQrah5s=
-X-Google-Smtp-Source: APXvYqzem7LFUqWkFm7Fpj1PhmAahosRf758chprfstLPBa92BiLRvwKvF2Uk/nu0KWjxDmQnrQH6w==
-X-Received: by 2002:aa7:d1c5:: with SMTP id g5mr14135805edp.37.1559571444661;
-        Mon, 03 Jun 2019 07:17:24 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id o7sm2602517ejj.88.2019.06.03.07.17.23
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 07:17:23 -0700 (PDT)
-Subject: Re: hid-related 5.2-rc1 boot hang
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
- <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
- <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
- <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
- <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
- <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
- <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
- <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
- <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
- <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e431dafc-0fb4-4be3-ac29-dcf125929090@redhat.com>
-Date:   Mon, 3 Jun 2019 16:17:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KAC1TPImFCotEdm440j6roz5khMTaZly6qZwqAJTL0A=;
+        b=YXS+A9erEK3x+uYJoKLRVKWBnXJrwzDsWLVN0hJRY1co3hp9xBfFJLtRCb/mJuy5Ib
+         dRmjSsYB1UIjENwB8nbdG3QEyfPP1pdMJSmvnPV5YCWlcVGaFObtRLa5eNazg1eNhJhp
+         jvqUU9QsOZd9+lbDIfkj+3OtGb69SFNeAL16mrHIkpsLCCxUREd/w1QbQacjmofQhMeX
+         njrfrgha/SzFQsdH/kZramOI9+Ov5kF+PxJbAEw17n3F1UHKoEGBxjsAp9UFzNYtMtU4
+         kncVe8GSHwg8LarZdR1lywJyjDb6qpa5It4H+maM3W0M4DQqx/PSCgsmE5Dm2NsO4Afi
+         bcTQ==
+X-Gm-Message-State: APjAAAV8gGBp8tNdxNMzezFLM9NOtCXXiYbJCmvL8Rx0VPhEQkUI7oMA
+        rJ8+TyNE7fzRfQxan6Nw65NSAw==
+X-Google-Smtp-Source: APXvYqyaUTStKWFW6wuDQ3RS8JGwQCCFsr4nPZv5I59ht3en2kpWMlKTZ25g7h+WKzgN9r7cZsXBuA==
+X-Received: by 2002:a5d:56c1:: with SMTP id m1mr17394223wrw.26.1559571470222;
+        Mon, 03 Jun 2019 07:17:50 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:8816:b980:b875:4d47])
+        by smtp.gmail.com with ESMTPSA id h8sm7116223wrt.59.2019.06.03.07.17.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 03 Jun 2019 07:17:49 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair: clean up asym packing
+Date:   Mon,  3 Jun 2019 16:17:16 +0200
+Message-Id: <1559571436-29091-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
+References: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Clean up asym packing to follow the default load balance behavior:
+- classify the group by creating a group_asym_capacity field.
+- calculate the imbalance in calculate_imbalance() instead of bypassing it.
 
-On 03-06-19 15:55, Benjamin Tissoires wrote:
-> On Mon, Jun 3, 2019 at 11:51 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi Again,
->>
->> On 03-06-19 11:11, Hans de Goede wrote:
->> <snip>
->>
->>>> not sure about the rest of logitech issues yet) next week.
->>>
->>> The main problem seems to be the request_module patches. Although I also
-> 
-> Can't we use request_module_nowait() instead, and set a reasonable
-> timeout that we detect only once to check if userspace is compatible:
-> 
-> In pseudo-code:
-> if (!request_module_checked) {
->    request_module_nowait(name);
->    use_request_module = wait_event_timeout(wq,
->          first_module_loaded, 10 seconds in jiffies);
->    request_module_checked = true;
-> } else if (use_request_module) {
->    request_module(name);
-> }
+We don't need to test twice same conditions anymore to detect asym packing
+and we consolidate the calculation of imbalance in calculate_imbalance().
 
-Well looking at the just attached dmesg , the modprobe
-when triggered by udev from userspace succeeds in about
-0.5 seconds, so it seems that the modprobe hangs happens
-when called from within the kernel rather then from within
-userspace.
+There is no functional changes.
 
-What I do not know if is the hang is inside userspace, or
-maybe it happens when modprobe calls back into the kernel,
-if the hang happens when modprobe calls back into the kernel,
-then other modprobes (done from udev) likely will hang too
-since I think only 1 modprobe can happen at a time.
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 63 ++++++++++++++---------------------------------------
+ 1 file changed, 16 insertions(+), 47 deletions(-)
 
-I really wish we knew what distinguished working systems
-from non working systems :|
-
-I cannot find a common denominator; other then the systems
-are not running Fedora. So far we've reports from both Ubuntu 16.04
-and Tumbleweed, so software version wise these 2 are wide apart.
-
->>> have 2 reports of problems with hid-logitech-dj driving the 0xc52f product-id,
->>> so we may need to drop that product-id from hid-logitech-dj, I'm working on
->>> that one...
->>
->> Besides the modprobe hanging issue, the only other issues all
->> (2 reporters) seem to be with 0xc52f receivers. We have a bug
->> open for this:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=203619
->>
->> And I've asked the reporter of the second bug to add his logs
->> to that bug.
-> 
-> We should likely just remove c52f from the list of supported devices.
-> C52f receivers seem to have a different firmware as they are meant to
-> work with different devices than C534. So I guess it is safer to not
-> handle those right now and get the code in when it is ready.
-
-Ack. Can you prepare a patch to drop the c52f id?
-
-Regards,
-
-Hans
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f..93c2447 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7888,6 +7888,7 @@ struct sg_lb_stats {
+ 	unsigned int group_weight;
+ 	enum group_type group_type;
+ 	int group_no_capacity;
++	int group_asym_capacity;
+ 	unsigned long group_misfit_task_load; /* A CPU has a task too big for its capacity */
+ #ifdef CONFIG_NUMA_BALANCING
+ 	unsigned int nr_numa_running;
+@@ -8382,9 +8383,17 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+ 	 * ASYM_PACKING needs to move all the work to the highest
+ 	 * prority CPUs in the group, therefore mark all groups
+ 	 * of lower priority than ourself as busy.
++	 *
++	 * This is primarily intended to used at the sibling level.  Some
++	 * cores like POWER7 prefer to use lower numbered SMT threads.  In the
++	 * case of POWER7, it can move to lower SMT modes only when higher
++	 * threads are idle.  When in lower SMT modes, the threads will
++	 * perform better since they share less core resources.  Hence when we
++	 * have idle threads, we want them to be the higher ones.
+ 	 */
+ 	if (sgs->sum_nr_running &&
+ 	    sched_asym_prefer(env->dst_cpu, sg->asym_prefer_cpu)) {
++		sgs->group_asym_capacity = 1;
+ 		if (!sds->busiest)
+ 			return true;
+ 
+@@ -8522,51 +8531,6 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+ }
+ 
+ /**
+- * check_asym_packing - Check to see if the group is packed into the
+- *			sched domain.
+- *
+- * This is primarily intended to used at the sibling level.  Some
+- * cores like POWER7 prefer to use lower numbered SMT threads.  In the
+- * case of POWER7, it can move to lower SMT modes only when higher
+- * threads are idle.  When in lower SMT modes, the threads will
+- * perform better since they share less core resources.  Hence when we
+- * have idle threads, we want them to be the higher ones.
+- *
+- * This packing function is run on idle threads.  It checks to see if
+- * the busiest CPU in this domain (core in the P7 case) has a higher
+- * CPU number than the packing function is being run on.  Here we are
+- * assuming lower CPU number will be equivalent to lower a SMT thread
+- * number.
+- *
+- * Return: 1 when packing is required and a task should be moved to
+- * this CPU.  The amount of the imbalance is returned in env->imbalance.
+- *
+- * @env: The load balancing environment.
+- * @sds: Statistics of the sched_domain which is to be packed
+- */
+-static int check_asym_packing(struct lb_env *env, struct sd_lb_stats *sds)
+-{
+-	int busiest_cpu;
+-
+-	if (!(env->sd->flags & SD_ASYM_PACKING))
+-		return 0;
+-
+-	if (env->idle == CPU_NOT_IDLE)
+-		return 0;
+-
+-	if (!sds->busiest)
+-		return 0;
+-
+-	busiest_cpu = sds->busiest->asym_prefer_cpu;
+-	if (sched_asym_prefer(busiest_cpu, env->dst_cpu))
+-		return 0;
+-
+-	env->imbalance = sds->busiest_stat.group_load;
+-
+-	return 1;
+-}
+-
+-/**
+  * fix_small_imbalance - Calculate the minor imbalance that exists
+  *			amongst the groups of a sched_domain, during
+  *			load balancing.
+@@ -8650,6 +8614,11 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 	local = &sds->local_stat;
+ 	busiest = &sds->busiest_stat;
+ 
++	if (busiest->group_asym_capacity) {
++		env->imbalance = busiest->group_load;
++		return;
++	}
++
+ 	if (busiest->group_type == group_imbalanced) {
+ 		/*
+ 		 * In the group_imb case we cannot rely on group-wide averages
+@@ -8754,8 +8723,8 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
+ 	busiest = &sds.busiest_stat;
+ 
+ 	/* ASYM feature bypasses nice load balance check */
+-	if (check_asym_packing(env, &sds))
+-		return sds.busiest;
++	if (busiest->group_asym_capacity)
++		goto force_balance;
+ 
+ 	/* There is no busy sibling group to pull tasks from */
+ 	if (!sds.busiest || busiest->sum_nr_running == 0)
+-- 
+2.7.4
 
