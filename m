@@ -2,190 +2,214 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D6DC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A82C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7179827B5B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1CE27B5E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KTGfi1N7"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="qksX5wzs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kAhOfNEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFCE0I (ORCPT
+        id S1726816AbfFCE1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:26:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56612 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfFCE0H (ORCPT
+        Mon, 3 Jun 2019 00:27:09 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:33187 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726223AbfFCE1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:26:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x534PnwV015194;
-        Sun, 2 Jun 2019 23:25:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559535949;
-        bh=U1QCwRlEhwv7rziVzxtrUAAJTnyoVC6b1KNsx66xn1Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KTGfi1N7r6pXKFh2PyV35FKGuy1ELmDFQbE9OxChaUXF0gOFrw25+IvegRkoT0En/
-         ojrcoK+2b91d0fsTQTS6bs2NK3R+PDyF9/nntq0F3b6qNv455atkXMYBCQRF9c0sFB
-         Lw+XaXm/7Z1/8QWpft8bpS72Tw+FIk38xlIR/B1Y=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x534PnVQ074967
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 2 Jun 2019 23:25:49 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 2 Jun
- 2019 23:25:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 2 Jun 2019 23:25:48 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x534PfNv118820;
-        Sun, 2 Jun 2019 23:25:43 -0500
-Subject: Re: [PATCH] PCI: endpoint: Add DMA to Linux PCI EP Framework
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "wen.yang99@zte.com.cn" <wen.yang99@zte.com.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-References: <1558650258-15050-1-git-send-email-alan.mikhak@sifive.com>
- <305100E33629484CBB767107E4246BBB0A6FAFFD@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxsQ9NXrN7W_8HVrXQBb9HiBd+d1dNfv+cXmoBpXQnLwA@mail.gmail.com>
- <305100E33629484CBB767107E4246BBB0A6FC308@DE02WEMBXB.internal.synopsys.com>
- <CABEDWGxL-WYz1BY7yXJ6eKULgVtKeo67XhgHZjvtm5Ka5foKiA@mail.gmail.com>
- <192e3a19-8b69-dfaf-aa5c-45c7087548cc@ti.com>
- <20190531050727.GO15118@vkoul-mobl>
- <d2d8a904-d796-f9f2-8f4a-61e857355a4f@ti.com>
- <20190531063247.GP15118@vkoul-mobl>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <400a7c28-39b1-f242-7810-a1d38aa51446@ti.com>
-Date:   Mon, 3 Jun 2019 09:54:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 00:27:09 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DBC2D123E;
+        Mon,  3 Jun 2019 00:27:07 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 03 Jun 2019 00:27:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=z9n041mVBoMx+lU8lmhyG3phiO4
+        dUW1z+lGS4cRtV5s=; b=qksX5wzsra2tYynWZhegmrL/72S5klpK2oTRqt1rsWS
+        smwkyrb0XtcXmGCptBP7qRU+Tj4zHAHmr9+Ttlc+ew0+ZwQ6nvucSxTzNvcGduBn
+        B8VoEgz32xnmMBYWfyUcwASTDRzUqvOwadevUAYK3P0ckPFOhW05cJMGofWN5A4B
+        itF8HvoxMseJaeg+wXqepRhT0FlG99OV1GWUNC4XjYgyYbC7kagv2gWf0gCb2whx
+        uFWbMzr9HOGJjdUmIi+VdGpgaxrCcFzIWVh2nLO8HQxaU3m4DifGlsBEYdBpHuwr
+        ZIoLqP80wNrqdrOOOkYm1hAKS/1XSx+2fz887CGstWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=z9n041
+        mVBoMx+lU8lmhyG3phiO4dUW1z+lGS4cRtV5s=; b=kAhOfNEOtQESkNPK/QgoFR
+        ioYb980SjObemXQqu5rWpyDRd9kll0AzwfrmTgmt5ANtRAzShlUkUSFrWbSZOSdE
+        ceZpvYZVvYGypA3K5lm54xk6jdOYImRuothJQUXgBUyw8r8dus1DFuOwccpl12AF
+        m3tMunnoo8ScUmzfSt47mHvYeJlQIHJK8z97fztcVDy8il89eoi0qrDB3/ujfEKb
+        8PadHRzBbIgfJpFjpmfuVqDjBjlm6DpwOUgj+iFVRr9GPXBX7UIh/Zl65PceLu7m
+        wi0xigtqFvyadEkmuJ0nINWGieKwcHzz8FI4JnanlJQzPiYGJCAXd9Dl0u4RnKfg
+        ==
+X-ME-Sender: <xms:l6H0XKQzXbuonbb3UP4TgqpY6CCDT0nQhhRv9OYBRUa1eGn-ZQMRkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefiedgkedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfedtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrddugeelrdduudefrdefieenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:l6H0XP9KjYpAiNvTS1MfuedY3zJXLP_8ha9aJmBysHyOU8U1iIMJbA>
+    <xmx:l6H0XJpReFxW0eBpwvqekelSmmqLqCwQk8bEHuS-1lQIDbrCTlaLeA>
+    <xmx:l6H0XEmYSSgn9uupwEN-ZdKr_WuQiZ1e1gdfLfYAB3hbhrmAVyDdiQ>
+    <xmx:m6H0XB25yu1H9mUyEsVQ0nMIxjwfKuCgZNRjUEfJrXi_-9cn1V0l_Q>
+Received: from localhost (124-149-113-36.dyn.iinet.net.au [124.149.113.36])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6920938008B;
+        Mon,  3 Jun 2019 00:27:02 -0400 (EDT)
+Date:   Mon, 3 Jun 2019 14:26:20 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v5 16/16] dcache: Add CONFIG_DCACHE_SMO
+Message-ID: <20190603042620.GA23098@eros.localdomain>
+References: <20190520054017.32299-1-tobin@kernel.org>
+ <20190520054017.32299-17-tobin@kernel.org>
+ <20190521005740.GA9552@tower.DHCP.thefacebook.com>
+ <20190521013118.GB25898@eros.localdomain>
+ <20190521020530.GA18287@tower.DHCP.thefacebook.com>
+ <20190529035406.GA23181@eros.localdomain>
+ <20190529161644.GA3228@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190531063247.GP15118@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529161644.GA3228@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.12.0 (2019-05-25)
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On Wed, May 29, 2019 at 04:16:51PM +0000, Roman Gushchin wrote:
+> On Wed, May 29, 2019 at 01:54:06PM +1000, Tobin C. Harding wrote:
+> > On Tue, May 21, 2019 at 02:05:38AM +0000, Roman Gushchin wrote:
+> > > On Tue, May 21, 2019 at 11:31:18AM +1000, Tobin C. Harding wrote:
+> > > > On Tue, May 21, 2019 at 12:57:47AM +0000, Roman Gushchin wrote:
+> > > > > On Mon, May 20, 2019 at 03:40:17PM +1000, Tobin C. Harding wrote:
+> > > > > > In an attempt to make the SMO patchset as non-invasive as possible add a
+> > > > > > config option CONFIG_DCACHE_SMO (under "Memory Management options") for
+> > > > > > enabling SMO for the DCACHE.  Whithout this option dcache constructor is
+> > > > > > used but no other code is built in, with this option enabled slab
+> > > > > > mobility is enabled and the isolate/migrate functions are built in.
+> > > > > > 
+> > > > > > Add CONFIG_DCACHE_SMO to guard the partial shrinking of the dcache via
+> > > > > > Slab Movable Objects infrastructure.
+> > > > > 
+> > > > > Hm, isn't it better to make it a static branch? Or basically anything
+> > > > > that allows switching on the fly?
+> > > > 
+> > > > If that is wanted, turning SMO on and off per cache, we can probably do
+> > > > this in the SMO code in SLUB.
+> > > 
+> > > Not necessarily per cache, but without recompiling the kernel.
+> > > > 
+> > > > > It seems that the cost of just building it in shouldn't be that high.
+> > > > > And the question if the defragmentation worth the trouble is so much
+> > > > > easier to answer if it's possible to turn it on and off without rebooting.
+> > > > 
+> > > > If the question is 'is defragmentation worth the trouble for the
+> > > > dcache', I'm not sure having SMO turned off helps answer that question.
+> > > > If one doesn't shrink the dentry cache there should be very little
+> > > > overhead in having SMO enabled.  So if one wants to explore this
+> > > > question then they can turn on the config option.  Please correct me if
+> > > > I'm wrong.
+> > > 
+> > > The problem with a config option is that it's hard to switch over.
+> > > 
+> > > So just to test your changes in production a new kernel should be built,
+> > > tested and rolled out to a representative set of machines (which can be
+> > > measured in thousands of machines). Then if results are questionable,
+> > > it should be rolled back.
+> > > 
+> > > What you're actually guarding is the kmem_cache_setup_mobility() call,
+> > > which can be perfectly avoided using a boot option, for example. Turning
+> > > it on and off completely dynamic isn't that hard too.
+> > 
+> > Hi Roman,
+> > 
+> > I've added a boot parameter to SLUB so that admins can enable/disable
+> > SMO at boot time system wide.  Then for each object that implements SMO
+> > (currently XArray and dcache) I've also added a boot parameter to
+> > enable/disable SMO for that cache specifically (these depend on SMO
+> > being enabled system wide).
+> > 
+> > All three boot parameters default to 'off', I've added a config option
+> > to default each to 'on'.
+> > 
+> > I've got a little more testing to do on another part of the set then the
+> > PATCH version is coming at you :)
+> > 
+> > This is more a courtesy email than a request for comment, but please
+> > feel free to shout if you don't like the method outlined above.
+> > 
+> > Fully dynamic config is not currently possible because currently the SMO
+> > implementation does not support disabling mobility for a cache once it
+> > is turned on, a bit of extra logic would need to be added and some state
+> > stored - I'm not sure it warrants it ATM but that can be easily added
+> > later if wanted.  Maybe Christoph will give his opinion on this.
+> 
+> Perfect!
 
-On 31/05/19 12:02 PM, Vinod Koul wrote:
-> On 31-05-19, 10:50, Kishon Vijay Abraham I wrote:
->> Hi Vinod,
->>
->> On 31/05/19 10:37 AM, Vinod Koul wrote:
->>> Hi Kishon,
->>>
->>> On 30-05-19, 11:16, Kishon Vijay Abraham I wrote:
->>>> +Vinod Koul
->>>>
->>>> Hi,
->>>>
->>>> On 30/05/19 4:07 AM, Alan Mikhak wrote:
->>>>> On Mon, May 27, 2019 at 2:09 AM Gustavo Pimentel
->>>>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>>>
->>>>>> On Fri, May 24, 2019 at 20:42:43, Alan Mikhak <alan.mikhak@sifive.com>
->>>>>> wrote:
->>>>>>
->>>>>> Hi Alan,
->>>>>>
->>>>>>> On Fri, May 24, 2019 at 1:59 AM Gustavo Pimentel
->>>>>>> <Gustavo.Pimentel@synopsys.com> wrote:
->>>>>>>>
->>>>>>>> Hi Alan,
->>>>>>>>
->>>>>>>> This patch implementation is very HW implementation dependent and
->>>>>>>> requires the DMA to exposed through PCIe BARs, which aren't always the
->>>>>>>> case. Besides, you are defining some control bits on
->>>>>>>> include/linux/pci-epc.h that may not have any meaning to other types of
->>>>>>>> DMA.
->>>>>>>>
->>>>>>>> I don't think this was what Kishon had in mind when he developed the
->>>>>>>> pcitest, but let see what Kishon was to say about it.
->>>>>>>>
->>>>>>>> I've developed a DMA driver for DWC PCI using Linux Kernel DMAengine API
->>>>>>>> and which I submitted some days ago.
->>>>>>>> By having a DMA driver which implemented using DMAengine API, means the
->>>>>>>> pcitest can use the DMAengine client API, which will be completely
->>>>>>>> generic to any other DMA implementation.
->>>>
->>>> right, my initial thought process was to use only dmaengine APIs in
->>>> pci-epf-test so that the system DMA or DMA within the PCIe controller can be
->>>> used transparently. But can we register DMA within the PCIe controller to the
->>>> DMA subsystem? AFAIK only system DMA should register with the DMA subsystem.
->>>> (ADMA in SDHCI doesn't use dmaengine). Vinod Koul can confirm.
->>>
->>> So would this DMA be dedicated for PCI and all PCI devices on the bus?
->>
->> Yes, this DMA will be used only by PCI ($patch is w.r.t PCIe device mode. So
->> all endpoint functions both physical and virtual functions will use the DMA in
->> the controller).
->>> If so I do not see a reason why this cannot be using dmaengine. The use
->>
->> Thanks for clarifying. I was under the impression any DMA within a peripheral
->> controller shouldn't use DMAengine.
-> 
-> That is indeed a correct assumption. The dmaengine helps in cases where
-> we have a dma controller with multiple users, for a single user case it
-> might be overhead to setup dma driver and then use it thru framework.
-> 
-> Someone needs to see the benefit and cost of using the framework and
-> decide.
+Hi Roman,
 
-The DMA within the endpoint controller can indeed be used by multiple users for
-e.g in the case of multi function EP devices or SR-IOV devices, all the
-function drivers can use the DMA in the endpoint controller.
+I'm about to post PATCH series.  I have removed all the boot time config
+options in contrast to what I stated in this thread.  I feel it requires
+some comment so as not to seem rude to you.  Please feel free to
+re-raise these issues on the series if you feel it is a better place to
+do it than on this thread.
 
-I think it makes sense to use dmaengine for DMA within the endpoint controller.
-> 
->>> case would be memcpy for DMA right or mem to device (vice versa) transfers?
->>
->> The device is memory mapped so it would be only memcopy.
->>>
->>> Btw many driver in sdhci do use dmaengine APIs and yes we are missing
->>> support in framework than individual drivers
->>
->> I think dmaengine APIs is used only when the platform uses system DMA and not
->> ADMA within the SDHCI controller. IOW there is no dma_async_device_register()
->> to register ADMA in SDHCI with DMA subsystem.
-> 
-> We are looking it from the different point of view. You are looking for
-> dmaengine drivers in that (which would be in drivers/dma/) and I am
-> pointing to users of dmaengine in that.
-> 
-> So the users in mmc would be ones using dmaengine APIs:
-> $git grep -l dmaengine_prep_* drivers/mmc/
-> 
-> which tells me 17 drivers!
+I still hear you re making testing easier if there are boot parameters.
+I don't have extensive experience testing on a large number of machines
+so I have no basis to contradict what you said.
 
-right. For the endpoint case, drivers/pci/controller should register with the
-dmaengine i.e if the controller has aN embedded DMA (I think it should be okay
-to keep that in drivers/pci/controller itself instead of drivers/dma) and
-drivers/pci/endpoint/functions/ should use dmaengine API's (Depending on the
-platform, this will either use system DMA or DMA within the PCI controller).
+It was suggested to me that having switches to turn SMO off implies the
+series is not ready.  I am claiming that SMO _is_ ready and also that it
+has no negative effects (especially on the dcache).  I therefore think
+this comment is pertinent.
 
-Thanks
-Kishon
+So ... I re-did the boot parameters defaulting to 'on'.  However I could
+then see no reason (outside of testing) to turn them off.  It seems ugly
+to have code that is only required during testing and never after.
+Please correct me if I'm wrong.
+
+Finally I decided that since adding a boot parameter is trivial that
+hackers could easily add one to test if they wanted to test a specific
+cache.  Otherwise we just test 'patched kernel' vs 'unpatched kernel'.
+Again, please correct me if I'm wrong.
+
+So, that said, please feel free to voice your opinion as strongly as you
+wish.  I am super appreciative of the time you have already taken to
+look at these patches.  I hope I have made the best technical decision,
+and I am totally open to being told I'm wrong :)
+
+thanks,
+Tobin.
