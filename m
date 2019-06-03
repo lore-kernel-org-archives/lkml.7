@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1308C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E17C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B060827867
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FF52786C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfFCPv2 (ORCPT
+        id S1729133AbfFCPvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:51:28 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53706 "EHLO
+        Mon, 3 Jun 2019 11:51:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53714 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbfFCPvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:51:25 -0400
+        id S1729012AbfFCPv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:51:27 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C7AD169E;
-        Mon,  3 Jun 2019 08:51:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E90101715;
+        Mon,  3 Jun 2019 08:51:26 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3375A3F246;
-        Mon,  3 Jun 2019 08:51:24 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8984C3F246;
+        Mon,  3 Jun 2019 08:51:25 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [RFC PATCH 18/57] drivers: intel_th: Use bus_find_device_by_devt helper
-Date:   Mon,  3 Jun 2019 16:49:44 +0100
-Message-Id: <1559577023-558-19-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Oliver Neukum <oneukum@suse.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-usb@vger.kernel.org
+Subject: [RFC PATCH 19/57] drivers: usb: core: Use bus_find_device_by_devt helper
+Date:   Mon,  3 Jun 2019 16:49:45 +0100
+Message-Id: <1559577023-558-20-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,41 +44,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Switch to using the bus_find_device_by_devt helper
 
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-usb@vger.kernel.org
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/intel_th/core.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/usb/core/devio.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
-index 033dce5..a85e236 100644
---- a/drivers/hwtracing/intel_th/core.c
-+++ b/drivers/hwtracing/intel_th/core.c
-@@ -789,13 +789,6 @@ static int intel_th_populate(struct intel_th *th)
- 	return 0;
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index fa783531..28358a3 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -947,17 +947,11 @@ static int parse_usbdevfs_streams(struct usb_dev_state *ps,
+ 	return ret;
  }
  
 -static int match_devt(struct device *dev, void *data)
 -{
--	dev_t devt = (dev_t)(unsigned long)data;
--
--	return dev->devt == devt;
+-	return dev->devt == (dev_t) (unsigned long) data;
 -}
 -
- static int intel_th_output_open(struct inode *inode, struct file *file)
+ static struct usb_device *usbdev_lookup_by_devt(dev_t devt)
  {
- 	const struct file_operations *fops;
-@@ -803,9 +796,7 @@ static int intel_th_output_open(struct inode *inode, struct file *file)
  	struct device *dev;
- 	int err;
  
--	dev = bus_find_device(&intel_th_bus, NULL,
--			      (void *)(unsigned long)inode->i_rdev,
--			      match_devt);
-+	dev = bus_find_device_by_devt(&intel_th_bus, NULL, inode->i_rdev);
- 	if (!dev || !dev->driver)
- 		return -ENODEV;
- 
+-	dev = bus_find_device(&usb_bus_type, NULL,
+-			      (void *) (unsigned long) devt, match_devt);
++	dev = bus_find_device_by_devt(&usb_bus_type, NULL, devt);
+ 	if (!dev)
+ 		return NULL;
+ 	return to_usb_device(dev);
 -- 
 2.7.4
 
