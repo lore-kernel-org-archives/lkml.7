@@ -1,220 +1,172 @@
 Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B0BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A83C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E1726B2E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559602935;
-	bh=nIQkRUZvfD1OXw5jVds16tNjBANJ46o8+Khpfdn9tyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lalJ4nw3LVdA7LlJJNyGT45fdygFsUgHw+jUqdr9fR/x8FYQWYKAt+EIsPOH5KA9L
-	 MHE3CES+vq2GQgP1e4A3uW5MPOC65R9fIjl27LjLRy0NrVMkxabfWP3LBmvN/Rct+G
-	 ckQJF6R1JlGpXZb3pZtRCMa0oNQr3zbg99oRYOhk=
+	by mail.kernel.org (Postfix) with ESMTP id 9275426A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xfn13xPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfFCXCO (ORCPT
+        id S1726603AbfFCXDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:02:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44249 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfFCXCO (ORCPT
+        Mon, 3 Jun 2019 19:03:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35143 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfFCXDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:02:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c5so7530277pll.11;
-        Mon, 03 Jun 2019 16:02:13 -0700 (PDT)
+        Mon, 3 Jun 2019 19:03:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d126so11473157pfd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 16:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yGWgisOzgWfpAsWuWpBW9wv4B2VfU1HINjYPzcFySSo=;
-        b=EgfyT96fk6vvQY5SFnesmZ6DIVFRx6yrNM5JKL31Zn5a0Pf0fQvmbHoY6+R3MGiEyp
-         ocfeJcp7zAGOLX1qUteCkyVf9QkbVMfr5nY6fretb37D7LwJdW+FGtS7acGvamYPx7sn
-         rwrRij92Ohr62F+vVRuJciAP5KP4eMBXEcKrPWawZlnldrd++mIsnoqXjQlbeUKK11xg
-         RHM/QfwH4vYaI3wgmQpkWB/YxQMYFxRHjqj0Lv0XlR4Y56YQK3+Xwc0cvyksjCbAF2Dn
-         RNbCrW/QSU5ONniWnxCAQx41j0YMGSeRi2PE4w/ELrpddUdmOZgzNAuyvXwUnbXB+BsX
-         mMhQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=M0Hol1AOy0PKp1c8t8OnpXkvg1N8/Tmp5x6wPCFFMsw=;
+        b=Xfn13xPJjjwbLXR9uug3Z3G6LQb+xBE4ONBMi76WHafAXU8u3CBRtuKcEB+IYyRXLD
+         df0YOzJAgsBizPo4j8K2kObvDFTIa00ANWFb0BsDU0KgNxuBCjcQy0Ye0Glb5SZ8I7Uy
+         d0e1kVim0sDFhNYzBkTSEazmw7ZzArabm1gNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yGWgisOzgWfpAsWuWpBW9wv4B2VfU1HINjYPzcFySSo=;
-        b=KP+mqV3aQ/6dnVIJFXXuR0iS+bTCHv0rX36G4g8BqwuTNmWhAcz46F7JatKYzkmC5T
-         iFJIYfrL4pbcKzypWlwmRSZ2Sqa+Vl4R8e6/ifWMzmCp8k8ciI3uI5VjGRqf70/1yywB
-         2W7piB1HHchMrHeGpKBAD+DJsS7n37WFJ3Leq0qh3B+uPnRjuMwnFhlalyzStdtDOoGS
-         aPE86yMrc0F2X4aQT8yE0zuCO9vsZOf1QGF0BfgaGED0ihUobUy1TZmV6ZCGZt7z3Xm5
-         2lmCO7AS+Opl1ybGy6X6LTMi+5k2sgchkyzcQS9v1SKdjb97FxX99htEyUx2PU0eeCiI
-         5xHA==
-X-Gm-Message-State: APjAAAV5ZVspgTTF6GyDf4X1R5PLSvRzuNVcNOlBA6CXcWpsVa0ijzg6
-        HESqxHVYZQpyff+b4waj2owu5eB0
-X-Google-Smtp-Source: APXvYqxCkkmPXZHimkozMNVYP9gcbva1AMdrrcMfJLPuejBMXVOEhl4/p8tBtCCcCov7W2EolbjhXA==
-X-Received: by 2002:a17:902:2983:: with SMTP id h3mr33061358plb.267.1559602933011;
-        Mon, 03 Jun 2019 16:02:13 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id d19sm13502849pjs.22.2019.06.03.16.02.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 16:02:11 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 08:02:05 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
-Message-ID: <20190603230205.GA43390@google.com>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-2-minchan@kernel.org>
- <20190531084752.GI6896@dhcp22.suse.cz>
- <20190531133904.GC195463@google.com>
- <20190531140332.GT6896@dhcp22.suse.cz>
- <20190531143407.GB216592@google.com>
- <20190603071607.GB4531@dhcp22.suse.cz>
- <20190603172717.GA30363@cmpxchg.org>
- <20190603203230.GB22799@dhcp22.suse.cz>
- <20190603215059.GA16824@cmpxchg.org>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=M0Hol1AOy0PKp1c8t8OnpXkvg1N8/Tmp5x6wPCFFMsw=;
+        b=IcE9TGJVYP4FZUSXBZECCc0Wfm2jog5mPHKBNt573iK8IG2ik8BVJz1Bos8tsShg7O
+         yd/ThbZPjY7INJjd+oDwbTnGkNBTTUraAfr1YUiZ5ANqueOJXqyBmG911z+ya+Zik0xn
+         kvxjD8kpqGNyxkrSvvMpb/Lqzw2DVY6i9yKnPcKoADMqvsGq0ZR48SaHMLBedoBWjQ+J
+         KBEaWe60jALctEkSfNQ97bJJxGxU/vMO+Wb9UTBa5k20uHZ4Xuf5jcnKvmWGXC251Ibm
+         8d9Skr0rhbJdAcgv4PBAcHeyCMBU0TcPJtvvizmaB62JBDAutQoXyqoQV7ZW5CxI+MUO
+         1PWA==
+X-Gm-Message-State: APjAAAWrPsKW7ehwzlaGcckMUCqaqNykdNVCZOOa11lrUpC1AwzPhkhR
+        rFrYRuyyLXF9fQKUJRgCAsxaAQ==
+X-Google-Smtp-Source: APXvYqxm7Ws5lscObY+oPn1h3+ONhLwXf8YRLVndDfYmndsXiVoHaByRfk1oBLv+cxwcrRXvWyohLg==
+X-Received: by 2002:a63:6c87:: with SMTP id h129mr32302973pgc.427.1559602981281;
+        Mon, 03 Jun 2019 16:03:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c142sm17390174pfb.171.2019.06.03.16.03.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 16:03:00 -0700 (PDT)
+Message-ID: <5cf5a724.1c69fb81.1e8f0.08fb@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603215059.GA16824@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190221203334.24504-1-helen.koike@collabora.com>
+References: <20190221203334.24504-1-helen.koike@collabora.com>
+Cc:     wad@chromium.org, keescook@chromium.org, snitzer@redhat.com,
+        linux-doc@vger.kernel.org, richard.weinberger@gmail.com,
+        linux-kernel@vger.kernel.org, linux-lvm@redhat.com,
+        enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
+To:     Helen Koike <helen.koike@collabora.com>, dm-devel@redhat.com
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v12] dm: add support to directly boot to a mapped device
+User-Agent: alot/0.8.1
+Date:   Mon, 03 Jun 2019 16:02:59 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johannes,
+Quoting Helen Koike (2019-02-21 12:33:34)
+> Add a "create" module parameter, which allows device-mapper targets to be
+> configured at boot time. This enables early use of dm targets in the boot
+> process (as the root device or otherwise) without the need of an initramf=
+s.
+>=20
+> The syntax used in the boot param is based on the concise format from the
+> dmsetup tool to follow the rule of least surprise:
+>=20
+>         sudo dmsetup table --concise /dev/mapper/lroot
+>=20
+> Which is:
+>         dm-mod.create=3D<name>,<uuid>,<minor>,<flags>,<table>[,<table>+][=
+;<name>,<uuid>,<minor>,<flags>,<table>[,<table>+]+]
+>=20
+> Where,
+>         <name>          ::=3D The device name.
+>         <uuid>          ::=3D xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx | ""
+>         <minor>         ::=3D The device minor number | ""
+>         <flags>         ::=3D "ro" | "rw"
+>         <table>         ::=3D <start_sector> <num_sectors> <target_type> =
+<target_args>
+>         <target_type>   ::=3D "verity" | "linear" | ...
+>=20
+> For example, the following could be added in the boot parameters:
+> dm-mod.create=3D"lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:3=
+2 0" root=3D/dev/dm-0
+>=20
+> Only the targets that were tested are allowed and the ones that doesn't
+> change any block device when the dm is create as read-only. For example,
+> mirror and cache targets are not allowed. The rationale behind this is
+> that if the user makes a mistake, choosing the wrong device to be the
+> mirror or the cache can corrupt data.
+>=20
+> The only targets allowed are:
+> * crypt
+> * delay
+> * linear
+> * snapshot-origin
+> * striped
+> * verity
+>=20
+> Co-developed-by: Will Drewry <wad@chromium.org>
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Co-developed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>=20
+> ---
+>=20
 
-On Mon, Jun 03, 2019 at 05:50:59PM -0400, Johannes Weiner wrote:
-> On Mon, Jun 03, 2019 at 10:32:30PM +0200, Michal Hocko wrote:
-> > On Mon 03-06-19 13:27:17, Johannes Weiner wrote:
-> > > On Mon, Jun 03, 2019 at 09:16:07AM +0200, Michal Hocko wrote:
-> > > > On Fri 31-05-19 23:34:07, Minchan Kim wrote:
-> > > > > On Fri, May 31, 2019 at 04:03:32PM +0200, Michal Hocko wrote:
-> > > > > > On Fri 31-05-19 22:39:04, Minchan Kim wrote:
-> > > > > > > On Fri, May 31, 2019 at 10:47:52AM +0200, Michal Hocko wrote:
-> > > > > > > > On Fri 31-05-19 15:43:08, Minchan Kim wrote:
-> > > > > > > > > When a process expects no accesses to a certain memory range, it could
-> > > > > > > > > give a hint to kernel that the pages can be reclaimed when memory pressure
-> > > > > > > > > happens but data should be preserved for future use.  This could reduce
-> > > > > > > > > workingset eviction so it ends up increasing performance.
-> > > > > > > > > 
-> > > > > > > > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > > > > > > > > MADV_COLD can be used by a process to mark a memory range as not expected
-> > > > > > > > > to be used in the near future. The hint can help kernel in deciding which
-> > > > > > > > > pages to evict early during memory pressure.
-> > > > > > > > > 
-> > > > > > > > > Internally, it works via deactivating pages from active list to inactive's
-> > > > > > > > > head if the page is private because inactive list could be full of
-> > > > > > > > > used-once pages which are first candidate for the reclaiming and that's a
-> > > > > > > > > reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
-> > > > > > > > > if the memory pressure happens, they will be reclaimed earlier than other
-> > > > > > > > > active pages unless there is no access until the time.
-> > > > > > > > 
-> > > > > > > > [I am intentionally not looking at the implementation because below
-> > > > > > > > points should be clear from the changelog - sorry about nagging ;)]
-> > > > > > > > 
-> > > > > > > > What kind of pages can be deactivated? Anonymous/File backed.
-> > > > > > > > Private/shared? If shared, are there any restrictions?
-> > > > > > > 
-> > > > > > > Both file and private pages could be deactived from each active LRU
-> > > > > > > to each inactive LRU if the page has one map_count. In other words,
-> > > > > > > 
-> > > > > > >     if (page_mapcount(page) <= 1)
-> > > > > > >         deactivate_page(page);
-> > > > > > 
-> > > > > > Why do we restrict to pages that are single mapped?
-> > > > > 
-> > > > > Because page table in one of process shared the page would have access bit
-> > > > > so finally we couldn't reclaim the page. The more process it is shared,
-> > > > > the more fail to reclaim.
-> > > > 
-> > > > So what? In other words why should it be restricted solely based on the
-> > > > map count. I can see a reason to restrict based on the access
-> > > > permissions because we do not want to simplify all sorts of side channel
-> > > > attacks but memory reclaim is capable of reclaiming shared pages and so
-> > > > far I haven't heard any sound argument why madvise should skip those.
-> > > > Again if there are any reasons, then document them in the changelog.
-> > > 
-> > > I think it makes sense. It could be explained, but it also follows
-> > > established madvise semantics, and I'm not sure it's necessarily
-> > > Minchan's job to re-iterate those.
-> > > 
-> > > Sharing isn't exactly transparent to userspace. The kernel does COW,
-> > > ksm etc. When you madvise, you can really only speak for your own
-> > > reference to that memory - "*I* am not using this."
-> > > 
-> > > This is in line with other madvise calls: MADV_DONTNEED clears the
-> > > local page table entries and drops the corresponding references, so
-> > > shared pages won't get freed. MADV_FREE clears the pte dirty bit and
-> > > also has explicit mapcount checks before clearing PG_dirty, so again
-> > > shared pages don't get freed.
-> > 
-> > Right, being consistent with other madvise syscalls is certainly a way
-> > to go. And I am not pushing one way or another, I just want this to be
-> > documented with a reasoning behind. Consistency is certainly an argument
-> > to use.
-> > 
-> > On the other hand these non-destructive madvise operations are quite
-> > different and the shared policy might differ as a result as well. We are
-> > aging objects rather than destroying them after all. Being able to age
-> > a pagecache with a sufficient privileges sounds like a useful usecase to
-> > me. In other words you are able to cause the same effect indirectly
-> > without the madvise operation so it kinda makes sense to allow it in a
-> > more sophisticated way.
-> 
-> Right, I don't think it's about permission - as you say, you can do
-> this indirectly. Page reclaim is all about relative page order, so if
-> we thwarted you from demoting some pages, you could instead promote
-> other pages to cause a similar end result.
-> 
-> I think it's about intent. You're advising the kernel that *you're*
-> not using this memory and would like to have it cleared out based on
-> that knowledge. You could do the same by simply allocating the new
-> pages and have the kernel sort it out. However, if the kernel sorts it
-> out, it *will* look at other users of the page, and it might decide
-> that other pages are actually colder when considering all users.
-> 
-> When you ignore shared state, on the other hand, the pages you advise
-> out could refault right after. And then, not only did you not free up
-> the memory, but you also caused IO that may interfere with bringing in
-> the new data for which you tried to create room in the first place.
-> 
-> So I don't think it ever makes sense to override it.
-> 
-> But it might be better to drop the explicit mapcount check and instead
-> make the local pte young and call shrink_page_list() without the
-                     ^
-                     old?
+I'm trying to boot a mainline linux kernel on a chromeos device with dm
+verity and a USB stick but it's not working for me even with this patch.
+I've had to hack around two problems:
 
-> TTU_IGNORE_ACCESS, ignore_references flags - leave it to reclaim code
-> to handle references and shared pages exactly the same way it would if
-> those pages came fresh off the LRU tail, excluding only the reference
-> from the mapping that we're madvising.
+ 1) rootwait isn't considered
 
-You are confused from the name change. Here, MADV_COLD is deactivating
-, not pageing out. Therefore, shrink_page_list doesn't matter.
-And madvise_cold_pte_range already makes the local pte *old*(I guess
-your saying was typo).
-I guess that's exactly what Michal wanted: just removing page_mapcount
-check and defers to decision on normal page reclaim policy:
-If I didn't miss your intention, it seems you and Michal are on same page.
-(Please correct me if you want to say something other)
-I could drop the page_mapcount check at next revision.
+ 2) verity doesn't seem to accept UUID for <hash_dev> or <dev>
 
-Thanks for the review!
+For the first problem, it happens every boot for me because I'm trying
+to boot off of a USB stick and it's behind a hub that takes a few
+seconds to enumerate. If I hack up the code to call dm_init_init() after
+the 'rootdelay' cmdline parameter is used then I can make this work. It
+would be much nicer if the whole mechanism didn't use a late initcall
+though. If it used a hook from prepare_namespace() and then looped
+waiting for devices to create when rootwait was specified it would work.
+
+The second problem is that in chromeos we have the bootloader fill out
+the UUID of the kernel partition (%U) and then we have another parameter
+that indicates the offset from that kernel partition to add to the
+kernel partition (typically 1, i.e. PARTNROFF=3D1) to find the root
+filesystem partition. The way verity seems to work here is that we need
+to specify a path like /dev/sda3 or the major:minor number of the device
+on the commandline to make this work. It would be better if we could add
+in support for the PARTNROFF style that name_to_dev_t() handles so we
+can specify the root partition like we're currently doing. I suspect we
+should be able to add support for this into the device mapper layer so
+that we can specify devices this way.
+
+If it helps, an example commandline I've been using to test out a usb
+stick is as follows:
+
+dm-mod.create=3D"vroot,,0,ro, 0 4710400 verity 0 8:19 8:19 4096 4096 588800=
+ 588800 sha1 9b0a223aedbf74b06442b0f05fbff33c55edd010 414b21fba60a1901e23ae=
+c373e994942e991d6762631e54a39bc42411f244bd2"
+
+Also, the documentation (Documentation/device-mapper/dm-init.txt) says
+we can use a way that doesn't specify so many arguments, but dm verity
+complains about not enough arguments (10) when following the example:
+
+  vroot,,,ro,
+  0 1740800 verity 254:0 254:0 1740800 sha1
+  76e9be054b15884a9fa85973e9cb274c93afadb6
+  5b3549d54d6c7a3837b9b81ed72e49463a64c03680c47835bef94d768e5646fe;   =20
+
+So the documentation needs an update?
+
