@@ -2,72 +2,120 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3CFC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3085C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFC925F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559564451;
-	bh=TWs8GbjLZEVnwhh8cISnycPPa+/IgUhH2+EwwAMLpWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FJUs+e4Ezbo6mJduacXsXKrF4ClZyTzXuDYnFJK7YMbQJniTgkn+OTOm5XGa7YYPd
-	 Z5icKS5mgUhirDDpiq7/tA9iefx0/2qHt404F1IHP1W35gmMlpB4wUYfTEsyKsMD/c
-	 Q+gjtPqkx6sj3ixzngUgdvhj7kG0/3ZWXvUIt91E=
+	by mail.kernel.org (Postfix) with ESMTP id 92259280CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfFCMUt (ORCPT
+        id S1727738AbfFCMVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 08:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfFCMUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:20:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 619DE25F14;
-        Mon,  3 Jun 2019 12:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559564448;
-        bh=TWs8GbjLZEVnwhh8cISnycPPa+/IgUhH2+EwwAMLpWc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VU31btN3lBLtca7FKNKKtNOd9bMvSoo6k6FnivDNO6JRBr4lvyAcPhZG1+9Dv0gHc
-         ftbln7arKRGD1qJ4pcGOugQGLczprn8K36smipnKAPqYGG7dQkTRioiqcbSHXstJ+H
-         3r6o+uq+qnMhI5GjQKz3ESlN+pGk2nR1gWntvjOg=
-Date:   Mon, 3 Jun 2019 14:20:46 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        straube.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8712: Change _SUCCESS/_FAIL to 0/-ENOMEM
-Message-ID: <20190603122046.GA27037@kroah.com>
-References: <20190530210638.30343-1-nishkadg.linux@gmail.com>
+        Mon, 3 Jun 2019 08:21:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56724 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726342AbfFCMVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:21:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 03AD1AE4B;
+        Mon,  3 Jun 2019 12:21:03 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 12668DA85E; Mon,  3 Jun 2019 14:21:54 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 14:21:52 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Andrey Abramov <st5pub@yandex.ru>
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Fix -Wunused-but-set-variable warnings
+Message-ID: <20190603122152.GM15290@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Andrey Abramov <st5pub@yandex.ru>,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190531195349.31129-1-st5pub@yandex.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530210638.30343-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190531195349.31129-1-st5pub@yandex.ru>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 02:36:38AM +0530, Nishka Dasgupta wrote:
-> Change return values _SUCCESS and _FAIL to 0 and -ENOMEM respectively,
-> to match the convention in the drivers (and also because the return
-> value of this changed function is never checked anyway).
-> Change return type of the function to int (from u8) to allow the return
-> of -ENOMEM.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->  drivers/staging/rtl8712/rtl871x_cmd.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+On Fri, May 31, 2019 at 10:53:49PM +0300, Andrey Abramov wrote:
+> Fix -Wunused-but-set-variable warnings in raid56.c and sysfs.c files
 
-Also does not apply to my tree :(
+Please ignore the warnings for now. The RAID56 needs more cleanups than
+that an the sysfs part needs to be reworked. The stale code comes from
+e410e34fad913dd568ec28d2a9949694324c14db that reverted
+14e46e04958df740c6c6a94849f176159a333f13.
+
+> Signed-off-by: Andrey Abramov <st5pub@yandex.ru>
+> ---
+>  fs/btrfs/raid56.c | 32 +++++++++++---------------------
+>  fs/btrfs/sysfs.c  |  5 +----
+>  2 files changed, 12 insertions(+), 25 deletions(-)
+> 
+> diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+> index f3d0576dd327..4ab29eacfdf3 100644
+> --- a/fs/btrfs/raid56.c
+> +++ b/fs/btrfs/raid56.c
+> @@ -1182,22 +1182,17 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+>  	int nr_data = rbio->nr_data;
+>  	int stripe;
+>  	int pagenr;
+> -	int p_stripe = -1;
+> -	int q_stripe = -1;
+> +	int is_q_stripe = 0;
+>  	struct bio_list bio_list;
+>  	struct bio *bio;
+>  	int ret;
+>  
+>  	bio_list_init(&bio_list);
+>  
+> -	if (rbio->real_stripes - rbio->nr_data == 1) {
+> -		p_stripe = rbio->real_stripes - 1;
+> -	} else if (rbio->real_stripes - rbio->nr_data == 2) {
+> -		p_stripe = rbio->real_stripes - 2;
+> -		q_stripe = rbio->real_stripes - 1;
+> -	} else {
+> +	if (rbio->real_stripes - rbio->nr_data == 2)
+> +		is_q_stripe = 1;
+> +	else if (rbio->real_stripes - rbio->nr_data != 1)
+>  		BUG();
+> -	}
+
+The original code is better structured, enumerates the expected cases
+and leaves a catch-all branch.
+
+>  
+>  	/* at this point we either have a full stripe,
+>  	 * or we've read the full stripe from the drive.
+> @@ -1241,7 +1236,7 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+>  		SetPageUptodate(p);
+>  		pointers[stripe++] = kmap(p);
+>  
+> -		if (q_stripe != -1) {
+> +		if (is_q_stripe) {
+>  
+>  			/*
+>  			 * raid6, add the qstripe and call the
+> @@ -2340,8 +2335,7 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+>  	int nr_data = rbio->nr_data;
+>  	int stripe;
+>  	int pagenr;
+> -	int p_stripe = -1;
+
+To get rid of the warning, perhaps just this initialization could be
+removed, the rest of the code untouched.
+
+> -	int q_stripe = -1;
+> +	int is_q_stripe = 0;
+>  	struct page *p_page = NULL;
+>  	struct page *q_page = NULL;
+>  	struct bio_list bio_list;
