@@ -2,95 +2,104 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EF8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB7C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8AA227CC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3FE2792D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cLa02IF7"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="N9Pr2jYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfFCODG (ORCPT
+        id S1728840AbfFCOFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:03:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:36913 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfFCODF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:03:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HcFy3VZNz9s4V;
-        Tue,  4 Jun 2019 00:03:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559570582;
-        bh=YQmprlQcov0lqweTkPPWd8ZDL5rmWYDbaGinmtBxu44=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cLa02IF7Ofm8/RPc/K7inCIHa7B8re7Tmz/iqluo3XqfRIKxzRxwyf9uf+EvClD60
-         xxtf3tDqcuFhZir2op+AHJ3tNVILDFv1sd6nFmnvydPvVJ8cD9mwOc1i36x9ViSJ8i
-         ER/aVRw7UTuu7tngjpUutUanJ7I0LK5Xtv3ScE/adW7sutx7mHOuarr44x5w563MVv
-         OJCn6+bwDUefwtkDiMV9D1Tss3E7dy33Ny+HWEHJVc0vPpF1k+lj8+yq2IsTMsuuZD
-         MEQW2iuhW5oLGqRbmA8RC3Ir4cBaMNXEUWR301IXtnx5MbcX4KaOLd2nS00xcdHR09
-         gbRCCniG+M8yQ==
-Date:   Tue, 4 Jun 2019 00:02:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: linux-next: Fixes tag needs some work in the phy tree
-Message-ID: <20190604000255.38c084e3@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/.k/a7L63NBkov+bwl0D_R_N"; protocol="application/pgp-signature"
+        Mon, 3 Jun 2019 10:05:32 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34836 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfFCOFc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:05:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id l128so464292qke.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 07:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=nF9cQpios6fXc6OzV7zmvzF2+NBva4iLFuGACokhWRE=;
+        b=N9Pr2jYVC3j5RXnC1lhMMCOGdLeidx0t4kajq30mmGwS9UFw32IWw17K5OUeYwy/Z4
+         ImpgBtW72k5AIKHNDm3VsibxjC/QObuVKP4jLT3j9hs11/kYKHfQQKCUAYIP91yS7mSc
+         cUbs6kRFMGTHe115Nd1uObdfmQzco1YLOfiNKpac64pOTcYtIBoPyMp7s4YVK4pAbMER
+         MLt3DIseH7ilx6DjDpc7HXZ8L8Xl6fXTVNH3IbPrm7DGcftz67uPHF/FT2IuvsTYpSdS
+         Gz7KAkhG8CHp+NBnRAyGOqHtHEM8qsnegoWqEkNm08xPpmLsdEom8WxE5RQ8FwbtqX/F
+         4osQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nF9cQpios6fXc6OzV7zmvzF2+NBva4iLFuGACokhWRE=;
+        b=oNEB9SumheHQ6wwZzeoTlYOMauqpccmUBjdyxZwhkmq51fbFBW5CYDklAO8ZVUm5V5
+         1UQw2ttX9psGnNhlm5NT7xHcCgi3AVC6pr5AFm02uPtpSPLcUi1m8mqzvpTOo296ZV1x
+         pLOloQQ2hNXL6D8ntryJGS3tkvztUzhV4AzIe6toLxGk60K6C7Gdmc2QWMlHT9aLOamh
+         jYjyb2OcsFI2T561lbe4ok1wBdS1uiMt7mAT9rAcfl8AMLDOzPDRt8le/q1UzT6Mkhe6
+         539gqmaKPaMk95m7a2KfIvxjABAl0XsevsoGjTny9HgNO2rhmgxPyayM7lMhY03OUhSY
+         nSIg==
+X-Gm-Message-State: APjAAAWnlSppFX7Vb+PsN27gwOoJf0WkeUmp+a+CaJy5k0SfUtbwJW4t
+        HJJxqoJ213wiKKOdPNSuEV84qQ==
+X-Google-Smtp-Source: APXvYqwvA7+/eTZv71B8hBFS5QTuc/mvZOV2BnCVsIwXN90jHz1i5jWNRPBpMFNl755BiaI33dSSGw==
+X-Received: by 2002:ae9:d601:: with SMTP id r1mr22357556qkk.231.1559570731086;
+        Mon, 03 Jun 2019 07:05:31 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id f9sm9310878qkb.97.2019.06.03.07.05.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 07:05:30 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] iommu/intel: silence a variable set but not used
+Date:   Mon,  3 Jun 2019 10:05:19 -0400
+Message-Id: <1559570719-16285-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.k/a7L63NBkov+bwl0D_R_N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The commit "iommu/vt-d: Probe DMA-capable ACPI name space devices"
+introduced a compilation warning due to the "iommu" variable in
+for_each_active_iommu() but never used the for each element, i.e,
+"drhd->iommu".
 
-Hi all,
+drivers/iommu/intel-iommu.c: In function 'probe_acpi_namespace_devices':
+drivers/iommu/intel-iommu.c:4639:22: warning: variable 'iommu' set but
+not used [-Wunused-but-set-variable]
+  struct intel_iommu *iommu;
 
-In commit
+Silence the warning the same way as in the commit d3ed71e5cc50
+("drivers/iommu/intel-iommu.c: fix variable 'iommu' set but not used")
 
-  3ddc3f3057ff ("phy: renesas: rcar-gen2: Fix memory leak at error paths")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/iommu/intel-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Fixes tag
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index b431cc6f6ba4..2897354a341a 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4636,7 +4636,8 @@ static int __init platform_optin_force_iommu(void)
+ static int __init probe_acpi_namespace_devices(void)
+ {
+ 	struct dmar_drhd_unit *drhd;
+-	struct intel_iommu *iommu;
++	/* To avoid a -Wunused-but-set-variable warning. */
++	struct intel_iommu *iommu __maybe_unused;
+ 	struct device *dev;
+ 	int i, ret = 0;
+ 
+-- 
+1.8.3.1
 
-  Fixes: 1233f59f745 ("phy: Renesas R-Car Gen2 PHY driver")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.k/a7L63NBkov+bwl0D_R_N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz1KI8ACgkQAVBC80lX
-0GwVdgf6AgnZzXI0Tsoy83ah8JTi/GgbIvsitDcjcKwY/pblvYx2aL1VMtFOP+m+
-NtIZdRxwH6Sn6msGEeq5JEst2chVWWqDRAbzPm3ANT7rH88meORasAgPLLP0HzDv
-f1kenI5bDjti/eC2PUch6Rdpn5Ey7qAUXYJmJFEo0Nz72lSQUUSwBuHoX+r6UQAS
-H3GExOPpMO05u1vh2ZJ2s7HLQsQcVXT5Cj/uptPTJxqzvdjPDGizS2C9Y38eQqc9
-fBR4FuZzAalPOytImTLWOiqb2jyUbCb/MIUAFMPDoNZ4vnk/3xRsj42NZZ5R1/pm
-J+Z5ghCs3rEyzVuPx52gYhulUv5LLw==
-=AcrJ
------END PGP SIGNATURE-----
-
---Sig_/.k/a7L63NBkov+bwl0D_R_N--
