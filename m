@@ -2,153 +2,149 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B60C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF284C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C57825353
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lpDfhW7v"
+	by mail.kernel.org (Postfix) with ESMTP id 8177B2767D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfFCOYy (ORCPT
+        id S1729056AbfFCOZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 10:24:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37028 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfFCOYy (ORCPT
+        Mon, 3 Jun 2019 10:25:23 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:46314 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727650AbfFCOZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 10:24:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53EOKe1153232;
-        Mon, 3 Jun 2019 14:24:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=f/3shJw30h+WPErENrMOOkyLDOALkiWq64WdWc2LbQk=;
- b=lpDfhW7vcM3NqgOU20G8JwmRYda5o7+JCmgmlR1EiI3PUxdJ9OVVc3oQRzEGVqgk43ee
- Oj+SvO7mPkDoXfLtWF5vdMomW6QQjyClLKY2KXKM+RXHuSH7wB2b4Ef9hIzQjwRta7vZ
- TC+pssiOGIrHvb4n/+nGSWNuHHnSjCHNS82tYfxDPscbn/L8Lwn8nP/YmxxTgyFgb3Z3
- 8RK9nvoH5S3BllsWzAnMFZtzIdQ+uSUNBQk1u1WqS46fi3dQJx+BfJS2thYhDnmDj3gr
- nMs1yp3sE6KBEFM58xl7YkixKe5qSgtbjyYvP3jL3tLXM1kMEp0ys5QAM/cM2RUiueHA Qw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2suj0q78em-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Jun 2019 14:24:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x53EOZKb010822;
-        Mon, 3 Jun 2019 14:24:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2sv36s8d9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Jun 2019 14:24:36 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x53EOTPb026124;
-        Mon, 3 Jun 2019 14:24:30 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Jun 2019 07:24:29 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <1559569401.5052.17.camel@HansenPartnership.com>
-Date:   Mon, 3 Jun 2019 10:24:27 -0400
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, dmitry.kasatkin@huawei.com,
-        Matthew Garrett <mjg59@google.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        silviu.vlasceanu@huawei.com, stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8658CD39-B977-41A7-841B-D209AE05D9C0@oracle.com>
-References: <20190529133035.28724-1-roberto.sassu@huawei.com>
- <20190529133035.28724-3-roberto.sassu@huawei.com>
- <1559217621.4008.7.camel@linux.ibm.com>
- <e6b31aa9-0319-1805-bdfc-3ddde5884494@huawei.com>
- <1559569401.5052.17.camel@HansenPartnership.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9276 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906030102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9276 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906030102
+        Mon, 3 Jun 2019 10:25:23 -0400
+Received: (qmail 2363 invoked by uid 2102); 3 Jun 2019 10:25:22 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 3 Jun 2019 10:25:22 -0400
+Date:   Mon, 3 Jun 2019 10:25:22 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+6101b0c732dea13ea55b@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in ar5523_submit_rx_cmd/usb_submit_urb
+In-Reply-To: <000000000000f4900f058a69d6c5@google.com>
+Message-ID: <Pine.LNX.4.44L0.1906031011010.1547-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 3 Jun 2019, syzbot wrote:
 
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15d280f2a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6101b0c732dea13ea55b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142c0e4aa00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1097d286a00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6101b0c732dea13ea55b@syzkaller.appspotmail.com
+> 
+> usb 1-1: config 0 has no interface number 0
+> usb 1-1: config 0 interface 61 altsetting 0 endpoint 0x81 is Bulk; changing  
+> to Interrupt
+> usb 1-1: New USB device found, idVendor=1385, idProduct=5f02,  
+> bcdDevice=64.86
+> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> usb 1-1: config 0 descriptor??
+> ------------[ cut here ]------------
+> usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+> WARNING: CPU: 0 PID: 12 at drivers/usb/core/urb.c:477  
+> usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
 
-> On Jun 3, 2019, at 9:43 AM, James Bottomley =
-<James.Bottomley@HansenPartnership.com> wrote:
->=20
-> On Mon, 2019-06-03 at 11:25 +0200, Roberto Sassu wrote:
->> On 5/30/2019 2:00 PM, Mimi Zohar wrote:
->>> On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
->>>> Currently, ima_appraise_measurement() ignores the EVM status when
->>>> evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a
->>>> valid security.ima xattr with type IMA_XATTR_DIGEST or
->>>> IMA_XATTR_DIGEST_NG, ima_appraise_measurement() returns
->>>> INTEGRITY_PASS regardless of the EVM status. The problem is that
->>>> the EVM status is overwritten with the appraisal statu
->>>=20
->>> Roberto, your framing of this problem is harsh and misleading.  IMA
->>> and EVM are intentionally independent of each other and can be
->>> configured independently of each other.  The intersection of the
->>> two is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is
->>> returned for a number of reasons - when EVM is not configured, the
->>> EVM hmac key has not yet been loaded, the protected security
->>> attribute is unknown, or the file is not in policy.
->>>=20
->>> This patch does not differentiate between any of the above cases,
->>> requiring mutable files to always be protected by EVM, when
->>> specified as an "ima_appraise=3D" option on the boot command line.
->>>=20
->>> IMA could be extended to require EVM on a per IMA policy rule
->>> basis. Instead of framing allowing IMA file hashes without EVM as a
->>> bug that has existed from the very beginning, now that IMA/EVM have
->>> matured and is being used, you could frame it as extending IMA
->>> or hardening.
->>=20
->> I'm seeing it from the perspective of an administrator that manages
->> an already hardened system, and expects that the system only grants
->> access to files with a valid signature/HMAC. That system would not
->> enforce this behavior if EVM keys are removed and the digest in
->> security.ima is set to the actual file digest.
->>=20
->> Framing it as a bug rather than an extension would in my opinion help
->> to convince people about the necessity to switch to the safe mode, if
->> their system is already hardened.
->=20
-> I have a use case for IMA where I use it to enforce immutability of
-> containers.  In this use case, the cluster admin places hashes on
-> executables as the image is unpacked so that if an executable file is
-> changed, IMA will cause an execution failure.  For this use case, I
-> don't care about the EVM, in fact we don't use it, because the only
-> object is to fail execution if a binary is mutated.
->=20
-> So I can see your use case requires IMA+EVM, but requiring it would
-> cause more complexity for my use case.
+FYI, this error message means that the driver used a bulk pipe and
+usb_fill_bulk_urb() but the endpoint was actually interrupt.  No doubt 
+this is related to the message a few lines above, about changing 
+endpoint 0x81 from Bulk to Interrupt.  In any case, the driver should 
+check that the ep has the expected type before using it.
 
-... and would not work at all for the current NFS IMA implementation.
+Alan Stern
 
-
---
-Chuck Lever
-
-
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc1+ #10
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   panic+0x292/0x6c9 kernel/panic.c:218
+>   __warn.cold+0x20/0x4b kernel/panic.c:575
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+> Code: 4d 85 ed 74 2c e8 b8 06 e9 fd 4c 89 f7 e8 c0 44 13 ff 41 89 d8 44 89  
+> e1 4c 89 ea 48 89 c6 48 c7 c7 20 1c 1a 86 e8 03 db be fd <0f> 0b e9 20 f4  
+> ff ff e8 8c 06 e9 fd 4c 89 f2 48 b8 00 00 00 00 00
+> RSP: 0000:ffff8881d9e0f0c0 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff8127e98d RDI: ffffed103b3c1e0a
+> RBP: ffff8881d266af00 R08: ffff8881d9df9800 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+> R13: ffff8881cd2d9870 R14: ffff8881d09455a0 R15: ffff8881d4affa00
+>   ar5523_submit_rx_cmd+0x1fa/0x310  
+> drivers/net/wireless/ath/ar5523/ar5523.c:208
+>   ar5523_probe+0xbae/0x1980 drivers/net/wireless/ath/ar5523/ar5523.c:1642
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2268
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+>   kthread+0x30b/0x410 kernel/kthread.c:254
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
