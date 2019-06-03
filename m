@@ -2,107 +2,144 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B9AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811A6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943BC27F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553359;
-	bh=yIL5NuiECHeHhIeHCh3UBszSfdb3KeS2gVIULncVAgk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBW84A4OYOb9WM/Zgd5FFRl0QdrrRE4m5vBrBzm7byEa0mtUypvXOXbAES2wRgC3A
-	 rDlhzWvFxB9QpvDaazAso7oax91gQH6MpXgSbsvsohKxFw0ngS9y0exBfDubZoxEV+
-	 dXJXIcvswHi9iYT3kas62y3URUM4K1KOBIPXc3PM=
+	by mail.kernel.org (Postfix) with ESMTP id 5735F27F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LErR/q1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfFCJNI (ORCPT
+        id S1728484AbfFCJQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfFCJNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:13:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F209F245DF;
-        Mon,  3 Jun 2019 09:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553180;
-        bh=yIL5NuiECHeHhIeHCh3UBszSfdb3KeS2gVIULncVAgk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBjyk+jaP4mqXBPRzTr8u8t7DvLzMjqG4+FxjuYdOVzxF9wM9cQN8Znsy6rAXGyDK
-         yH96IDOMcGpOKrC+v4VVneNlioukMRFHrTucTEaU3pZPg8YwT+E7fxzyxqM8gABw/U
-         rHqkBAT3sHS4p6Z5vH7tnzODvNg6Fu82BJkciPPc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 14/40] net: mvneta: Fix err code path of probe
-Date:   Mon,  3 Jun 2019 11:09:07 +0200
-Message-Id: <20190603090523.498666377@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
-References: <20190603090522.617635820@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Jun 2019 05:16:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35000 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728757AbfFCJNH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h11so15468192ljb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p2w7Kl57iLHckjKus0ozI/d6mjFcbpIqopjV/HxyM1s=;
+        b=LErR/q1Cw7oedcRjmOCVzqcAxs8gPx/T7/buH9Lwg8mSGR8eAtJ2kTcwFRHivjn5Ex
+         kEjWaZ0dS19gIlRmtSTi0+74wxiQjf4cTAxf6mfbrFI1L/VVIf/lavH55pIQidTKt0LG
+         2bOOWaw3tWlDzpGQXwdZjUkhHrTMpQohW7T04THJ1XaQ294z0vbUDDvwYtL4a72rZ7KG
+         7x2a+G2Gwx/2N46KE1z6HifQw3qO52VIzGyZMI0hqpYVvdNJTb4Zob+fSBJTFrWEwMFa
+         uMVDaQRSfaZWNnyGyJJqBArLdT7HZuOV1TPrk5K2dQgjo5cyiopk3TKCtcAeZbSyhF7P
+         7NYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p2w7Kl57iLHckjKus0ozI/d6mjFcbpIqopjV/HxyM1s=;
+        b=attQ9WyYMwZjSEEjMFYbts7xkxVQpd5Dh7NwyieoCpcTFsRbUxEgOW9l78sWziA/3b
+         NSLB9CHl3ZTzvlAxoeRZxaE8GXY0fYu+aJyXpW2FxDbBZCNwqnl/EdHVzQiJ4Gyz9zsq
+         ojeAcUIefMHO4relPdh55GKAqx1DGS+4NCdTeIUbEZmo1BYq9YxZzC6bBFfa/ud/Hyqz
+         Rxs7gs5rqDt7GoPatUSesAsZqUZqpESRp2d0cEfXl9cp0WNX5wCRLo8zcGtL5AVbmbKG
+         l9m45MuuSUy9qArwQy7v1iFd8tAlKP0BNGe0T8bMFfUJQ//WDEXcrhvQA6z0b1u3UJe3
+         ytOA==
+X-Gm-Message-State: APjAAAXbVdBMJLdd/B/TNQYuep8Udjhevtaqyqlbh5Z2sZ8BNKYIAwM9
+        Mqboimb71OGRq70RzMRh13xutA==
+X-Google-Smtp-Source: APXvYqzH+12IqYjeDa9Cf9SfS3k+UN9FSA/zr7tE4XHHnE6+zYlsVHzadgAxfalAVmWokf3dCikz8w==
+X-Received: by 2002:a2e:5b94:: with SMTP id m20mr3452661lje.7.1559553185375;
+        Mon, 03 Jun 2019 02:13:05 -0700 (PDT)
+Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
+        by smtp.gmail.com with ESMTPSA id v2sm3030127lfi.52.2019.06.03.02.13.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 02:13:04 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     mark.rutland@arm.com, marc.zyngier@arm.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH 1/3] clocksource/arm_arch_timer: mark arch_counter_get_* as notrace
+Date:   Mon,  3 Jun 2019 11:12:56 +0200
+Message-Id: <20190603091256.25012-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+When CONFIG_FUNCTION_GRAPH_TRACER is enabled we end up in this circular
+call trace since function arch_counter_get_cntvct() isn't marked with no
+trace:
 
-[ Upstream commit d484e06e25ebb937d841dac02ac1fe76ec7d4ddd ]
+[   17.914934] Call trace:
+[   17.915211]  ftrace_return_to_handler+0x194/0x288
+[   17.915551]  return_to_handler+0x1c/0x38
+[   17.915855]  trace_clock_local+0x38/0x88
+[   17.916159]  function_graph_enter+0xf0/0x258
+[   17.916465]  prepare_ftrace_return+0x60/0x90
+[   17.916772]  ftrace_graph_caller+0x1c/0x24
+[   17.917093]  arch_counter_get_cntvct+0x10/0x30
+[   17.917417]  sched_clock+0x70/0x218
+[   17.917723]  trace_clock_local+0x38/0x88
+[   17.918026]  function_graph_enter+0xf0/0x258
+[   17.918332]  prepare_ftrace_return+0x60/0x90
+[   17.918649]  ftrace_graph_caller+0x1c/0x24
+[   17.918963]  arch_counter_get_cntvct+0x10/0x30
+[   17.919286]  sched_clock+0x70/0x218
 
-Fix below issues in err code path of probe:
-1. we don't need to unregister_netdev() because the netdev isn't
-registered.
-2. when register_netdev() fails, we also need to destroy bm pool for
-HWBM case.
+Rework so that function arch_counter_get_cntvct() is marked with notrace.
 
-Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer management")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0ea415390cd3 ("clocksource/arm_arch_timer: Use arch_timer_read_counter to access stable counters")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clocksource/arm_arch_timer.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -4674,7 +4674,7 @@ static int mvneta_probe(struct platform_
- 	err = register_netdev(dev);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register\n");
--		goto err_free_stats;
-+		goto err_netdev;
- 	}
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index b2a951a798e2..f4d5bd8fe906 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -149,22 +149,22 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
+ 	return val;
+ }
  
- 	netdev_info(dev, "Using %s mac address %pM\n", mac_from,
-@@ -4685,14 +4685,12 @@ static int mvneta_probe(struct platform_
- 	return 0;
+-static u64 arch_counter_get_cntpct_stable(void)
++static u64 notrace arch_counter_get_cntpct_stable(void)
+ {
+ 	return __arch_counter_get_cntpct_stable();
+ }
  
- err_netdev:
--	unregister_netdev(dev);
- 	if (pp->bm_priv) {
- 		mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
- 		mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
- 				       1 << pp->id);
- 		mvneta_bm_put(pp->bm_priv);
- 	}
--err_free_stats:
- 	free_percpu(pp->stats);
- err_free_ports:
- 	free_percpu(pp->ports);
-
+-static u64 arch_counter_get_cntpct(void)
++static u64 notrace arch_counter_get_cntpct(void)
+ {
+ 	return __arch_counter_get_cntpct();
+ }
+ 
+-static u64 arch_counter_get_cntvct_stable(void)
++static u64 notrace arch_counter_get_cntvct_stable(void)
+ {
+ 	return __arch_counter_get_cntvct_stable();
+ }
+ 
+-static u64 arch_counter_get_cntvct(void)
++static u64 notrace arch_counter_get_cntvct(void)
+ {
+ 	return __arch_counter_get_cntvct();
+ }
+@@ -947,7 +947,7 @@ bool arch_timer_evtstrm_available(void)
+ 	return cpumask_test_cpu(raw_smp_processor_id(), &evtstrm_available);
+ }
+ 
+-static u64 arch_counter_get_cntvct_mem(void)
++static u64 notrace arch_counter_get_cntvct_mem(void)
+ {
+ 	u32 vct_lo, vct_hi, tmp_hi;
+ 
+-- 
+2.20.1
 
