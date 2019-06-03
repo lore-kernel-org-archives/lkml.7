@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA27C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A262FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEE227E3B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7652C27E3C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553013;
-	bh=nIhh939yS6fdWsHpG0bb5FyJ1GG9hoy/+ApJ1dU19NU=;
+	s=default; t=1559553017;
+	bh=OkSZOmrzbRtglGgaWTCASBVMjYEU2o0yP0IEyf5sVKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDgvSnkhQlV9fh2l3GsZW/VPEaGsjG3u9l40xRGNUXyFjDyR8CfaR1sq0MZi23+yQ
-	 dqegjnMO9SEHVsg8qzuT1zeIZS8FranjC/lDbFE0ZGWy6BwXjttkyyISkE652pX7l7
-	 9lnbFIznePVJ28g+7qeBffppmOY/7RfL0YQBTxos=
+	b=CJbQXlTSopYuVbdMCm8o6PvwbgwvLS77JoGgbQeNY/EeN/dvtPcHgiNfLyfDVNEla
+	 lyrlw/FzSk/X9kdvF4pLF/qKREhIEaNTgO+ru5Vi0Qayt6qpvdQiDsH6sUFVpin3Tt
+	 GE0DY7phQOJQdZBbKpImX9FBH8xO9ElWKB0f5fc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfFCJKM (ORCPT
+        id S1728084AbfFCJKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbfFCJKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:10:10 -0400
+        id S1728057AbfFCJKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C022C27E2A;
-        Mon,  3 Jun 2019 09:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4CC27E2B;
+        Mon,  3 Jun 2019 09:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553010;
-        bh=nIhh939yS6fdWsHpG0bb5FyJ1GG9hoy/+ApJ1dU19NU=;
+        s=default; t=1559553012;
+        bh=OkSZOmrzbRtglGgaWTCASBVMjYEU2o0yP0IEyf5sVKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaTxVOZcnn6oObZ7BbQ9sbeRSKpphN1VbeaR3Ek5g2gcHNow2ambUIPbJCWGR5CqS
-         /UiHFVg1HuZpHfrXrULiQgRvcH1llYy0t+hA4fE1582ecUjjxsBC3fg38ai5cJlnsa
-         7vFXF/0HHcDtPZk1RxCHHex3kW0vZrRPRuor0eAI=
+        b=SGXnNZwjGw8zthhsQSjYJLs7dW5l2929U+eneJ9oHEXDolUiffKQj78E261l08P8E
+         NJLxrXMVPvDo9X1Pd7nCC3TbqJZqMkABWxTXYxKP3mqceRWeCAqYWMZ043cLPbH4xk
+         DCYh83ibvQ2dTVbfEtvPVtPK+9lkZh+oLbqG5TCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 20/32] net/mlx5: Allocate root ns memory using kzalloc to match kfree
-Date:   Mon,  3 Jun 2019 11:08:14 +0200
-Message-Id: <20190603090313.853867511@linuxfoundation.org>
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 21/32] net/mlx5e: Disable rxhash when CQE compress is enabled
+Date:   Mon,  3 Jun 2019 11:08:15 +0200
+Message-Id: <20190603090313.925496353@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090308.472021390@linuxfoundation.org>
 References: <20190603090308.472021390@linuxfoundation.org>
@@ -61,38 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 25fa506b70cadb580c1e9cbd836d6417276d4bcd ]
+[ Upstream commit c0194e2d0ef0e5ce5e21a35640d23a706827ae28 ]
 
-root ns is yet another fs core node which is freed using kfree() by
-tree_put_node().
-Rest of the other fs core objects are also allocated using kmalloc
-variants.
+When CQE compression is enabled (Multi-host systems), compressed CQEs
+might arrive to the driver rx, compressed CQEs don't have a valid hash
+offload and the driver already reports a hash value of 0 and invalid hash
+type on the skb for compressed CQEs, but this is not good enough.
 
-However, root ns memory is allocated using kvzalloc().
-Hence allocate root ns memory using kzalloc().
+On a congested PCIe, where CQE compression will kick in aggressively,
+gro will deliver lots of out of order packets due to the invalid hash
+and this might cause a serious performance drop.
 
-Fixes: 2530236303d9e ("net/mlx5_core: Flow steering tree initialization")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
+The only valid solution, is to disable rxhash offload at all when CQE
+compression is favorable (Multi-host systems).
+
+Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -2220,7 +2220,7 @@ static struct mlx5_flow_root_namespace
- 		cmds = mlx5_fs_cmd_get_default_ipsec_fpga_cmds(table_type);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3734,6 +3734,12 @@ static netdev_features_t mlx5e_fix_featu
+ 			netdev_warn(netdev, "Disabling LRO, not supported in legacy RQ\n");
+ 	}
  
- 	/* Create the root namespace */
--	root_ns = kvzalloc(sizeof(*root_ns), GFP_KERNEL);
-+	root_ns = kzalloc(sizeof(*root_ns), GFP_KERNEL);
- 	if (!root_ns)
- 		return NULL;
++	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_CQE_COMPRESS)) {
++		features &= ~NETIF_F_RXHASH;
++		if (netdev->features & NETIF_F_RXHASH)
++			netdev_warn(netdev, "Disabling rxhash, not supported when CQE compress is active\n");
++	}
++
+ 	mutex_unlock(&priv->state_lock);
  
+ 	return features;
+@@ -3860,6 +3866,9 @@ int mlx5e_hwstamp_set(struct mlx5e_priv
+ 	memcpy(&priv->tstamp, &config, sizeof(config));
+ 	mutex_unlock(&priv->state_lock);
+ 
++	/* might need to fix some features */
++	netdev_update_features(priv->netdev);
++
+ 	return copy_to_user(ifr->ifr_data, &config,
+ 			    sizeof(config)) ? -EFAULT : 0;
+ }
+@@ -4702,6 +4711,10 @@ static void mlx5e_build_nic_netdev(struc
+ 	if (!priv->channels.params.scatter_fcs_en)
+ 		netdev->features  &= ~NETIF_F_RXFCS;
+ 
++	/* prefere CQE compression over rxhash */
++	if (MLX5E_GET_PFLAG(&priv->channels.params, MLX5E_PFLAG_RX_CQE_COMPRESS))
++		netdev->features &= ~NETIF_F_RXHASH;
++
+ #define FT_CAP(f) MLX5_CAP_FLOWTABLE(mdev, flow_table_properties_nic_receive.f)
+ 	if (FT_CAP(flow_modify_en) &&
+ 	    FT_CAP(modify_root) &&
 
 
