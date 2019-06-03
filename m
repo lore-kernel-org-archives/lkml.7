@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B92C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D44C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09C027F56
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFC227F5F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553398;
-	bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
+	s=default; t=1559553405;
+	bh=a34O6TKGoN+iU8eyd38/ahRLYi1VAHFDW0/FaTBjEnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7tach7UiZxcGs29AI/QwXdED3/kxcQ+ZBg2UsXYS/x1tQXbs3X2IOs68nta5HfAB
-	 EaNreufAzrmdlOpWLQS24C43LzIc3lWeGiQ5Bmy0HnX6mSnW8+Y96f5qYmQpONzAcJ
-	 NbRP00lx9Uy69TqiSc+WoEG0kMZXiWuJHJjsgeE4=
+	b=S3YeL41UKYwkiYAFVCaVZ+K91pdumTjjBCt4N98hfJ63SNne+c2CA6nvMWuYTAE0X
+	 amleSidCl7uBf+Xv1CLG/+0H4JNSXL7WIW03gMkdv54NLEB/eUgn/d9lWiP5ELRtwl
+	 wCeAI5CdRIj6ZZSs2dpUok7PnmQr6BnMZigiTzns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfFCJQi (ORCPT
+        id S1728759AbfFCJQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57898 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbfFCJMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:19 -0400
+        id S1728047AbfFCJMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A15427E94;
-        Mon,  3 Jun 2019 09:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECC3327E7C;
+        Mon,  3 Jun 2019 09:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553138;
-        bh=+Y3RyFGuyeVzcTxPSIRnG+lKl/0OSsVEM+e1L0Exjys=;
+        s=default; t=1559553133;
+        bh=a34O6TKGoN+iU8eyd38/ahRLYi1VAHFDW0/FaTBjEnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eh0wVQiijwhiJ4fxdXgaSnv/t3g6NpTgMouf6Jh5raKHEFpsv5NAoxkK+WeGCZ/Gk
-         fqNOKMytZ5BVu5bvGiivz05gol/tPbkQM+faXcWDBAbw95FohPGBxcDqobyj0Kl4XZ
-         UK7VL6PO9DUFq12Y9y5xvgh8bJLJvP4QiUzsVnLo=
+        b=AQeS0gV7aL88wBb33Enr5y0xVIPB+j3ZtRFWUdvWNLVzX87onak+AJWKOpzTfJTgZ
+         SFWMmlP3yoB6IpHO2MGfgXuiC/b+Ojy52aeMEaofIgx+FsizK0QlzjqWVm6sRK10Dh
+         aZWn/nCGUVajGBnYztu+chHc5y9EdP4boJczxyjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 35/36] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
-Date:   Mon,  3 Jun 2019 11:09:23 +0200
-Message-Id: <20190603090523.290867372@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 33/36] crypto: vmx - ghash: do nosimd fallback manually
+Date:   Mon,  3 Jun 2019 11:09:21 +0200
+Message-Id: <20190603090523.166395290@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -58,78 +62,313 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David S. Miller <davem@davemloft.net>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
+commit 357d065a44cdd77ed5ff35155a989f2a763e96ef upstream.
 
-This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
+VMX ghash was using a fallback that did not support interleaving simd
+and nosimd operations, leading to failures in the extended test suite.
 
-More revisions coming up.
+If I understood correctly, Eric's suggestion was to use the same
+data format that the generic code uses, allowing us to call into it
+with the same contexts. I wasn't able to get that to work - I think
+there's a very different key structure and data layout being used.
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So instead steal the arm64 approach and perform the fallback
+operations directly if required.
+
+Fixes: cc333cd68dfa ("crypto: vmx - Adding GHASH routines for VMX module")
+Cc: stable@vger.kernel.org # v4.1+
+Reported-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/crypto/vmx/ghash.c |  212 ++++++++++++++++++---------------------------
+ 1 file changed, 86 insertions(+), 126 deletions(-)
 
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -66,10 +66,6 @@ static int __net_init tipc_init_net(stru
- 	INIT_LIST_HEAD(&tn->node_list);
- 	spin_lock_init(&tn->node_list_lock);
+--- a/drivers/crypto/vmx/ghash.c
++++ b/drivers/crypto/vmx/ghash.c
+@@ -1,22 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
+ /**
+  * GHASH routines supporting VMX instructions on the Power 8
+  *
+- * Copyright (C) 2015 International Business Machines Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 only.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ * Copyright (C) 2015, 2019 International Business Machines Inc.
+  *
+  * Author: Marcelo Henrique Cerri <mhcerri@br.ibm.com>
++ *
++ * Extended by Daniel Axtens <dja@axtens.net> to replace the fallback
++ * mechanism. The new approach is based on arm64 code, which is:
++ *   Copyright (C) 2014 - 2018 Linaro Ltd. <ard.biesheuvel@linaro.org>
+  */
  
--	err = tipc_socket_init();
--	if (err)
--		goto out_socket;
+ #include <linux/types.h>
+@@ -39,71 +31,25 @@ void gcm_ghash_p8(u64 Xi[2], const u128
+ 		  const u8 *in, size_t len);
+ 
+ struct p8_ghash_ctx {
++	/* key used by vector asm */
+ 	u128 htable[16];
+-	struct crypto_shash *fallback;
++	/* key used by software fallback */
++	be128 key;
+ };
+ 
+ struct p8_ghash_desc_ctx {
+ 	u64 shash[2];
+ 	u8 buffer[GHASH_DIGEST_SIZE];
+ 	int bytes;
+-	struct shash_desc fallback_desc;
+ };
+ 
+-static int p8_ghash_init_tfm(struct crypto_tfm *tfm)
+-{
+-	const char *alg = "ghash-generic";
+-	struct crypto_shash *fallback;
+-	struct crypto_shash *shash_tfm = __crypto_shash_cast(tfm);
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
 -
- 	err = tipc_sk_rht_init(net);
- 	if (err)
- 		goto out_sk_rht;
-@@ -96,8 +92,6 @@ out_subscr:
- out_nametbl:
- 	tipc_sk_rht_destroy(net);
- out_sk_rht:
--	tipc_socket_stop();
--out_socket:
- 	return err;
- }
- 
-@@ -108,7 +102,6 @@ static void __net_exit tipc_exit_net(str
- 	tipc_bcast_stop(net);
- 	tipc_nametbl_stop(net);
- 	tipc_sk_rht_destroy(net);
--	tipc_socket_stop();
- }
- 
- static struct pernet_operations tipc_net_ops = {
-@@ -144,6 +137,10 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_pernet;
- 
-+	err = tipc_socket_init();
-+	if (err)
-+		goto out_socket;
-+
- 	err = tipc_bearer_setup();
- 	if (err)
- 		goto out_bearer;
-@@ -151,6 +148,8 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
-+	tipc_socket_stop();
-+out_socket:
- 	unregister_pernet_subsys(&tipc_net_ops);
- out_pernet:
- 	tipc_unregister_sysctl();
-@@ -166,6 +165,7 @@ out_netlink:
- static void __exit tipc_exit(void)
+-	fallback = crypto_alloc_shash(alg, 0, CRYPTO_ALG_NEED_FALLBACK);
+-	if (IS_ERR(fallback)) {
+-		printk(KERN_ERR
+-		       "Failed to allocate transformation for '%s': %ld\n",
+-		       alg, PTR_ERR(fallback));
+-		return PTR_ERR(fallback);
+-	}
+-
+-	crypto_shash_set_flags(fallback,
+-			       crypto_shash_get_flags((struct crypto_shash
+-						       *) tfm));
+-
+-	/* Check if the descsize defined in the algorithm is still enough. */
+-	if (shash_tfm->descsize < sizeof(struct p8_ghash_desc_ctx)
+-	    + crypto_shash_descsize(fallback)) {
+-		printk(KERN_ERR
+-		       "Desc size of the fallback implementation (%s) does not match the expected value: %lu vs %u\n",
+-		       alg,
+-		       shash_tfm->descsize - sizeof(struct p8_ghash_desc_ctx),
+-		       crypto_shash_descsize(fallback));
+-		return -EINVAL;
+-	}
+-	ctx->fallback = fallback;
+-
+-	return 0;
+-}
+-
+-static void p8_ghash_exit_tfm(struct crypto_tfm *tfm)
+-{
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
+-
+-	if (ctx->fallback) {
+-		crypto_free_shash(ctx->fallback);
+-		ctx->fallback = NULL;
+-	}
+-}
+-
+ static int p8_ghash_init(struct shash_desc *desc)
  {
- 	tipc_bearer_cleanup();
-+	tipc_socket_stop();
- 	unregister_pernet_subsys(&tipc_net_ops);
- 	tipc_netlink_stop();
- 	tipc_netlink_compat_stop();
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+ 	dctx->bytes = 0;
+ 	memset(dctx->shash, 0, GHASH_DIGEST_SIZE);
+-	dctx->fallback_desc.tfm = ctx->fallback;
+-	dctx->fallback_desc.flags = desc->flags;
+-	return crypto_shash_init(&dctx->fallback_desc);
++	return 0;
+ }
+ 
+ static int p8_ghash_setkey(struct crypto_shash *tfm, const u8 *key,
+@@ -121,7 +67,51 @@ static int p8_ghash_setkey(struct crypto
+ 	disable_kernel_vsx();
+ 	pagefault_enable();
+ 	preempt_enable();
+-	return crypto_shash_setkey(ctx->fallback, key, keylen);
++
++	memcpy(&ctx->key, key, GHASH_BLOCK_SIZE);
++
++	return 0;
++}
++
++static inline void __ghash_block(struct p8_ghash_ctx *ctx,
++				 struct p8_ghash_desc_ctx *dctx)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_vsx();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				dctx->buffer, GHASH_DIGEST_SIZE);
++		disable_kernel_vsx();
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		crypto_xor((u8 *)dctx->shash, dctx->buffer, GHASH_BLOCK_SIZE);
++		gf128mul_lle((be128 *)dctx->shash, &ctx->key);
++	}
++}
++
++static inline void __ghash_blocks(struct p8_ghash_ctx *ctx,
++				  struct p8_ghash_desc_ctx *dctx,
++				  const u8 *src, unsigned int srclen)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_vsx();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				src, srclen);
++		disable_kernel_vsx();
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		while (srclen >= GHASH_BLOCK_SIZE) {
++			crypto_xor((u8 *)dctx->shash, src, GHASH_BLOCK_SIZE);
++			gf128mul_lle((be128 *)dctx->shash, &ctx->key);
++			srclen -= GHASH_BLOCK_SIZE;
++			src += GHASH_BLOCK_SIZE;
++		}
++	}
+ }
+ 
+ static int p8_ghash_update(struct shash_desc *desc,
+@@ -131,49 +121,33 @@ static int p8_ghash_update(struct shash_
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_update(&dctx->fallback_desc, src,
+-					   srclen);
+-	} else {
+-		if (dctx->bytes) {
+-			if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+-				memcpy(dctx->buffer + dctx->bytes, src,
+-				       srclen);
+-				dctx->bytes += srclen;
+-				return 0;
+-			}
++	if (dctx->bytes) {
++		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+ 			memcpy(dctx->buffer + dctx->bytes, src,
+-			       GHASH_DIGEST_SIZE - dctx->bytes);
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			src += GHASH_DIGEST_SIZE - dctx->bytes;
+-			srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
+-			dctx->bytes = 0;
++				srclen);
++			dctx->bytes += srclen;
++			return 0;
+ 		}
+-		len = srclen & ~(GHASH_DIGEST_SIZE - 1);
+-		if (len) {
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable, src, len);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			src += len;
+-			srclen -= len;
+-		}
+-		if (srclen) {
+-			memcpy(dctx->buffer, src, srclen);
+-			dctx->bytes = srclen;
+-		}
+-		return 0;
++		memcpy(dctx->buffer + dctx->bytes, src,
++			GHASH_DIGEST_SIZE - dctx->bytes);
++
++		__ghash_block(ctx, dctx);
++
++		src += GHASH_DIGEST_SIZE - dctx->bytes;
++		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
++		dctx->bytes = 0;
++	}
++	len = srclen & ~(GHASH_DIGEST_SIZE - 1);
++	if (len) {
++		__ghash_blocks(ctx, dctx, src, len);
++		src += len;
++		srclen -= len;
+ 	}
++	if (srclen) {
++		memcpy(dctx->buffer, src, srclen);
++		dctx->bytes = srclen;
++	}
++	return 0;
+ }
+ 
+ static int p8_ghash_final(struct shash_desc *desc, u8 *out)
+@@ -182,25 +156,14 @@ static int p8_ghash_final(struct shash_d
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_final(&dctx->fallback_desc, out);
+-	} else {
+-		if (dctx->bytes) {
+-			for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
+-				dctx->buffer[i] = 0;
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_vsx();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			disable_kernel_vsx();
+-			pagefault_enable();
+-			preempt_enable();
+-			dctx->bytes = 0;
+-		}
+-		memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
+-		return 0;
++	if (dctx->bytes) {
++		for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
++			dctx->buffer[i] = 0;
++		__ghash_block(ctx, dctx);
++		dctx->bytes = 0;
+ 	}
++	memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
++	return 0;
+ }
+ 
+ struct shash_alg p8_ghash_alg = {
+@@ -215,11 +178,8 @@ struct shash_alg p8_ghash_alg = {
+ 		 .cra_name = "ghash",
+ 		 .cra_driver_name = "p8_ghash",
+ 		 .cra_priority = 1000,
+-		 .cra_flags = CRYPTO_ALG_NEED_FALLBACK,
+ 		 .cra_blocksize = GHASH_BLOCK_SIZE,
+ 		 .cra_ctxsize = sizeof(struct p8_ghash_ctx),
+ 		 .cra_module = THIS_MODULE,
+-		 .cra_init = p8_ghash_init_tfm,
+-		 .cra_exit = p8_ghash_exit_tfm,
+ 	},
+ };
 
 
