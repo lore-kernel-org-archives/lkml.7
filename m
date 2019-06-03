@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D079BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858FC46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A530A25B40
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121F4276E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553186;
-	bh=8HdkO6IeUmTPFrOdQLtsFWlylUbOIiHand7KfW3hicU=;
+	s=default; t=1559553192;
+	bh=w/nMXZBsMbJGzSpX0xnGjerq2RFpskK0JWksbaweKws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahypBLW/5JoY9Gv6675SGj3/VuH2Ig2po9nfYRZt6+DpOICFTBXfvS5HuaS4JNeLv
-	 aa5jGEJMz6x+STx8HLeE6xunQ8yCwLatNmGHgXsRHGYirdIxOF+Wt7CRMfCr82XAY9
-	 hh6DrBXRMwn58O0HMkT3qQupBPz0SuoxiycHZEZ4=
+	b=ccnnjHoWVB9IIO+WcjNBhhKDduYLet5+jTtNV9by8UY+jk4ZkMW3nnj2I9g2w9EiN
+	 fsJ/N60CmhFzW8a9vnmIvnQtbqUMgnq/5sZ7LChzb5mOQe0tdx98zcvFxDuoWAOIAt
+	 0JmtjD70UspfOM5yEw0w6jgP+afalS5F0uLW9xPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfFCJNF (ORCPT
+        id S1727772AbfFCJNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33016 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbfFCJM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:58 -0400
+        id S1728745AbfFCJND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:13:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75ADC21923;
-        Mon,  3 Jun 2019 09:12:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842EE245DF;
+        Mon,  3 Jun 2019 09:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553177;
-        bh=8HdkO6IeUmTPFrOdQLtsFWlylUbOIiHand7KfW3hicU=;
+        s=default; t=1559553183;
+        bh=w/nMXZBsMbJGzSpX0xnGjerq2RFpskK0JWksbaweKws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBW/UYjOQr+Wtzz30JybZW7lVRWUNfsTXn+di6VBiZbPTXCgA4Pj5v3IF+G1kFI/H
-         0/SBB+DWEX2QJxhOQBRYHUYgBJjejdd2J5Af3fuWOSkFO0AUdjv0Fxw/b68KhNfAaO
-         vL45/gfIEq7qAEEez4pwXZuSFcdiUkv4J/Ji/lmo=
+        b=tErxMYcqPr6l+dur5Hw76osdFpmQlKq1R4hCPc+wJ0Kvbk+L9mZ6PVibJxrhSZZ1x
+         jY/z0OtaS0cEvCIy9djDQO1ABP1EtcH401DFIlImF14FG2YNec7xPRZXxcL4frASHZ
+         PjdP4f3b2rqFm8XABcpYShwzkRMvbn0rTPqBn8yU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 13/40] net-gro: fix use-after-free read in napi_gro_frags()
-Date:   Mon,  3 Jun 2019 11:09:06 +0200
-Message-Id: <20190603090523.447909637@linuxfoundation.org>
+Subject: [PATCH 5.1 15/40] net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
+Date:   Mon,  3 Jun 2019 11:09:08 +0200
+Message-Id: <20190603090523.564537785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -60,69 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit a4270d6795b0580287453ea55974d948393e66ef ]
+[ Upstream commit 21808437214637952b61beaba6034d97880fbeb3 ]
 
-If a network driver provides to napi_gro_frags() an
-skb with a page fragment of exactly 14 bytes, the call
-to gro_pull_from_frag0() will 'consume' the fragment
-by calling skb_frag_unref(skb, 0), and the page might
-be freed and reused.
+MVPP2_TXQ_SCHED_TOKEN_CNTR_REG() expects the logical queue id but
+the current code is passing the global tx queue offset, so it ends
+up writing to unknown registers (between 0x8280 and 0x82fc, which
+seemed to be unused by the hardware). This fixes the issue by using
+the logical queue id instead.
 
-Reading eth->h_proto at the end of napi_frags_skb() might
-read mangled data, or crash under specific debugging features.
-
-BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
-BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
-Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
-
-CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
- __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- kasan_report+0x12/0x20 mm/kasan/common.c:614
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
- napi_frags_skb net/core/dev.c:5833 [inline]
- napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
- tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
- tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
- call_write_iter include/linux/fs.h:1872 [inline]
- do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:951
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
- do_writev+0x15b/0x330 fs/read_write.c:1058
-
-Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5804,7 +5804,6 @@ static struct sk_buff *napi_frags_skb(st
- 	skb_reset_mac_header(skb);
- 	skb_gro_reset_offset(skb);
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1455,7 +1455,7 @@ static inline void mvpp2_xlg_max_rx_size
+ /* Set defaults to the MVPP2 port */
+ static void mvpp2_defaults_set(struct mvpp2_port *port)
+ {
+-	int tx_port_num, val, queue, ptxq, lrxq;
++	int tx_port_num, val, queue, lrxq;
  
--	eth = skb_gro_header_fast(skb, 0);
- 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
- 		eth = skb_gro_header_slow(skb, hlen, 0);
- 		if (unlikely(!eth)) {
-@@ -5814,6 +5813,7 @@ static struct sk_buff *napi_frags_skb(st
- 			return NULL;
- 		}
- 	} else {
-+		eth = (const struct ethhdr *)skb->data;
- 		gro_pull_from_frag0(skb, hlen);
- 		NAPI_GRO_CB(skb)->frag0 += hlen;
- 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
+ 	if (port->priv->hw_version == MVPP21) {
+ 		/* Update TX FIFO MIN Threshold */
+@@ -1476,11 +1476,9 @@ static void mvpp2_defaults_set(struct mv
+ 	mvpp2_write(port->priv, MVPP2_TXP_SCHED_FIXED_PRIO_REG, 0);
+ 
+ 	/* Close bandwidth for all queues */
+-	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++) {
+-		ptxq = mvpp2_txq_phys(port->id, queue);
++	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++)
+ 		mvpp2_write(port->priv,
+-			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(ptxq), 0);
+-	}
++			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(queue), 0);
+ 
+ 	/* Set refill period to 1 usec, refill tokens
+ 	 * and bucket size to maximum
+@@ -2336,7 +2334,7 @@ static void mvpp2_txq_deinit(struct mvpp
+ 	txq->descs_dma         = 0;
+ 
+ 	/* Set minimum bandwidth for disabled TXQs */
+-	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->id), 0);
++	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->log_id), 0);
+ 
+ 	/* Set Tx descriptors queue starting address and size */
+ 	thread = mvpp2_cpu_to_thread(port->priv, get_cpu());
 
 
