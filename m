@@ -2,132 +2,99 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E97CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D4AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447F827DE2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A2027DD5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1pHEck2f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QdL2vqG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfFCJCB (ORCPT
+        id S1727122AbfFCJDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:02:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:32722 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfFCJCA (ORCPT
+        Mon, 3 Jun 2019 05:03:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38493 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfFCJDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:02:00 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5391jPm029705
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 18:01:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5391jPm029705
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559552506;
-        bh=eEI7m3wkZyuLRC5t4Dr95mXISCNX++0zsNC/lTShoE4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1pHEck2f7Y+LBk01WGT5fV+b3uCw5Avq+YOte/65/u1tg+kQ5LAe4240pktOPQUU/
-         /2UOObCVWgbGJnYC8wL0L5tjwKhlamV2WR0WWq0/czrACWj83rCljylcP+F1m//Gcc
-         QMApTGozC+ZX5oNbg7JpXl1+3iguK0I4X/3OhhOcjdKu1xyJwpmkORFKEBgzduSXzB
-         wFBS2VGeP7tRvEdqA6eBs/ncCCe8ShZMc7zodDbi+HWicyBe21rKEQ87RwZfd7AQB9
-         YzGNYPDL2QUIu3XioQ5VCVZ0XCfb7jyJbE1K2s5K7uIqI8eu3Wrk1H7rGHFRNiQEFl
-         QLp9mPooUXQow==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id d128so10733530vsc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:01:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAXH0AvHlFqIQf6prMmLhEi8+yYNrB65lEX+suMcxyMSVIcxtMH5
-        nMO4KtasoqS1G9Czo25H0E90ixIWb07S1za5JnE=
-X-Google-Smtp-Source: APXvYqwwfK8QVTnBMsGDfnmDcFgNqwES3z8jc8ADFv5osapsAFa/v12FAeIQphukw2jg6Z04KTZvNIUGWHhtQZHiK2c=
-X-Received: by 2002:a67:de99:: with SMTP id r25mr12068520vsk.215.1559552504781;
- Mon, 03 Jun 2019 02:01:44 -0700 (PDT)
+        Mon, 3 Jun 2019 05:03:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so11153496wrs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=axSkmR4/Wmhd1GVR+mG5T3r4ivwoxDL81oDdaQFl5E8=;
+        b=QdL2vqG+S5MqpQeBh4plB+1IVk7Xk3sr+fQQIhcv1OMnz0WncZc+jCab8dnn2qc2Wo
+         G/vDVBkFzxjiX8rg5EC6g2Ez7FIdYktE2SbC6I4poAZE1Vj8yVwxBmTYP+nAvEPfayOO
+         f+mNlv9G5fgP/VF7WsU1L9p0W2EhrcwW4kaRobljvbCTqRS9404Fn12Y9V7rupVM3jBb
+         gRjdCrwe04T0Rrp+1wki4RTE+UDN36YYQxZNvlZiWhyG+5MhTIbxQqybqa0JwF8ZyU2o
+         eAGPCQZDb7wZ7tYD7P9DPeTtJ0sQ3Aq5ivf6w1V5likg8SU9hizveJjB7lZaDp/COIxP
+         JXdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=axSkmR4/Wmhd1GVR+mG5T3r4ivwoxDL81oDdaQFl5E8=;
+        b=GMgp7p404EuQLobi3rgrHa4xH8pmEufX71nTGMJM7aH1Ifj8HeZbRe5JfGX3gxEVRd
+         04DkJqOMDrSq48wpyQfYw1ANylZqBc9OPTD03nxdldF2vWXiIZgRnkL/qVunSadOZu8l
+         2lpHBlhprFoeXrep5zIwFSTpeG96sNCMs/ut70RtVetDwcUxIc8T7x6r6AAvbIuRd3//
+         uBKMt2jVx6oEKhGg3y03e07bumv5KwaoisHUPffI+3KynF7CN7G32VFKl9WDX6UwJ/VI
+         1l5gNH6ngTS82wnGrKb+iXbJT4PqaXdEHKMYJbrpgPd91r9V24Sg/vSGWD9eFr42/wow
+         xR6w==
+X-Gm-Message-State: APjAAAUqc7iXKpll1woXWh6hmArtlnNrz45qFkhCGcuZxjKpqFEBXfuF
+        EX4P2ChMPEhnozJ6C0xNb30/CBDdhVs=
+X-Google-Smtp-Source: APXvYqxAFgAGgOSEI8r8mePcq1atG3EcjGeizbjbvD0TfUwUAfZ7nS3C2kTq9eJdbcf/MS2IzVlcQQ==
+X-Received: by 2002:adf:a749:: with SMTP id e9mr15762108wrd.64.1559552589525;
+        Mon, 03 Jun 2019 02:03:09 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id l15sm8588945wrb.42.2019.06.03.02.03.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 02:03:08 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:03:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     robh+dt@kernel.org, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: lp87565: Add lp87561 configuration
+Message-ID: <20190603090306.GH4797@dell>
+References: <20190515100848.19560-1-j-keerthy@ti.com>
+ <20190515100848.19560-2-j-keerthy@ti.com>
 MIME-Version: 1.0
-References: <20190603063119.36544-1-abrodkin@synopsys.com> <CAK7LNASiHzar3JmzGB1fgUYUC91F3FPsALj3iMhANTjGgnux5w@mail.gmail.com>
- <CY4PR1201MB012004A6281FFE93B8191F30A1140@CY4PR1201MB0120.namprd12.prod.outlook.com>
-In-Reply-To: <CY4PR1201MB012004A6281FFE93B8191F30A1140@CY4PR1201MB0120.namprd12.prod.outlook.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 3 Jun 2019 18:01:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATaLmeeeftK9AGfohEpYKhbgcXSp+GEgW46BeeAHnpqiQ@mail.gmail.com>
-Message-ID: <CAK7LNATaLmeeeftK9AGfohEpYKhbgcXSp+GEgW46BeeAHnpqiQ@mail.gmail.com>
-Subject: Re: [PATCH] ARC: build: Try to guess CROSS_COMPILE with cc-cross-prefix
-To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     arcml <linux-snps-arc@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190515100848.19560-2-j-keerthy@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexey,
+On Wed, 15 May 2019, Keerthy wrote:
 
-On Mon, Jun 3, 2019 at 5:34 PM Alexey Brodkin
-<Alexey.Brodkin@synopsys.com> wrote:
->
-> Hi Masahiro-san,
->
-> > -----Original Message-----
-> > From: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Sent: Monday, June 3, 2019 11:18 AM
-> > To: Alexey Brodkin <abrodkin@synopsys.com>
-> > Cc: arcml <linux-snps-arc@lists.infradead.org>; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>; Vineet Gupta <Vineet.Gupta1@synopsys.com>
-> > Subject: Re: [PATCH] ARC: build: Try to guess CROSS_COMPILE with cc-cross-prefix
-> >
-> > Hi Alexey,
-> >
-> > On Mon, Jun 3, 2019 at 3:42 PM Alexey Brodkin
-> > <Alexey.Brodkin@synopsys.com> wrote:
->
-> [snip]
->
-> > > A side note: even though "cc-cross-prefix" does its job it pollutes
-> > > console with output of "which" for all the prefixes it didn't manage to find
-> > > a matching cross-compiler for like that:
-> > > | # ARCH=arc make defconfig
-> > > | which: no arceb-linux-gcc in (~/.local/bin:~/bin:/usr/bin:/usr/sbin)
-> > > | *** Default configuration is based on 'nsim_hs_defconfig'
-> >
-> >
-> > Oh really?
-> >
-> > masahiro@pug:~$ which arc-linux-gcc
-> > /home/masahiro/tools/arc/bin/arc-linux-gcc
-> > masahiro@pug:~$ which dummy-linux-gcc
-> > masahiro@pug:~$ echo $?
-> > 1
-> >
-> >
-> > When 'which' cannot find the given command,
-> > it does not print anything to stderr.
-> >
-> > Does it work differently on your machine?
->
-> Well on Ubuntu 18.04 indeed which doesn't show anything
-> but on my build-server with CentOS 7 I'm getting mentioned verbose output:
-> | # cat /etc/redhat-release
-> | CentOS Linux release 7.3.1611 (Core)
->
-> | # /usr/bin/which -v
-> | GNU which v2.20, Copyright (C) 1999 - 2008 Carlo Wood.
-> | GNU which comes with ABSOLUTELY NO WARRANTY;
-> | This program is free software; your freedom to use, change
-> | and distribute this program is protected by the GPL.
+> lp87561 is a single output 4-phase regulator configuration.
+> Add support for the same.
+> 
+> Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/lp87565.txt       | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 
-
-OK, confirmed.
-
-Probably using 'which' is a bad idea
-since this is not portable.
-
-I will send a fix-up patch soon.
-
-
+Applied, thanks.
 
 -- 
-Best Regards
-Masahiro Yamada
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
