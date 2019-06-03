@@ -2,178 +2,239 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B977C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB780C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6292526E82
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XorbrS9w"
+	by mail.kernel.org (Postfix) with ESMTP id 985B92251A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 14:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfFCN7v (ORCPT
+        id S1728681AbfFCOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:59:51 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46719 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727645AbfFCN7u (ORCPT
+        Mon, 3 Jun 2019 10:02:44 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:35119 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727429AbfFCOCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:59:50 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m15so8006001ljg.13;
-        Mon, 03 Jun 2019 06:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vcIulk1/05i3H3O56SoVs73mT/TuSYKU/0fOegYFnxg=;
-        b=XorbrS9wQiwZEHNOg7M/It2oguH2TnWDInhMG/FuFIm7vNvAHIPJbkftW2hAJkqtPt
-         j6hRiv+mT4Ywy1NZEoj014JrkmfFJfdSCPjpT/knaO3KuyymgbUJSonYy5jkcz24zqcE
-         zuIvxNP3rZKupgoEripEfh7qoi5bzMG4w6Iiz5cA7p/80YvZIDfUU8hHz2QZIqi+A/H5
-         P0RdxCSa1nYBFiM1RnViiOoediFY9tm8u7FFhvtAM0dty7DksSwVczire2TYKUzcgjpH
-         XpqaCbWf2N/Lkh9SDKp7Q93+GOsApOQE4EbY4zoCT4GHTzSvyVORARr4Z/ZqyQDjVsTI
-         XgVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vcIulk1/05i3H3O56SoVs73mT/TuSYKU/0fOegYFnxg=;
-        b=EtAcRmWJFGOdwy/sEPU3mLOuuM2fLO/W40+x5589XQ4pPr99fNi6cnLVLbDWNsOo3J
-         y2iPjmwM/fug2HhUyfr79Netg99CK2jmZKuNHS/d520ISMX4ZBReBt7AjDwDJMRBWQ9t
-         HbpOlTKNe5atTk96QSuIyCdnnBcgvTt0nPXmxiRSsbNwfROoAgQ6kCZCXT0iJoGls1jJ
-         dZTVYh9smlJRw+ukXzP2INCkxu+8wsqRdzn4JAnn523IbII/YTt5TtgIpTM1KfJluTSP
-         JYZ0qyPo7taS6yzdGEQBmPB3PcEZaNQA478ujtjLkzKfhUF8FwZR/EYuNDfFsw9RbFZ5
-         9vkw==
-X-Gm-Message-State: APjAAAUCbgyBjZN+3duyVCdVmOLDEQYqoaUl8KOWDgT8FS0etiH9ZMqz
-        IqsQigMpv6gU4XK52vog2Oc=
-X-Google-Smtp-Source: APXvYqyFVBQYnGPoKwtTGlv44NljHekWGJjapzSzxqZN6bY43Dul5qCS1bh6iX6UugirvFhrzxp7Dw==
-X-Received: by 2002:a2e:301a:: with SMTP id w26mr4059172ljw.76.1559570388393;
-        Mon, 03 Jun 2019 06:59:48 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id c15sm272940lja.79.2019.06.03.06.59.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 06:59:47 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 3 Jun 2019 15:59:39 +0200
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Hillf Danton <hdanton@sina.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: Re: [BUG BISECT] bug mm/vmalloc.c:470 (mm/vmalloc.c: get rid of one
- single unlink_va() when merge)
-Message-ID: <20190603135939.e2mb7vkxp64qairr@pc636>
-References: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
+        Mon, 3 Jun 2019 10:02:44 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id XnXphM2PbsDWyXnXshtSjV; Mon, 03 Jun 2019 16:02:40 +0200
+Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+Message-ID: <bbc4e018-44d2-b9a7-1453-3e462fc33206@xs4all.nl>
+Date:   Mon, 3 Jun 2019 16:02:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfOw8dA4irUZWLqqC75I14gmMwiV4wMq7OUEwWPl8AypmDrqWaQOO1YfQG+XcxMfM3f6HrIoSHQjannlKjzSyXGb7FYIRSv/1GezWgiTjfLvEHrsPv/Qr
+ eFcF5+gGQeC4BDBdcBSDVFXgvmh0L1keflmZTVv+Ieqd3oAGu2oh7hLBU0WVBg0KUtgw/QoLnnO0LtPZF8UVHywvychkFBt0JPMtwGVmtEZZNgairI7AkaX5
+ w+tPdsCrwRmhqqHK33uQtMw3oQvbLzuRMTY4e30XSbHelOQLq2xtf06hD6jKYEZOQsMzebGerVGfpwgbiO6Y+r4vRMpxD17PLq6Gy9LJKDmzNcmZSMvc7rJN
+ DaZ6UJ0QK1iS+fVhRPMyZHFS/eKOfIbxAwbdYbO2KN8NndgsdOFdpuq4spFdKBjFNY/K93myMVZyMTckaR1HOJIKNVLhxqDi0yv/hjoWteSz1w/L8cps9GKy
+ ALR013ph4QmY0QEX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Krzysztof.
+These changes + the stateless decoder v4 patch are now available here:
 
-On Mon, Jun 03, 2019 at 11:07:46AM +0200, Krzysztof Kozlowski wrote:
-> Hi,
+https://hverkuil.home.xs4all.nl/codec-api/uapi/v4l/dev-mem2mem.html
+
+Easier to read than a patch :-)
+
+Regards,
+
+	Hans
+
+On 6/3/19 1:28 PM, Hans Verkuil wrote:
+> Since Thomasz was very busy with other things, I've taken over this
+> patch series. This v4 includes his draft changes and additional changes
+> from me.
 > 
-> On recent next I see bugs during boot (after bringing up user-space or
-> during reboot):
-> kernel BUG at ../mm/vmalloc.c:470!
-> On all my boards. On QEMU I see something similar, although the
-> message is "Internal error: Oops - undefined instruction: 0 [#1] ARM",
+> This series attempts to add the documentation of what was discussed
+> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+> later Embedded Linux Conference Europe 2014 in Düsseldorf and then
+> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+> video team (but mostly in a cosmetic way or making the document more
+> precise), during the several years of Chrome OS using the APIs in
+> production.
 > 
-> The calltrace is:
-> [   34.565126] [<c0275c9c>] (__free_vmap_area) from [<c0276044>]
-> (__purge_vmap_area_lazy+0xd0/0x170)
-> [   34.573963] [<c0276044>] (__purge_vmap_area_lazy) from [<c0276d50>]
-> (_vm_unmap_aliases+0x1fc/0x244)
-> [   34.582974] [<c0276d50>] (_vm_unmap_aliases) from [<c0279500>]
-> (__vunmap+0x170/0x200)
-> [   34.590770] [<c0279500>] (__vunmap) from [<c01d5a70>]
-> (do_free_init+0x40/0x5c)
-> [   34.597955] [<c01d5a70>] (do_free_init) from [<c01478f4>]
-> (process_one_work+0x228/0x810)
-> [   34.606018] [<c01478f4>] (process_one_work) from [<c0147f0c>]
-> (worker_thread+0x30/0x570)
-> [   34.614077] [<c0147f0c>] (worker_thread) from [<c014e8b4>]
-> (kthread+0x134/0x164)
-> [   34.621438] [<c014e8b4>] (kthread) from [<c01010b4>]
-> (ret_from_fork+0x14/0x20)
+> Note that most, if not all, of the API is already implemented in
+> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+> this series is just to formalize what we already have.
 > 
-> Full log here:
-> https://krzk.eu/#/builders/1/builds/3356/steps/14/logs/serial0
-> https://krzk.eu/#/builders/22/builds/1118/steps/35/logs/serial0
+> Thanks everyone for the huge amount of useful comments to previous
+> versions of this series. Much of the credits should go to Pawel Osciak
+> too, for writing most of the original text of the initial RFC.
 > 
-> Bisect pointed to:
-> 728e0fbf263e3ed359c10cb13623390564102881 is the first bad commit
-> commit 728e0fbf263e3ed359c10cb13623390564102881
-> Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Date:   Sat Jun 1 12:20:19 2019 +1000
->     mm/vmalloc.c: get rid of one single unlink_va() when merge
+> This v4 incorporates all known comments (let me know if I missed
+> something!) and should be complete for the decoder.
 > 
-I have checked the linux-next. I can confirm it happens because of:
- mm/vmalloc.c: get rid of one single unlink_va() when merge
+> For the encoder there are two remaining TODOs for the API:
+> 
+> 1) Setting the frame rate so bitrate control can make sense, since
+>    they need to know this information.
+> 
+>    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+>    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+>    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+>    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+>    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
+> 
+> 2) Interactions between OUTPUT and CAPTURE formats.
+> 
+>    The main problem is what to do if the capture sizeimage is too small
+>    for the OUTPUT resolution when streaming starts.
+> 
+>    Proposal: width and height of S_FMT(OUTPUT) are used to
+>    calculate a minimum sizeimage (app may request more). This is
+>    driver-specific.
+> 
+>    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
+>    for the encoder (i.e. we don't support mid-stream resolution
+>    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
+>    supported. See https://patchwork.linuxtv.org/patch/56478/ for
+>    the patch adding this flag.
+> 
+>    Of course, if we start to support mid-stream resolution
+>    changes (or other changes that require a source change event),
+>    then this flag should be dropped by the encoder driver and
+>    documentation on how to handle the source change event should
+>    be documented in the encoder spec. I prefer to postpone this
+>    until we have an encoder than can actually do mid-stream
+>    resolution changes.
+> 
+>    If sizeimage of the OUTPUT is too small for the CAPTURE
+>    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
+>    then the second STREAMON (either CAPTURE or OUTPUT) will
+>    return -ENOMEM since there is not enough memory to do the
+>    encode.
+> 
+>    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
+>    be the case for all current encoders), then any bitrate controls
+>    will be limited in range to what the current state (CAPTURE and
+>    OUTPUT formats and frame rate) supports.
+> 
+> Comments regarding these two encoder proposals are welcome!
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> Changes since v3:
+> 
+> - Lots of stylistic fixes and fixing typos/grammar/etc.
+> 
+> Decoder:
+> 
+> - width/height for S_FMT(OUTPUT):
+> 
+>   Expects that the output width and height is always a valid
+>   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
+>   instead of returning an error. Note that this resolution is a placeholder
+>   until the actual resolution is parsed from the stream.
+> 
+> - Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
+>   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
+>   a left-over from earlier versions. The same information is also in Step 10,
+>   so no need to have this in two places.
+> 
+> - Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
+> 
+> - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
+> 
+> Encoder:
+> 
+> - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
+>   are marked as read-only and are based on the encoders current state such
+>   as the OUTPUT format.
+> 
+> - Drop TGT_COMPOSE support in the encoder: there are currently
+>   no encoders that can do composing/scaling.
+> 
+> - Document corner cases in the Drain sequence
+> 
+> - Document error handling.
+> 
+> - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
+> 
+> Changes since v2:
+> (https://lore.kernel.org/patchwork/cover/1002474/)
+> Decoder:
+>  - Specified that the initial source change event is signaled
+>    regardless of whether the client-set format matches the
+>    stream format.
+>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
+>    for the bitstream input buffers of decoders.
+>  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
+>    if the stream information is not available.
+>  - Described decode error handling.
+>  - Mentioned that timestamps can be observed after a seek to
+>    determine whether the CAPTURE buffers originated from before
+>    or after the seek.
+>  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
+>    V4L2_DEC_CMD_START, the decoder is not reset and preserves
+>    all the state.
+> 
+> Encoder:
+>  - Specified that width and height of CAPTURE format are ignored
+>    and always zero.
+>  - Explicitly noted the common use case for the CROP target with
+>    macroblock-unaligned video resolutions.
+>  - Added a reference to Request API.
+>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
+>    for the bitstream output buffers of encoders.
+>  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
+>    V4L2_ENC_CMD_START, the encoder is not reset and preserves
+>    all the state.
+> 
+> General:
+>  - Dropped format enumeration from "Initialization", since it's already
+>    a part of "Querying capabilities".
+>  - Many spelling, grammar, stylistic, etc. changes.
+>  - Changed the style of note blocks.
+>  - Rebased onto Hans' documentation cleanup series.
+>    (https://patchwork.kernel.org/cover/10775407/
+>     https://patchwork.kernel.org/patch/10776737/)
+>  - Moved the interfaces under the "Video Memory-To-Memory Interface"
+>    section.
+> 
+> For changes since v1 see the v2:
+> https://lore.kernel.org/patchwork/cover/1002474/
+> 
+> For changes since RFC see the v1:
+> https://patchwork.kernel.org/cover/10542207/
+> 
+> Tomasz Figa (2):
+>   media: docs-rst: Document memory-to-memory video decoder interface
+>   media: docs-rst: Document memory-to-memory video encoder interface
+> 
+>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+>  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
+>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
+>  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+>  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
+>  7 files changed, 1779 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
+> 
 
-The problem is that, it has been applied wrongly into linux-next tree
-for some reason, i do not why. Probably due to the fact that i based
-my work on 5.1/2-rcX, whereas linux-next is a bit ahead of it. If so,
-sorry for that.
-
-See below the clean patch for remotes/linux-next/master:
-
-<snip>
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 650c89f38c1e..0ed95b864e31 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -719,9 +719,6 @@ merge_or_add_vmap_area(struct vmap_area *va,
-                        /* Check and update the tree if needed. */
-                        augment_tree_propagate_from(sibling);
-
--                       /* Remove this VA, it has been merged. */
--                       unlink_va(va, root);
--
-                        /* Free vmap_area object. */
-                        kmem_cache_free(vmap_area_cachep, va);
-
-@@ -746,12 +743,11 @@ merge_or_add_vmap_area(struct vmap_area *va,
-                        /* Check and update the tree if needed. */
-                        augment_tree_propagate_from(sibling);
-
--                       /* Remove this VA, it has been merged. */
--                       unlink_va(va, root);
-+                       if (merged)
-+                               unlink_va(va, root);
-
-                        /* Free vmap_area object. */
-                        kmem_cache_free(vmap_area_cachep, va);
--
-                        return;
-                }
-        }
--- 
-2.11.0
-<snip>
-
-Andrew, i am not sure how to proceed with that. Should i send an updated series
-based on linux-next tip or you can fix directly that patch?
-
-Thank you!
-
---
-Vlad Rezki
