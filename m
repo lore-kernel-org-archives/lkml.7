@@ -2,126 +2,334 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0746C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DB4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C2E2805E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CFA23A61
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="EvNMtevT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N84DjHMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfFCNLt (ORCPT
+        id S1728226AbfFCNMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:11:49 -0400
-Received: from mail-eopbgr80103.outbound.protection.outlook.com ([40.107.8.103]:35398
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726516AbfFCNLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:11:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=me4Q3yCxnaEDwABzPrqvBgZkv4GpBOMsZ6E/px0JVvA=;
- b=EvNMtevTLyveqBaeIqVMe+MMvWtV6DmNsqsi6Bt2De+Kgi3TcaycKIWSuGVkrUEF9Id0/P2L5eBUYq+FJY+T6MQ1vnKzqUV9TB+3dMbQ3jfMvB6OH0noNsg+YzZUdExgTfQ7CWXrzOMSZ73h2PCl6O1BIzBuKXtlwyLF4b6o5P4=
-Received: from VI1PR07MB3165.eurprd07.prod.outlook.com (10.175.243.15) by
- VI1PR07MB4143.eurprd07.prod.outlook.com (52.134.26.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Mon, 3 Jun 2019 13:11:45 +0000
-Received: from VI1PR07MB3165.eurprd07.prod.outlook.com
- ([fe80::1403:5377:c11d:a41a]) by VI1PR07MB3165.eurprd07.prod.outlook.com
- ([fe80::1403:5377:c11d:a41a%7]) with mapi id 15.20.1965.011; Mon, 3 Jun 2019
- 13:11:45 +0000
-From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Index: AQHVGg3k2XulVXbiDkOq27wOexnTBw==
-Date:   Mon, 3 Jun 2019 13:11:45 +0000
-Message-ID: <5ecab585-7e74-ea9f-8d33-93ab024e1a14@nokia.com>
-References: <20190530064509.GA13789@localhost.localdomain>
-In-Reply-To: <20190530064509.GA13789@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [131.228.32.166]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-clientproxiedby: HE1PR0102CA0005.eurprd01.prod.exchangelabs.com
- (2603:10a6:7:14::18) To VI1PR07MB3165.eurprd07.prod.outlook.com
- (2603:10a6:802:21::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=alexander.sverdlin@nokia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b7fbd54-94de-4f94-a5b4-08d6e8250727
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR07MB4143;
-x-ms-traffictypediagnostic: VI1PR07MB4143:
-x-microsoft-antispam-prvs: <VI1PR07MB41432681F33B862D570781B888140@VI1PR07MB4143.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(31686004)(76176011)(71190400001)(71200400001)(65826007)(25786009)(64126003)(486006)(26005)(446003)(11346002)(476003)(2616005)(52116002)(186003)(102836004)(99286004)(386003)(6506007)(53546011)(14444005)(256004)(4326008)(8676002)(31696002)(508600001)(6246003)(6512007)(7736002)(54906003)(316002)(81156014)(81166006)(66446008)(64756008)(66556008)(66476007)(66946007)(58126008)(73956011)(86362001)(5660300002)(110136005)(2906002)(53936002)(305945005)(229853002)(36756003)(8936002)(3846002)(6486002)(66066001)(6116002)(6436002)(65806001)(14454004)(65956001)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4143;H:VI1PR07MB3165.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V6qSizpizBOibPu2/FgKD41wPtxgWjQDQiLGlSSXAjMTlAxvi2vKAypn5zki6T8hSAhC0W6KR534+tCL4Dsc7+Vi5mUC1QH7BjhTcBPei+/raGdFG+UHuuiV9UkmV5HaE+eFvtqVTSicbUgbmYOJDnqAuKp699oQUZ/9LvPg/GN7QRPlYO+2iI3z4/AhXEcCLCn5nhPqHDstzXwzXSs3THWWIW6TlA4rpJgktyUNRiL0Nv7YmH6yRITe6iycCEsTcweTmrZik4HajEQh131j/SRHJtOZHdqT3SrxKbjO+6B8H6SS7q84GHMT+Ya/6Zl+fS5jGrzAHHQzHSTiIjafAw6WfvqdzkYM8RWQ71TcCIJNSavy+ROhcnShP8Vtr67bQGjEnwajMStiVOHfPm0euiuq0LjfXDlRKncpTPiMHqQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D6F218BE1CECF048AF31EE8BB5E643BD@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 3 Jun 2019 09:12:25 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45431 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfFCNMY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 09:12:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DCBk2605588
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 3 Jun 2019 06:12:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DCBk2605588
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559567532;
+        bh=BhiN52TB/dQyXVGItsz0PQw8WUZoC2aLZY7X0lw1MVo=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=N84DjHMXIkkUgKcZpRUceMeU3oQrnDsq7pevOrqMgZjB9547bi47tjGQWvcfSpK+J
+         tWh3gvOGrnK6sc3ymB91gy5yEYm8g/gNPkkgfTeqj8iqIL4Cb987H1LO0EQY6fMJfR
+         lfEXZ8+qUyMvgls567w9smPumsBDmSNbRwJg6K33XYKxj2k594naHeCrja4n2akC8l
+         36m/0jsD/0n1T95YAkZWfek83gexT4slJAzn+EHVD96ICzJlUcTBGRd+wlxOrd+7xd
+         bdoXGkhKh2A5yIx83KVECnvaT2NdnOGF3ZdMIf0DM8L/VN5ycyhgxkPTVb6Ta2hVMZ
+         wIgZOnF9+3D3A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DCBtD605585;
+        Mon, 3 Jun 2019 06:12:11 -0700
+Date:   Mon, 3 Jun 2019 06:12:11 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Yuyang Du <tipbot@zytor.com>
+Message-ID: <tip-01bb6f0af992a1e6b7797d92fd31a7864872e347@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, hpa@zytor.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, duyuyang@gmail.com
+Reply-To: tglx@linutronix.de, duyuyang@gmail.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+          peterz@infradead.org, torvalds@linux-foundation.org
+In-Reply-To: <20190506081939.74287-10-duyuyang@gmail.com>
+References: <20190506081939.74287-10-duyuyang@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Change the range of class_idx
+ in held_lock struct
+Git-Commit-ID: 01bb6f0af992a1e6b7797d92fd31a7864872e347
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b7fbd54-94de-4f94-a5b4-08d6e8250727
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 13:11:45.3525
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: alexander.sverdlin@nokia.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4143
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkhDQoNCk9uIDMwLzA1LzIwMTkgMDg6NDUsIEFkYW1za2ksIEtyenlzenRvZiAoTm9raWEgLSBQ
-TC9Xcm9jbGF3KSB3cm90ZToNCj4gVGhlIG9wZXJhdGlvbiBkb25lIGluIHRoZSBwbWJ1c191cGRh
-dGVfZmFuKCkgZnVuY3Rpb24gaXMgYQ0KPiByZWFkLW1vZGlmeS13cml0ZSBvcGVyYXRpb24gYnV0
-IGl0IGxhY2tzIGFueSBraW5kIG9mIGxvY2sgcHJvdGVjdGlvbg0KPiB3aGljaCBtYXkgY2F1c2Ug
-cHJvYmxlbXMgaWYgcnVuIG1vcmUgdGhhbiBvbmNlIHNpbXVsdGFuZW91c2x5LiBUaGlzDQo+IHBh
-dGNoIHVzZXMgYW4gZXhpc3RpbmcgdXBkYXRlX2xvY2sgbXV0ZXggdG8gZml4IHRoaXMgcHJvYmxl
-bS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBBZGFtc2tpIDxrcnp5c3p0b2YuYWRh
-bXNraUBub2tpYS5jb20+DQo+IC0tLQ0KPiANCj4gSSdtIHJlc2VuZGluZyB0aGlzIHBhdGNoIHRv
-IHByb3BlciByZWNpcGllbnRzIHRoaXMgdGltZS4gU29ycnkgaWYgdGhlDQo+IHByZXZpb3VzIHN1
-Ym1pc3Npb24gY29uZnVzZWQgYW55Ym9keS4NCj4gDQo+ICBkcml2ZXJzL2h3bW9uL3BtYnVzL3Bt
-YnVzX2NvcmUuYyB8IDExICsrKysrKysrLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRp
-b25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdtb24v
-cG1idXMvcG1idXNfY29yZS5jIGIvZHJpdmVycy9od21vbi9wbWJ1cy9wbWJ1c19jb3JlLmMNCj4g
-aW5kZXggZWY3ZWU5MGVlNzg1Li45NGFkYmVkZTc5MTIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-aHdtb24vcG1idXMvcG1idXNfY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvaHdtb24vcG1idXMvcG1i
-dXNfY29yZS5jDQo+IEBAIC0yNjgsNiArMjY4LDcgQEAgaW50IHBtYnVzX3VwZGF0ZV9mYW4oc3Ry
-dWN0IGkyY19jbGllbnQgKmNsaWVudCwgaW50IHBhZ2UsIGludCBpZCwNCj4gIAlpbnQgcnY7DQo+
-ICAJdTggdG87DQo+ICANCj4gKwltdXRleF9sb2NrKCZkYXRhLT51cGRhdGVfbG9jayk7DQo+ICAJ
-ZnJvbSA9IHBtYnVzX3JlYWRfYnl0ZV9kYXRhKGNsaWVudCwgcGFnZSwNCj4gIAkJCQkgICAgcG1i
-dXNfZmFuX2NvbmZpZ19yZWdpc3RlcnNbaWRdKTsNCj4gIAlpZiAoZnJvbSA8IDApDQo+IEBAIC0y
-NzgsMTEgKzI3OSwxNSBAQCBpbnQgcG1idXNfdXBkYXRlX2ZhbihzdHJ1Y3QgaTJjX2NsaWVudCAq
-Y2xpZW50LCBpbnQgcGFnZSwgaW50IGlkLA0KPiAgCQlydiA9IHBtYnVzX3dyaXRlX2J5dGVfZGF0
-YShjbGllbnQsIHBhZ2UsDQo+ICAJCQkJCSAgIHBtYnVzX2Zhbl9jb25maWdfcmVnaXN0ZXJzW2lk
-XSwgdG8pOw0KPiAgCQlpZiAocnYgPCAwKQ0KPiAtCQkJcmV0dXJuIHJ2Ow0KPiArCQkJZ290byBv
-dXQ7DQo+ICAJfQ0KPiAgDQo+IC0JcmV0dXJuIF9wbWJ1c193cml0ZV93b3JkX2RhdGEoY2xpZW50
-LCBwYWdlLA0KPiAtCQkJCSAgICAgIHBtYnVzX2Zhbl9jb21tYW5kX3JlZ2lzdGVyc1tpZF0sIGNv
-bW1hbmQpOw0KPiArCXJ2ID0gX3BtYnVzX3dyaXRlX3dvcmRfZGF0YShjbGllbnQsIHBhZ2UsDQo+
-ICsJCQkJICAgIHBtYnVzX2Zhbl9jb21tYW5kX3JlZ2lzdGVyc1tpZF0sIGNvbW1hbmQpOw0KPiAr
-DQo+ICtvdXQ6DQo+ICsJbXV0ZXhfbG9jaygmZGF0YS0+dXBkYXRlX2xvY2spOw0KDQpUaGlzIGhh
-cyB0byBiZSBtdXRleF91bmxvY2soKS4uLg0KDQo+ICsJcmV0dXJuIHJ2Ow0KPiAgfQ0KPiAgRVhQ
-T1JUX1NZTUJPTF9HUEwocG1idXNfdXBkYXRlX2Zhbik7DQoNCi0tIA0KQmVzdCByZWdhcmRzLA0K
-QWxleGFuZGVyIFN2ZXJkbGluLg0K
+Commit-ID:  01bb6f0af992a1e6b7797d92fd31a7864872e347
+Gitweb:     https://git.kernel.org/tip/01bb6f0af992a1e6b7797d92fd31a7864872e347
+Author:     Yuyang Du <duyuyang@gmail.com>
+AuthorDate: Mon, 6 May 2019 16:19:25 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 3 Jun 2019 11:55:43 +0200
+
+locking/lockdep: Change the range of class_idx in held_lock struct
+
+held_lock->class_idx is used to point to the class of the held lock. The
+index is shifted by 1 to make index 0 mean no class, which results in class
+index shifting back and forth but is not worth doing so.
+
+The reason is: (1) there will be no "no-class" held_lock to begin with, and
+(2) index 0 seems to be used for error checking, but if something wrong
+indeed happened, the index can't be counted on to distinguish it as that
+something won't set the class_idx to 0 on purpose to tell us it is wrong.
+
+Therefore, change the index to start from 0. This saves a lot of
+back-and-forth shifts and a class slot back to lock_classes.
+
+Since index 0 is now used for lock class, we change the initial chain key to
+-1 to avoid key collision, which is due to the fact that __jhash_mix(0, 0, 0) = 0.
+Actually, the initial chain key can be any arbitrary value other than 0.
+
+In addition, a bitmap is maintained to keep track of the used lock classes,
+and we check the validity of the held lock against that bitmap.
+
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bvanassche@acm.org
+Cc: frederic@kernel.org
+Cc: ming.lei@redhat.com
+Cc: will.deacon@arm.com
+Link: https://lkml.kernel.org/r/20190506081939.74287-10-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/lockdep.h  | 14 ++++++------
+ kernel/locking/lockdep.c | 59 ++++++++++++++++++++++++++++++++----------------
+ 2 files changed, 46 insertions(+), 27 deletions(-)
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index d4e69595dbd4..30a0f81aa130 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -223,13 +223,8 @@ struct lock_chain {
+ };
+ 
+ #define MAX_LOCKDEP_KEYS_BITS		13
+-/*
+- * Subtract one because we offset hlock->class_idx by 1 in order
+- * to make 0 mean no class. This avoids overflowing the class_idx
+- * bitfield and hitting the BUG in hlock_class().
+- */
+-#define MAX_LOCKDEP_KEYS		((1UL << MAX_LOCKDEP_KEYS_BITS) - 1)
+-#define INITIAL_CHAIN_KEY		0
++#define MAX_LOCKDEP_KEYS		(1UL << MAX_LOCKDEP_KEYS_BITS)
++#define INITIAL_CHAIN_KEY		-1
+ 
+ struct held_lock {
+ 	/*
+@@ -254,6 +249,11 @@ struct held_lock {
+ 	u64 				waittime_stamp;
+ 	u64				holdtime_stamp;
+ #endif
++	/*
++	 * class_idx is zero-indexed; it points to the element in
++	 * lock_classes this held lock instance belongs to. class_idx is in
++	 * the range from 0 to (MAX_LOCKDEP_KEYS-1) inclusive.
++	 */
+ 	unsigned int			class_idx:MAX_LOCKDEP_KEYS_BITS;
+ 	/*
+ 	 * The lock-stack is unified in that the lock chains of interrupt
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 9edf6f12b711..3eecae315885 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -151,17 +151,28 @@ unsigned long nr_lock_classes;
+ static
+ #endif
+ struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
++static DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
+ 
+ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+ {
+-	if (!hlock->class_idx) {
++	unsigned int class_idx = hlock->class_idx;
++
++	/* Don't re-read hlock->class_idx, can't use READ_ONCE() on bitfield */
++	barrier();
++
++	if (!test_bit(class_idx, lock_classes_in_use)) {
+ 		/*
+ 		 * Someone passed in garbage, we give up.
+ 		 */
+ 		DEBUG_LOCKS_WARN_ON(1);
+ 		return NULL;
+ 	}
+-	return lock_classes + hlock->class_idx - 1;
++
++	/*
++	 * At this point, if the passed hlock->class_idx is still garbage,
++	 * we just have to live with it
++	 */
++	return lock_classes + class_idx;
+ }
+ 
+ #ifdef CONFIG_LOCK_STAT
+@@ -590,19 +601,22 @@ static void print_lock(struct held_lock *hlock)
+ 	/*
+ 	 * We can be called locklessly through debug_show_all_locks() so be
+ 	 * extra careful, the hlock might have been released and cleared.
++	 *
++	 * If this indeed happens, lets pretend it does not hurt to continue
++	 * to print the lock unless the hlock class_idx does not point to a
++	 * registered class. The rationale here is: since we don't attempt
++	 * to distinguish whether we are in this situation, if it just
++	 * happened we can't count on class_idx to tell either.
+ 	 */
+-	unsigned int class_idx = hlock->class_idx;
++	struct lock_class *lock = hlock_class(hlock);
+ 
+-	/* Don't re-read hlock->class_idx, can't use READ_ONCE() on bitfields: */
+-	barrier();
+-
+-	if (!class_idx || (class_idx - 1) >= MAX_LOCKDEP_KEYS) {
++	if (!lock) {
+ 		printk(KERN_CONT "<RELEASED>\n");
+ 		return;
+ 	}
+ 
+ 	printk(KERN_CONT "%p", hlock->instance);
+-	print_lock_name(lock_classes + class_idx - 1);
++	print_lock_name(lock);
+ 	printk(KERN_CONT ", at: %pS\n", (void *)hlock->acquire_ip);
+ }
+ 
+@@ -861,7 +875,7 @@ static bool check_lock_chain_key(struct lock_chain *chain)
+ 	int i;
+ 
+ 	for (i = chain->base; i < chain->base + chain->depth; i++)
+-		chain_key = iterate_chain_key(chain_key, chain_hlocks[i] + 1);
++		chain_key = iterate_chain_key(chain_key, chain_hlocks[i]);
+ 	/*
+ 	 * The 'unsigned long long' casts avoid that a compiler warning
+ 	 * is reported when building tools/lib/lockdep.
+@@ -1136,6 +1150,7 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
+ 		return NULL;
+ 	}
+ 	nr_lock_classes++;
++	__set_bit(class - lock_classes, lock_classes_in_use);
+ 	debug_atomic_inc(nr_unused_locks);
+ 	class->key = key;
+ 	class->name = lock->name;
+@@ -2550,7 +2565,7 @@ static void print_chain_keys_chain(struct lock_chain *chain)
+ 	printk("depth: %u\n", chain->depth);
+ 	for (i = 0; i < chain->depth; i++) {
+ 		class_id = chain_hlocks[chain->base + i];
+-		chain_key = print_chain_key_iteration(class_id + 1, chain_key);
++		chain_key = print_chain_key_iteration(class_id, chain_key);
+ 
+ 		print_lock_name(lock_classes + class_id);
+ 		printk("\n");
+@@ -2601,7 +2616,7 @@ static int check_no_collision(struct task_struct *curr,
+ 	}
+ 
+ 	for (j = 0; j < chain->depth - 1; j++, i++) {
+-		id = curr->held_locks[i].class_idx - 1;
++		id = curr->held_locks[i].class_idx;
+ 
+ 		if (DEBUG_LOCKS_WARN_ON(chain_hlocks[chain->base + j] != id)) {
+ 			print_collision(curr, hlock, chain);
+@@ -2684,7 +2699,7 @@ static inline int add_chain_cache(struct task_struct *curr,
+ 	if (likely(nr_chain_hlocks + chain->depth <= MAX_LOCKDEP_CHAIN_HLOCKS)) {
+ 		chain->base = nr_chain_hlocks;
+ 		for (j = 0; j < chain->depth - 1; j++, i++) {
+-			int lock_id = curr->held_locks[i].class_idx - 1;
++			int lock_id = curr->held_locks[i].class_idx;
+ 			chain_hlocks[chain->base + j] = lock_id;
+ 		}
+ 		chain_hlocks[chain->base + j] = class - lock_classes;
+@@ -2864,10 +2879,12 @@ static void check_chain_key(struct task_struct *curr)
+ 				(unsigned long long)hlock->prev_chain_key);
+ 			return;
+ 		}
++
+ 		/*
+-		 * Whoops ran out of static storage again?
++		 * hlock->class_idx can't go beyond MAX_LOCKDEP_KEYS, but is
++		 * it registered lock class index?
+ 		 */
+-		if (DEBUG_LOCKS_WARN_ON(hlock->class_idx > MAX_LOCKDEP_KEYS))
++		if (DEBUG_LOCKS_WARN_ON(!test_bit(hlock->class_idx, lock_classes_in_use)))
+ 			return;
+ 
+ 		if (prev_hlock && (prev_hlock->irq_context !=
+@@ -3715,7 +3732,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	if (DEBUG_LOCKS_WARN_ON(depth >= MAX_LOCK_DEPTH))
+ 		return 0;
+ 
+-	class_idx = class - lock_classes + 1;
++	class_idx = class - lock_classes;
+ 
+ 	if (depth) {
+ 		hlock = curr->held_locks + depth - 1;
+@@ -3777,9 +3794,9 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	 * the hash, not class->key.
+ 	 */
+ 	/*
+-	 * Whoops, we did it again.. ran straight out of our static allocation.
++	 * Whoops, we did it again.. class_idx is invalid.
+ 	 */
+-	if (DEBUG_LOCKS_WARN_ON(class_idx > MAX_LOCKDEP_KEYS))
++	if (DEBUG_LOCKS_WARN_ON(!test_bit(class_idx, lock_classes_in_use)))
+ 		return 0;
+ 
+ 	chain_key = curr->curr_chain_key;
+@@ -3894,7 +3911,7 @@ static int match_held_lock(const struct held_lock *hlock,
+ 		if (DEBUG_LOCKS_WARN_ON(!hlock->nest_lock))
+ 			return 0;
+ 
+-		if (hlock->class_idx == class - lock_classes + 1)
++		if (hlock->class_idx == class - lock_classes)
+ 			return 1;
+ 	}
+ 
+@@ -3988,7 +4005,7 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 
+ 	lockdep_init_map(lock, name, key, 0);
+ 	class = register_lock_class(lock, subclass, 0);
+-	hlock->class_idx = class - lock_classes + 1;
++	hlock->class_idx = class - lock_classes;
+ 
+ 	curr->lockdep_depth = i;
+ 	curr->curr_chain_key = hlock->prev_chain_key;
+@@ -4638,7 +4655,7 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
+ recalc:
+ 	chain_key = INITIAL_CHAIN_KEY;
+ 	for (i = chain->base; i < chain->base + chain->depth; i++)
+-		chain_key = iterate_chain_key(chain_key, chain_hlocks[i] + 1);
++		chain_key = iterate_chain_key(chain_key, chain_hlocks[i]);
+ 	if (chain->depth && chain->chain_key == chain_key)
+ 		return;
+ 	/* Overwrite the chain key for concurrent RCU readers. */
+@@ -4712,6 +4729,7 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
+ 		WRITE_ONCE(class->key, NULL);
+ 		WRITE_ONCE(class->name, NULL);
+ 		nr_lock_classes--;
++		__clear_bit(class - lock_classes, lock_classes_in_use);
+ 	} else {
+ 		WARN_ONCE(true, "%s() failed for class %s\n", __func__,
+ 			  class->name);
+@@ -5057,6 +5075,7 @@ void __init lockdep_init(void)
+ 
+ 	printk(" memory used by lock dependency info: %zu kB\n",
+ 	       (sizeof(lock_classes) +
++		sizeof(lock_classes_in_use) +
+ 		sizeof(classhash_table) +
+ 		sizeof(list_entries) +
+ 		sizeof(list_entries_in_use) +
