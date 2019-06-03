@@ -2,183 +2,114 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BF5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965DDC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADAD272B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686F2272AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OIkuKoL6"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bEsneHSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfFCN22 (ORCPT
+        id S1728249AbfFCN3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:28:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48181 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfFCN22 (ORCPT
+        Mon, 3 Jun 2019 09:29:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42846 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfFCN3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:28:28 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DSHA9609665
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:28:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DSHA9609665
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559568498;
-        bh=gbQJThFwkE8MxLw8eOWCZ4O/ukMLlgODAsDr5hpi4vk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=OIkuKoL6ugK9agu+eMEchfRk2JdnyUAbLwjlRiF82/52ETt30KZHcCXiGpJIVPmhl
-         KNpqTt7poOSreAZavGsMXlQxooBmxzZNogX04jqdJrt1XDt8c/VBbRbW+TEDsalJP1
-         3Gw8p4Ns80ihqhqDt78IOe8jFwOa2Wxtf2jpo0rAECY5JkBx+nuwphtc3RnF5+x3Wq
-         EShLhKeZ35SwQpppZx7VtN2O7sANCe3zT7gR1IIqppgyj0Fqg5KGLWovwldI5yUeE+
-         ywnFAPVX2cwNuBnOZIk1Y312Sw7MBYQreqfNp/RldXqVpjCG6Nn/8tEFQOwNSZ8x+n
-         1C6sqZUpsF2xw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DSGQC609662;
-        Mon, 3 Jun 2019 06:28:16 -0700
-Date:   Mon, 3 Jun 2019 06:28:16 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-3d5672735b2348f5b13679a27f90c0847d22125d@git.kernel.org>
-Cc:     peterz@infradead.org, hpa@zytor.com, gregkh@linuxfoundation.org,
-        mingo@kernel.org, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, acme@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        torvalds@linux-foundation.org
-Reply-To: hpa@zytor.com, peterz@infradead.org, mingo@kernel.org,
-          gregkh@linuxfoundation.org, tglx@linutronix.de, acme@kernel.org,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          jolsa@kernel.org
-In-Reply-To: <20190512155518.21468-6-jolsa@kernel.org>
-References: <20190512155518.21468-6-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86: Add is_visible attribute_group callback
- for base events
-Git-Commit-ID: 3d5672735b2348f5b13679a27f90c0847d22125d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
+        Mon, 3 Jun 2019 09:29:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so9268659qtk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 06:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mZev96uN8n10EvmVIXtu7wkuFnMrbFGBNKk++AfTZ1E=;
+        b=bEsneHSjj52GjgF8l8Dc2ToLi/EkgcaZmpYGfwkd8iqgakVeS0vHif1pKbYP6+gKSY
+         ci2/zAAk6rqRWnZJuMlhMXvbWcLTrcC7HNxk4gahYTMl8/+Ym9xGS8ERPJVv0goMsep7
+         iyu0h8/ch4w8JwxB1YZWIfsPb9mV5CG8m0uv0VmkAxyFw64bIxgYGyzcrjWvtCveRPPY
+         zlmWzEb9vQmOo5A/Oc+w5h4vTIPZdKtp+/ZsSkCCTsGPAa82mmsg3MtDEsfS65YDOHcS
+         IRxwJvUDOsGZ9hXQZTwk88dYyoVW+X1wlYM9F5F5nvaD+F5VS4dqr1fzHgdVMaizSwO1
+         BG+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mZev96uN8n10EvmVIXtu7wkuFnMrbFGBNKk++AfTZ1E=;
+        b=Ty6kMPrWOaqMb8JNEZ5xqWQmiH16FaD3yeqbEemCuW+x8meKutVCXV9PWV2agI63rb
+         tzz8XyrizkccZ8mRDnlvyUhvz9yf9Gb1tU/i8yhql6CiJhnbT5kmnPuboRljuFA52bhO
+         U5bduF0qOhShGjYgF3hNX4a3eor4lgZWR20sK8YhNqSJWtFIVzqO4Uaxl/67YRk0W1XM
+         8qhk/j1TypbhHTjg+xrDDbufYefSdcNKOCMTZLInGcUr9hZWCz/xBj7b7XR6E7HNoo7V
+         qlHeHfGN6IcUMde/BjNHR0OtfmJlsEPc5ZsP2W9AhH2VbYtytIW1WrzSdzAulml24PCI
+         vYow==
+X-Gm-Message-State: APjAAAUKGHTVsIMhfD11LWXo4HUul1FxpsvXpSSpb0v68jCjqv9HUF9R
+        AFKtTUm628lcQz3L5OX37FCgSQ==
+X-Google-Smtp-Source: APXvYqye0Wu5YYJf2p5hR3aP5of+NBIqggqx412TOzc22Tu4TSfg9fOF7G4PVGU5gtTBViT3vCctxQ==
+X-Received: by 2002:a0c:bf4a:: with SMTP id b10mr21132334qvj.120.1559568572920;
+        Mon, 03 Jun 2019 06:29:32 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y29sm9931599qkj.8.2019.06.03.06.29.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 06:29:32 -0700 (PDT)
+Message-ID: <1559568571.6132.42.camel@lca.pw>
+Subject: Re: [PATCH] iommu: replace single-char identifiers in macros
+From:   Qian Cai <cai@lca.pw>
+To:     Robin Murphy <robin.murphy@arm.com>, jroedel@suse.de
+Cc:     akpm@linux-foundation.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 03 Jun 2019 09:29:31 -0400
+In-Reply-To: <fe5e8da4-38d2-c663-c2e2-70e6d4f7640f@arm.com>
+References: <1559566783-13627-1-git-send-email-cai@lca.pw>
+         <fe5e8da4-38d2-c663-c2e2-70e6d4f7640f@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3d5672735b2348f5b13679a27f90c0847d22125d
-Gitweb:     https://git.kernel.org/tip/3d5672735b2348f5b13679a27f90c0847d22125d
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 12 May 2019 17:55:14 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 3 Jun 2019 11:58:23 +0200
+On Mon, 2019-06-03 at 14:07 +0100, Robin Murphy wrote:
+> On 03/06/2019 13:59, Qian Cai wrote:
+> > There are a few macros in IOMMU have single-char identifiers make the
+> > code hard to read and debug. Replace them with meaningful names.
+> > 
+> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >   include/linux/dmar.h | 14 ++++++++------
+> >   1 file changed, 8 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+> > index f8af1d770520..eb634912f475 100644
+> > --- a/include/linux/dmar.h
+> > +++ b/include/linux/dmar.h
+> > @@ -104,12 +104,14 @@ static inline bool dmar_rcu_check(void)
+> >   
+> >   #define	dmar_rcu_dereference(p)	rcu_dereference_check((p),
+> > dmar_rcu_check())
+> >   
+> > -#define	for_each_dev_scope(a, c, p, d)	\
+> > -	for ((p) = 0; ((d) = (p) < (c) ? dmar_rcu_dereference((a)[(p)].dev)
+> > : \
+> > -			NULL, (p) < (c)); (p)++)
+> > -
+> > -#define	for_each_active_dev_scope(a, c, p, d)	\
+> > -	for_each_dev_scope((a), (c), (p), (d))	if (!(d)) { continue;
+> > } else
+> > +#define for_each_dev_scope(devs, cnt, i, tmp)				
+> > \
+> > +	for ((i) = 0; ((tmp) = (i) < (cnt) ?				
+> > \
+> 
+> Given that "tmp" actually appears to be some sort of device cursor, I'm 
+> not sure that that naming really achieves the stated goal of clarity :/
 
-perf/x86: Add is_visible attribute_group callback for base events
-
-We dont need to pre-filter out unsupported base events,
-we can just use its group's is_visible function to do this.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190512155518.21468-6-jolsa@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/core.c | 53 ++++++++++++++------------------------------------
- 1 file changed, 15 insertions(+), 38 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index db815ceb5017..b831091d4c10 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1618,42 +1618,6 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
- 	.attrs = NULL,
- };
- 
--/*
-- * Remove all undefined events (x86_pmu.event_map(id) == 0)
-- * out of events_attr attributes.
-- */
--static void __init filter_events(struct attribute **attrs)
--{
--	struct device_attribute *d;
--	struct perf_pmu_events_attr *pmu_attr;
--	int offset = 0;
--	int i, j;
--
--	for (i = 0; attrs[i]; i++) {
--		d = (struct device_attribute *)attrs[i];
--		pmu_attr = container_of(d, struct perf_pmu_events_attr, attr);
--		/* str trumps id */
--		if (pmu_attr->event_str)
--			continue;
--		if (x86_pmu.event_map(i + offset))
--			continue;
--
--		for (j = i; attrs[j]; j++)
--			attrs[j] = attrs[j + 1];
--
--		/* Check the shifted attr. */
--		i--;
--
--		/*
--		 * event_map() is index based, the attrs array is organized
--		 * by increasing event index. If we shift the events, then
--		 * we need to compensate for the event_map(), otherwise
--		 * we are looking up the wrong event in the map
--		 */
--		offset++;
--	}
--}
--
- /* Merge two pointer arrays */
- __init struct attribute **merge_attr(struct attribute **a, struct attribute **b)
- {
-@@ -1744,9 +1708,24 @@ static struct attribute *events_attr[] = {
- 	NULL,
- };
- 
-+/*
-+ * Remove all undefined events (x86_pmu.event_map(id) == 0)
-+ * out of events_attr attributes.
-+ */
-+static umode_t
-+is_visible(struct kobject *kobj, struct attribute *attr, int idx)
-+{
-+	struct perf_pmu_events_attr *pmu_attr;
-+
-+	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
-+	/* str trumps id */
-+	return pmu_attr->event_str || x86_pmu.event_map(idx) ? attr->mode : 0;
-+}
-+
- static struct attribute_group x86_pmu_events_group __ro_after_init = {
- 	.name = "events",
- 	.attrs = events_attr,
-+	.is_visible = is_visible,
- };
- 
- ssize_t x86_event_sysfs_show(char *page, u64 config, u64 event)
-@@ -1852,8 +1831,6 @@ static int __init init_hw_perf_events(void)
- 
- 	if (!x86_pmu.events_sysfs_show)
- 		x86_pmu_events_group.attrs = &empty_attrs;
--	else
--		filter_events(x86_pmu_events_group.attrs);
- 
- 	if (x86_pmu.attrs) {
- 		struct attribute **tmp;
+"tmp" is used in the callers everywhere though, although I suppose something
+like "tmp_dev" can be used if you prefer.
