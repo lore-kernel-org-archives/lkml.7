@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A6AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B17C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798762786B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E9D2786B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfFCPwF (ORCPT
+        id S1729525AbfFCPwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:52:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53974 "EHLO
+        Mon, 3 Jun 2019 11:52:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53998 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbfFCPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:52:03 -0400
+        id S1729486AbfFCPwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:52:06 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A5AB169E;
-        Mon,  3 Jun 2019 08:52:03 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F030D15AB;
+        Mon,  3 Jun 2019 08:52:05 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E25863F246;
-        Mon,  3 Jun 2019 08:52:01 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BD4693F246;
+        Mon,  3 Jun 2019 08:52:04 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [RFC PATCH 42/57] drivers: regulator: Use class_find_device_by_of_node helper
-Date:   Mon,  3 Jun 2019 16:50:08 +0100
-Message-Id: <1559577023-558-43-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org
+Subject: [RFC PATCH 44/57] drivers: usb : Use class_find_device_by_fwnode() helper
+Date:   Mon,  3 Jun 2019 16:50:10 +0100
+Message-Id: <1559577023-558-45-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
@@ -41,37 +42,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic helper to find a device matching the of_node.
+Reuse the generic helper to find a device by fwnode handle.
 
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: linux-usb@vger.kernel.org
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/regulator/of_regulator.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/usb/roles/class.c | 8 +-------
+ drivers/usb/typec/class.c | 8 +-------
+ 2 files changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 0ead116..1485f6e 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -442,16 +442,11 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
- 	return NULL;
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 3dc78cb..be9b70c 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -85,11 +85,6 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
  }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
  
--static int of_node_match(struct device *dev, const void *data)
+-static int switch_fwnode_match(struct device *dev, const void *fwnode)
 -{
--	return dev->of_node == data;
+-	return dev_fwnode(dev) == fwnode;
 -}
 -
- struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
+ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 				   void *data)
+ {
+@@ -99,8 +94,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 		if (!fwnode_property_present(con->fwnode, con->id))
+ 			return NULL;
+ 
+-		dev = class_find_device(role_class, NULL, con->fwnode,
+-					switch_fwnode_match);
++		dev = class_find_device_by_fwnode(role_class, NULL, con->fwnode);
+ 	} else {
+ 		dev = class_find_device_by_name(role_class, NULL, con->endpoint[ep]);
+ 	}
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index c11cc5f..12f9759 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -205,11 +205,6 @@ static void typec_altmode_put_partner(struct altmode *altmode)
+ 	put_device(&adev->dev);
+ }
+ 
+-static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
+-{
+-	return dev_fwnode(dev) == fwnode;
+-}
+-
+ static void *typec_port_match(struct device_connection *con, int ep, void *data)
  {
  	struct device *dev;
+@@ -219,8 +214,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
+ 	 * we need to return ERR_PTR(-PROBE_DEFER) when there is no device.
+ 	 */
+ 	if (con->fwnode)
+-		return class_find_device(typec_class, NULL, con->fwnode,
+-					 typec_port_fwnode_match);
++		return class_find_device_by_fwnode(typec_class, NULL, con->fwnode);
  
--	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
-+	dev = class_find_device_by_of_node(&regulator_class, NULL, np);
+ 	dev = class_find_device_by_name(typec_class, NULL, con->endpoint[ep]);
  
- 	return dev ? dev_to_rdev(dev) : NULL;
- }
 -- 
 2.7.4
 
