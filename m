@@ -2,116 +2,144 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1F4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99148C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1DD25E7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCD027D78
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 08:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pnNjf5KD"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HKXKteSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfFCITA (ORCPT
+        id S1727695AbfFCIUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 04:19:00 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:19448 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727613AbfFCITA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:19:00 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x538IkUm010888
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 17:18:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x538IkUm010888
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559549927;
-        bh=HPTf6oudyVJie6W4n2JC8Ehi4mmYu1RfWzsjHZSF1Nw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pnNjf5KDT12l3ZioAUZ2TX56pm+GhyLm4r8TZ3ePCtvILwrK8w+ySNRu8F6sPQJhx
-         5C9+YCVvfWUx3Z+P5eOIkQ9K+jStkglBiZk3YC1O68GOMxYIW21WXcR4Q0w9lvUW/6
-         khsrFQpTMPb4rQsuRz+7gD2HENRD6bBPAhI1/ehQp7VvbrBsJK4uL8eqEVa07aNjRC
-         6Ad9ia/h5eJNlnYOnVzHT4Nv+z4vXCOB78T4OqMVAhtdW14ebAlxIeFQf+8U1T4MgM
-         C4sL184nxD97LwZgiFUKokfRRz4hQMkvrr1cxu/8gh4Temfy4lDZU2Az9YrsDJNENc
-         2D0BXRdYG7qgg==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id m8so1604441vsj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 01:18:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAWq48oXOQwCI7miAC2X15VZYD8i95OHjAHIESWlSJWa/Ah4jlrF
-        uhgoqFxCtuiCCuQGbkN9OcF7ZIQ137enkqjQSnA=
-X-Google-Smtp-Source: APXvYqyPKWuyt+23UjOXvdttDyJvl0sGlo6qbrT65pEc7Udo2uhEMRoX+aTnLLn90dlw2btiXBIVCCU1zkZbNIFqAU4=
-X-Received: by 2002:a67:b109:: with SMTP id w9mr1144657vsl.155.1559549926179;
- Mon, 03 Jun 2019 01:18:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190603063119.36544-1-abrodkin@synopsys.com>
-In-Reply-To: <20190603063119.36544-1-abrodkin@synopsys.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 3 Jun 2019 17:18:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASiHzar3JmzGB1fgUYUC91F3FPsALj3iMhANTjGgnux5w@mail.gmail.com>
-Message-ID: <CAK7LNASiHzar3JmzGB1fgUYUC91F3FPsALj3iMhANTjGgnux5w@mail.gmail.com>
-Subject: Re: [PATCH] ARC: build: Try to guess CROSS_COMPILE with cc-cross-prefix
-To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     arcml <linux-snps-arc@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Jun 2019 04:20:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6990 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfFCIUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 04:20:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45HSfc02pHz9typt;
+        Mon,  3 Jun 2019 10:20:24 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=HKXKteSe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zr09SGG8LgmD; Mon,  3 Jun 2019 10:20:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45HSfb66BNz9typs;
+        Mon,  3 Jun 2019 10:20:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1559550023; bh=+Dy4E19F4WwnCTLPgVfWD0Hzr4dGN4PVcDn0mVnwdX4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=HKXKteSeJVqAwnfV652Zlbx/9HBL6LLz0ee+FohA66lTxGEmoJRWHxZ/jlM8/vxiK
+         PJWHxCothJ27GwxxvTKjt9y8M/6WKV2tQBo7RjFfa2Dg3quIH/XYJnefgUrZ58gR0s
+         gflCbR5IEkusGiIW12lxirectA+CQXWuWyNcecxA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FB5E8B7B8;
+        Mon,  3 Jun 2019 10:20:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 0biTqtzBvmD1; Mon,  3 Jun 2019 10:20:28 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 596B48B7B1;
+        Mon,  3 Jun 2019 10:20:28 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2570168B20; Mon,  3 Jun 2019 08:20:28 +0000 (UTC)
+Message-Id: <56efc3b317622d5f607d1f7a35894b194c385492.1559549824.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3] powerpc: fix kexec failure on book3s/32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  3 Jun 2019 08:20:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexey,
+In the old days, _PAGE_EXEC didn't exist on 6xx aka book3s/32.
+Therefore, allthough __mapin_ram_chunk() was already mapping kernel
+text with PAGE_KERNEL_TEXT and the rest with PAGE_KERNEL, the entire
+memory was executable. Part of the memory (first 512kbytes) was
+mapped with BATs instead of page table, but it was also entirely
+mapped as executable.
 
-On Mon, Jun 3, 2019 at 3:42 PM Alexey Brodkin
-<Alexey.Brodkin@synopsys.com> wrote:
->
-> For a long time we used to hard-code CROSS_COMPILE prefix
-> for ARC until it started to cause problems, so we decided to
-> solely rely on CROSS_COMPILE externally set by a user:
-> commit 40660f1fcee8 ("ARC: build: Don't set CROSS_COMPILE in arch's Makefile").
->
-> While it works perfectly fine for build-systems where the prefix
-> gets defined anyways for us human beings it's quite an annoying
-> requirement especially given most of time the same one prefix
-> "arc-linux-" is all what we need.
->
-> It looks like finally we're getting the best of both worlds:
->  1. W/o cross-toolchain we still may install headers, build .dtb etc
->  2. W/ cross-toolchain get the kerne built with only ARCH=arc
->
-> Inspired by [1] & [2].
->
-> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-May/005788.html
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fc2b47b55f17
->
-> A side note: even though "cc-cross-prefix" does its job it pollutes
-> console with output of "which" for all the prefixes it didn't manage to find
-> a matching cross-compiler for like that:
-> | # ARCH=arc make defconfig
-> | which: no arceb-linux-gcc in (~/.local/bin:~/bin:/usr/bin:/usr/sbin)
-> | *** Default configuration is based on 'nsim_hs_defconfig'
+In commit 385e89d5b20f ("powerpc/mm: add exec protection on
+powerpc 603"), we started adding exec protection to some 6xx, namely
+the 603, for pages mapped via pagetables.
 
+Then, in commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+STRICT_KERNEL_RWX"), the exec protection was extended to BAT mapped
+memory, so that really only the kernel text could be executed.
 
-Oh really?
+The problem here is that kexec is based on copying some code into
+upper part of memory then executing it from there in order to install
+a fresh new kernel at its definitive location.
 
-masahiro@pug:~$ which arc-linux-gcc
-/home/masahiro/tools/arc/bin/arc-linux-gcc
-masahiro@pug:~$ which dummy-linux-gcc
-masahiro@pug:~$ echo $?
-1
+However, the code is position independant and first part of it is
+just there to deactivate the MMU and jump to the second part. So it
+is possible to run this first part inplace instead of running the
+copy. Once the MMU is off, there is no protection anymore and the
+second part of the code will just run as before.
 
+Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ Aaro, can you test this patch ? Thanks.
 
-When 'which' cannot find the given command,
-it does not print anything to stderr.
+ arch/powerpc/include/asm/kexec.h       | 3 +++
+ arch/powerpc/kernel/machine_kexec_32.c | 4 +++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Does it work differently on your machine?
-
-
-
-
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 4a585cba1787..c68476818753 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -94,6 +94,9 @@ static inline bool kdump_in_progress(void)
+ 	return crashing_cpu >= 0;
+ }
+ 
++void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_code_buffer,
++			 unsigned long start_address) __noreturn;
++
+ #ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops kexec_elf64_ops;
+ 
+diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/machine_kexec_32.c
+index affe5dcce7f4..2b160d68db49 100644
+--- a/arch/powerpc/kernel/machine_kexec_32.c
++++ b/arch/powerpc/kernel/machine_kexec_32.c
+@@ -30,7 +30,6 @@ typedef void (*relocate_new_kernel_t)(
+  */
+ void default_machine_kexec(struct kimage *image)
+ {
+-	extern const unsigned char relocate_new_kernel[];
+ 	extern const unsigned int relocate_new_kernel_size;
+ 	unsigned long page_list;
+ 	unsigned long reboot_code_buffer, reboot_code_buffer_phys;
+@@ -58,6 +57,9 @@ void default_machine_kexec(struct kimage *image)
+ 				reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
+ 	printk(KERN_INFO "Bye!\n");
+ 
++	if (!IS_ENABLED(CONFIG_FSL_BOOKE) && !IS_ENABLED(CONFIG_44x))
++		relocate_new_kernel(page_list, reboot_code_buffer_phys, image->start);
++
+ 	/* now call it */
+ 	rnk = (relocate_new_kernel_t) reboot_code_buffer;
+ 	(*rnk)(page_list, reboot_code_buffer_phys, image->start);
 -- 
-Best Regards
-Masahiro Yamada
+2.13.3
+
