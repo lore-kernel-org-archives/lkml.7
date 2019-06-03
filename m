@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E76C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26277C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236D527E7E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED59427E82
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553099;
-	bh=M70iY75YB6uFHmdLogfmBSj+VIsEpj2o7JIN4Idf4uY=;
+	s=default; t=1559553101;
+	bh=lfpX54i1ME6lCEhNG/tCmCnRWGzVpXWcT0EQVjwNNIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wuLJ9Q4bMEhX1+dHlwA6WB4w+cMO+3rbA0pvoxWOiro0Zwm5Qt++8PojQ29Mo4Oa+
-	 UKnEVn9WqJRrfc+0ZZMuHLKs4BZEU1lgw+02nGb+iJTKunH7sdbtX0+TG8RG9WgQbj
-	 AsTpxk0Jyy852MoAwNLxeti+kQJEp+ZlRpaRD7k0=
+	b=tjWv54AV9QBDxiJW8SobI5DmrEpJJjyl3LWiYznbtTovK57AJhAuUTShtYe32Yh/I
+	 DU0fvW9jpXSFU+JfXK3QntNMTJVOLm3+HxBS3zZh+LatFQFILUyGisKYaaZdEs2eWX
+	 YfxhS7bqSgHkjQxb5RVcRyIhlgIzOz6tILa+igxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfFCJLi (ORCPT
+        id S1728449AbfFCJLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728418AbfFCJLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:11:33 -0400
+        id S1727462AbfFCJLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:11:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7614A27E66;
-        Mon,  3 Jun 2019 09:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 196C427E69;
+        Mon,  3 Jun 2019 09:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553093;
-        bh=M70iY75YB6uFHmdLogfmBSj+VIsEpj2o7JIN4Idf4uY=;
+        s=default; t=1559553095;
+        bh=lfpX54i1ME6lCEhNG/tCmCnRWGzVpXWcT0EQVjwNNIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W8PL0J6o2z5gJ9cmOVK2OfGekSzw+HHLYUNmH2IrwQvg1AR5HL1J3zfKY67a1rt+G
-         mXkOr4Q+MMulIAWls9wi7h3KwCr2V7yrmT5XO07kPFUaAPF6gvYjcPfIXcaunAf+dK
-         shtA4LsJYuuuWY6rolyn7y52oE1USslu54S9KFQk=
+        b=A3bwt0ftu5WaKlB4LN+NmVMeqfbZD/gaF/gnZtyIgV85inNSSXrgJ6tITilbY85Pm
+         FR2jjBarx93uzmq2g48cG6MSRoERs+b9KS323RB0ZZuA4t3m7PHb1ZezjJ/TIFANYX
+         XrF26EByKC4yR3YabYtt11UnTmHGDLTZka3OyrEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Albert Astals Cid <aacid@kde.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jan=20Kl=C3=B6tzke?= <Jan.Kloetzke@preh.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 18/36] r8169: fix MAC address being lost in PCI D3
-Date:   Mon,  3 Jun 2019 11:09:06 +0200
-Message-Id: <20190603090522.186695240@linuxfoundation.org>
+Subject: [PATCH 5.0 19/36] usbnet: fix kernel crash after disconnect
+Date:   Mon,  3 Jun 2019 11:09:07 +0200
+Message-Id: <20190603090522.257021301@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
 References: <20190603090520.998342694@linuxfoundation.org>
@@ -60,45 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-[ Upstream commit 59715171fbd0172a579576f46821031800a63bc5 ]
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-(At least) RTL8168e forgets its MAC address in PCI D3. To fix this set
-the MAC address when resuming. For resuming from runtime-suspend we
-had this in place already, for resuming from S3/S5 it was missing.
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-The commit referenced as being fixed isn't wrong, it's just the first
-one where the patch applies cleanly.
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
 
-Fixes: 0f07bd850d36 ("r8169: use dev_get_drvdata where possible")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reported-by: Albert Astals Cid <aacid@kde.org>
-Tested-by: Albert Astals Cid <aacid@kde.org>
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
+
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
+
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/usbnet.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -6814,6 +6814,8 @@ static int rtl8169_resume(struct device
- 	struct net_device *dev = dev_get_drvdata(device);
- 	struct rtl8169_private *tp = netdev_priv(dev);
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -506,6 +506,7 @@ static int rx_submit (struct usbnet *dev
  
-+	rtl_rar_set(tp, dev->dev_addr);
-+
- 	clk_prepare_enable(tp->clk);
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1431,6 +1432,11 @@ netdev_tx_t usbnet_start_xmit (struct sk
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
+ 	}
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
++	}
  
- 	if (netif_running(dev))
-@@ -6847,6 +6849,7 @@ static int rtl8169_runtime_resume(struct
- {
- 	struct net_device *dev = dev_get_drvdata(device);
- 	struct rtl8169_private *tp = netdev_priv(dev);
-+
- 	rtl_rar_set(tp, dev->dev_addr);
- 
- 	if (!tp->TxDescArray)
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 
 
