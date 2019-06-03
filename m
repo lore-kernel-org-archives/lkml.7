@@ -2,148 +2,153 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D36C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693C3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C7C27EBE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4244C27EBE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 12:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="voXMYeul"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kNNcDuFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfFCMoJ (ORCPT
+        id S1728136AbfFCMoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 3 Jun 2019 08:44:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58728 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfFCMoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Jun 2019 08:44:09 -0400
-Received: from mail-eopbgr750085.outbound.protection.outlook.com ([40.107.75.85]:39902
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727870AbfFCMnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 08:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KUGFUHjDuC9zQr7lFbbDIbJGIAyqnoCUl1vz0YJezgQ=;
- b=voXMYeuleti8qC6bYC9T86dJIz9KK4vRoQK8YuHQ9GMQhrtaj6FUkdkzEkNcyxyVpXDMa0/Ju/cNNwaYvtURFZfQTQnSUA721SzYiMrNQJWRGR6wCUoWP5OAB6Bmj/UN9QCBpI2b9j5ZeRe23xEgQucKecvnwlBBY/xzKZs0DuE=
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
- MN2PR08MB5872.namprd08.prod.outlook.com (20.179.86.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.18; Mon, 3 Jun 2019 12:43:32 +0000
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::f0f7:f262:a3c6:ce23]) by MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::f0f7:f262:a3c6:ce23%7]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
- 12:43:32 +0000
-From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Yixun Lan <yixun.lan@amlogic.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 06/12] mtd: nand: Move ONFI code into nand/ directory
-Thread-Topic: [PATCH v3 06/12] mtd: nand: Move ONFI code into nand/ directory
-Thread-Index: AdUaBNtca2KDLPT1Q8mI6fj/40cXiw==
-Date:   Mon, 3 Jun 2019 12:43:32 +0000
-Message-ID: <MN2PR08MB5951D8BB1624C922812DB38EB8140@MN2PR08MB5951.namprd08.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sshivamurthy@micron.com; 
-x-originating-ip: [165.225.81.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7939fbf2-89a4-4d78-aa13-08d6e821167a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR08MB5872;
-x-ms-traffictypediagnostic: MN2PR08MB5872:|MN2PR08MB5872:
-x-microsoft-antispam-prvs: <MN2PR08MB5872E75243C5B860E2C851DBB8140@MN2PR08MB5872.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:651;
-x-forefront-prvs: 0057EE387C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(76116006)(14454004)(99286004)(7696005)(71200400001)(71190400001)(66446008)(5660300002)(9686003)(52536014)(73956011)(66946007)(66476007)(66066001)(66556008)(64756008)(2201001)(55236004)(6116002)(478600001)(316002)(102836004)(110136005)(2906002)(3846002)(6506007)(86362001)(7416002)(53936002)(486006)(26005)(2501003)(8936002)(476003)(33656002)(14444005)(256004)(8676002)(74316002)(81166006)(81156014)(6436002)(68736007)(7736002)(305945005)(186003)(25786009)(55016002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5872;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1wlj9f+DGpNcaLCEGDkK4qrMFf9kDneoUupWHf8OFKZM+nwxium/mOPHWV/RQcgNBxmvisLdyGpCX904ztXwmigw2xznh/aIgim+osbRFDsBL144IqfZ4d7sgGXN8cMm6lW4OP5kxuqXxX3/vZwNjiXSihtA+qWiqRGpZMLhnFr7iPq6nUCcfEp4Ox2ixop2XBKI0A0dKGjwM11WCARdi357tngUyeZbg3erO7WHx+rIOw6zC9VT7+BgFaDcOxC0EgrGqA7vJbeHzBCjUMVD3StB49ZQYJt6Mimdk3Y73FjFrtlT5Sqa1pg2uYn1GxJOOR//ye9oeBD8pE4ZVNkXphPHybYoPkSN0dZn8gH9xt4rSDPGju16adWS+dpLMjQRfzj2Q0AFFB+zH5KBP+RYFvQOTAtmyOdSjOLcb5hn3EQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GNP3D276BFtDK39lLo6rJPWpnwlFMjiWsjF1eSRNq9k=; b=kNNcDuFgjSY3vB9kQuAo8Ap2W
+        LZjW6ej3axV9mqJfEPOQFrK+BxXkmgewzcyXkXEFQ+hm/CEJTLQGKgVTB5n8CAXGs7hKVoBe6o+pD
+        NVaeCspnEij+mfEOtozvjOHEcxOtjBcWqhpbjaxRfUU87KZ+f0jBRMoRfpzzjfMHRhzDmN5dDbvY5
+        hlb6vN8a82YFI3+tI26fcMhxrMjTfMYk7TH61euKay+ArCHXVntMUgrvk28lZR4AlDs9wrqOPLlyv
+        R4QthQrORiZVlXpb3A5eNEt+oucLFWpIKVIvVP+yiz9BLLHGzskGur/XNFIBDQGswlMoikfSWafKe
+        meD4M2llg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hXmJn-0004ug-CU; Mon, 03 Jun 2019 12:44:03 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B738F20274AFF; Mon,  3 Jun 2019 14:44:01 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 14:44:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+Message-ID: <20190603124401.GB3463@hirez.programming.kicks-ass.net>
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7939fbf2-89a4-4d78-aa13-08d6e821167a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 12:43:32.6487
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sshivamurthy@micron.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5872
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move generic ONFI code to nand/ directory, which can be used by SPI
-NAND layer.
+On Mon, Jun 03, 2019 at 02:37:05PM +0200, Peter Zijlstra wrote:
 
-Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
----
- drivers/mtd/nand/Makefile                    | 2 +-
- drivers/mtd/nand/{raw/nand_onfi.c =3D> onfi.c} | 1 +
- drivers/mtd/nand/raw/Makefile                | 1 -
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/mtd/nand/{raw/nand_onfi.c =3D> onfi.c} (99%)
+> Anyway, Oleg, do you see anything blatantly buggered with this patch?
+> 
+> (the stats were already dodgy for rq-stats, this patch makes them dodgy
+> for task-stats too)
 
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 7ecd80c0a66e..221945c223c3 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
-=20
--nandcore-objs :=3D core.o bbt.o
-+nandcore-objs :=3D core.o bbt.o onfi.o
- obj-$(CONFIG_MTD_NAND_CORE) +=3D nandcore.o
-=20
- obj-y	+=3D onenand/
-diff --git a/drivers/mtd/nand/raw/nand_onfi.c b/drivers/mtd/nand/onfi.c
-similarity index 99%
-rename from drivers/mtd/nand/raw/nand_onfi.c
-rename to drivers/mtd/nand/onfi.c
-index 05592f815949..fad03bb4b1ea 100644
---- a/drivers/mtd/nand/raw/nand_onfi.c
-+++ b/drivers/mtd/nand/onfi.c
-@@ -177,3 +177,4 @@ int nand_onfi_detect(struct nand_device *base)
-=20
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(nand_onfi_detect);
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index ff7f90e9d417..9045336019d5 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -60,7 +60,6 @@ obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+=3D stm32_fmc2_nand.o
- obj-$(CONFIG_MTD_NAND_MESON)		+=3D meson_nand.o
-=20
- nand-objs :=3D nand_base.o nand_legacy.o nand_bbt.o nand_timings.o nand_id=
-s.o
--nand-objs +=3D nand_onfi.o
- nand-objs +=3D nand_jedec.o
- nand-objs +=3D nand_amd.o
- nand-objs +=3D nand_esmt.o
---=20
-2.17.1
+It now also has concurrency on wakeup; but afaict that's harmless, we'll
+get racing stores of p->state = TASK_RUNNING, much the same as if there
+was a remote wakeup vs a wait-loop terminating early.
 
+I suppose the tracepoint consumers might have to deal with some
+artifacts there, but that's their problem.
+
+> ---
+>  kernel/sched/core.c | 38 ++++++++++++++++++++++++++++++++------
+>  1 file changed, 32 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 102dfcf0a29a..474aa4c8e9d2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1990,6 +1990,28 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  	unsigned long flags;
+>  	int cpu, success = 0;
+>  
+> +	if (p == current) {
+> +		/*
+> +		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+> +		 * == smp_processor_id()'. Together this means we can special
+> +		 * case the whole 'p->on_rq && ttwu_remote()' case below
+> +		 * without taking any locks.
+> +		 *
+> +		 * In particular:
+> +		 *  - we rely on Program-Order guarantees for all the ordering,
+> +		 *  - we're serialized against set_special_state() by virtue of
+> +		 *    it disabling IRQs (this allows not taking ->pi_lock).
+> +		 */
+> +		if (!(p->state & state))
+> +			goto out;
+> +
+> +		success = 1;
+> +		trace_sched_waking(p);
+> +		p->state = TASK_RUNNING;
+> +		trace_sched_woken(p);
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * If we are going to wake up a thread waiting for CONDITION we
+>  	 * need to ensure that CONDITION=1 done by the caller can not be
+> @@ -1999,7 +2021,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  	raw_spin_lock_irqsave(&p->pi_lock, flags);
+>  	smp_mb__after_spinlock();
+>  	if (!(p->state & state))
+> -		goto out;
+> +		goto unlock;
+>  
+>  	trace_sched_waking(p);
+>  
+> @@ -2029,7 +2051,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  	 */
+>  	smp_rmb();
+>  	if (p->on_rq && ttwu_remote(p, wake_flags))
+> -		goto stat;
+> +		goto unlock;
+>  
+>  #ifdef CONFIG_SMP
+>  	/*
+> @@ -2089,12 +2111,16 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>  #endif /* CONFIG_SMP */
+>  
+>  	ttwu_queue(p, cpu, wake_flags);
+> -stat:
+> -	ttwu_stat(p, cpu, wake_flags);
+> -out:
+> +unlock:
+>  	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+>  
+> -	return success;
+> +out:
+> +	if (success) {
+> +		ttwu_stat(p, cpu, wake_flags);
+> +		return true;
+> +	}
+> +
+> +	return false;
+>  }
+>  
+>  /**
