@@ -6,151 +6,104 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE0FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F15BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCCD26C77
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C98026D1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 20:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfFCUN3 (ORCPT
+        id S1726613AbfFCUNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 16:13:29 -0400
-Received: from sauhun.de ([88.99.104.3]:40334 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfFCUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 16:13:28 -0400
-Received: from localhost (p5486CC42.dip0.t-ipconnect.de [84.134.204.66])
-        by pokefinder.org (Postfix) with ESMTPSA id 5FA242CF690;
-        Mon,  3 Jun 2019 22:13:26 +0200 (CEST)
-Date:   Mon, 3 Jun 2019 22:13:26 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     "minyard@acm.org" <minyard@acm.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Michael Shych <michaelsh@mellanox.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH v9 1/1] Add support for IPMB driver
-Message-ID: <20190603201325.GC2383@kunai>
-References: <cover.1557322882.git.Asmaa@mellanox.com>
- <a4d9fe418013b604e7224bf3038c294da42d5534.1557322882.git.Asmaa@mellanox.com>
- <20190519140231.GA7291@kunai>
- <VI1PR05MB623971FF6F956A091840716DDA060@VI1PR05MB6239.eurprd05.prod.outlook.com>
+        Mon, 3 Jun 2019 16:13:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726173AbfFCUNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 16:13:31 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53KDGee052468
+        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 16:13:29 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sw9rf9t58-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 16:13:29 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 3 Jun 2019 21:13:28 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Jun 2019 21:13:26 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53KDPLJ37355998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 20:13:25 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3805DB206A;
+        Mon,  3 Jun 2019 20:13:25 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08559B2066;
+        Mon,  3 Jun 2019 20:13:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.210.156])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 20:13:24 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7742816C5DA0; Mon,  3 Jun 2019 13:13:24 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 13:13:24 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: single copy atomicity for double load/stores on 32-bit systems
+Reply-To: paulmck@linux.ibm.com
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+ <20190531082112.GH2623@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR05MB623971FF6F956A091840716DDA060@VI1PR05MB6239.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060320-0060-0000-0000-0000034B921E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011209; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01212784; UDB=6.00637371; IPR=6.00993844;
+ MB=3.00027168; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-03 20:13:28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060320-0061-0000-0000-0000499BBCCD
+Message-Id: <20190603201324.GN28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=835 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 03, 2019 at 06:08:35PM +0000, Vineet Gupta wrote:
+> On 5/31/19 1:21 AM, Peter Zijlstra wrote:
+> >> I'm not sure how to interpret "natural alignment" for the case of double
+> >> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
+> >> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
+> > Natural alignment: !((uintptr_t)ptr % sizeof(*ptr))
+> >
+> > For any u64 type, that would give 8 byte alignment. the problem
+> > otherwise being that your data spans two lines/pages etc..
+> 
+> Sure, but as Paul said, if the software doesn't expect them to be atomic by
+> default, they could span 2 hardware lines to keep the implementation simpler/sane.
 
---9Ek0hoCL9XbhcSqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I could imagine 8-byte types being only four-byte aligned on 32-bit systems,
+but it would be quite a surprise on 64-bit systems.
 
-Hi Asmaa,
+							Thanx, Paul
 
-sorry for the long wait. I missed this mail was still sitting in my
-Drafts folder :(
-
-> >> Am I overlooking something? Why are you protecting an atomic_read with=
- a spinlock?
->=20
-> A thread would lock the ipmb_dev->lock spinlock (above) for all the code =
-below ONLY IF the atomic_read for the request_queue_len reports a value dif=
-ferent from 0:
-
-Well, not really. The spinlock is taken _before_ the atomic read. But
-the read is atomic, so there should be no need. I am asking if the code
-could look like this?
-
-+	while (!atomic_read(&ipmb_dev->request_queue_len)) {
-+		if (non_blocking)
-+			return -EAGAIN;
-+
-+		res =3D wait_event_interruptible(ipmb_dev->wait_queue,
-+				atomic_read(&ipmb_dev->request_queue_len));
-+		if (res)
-+			return res;
-+	}
-+
-+	spin_lock_irqsave(&ipmb_dev->lock, flags);
-+	if (list_empty(&ipmb_dev->request_queue)) {
-
-> if (list_empty(&ipmb_dev->request_queue)) {
-> 260 +               dev_err(&ipmb_dev->client->dev, "request_queue is emp=
-ty\n");
-> 261 +               spin_unlock_irqrestore(&ipmb_dev->lock, flags);
-
-The unlock operation could come before the dev_err. We don't need to
-protect the printout and save time with the spinlock held.
-
-> > +	rq_sa =3D msg[RQ_SA_8BIT_IDX] >> 1;
-> > +	netf_rq_lun =3D msg[NETFN_LUN_IDX];
-> > +	/*
-> > +	 * subtract rq_sa and netf_rq_lun from the length of the msg passed to
-> > +	 * i2c_smbus_write_block_data_local
-> > +	 */
-> > +	msg_len =3D msg[IPMB_MSG_LEN_IDX] - SMBUS_MSG_HEADER_LENGTH;
-> > +
-> > +	strcpy(rq_client.name, "ipmb_requester");
-> > +	rq_client.adapter =3D ipmb_dev->client->adapter;
-> > +	rq_client.flags =3D ipmb_dev->client->flags;
-> > +	rq_client.addr =3D rq_sa;
->=20
-> >> Is it possible to determine in a race-free way if rq_sa (which came
-> >> from userspace AFAIU) is really the address from which the request
-> >> came in (again if I understood all this correctly)?
-> Yes there is. I see 2 options:
->=20
-> 1) This is less explicit than option 2 but uses existing code and is
-> simpler. we can use the ipmb_verify_checksum1 function since the IPMB
-> response format is as follows:
-> Byte 1: rq_sa
-> Byte 2: netfunction/rqLUN
-> Byte 3: checksum1
-
-Hmmm, does that really prove that rq_sa is the same address the request
-came from? Or does it only prove that the response packet is not
-mangled?
-
-> So if checksum1 is verified, it means rq_sa is correct.
->=20
-> 2) I am not sure we want this but have a global variable which stores
-> the address of the requester once the first request is received. We
-> would compare that address with the one received from userspace in the
-> code above.
-
-Can there be only one requester in the system?
-
-Thanks,
-
-   Wolfram
-
---9Ek0hoCL9XbhcSqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz1f2UACgkQFA3kzBSg
-KbZe1A//dZCx+YmQNFnYXW6fwX4hm2JFolCqtolCDfbAEKvqcqgEf7VwQ0Qoy4wm
-P+RbEvYTBlnvPfk01PM8Kbe3D79xGgjGLAzfaLyVN5khGiQguK1nWND76tSxAkws
-otCtiiNEcVv0z2uRGheJZWZvmANEt9nzbwqcyJzqaCDZKATQNstu1ClkWrIZLxJ4
-rqXP2mPGJHAv7KzquR5dlpAmAz8yxA0uqoUzQoKbWuchg6fSKbIp7JzVePJvGI7o
-7U/pNuhQ7hJ/tAPrj5fWELHjazDsDUkgu/vsQObvps1ixUuCFymFk+7l2tmPCAnX
-OzFNk79jBbh3YgpSAqMLqPi9ftMrn6so7c3JzchzXzrmAvRmLvf/ChBwTIB8fGZi
-f7958PVOdDr5c386w9EOLB0q9MLc5ONLDlKO96SVnvC8kLrq1iylbpRm17xmJywb
-29Aao9YdsjIoijXsuskYV02XxMGh4JxgrewBOq0IcAuit/YWKsJldp1RyMuWESjM
-gdptkXyp69N1Y6wVL72zkDNB2Cd6NWpoCu4mJDgb6XfX/zv2hadXIgL4yq4cZncx
-61wRgMM0F0MZEiXGsC85qlryaZuBUFdlZnKj1sBbkaRdvDbSpykE1NcGvOti1fIM
-UIYYy9E2Vo/VzPxXR4Gx5JO+6UTjvX2onpJgPAbGOTAiC8Yn53s=
-=REap
------END PGP SIGNATURE-----
-
---9Ek0hoCL9XbhcSqy--
