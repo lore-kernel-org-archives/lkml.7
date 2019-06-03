@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BEBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD10C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5BB27FE8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3AB27FE8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfFCJYS (ORCPT
+        id S1728165AbfFCJYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:24:18 -0400
+        Mon, 3 Jun 2019 05:24:20 -0400
 Received: from mga14.intel.com ([192.55.52.115]:54536 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbfFCJYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:24:15 -0400
+        id S1728122AbfFCJYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:24:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 02:24:15 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 02:24:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,546,1549958400"; 
-   d="scan'208";a="181096352"
+   d="scan'208";a="181096361"
 Received: from twinkler-lnx.jer.intel.com ([10.12.91.48])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 02:24:14 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2019 02:24:16 -0700
 From:   Tomas Winkler <tomas.winkler@intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         linux-kernel@vger.kernel.org,
         Tomas Winkler <tomas.winkler@intel.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [char-misc-next 3/7] mei: docs: update mei documentation
-Date:   Mon,  3 Jun 2019 12:14:02 +0300
-Message-Id: <20190603091406.28915-4-tomas.winkler@intel.com>
+Subject: [char-misc-next 4/7] mei: docs: update mei client bus documentation.
+Date:   Mon,  3 Jun 2019 12:14:03 +0300
+Message-Id: <20190603091406.28915-5-tomas.winkler@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190603091406.28915-1-tomas.winkler@intel.com>
 References: <20190603091406.28915-1-tomas.winkler@intel.com>
@@ -47,201 +47,239 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mei driver went via multiple changes, update
-the documentation and fix formatting.
+The mei client bus API has changed significantly from
+time it was documented, and had required update.
 
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
- Documentation/driver-api/mei/mei.rst | 96 ++++++++++++++++++----------
- 1 file changed, 61 insertions(+), 35 deletions(-)
+ .../driver-api/mei/mei-client-bus.rst         | 162 +++++++++---------
+ 1 file changed, 85 insertions(+), 77 deletions(-)
 
-diff --git a/Documentation/driver-api/mei/mei.rst b/Documentation/driver-api/mei/mei.rst
-index c7f10a4b46ff..c800d8e5f422 100644
---- a/Documentation/driver-api/mei/mei.rst
-+++ b/Documentation/driver-api/mei/mei.rst
-@@ -5,34 +5,32 @@ Introduction
+diff --git a/Documentation/driver-api/mei/mei-client-bus.rst b/Documentation/driver-api/mei/mei-client-bus.rst
+index a26a85453bdf..7310dd45c484 100644
+--- a/Documentation/driver-api/mei/mei-client-bus.rst
++++ b/Documentation/driver-api/mei/mei-client-bus.rst
+@@ -8,13 +8,13 @@ Intel(R) Management Engine (ME) Client bus API
+ Rationale
+ =========
  
- The Intel Management Engine (Intel ME) is an isolated and protected computing
- resource (Co-processor) residing inside certain Intel chipsets. The Intel ME
--provides support for computer/IT management features. The feature set
--depends on the Intel chipset SKU.
-+provides support for computer/IT management and security features.
-+The actual feature set depends on the Intel chipset SKU.
+-MEI misc character device is useful for dedicated applications to send and receive
++The MEI character device is useful for dedicated applications to send and receive
+ data to the many FW appliance found in Intel's ME from the user space.
+-However for some of the ME functionalities it make sense to leverage existing software
++However, for some of the ME functionalities it makes sense to leverage existing software
+ stack and expose them through existing kernel subsystems.
  
- The Intel Management Engine Interface (Intel MEI, previously known as HECI)
- is the interface between the Host and Intel ME. This interface is exposed
--to the host as a PCI device. The Intel MEI Driver is in charge of the
--communication channel between a host application and the Intel ME feature.
-+to the host as a PCI device, actually multiple PCI devices might be exposed.
-+The Intel MEI Driver is in charge of the communication channel between
-+a host application and the Intel ME features.
+ In order to plug seamlessly into the kernel device driver model we add kernel virtual
+-bus abstraction on top of the MEI driver. This allows implementing linux kernel drivers
++bus abstraction on top of the MEI driver. This allows implementing Linux kernel drivers
+ for the various MEI features as a stand alone entities found in their respective subsystem.
+ Existing device drivers can even potentially be re-used by adding an MEI CL bus layer to
+ the existing code.
+@@ -23,9 +23,9 @@ the existing code.
+ MEI CL bus API
+ ==============
  
--Each Intel ME feature (Intel ME Client) is addressed by a GUID/UUID and
-+Each Intel ME feature, or Intel ME Client is addressed by a unique GUID and
- each client has its own protocol. The protocol is message-based with a
--header and payload up to 512 bytes.
-+header and payload up to maximal number of bytes advertised by the client,
-+upon connection.
- 
- Intel MEI Driver
- ================
- 
--The driver exposes a misc device called /dev/mei.
-+The driver exposes a character device with device nodes /dev/meiX.
- 
- An application maintains communication with an Intel ME feature while
--/dev/mei is open. The binding to a specific feature is performed by calling
--MEI_CONNECT_CLIENT_IOCTL, which passes the desired UUID.
-+/dev/meiX is open. The binding to a specific feature is performed by calling
-+:c:macro:`MEI_CONNECT_CLIENT_IOCTL`, which passes the desired GUID.
- The number of instances of an Intel ME feature that can be opened
- at the same time depends on the Intel ME feature, but most of the
- features allow only a single instance.
- 
--The Intel AMT Host Interface (Intel AMTHI) feature supports multiple
--simultaneous user connected applications. The Intel MEI driver
--handles this internally by maintaining request queues for the applications.
--
- The driver is transparent to data that are passed between firmware feature
- and host application.
- 
-@@ -40,6 +38,8 @@ Because some of the Intel ME features can change the system
- configuration, the driver by default allows only a privileged
- user to access it.
- 
-+The session is terminated calling :c:func:`close(int fd)`.
-+
- A code snippet for an application communicating with Intel AMTHI client:
+-A driver implementation for an MEI Client is very similar to existing bus
++A driver implementation for an MEI Client is very similar to any other existing bus
+ based device drivers. The driver registers itself as an MEI CL bus driver through
+-the ``struct mei_cl_driver`` structure:
++the ``struct mei_cl_driver`` structure defined in :file:`include/linux/mei_cl_bus.c`
  
  .. code-block:: C
-@@ -47,13 +47,13 @@ A code snippet for an application communicating with Intel AMTHI client:
- 	struct mei_connect_client_data data;
- 	fd = open(MEI_DEVICE);
  
--	data.d.in_client_uuid = AMTHI_UUID;
-+	data.d.in_client_uuid = AMTHI_GUID;
+@@ -39,25 +39,38 @@ the ``struct mei_cl_driver`` structure:
+                 int (*remove)(struct mei_cl_device *dev);
+         };
  
- 	ioctl(fd, IOCTL_MEI_CONNECT_CLIENT, &data);
- 
- 	printf("Ver=%d, MaxLen=%ld\n",
--			data.d.in_client_uuid.protocol_version,
--			data.d.in_client_uuid.max_msg_length);
-+	       data.d.in_client_uuid.protocol_version,
-+	       data.d.in_client_uuid.max_msg_length);
- 
- 	[...]
- 
-@@ -67,60 +67,86 @@ A code snippet for an application communicating with Intel AMTHI client:
- 	close(fd);
- 
- 
--IOCTLs
--======
-+User space API
-+
-+IOCTLs:
-+=======
- 
- The Intel MEI Driver supports the following IOCTL commands:
--	IOCTL_MEI_CONNECT_CLIENT	Connect to firmware Feature (client).
- 
--	usage:
--		struct mei_connect_client_data clientData;
--		ioctl(fd, IOCTL_MEI_CONNECT_CLIENT, &clientData);
-+IOCTL_MEI_CONNECT_CLIENT
-+-------------------------
-+Connect to firmware Feature/Client.
-+
-+.. code-block:: none
-+
-+	Usage:
- 
--	inputs:
--		mei_connect_client_data struct contain the following
--		input field:
-+        struct mei_connect_client_data client_data;
- 
--		in_client_uuid -	UUID of the FW Feature that needs
-+        ioctl(fd, IOCTL_MEI_CONNECT_CLIENT, &client_data);
-+
-+	Inputs:
-+
-+        struct mei_connect_client_data - contain the following
-+	Input field:
-+
-+		in_client_uuid -	GUID of the FW Feature that needs
- 					to connect to.
--	outputs:
-+         Outputs:
- 		out_client_properties - Client Properties: MTU and Protocol Version.
- 
--	error returns:
-+         Error returns:
-+
-+                ENOTTY  No such client (i.e. wrong GUID) or connection is not allowed.
- 		EINVAL	Wrong IOCTL Number
--		ENODEV	Device or Connection is not initialized or ready. (e.g. Wrong UUID)
-+		ENODEV	Device or Connection is not initialized or ready.
- 		ENOMEM	Unable to allocate memory to client internal data.
- 		EFAULT	Fatal Error (e.g. Unable to access user input data)
- 		EBUSY	Connection Already Open
- 
-+:Note:
-         max_msg_length (MTU) in client properties describes the maximum
-         data that can be sent or received. (e.g. if MTU=2K, can send
-         requests up to bytes 2k and received responses up to 2k bytes).
- 
--	IOCTL_MEI_NOTIFY_SET: enable or disable event notifications
-+
-+IOCTL_MEI_NOTIFY_SET
-+---------------------
-+Enable or disable event notifications.
+-        struct mei_cl_id {
+-                char name[MEI_NAME_SIZE];
 +
 +
-+.. code-block:: none
- 
- 	Usage:
++The mei_cl_device_id structure defined in :file:`include/linux/mod_devicetable.h` allows a
++driver to bind itself against a device name.
 +
- 		uint32_t enable;
++.. code-block:: C
 +
- 		ioctl(fd, IOCTL_MEI_NOTIFY_SET, &enable);
++        struct mei_cl_device_id {
++                char name[MEI_CL_NAME_SIZE];
++                uuid_le uuid;
++                __u8    version;
+                 kernel_ulong_t driver_info;
+         };
  
--	Inputs:
+-The mei_cl_id structure allows the driver to bind itself against a device name.
++To actually register a driver on the ME Client bus one must call the :c:func:`mei_cl_add_driver`
++API. This is typically called at module initialization time.
 +
- 		uint32_t enable = 1;
- 		or
- 		uint32_t enable[disable] = 0;
- 
- 	Error returns:
++Once the driver is registered and bound to the device, a driver will typically
++try to do some I/O on this bus and this should be done through the :c:func:`mei_cl_send`
++and :c:func:`mei_cl_recv` functions. More detailed information is in :ref:`api` section.
 +
++In order for a driver to be notified about pending traffic or event, the driver
++should register a callback via :c:func:`mei_cl_devev_register_rx_cb` and
++:c:func:`mei_cldev_register_notify_cb` function respectively.
+ 
+-To actually register a driver on the ME Client bus one must call the mei_cl_add_driver()
+-API. This is typically called at module init time.
++.. _api:
 +
- 		EINVAL	Wrong IOCTL Number
- 		ENODEV	Device  is not initialized or the client not connected
- 		ENOMEM	Unable to allocate memory to client internal data.
- 		EFAULT	Fatal Error (e.g. Unable to access user input data)
- 		EOPNOTSUPP if the device doesn't support the feature
++API:
++----
++.. kernel-doc:: drivers/misc/mei/bus.c
++    :export: drivers/misc/mei/bus.c
  
-+:Note:
- 	The client must be connected in order to enable notification events
+-Once registered on the ME Client bus, a driver will typically try to do some I/O on
+-this bus and this should be done through the mei_cl_send() and mei_cl_recv()
+-routines. The latter is synchronous (blocks and sleeps until data shows up).
+-In order for drivers to be notified of pending events waiting for them (e.g.
+-an Rx event) they can register an event handler through the
+-mei_cl_register_event_cb() routine. Currently only the MEI_EVENT_RX event
+-will trigger an event handler call and the driver implementation is supposed
+-to call mei_recv() from the event handler in order to fetch the pending
+-received buffers.
  
  
--	IOCTL_MEI_NOTIFY_GET : retrieve event
-+IOCTL_MEI_NOTIFY_GET
-+--------------------
-+Retrieve event
+ Example
+@@ -68,85 +81,80 @@ The driver init and exit routines for this device would look like:
+ 
+ .. code-block:: C
+ 
+-	#define CONTACT_DRIVER_NAME "contact"
++        #define CONTACT_DRIVER_NAME "contact"
+ 
+-	static struct mei_cl_device_id contact_mei_cl_tbl[] = {
+-		{ CONTACT_DRIVER_NAME, },
++        static struct mei_cl_device_id contact_mei_cl_tbl[] = {
++                { CONTACT_DRIVER_NAME, },
+ 
+-		/* required last entry */
+-		{ }
+-	};
+-	MODULE_DEVICE_TABLE(mei_cl, contact_mei_cl_tbl);
++                /* required last entry */
++                { }
++        };
++        MODULE_DEVICE_TABLE(mei_cl, contact_mei_cl_tbl);
+ 
+-	static struct mei_cl_driver contact_driver = {
+-		.id_table = contact_mei_tbl,
+-		.name = CONTACT_DRIVER_NAME,
++        static struct mei_cl_driver contact_driver = {
++                .id_table = contact_mei_tbl,
++                .name = CONTACT_DRIVER_NAME,
+ 
+-		.probe = contact_probe,
+-		.remove = contact_remove,
+-	};
++                .probe = contact_probe,
++                .remove = contact_remove,
++        };
+ 
+-	static int contact_init(void)
+-	{
+-		int r;
++        static int contact_init(void)
++        {
++                int r;
+ 
+-		r = mei_cl_driver_register(&contact_driver);
+-		if (r) {
+-			pr_err(CONTACT_DRIVER_NAME ": driver registration failed\n");
+-			return r;
+-		}
++                r = mei_cl_driver_register(&contact_driver);
++                if (r) {
++                        pr_err(CONTACT_DRIVER_NAME ": driver registration failed\n");
++                        return r;
++                }
+ 
+-		return 0;
+-	}
++                return 0;
++        }
+ 
+-	static void __exit contact_exit(void)
+-	{
+-		mei_cl_driver_unregister(&contact_driver);
+-	}
++        static void __exit contact_exit(void)
++        {
++                mei_cl_driver_unregister(&contact_driver);
++        }
+ 
+-	module_init(contact_init);
+-	module_exit(contact_exit);
++        module_init(contact_init);
++        module_exit(contact_exit);
+ 
+ And the driver's simplified probe routine would look like that:
+ 
+ .. code-block:: C
+ 
+-	int contact_probe(struct mei_cl_device *dev, struct mei_cl_device_id *id)
+-	{
+-		struct contact_driver *contact;
++        int contact_probe(struct mei_cl_device *dev, struct mei_cl_device_id *id)
++        {
++                [...]
++                mei_cldev_enable(dev);
+ 
+-		[...]
+-		mei_cl_enable_device(dev);
++                mei_cldev_register_rx_cb(dev, contact_rx_cb);
+ 
+-		mei_cl_register_event_cb(dev, contact_event_cb, contact);
+-
+-		return 0;
+-	}
++                return 0;
++        }
+ 
+ In the probe routine the driver first enable the MEI device and then registers
+-an ME bus event handler which is as close as it can get to registering a
+-threaded IRQ handler.
+-The handler implementation will typically call some I/O routine depending on
+-the pending events:
+-
+-#define MAX_NFC_PAYLOAD 128
++an rx handler which is as close as it can get to registering a threaded IRQ handler.
++The handler implementation will typically call :c:func:`mei_cldev_recv` and then
++process received data.
+ 
+ .. code-block:: C
+ 
+-	static void contact_event_cb(struct mei_cl_device *dev, u32 events,
+-				     void *context)
+-	{
+-		struct contact_driver *contact = context;
++        #define MAX_PAYLOAD 128
++        #define HDR_SIZE 4
++        static void conntact_rx_cb(struct mei_cl_device *cldev)
++        {
++                struct contact *c = mei_cldev_get_drvdata(cldev);
++                unsigned char payload[MAX_PAYLOAD];
++                ssize_t payload_sz;
 +
-+.. code-block:: none
++                payload_sz = mei_cldev_recv(cldev, payload,  MAX_PAYLOAD)
++                if (reply_size < HDR_SIZE) {
++                        return;
++                }
  
- 	Usage:
- 		uint32_t event;
-@@ -137,7 +163,7 @@ The Intel MEI Driver supports the following IOCTL commands:
- 		EFAULT	Fatal Error (e.g. Unable to access user input data)
- 		EOPNOTSUPP if the device doesn't support the feature
+-		if (events & BIT(MEI_EVENT_RX)) {
+-			u8 payload[MAX_NFC_PAYLOAD];
+-			int payload_size;
++                c->process_rx(payload);
  
-+:Note:
- 	The client must be connected and event notification has to be enabled
- 	in order to receive an event
+-			payload_size = mei_recv(dev, payload, MAX_NFC_PAYLOAD);
+-			if (payload_size <= 0)
+-				return;
++        }
  
+-			/* Hook to the NFC subsystem */
+-			nfc_hci_recv_frame(contact->hdev, payload, payload_size);
+-		}
+-	}
 -- 
 2.20.1
 
