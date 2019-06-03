@@ -2,110 +2,122 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B97C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC7C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C847226A32
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FgCBDPY6"
+	by mail.kernel.org (Postfix) with ESMTP id 6974226A32
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 22:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559601635;
+	bh=4VVHVVBJYOrtfjQmkmfX4km6vna4lr6Ms9TIAd0Y6EU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sq8ieZ6RWO0bp0yLhoYMiFpEPwV2WiIxl3hynPDaKohg0D+oSmT/kp8NZibXLcE6W
+	 VAIu95zSgDlVcZ76xRZtDqayC8JMsAU6OvMho3hEtrD7g/+hFI4EEPdOomrEtXD8Sh
+	 J9GNtRnry3O0Zznnnyw0krxrjtKO/FlVqbrvPqRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFCWjx (ORCPT
+        id S1726603AbfFCWke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 18:39:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46917 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfFCWjx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 18:39:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so5778153pls.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 15:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=d0pHGkFAzud1LXVO2y8qggIx+lZyQUhfT9A6e9r7pVo=;
-        b=FgCBDPY6CRCXcPfk8fTafoSLnOLpuZSDUFRvAWxACU0zQWMF3HJ7nn6TkRRcn0oixU
-         Yko0WDBIyDpE/d1snVSEuha+BomUaa+tnm8tbvNOMhhAmF0GCeqqJ32D5nJTkNxwZz+z
-         brMiHfKbm88zFuyU7H97WwSZbpI1x1r0yFw7PisVxJm5Z8oIuRu/a3zbsjgotxcktI0e
-         cqAHx9nLyf4QC/CpWQafjMf/+xNq7n9G4FScYwN5xpRtE8p7bIyP0I+6lk0xFOkSDaKm
-         AG6X3oEgcDW55aCXpS181mxbF1IgPy6WMNlk5KAC7fDrOBSYg0NUOztcKNkac6oP3DcG
-         aa+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=d0pHGkFAzud1LXVO2y8qggIx+lZyQUhfT9A6e9r7pVo=;
-        b=TwsMcySh+u7bIuF1eRiCaxQ1E/nhbTyxcy9fe+PLsh7jzkfKC4PL8oaXenChuar/VO
-         q+XDcEe26T9ujrpZCRgS7nACY3AbsJvHXfnNSVv7Y0l8eW9PXo31mj2SCxb46HGWG8Mq
-         8tT4ZhuwMfQCoaUMhmuN8x/pGTAObhA6SmZOM+pjVBVVexGdCBpQ6RY+ZG2WEHzDKH2D
-         vh6ZKKuwbTnyBtzLxzOopz6kYSLFQqu3aix28cBUIlRo09w7kCsTN5kQw1Uh2rnNB8l+
-         zet6ah3J9edDlqDx+kml0dwHXAS8HCYE28xecnWG8hgKAsihxDVfm+0EATBfotVks0Th
-         a/bw==
-X-Gm-Message-State: APjAAAXtXv2gUCN2Re3ZQlaVxOL+AgJPDzLZKKSAM8TK0QQ8SUhV/59m
-        +5JpZdf9MpavIyxDUgo1a/R4NA==
-X-Google-Smtp-Source: APXvYqwudy03I5p10WfbvIimwqVrr2QjqJjMVmggzEI1EiREVUvMw5spyMDtTF/kgJ3WUmnjkQt/rQ==
-X-Received: by 2002:a17:902:163:: with SMTP id 90mr33158196plb.212.1559601592730;
-        Mon, 03 Jun 2019 15:39:52 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id j97sm15138949pje.5.2019.06.03.15.39.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 15:39:52 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 10/10] ARM: mach-meson: update with SPDX Licence identifier
-In-Reply-To: <20190527133857.30108-11-narmstrong@baylibre.com>
-References: <20190527133857.30108-1-narmstrong@baylibre.com> <20190527133857.30108-11-narmstrong@baylibre.com>
-Date:   Mon, 03 Jun 2019 15:39:51 -0700
-Message-ID: <7h8suii98o.fsf@baylibre.com>
+        Mon, 3 Jun 2019 18:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfFCWke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 18:40:34 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1DBE26A32;
+        Mon,  3 Jun 2019 22:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559601633;
+        bh=4VVHVVBJYOrtfjQmkmfX4km6vna4lr6Ms9TIAd0Y6EU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rVmbs/zsxjB0l+JVVvUWDeQ857KCgbfN2xMCzG5JWVRitgEAEdAaKwqbzVCPyJTRG
+         k/KjK7RbzDxuGCQ3fGSg2oBsyQ8OAmaC29aasEdfWAJrvc8YudmpTNIQ9I0iLFYmaf
+         ZnZBErOfUIqgTR/54n8QWeEJV0eUGdRWiuKo8m00=
+Date:   Mon, 3 Jun 2019 17:40:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Himanshu Madhani <hmadhani@marvell.com>
+Cc:     Andrew Vasquez <andrewv@marvell.com>,
+        Girish Basrur <gbasrur@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Myron Stowe <mstowe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quinn Tran <quinn.tran@qlogic.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [EXT] VPD access Blocked by commit
+ 0d5370d1d85251e5893ab7c90a429464de2e140b
+Message-ID: <20190603224029.GC58810@google.com>
+References: <B5B745A3-96B4-46ED-8F3F-D3636A96057F@marvell.com>
+ <CAErSpo5qy6WuUe9cz1vTBBnc5P_uZaPzc-Yqbag2eBBxzi+ENg@mail.gmail.com>
+ <CAErSpo45bCV7geSPAwBjy5fdQqzDcX61Ybksk65c=intfTWFZQ@mail.gmail.com>
+ <D8764654-E2A0-43B8-97D9-6644F2BC8D0E@marvell.com>
+ <20190530205823.GA45696@google.com>
+ <DFF05429-6C84-4DBD-B3D0-14A0BD209E38@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DFF05429-6C84-4DBD-B3D0-14A0BD209E38@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Mon, Jun 03, 2019 at 09:30:50PM +0000, Himanshu Madhani wrote:
+> On May 30, 2019, at 1:58 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> On Thu, May 30, 2019 at 07:33:01PM +0000, Himanshu Madhani wrote:
+>>> We are able to successfully read VPD config data using lspci and cat
+>>> command
 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/arm/mach-meson/meson.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
->
-> diff --git a/arch/arm/mach-meson/meson.c b/arch/arm/mach-meson/meson.c
-> index c8d99df32f9b..04ae414d88c9 100644
-> --- a/arch/arm/mach-meson/meson.c
-> +++ b/arch/arm/mach-meson/meson.c
-> @@ -1,16 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->  /*
->   * Copyright (C) 2014 Carlo Caione <carlo@caione.org>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> - *
-> - * This program is distributed in the hope that it will be useful, but WITHOUT
-> - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> - * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> - * more details.
-> - *
->   */
+> Missed the request for xxd output. I got access back today for the system 
+> and captured it for you
+> 
+> # cat /sys/class/pci_bus/0000\:13/device/0000\:13\:00.0/vpd  | xxd
+> 00000000: 822d 0051 4c6f 6769 6320 3332 4762 2032  .-.QLogic 32Gb 2
+> 00000010: 2d70 6f72 7420 4643 2074 6f20 5043 4965  -port FC to PCIe
+> 00000020: 2047 656e 3320 7838 2041 6461 7074 6572   Gen3 x8 Adapter
+> 00000030: 9039 0050 4e07 514c 4532 3734 3253 4e0d  .9.PN.QLE2742SN.
+> 00000040: 4146 4431 3533 3359 3032 3939 3945 430f  AFD1533Y02999EC.
+> 00000050: 424b 3332 3130 3430 372d 3035 2030 3356  BK3210407-05 03V
+> 00000060: 3906 3031 3031 3839 5256 01a0 78         9.010189RV..x
+> 
+> PCIe trace also confirmed there are no READ errors. 
+> (if you need i can attach .pex file for review)
 
-I dropped this one since it conflicts with one that was already applied
-to mainline in the treewide cleanup of SPDX headers.
+Thank you!  It would be really excellent to have a report at
+https://bugzilla.kernel.org with these details (hex VPD dump, .pex
+file, QLogic firmware version info) attached.  Your patch commit log
+could then include the bugzilla URL.
 
-The rest of the series is queued for v5.3,
+If we had this sort of information for Ethan's original patch, we
+would have a good start at making a smarter quirk.  But we don't, so I
+think all we can assume at this point is that all QLogic firmware
+older than your current version is broken and we shouldn't try reading
+VPD.
 
-Thanks,
+>> If a QLogic firmware update indeed fixed the VPD format, I suggest
+>> that you ask the folks responsible for the firmware to identify the
+>> specific version where that was fixed and how the OS can figure that
+>> out.
 
-Kevin
+> Still waiting on this data. 
+
+Don't hold your breath :)
+
+> Since major OEMs are having issues using adapter to extract VPD data, We 
+> would like to get them relief first and then approach this issue with more
+> detailed fix if needed. 
+
+I don't think it's a good idea to simply revert 0d5370d1d852.  That
+would mean any users that have the same QLogic firmware version Ethan
+had would start seeing panics.
+
+But I think you could certainly make a quirk that allows VPD access
+for the firmware version you have on your card (or newer), leaving the
+original "no VPD at all" behavior for older versions.
+
+Bjorn
