@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BB0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C0AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7F927EF4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7815E27EF0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553264;
-	bh=dYttiehfkk88Cug34rZINtJ77ZlqTj1hqrTI2sLLz/I=;
+	s=default; t=1559553268;
+	bh=VidwH8+mGa7XfstnXVKdVXEA62LZmNbaWhmGbLQifyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKEGg4sW2cuLM5/7DAjSxxTbEU/83unPpXOOuj2kLHIcClUtlzcCx5u4oHGR/1Wp8
-	 4QHkJDbHRnNzZL6sdG4gMffeW7uEmruBDCjXgzgQ3flEu1UfiObQ+NIT0AK7KZwZTA
-	 9j9NwZVwaUYRhvc+IVIg7NeSNbTvBrQYaJLmnfV4=
+	b=rW+5HKMmgYlObNY4Cma9Yvy88FrMDVvfbuAdKhqJvYCYaWvw15IJTfauVH+Vtf1Kd
+	 LgXhb/2tZbCqq+MYJDt6l6xsCl2f9Y22hxjaSqWYv1viAhSz6xMu0rGw5yWhmEq2Ra
+	 7uYuOEPt825nVFIhRSNrk0YUTr9bfUdt9jQcE1y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfFCJOX (ORCPT
+        id S1729010AbfFCJO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbfFCJOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:14:16 -0400
+        id S1728999AbfFCJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:14:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8B3527EE4;
-        Mon,  3 Jun 2019 09:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279B827EE4;
+        Mon,  3 Jun 2019 09:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553256;
-        bh=dYttiehfkk88Cug34rZINtJ77ZlqTj1hqrTI2sLLz/I=;
+        s=default; t=1559553261;
+        bh=VidwH8+mGa7XfstnXVKdVXEA62LZmNbaWhmGbLQifyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDcVR09aXLuxOgIyRYfjRRizOIA757otEKpONWRth+q8WkFkFSjEmsRhjuzjInXLe
-         Kf5cIOrq7YwWzLk6TRIp1salN+eBJ8wQ3ODDeKk7MwElcvgCIbz4RoPHJH2KMf17uu
-         vXglhgrGo1UTVg2itxtkTJZdQQvmk4XUPE2RQ15w=
+        b=zcuqQ2jwPgW7oDqZycUffIRokQ5cGA29GFN2tvaTiLNZR5Nxz6vu6c4I9ik8QbdRx
+         HlcyeX9/qhinwyYlKYz8M6+g6MJxWxa7r9eIDFN2cc1Shz7ZUggJVTHm3aXn+xZiT3
+         J9wd599MJ9wh4DYGBdzQEOvNzcAlbMTDGV3q+Av4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        stable@vger.kernel.org, Vishal Kulkarni <vishal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 34/40] net/tls: fix state removal with feature flags off
-Date:   Mon,  3 Jun 2019 11:09:27 +0200
-Message-Id: <20190603090524.607098473@linuxfoundation.org>
+Subject: [PATCH 5.1 36/40] cxgb4: Revert "cxgb4: Remove SGE_HOST_PAGE_SIZE dependency on page size"
+Date:   Mon,  3 Jun 2019 11:09:29 +0200
+Message-Id: <20190603090524.695909045@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190603090522.617635820@linuxfoundation.org>
 References: <20190603090522.617635820@linuxfoundation.org>
@@ -61,60 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit 3686637e507b48525fcea6fb91e1988bdbc14530 ]
+[ Upstream commit ab0610efabb4c4f419a531455708caf1dd29357e ]
 
-TLS offload drivers shouldn't (and currently don't) block
-the TLS offload feature changes based on whether there are
-active offloaded connections or not.
+This reverts commit 2391b0030e241386d710df10e53e2cfc3c5d4fc1 which has
+introduced regression. Now SGE's BAR2 Doorbell/GTS Page Size is
+interpreted correctly in the firmware itself by using actual host
+page size. Hence previous commit needs to be reverted.
 
-This seems to be a good idea, because we want the admin to
-be able to disable the TLS offload at any time, and there
-is no clean way of disabling it for active connections
-(TX side is quite problematic).  So if features are cleared
-existing connections will stay offloaded until they close,
-and new connections will not attempt offload to a given
-device.
-
-However, the offload state removal handling is currently
-broken if feature flags get cleared while there are
-active TLS offloads.
-
-RX side will completely bail from cleanup, even on normal
-remove path, leaving device state dangling, potentially
-causing issues when the 5-tuple is reused.  It will also
-fail to release the netdev reference.
-
-Remove the RX-side warning message, in next release cycle
-it should be printed when features are disabled, rather
-than when connection dies, but for that we need a more
-efficient method of finding connection of a given netdev
-(a'la BPF offload code).
-
-Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device.c |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -943,12 +943,6 @@ void tls_device_offload_cleanup_rx(struc
- 	if (!netdev)
- 		goto out;
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -7206,10 +7206,21 @@ int t4_fixup_host_params(struct adapter
+ 			 unsigned int cache_line_size)
+ {
+ 	unsigned int page_shift = fls(page_size) - 1;
++	unsigned int sge_hps = page_shift - 10;
+ 	unsigned int stat_len = cache_line_size > 64 ? 128 : 64;
+ 	unsigned int fl_align = cache_line_size < 32 ? 32 : cache_line_size;
+ 	unsigned int fl_align_log = fls(fl_align) - 1;
  
--	if (!(netdev->features & NETIF_F_HW_TLS_RX)) {
--		pr_err_ratelimited("%s: device is missing NETIF_F_HW_TLS_RX cap\n",
--				   __func__);
--		goto out;
--	}
--
- 	netdev->tlsdev_ops->tls_dev_del(netdev, tls_ctx,
- 					TLS_OFFLOAD_CTX_DIR_RX);
- 
++	t4_write_reg(adap, SGE_HOST_PAGE_SIZE_A,
++		     HOSTPAGESIZEPF0_V(sge_hps) |
++		     HOSTPAGESIZEPF1_V(sge_hps) |
++		     HOSTPAGESIZEPF2_V(sge_hps) |
++		     HOSTPAGESIZEPF3_V(sge_hps) |
++		     HOSTPAGESIZEPF4_V(sge_hps) |
++		     HOSTPAGESIZEPF5_V(sge_hps) |
++		     HOSTPAGESIZEPF6_V(sge_hps) |
++		     HOSTPAGESIZEPF7_V(sge_hps));
++
+ 	if (is_t4(adap->params.chip)) {
+ 		t4_set_reg_field(adap, SGE_CONTROL_A,
+ 				 INGPADBOUNDARY_V(INGPADBOUNDARY_M) |
 
 
