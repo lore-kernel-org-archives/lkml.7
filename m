@@ -2,114 +2,139 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA38CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B9DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAE42469D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559552882;
-	bh=Rzr6gfXjAXNtZ72i1f03ZP5xQADxqoyjKQjlDsDgnOU=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=wEYrO1Afb58rtM+1APrg7CnTJtU5e7A26+RXRaeeEEteE+gnaS4Kl/qVDqyck3asT
-	 FIkWO2LCVXZE0GTNDUT4d+VXMusT+UqpSqzysd7sBq20t0mwFIQLCFJz9psaZ/weaL
-	 PaS5MjfLgMchWj99zfa5ELFGiZMS2IKGxa7sBYY8=
+	by mail.kernel.org (Postfix) with ESMTP id 40C3927137
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfFCJIB (ORCPT
+        id S1727510AbfFCJIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:08:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60338 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfFCJIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:08:00 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726561AbfFCJIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:08:47 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D586F2713A;
-        Mon,  3 Jun 2019 09:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559552880;
-        bh=Rzr6gfXjAXNtZ72i1f03ZP5xQADxqoyjKQjlDsDgnOU=;
-        h=From:Date:Subject:To:From;
-        b=OFyk4NY4DclC0oTHFd+eXw4x0tlpPhoixH2tmw3kBXKOXH5TYz61qqu8iPuV6Oxov
-         pUaAnT2yl/SpS/pTBkp8RfXYzmGPLR5VVU8Rq3Bsvowc2B50/wekJgJPg8z8tp5OC0
-         3dySqY9w+R7b6avLDJk8xQJPQ038nr55Pc74dKLs=
-Received: by mail-lj1-f181.google.com with SMTP id r76so15397974lja.12;
-        Mon, 03 Jun 2019 02:07:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAUN/U+s+/4kff/ksnLsTx92XpgCoKoTq/3GmFh1N1n/oBVm8KQJ
-        xbkABQ2gvTbsTXw4122o0OqgW/6EFFzyyEy066s=
-X-Google-Smtp-Source: APXvYqw8WHJT+fvLmcEcp0Lo0YX/2W6ao7L44cq/RA1vj/2N8oEiiJnTLU0U+PgTYKDOUB7tqpELGDErPLLk8DYOMYs=
-X-Received: by 2002:a2e:980e:: with SMTP id a14mr2097047ljj.60.1559552878019;
- Mon, 03 Jun 2019 02:07:58 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C3C2308404B;
+        Mon,  3 Jun 2019 09:08:47 +0000 (UTC)
+Received: from gondolin (ovpn-204-96.brq.redhat.com [10.40.204.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C650C648B1;
+        Mon,  3 Jun 2019 09:08:43 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 11:08:39 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v1] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+Message-ID: <20190603110839.1a44f352.cohuck@redhat.com>
+In-Reply-To: <67136b8b-251f-4745-a220-2624aeac289e@redhat.com>
+References: <20190531093628.14766-1-david@redhat.com>
+        <3dfea8fd-dbe7-f9d0-f7a7-2c65349c0a81@linux.ibm.com>
+        <67136b8b-251f-4745-a220-2624aeac289e@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 3 Jun 2019 11:07:46 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
-Message-ID: <CAJKOXPcTVpLtSSs=Q0G3fQgXYoVa=kHxWcWXyvS13ie73ByZBw@mail.gmail.com>
-Subject: [BUG BISECT] bug mm/vmalloc.c:470 (mm/vmalloc.c: get rid of one
- single unlink_va() when merge)
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Hillf Danton <hdanton@sina.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 03 Jun 2019 09:08:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 3 Jun 2019 10:14:53 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-On recent next I see bugs during boot (after bringing up user-space or
-during reboot):
-kernel BUG at ../mm/vmalloc.c:470!
-On all my boards. On QEMU I see something similar, although the
-message is "Internal error: Oops - undefined instruction: 0 [#1] ARM",
+> On 03.06.19 09:48, Harald Freudenberger wrote:
+> > On 31.05.19 11:36, David Hildenbrand wrote:  
+> >> systemd-modules-load.service automatically tries to load the pkey module
+> >> on systems that have MSA.
+> >>
+> >> Pkey also requires the MSA3 facility and a bunch of subfunctions.
+> >> Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
+> >> any system that does not have all needed subfunctions. For example,
+> >> when running under QEMU TCG (but also on systems where protected keys
+> >> are disabled via the HMC).
+> >>
+> >> Let's use -ENODEV, so systemd-modules-load.service properly ignores
+> >> failing to load the pkey module because of missing HW functionality.
+> >>
+> >> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> >> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> >> Cc: Cornelia Huck <cohuck@redhat.com>
+> >> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> >> ---
+> >>  drivers/s390/crypto/pkey_api.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+> >> index 45eb0c14b880..ddfcefb47284 100644
+> >> --- a/drivers/s390/crypto/pkey_api.c
+> >> +++ b/drivers/s390/crypto/pkey_api.c
+> >> @@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
+> >>  	 * are able to work with protected keys.
+> >>  	 */
+> >>  	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
+> >> -		return -EOPNOTSUPP;
+> >> +		return -ENODEV;
+> >>  
+> >>  	/* check for kmc instructions available */
+> >>  	if (!cpacf_query(CPACF_KMC, &kmc_functions))
+> >> -		return -EOPNOTSUPP;
+> >> +		return -ENODEV;
+> >>  	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
+> >>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
+> >>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
+> >> -		return -EOPNOTSUPP;
+> >> +		return -ENODEV;
+> >>  
+> >>  	pkey_debug_init();
+> >>    
+> > I can't really agree to this: there are a lot more modules returning
+> > EOPNOTSUPP, for example have a look into the arch/s390/crypto
+> > subdirectory. The ghash_s390 module also registers for MSA feature
+> > and also returns EOPNOTSUPPORTED when the required hardware extension  
+> 
+> For s390x KVM, we return ENODEV in case the SIE (the HW feature) is not
+> available. Just because s390x crypto is doing it consistently this way
+> doesn't mean it is the right thing to do.
+> 
+> Maybe we should change all s390x crypto modules then.
 
-The calltrace is:
-[   34.565126] [<c0275c9c>] (__free_vmap_area) from [<c0276044>]
-(__purge_vmap_area_lazy+0xd0/0x170)
-[   34.573963] [<c0276044>] (__purge_vmap_area_lazy) from [<c0276d50>]
-(_vm_unmap_aliases+0x1fc/0x244)
-[   34.582974] [<c0276d50>] (_vm_unmap_aliases) from [<c0279500>]
-(__vunmap+0x170/0x200)
-[   34.590770] [<c0279500>] (__vunmap) from [<c01d5a70>]
-(do_free_init+0x40/0x5c)
-[   34.597955] [<c01d5a70>] (do_free_init) from [<c01478f4>]
-(process_one_work+0x228/0x810)
-[   34.606018] [<c01478f4>] (process_one_work) from [<c0147f0c>]
-(worker_thread+0x30/0x570)
-[   34.614077] [<c0147f0c>] (worker_thread) from [<c014e8b4>]
-(kthread+0x134/0x164)
-[   34.621438] [<c014e8b4>] (kthread) from [<c01010b4>]
-(ret_from_fork+0x14/0x20)
+I agree.
 
-Full log here:
-https://krzk.eu/#/builders/1/builds/3356/steps/14/logs/serial0
-https://krzk.eu/#/builders/22/builds/1118/steps/35/logs/serial0
+> 
+> > is not available. Same with the prng kernel module, sha1_s390, sha256_s390
+> > and I assume there is a bunch of other kernel modules with same behavior.
+> > I would prefer having this fixed on the systemd-modules-load.service side.  
+> 
+> 
+> A very, very bad comparison (because it contains a lot of false positives):
+> 
+> t460s: ~/git/linux memory_block_devices2 $ git grep -A 20 "_init("  --
+> 'drivers*.[c]' | grep ENODEV | wc -l
+> 1552
+> 
+> t460s: ~/git/linux memory_block_devices2 $ git grep -A 20 "_init("  --
+> 'drivers*.[c]' | grep EOPNOTSUPP | wc -l
+> 56
+> 
+> No, I don't think EOPNOTSUPP is the right thing to do.
 
-Bisect pointed to:
-728e0fbf263e3ed359c10cb13623390564102881 is the first bad commit
-commit 728e0fbf263e3ed359c10cb13623390564102881
-Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Date:   Sat Jun 1 12:20:19 2019 +1000
-    mm/vmalloc.c: get rid of one single unlink_va() when merge
+If we frame it as
+-EOPNOTSUPP -> operation not supported (i.e. we cannot perform this
+operation)
+-ENODEV -> no such device (i.e. we're lacking hardware support)
 
-Boards:
-1. Arch ARM Linux
-2. exynos_defconfig
-3. Exynos boards (Odroid XU3, etc), ARMv7, octa-core (Cortex-A7+A15),
-Exynos5422 SoC
-4. Systemd: v239, static IP set in kernel command line
-
-Best regards,
-Krzysztof
+I think -ENODEV makes more sense (even though we could argue for both.)
+And it is an easy change to make...
