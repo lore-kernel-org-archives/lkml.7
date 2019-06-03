@@ -2,163 +2,128 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6C1C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05597C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CEB27B16
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cs.unibo.it header.i=@cs.unibo.it header.b="t9TRXE1Z"
+	by mail.kernel.org (Postfix) with ESMTP id D687427B2D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbfFCPAS (ORCPT
+        id S1729315AbfFCPBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:00:18 -0400
-Received: from mail.virtlab.unibo.it ([130.136.161.50]:48671 "EHLO
-        mail.virtlab.unibo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbfFCPAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:00:17 -0400
-Received: from cs.unibo.it (host5.studiodavoli.it [109.234.61.227])
-        by mail.virtlab.unibo.it (Postfix) with ESMTPSA id 98D3C22603;
-        Mon,  3 Jun 2019 17:00:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cs.unibo.it;
-        s=virtlab; t=1559574013;
-        bh=DLnGNJnyJiNIykJV53YV0lVX0PRr2Fd6kDb05wo5wS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t9TRXE1ZG2HmO1JDHZWIbU3N53MsWj6yw5DLIv3bv8lY/Gn9lUzXMZv2o80o29Gx0
-         lIuBTK/cPwE8c/kanOCxHBwFDWOrRbCOu89aCbpzhZ8uRZ9UDA4N1te50FN2ddtltg
-         bMph7PP9tu8nzFne0ohyU69o8q/hDpfLCQXN1f5I=
-Date:   Mon, 3 Jun 2019 17:00:10 +0200
-From:   Renzo Davoli <renzo@cs.unibo.it>
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-Message-ID: <20190603150010.GE4312@cs.unibo.it>
-References: <20190526142521.GA21842@cs.unibo.it>
- <20190527073332.GA13782@kroah.com>
- <20190527133621.GC26073@cs.unibo.it>
- <480f1bda66b67f740f5da89189bbfca3@suse.de>
- <20190531104502.GE3661@cs.unibo.it>
- <cd20672aaf13f939b4f798d0839d2438@suse.de>
+        Mon, 3 Jun 2019 11:01:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44799 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729038AbfFCPBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:01:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 08:01:11 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga004.jf.intel.com with ESMTP; 03 Jun 2019 08:01:10 -0700
+Date:   Mon, 3 Jun 2019 08:02:18 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 2/2] mm/gup: rename nr as nr_pinned in
+ get_user_pages_fast()
+Message-ID: <20190603150218.GB26623@iweiny-DESK2.sc.intel.com>
+References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+ <1559543653-13185-2-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd20672aaf13f939b4f798d0839d2438@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559543653-13185-2-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
-
-	 I sorry for the delay in my answer, but I needed to set up a minimal
-tutorial to show what I am working on and why I need a feature like the
-one I am proposing.
-
-Please, have a look of the README.md page here:
-https://github.com/virtualsquare/vuos
-(everything can be downloaded and tested)
-
-On Fri, May 31, 2019 at 01:48:39PM +0200, Roman Penyaev wrote:
-> Since each such a stack has a set of read/write/etc functions you always
-> can extend you stack with another call which returns you event mask,
-> specifying what exactly you have to do, e.g.:
+On Mon, Jun 03, 2019 at 02:34:13PM +0800, Pingfan Liu wrote:
+> To better reflect the held state of pages and make code self-explaining,
+> rename nr as nr_pinned.
 > 
->     nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
->     for (n = 0; n < nfds; ++n) {
->          struct sock *sock;
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/gup.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > 
->          sock = events[n].data.ptr;
->          events = sock->get_events(sock, &events[n]);
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 6fe2feb..106ab22 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2239,7 +2239,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>  			unsigned int gup_flags, struct page **pages)
+>  {
+>  	unsigned long addr, len, end;
+> -	int nr = 0, ret = 0;
+> +	int nr_pinned = 0, ret = 0;
+>  
+>  	start &= PAGE_MASK;
+>  	addr = start;
+> @@ -2254,26 +2254,26 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>  
+>  	if (gup_fast_permitted(start, nr_pages)) {
+>  		local_irq_disable();
+> -		gup_pgd_range(addr, end, gup_flags, pages, &nr);
+> +		gup_pgd_range(addr, end, gup_flags, pages, &nr_pinned);
+>  		local_irq_enable();
+> -		ret = nr;
+> +		ret = nr_pinned;
+>  	}
+>  
+> -	nr = reject_cma_pages(nr, gup_flags, pages);
+> -	if (nr < nr_pages) {
+> +	nr_pinned = reject_cma_pages(nr_pinned, gup_flags, pages);
+> +	if (nr_pinned < nr_pages) {
+>  		/* Try to get the remaining pages with get_user_pages */
+> -		start += nr << PAGE_SHIFT;
+> -		pages += nr;
+> +		start += nr_pinned << PAGE_SHIFT;
+> +		pages += nr_pinned;
+>  
+> -		ret = __gup_longterm_unlocked(start, nr_pages - nr,
+> +		ret = __gup_longterm_unlocked(start, nr_pages - nr_pinned,
+>  					      gup_flags, pages);
+>  
+>  		/* Have to be a bit careful with return values */
+> -		if (nr > 0) {
+> +		if (nr_pinned > 0) {
+>  			if (ret < 0)
+> -				ret = nr;
+> +				ret = nr_pinned;
+>  			else
+> -				ret += nr;
+> +				ret += nr_pinned;
+>  		}
+>  	}
+>  
+> -- 
+> 2.7.5
 > 
->          if (events & EPOLLIN)
->              sock->read(sock);
->          if (events & EPOLLOUT)
->              sock->write(sock);
->     }
-> 
-> 
-> With such a virtual table you can mix all userspace stacks and even
-> with normal sockets, for which 'get_events' function can be declared as
-> 
-> static poll_t kernel_sock_get_events(struct sock *sock, struct epoll_event
-> *ev)
-> {
->     return ev->events;
-> }
-> 
-> Do I miss something?
-
-I am not trying to port some tools to use user-space implemented stacks or device
-drivers/emulators, I am seeking to a general purpose approach.
-
-I think that the example in the section of the README "mount a user-level 
-networking stack" explains the situation.
-
-The submodule vunetvdestack uses a namespace to define a networking stack connected
-to a VDE network (see https://github.com/rd235/vdeplug4).
-
-The API is clean (as it can be seen at the end of the file vunet_modules/vunetvdestack.c).
-All the methods but "socket" are directly mapped to their system call counterparts:
-
-struct vunet_operations vunet_ops = {
-  .socket = vdestack_socket,
-  .bind = bind,
-  .connect = connect,
-  .listen = listen,
-  .accept4 = accept4,
-....
-	.epoll_ctl = epoll_ctl,
-...
-}
-
-(the elegance of the API can be seen also in vunet_modules/vunetreal.c: a 38 lines module
- implementing a gateway to the real networking of the hosting machine)
-
-Unfortunately I cannot use the same clean interface to support user-library implemented
-stacks like lwip/lwipv6/picotcp because I cannot generate EPOLL events...
-
-Bizantine workarounds based on data structures exchanged in the data.ptr field of epoll_event
-that must be decoded by the hypervisor to retrieve the missing information about the event
-can be implemented... but it would be a pity ;-)
-
-The same problem arises in umdev modules: virtual devices should generate the same
-EPOLL events of their real couterparts.
-
-I feel that the ability to generate/synthesize EPOLL events could be useful for many projects.
-(In my first message I included some URLs of people seeking for this feature, retrieved by
- some queries on a web search engine)
-
-Implementations may vary as well as the kernel API to support such a feature.
-As I told, my proposal has a minimal impact on the code, it does not require the definition
-of new syscalls, it simply enhances the features of eventfd.
-
-> 
-> Eventually you come up with such a lock to protect your tcp or whatever
-> state machine.  Or you have a real example where read and write paths
-> can work completely independently?
-
-Actually umvu hypervisor uses concurrent tracing of concurrent processes.
-We have named this technique "guardian angels": each process/thread running in the
-partial virtual machine has a correspondent thread in the hypervisor.
-So if a process uses two threads to manage a network connection (say a TCP stream),
-the two guardian angels replicate their requests towards the networking module.
-
-So I am looking for a general solution, not to a pattern to port some projects.
-(and I cannot use two different approaches for event driven and multi-threaded
- implementations as I have to support both).
-
-If you reached this point...  Thank you for your patience.
-I am more than pleased to receive further comments or proposals.
-
-	renzo
