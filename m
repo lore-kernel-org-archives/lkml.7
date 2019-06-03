@@ -2,121 +2,143 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB53C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637AAC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF45272AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398D127CCD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Hzs5RRzc"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MJMwKFHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfFCHbI (ORCPT
+        id S1726754AbfFCHcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:31:08 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36404 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfFCHbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:31:07 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a8so25527249edx.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 00:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5F+wBhCS8sAZq+YWWqmEdfsd0GQvCSzsuUSE02Dy/+0=;
-        b=Hzs5RRzcSR5/iPErwK/TEKCpPfXXb7NKCEOoQh6t1GSNoJcrbpRJTGuHhRcsIvE4GA
-         Q2fL8ChTxAdQyhg9lYzM6RlDVxYJ872nr/HoKow0Nt4+OHzRXdZXlY1B4atsQeSCQSJq
-         9U7pW/mavwwQfxwMb6LJD5fDNPhck3RJgGjfE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=5F+wBhCS8sAZq+YWWqmEdfsd0GQvCSzsuUSE02Dy/+0=;
-        b=NmSvs7BpLNctgCIT0QzIzGDHeSUrdYs3/oq7ItW90LcfvV9aZQQPyE01uNztTRBg+9
-         BQS89h4suu1A21Vj/IhC0RRFXE08Co4VxT6JNxvlwfK6N3Z+meckhKEhPh0iImEzxmb3
-         Pt++VfIfFz3ZKu7lnrg05LUxXSif/EfxyVR3Hg8xigHzkITKOuFpscfINHH8CZ87C+5i
-         0nMjBwWvY7SndqDGdGDdbso0ISqE4B019kxIh8L5UVeQf1z9EWbE8/VIvsyQ/P2PWWLe
-         SV3zUrizv70bNrPlG+7eHlXbM2/5defgWh2djrU05KmX+365S7RvyQb97Um+ZpoJgF/f
-         q6iw==
-X-Gm-Message-State: APjAAAVHoCFTcz5pCpQECC13bJuma0ISmJHCDA+3uJNHon4AY6oi50K7
-        sapScGOqUKXqP6CwG42HQFfQpg==
-X-Google-Smtp-Source: APXvYqyMy/Q966VQ6QHnjPoehMyRWwroWW9LptlRkVDBtGI4jRcS7IQg+vBhXqAEQ7Dl1PqAwJEjjw==
-X-Received: by 2002:a17:906:254c:: with SMTP id j12mr21659216ejb.176.1559547065959;
-        Mon, 03 Jun 2019 00:31:05 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id b53sm3889272edd.89.2019.06.03.00.31.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 00:31:05 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 09:31:03 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: linux-next: unable to fetch the drm-intel-fixes tree
-Message-ID: <20190603073103.GC21222@phenom.ffwll.local>
-Mail-Followup-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20190603082051.273a014c@canb.auug.org.au>
- <20190603110403.0412ed22@canb.auug.org.au>
+        Mon, 3 Jun 2019 03:32:18 -0400
+Received: from mail-eopbgr60069.outbound.protection.outlook.com ([40.107.6.69]:63523
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfFCHcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 03:32:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5g4q9/O2dGLjm+Le6JzlgAyifZOQAHRKB743xmfbmoE=;
+ b=MJMwKFHEp3ciWisy0oaaakdlLbHf/kAmz+KTtV2wqBOOfkKim59lh123TRGvsfpQQaVlqBD2bNrFEMIESbRRxM6qcNApKZ/tIELGs7C+rbJl8vlF3Kq1iRnDY7I5Fzw6RZGhlszTcCqRMWuVBjXOKOyUxHTA4lwnH94gLXkDKi0=
+Received: from VI1PR04MB5790.eurprd04.prod.outlook.com (20.178.127.224) by
+ VI1PR04MB4078.eurprd04.prod.outlook.com (10.171.183.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Mon, 3 Jun 2019 07:32:13 +0000
+Received: from VI1PR04MB5790.eurprd04.prod.outlook.com
+ ([fe80::607a:a473:5c73:7d7e]) by VI1PR04MB5790.eurprd04.prod.outlook.com
+ ([fe80::607a:a473:5c73:7d7e%5]) with mapi id 15.20.1943.018; Mon, 3 Jun 2019
+ 07:32:13 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 3/3] arm64: defconfig: Select CONFIG_CLK_IMX8MN by
+ default
+Thread-Topic: [PATCH V2 3/3] arm64: defconfig: Select CONFIG_CLK_IMX8MN by
+ default
+Thread-Index: AQHVGaxef4gq0FBOl0qNeIPzUu861qaJiZIA
+Date:   Mon, 3 Jun 2019 07:32:13 +0000
+Message-ID: <20190603073212.hgdc4mwqwqvrc6kg@fsr-ub1664-175>
+References: <20190603013503.40626-1-Anson.Huang@nxp.com>
+ <20190603013503.40626-3-Anson.Huang@nxp.com>
+In-Reply-To: <20190603013503.40626-3-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb8b84e5-1676-4817-04d8-08d6e7f5989b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4078;
+x-ms-traffictypediagnostic: VI1PR04MB4078:
+x-microsoft-antispam-prvs: <VI1PR04MB407811AFEED43EA1EBCA74C1F6140@VI1PR04MB4078.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:489;
+x-forefront-prvs: 0057EE387C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(346002)(376002)(366004)(136003)(39860400002)(199004)(189003)(25786009)(99286004)(2906002)(305945005)(6436002)(71190400001)(4744005)(7736002)(476003)(71200400001)(7416002)(102836004)(6512007)(33716001)(9686003)(6862004)(8676002)(11346002)(81166006)(81156014)(53936002)(446003)(8936002)(6486002)(3846002)(1076003)(6246003)(6116002)(54906003)(6636002)(186003)(6506007)(486006)(66946007)(14454004)(76116006)(53546011)(66556008)(66476007)(66446008)(64756008)(86362001)(5660300002)(316002)(68736007)(478600001)(73956011)(66066001)(256004)(26005)(229853002)(4326008)(44832011)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4078;H:VI1PR04MB5790.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1Bb+8gDj0J1DBVLMaac/pvmazLYa+LMCcUSBb0L9wlpsdhen6zYi05rtQgqgFrIskep9xmWhGaUYyCn4PkNNA79RAoJYVi8CLAGZU+gG+0XLwNY6F2AOv01mKXcdb2YKzxB5GwYrbJqHOYmjUecj1D4UaQ84b9UWFR1vHAQv0pOwH88HjbyQoVxcVWOEFHvzUpGL0yNYwMaYzA6e6Kp9v7uCEt4KgWDNyyREP9LS83pnwmfiILs5WamysfsIzQ27iyrUA6faYz9+/f41W7M5Fi+QWrc/k828AhXTnr/67e2eQODdO2NFIgfAXCbuqIHE026KjeKxmJVe87aeUtt0v7fm3XHGuZTL0vefTg85rRkDb+eQmCNTRw46YbajR2feCq3HTebiPDS1XTl0+0fofOuDUsAXC8y2BZsd2KxMp1A=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A1E0E3CAD1331D4C866338A97F69F3D0@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603110403.0412ed22@canb.auug.org.au>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb8b84e5-1676-4817-04d8-08d6e7f5989b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2019 07:32:13.2154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:04:03AM +1000, Stephen Rothwell wrote:
-> Hi Stephen,
-> 
-> On Mon, 3 Jun 2019 08:20:51 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> > 
-> > Trying to fetch the drm-intel-fixes tree today gives me this error:
-> > 
-> > -----------------------------------------------------------------
-> > fatal: Could not read from remote repository.
-> > 
-> > Please make sure you have the correct access rights
-> > and the repository exists.
-> > -----------------------------------------------------------------
-> > 
-> > The same for drm-misc-fixes, drm-intel and drm-misc.  These are all
-> > hosted on git://anongit.freedesktop.org/ .
-> 
-> Also the drm-tegra tree.
+On 19-06-03 09:35:03, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+>=20
+> Enable CONFIG_CLK_IMX8MN to support i.MX8MN clock driver.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes.
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 8d4f25c..aef797c 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -654,6 +654,7 @@ CONFIG_COMMON_CLK_CS2000_CP=3Dy
+>  CONFIG_COMMON_CLK_S2MPS11=3Dy
+>  CONFIG_CLK_QORIQ=3Dy
+>  CONFIG_COMMON_CLK_PWM=3Dy
+> +CONFIG_CLK_IMX8MN=3Dy
 
-drm.git too I guess?
+Nitpick: Move this after IMX8MM so it can stay alphabetically ordered.
 
-But yeah fd.o anongit keeled over over the w/e :-( Admins not yet awake,
-so can't tell you what's up.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>  CONFIG_CLK_IMX8MM=3Dy
+>  CONFIG_CLK_IMX8MQ=3Dy
+>  CONFIG_CLK_IMX8QXP=3Dy
+> --=20
+> 2.7.4
+> =
