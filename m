@@ -2,125 +2,212 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A71C28CC6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2665C28CC6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9972800C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BD328015
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfFCJcQ (ORCPT
+        id S1727738AbfFCJfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:32:16 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33692 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbfFCJcP (ORCPT
+        Mon, 3 Jun 2019 05:35:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727334AbfFCJfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:32:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id y17so7938644edr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 02:32:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5MuUwNLcPfT/+zATBH4u9dUs0Z1WXWpu06xsQGxzqoY=;
-        b=Vu+thWWdEOCzCJnSb0hoJS+pF8xH1Ch0W9NCni0z+mYk7rUthOVwKFJv5omY91KLVo
-         EwbKejkaT5yWeAaZndgPDE/h87BE3Ghr54E2cs5Wo4vCQw0qQtzQjErIUVpOIXXZvuR7
-         BoojHM41NmOvnE0gUmLE/NbQWJpIGD+aLHI7PUAVJeixwYhxGR0PLAsGf9e9M95mrLwE
-         kX31xwYrgYArwsbmi0UJyNJpdZUhynmwrsFPiuIqIvj5xNAGdCGMernW9eGeNtlTx8Wc
-         kZ+MZZQvwceT0MQtkj+ansxULDKM3zTB6t1RqTXnPzlYmh21btuMd9NRFdYa4KkTzfpx
-         cBoA==
-X-Gm-Message-State: APjAAAXdcypsGkNKLwGQ3QerZNK1ivkRLz6osqvPjo0ITbFvt85gWZMS
-        7EGZ3xiL9nTyyDwASTuQmg3X8DO3tk0=
-X-Google-Smtp-Source: APXvYqzPLI+BhjrCwqu59zzJGO7teaba6zJ0gAKWLOiqpf18XHKqh7nGwqSw2w3RyWK/gNr6AyETRQ==
-X-Received: by 2002:aa7:d342:: with SMTP id m2mr27474197edr.111.1559554333155;
-        Mon, 03 Jun 2019 02:32:13 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id h23sm2513270ejc.34.2019.06.03.02.32.12
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 02:32:12 -0700 (PDT)
-Subject: Re: hid-related 5.2-rc1 boot hang
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>, Dave Hansen <dave.hansen@intel.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
- <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
- <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
- <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
- <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
- <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
- <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
- <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
-Message-ID: <e602db44-c792-1abe-e389-a71fca6d2ddd@redhat.com>
-Date:   Mon, 3 Jun 2019 11:32:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 05:35:39 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x539WtVk028296;
+        Mon, 3 Jun 2019 05:35:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw0ytg7pg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 05:35:32 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x539X0tZ029210;
+        Mon, 3 Jun 2019 05:35:32 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw0ytg7nw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 05:35:32 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x533XSKN001411;
+        Mon, 3 Jun 2019 03:40:32 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01dal.us.ibm.com with ESMTP id 2suh08xmts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 03:40:32 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x539ZTIa26017906
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 09:35:29 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97067B2064;
+        Mon,  3 Jun 2019 09:35:29 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 356E5B2071;
+        Mon,  3 Jun 2019 09:35:29 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.160.165])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 09:35:29 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A392716C5D9E; Mon,  3 Jun 2019 02:35:28 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 02:35:28 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Message-ID: <20190603093528.GJ28207@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
+ <20150910171649.GE4029@linux.vnet.ibm.com>
+ <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
+ <20150921193045.GA13674@lerouge>
+ <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
+ <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
+ <20190603034707.GG28207@linux.ibm.com>
+ <20190603052626.nz2qktwmkswxfnsd@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603052626.nz2qktwmkswxfnsd@gondor.apana.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03-06-19 11:11, Hans de Goede wrote:
-> Hi,
+On Mon, Jun 03, 2019 at 01:26:26PM +0800, Herbert Xu wrote:
+> On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
+> > 
+> > 1.	These guarantees are of full memory barriers, -not- compiler
+> > 	barriers.
 > 
-> On 01-06-19 00:15, Jiri Kosina wrote:
->> On Thu, 30 May 2019, Dave Hansen wrote:
->>
->>> On 5/29/19 2:17 AM, Hans de Goede wrote:
->>> ...
->>>> Dave, can you try building your initrd without the hid-logitech-dj module
->>>> included in the initrd?
->>>
->>> I did this on a vanilla 5.2-rc2 kernel (without the reverts) and still
->>> experienced the boot hang while the device was inserted.
->>>
->>>> Also can you check if your modprobe is provided by module-init-tools
->>>> or by kmod ?
->>>
->>> $ dpkg -S `which modprobe`
->>> kmod: /sbin/modprobe
->>
->> Benjamin, Hans, are you looking into this?
+> What I'm saying is that wherever they are, they must come with
+> compiler barriers.  I'm not aware of any synchronisation mechanism
+> in the kernel that gives a memory barrier without a compiler barrier.
+
+Yes, if a given synchronization mechanism requires that memory references
+need to be ordered, both the compiler and the CPU must maintain that
+ordering.
+
+> > 2.	These rules don't say exactly where these full memory barriers
+> > 	go.  SRCU is at one extreme, placing those full barriers in
+> > 	srcu_read_lock() and srcu_read_unlock(), and !PREEMPT Tree RCU
+> > 	at the other, placing these barriers entirely within the callback
+> > 	queueing/invocation, grace-period computation, and the scheduler.
+> > 	Preemptible Tree RCU is in the middle, with rcu_read_unlock()
+> > 	sometimes including a full memory barrier, but other times with
+> > 	the full memory barrier being confined as it is with !PREEMPT
+> > 	Tree RCU.
 > 
-> Not really, I cannot reproduce the request_module problem. I was hoping some
-> of the info from Dave would help to pinpoint it, but it does not :|
+> The rules do say that the (full) memory barrier must precede any
+> RCU read-side that occur after the synchronize_rcu and after the
+> end of any RCU read-side that occur before the synchronize_rcu.
 > 
->> If not, I think we should start reverting (at least the request_module()
->> changes
+> All I'm arguing is that wherever that full mb is, as long as it
+> also carries with it a barrier() (which it must do if it's done
+> using an existing kernel mb/locking primitive), then we're fine.
+
+Fair enough, and smp_mb() does provide what is needed.
+
+> > Interleaving and inserting full memory barriers as per the rules above:
+> > 
+> > 	CPU1: WRITE_ONCE(a, 1)
+> > 	CPU1: synchronize_rcu	
+> > 	/* Could put a full memory barrier here, but it wouldn't help. */
 > 
-> I agree we need to do something about the request_module changes.
+> 	CPU1: smp_mb();
+> 	CPU2: smp_mb();
+
+What is CPU2's smp_mb() ordering?  In other words, what comment would
+you put on each of the above smp_mb() calls?
+
+> Let's put them in because I think they are critical.  smp_mb() also
+> carries with it a barrier().
+
+Again, agreed, smp_mb() implies barrier().
+
+> > 	CPU2: rcu_read_lock();
+> > 	CPU1: b = 2;	
+> > 	CPU2: if (READ_ONCE(a) == 0)
+> > 	CPU2:         if (b != 1)  /* Weakly ordered CPU moved this up! */
+> > 	CPU2:                 b = 1;
+> > 	CPU2: rcu_read_unlock
+> > 
+> > In fact, CPU2's load from b might be moved up to race with CPU1's store,
+> > which (I believe) is why the model complains in this case.
 > 
-> I myself was thinking about somehow making them conditional, e.g. we
-> could add a (temporary) module option defaulting to false for this
-> while we investigate further.
+> Let's put aside my doubt over how we're even allowing a compiler
+> to turn
 > 
-> I'm afraid that if we just revert we will never find the root cause and then
-> we will be stuck with the suboptimal behavior of first the generic hid driver
-> binding followed by a unbind + bind of the new driver shortly afterwards,
-> which also leads to a ton of udev events being fired to userspace (well I
-> guess this does make for a good stress test of the userspace hotplug code).
+> 	b = 1
+> 
+> into
+> 
+> 	if (b != 1)
+> 		b = 1
+> 
+> Since you seem to be assuming that (a == 0) is true in this case
+> (as the assignment b = 1 is carried out), then because of the
+> presence of the full memory barrier, the RCU read-side section
+> must have started prior to the synchronize_rcu.  This means that
+> synchronize_rcu is not allowed to return until at least the end
+> of the grace period, or at least until the end of rcu_read_unlock.
+> 
+> So it actually should be:
+> 
+> 	CPU1: WRITE_ONCE(a, 1)
+> 	CPU1: synchronize_rcu called
+> 	/* Could put a full memory barrier here, but it wouldn't help. */
+> 
+> 	CPU1: smp_mb();
+> 	CPU2: smp_mb();
+> 
+> 	CPU2: grace period starts
+> 	...time passes...
+> 	CPU2: rcu_read_lock();
+> 	CPU2: if (READ_ONCE(a) == 0)
+> 	CPU2:         if (b != 1)  /* Weakly ordered CPU moved this up! */
+> 	CPU2:                 b = 1;
+> 	CPU2: rcu_read_unlock
+> 	...time passes...
+> 	CPU2: grace period ends
+> 
+> 	/* This full memory barrier is also guaranteed by RCU. */
+> 	CPU2: smp_mb();
 
-Quick update, we have another report of module-loading related problems
-which are likely related:
+But in this case, given that there are no more statements for CPU2,
+what is this smp_mb() ordering?
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203741
+							Thanx, Paul
 
-In this case there is no hang, instead there is a 1 to 3 minute delay.
-
-Regards,
-
-Hans
-
+> 	CPU1 synchronize_rcu returns
+> 	CPU1: b = 2;	
+> 
+> Cheers,
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
