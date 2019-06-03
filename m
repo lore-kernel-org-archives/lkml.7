@@ -2,125 +2,109 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB2AC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F86C04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FA827AA3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DC227B56
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 15:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KVVeQ3QZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bvUX7QW7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NS6Q74II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfFCP4q (ORCPT
+        id S1729536AbfFCP4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 11:56:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53072 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbfFCP4p (ORCPT
+        Mon, 3 Jun 2019 11:56:54 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:51483 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbfFCP4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 11:56:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 12B62618F6; Mon,  3 Jun 2019 15:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559577404;
-        bh=EAPG4xulPvqzLmZB0/PxBD6J0ritzVL9IFC2BKLxfxA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KVVeQ3QZIdvovYMUCz5ZmxIoHTSkss8TNYnjBO0yrrdvyBwBWKRXEejff4S5rxD04
-         sMxYEq0oR5ZRGk627ySeJFwyhfScNmzQFmUufGMOl+GNHhS8tk+Xn+T2UanX08uz9o
-         dHZGyNqscx0Fb3UpqOzY4GOtl6/S8TAoLQUYhS4o=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2AB0E618CA;
-        Mon,  3 Jun 2019 15:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559577398;
-        bh=EAPG4xulPvqzLmZB0/PxBD6J0ritzVL9IFC2BKLxfxA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bvUX7QW75oN+oKUhYcAksvTC2vl1Ulm9OO/i8DdtM438nd6u+jao3xQzHE+Ry873C
-         nrGRHqvFkFy0ynOIdCil8+HYBKMRveZcKX+DBSnXqWePV937Np/KtYwACcA/JOOybk
-         9pPsq83DrIGpGoQQ+WkAcKNpMFpfdhGMv2RwVyKo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2AB0E618CA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 3 Jun 2019 09:56:35 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     georgi.djakov@linaro.org, amit.kucheria@linaro.org,
-        bjorn.andersson@linaro.org, daidavid1@codeaurora.org,
-        devicetree@vger.kernel.org, evgreen@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, nm@ti.com,
-        rjw@rjwysocki.net, robh+dt@kernel.org, sboyd@kernel.org,
-        seansw@qti.qualcomm.com, sibis@codeaurora.org,
-        vincent.guittot@linaro.org, vireshk@kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 0/5] Introduce OPP bandwidth bindings
-Message-ID: <20190603155634.GA10741@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Saravana Kannan <saravanak@google.com>,
-        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
-        bjorn.andersson@linaro.org, daidavid1@codeaurora.org,
-        devicetree@vger.kernel.org, evgreen@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, nm@ti.com,
-        rjw@rjwysocki.net, robh+dt@kernel.org, sboyd@kernel.org,
-        seansw@qti.qualcomm.com, sibis@codeaurora.org,
-        vincent.guittot@linaro.org, vireshk@kernel.org,
-        kernel-team@android.com
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190601021228.210574-1-saravanak@google.com>
+        Mon, 3 Jun 2019 11:56:53 -0400
+Received: by mail-wm1-f54.google.com with SMTP id f10so11783077wmb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 08:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=cc2qpruDakPhVR/+oGLp9bzGzok2vGK8TIr8IQJeQhA=;
+        b=NS6Q74IIv8QB4krMkgs4Z9IVQ/L7pYBS4KAPNrffZl4NiBWlyDQAr1i6n+6dpjkb6/
+         J6+wbDcSx5kPgyhGffeJezsXhLGEATG2LG3i/lmQ/khNcy2524DTjZYwWtIQIeQ4Q3z3
+         gBEp5SBWEF1RqoYuKRrnC1MKr8iUx9jqiZfJQFcU4Xaj5CIBbUEY19/xmpI2NT0/bVI9
+         5hhWJhy1oEn7lWPpShFUTp0ELu5cEaYp7KZAwIHR+zL5w8Fq+cEv4We5oa7GfP3GIM2r
+         jQYBAfp9oZHjQGbfeU4s3mJnnaArSRMtfth/iRRZW2hcSm0ZP3SLZLPINAUGEq3xsohH
+         OsVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=cc2qpruDakPhVR/+oGLp9bzGzok2vGK8TIr8IQJeQhA=;
+        b=EG2dbwlMbSgx+9rJBfE0V8bLOhBOshVi8ILRLZM37k2TmAwa9K028welVwTr2KmcEk
+         6W2yfBcf02qpnlhr3I+6a2dy0WB1BeUWTowey94qqu/TBi0WI03I4h9T97dBtVFAWILZ
+         3/7Jo3e/Ba8F9yR16rvWcXn0xj4WAMcBGyOf5qfFXH998M9Z73+ixru2PaPP2GMeFfQw
+         QgmHDvOdaWFolKzoyal0U3bQZKQOny6oqgZKtGfKGc4gOM1y+PZsVogZ+cRdwOYz24Kz
+         kGW0VvRINOIw+6Cx3GptqFzWyIKJjnOMbtXcR6jRoYkH1UQTEgEK1Cnrz/lj8z7Sfppb
+         UyEA==
+X-Gm-Message-State: APjAAAXgTW42YhyATTugIPRx7n1Wx5bi4T6KrziD35cxgYB2FuVorTkz
+        7Vmx7FyIvxWZTQJnVSlach8=
+X-Google-Smtp-Source: APXvYqwPX2H3IGUwFLIGuTkeFVAZmiMTYEKzIO9oj3HMpTK5kDSaWvjvgjHW/1K1E5HU4gukgGcRjQ==
+X-Received: by 2002:a1c:b68a:: with SMTP id g132mr15319505wmf.66.1559577411337;
+        Mon, 03 Jun 2019 08:56:51 -0700 (PDT)
+Received: from [10.17.91.220] ([91.199.104.6])
+        by smtp.gmail.com with ESMTPSA id f2sm3881449wru.31.2019.06.03.08.56.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 08:56:50 -0700 (PDT)
+Message-ID: <b8c50bcb9335c93c3c730d55b6a9415d5f1fdb2a.camel@gmail.com>
+Subject: Re: O_CLOFORK use case
+From:   Mihai =?UTF-8?Q?Don=C8=9Bu?= <mihai.dontu@gmail.com>
+To:     Joshua Hudson <joshudson@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Mon, 03 Jun 2019 18:56:49 +0300
+In-Reply-To: <CA+jjjYT6_ZZP5Ucqxvtmcd3d18vAC1LRtruiXojFVaxpJ-HhLA@mail.gmail.com>
+References: <CA+jjjYT6_ZZP5Ucqxvtmcd3d18vAC1LRtruiXojFVaxpJ-HhLA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190601021228.210574-1-saravanak@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 07:12:28PM -0700, Saravana Kannan wrote:
-> I'll have to Nack this series because it's making a couple of wrong assumptions
-> about bandwidth voting.
+On Mon, 2019-06-03 at 08:24 -0700, Joshua Hudson wrote:
+> I ran headlong into the use case for O_CLOFORK and got into a locking
+> debate over it.
 > 
-> Firstly, it's mixing up OPP to bandwidth mapping (Eg: CPU freq to CPU<->DDR
-> bandwidth mapping) with the bandwidth levels that are actually supported by an
-> interconnect path (Eg: CPU<->DDR bandwidth levels). For example, CPU0 might
-> decide to vote for a max of 10 GB/s because it's a little CPU and never needs
-> anything higher than 10 GB/s even at CPU0's max frequency. But that has no
-> bearing on bandwidth level available between CPU<->DDR.
+> The actual use case involves squashing a thread race between two
+> threads. If a file is opened for write in one thread with O_CLOEXEC
+> while another thread calls fork(), a race condition can happen where
+> the thread that closes the handle misses the out of disk error because
+> the child process closed the handle last inside execve().
+> 
+> The decades old idiom for replacing config files isn't safe in
+> multi-threaded code. Yipe.
+> 
+>     int h = open(".configfile~", O_WRONY | O_EXCL | O_CLOEXEC, 0666);
+>     if (h < 0) { perror(".configfile"); return 1; }
+>     ssize_t delta = 0;
+>     while ((delta = write(h, newconfigdata, newconfiglen)) > 0) {
+>         newconfigdata += delta;
+>         newconfiglen -= delta;
+>     }
+>     if (delta < 0) { perror(".configfile"); return 1; }
+>     if (close(h)) { perror(".configfile"); return 1; }
+>     rename(".configfile~", ".configfile");
+> 
+> To fix it, we have to put locks around close() and fork()/vfork(). Ugh.
 
-I'm going to just quote this part of the email to avoid forcing people to
-scroll too much.
+fsync() / fdatasync() before close() should fix it, non?
 
-I agree that there is an enormous universe of new and innovative things that can
-be done for bandwidth voting. I would love to have smart governors and expansive
-connections between different components that are all aware of each other. I
-don't think that anybody is discounting that these things are possible.
+I was under the impression that any of those two became mandatory when
+ext4 came along.
 
-But as it stands today, as a leaf driver developer my primary concern is that I
-need to vote something for the GPU->DDR path. Right now I'm voting the maximum
-because that is the bare minimum we need to get working GPU.
-
-Then the next incremental baby step is to allow us to select a minimum
-vote based on a GPU frequency level to allow for some sort of very coarse power
-savings. It isn't perfect, but better than cranking everything to 11. This is
-why we need the OPP bandwidth bindings to allow us to make the association and
-tune down the vote. I fully agree that this isn't the optimal solution but
-it is the only knob we have right now.
-
-And after that we should go nuts. I'll gladly put the OPP bindings in the
-rear-view mirror and turn over all bandwidth to a governor or two or three.
-I'll be happy to have nothing to do with it again. But until then we need
-a solution for the leaf drivers that lets us provide some modicum of power
-control.
-
-Jordan
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Mihai Donțu
+
+
