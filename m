@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5FCC04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8684A25D85
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5B32542C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 13:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="q+CTCZb5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ldQ+tNgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfFCNo6 (ORCPT
+        id S1728585AbfFCNpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 09:44:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48507 "EHLO
+        Mon, 3 Jun 2019 09:45:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60429 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfFCNo6 (ORCPT
+        with ESMTP id S1726780AbfFCNpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 09:44:58 -0400
+        Mon, 3 Jun 2019 09:45:43 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DiiA2614049
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x53DjSoC614326
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 3 Jun 2019 06:44:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DiiA2614049
+        Mon, 3 Jun 2019 06:45:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x53DjSoC614326
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559569485;
-        bh=I6bucJmuOsEloEQTOfg2YM3pP8k+T5TGAAh3PxQmNPA=;
+        s=2019051801; t=1559569529;
+        bh=tnCa0VNVmlfW+3+oVVEvRCh2gYklefe4IzvWiy7w82I=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=q+CTCZb5G2NVtfRk8+gfrdjuiahogZOdkQpStPNxuNpAb1dQIkIxP5EecV890/Jz2
-         zgH4FXVOvRGhy62WFsG325ZVVhLuNCnT9Jztzey3V6X6dkScjGM+zO4649Q9pY+I54
-         gTC5JY0wiv64OZc3QsaiLoUC1QXyrkpL8ursujLZinx235zB1bYCjqhQhXsQw2zDnT
-         68uEWx8jIdJBuvRT5nlI/Ux53lTAVTRxep6Yz+Eau/YXRdCG0Xop/fhVfpNyLTDKC1
-         0NW/ntCbUHPTwOJHrr0Gomw3dBpOqBMwmY8xiDO///GmlVnMLule62b/qdd3Z/jbTR
-         Ml8yxV/U9K0Cg==
+        b=ldQ+tNgWM49Lkd8CRRvzxke/pJSmKJw6fr3w5/qXux2TgASUBQOLt6o1VJzyg+WrH
+         7xdHWFwZukoFrpDwGULztoICZdpxvV2kOq+vjg7DpRsMslVddG2YNy8wndHCOAgLlo
+         07yNzXRI1FMA4NT25vJMzPD8q7N05Ch68KLgtMZ3+3RklRj3hsiaNoOa7k4EkAPpQB
+         bU3Xvh9pfCPHzyX/1cNyDQTRDqZT50pJZpzacsodDitQolQdGcgqHthxGyweaiuv1c
+         53TQS4UtraZbAczEcsueT0BYPTqIRwKgAQnVnYDcJA2pjQenoIXZvVFbpdaY4qtROj
+         GH9rDBZcg1TQA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53Dii3C614046;
-        Mon, 3 Jun 2019 06:44:44 -0700
-Date:   Mon, 3 Jun 2019 06:44:44 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x53DjRiw614323;
+        Mon, 3 Jun 2019 06:45:27 -0700
+Date:   Mon, 3 Jun 2019 06:45:27 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mark Rutland <tipbot@zytor.com>
-Message-ID: <tip-3724921396dd1a07c93e3516b8d7c9ff570d17a9@git.kernel.org>
-Cc:     tglx@linutronix.de, mark.rutland@arm.com, hpa@zytor.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@kernel.org, will.deacon@arm.com
-Reply-To: mark.rutland@arm.com, tglx@linutronix.de,
-          torvalds@linux-foundation.org, hpa@zytor.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          will.deacon@arm.com
-In-Reply-To: <20190522132250.26499-17-mark.rutland@arm.com>
-References: <20190522132250.26499-17-mark.rutland@arm.com>
+Message-ID: <tip-2af7a0f91c3a645ec9f1cd68e41472021746db35@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, tglx@linutronix.de, herbert@gondor.apana.org.au,
+        will.deacon@arm.com, peterz@infradead.org, mark.rutland@arm.com,
+        hpa@zytor.com
+Reply-To: mark.rutland@arm.com, hpa@zytor.com, herbert@gondor.apana.org.au,
+          peterz@infradead.org, will.deacon@arm.com,
+          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+          mingo@kernel.org, tglx@linutronix.de
+In-Reply-To: <20190522132250.26499-18-mark.rutland@arm.com>
+References: <20190522132250.26499-18-mark.rutland@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/atomic: Use s64 for atomic64_t on 64-bit
-Git-Commit-ID: 3724921396dd1a07c93e3516b8d7c9ff570d17a9
+Subject: [tip:locking/core] locking/atomic, crypto/nx: Remove redundant
+ casts
+Git-Commit-ID: 2af7a0f91c3a645ec9f1cd68e41472021746db35
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,30 +72,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3724921396dd1a07c93e3516b8d7c9ff570d17a9
-Gitweb:     https://git.kernel.org/tip/3724921396dd1a07c93e3516b8d7c9ff570d17a9
+Commit-ID:  2af7a0f91c3a645ec9f1cd68e41472021746db35
+Gitweb:     https://git.kernel.org/tip/2af7a0f91c3a645ec9f1cd68e41472021746db35
 Author:     Mark Rutland <mark.rutland@arm.com>
-AuthorDate: Wed, 22 May 2019 14:22:48 +0100
+AuthorDate: Wed, 22 May 2019 14:22:49 +0100
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Mon, 3 Jun 2019 12:32:57 +0200
 
-locking/atomic: Use s64 for atomic64_t on 64-bit
+locking/atomic, crypto/nx: Remove redundant casts
 
-Now that all architectures use 64 consistently as the base type for the
-atomic64 API, let's have the CONFIG_64BIT definition of atomic64_t use
-s64 as the underlying type for atomic64_t, rather than long, matching
-the generated headers.
-
-On architectures where atomic64_read(v) is READ_ONCE(v->counter), this
-patch will cause the return type of atomic64_read() to be s64.
-
-As of this patch, the atomic64 API can be relied upon to consistently
-return s64 where a value rather than boolean condition is returned. This
-should make code more robust, and simpler, allowing for the removal of
-casts previously required to ensure consistent types.
+Now that atomic64_read() returns s64 consistently, we don't need to
+explicitly cast its return value. Drop the redundant casts.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -105,7 +98,6 @@ Cc: catalin.marinas@arm.com
 Cc: davem@davemloft.net
 Cc: fenghua.yu@intel.com
 Cc: heiko.carstens@de.ibm.com
-Cc: herbert@gondor.apana.org.au
 Cc: ink@jurassic.park.msu.ru
 Cc: jhogan@kernel.org
 Cc: linux@armlinux.org.uk
@@ -118,22 +110,40 @@ Cc: ralf@linux-mips.org
 Cc: rth@twiddle.net
 Cc: tony.luck@intel.com
 Cc: vgupta@synopsys.com
-Link: https://lkml.kernel.org/r/20190522132250.26499-17-mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/20190522132250.26499-18-mark.rutland@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/nx/nx-842-pseries.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/types.h b/include/linux/types.h
-index 231114ae38f4..05030f608be3 100644
---- a/include/linux/types.h
-+++ b/include/linux/types.h
-@@ -174,7 +174,7 @@ typedef struct {
+diff --git a/drivers/crypto/nx/nx-842-pseries.c b/drivers/crypto/nx/nx-842-pseries.c
+index 938332ce3b60..2de5e3672e42 100644
+--- a/drivers/crypto/nx/nx-842-pseries.c
++++ b/drivers/crypto/nx/nx-842-pseries.c
+@@ -857,7 +857,7 @@ static ssize_t nx842_##_name##_show(struct device *dev,		\
+ 	local_devdata = rcu_dereference(devdata);			\
+ 	if (local_devdata)						\
+ 		p = snprintf(buf, PAGE_SIZE, "%lld\n",			\
+-		       (s64)atomic64_read(&local_devdata->counters->_name));	\
++		       atomic64_read(&local_devdata->counters->_name));	\
+ 	rcu_read_unlock();						\
+ 	return p;							\
+ }
+@@ -911,7 +911,7 @@ static ssize_t nx842_timehist_show(struct device *dev,
+ 	for (i = 0; i < (NX842_HIST_SLOTS - 2); i++) {
+ 		bytes = snprintf(p, bytes_remain, "%u-%uus:\t%lld\n",
+ 			       i ? (2<<(i-1)) : 0, (2<<i)-1,
+-			       (s64)atomic64_read(&times[i]));
++			       atomic64_read(&times[i]));
+ 		bytes_remain -= bytes;
+ 		p += bytes;
+ 	}
+@@ -919,7 +919,7 @@ static ssize_t nx842_timehist_show(struct device *dev,
+ 	 * 2<<(NX842_HIST_SLOTS - 2) us */
+ 	bytes = snprintf(p, bytes_remain, "%uus - :\t%lld\n",
+ 			2<<(NX842_HIST_SLOTS - 2),
+-			(s64)atomic64_read(&times[(NX842_HIST_SLOTS - 1)]));
++			atomic64_read(&times[(NX842_HIST_SLOTS - 1)]));
+ 	p += bytes;
  
- #ifdef CONFIG_64BIT
- typedef struct {
--	long counter;
-+	s64 counter;
- } atomic64_t;
- #endif
- 
+ 	rcu_read_unlock();
