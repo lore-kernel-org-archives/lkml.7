@@ -2,92 +2,62 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0251C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963AAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF40248B1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A28A274B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 17:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfFCRDC (ORCPT
+        id S1727654AbfFCRED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 13:03:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57963 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbfFCRDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 13:03:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hXqMB-0004iE-Uh; Mon, 03 Jun 2019 17:02:48 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] bpf: remove redundant assignment to err
-Date:   Mon,  3 Jun 2019 18:02:47 +0100
-Message-Id: <20190603170247.9951-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 3 Jun 2019 13:04:03 -0400
+Received: from foss.arm.com ([217.140.101.70]:55974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfFCREB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 13:04:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63F8980D;
+        Mon,  3 Jun 2019 10:04:01 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 694F53F5AF;
+        Mon,  3 Jun 2019 10:04:00 -0700 (PDT)
+Subject: Re: [RFC PATCH 02/57] drivers: ipmi: Drop device reference
+To:     minyard@acm.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, arnd@arndb.de
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-3-git-send-email-suzuki.poulose@arm.com>
+ <20190603170125.GM2742@minyard.net>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f1278aea-9992-f9de-95a8-487aae1d36da@arm.com>
+Date:   Mon, 3 Jun 2019 18:03:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603170125.GM2742@minyard.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi
 
-The variable err is assigned with the value -EINVAL that is never
-read and it is re-assigned a new value later on.  The assignment is
-redundant and can be removed.
+On 03/06/2019 18:01, Corey Minyard wrote:
+> On Mon, Jun 03, 2019 at 04:49:28PM +0100, Suzuki K Poulose wrote:
+>> Drop the reference to a device found via bus_find_device()
+> 
+> This change is correct, but it probably doesn't belong in this
+> series.  Would you like me to take it as a stand-alone change?
+> 
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- kernel/bpf/devmap.c | 2 +-
- kernel/bpf/xskmap.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Sure, please go ahead and I can drop it.
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 5ae7cce5ef16..a76cc6412fc4 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
- static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
- {
- 	struct bpf_dtab *dtab;
--	int err = -EINVAL;
-+	int err;
- 	u64 cost;
- 
- 	if (!capable(CAP_NET_ADMIN))
-diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
-index 22066c28ba61..26859c6c9491 100644
---- a/kernel/bpf/xskmap.c
-+++ b/kernel/bpf/xskmap.c
-@@ -17,7 +17,7 @@ struct xsk_map {
- 
- static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
- {
--	int cpu, err = -EINVAL;
-+	int cpu, err;
- 	struct xsk_map *m;
- 	u64 cost;
- 
--- 
-2.20.1
-
+Thanks
+Suzuki
