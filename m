@@ -2,142 +2,253 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A13C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1320CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF2027E94
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBAB27E94
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 09:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559553126;
-	bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8BJdlcbdsbfp/KDSoh5g2Z3n4uKbv69tXFI8ik4b3Xjftm9pesSYPBkk1tdFPAYU
-	 sdm+nKd52MuM/hQq+CBwFgtdDW3BKBznzlnyAl/4fSuqsnLY4XjvV4rtXOW4ahVRC4
-	 C6R/ljtQs5XiD6M6Vvc2ehYtDmEp0twWp6Oi7LJE=
+	s=default; t=1559553129;
+	bh=36HEQJkAL0awwlXXRE8WLmiNKBm5ex8Qw7VMxA0CmyI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Q1bii0cTLRG1fcBoP7jcTzJjaqoK6GGAFz2PFmPzjV9ZQ9ZN9xHy11eqGNkZPeu2E
+	 6+UpOLzcw926XIZM2xQiYRsac+jyuDIdhcAPIXP85EV7ZTUastn19xIh/rO9oEgleC
+	 wCR74wuXVHWD6M8uUWF56L+9QuobV0oMj2PLnXq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfFCJMF (ORCPT
+        id S1728583AbfFCJMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 05:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
+        Mon, 3 Jun 2019 05:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfFCJMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 05:12:00 -0400
+        id S1728571AbfFCJMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 05:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F362B27E79;
-        Mon,  3 Jun 2019 09:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614ED27E79;
+        Mon,  3 Jun 2019 09:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559553119;
-        bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTJJ94u6lcDHYy/7WJarGZybIDx/rBi3/x0dD2acbAoUQSfjWbnfKPdU52/YdbXEg
-         +KglXi7GhSVVfan0u72Kmed0r8RWMvZFche8i+NoBjBVyi05FRSUpCf3+aU86xQE0n
-         d4rB6RuYvndgkCY9pai92JXtR+ycEmQUcUADam/E=
+        s=default; t=1559553124;
+        bh=36HEQJkAL0awwlXXRE8WLmiNKBm5ex8Qw7VMxA0CmyI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q4nmJyLryPB5tXaAX1sVDP/OLQrNzFVrCDbS3KRXy3WglH9RIW3RIwalh44dZyg9N
+         TeSYU3c/cNu4COvKJBa2bq66bEyATzcZ3fXsl42ij1mmG6LdCLEG7alI0V/1KqElee
+         ixDb6tkzLkN+SqLGb2hlTSRuHzfsqGUR7Rp135AU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 08/36] llc: fix skb leak in llc_build_and_send_ui_pkt()
-Date:   Mon,  3 Jun 2019 11:08:56 +0200
-Message-Id: <20190603090521.505143571@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.0 00/36] 5.0.21-stable review
+Date:   Mon,  3 Jun 2019 11:08:48 +0200
+Message-Id: <20190603090520.998342694@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190603090520.998342694@linuxfoundation.org>
-References: <20190603090520.998342694@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.0.21-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.0.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.0.21-rc1
+X-KernelTest-Deadline: 2019-06-05T09:05+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Note, this is going to be the LAST 5.0.y kernel release.  After this one, it is
+end-of-life, please move to 5.1.y at this point in time.  If there is anything
+wrong with the 5.1.y tree, preventing you from moving to 5.1.y, please let me
+know.
 
-[ Upstream commit 8fb44d60d4142cd2a440620cd291d346e23c131e ]
+This is the start of the stable review cycle for the 5.0.21 release.
+There are 36 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-If llc_mac_hdr_init() returns an error, we must drop the skb
-since no llc_build_and_send_ui_pkt() caller will take care of this.
+Responses should be made by Wed 05 Jun 2019 09:04:48 AM UTC.
+Anything received after that time might be too late.
 
-BUG: memory leak
-unreferenced object 0xffff8881202b6800 (size 2048):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
-    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
-    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
-    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
-    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
-    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
-    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
-    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
-    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
-    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
-    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
-    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
-    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.21-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+and the diffstat can be found below.
 
-BUG: memory leak
-unreferenced object 0xffff88811d750d00 (size 224):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
-  backtrace:
-    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
-    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
-    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
-    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
-    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
-    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
-    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
-    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+thanks,
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/llc/llc_output.c |    2 ++
- 1 file changed, 2 insertions(+)
+greg k-h
 
---- a/net/llc/llc_output.c
-+++ b/net/llc/llc_output.c
-@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
- 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
- 	if (likely(!rc))
- 		rc = dev_queue_xmit(skb);
-+	else
-+		kfree_skb(skb);
- 	return rc;
- }
- 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.0.21-rc1
+
+Junwei Hu <hujunwei4@huawei.com>
+    tipc: fix modprobe tipc failed after switch order of device registration
+
+David S. Miller <davem@davemloft.net>
+    Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+
+Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+    xen/pciback: Don't disable PCI_COMMAND on PCI device reset.
+
+Daniel Axtens <dja@axtens.net>
+    crypto: vmx - ghash: do nosimd fallback manually
+
+Willem de Bruijn <willemb@google.com>
+    net: correct zerocopy refcnt with udp MSG_MORE
+
+Vishal Kulkarni <vishal@chelsio.com>
+    cxgb4: Revert "cxgb4: Remove SGE_HOST_PAGE_SIZE dependency on page size"
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: don't ignore netdev notifications if no TLS features
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: fix state removal with feature flags off
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Reduce memory usage when running in kdump kernel.
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix possible BUG() condition when calling pci_disable_msix().
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix aggregation buffer leak under OOM condition.
+
+Weifeng Voon <weifeng.voon@intel.com>
+    net: stmmac: dma channel control register need to be init first
+
+Tan, Tee Min <tee.min.tan@intel.com>
+    net: stmmac: fix ethtool flow control not able to get/set
+
+Saeed Mahameed <saeedm@mellanox.com>
+    net/mlx5e: Disable rxhash when CQE compress is enabled
+
+Parav Pandit <parav@mellanox.com>
+    net/mlx5: Allocate root ns memory using kzalloc to match kfree
+
+Chris Packham <chris.packham@alliedtelesis.co.nz>
+    tipc: Avoid copying bytes beyond the supplied data
+
+Parav Pandit <parav@mellanox.com>
+    net/mlx5: Avoid double free in fs init error unwinding path
+
+Kloetzke Jan <Jan.Kloetzke@preh.de>
+    usbnet: fix kernel crash after disconnect
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    r8169: fix MAC address being lost in PCI D3
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: stmmac: fix reset gpio free missing
+
+Vlad Buslov <vladbu@mellanox.com>
+    net: sched: don't use tc_action->order during action dump
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    net: phy: marvell10g: report if the PHY fails to boot firmware
+
+Antoine Tenart <antoine.tenart@bootlin.com>
+    net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: mvneta: Fix err code path of probe
+
+Eric Dumazet <edumazet@google.com>
+    net-gro: fix use-after-free read in napi_gro_frags()
+
+Andy Duan <fugang.duan@nxp.com>
+    net: fec: fix the clk mismatch in failed_reset path
+
+Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+    net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
+
+Jiri Pirko <jiri@mellanox.com>
+    mlxsw: spectrum_acl: Avoid warning after identical rules insertion
+
+Eric Dumazet <edumazet@google.com>
+    llc: fix skb leak in llc_build_and_send_ui_pkt()
+
+David Ahern <dsahern@gmail.com>
+    ipv6: Fix redirect with VRF
+
+Mike Manning <mmanning@vyatta.att-mail.com>
+    ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
+
+Eric Dumazet <edumazet@google.com>
+    ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
+
+Eric Dumazet <edumazet@google.com>
+    ipv4/igmp: fix another memory leak in igmpv3_del_delrec()
+
+Eric Dumazet <edumazet@google.com>
+    inet: switch IP ID generator to siphash
+
+Raju Rangoju <rajur@chelsio.com>
+    cxgb4: offload VLAN flows regardless of VLAN ethtype
+
+Jarod Wilson <jarod@redhat.com>
+    bonding/802.3ad: fix slave link initialization transition states
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ drivers/crypto/vmx/ghash.c                         | 212 +++++++++------------
+ drivers/net/bonding/bond_main.c                    |  15 +-
+ drivers/net/dsa/mv88e6xxx/chip.c                   |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  19 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h          |   6 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c      |   2 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c   |   5 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c         |  11 ++
+ drivers/net/ethernet/freescale/fec_main.c          |   2 +-
+ drivers/net/ethernet/marvell/mvneta.c              |   4 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c    |  10 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  13 ++
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   6 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |  11 +-
+ drivers/net/ethernet/realtek/r8169.c               |   3 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   4 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |   3 +-
+ drivers/net/phy/marvell10g.c                       |  13 ++
+ drivers/net/usb/usbnet.c                           |   6 +
+ drivers/xen/xen-pciback/pciback_ops.c              |   2 -
+ include/linux/siphash.h                            |   5 +
+ include/net/netns/ipv4.h                           |   2 +
+ include/uapi/linux/tipc_config.h                   |  10 +-
+ net/core/dev.c                                     |   2 +-
+ net/core/skbuff.c                                  |   6 +-
+ net/ipv4/igmp.c                                    |  47 +++--
+ net/ipv4/ip_output.c                               |   4 +-
+ net/ipv4/route.c                                   |  12 +-
+ net/ipv6/ip6_output.c                              |   4 +-
+ net/ipv6/output_core.c                             |  30 +--
+ net/ipv6/raw.c                                     |   2 +
+ net/ipv6/route.c                                   |   6 +
+ net/llc/llc_output.c                               |   2 +
+ net/sched/act_api.c                                |   3 +-
+ net/tipc/core.c                                    |  32 ++--
+ net/tipc/subscr.h                                  |   5 +-
+ net/tipc/topsrv.c                                  |  14 +-
+ net/tls/tls_device.c                               |   9 +-
+ 41 files changed, 313 insertions(+), 245 deletions(-)
 
 
