@@ -3,106 +3,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A00C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795DE26329
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E893E26329
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 23:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFCXsZ (ORCPT
+        id S1726510AbfFCXsu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 19:48:25 -0400
-Received: from www62.your-server.de ([213.133.104.62]:46692 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfFCXsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 19:48:25 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXwgf-00010o-Eh; Tue, 04 Jun 2019 01:48:21 +0200
-Received: from [178.197.249.21] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXwgf-000Lnk-48; Tue, 04 Jun 2019 01:48:21 +0200
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matt Mullins <mmullins@fb.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Andrew Hall <hall@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-References: <20190531223735.4998-1-mmullins@fb.com>
- <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
- <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net>
- <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
- <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
-Date:   Tue, 4 Jun 2019 01:48:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 3 Jun 2019 19:48:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:45303 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfFCXsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 19:48:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jun 2019 16:48:49 -0700
+X-ExtLoop1: 1
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Jun 2019 16:48:48 -0700
+Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 3 Jun 2019 16:48:48 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX125.amr.corp.intel.com ([169.254.3.172]) with mapi id 14.03.0415.000;
+ Mon, 3 Jun 2019 16:48:47 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: RE: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
+ in single ioctl()
+Thread-Topic: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages
+ in single ioctl()
+Thread-Index: AQHVGAki7TYpY4ZsUk+m4jTej+khLaaK1z+AgAAGRQD//79uoA==
+Date:   Mon, 3 Jun 2019 23:48:47 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654ED499@ORSMSX116.amr.corp.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-4-sean.j.christopherson@intel.com>
+ <beb8ac7a-b580-8ff2-7467-fb2870fb8cf0@intel.com>
+ <20190603203712.GI13384@linux.intel.com>
+In-Reply-To: <20190603203712.GI13384@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTAxNjYzMWQtZDY5OC00ZWI3LTk2OWEtOWJkZjNiZTQyOWEzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTUg1cmMzcysxSFhSSFhEb1Z5MGpja250Qzk1SnhVakRIOTFySFNaNXlkQUdaWVh0SmNSNEZMNHZGT3JrdnRubiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 01:27 AM, Alexei Starovoitov wrote:
-> On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
->>
->> If these are invariably non-nested, I can easily keep bpf_misc_sd when
->> I resubmit.  There was no technical reason other than keeping the two
->> codepaths as similar as possible.
->>
->> What resource gives you worry about doing this for the networking
->> codepath?
-> 
-> my preference would be to keep tracing and networking the same.
-> there is already minimal nesting in networking and probably we see
-> more when reuseport progs will start running from xdp and clsbpf
-> 
->>> Aside from that it's also really bad to miss events like this as exporting
->>> through rb is critical. Why can't you have a per-CPU counter that selects a
->>> sample data context based on nesting level in tracing? (I don't see a discussion
->>> of this in your commit message.)
->>
->> This change would only drop messages if the same perf_event is
->> attempted to be used recursively (i.e. the same CPU on the same
->> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
->> BPF_F_CURRENT_CPU in testing).
->>
->> I'll try to accomplish the same with a percpu nesting level and
->> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
->> same problem -- a local patch keeping track of the nesting level is how
->> I got the above stack trace, too.
-> 
-> I don't think counter approach works. The amount of nesting is unknown.
-> imo the approach taken in this patch is good.
-> I don't see any issue when event_outputs will be dropped for valid progs.
-> Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
-> But that's an error anyway.
 
-My main worry with this xchg() trick is that we'll miss to export crucial
-data with the EBUSY bailing out especially given nesting could increase in
-future as you state, so users might have a hard time debugging this kind of
-issue if they share the same perf event map among these programs, and no
-option to get to this data otherwise. Supporting nesting up to a certain
-level would still be better than a lost event which is also not reported
-through the usual way aka perf rb.
+
+> -----Original Message-----
+> From: Christopherson, Sean J
+> Sent: Monday, June 03, 2019 1:37 PM
+> To: Hansen, Dave <dave.hansen@intel.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>; Andy Lutomirski
+> <luto@kernel.org>; Xing, Cedric <cedric.xing@intel.com>; Stephen Smalley
+> <sds@tycho.nsa.gov>; James Morris <jmorris@namei.org>; Serge E . Hallyn
+> <serge@hallyn.com>; LSM List <linux-security-module@vger.kernel.org>;
+> Paul Moore <paul@paul-moore.com>; Eric Paris <eparis@parisplace.org>;
+> selinux@vger.kernel.org; Jethro Beekman <jethro@fortanix.com>; Thomas
+> Gleixner <tglx@linutronix.de>; Linus Torvalds <torvalds@linux-
+> foundation.org>; LKML <linux-kernel@vger.kernel.org>; X86 ML
+> <x86@kernel.org>; linux-sgx@vger.kernel.org; Andrew Morton <akpm@linux-
+> foundation.org>; nhorman@redhat.com; npmccallum@redhat.com; Ayoun, Serge
+> <serge.ayoun@intel.com>; Katz-zamir, Shay <shay.katz-zamir@intel.com>;
+> Huang, Haitao <haitao.huang@intel.com>; Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com>; Svahn, Kai <kai.svahn@intel.com>;
+> Borislav Petkov <bp@alien8.de>; Josh Triplett <josh@joshtriplett.org>;
+> Huang, Kai <kai.huang@intel.com>; David Rientjes <rientjes@google.com>;
+> Roberts, William C <william.c.roberts@intel.com>; Tricca, Philip B
+> <philip.b.tricca@intel.com>
+> Subject: Re: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple
+> pages in single ioctl()
+> 
+> On Mon, Jun 03, 2019 at 01:14:45PM -0700, Dave Hansen wrote:
+> > On 5/31/19 4:31 PM, Sean Christopherson wrote:
+> > > -struct sgx_enclave_add_page {
+> > > +struct sgx_enclave_add_pages {
+> > >  	__u64	addr;
+> > >  	__u64	src;
+> > >  	__u64	secinfo;
+> > > +	__u32	nr_pages;
+> > >  	__u16	mrmask;
+> > >  } __attribute__((__packed__));
+> >
+> > IMNHO this follows a user interface anti-pattern: exposing page sizes
+> > where not strictly required.
+> >
+> > Think of how this would look to an application if page size was
+> > variable.  With this interface, they always need to scale their
+> > operations by page size instead of just aligning it.
+> 
+> I briefly considered taking size in bytes, but I took a shortcut because
+> EPC pages are architecturally defined to be 4k sized and aligned.  That
+> being said, I don't necessarily disagree, especially if nr_pages isn't
+> squeezed into a u32.
+> 
+> > BTW, why is nr_pages a u32?  Do we never envision a case where you can
+> > add more than 4TB of memory to an enclave? ;)
+> 
+> Heh, fair enough.  IIRC, a while back someone posted about having
+> problems building a 512gb enclave in a 92mb EPC...
+> 
+> How about this for the intermediate patch:
+> 
+> 	struct sgx_enclave_add_region {
+> 		__u64	addr;
+> 		__u64	src;
+> 		__u64	size;
+> 		__u64	secinfo;
+> 		__u16	mrmask;
+> 		__u16	reserved16;
+> 		__u32	reserved;
+> 	}
+> 
+> and with the flags field:
+> 
+> 	struct sgx_enclave_add_region {
+> 		__u64	addr;
+> 		__u64	src;
+> 		__u64	size;
+> 		__u64	secinfo;
+> 		__u16	mrmask;
+> 		__u16	flags;
+
+What is "flags" here?
+
+> 		__u32	reserved;
+> 	}
