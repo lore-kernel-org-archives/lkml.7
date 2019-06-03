@@ -2,126 +2,169 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BE4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFF9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4E627B84
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 04:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3923127B84
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SxuzK9oG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfFCExU (ORCPT
+        id S1726618AbfFCFBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 00:53:20 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44420 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfFCExT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:53:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A87D1341;
-        Sun,  2 Jun 2019 21:53:18 -0700 (PDT)
-Received: from [10.162.40.144] (p8cg001049571a15.blr.arm.com [10.162.40.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC0BB3F5AF;
-        Sun,  2 Jun 2019 21:53:11 -0700 (PDT)
-Subject: Re: [RFC] mm: Generalize notify_page_fault()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>
-References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
- <20190530110639.GC23461@bombadil.infradead.org>
- <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
- <20190530133954.GA2024@bombadil.infradead.org>
- <f1995445-d5ab-f292-d26c-809581002184@arm.com>
- <20190531174854.GA31852@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6338fef8-e097-a76e-5c07-455d0d9b6e24@arm.com>
-Date:   Mon, 3 Jun 2019 10:23:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 3 Jun 2019 01:01:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59529 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfFCFBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 01:01:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HNDv1ry3z9sNC;
+        Mon,  3 Jun 2019 15:01:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559538079;
+        bh=UBqzdB6Lxax+3unelMIrwtK+PlVXo1q36OjfCyBjZgo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SxuzK9oGL3h050ZuL02+l/8gw05qmI/xdCodGlbMT5/6EmRHhTWaF8cFx4s+9idYX
+         sEi7EjM4zdNV23r4F6D4gWdCSktIPzLUchZh4dMaXqMlvWahcLtpSol3bnG2qul0wL
+         /wKiaMuVm3+uqxrEUBeZJ/MHfYi9dyR8WEY1QyhTKTpMxJYjX3rYkU3hd94yoRy4N5
+         d2oVNO5VbX6MsmiJtegzzRaYZaanX93wkUlomNGQe2/3i5V1lOFRVyelQfRQ2dfMxz
+         1U7YArFiHI2hy+EyCHmbFQ4U3lX9xlVfZm1gOWWLeyJ1BlRc58NYD5wXoEPTvS6Vm3
+         CFbVPDRYCbN3g==
+Date:   Mon, 3 Jun 2019 15:01:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fredrik Noring <noring@nocrew.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: linux-next: manual merge of the akpm-current tree with the
+ dma-mapping tree
+Message-ID: <20190603150118.73e2c3b4@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190531174854.GA31852@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jeuklPm=Sjw9bTY1hdmFu_M"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/jeuklPm=Sjw9bTY1hdmFu_M
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 05/31/2019 11:18 PM, Matthew Wilcox wrote:
-> On Fri, May 31, 2019 at 02:17:43PM +0530, Anshuman Khandual wrote:
->> On 05/30/2019 07:09 PM, Matthew Wilcox wrote:
->>> On Thu, May 30, 2019 at 05:31:15PM +0530, Anshuman Khandual wrote:
->>>> On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
->>>>> The two handle preemption differently.  Why is x86 wrong and this one
->>>>> correct?
->>>>
->>>> Here it expects context to be already non-preemptible where as the proposed
->>>> generic function makes it non-preemptible with a preempt_[disable|enable]()
->>>> pair for the required code section, irrespective of it's present state. Is
->>>> not this better ?
->>>
->>> git log -p arch/x86/mm/fault.c
->>>
->>> search for 'kprobes'.
->>>
->>> tell me what you think.
->>
->> Are you referring to these following commits
->>
->> a980c0ef9f6d ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
->> b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
->>
->> In particular the later one (b506a9d08bae). It explains how the invoking context
->> in itself should be non-preemptible for the kprobes processing context irrespective
->> of whether kprobe_running() or perhaps smp_processor_id() is safe or not. Hence it
->> does not make much sense to continue when original invoking context is preemptible.
->> Instead just bail out earlier. This seems to be making more sense than preempt
->> disable-enable pair. If there are no concerns about this change from other platforms,
->> I will change the preemption behavior in proposed generic function next time around.
-> 
-> Exactly.
-> 
-> So, any of the arch maintainers know of a reason they behave differently
-> from x86 in this regard?  Or can Anshuman use the x86 implementation
-> for all the architectures supporting kprobes?
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-So the generic notify_page_fault() will be like this.
+  include/linux/genalloc.h
 
-int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
-{
-        int ret = 0;
+between commit:
 
-        /*
-         * To be potentially processing a kprobe fault and to be allowed
-         * to call kprobe_running(), we have to be non-preemptible.
-         */
-        if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
-                if (kprobe_running() && kprobe_fault_handler(regs, trap))
-                        ret = 1;
-        }
-        return ret;
-}
+  3334e1dc5d71 ("lib/genalloc: add gen_pool_dma_zalloc() for zeroed DMA all=
+ocations")
+
+from the dma-mapping tree and commit:
+
+  1c6b703cba18 ("lib/genalloc: introduce chunk owners")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/genalloc.h
+index 6c62eeca754f,b0ab64879ccb..000000000000
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@@ -116,13 -124,47 +124,48 @@@ static inline int gen_pool_add(struct g
+  	return gen_pool_add_virt(pool, addr, -1, size, nid);
+  }
+  extern void gen_pool_destroy(struct gen_pool *);
+- extern unsigned long gen_pool_alloc(struct gen_pool *, size_t);
+- extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
+- 		genpool_algo_t algo, void *data);
++ unsigned long gen_pool_alloc_algo_owner(struct gen_pool *pool, size_t siz=
+e,
++ 		genpool_algo_t algo, void *data, void **owner);
++=20
++ static inline unsigned long gen_pool_alloc_owner(struct gen_pool *pool,
++ 		size_t size, void **owner)
++ {
++ 	return gen_pool_alloc_algo_owner(pool, size, pool->algo, pool->data,
++ 			owner);
++ }
++=20
++ static inline unsigned long gen_pool_alloc_algo(struct gen_pool *pool,
++ 		size_t size, genpool_algo_t algo, void *data)
++ {
++ 	return gen_pool_alloc_algo_owner(pool, size, algo, data, NULL);
++ }
++=20
++ /**
++  * gen_pool_alloc - allocate special memory from the pool
++  * @pool: pool to allocate from
++  * @size: number of bytes to allocate from the pool
++  *
++  * Allocate the requested number of bytes from the specified pool.
++  * Uses the pool allocation function (with first-fit algorithm by default=
+).
++  * Can not be used in NMI handler on architectures without
++  * NMI-safe cmpxchg implementation.
++  */
++ static inline unsigned long gen_pool_alloc(struct gen_pool *pool, size_t =
+size)
++ {
++ 	return gen_pool_alloc_algo(pool, size, pool->algo, pool->data);
++ }
++=20
+  extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
+  		dma_addr_t *dma);
+ +void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t =
+*dma);
+- extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
++ extern void gen_pool_free_owner(struct gen_pool *pool, unsigned long addr,
++ 		size_t size, void **owner);
++ static inline void gen_pool_free(struct gen_pool *pool, unsigned long add=
+r,
++                 size_t size)
++ {
++ 	gen_pool_free_owner(pool, addr, size, NULL);
++ }
++=20
+  extern void gen_pool_for_each_chunk(struct gen_pool *,
+  	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
+  extern size_t gen_pool_avail(struct gen_pool *);
+
+--Sig_/jeuklPm=Sjw9bTY1hdmFu_M
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz0qZ4ACgkQAVBC80lX
+0Gww3Af7BfIy8PAMS8/X58GYqmvxTsxE9AEP9trbAhPCoWFAj/EJupkDeRk64Bqm
+lTMBDazfe2pRDL7on963n07SUMWvdAD+/EjyiMXAb9/IU2jQXpTpI5ILH4x//IEc
+Cz5+iut8k9CnLduTnlko5+WeRyAXRNQxG4TLfu3+xLXtssOgIZjG4xvZcgf1GS3f
+CO/8wCo3R2aCB4A3RXC5cMTEe5dhQiv3WMO+52dQFXZ7dl4c6H6mZU/8cAxLkx85
+NNFG9ZErLmHP8Db/i+W4ZchEO4eoMjCnX54oYy8snzFuXya0ohB6qyzQYFg3OS0o
+G1EBpFQwfPVELEsbTJnCx9nc33HycA==
+=3jKI
+-----END PGP SIGNATURE-----
+
+--Sig_/jeuklPm=Sjw9bTY1hdmFu_M--
