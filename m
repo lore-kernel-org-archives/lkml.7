@@ -2,154 +2,75 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09DDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A9FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD9827BA4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F0D27BA4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 05:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfFCF0j (ORCPT
+        id S1726684AbfFCFb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 01:26:39 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:53536 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfFCF0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 01:26:39 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hXfUO-0001EU-Sq; Mon, 03 Jun 2019 13:26:32 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hXfUI-0002FC-5j; Mon, 03 Jun 2019 13:26:26 +0800
-Date:   Mon, 3 Jun 2019 13:26:26 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Message-ID: <20190603052626.nz2qktwmkswxfnsd@gondor.apana.org.au>
-References: <20150910005708.GA23369@wfg-t540p.sh.intel.com>
- <20150910102513.GA1677@fixme-laptop.cn.ibm.com>
- <20150910171649.GE4029@linux.vnet.ibm.com>
- <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
- <CAHk-=whLGKOmM++OQi5GX08_dfh8Xfz9Wq7khPo+MVtPYh_8hw@mail.gmail.com>
- <20190603024640.2soysu4rpkwjuash@gondor.apana.org.au>
- <20190603034707.GG28207@linux.ibm.com>
+        Mon, 3 Jun 2019 01:31:56 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:52298 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfFCFbz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 01:31:55 -0400
+X-AuditID: c0a8fbf4-501ff700000014c1-4e-5cf4b0c92533
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 7F.D6.05313.9C0B4FC5; Mon,  3 Jun 2019 07:31:53 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 3 Jun 2019 07:31:43 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regulator: bd70528: Drop unused include
+Thread-Topic: [PATCH] regulator: bd70528: Drop unused include
+Thread-Index: AQHVGAVxKHCtqauchUSIjw1kB2pu76aJSbiA
+Date:   Mon, 3 Jun 2019 05:31:42 +0000
+Message-ID: <d3beff0caa9326f937cf948eb1a4ce8be1dde499.camel@fi.rohmeurope.com>
+References: <20190531230608.7361-1-linus.walleij@linaro.org>
+In-Reply-To: <20190531230608.7361-1-linus.walleij@linaro.org>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <12CDB735314091408BED96B098A5093F@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603034707.GG28207@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsVyYMXvjbonN3yJMTh5Q8xi6sMnbBbfrnQw
+        WUz5s5zJ4vKuOWwOLB47Z91l99i0qpPN4861PWwenzfJBbBEcdskJZaUBWem5+nbJXBn3LyU
+        UdDEUrHj6hzmBsYvzF2MnBwSAiYS2w4dZuti5OIQErjGKLHg3XcWCOc4o8T+ibOBqjg42ARs
+        JLpusoPERQQmM0ps23uaFaSbWcBR4vbet0wgtjBQzapph8DiIgK2Eife7meGsI0kVv15Dmaz
+        CKhInH93hx3E5hXwk+g/cY0NxBYC6m36dJ0RxOYE6t1/7i+YzSggK9HZ8I4JYpe4xKZn31kh
+        rhaQWLLnPNQHohIvH/+DiitJ7P35kAXkZmYBTYn1u/QhWh0k/izZyAxhK0pM6X4IdYKgxMmZ
+        T1gmMIrNQrJhFkL3LCTds5B0z0LSvYCRdRWjRG5iZk56YkmqoV5RaqleUX5GLpBKzs/dxAiJ
+        wC87GP8f8jzEKMDBqMTDG7DyS4wQa2JZcWXuIUZJDiYlUd7Cdx9jhPiS8lMqMxKLM+KLSnNS
+        iw8xSnAwK4nwrjQDyvGmJFZWpRblw6SkOViUxHl/7zoYIyQAsjk7NbUgtQgmK8PBoSTBy70e
+        aI9gUWp6akVaZk4JQpqJgxNkOJeUSHFqXkpqUWJpSUY8KLHEFwNTC0iKB2jvi3VA7bzFBYm5
+        QFGI1lOM2hwHFj2cy8zx9uDzucxCLHn5ealS4rzCwOQpJABSmlGaB7foFaM40L/CvKtA7uAB
+        pmm4Oa+AVjABrfC//QlkRUkiQkqqgXGJ75o91bzVe0756y5gULz1h+uXwaE8kTWVwtYC3n55
+        wrOSo56IdG6bEX/0orObloPBgdK1jNvqmSwiDPUbuNJ38vZVV6ft1J4g7elopeEyTfh37JMX
+        qya6xmtNZYrc32wfKhfgyVEkp/VluXdLWc+quSsrnk8ozf18+0V+vd3Por0b4yNjlFiKMxIN
+        tZiLihMB/kla25ADAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
-> 
-> 1.	These guarantees are of full memory barriers, -not- compiler
-> 	barriers.
-
-What I'm saying is that wherever they are, they must come with
-compiler barriers.  I'm not aware of any synchronisation mechanism
-in the kernel that gives a memory barrier without a compiler barrier.
-
-> 2.	These rules don't say exactly where these full memory barriers
-> 	go.  SRCU is at one extreme, placing those full barriers in
-> 	srcu_read_lock() and srcu_read_unlock(), and !PREEMPT Tree RCU
-> 	at the other, placing these barriers entirely within the callback
-> 	queueing/invocation, grace-period computation, and the scheduler.
-> 	Preemptible Tree RCU is in the middle, with rcu_read_unlock()
-> 	sometimes including a full memory barrier, but other times with
-> 	the full memory barrier being confined as it is with !PREEMPT
-> 	Tree RCU.
-
-The rules do say that the (full) memory barrier must precede any
-RCU read-side that occur after the synchronize_rcu and after the
-end of any RCU read-side that occur before the synchronize_rcu.
-
-All I'm arguing is that wherever that full mb is, as long as it
-also carries with it a barrier() (which it must do if it's done
-using an existing kernel mb/locking primitive), then we're fine.
-
-> Interleaving and inserting full memory barriers as per the rules above:
-> 
-> 	CPU1: WRITE_ONCE(a, 1)
-> 	CPU1: synchronize_rcu	
-> 	/* Could put a full memory barrier here, but it wouldn't help. */
-
-	CPU1: smp_mb();
-	CPU2: smp_mb();
-
-Let's put them in because I think they are critical.  smp_mb() also
-carries with it a barrier().
-
-> 	CPU2: rcu_read_lock();
-> 	CPU1: b = 2;	
-> 	CPU2: if (READ_ONCE(a) == 0)
-> 	CPU2:         if (b != 1)  /* Weakly ordered CPU moved this up! */
-> 	CPU2:                 b = 1;
-> 	CPU2: rcu_read_unlock
-> 
-> In fact, CPU2's load from b might be moved up to race with CPU1's store,
-> which (I believe) is why the model complains in this case.
-
-Let's put aside my doubt over how we're even allowing a compiler
-to turn
-
-	b = 1
-
-into
-
-	if (b != 1)
-		b = 1
-
-Since you seem to be assuming that (a == 0) is true in this case
-(as the assignment b = 1 is carried out), then because of the
-presence of the full memory barrier, the RCU read-side section
-must have started prior to the synchronize_rcu.  This means that
-synchronize_rcu is not allowed to return until at least the end
-of the grace period, or at least until the end of rcu_read_unlock.
-
-So it actually should be:
-
-	CPU1: WRITE_ONCE(a, 1)
-	CPU1: synchronize_rcu called
-	/* Could put a full memory barrier here, but it wouldn't help. */
-
-	CPU1: smp_mb();
-	CPU2: smp_mb();
-
-	CPU2: grace period starts
-	...time passes...
-	CPU2: rcu_read_lock();
-	CPU2: if (READ_ONCE(a) == 0)
-	CPU2:         if (b != 1)  /* Weakly ordered CPU moved this up! */
-	CPU2:                 b = 1;
-	CPU2: rcu_read_unlock
-	...time passes...
-	CPU2: grace period ends
-
-	/* This full memory barrier is also guaranteed by RCU. */
-	CPU2: smp_mb();
-
-	CPU1 synchronize_rcu returns
-	CPU1: b = 2;	
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+VGhhbmtzIExpbnVzIQ0KDQpPbiBTYXQsIDIwMTktMDYtMDEgYXQgMDE6MDYgKzAyMDAsIExpbnVz
+IFdhbGxlaWogd3JvdGU6DQo+IFRoaXMgZHJpdmVyIGRvZXMgbm90IHVzZSBhbnkgc3ltYm9scyBm
+cm9tIDxsaW51eC9ncGlvLmg+DQo+IHNvIGp1c3QgZHJvcCB0aGUgaW5jbHVkZS4NCj4gDQo+IENj
+OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4g
+U2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0K
+QWNrZWQtQnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUu
+Y29tPg0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
