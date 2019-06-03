@@ -2,226 +2,212 @@ Return-Path: <SRS0=cV2B=UC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA76C04AB6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A17627CA8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3804C27CB0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Jun 2019 07:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfFCH0A (ORCPT
+        id S1727413AbfFCH03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 03:26:00 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36583 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726684AbfFCHZ6 (ORCPT
+        Mon, 3 Jun 2019 03:26:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44810 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfFCH02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 03:25:58 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id XhLrhJMQjsDWyXhLuhrgWW; Mon, 03 Jun 2019 09:25:55 +0200
-Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
- codec API
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
- <20190117162008.25217-11-stanimir.varbanov@linaro.org>
- <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
- <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
- <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
- <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
- <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
- <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
- <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
- <a9b11ba0-adca-f974-67a5-a0fe54689bba@xs4all.nl>
- <CAAFQd5CMpQ4ODyeBPnOv4w9ktqPsiqJtSkpRhAx+XgQ=Lz9crQ@mail.gmail.com>
- <ee62fdb0-d8fa-0695-9088-5aaef48e485f@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <0cf25512-97b3-f46a-c266-508368e261d8@xs4all.nl>
-Date:   Mon, 3 Jun 2019 09:25:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 3 Jun 2019 03:26:28 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e13so15100944ljl.11;
+        Mon, 03 Jun 2019 00:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KhURR/1L/XO3rkbtP/lZN+kQeqZQJiO5LLdolVZ46NI=;
+        b=mu+iMOw3Tge93nqGdAXj1rUIa2iAZma+Xf1Uy+KT5jsO7SlqJQbptWnlxSzx9yBOJS
+         KZHwO+nQN6m0C1ertgga3Ew4uvMbyQCmo7ScoDr/309mZdDoj7yPf4tXciGWo5KWRCqv
+         KOLQmKKHNsyM17uPfxX7tbZJADjBf/bXomgjwgU4vGdcf0l0DBNyy+tPZvswicbGN6zD
+         KS9tGlOYk/M5gVcrKkfGiG1cj8qEtvtBDgyaevZfTeE3bIDC7A4iVinxFy8TrcUQN5dV
+         yErW1ZjbBXpm7Y7j6/AEoQgiHUv4goE1LwqrJAj2NwJNjaGulTiYs9on28OrHj+UIckV
+         82KA==
+X-Gm-Message-State: APjAAAVPBH5Pq9kkru69RJ4IKB9WJ/HKFP/uPucUwWxbfV+3jHCvhWJm
+        KXn6I0g4aM9ZM88bBaFh3JI=
+X-Google-Smtp-Source: APXvYqxjXMmQmYPVFR3WFmWe4xzfqce/gAOC0paftrc1mms5rYwp7SBnzg6ODSESgJli9quL7/5WMA==
+X-Received: by 2002:a2e:8041:: with SMTP id p1mr13464034ljg.121.1559546785116;
+        Mon, 03 Jun 2019 00:26:25 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id k16sm2966786lje.30.2019.06.03.00.26.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 00:26:24 -0700 (PDT)
+Date:   Mon, 3 Jun 2019 10:26:12 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v15 4/7] dt-bindings: mfd: Document first ROHM BD70528
+ bindings
+Message-ID: <468b8e1af86ec151ccfe78b7e6ba2e0a74398974.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <ee62fdb0-d8fa-0695-9088-5aaef48e485f@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfG9uNhP0/Ik5UJJWj+ABfQeyr9NMZ8hLR9srE70Z3CObqO/xuS8hMYLEO9M9/u2kYkho7TaljjYZlxTvSsqu1NPLdXvmPKAJoK03XwWZs6A1tuqokxI5
- MPoTK2dxHRb3+AzOKhH1OQfmf/g2PPu5RamSI8F+Qe3xUmOTMFpoeflAJcazOCYDB2IP79WRvB0tr0mP8v1y1uK1PY52Q8rjjGvXgdaREvYNyvY//24VdZdb
- oD07KerHuTlhGJtWsOuh6risX95o7WnnABA3Kx2+nrTl5ipdwRWegRLBmvzGyDYZYU6MszGylVFhvZEeP7cpvAf/2tgB2cWOqUh8f0LHUaToZ8R0KIy1p8ne
- KC2X3D8xU5E6srl+1SAXBefygUmXacIkwU7WdKJNCgZizBPm+9tC9YoxxBeFxgtDQPUjanelCuj/33j4euCzQPRogXXVzQtZZwRHh0mrnxyRNhbSwZU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 10:01 AM, Stanimir Varbanov wrote:
-> Hi,
-> 
-> On 5/27/19 11:18 AM, Tomasz Figa wrote:
->> On Mon, May 27, 2019 at 4:39 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>>
->>> On 5/27/19 5:51 AM, Tomasz Figa wrote:
->>>> On Tue, May 21, 2019 at 9:27 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>>>>
->>>>> On 5/21/19 11:09 AM, Tomasz Figa wrote:
->>>>>> Hi Stan,
->>>>>>
->>>>>> On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
->>>>>> <stanimir.varbanov@linaro.org> wrote:
->>>>>>>
->>>>>>> Hi Tomasz,
->>>>>>>
->>>>>>> On 4/24/19 3:39 PM, Tomasz Figa wrote:
->>>>>>>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
->>>>>>>> <stanimir.varbanov@linaro.org> wrote:
->>>>>>>>>
->>>>>>>>> Hi Hans,
->>>>>>>>>
->>>>>>>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
->>>>>>>>>> Hi Stanimir,
->>>>>>>>>>
->>>>>>>>>> I never paid much attention to this patch series since others were busy
->>>>>>>>>> discussing it and I had a lot of other things on my plate, but then I heard
->>>>>>>>>> that this patch made G_FMT blocking.
->>>>>>>>>
->>>>>>>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
->>>>>>>>> is received that the stream is parsed and the resolution is correctly
->>>>>>>>> set by application. Just to note that I'd think to this like a temporal
->>>>>>>>> solution until gstreamer implements v4l events.
->>>>>>>>>
->>>>>>>>> Is that looks good to you?
->>>>>>>>
->>>>>>>> Hmm, I thought we concluded that gstreamer sets the width and height
->>>>>>>> in OUTPUT queue before querying the CAPTURE queue and so making the
->>>>>>>> driver calculate the CAPTURE format based on what's set on OUTPUT
->>>>>>>> would work fine. Did I miss something?
->>>>>>>
->>>>>>> Nobody is miss something.
->>>>>>>
->>>>>>> First some background about how Venus implements stateful codec API.
->>>>>>>
->>>>>>> The Venus firmware can generate two events "sufficient" and
->>>>>>> "insufficient" buffer requirements (this includes decoder output buffer
->>>>>>> size and internal/scratch buffer sizes). Presently I always set minimum
->>>>>>> possible decoder resolution no matter what the user said, and by that
->>>>>>> way I'm sure that "insufficient" event will always be triggered by the
->>>>>>> firmware (the other reason to take this path is because this is the
->>>>>>> least-common-divider for all supported Venus hw/fw versions thus common
->>>>>>> code in the driver). The reconfiguration (during codec Initialization
->>>>>>> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
->>>>>>> re-configuration happen I need to wait for "insufficient" event from
->>>>>>> firmware in order to know the real coded resolution.
->>>>>>>
->>>>>>> In the case of gstreamer where v4l2_events support is missing I have to
->>>>>>> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
->>>>>>> STREAMON(CAPTURE) (vb2::start_streaming).
->>>>>>>
->>>>>>> I tried to set the coded resolution to the firmware as-is it set by
->>>>>>> gstreamer but then I cannot receive the "sufficient" event for VP8 and
->>>>>>> VP9 codecs. So I return back to the solution with minimum resolution above.
->>>>>>>
->>>>>>> I'm open for suggestions.
->>>>>>
->>>>>> I think you could still keep setting the minimum size and wait for the
->>>>>> "insufficient" event. At the same time, you could speculatively
->>>>>> advertise the expected "sufficient" size on the CAPTURE queue before
->>>>>> the hardware signals those. Even if you mispredict them, you'll get
->>>>>> the event, update the CAPTURE resolution and send the source change
->>>>>> event to the application, which would then give you the correct
->>>>>> buffers. Would that work for you?
->>>>>
->>>>> As I understand it this still would require event support, which gstreamer
->>>>> doesn't have.
->>>>
->>>> I don't think it matches what I remember from the earlier discussion.
->>>> As long as Gstreamer sets the visible resolution (from the container
->>>> AFAIR) on OUTPUT, the driver would adjust it to something that is
->>>> expected to be the right framebuffer resolution and so Gstreamer would
->>>> be able to continue. Of course if the expected value doesn't match, it
->>>> wouldn't work, but it's the same as currently for Coda AFAICT.
->>>>
->>>>>
->>>>> I think it is OK to have REQBUFS sleep in this case. However, I would only
->>>>
->>>> Why REQBUFS? While that could possibly allow us to allocate the right
->>>> buffers, Gstreamer wouldn't be able to know the right format, because
->>>> it would query it before REQBUFS, wouldn't it?
->>>
->>> Oops, you are right. It's got to be in G_FMT(CAPTURE), but *only* if
->>> nobody subscribed to the SOURCE_CHANGE event.
->>>
->>>>
->>>> For this reason, s5p-mfc makes G_FMT(CAPTURE) blocking and if we
->>>> decide to forcefully keep the compatibility, even with in drivers, we
->>>> should probably do the same here.
->>>>
->>>>> enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
->>>>> event. That's easy enough to check in the driver. And that means that if the
->>>>> application is well written, then the driver will behave in a completely
->>>>> standard way that the compliance test can check.
->>>>
->>>> I guess one could have some helpers for this. They would listen to the
->>>> source change events internally and block / wake-up appropriate ioctls
->>>> whenever necessary.
->>>
->>> I really do not want this for new drivers. gstreamer should be fixed.
->>> A blocking G_FMT is just plain bad. Only those drivers that do this, can
->>> still block if nobody subscribed to EVENT_SOURCE_CHANGE.
->>
->> Yeah and that's why I just suggested to mimic coda, which doesn't
->> block, but apparently gstreamer still works with it.
-> 
-> Unfortunately in Venus case that is not an easy task (as I tried to
-> explain why above).
-> 
-> To have an unified and common code for all different SoCs and
-> firmware/hardware versions I decided to set the minimum supported
-> resolution for the decoder (no matter what the user said) and trigger
-> the reconfiguration event always. Something more, I need the event also
-> to retrieve the minimum capture buffers
-> (V4L2_CID_MIN_BUFFERS_FOR_CAPTURE) and sizes for capture and
-> internal/scratch buffers as well, thus I really need to wait for that
-> event.
-> 
-> So, just to confirm - you are fine with blocking G_FMT (not REQBUF) when
-> the user doesn't subscribe for v4l2 events?
+Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
+drivers) and 4 GPIO pins which can be configured for I/O or
+as interrupt sources withe configurable trigger levels.
 
-'Fine' is too strong a word :-)
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+Unchanged from v14
 
-But I think this is a reasonable compromise.
+ .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
 
-Document carefully why you are doing this, since it is purely for backwards
-compatibility reasons. And perhaps at some point in the future the workaround
-might be removed again.
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+new file mode 100644
+index 000000000000..c3c02ce73cde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+@@ -0,0 +1,102 @@
++* ROHM BD70528 Power Management Integrated Circuit bindings
++
++BD70528MWV is an ultra-low quiescent current general purpose, single-chip,
++power management IC for battery-powered portable devices. The IC
++integrates 3 ultra-low current consumption buck converters, 3 LDOs and 2
++LED Drivers. Also included are 4 GPIOs, a real-time clock (RTC), a 32kHz
++clock gate, high-accuracy VREF for use with an external ADC, flexible
++dual-input power path, 10 bit SAR ADC for battery temperature monitor and
++1S battery charger with scalable charge currents.
++
++Required properties:
++ - compatible		: Should be "rohm,bd70528"
++ - reg			: I2C slave address.
++ - interrupts		: The interrupt line the device is connected to.
++ - interrupt-controller	: To indicate BD70528 acts as an interrupt controller.
++ - #interrupt-cells	: Should be 2. Usage is compliant to the 2 cells
++			  variant of ../interrupt-controller/interrupts.txt
++ - gpio-controller	: To indicate BD70528 acts as a GPIO controller.
++ - #gpio-cells		: Should be 2. The first cell is the pin number and
++			  the second cell is used to specify flags. See
++			  ../gpio/gpio.txt for more information.
++ - #clock-cells		: Should be 0.
++ - regulators:		: List of child nodes that specify the regulators.
++			  Please see ../regulator/rohm,bd70528-regulator.txt
++
++Optional properties:
++ - clock-output-names	: Should contain name for output clock.
++
++Example:
++/* External oscillator */
++osc: oscillator {
++	compatible = "fixed-clock";
++	#clock-cells = <1>;
++	clock-frequency  = <32768>;
++	clock-output-names = "osc";
++};
++
++pmic: pmic@4b {
++	compatible = "rohm,bd70528";
++	reg = <0x4b>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <29 GPIO_ACTIVE_LOW>;
++	clocks = <&osc 0>;
++	#clock-cells = <0>;
++	clock-output-names = "bd70528-32k-out";
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	regulators {
++		buck1: BUCK1 {
++			regulator-name = "buck1";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <3400000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <125>;
++		};
++		buck2: BUCK2 {
++			regulator-name = "buck2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <125>;
++		};
++		buck3: BUCK3 {
++			regulator-name = "buck3";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <250>;
++		};
++		ldo1: LDO1 {
++			regulator-name = "ldo1";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++		};
++		ldo2: LDO2 {
++			regulator-name = "ldo2";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++		};
++
++		ldo3: LDO3 {
++			regulator-name = "ldo3";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		led_ldo1: LED_LDO1 {
++			regulator-name = "led_ldo1";
++			regulator-min-microvolt = <200000>;
++			regulator-max-microvolt = <300000>;
++		};
++		led_ldo2: LED_LDO2 {
++			regulator-name = "led_ldo2";
++			regulator-min-microvolt = <200000>;
++			regulator-max-microvolt = <300000>;
++		};
++	};
++};
+-- 
+2.17.2
 
-Regards,
 
-	Hans
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-> 
->>
->>>
->>>> Another question: If we intend this to be implemented in new drivers
->>>> too, should it be documented in the spec?
->>>
->>> We most certainly do NOT want to implement this in new drivers.
->>>
->>
->> Makes sense.
->>
->> When venus was merged initially, did it already have a blocking G_FMT?
-> 
-> No it isn't.
-> 
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
