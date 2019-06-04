@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793CDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D47C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AE0206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912ED20851
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691082;
-	bh=DEfZPxevgdlIF4EJdrDYiUNmOwg+yU+llyzjzz9f0BY=;
+	s=default; t=1559691086;
+	bh=cM51D5QoSBQ33n3wnZ0FR9jG2E5nPuSQ6IWklbZuo9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lpk6yx/wmb2sAH4HtRThZarOBn2aVdR899e1w9S7PGtiFCAZmXkc3ACbJIeb7Taj7
-	 YKKZWk6q59rPOsT1nIbigWOyJNXtjNBNSCYhzpLNhPNbudiEiVtB7EMZYRNSRYhhW8
-	 x71sDnZJvsDdmZJbmE113Vcf153QGxTSamCtD27E=
+	b=Nrva2rfyMzqqPTlsBMPpg9+9HmlOTjKjecizViguRut/CVNhxo4sBH0VcGiRQUiaS
+	 k5AwGDVE848EWyrX/OwXpUUHi9G+oHIefwP9QyeeIPGODn09erZo+KIhMYfMkclc9d
+	 uAovjwbFg4Vyyp5bIsZnYlOemyeFe+J60IMmQ+nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfFDXbV (ORCPT
+        id S1727856AbfFDXbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33444 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfFDXXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:01 -0400
+        id S1727110AbfFDXW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C057420862;
-        Tue,  4 Jun 2019 23:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81FD520859;
+        Tue,  4 Jun 2019 23:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690581;
-        bh=DEfZPxevgdlIF4EJdrDYiUNmOwg+yU+llyzjzz9f0BY=;
+        s=default; t=1559690579;
+        bh=cM51D5QoSBQ33n3wnZ0FR9jG2E5nPuSQ6IWklbZuo9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ReMO5OaXGt8ZajBV10RNoHPJ6omTAf3LqlnYyKRfSci7Joy12nvdKL64zK9U/sdb7
-         pNkJr6A7y6Lyui9W45cQ2lHjS8HTbLkPkRvPtp4xMwPlxqmu1XaT39US8eQvHyuAtn
-         mQ2fKz5iRQv7+4Q3+obAheH8MZeXpbT7jiLitnFM=
+        b=m/2UJ57KtpjCgrCskdRAobh1a9hGtQZyu8CRPriq3VppFW1qOUJvS6k+FCAghHNpK
+         reU2tyoPVuNI9Szy2HLYF8CKjVs4vRlJXBpHLdZp8dOy0YN4vvS1+pD6K7qMbaRVtl
+         XBLE2qlEt3qkafOaHca9Sp552pCmD78CfB5SxW1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>,
         Keith Busch <keith.busch@intel.com>,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 31/60] nvme: merge nvme_ns_ioctl into nvme_ioctl
-Date:   Tue,  4 Jun 2019 19:21:41 -0400
-Message-Id: <20190604232212.6753-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 29/60] nvme: fix srcu locking on error return in nvme_get_ns_from_disk
+Date:   Tue,  4 Jun 2019 19:21:39 -0400
+Message-Id: <20190604232212.6753-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -62,84 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 90ec611adcf20b96d0c2b7166497d53e4301a57f ]
+[ Upstream commit 100c815cbd56480b3e31518475b04719c363614a ]
 
-Merge the two functions to make future changes a little easier.
+If we can't get a namespace don't leak the SRCU lock.  nvme_ioctl was
+working around this, but nvme_pr_command wasn't handling this properly.
+Just do what callers would usually expect.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Keith Busch <keith.busch@intel.com>
 Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 47 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+ drivers/nvme/host/core.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index decc0b3a3854..8b77e6a05f4b 100644
+index 8782d86a8ca3..e29c395f44d2 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -1383,32 +1383,11 @@ static void nvme_put_ns_from_disk(struct nvme_ns_head *head, int idx)
- 		srcu_read_unlock(&head->srcu, idx);
- }
- 
--static int nvme_ns_ioctl(struct nvme_ns *ns, unsigned cmd, unsigned long arg)
--{
--	switch (cmd) {
--	case NVME_IOCTL_ID:
--		force_successful_syscall_return();
--		return ns->head->ns_id;
--	case NVME_IOCTL_ADMIN_CMD:
--		return nvme_user_cmd(ns->ctrl, NULL, (void __user *)arg);
--	case NVME_IOCTL_IO_CMD:
--		return nvme_user_cmd(ns->ctrl, ns, (void __user *)arg);
--	case NVME_IOCTL_SUBMIT_IO:
--		return nvme_submit_io(ns, (void __user *)arg);
--	default:
--		if (ns->ndev)
--			return nvme_nvm_ioctl(ns, cmd, arg);
--		if (is_sed_ioctl(cmd))
--			return sed_ioctl(ns->ctrl->opal_dev, cmd,
--					 (void __user *) arg);
--		return -ENOTTY;
--	}
--}
--
- static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 		unsigned int cmd, unsigned long arg)
+@@ -1362,9 +1362,14 @@ static struct nvme_ns *nvme_get_ns_from_disk(struct gendisk *disk,
  {
- 	struct nvme_ns_head *head = NULL;
-+	void __user *argp = (void __user *)arg;
- 	struct nvme_ns *ns;
- 	int srcu_idx, ret;
- 
-@@ -1416,7 +1395,29 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	if (unlikely(!ns))
- 		return -EWOULDBLOCK;
- 
--	ret = nvme_ns_ioctl(ns, cmd, arg);
-+	switch (cmd) {
-+	case NVME_IOCTL_ID:
-+		force_successful_syscall_return();
-+		ret = ns->head->ns_id;
-+		break;
-+	case NVME_IOCTL_ADMIN_CMD:
-+		ret = nvme_user_cmd(ns->ctrl, NULL, argp);
-+		break;
-+	case NVME_IOCTL_IO_CMD:
-+		ret = nvme_user_cmd(ns->ctrl, ns, argp);
-+		break;
-+	case NVME_IOCTL_SUBMIT_IO:
-+		ret = nvme_submit_io(ns, argp);
-+		break;
-+	default:
-+		if (ns->ndev)
-+			ret = nvme_nvm_ioctl(ns, cmd, arg);
-+		else if (is_sed_ioctl(cmd))
-+			ret = sed_ioctl(ns->ctrl->opal_dev, cmd, argp);
-+		else
-+			ret = -ENOTTY;
-+	}
+ #ifdef CONFIG_NVME_MULTIPATH
+ 	if (disk->fops == &nvme_ns_head_ops) {
++		struct nvme_ns *ns;
 +
+ 		*head = disk->private_data;
+ 		*srcu_idx = srcu_read_lock(&(*head)->srcu);
+-		return nvme_find_path(*head);
++		ns = nvme_find_path(*head);
++		if (!ns)
++			srcu_read_unlock(&(*head)->srcu, *srcu_idx);
++		return ns;
+ 	}
+ #endif
+ 	*head = NULL;
+@@ -1411,9 +1416,9 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 
+ 	ns = nvme_get_ns_from_disk(bdev->bd_disk, &head, &srcu_idx);
+ 	if (unlikely(!ns))
+-		ret = -EWOULDBLOCK;
+-	else
+-		ret = nvme_ns_ioctl(ns, cmd, arg);
++		return -EWOULDBLOCK;
++
++	ret = nvme_ns_ioctl(ns, cmd, arg);
  	nvme_put_ns_from_disk(head, srcu_idx);
  	return ret;
  }
