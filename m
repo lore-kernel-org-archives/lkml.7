@@ -2,122 +2,97 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B297C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E033206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFAF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559691134;
+	bh=bVL5XE/t5xd48IGr1qdwkcaiwJG1oAw4Msey13+p20w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k87UaIHCzPoheo5GLhe0FkcwwK4UvqPfwIOamc0rFX6zwNyP+7HaVfzk+p36w0ydK
+	 jsJUYkfahSUISmfovLLYObXC6MpDnIhfnidSubPtokHGHJyc7hr2zE6bji20l//hA1
+	 xRBhWrE7C3ISBlRLMJz3td56cMfSrQxqZcdjCx0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfFDXcJ (ORCPT
+        id S1727488AbfFDXcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:32:09 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.164]:23764 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727372AbfFDXcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 19:32:08 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id B28F5615C8
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 18:32:07 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YIuVh73g2dnCeYIuVhkf6E; Tue, 04 Jun 2019 18:32:07 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=46282 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYIuU-000mO4-N5; Tue, 04 Jun 2019 18:32:06 -0500
-Date:   Tue, 4 Jun 2019 18:32:05 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] video: fbdev-MMP: Use struct_size() in devm_kzalloc()
-Message-ID: <20190604233205.GA5377@embeddedor>
+Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfFDXWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91F4820862;
+        Tue,  4 Jun 2019 23:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559690565;
+        bh=bVL5XE/t5xd48IGr1qdwkcaiwJG1oAw4Msey13+p20w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mr1bVgQnPwhlyGpCqEFb3/B742c1DTrmQ93tjq17Mi1LMTXp5rdpJ/kI4Q3hevEzA
+         Wkt9KPPCrle7+GYaO84N/CxIFdV8XMhTWgB6vMLRAteFVHqjJPHrfJHyezBjJaajTN
+         Gu44n/ptWuAdn8w4fiK0PX3PAEVjAZ9F4s6xPiNM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 20/60] scsi: lpfc: add check for loss of ndlp when sending RRQ
+Date:   Tue,  4 Jun 2019 19:21:30 -0400
+Message-Id: <20190604232212.6753-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
+References: <20190604232212.6753-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYIuU-000mO4-N5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:46282
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+From: James Smart <jsmart2021@gmail.com>
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
+[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
 
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = devm_kzalloc(dev, size, GFP_KERNEL);
+There was a missing qualification of a valid ndlp structure when calling to
+send an RRQ for an abort.  Add the check.
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = devm_kzalloc(dev, struct_size(instance, entry, count), GFP_KERNEL);
-
-Notice that, in this case, variable size is not necessary, hence it
-is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/mmp/hw/mmp_ctrl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-index 87d943f15a12..17174cd7a5bb 100644
---- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-+++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-@@ -433,7 +433,7 @@ static int mmphw_probe(struct platform_device *pdev)
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index fc077cb87900..965f8a1a8f67 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7338,7 +7338,10 @@ int
+ lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
  {
- 	struct mmp_mach_plat_info *mi;
- 	struct resource *res;
--	int ret, i, size, irq;
-+	int ret, i, irq;
- 	struct mmphw_path_plat *path_plat;
- 	struct mmphw_ctrl *ctrl = NULL;
- 
-@@ -461,9 +461,9 @@ static int mmphw_probe(struct platform_device *pdev)
- 	}
- 
- 	/* allocate */
--	size = sizeof(struct mmphw_ctrl) + sizeof(struct mmphw_path_plat) *
--	       mi->path_num;
--	ctrl = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-+	ctrl = devm_kzalloc(&pdev->dev,
-+			    struct_size(ctrl, path_plats, mi->path_num),
-+			    GFP_KERNEL);
- 	if (!ctrl) {
- 		ret = -ENOMEM;
- 		goto failed;
+ 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
+-							rrq->nlp_DID);
++						       rrq->nlp_DID);
++	if (!ndlp)
++		return 1;
++
+ 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
+ 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
+ 					 rrq->nlp_DID, rrq);
 -- 
-2.21.0
+2.20.1
 
