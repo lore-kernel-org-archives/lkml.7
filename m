@@ -2,114 +2,90 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A59EC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB413C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4419B249EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D534249E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEvGKN01"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CT9ycWKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfFDF7U (ORCPT
+        id S1726659AbfFDGCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 01:59:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34840 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbfFDF7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 01:59:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m3so14410705wrv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 22:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Jarh7LeGfPu45XYPSBuK6f+8okfPC3JzoLqM+4fRdvo=;
-        b=vEvGKN018/l4/qofPxgpuz03Gx/QPZ/zz9kygVUIfCgek99F0lwpmRVHExCKlQ3Wc8
-         SFMZ82lJS4sEdpwDFEkYEFeAEkRBAYWKBigHVRrPsX5hNkxe/Z+cL5HVllIX2hRLN7x/
-         onfCCFjyD0vzuSDW2yDGywHRQ6hU1bsqFfxOAJdA89pE9QLoN6kB+XW0S9HH/MOZ6P94
-         ZayreXbfY3uKs0H+5AOZrah/BoOGh0b7tTLgcoNauK72WVOe55ngmd/lD1Ob+nlVn9Yp
-         5AIVSIkp7ALsPR78CD4jY4mopkwOPatH5GLhWqyJREba3XCq3ODg9diPdBncU/T3yvNK
-         VrQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Jarh7LeGfPu45XYPSBuK6f+8okfPC3JzoLqM+4fRdvo=;
-        b=B6q0X3LDWmonlQOheFwvomDXkwyPzkRemvSSPKFnHfl6BQJTV1oVVw9Wi6jsw9stu+
-         U7lWfUsgioSBU9YvhbavlRcFC+MR0RwNu7Ti/jLznzuxmYwNu1nkuBgaX4+htYrjYVfe
-         8rF/xl/gzxlpt8Zsbl961vsw6TD8KuRvuCqTyHhtWk6D6TbG7sn/4nRr/rKRO7xvHKHC
-         hyIBUkHRbwV7Or9kVHHwQpEQ4bbYH2rpTerSV3tZNoUL/PFPteKUvRp4ZZ4OspfRjqbL
-         GHem3Ok8jzwHC2Fj2Jk91OyirUqzDHqGRq/D9zPjuwt10Eknke/YZAiJaFaq0pmy5bRK
-         S22A==
-X-Gm-Message-State: APjAAAXX6CyMk2fuEyHan7edhvbwjbImv63ctFAdO2bQc4qVcwwiuF/x
-        502sFcPylfJgygqtSk8kQlZJhw==
-X-Google-Smtp-Source: APXvYqyGn3pYiQrB0R9AEkK3CMobRDAxMJXZBRFJcH4t+l072iVHqtfvkX8LRbZpJoFgIKm6vUBIvQ==
-X-Received: by 2002:adf:f041:: with SMTP id t1mr18830108wro.74.1559627958374;
-        Mon, 03 Jun 2019 22:59:18 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id e6sm9199122wrw.83.2019.06.03.22.59.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 22:59:17 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 06:59:08 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, jic23@kernel.org, broonie@kernel.org,
-        cychiang@chromium.org, tiwai@suse.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v3 00/30] Update cros_ec_commands.h
-Message-ID: <20190604055908.GA4797@dell>
-References: <20190603183401.151408-1-gwendal@chromium.org>
+        Tue, 4 Jun 2019 02:02:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:43691 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbfFDGCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:02:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45J1XV4hT5z9s1c;
+        Tue,  4 Jun 2019 16:02:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559628122;
+        bh=QmUEdiCZy8KScyRjadMIzXOhxamIsaJsSVXTw+rv4X0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CT9ycWKNi3XoAKNZsuGx93XjwBUUSKRVl7sLBiQlaoba5YrpEVI7hxzAlv8ORfFEs
+         uTpijtENhOFicgKb1r++UQgD7yU9w8CsVMIVC5fGLPFKy2JHCS+Sog2fHAb72RDGzX
+         QPycU376MW006rJS6bW848UAsAhVHXFvvCVPCGqkFT4yLQn41/HJgj/HiSmaSkSuKB
+         P7CxmpLY34lGEs7ufCdvT8oMS4N3CL+Woqyq7NdNrOxRfXOq4ptes5c7RXnIvftYvq
+         79ryhx11FmcZx+1QQf9pnPQvapud8ShuSpycPPQ/52ZJuf+AIzkQpWTjRLMFmtaET0
+         j+zgmXqBrY8ag==
+Date:   Tue, 4 Jun 2019 16:02:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: linux-next: build failure after merge of the clockevents tree
+Message-ID: <20190604160200.53bdf2c8@canb.auug.org.au>
+In-Reply-To: <6592f64c-79c1-7ac4-dfa5-499362539319@linaro.org>
+References: <20190603121350.653cacce@canb.auug.org.au>
+        <6592f64c-79c1-7ac4-dfa5-499362539319@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190603183401.151408-1-gwendal@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/=ThhywD3kNJlb7gyGjZmIPI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Jun 2019, Gwendal Grignou wrote:
+--Sig_/=ThhywD3kNJlb7gyGjZmIPI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> The interface between CrosEC embedded controller and the host,
-> described by cros_ec_commands.h, as diverged from what the embedded
-> controller really support.
-> 
-> The source of thruth is at
-> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
-> 
-> That include file is converted to remove ACPI and Embedded only code.
-> 
-> From now on, cros_ec_commands.h will be automatically generated from
-> the file above, do not modify directly.
-> 
-> Fell free to squash the commits below.
-> 
-> v3 resent: Add Fabien's ack.
+Hi Daniel,
 
-Thanks for doing that.
+On Tue, 4 Jun 2019 07:56:45 +0200 Daniel Lezcano <daniel.lezcano@linaro.org=
+> wrote:
+>
+> I dropped the patch from my tree.
 
-In future, please ensure *-bys tags are in chronological order with
-the first one either being a Suggested-by or your SoB.  Reviews, tests
-etc usually come *after* first submission.
+Thanks.
+--=20
+Cheers,
+Stephen Rothwell
 
-I've changed this for you this time, yes in all 30 patches!  :)
+--Sig_/=ThhywD3kNJlb7gyGjZmIPI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Anyway, all applied, thanks.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz2CVgACgkQAVBC80lX
+0Gw9SwgAjgufUU36XEzHKnStWSaTeI4dN1xdzs6rhq41ueRX/9GjXC9Lc4KivC8V
+8DY2xaUgaDQUrxp5bnV8gtqrNjbeo19BNPlIithEKGoV72MB6wZK9M4JHdP6FFvv
+v6qbXK8ARMGH7myR/a25vfbLxj9DxQzTKwElx87wEmTixvP5v9BjeUAKYsONS9ds
+2yl+YIq7hglcX8bZpD9ETS1ca21gTixZ3wV6yN65GMMcm9/J0VfQRQwty7/6MBVl
+8ZDsbQznC7ghuNhe4DUdloUwZ/PSlW64BneNnmKgNs3NboCmiteCN3nMOJEn+eTL
+kyieIVg+f7HAh4RYdZTuALEBBLckPw==
+=TiyF
+-----END PGP SIGNATURE-----
+
+--Sig_/=ThhywD3kNJlb7gyGjZmIPI--
