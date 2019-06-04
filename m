@@ -2,124 +2,108 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43751C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4329FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC3324BBB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C596124BBB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGkBuEZj"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zU9GZzrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfFDLSM (ORCPT
+        id S1727484AbfFDLSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:18:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44719 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfFDLSM (ORCPT
+        Tue, 4 Jun 2019 07:18:40 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:54418 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfFDLSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:18:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w13so15345896wru.11;
-        Tue, 04 Jun 2019 04:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n/J7DO2DO5aFROvncBpvYr7O3pit+Ij/S9CA3PoODrM=;
-        b=LGkBuEZjy4RsgzBSCi87kEzoeO2TkfcbiDJz0oeI5qkR2haj8RRx+NGPbxv5xppKtM
-         ORl+sWhFIZmas4ErPaTDEFMvRuAzBbDsdapGYaeyfds4ycq6Cysm69AXC6YBcziuB/4n
-         PeWYhM1+JfKp5POE0jJHaDWOIGicRTyCVrTgMfxKIEydsFXotjjiQDK1JPWXj4JpNOB6
-         Hm9QphoihX1FLMl+pKEXTSIiK9VQSkkt4PuG/xRlMHR3i5xLRbZuYOVLEjsGoxJKTQ65
-         IBZ3f57pwTXvs5tQ4q3AZ+mZYU0KTuCKxeWq9BTg5WgRFCnIZ1SfzMkOnBXIyq9jHfYu
-         Md8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n/J7DO2DO5aFROvncBpvYr7O3pit+Ij/S9CA3PoODrM=;
-        b=q+oXJaQ0+7DkOD5ZUyvcyjtSmYJs91dC4h9NCl7bMjhoyaq0/6ZTVLIWcLj9+hQ5nz
-         Zz8S4VkiU81yqHBOtWLWwp9/5IbEH7A0HX1rHk9HkkdclmrRWWPpnHMiZOCVaZopwbB0
-         kZ3TiVhzgVGNqIe/+9oAnutZ8EY8k5HKants6ym6tcfEauy335A2eNR9i8yxwzlstNnD
-         LB8iPQv2ejSCfkBi3nfH4mn3uRIcxnAMfERIApxfPr6TBUvi8iiQ4M6dUksdPmbLZzPj
-         ILReiPCP88DGXyBQaqV+nAoPvFKOPxhF+4fJot8DcXu41osVIQEktsFDGzDv7tulBbVN
-         tlbg==
-X-Gm-Message-State: APjAAAUBEYz3MlrU/Al6Vf0N7/atl5StB8d2LpD0K06cP3BcCAEhijJs
-        kEyxhVQVfu++a9ogEBCDJaw=
-X-Google-Smtp-Source: APXvYqzSEIpGd9eAHDPXQtrjLlcstzFimgmEaFDwBmnWZyH/HJ30pYPye4GEBEnwa489QEaAQC75TA==
-X-Received: by 2002:a5d:5189:: with SMTP id k9mr5867405wrv.329.1559647090033;
-        Tue, 04 Jun 2019 04:18:10 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id o12sm17621110wmh.12.2019.06.04.04.18.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 04:18:09 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:18:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 4 Jun 2019 07:18:40 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x54BGvLH009633;
+        Tue, 4 Jun 2019 20:16:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x54BGvLH009633
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559647019;
+        bh=0QZKxY5pgYied5dcdhzPAVfJ4vw59SmOyFiNqN2eH8Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zU9GZzrIDSRFvCVh22UF0auDxXNQY1UOH1VC8qhSJSrflclWa9p0lSsoH5fzjiYTT
+         +4mYPcE3hXLAWcyOeOr0Zts1pGZyCaqkkB2wvG6r+HvJV0nIEnrHcPCOz9TWelrYxh
+         uj98l9srM15CKvuhGxgGjHXMDS7H+v0cK6sj5KR8G2rNWQLqmEdaQTUFQrHNYJyxzF
+         KYglswUnZ5u4XZnRpld3T1e6sbEtr8WG2AZDafPjNHltAabVyHE95uSdbJYRrOYGpr
+         8YTfe0pi8nTwKmFMg3ZkfnlWhWfXrWLtjfBHlphKgBTTQAn4wXgYcuQ/Ir6502MGW7
+         PzSsqx3DC0tYQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-Message-ID: <20190604111808.GM16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-14-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8c07nsHwQobhlezh"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-14-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Subject: [PATCH] ocxl: do not use C++ style comments in uapi header
+Date:   Tue,  4 Jun 2019 20:16:32 +0900
+Message-Id: <20190604111632.22479-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linux kernel tolerates C++ style comments these days. Actually, the
+SPDX License tags for .c files start with //.
 
---8c07nsHwQobhlezh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On the other hand, uapi headers are written in more strict C, where
+the C++ comment style is forbidden.
 
-On Thu, May 02, 2019 at 02:38:12AM +0300, Dmitry Osipenko wrote:
-> The devfreq driver can be used on Tegra30 without any code change and
-> it works perfectly fine, the default Tegra124 parameters are good enough
-> for Tegra30.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/Kconfig         | 4 ++--
->  drivers/devfreq/tegra-devfreq.c | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+ include/uapi/misc/ocxl.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---8c07nsHwQobhlezh
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/include/uapi/misc/ocxl.h b/include/uapi/misc/ocxl.h
+index 97937cfa3baa..6d29a60a896a 100644
+--- a/include/uapi/misc/ocxl.h
++++ b/include/uapi/misc/ocxl.h
+@@ -33,23 +33,23 @@ struct ocxl_ioctl_attach {
+ };
+ 
+ struct ocxl_ioctl_metadata {
+-	__u16 version; // struct version, always backwards compatible
++	__u16 version; /* struct version, always backwards compatible */
+ 
+-	// Version 0 fields
++	/* Version 0 fields */
+ 	__u8  afu_version_major;
+ 	__u8  afu_version_minor;
+-	__u32 pasid;		// PASID assigned to the current context
++	__u32 pasid;		/* PASID assigned to the current context */
+ 
+-	__u64 pp_mmio_size;	// Per PASID MMIO size
++	__u64 pp_mmio_size;	/* Per PASID MMIO size */
+ 	__u64 global_mmio_size;
+ 
+-	// End version 0 fields
++	/* End version 0 fields */
+ 
+-	__u64 reserved[13]; // Total of 16*u64
++	__u64 reserved[13]; /* Total of 16*u64 */
+ };
+ 
+ struct ocxl_ioctl_p9_wait {
+-	__u16 thread_id; // The thread ID required to wake this thread
++	__u16 thread_id; /* The thread ID required to wake this thread */
+ 	__u16 reserved1;
+ 	__u32 reserved2;
+ 	__u64 reserved3[3];
+-- 
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2U3AACgkQ3SOs138+
-s6EgCg//RWhW/x4dD2kG6xp3zwSVBovQVAQZakm4/20gtph1Ak6gBxzPVa9+8iIJ
-9yYQF+yiAjfL3OCDSMJ9OOHVULKujR0KFrdV9Ui62DFXPT0TApvwf8jGu3rbsB2b
-TvtL0iE4bEwzPMyQJWzWVqOiUbVb5Y9LrbslWnU2F6CeeV3Wp7Op7yscqwJtJ1Gb
-IrvO7OohyV/1XlaZGrjQcNf8bWNADNiEF31nMZnTwRVd0H3nP5pMjPBTCBJcucFq
-PmyNeL8AzNFGeAUYTFTQlxk2k7HoZcAVL0CWm28F32ln4Kt8phyj9qAx9An57hDc
-2lUKTbph2r9SS2t0zkoqTLeHqspqepMwPpSuTc2pga/dOLC5OEnsadxDmgShG8E4
-si9QOIf8sOUwYjQ2R1mVgQ9i7ytPhvoj/zHPz0LY2a/Zh9YBR6Omyas2OgRm3qC9
-oedItj3W7Dlfkx7YDkZL4jlyBdUc2EdWgMQMFxKd3+38NWIdAJ1UUIl1rHopkg7y
-F71vZp2r2ATKzKCp11pvLyrx1YA2505A+29tH4CEWuYA2yZHvnMuRD/0uaQz6GJP
-8A1RYsU0lhVp86S/X8MD6Um1Ez29+p+E1j64rCd1uQbFqw4UoS4PwepXLJN9ln8v
-4Nijuy1uktMhFtFouPdr7Sb8Tk1e0g2l9yn1U2RmRdmqA2rRSGU=
-=mk8X
------END PGP SIGNATURE-----
-
---8c07nsHwQobhlezh--
