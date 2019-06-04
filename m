@@ -2,100 +2,152 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CE4C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B1FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D309C24ABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AprUw2fU"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3C42064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFDFsK (ORCPT
+        id S1726656AbfFDFsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 01:48:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55389 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfFDFsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 01:48:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 16so8990437wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 22:48:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=d0PHWADGUTRHP3RbtVmcCFQIV5Xx7EXkRTIqij8bmTU=;
-        b=AprUw2fUY0LjS5Diu/tR2Pmn7vwhaxX8wO278qS0E1kpmPhfqoJ0SXgBwesswQaVj1
-         8PK7CdzlaqoLFTCdNpyPgYKJiTifXUzb7GhCqfnJ6N/EE9NUs7tNdhJ2uxK5+rDjUaBJ
-         t2T42Okzeb79umghXaLPG4nfl0wp2e7t7KThJk2vD2Y6jbt5zzprKHpoAdfhMCbn1WcR
-         v2cr1nwtmyUGeQfjsfAab/OslH0UZawmNrfbyyqZ1s1NEfYWnumslps++LeCw3VIhhyp
-         sjPlWOQ75u6UuUF6C9guxJgimDoB9IPQFkMSHf9aYodOQwamPQubvdlKUlGoeisaMxAh
-         Kwgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=d0PHWADGUTRHP3RbtVmcCFQIV5Xx7EXkRTIqij8bmTU=;
-        b=XbGwut/4yujHzuPyNyH/laCaM+JTRoULHaEDT+It75KoVcMaSLoRrsK/2eZmXCa/n/
-         lpisRor+a8Pgnd0xYG13o9IieYX5XSayuga+/BCHTXWBPmlv3IgnHhzSHxLZbFbqd/12
-         kt4rYJpbgrk73fjNFIo4aqYp0A3wwI537UzYYC924vERB+R2XGevEmAhp6Dx58hhduwy
-         CjDHLFJLIBKRAakVcIiSo0cC3F3VkIBqHNyw+6CM1HiuLGyJY9Zbj2AcNq4H4uJIa6Lz
-         P8+vT0VF/UgIXCIErhmmMcjpbQW+Gsn9b0F85uRnXMAsoGUdIubG6P4JkTe3wgI5oHEj
-         FR+g==
-X-Gm-Message-State: APjAAAXpkMQDruQDX9NUldqbmwurzvKej2FWh76KwL+0I7sVXaQrLJ37
-        sO7TAP61lhEQBGNo12kP0Ph3zw==
-X-Google-Smtp-Source: APXvYqwIIlQozIHS1omANt46ZYA1k5oV3Ls5bT0crSJhfYkQnCeDPC78T92R6f4ncEyKrlsTMbBaHQ==
-X-Received: by 2002:a1c:305:: with SMTP id 5mr17363067wmd.101.1559627287208;
-        Mon, 03 Jun 2019 22:48:07 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id x8sm5149737wmc.5.2019.06.03.22.48.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 22:48:06 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 06:47:56 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, jic23@kernel.org, cychiang@chromium.org,
-        tiwai@suse.com, fabien.lahoudere@collabora.com,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v3 00/30] Update cros_ec_commands.h
-Message-ID: <20190604054756.GZ4797@dell>
-References: <20190603183401.151408-1-gwendal@chromium.org>
- <20190603194249.GD2456@sirena.org.uk>
+        Tue, 4 Jun 2019 01:48:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41174 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726606AbfFDFs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 01:48:29 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8E1DC307D914;
+        Tue,  4 Jun 2019 05:48:29 +0000 (UTC)
+Received: from gondolin (ovpn-116-92.ams2.redhat.com [10.36.116.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE1BA60C67;
+        Tue,  4 Jun 2019 05:48:23 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 07:48:20 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Message-ID: <20190604074820.71853cbb.cohuck@redhat.com>
+In-Reply-To: <20190603185658.54517-4-parav@mellanox.com>
+References: <20190603185658.54517-1-parav@mellanox.com>
+        <20190603185658.54517-4-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190603194249.GD2456@sirena.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 04 Jun 2019 05:48:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Jun 2019, Mark Brown wrote:
+On Mon,  3 Jun 2019 13:56:58 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-> On Mon, Jun 03, 2019 at 11:33:31AM -0700, Gwendal Grignou wrote:
-> > The interface between CrosEC embedded controller and the host,
-> > described by cros_ec_commands.h, as diverged from what the embedded
-> > controller really support.
+> In following sequences, child devices created while removing mdev parent
+> device can be left out, or it may lead to race of removing half
+> initialized child mdev devices.
 > 
-> I'm not clear why I keep getting copied on this series or why it's being
-> resent?
+> issue-1:
+> --------
+>        cpu-0                         cpu-1
+>        -----                         -----
+>                                   mdev_unregister_device()
+>                                     device_for_each_child()
+>                                       mdev_device_remove_cb()
+>                                         mdev_device_remove()
+> create_store()
+>   mdev_device_create()                   [...]
+>     device_add()
+>                                   parent_remove_sysfs_files()
+> 
+> /* BUG: device added by cpu-0
+>  * whose parent is getting removed
+>  * and it won't process this mdev.
+>  */
+> 
+> issue-2:
+> --------
+> Below crash is observed when user initiated remove is in progress
+> and mdev_unregister_driver() completes parent unregistration.
+> 
+>        cpu-0                         cpu-1
+>        -----                         -----
+> remove_store()
+>    mdev_device_remove()
+>    active = false;
+>                                   mdev_unregister_device()
+>                                   parent device removed.
+>    [...]
+>    parents->ops->remove()
+>  /*
+>   * BUG: Accessing invalid parent.
+>   */
+> 
+> This is similar race like create() racing with mdev_unregister_device().
+> 
+> BUG: unable to handle kernel paging request at ffffffffc0585668
+> PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
+> Oops: 0000 [#1] SMP PTI
+> CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
+> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
+> Call Trace:
+>  remove_store+0x71/0x90 [mdev]
+>  kernfs_fop_write+0x113/0x1a0
+>  vfs_write+0xad/0x1b0
+>  ksys_write+0x5a/0xe0
+>  do_syscall_64+0x5a/0x210
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Therefore, mdev core is improved as below to overcome above issues.
+> 
+> Wait for any ongoing mdev create() and remove() to finish before
+> unregistering parent device.
+> This continues to allow multiple create and remove to progress in
+> parallel for different mdev devices as most common case.
+> At the same time guard parent removal while parent is being accessed by
+> create() and remove() callbacks.
+> create()/remove() and unregister_device() are synchronized by the rwsem.
+> 
+> Refactor device removal code to mdev_device_remove_common() to avoid
+> acquiring unreg_sem of the parent.
+> 
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 71 ++++++++++++++++++++++++--------
+>  drivers/vfio/mdev/mdev_private.h |  2 +
+>  2 files changed, 55 insertions(+), 18 deletions(-)
+> 
 
-Not sure why you're copied in, but I asked him to resend.
+> @@ -265,6 +299,12 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  	mdev->parent = parent;
+>  
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Adding
+
+/* Check if parent unregistration has started */
+
+here as well might be nice, but no need to resend the patch for that.
+
+> +	if (!down_read_trylock(&parent->unreg_sem)) {
+> +		mdev_device_free(mdev);
+> +		ret = -ENODEV;
+> +		goto mdev_fail;
+> +	}
+> +
+>  	device_initialize(&mdev->dev);
+>  	mdev->dev.parent  = dev;
+>  	mdev->dev.bus     = &mdev_bus_type;
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
