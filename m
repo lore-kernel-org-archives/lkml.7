@@ -2,245 +2,171 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB67C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD49BC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335662075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3C2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gBDHtkDl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bd7V+auq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfFDRML (ORCPT
+        id S1728140AbfFDRMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:12:11 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:41888 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbfFDRML (ORCPT
+        Tue, 4 Jun 2019 13:12:20 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34242 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728004AbfFDRMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:12:11 -0400
-Received: by mail-yw1-f67.google.com with SMTP id y185so4121993ywy.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:12:10 -0700 (PDT)
+        Tue, 4 Jun 2019 13:12:20 -0400
+Received: by mail-it1-f194.google.com with SMTP id u124so3059079itc.1;
+        Tue, 04 Jun 2019 10:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2htaCOivl5sTuLqYX7DBsUd0R0AxIhk6VW2s3pZYFbg=;
-        b=gBDHtkDlkiEXkZDK7DqLEXR9KIC8iQ6US7e3B/MS/Xe2ggmln1v9lBBLoX1n7KBEdR
-         +Z1skXE5N9KSUfRFN7bFLbBI2PXVIwqhF0srbQOoTt+IBuE+IPstonebw8ER0ejx3Jfu
-         QiCZiWVkBuh0gMTef01fniwzPzmjvzrQQcOIxPgxM4KcwL+sC/Dm30PBe9pixcE5nl2o
-         l11wfLa8FXKXaHJecuf9ZSmqzE7QjinPlX3s4iivEcVM0FXEP0aohbRJZnAktQx3CSE+
-         WNBFb9aGQIiUzCoUM1Tvl8CZ5o900oXa6v4VtA2uKGt2lSPxJMuVwiRh9vts9i1/lMHN
-         pumg==
+        bh=YwvRTSi8hPGYNKJsDR2mQt7/vaWadpcHt5lEeh5TQj0=;
+        b=Bd7V+auq6f1XOlBC2pUbLKqKr37pQFOUTGlbFWLySuV7WdFk20+wWfgl3DexqyqwRQ
+         XTDFAAqxb2uedga0O//1YKG7BxO++EqRAdTJdR0Y1Yc8JRNi/Gqk2hlMF6cWkPDGYb/n
+         BZpijgpA88Vzp+0/F3BHuGiSX9COx3eW/7j4hyowUM93hYHLDnWbY+QOp/BWgek0nl8y
+         TIk2/Dhr7rBv7tEKAm/Iew4qO46003bLBEdENnaXALWzuCyK5YYffZLrHlYdQBCO/qh0
+         qpQIUYM79bGjKfEXOYm2wOIuuU2nJ1TwLvYOeKwhNpk4X9fSBCJF23V0T6hj88q4c0gU
+         X3mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2htaCOivl5sTuLqYX7DBsUd0R0AxIhk6VW2s3pZYFbg=;
-        b=pVLGWyNIqe1g4KSC+gF/0OW+0V+ymearRCUUcJ8+qWjND3to60zbC5cf6pi9MOSzdD
-         Q+BssjzC50pNMJQMrJOwmDKsufvdofbMzosnzgiNz7GOoRv85cPk4RHdQLSzIrDWwRal
-         V2KKbCrsTvkCsOzJ+lMQkTB9GDyrrq3MBRPHpU/R22kOqnOec7gHjTqMiOpLB+EGN9t4
-         TZU/xMM+JTVd/QF+lQIWxVyWfFYdy1NdEWQsHEin6/DXo/n9u5e7ksQYV278Ev4/gCrq
-         KYJIDKl+ArArjaIBorjuHSDSqGSdbsOpTbF0sWn7on1UL4+fwr1cRyUDziPL2k1Yo1RN
-         /xRQ==
-X-Gm-Message-State: APjAAAVaGTWYNY3wGhNTBwoRE9XE8vzZ5GKnAwOkAXyut0m3g5K9VkT2
-        PzDWtebbBtcV7vmhDlpEYewkv9y89zExMYNEbKs5yfWJzqc=
-X-Google-Smtp-Source: APXvYqyC1KlVktZJWE/L0OLH7BkBTiKvAxjSWjPPEGSAjnfDlH8KuO3J18ld1TsQ3Oi+hVy3SZRNT8CelnL4zUPfI20=
-X-Received: by 2002:a81:4e94:: with SMTP id c142mr4317513ywb.398.1559668329458;
- Tue, 04 Jun 2019 10:12:09 -0700 (PDT)
+        bh=YwvRTSi8hPGYNKJsDR2mQt7/vaWadpcHt5lEeh5TQj0=;
+        b=gNemzrTEv3zjrbRvsx4jJW/a3qzwduklPtd+EzHjozKteEwPhlS0YRamAQY8shvfFT
+         r1KTj2apFPuuWOydzd5G7APanfjOkPeHTkleR57xD6Ksfthl+8LRldKDxkxqtc4kQ3LH
+         yHpYbCmDJa/OO1jlIahqUmFAwjXPhf3G7Tu2AaXqyWu/sVycQaepCaLYP2OqWkz2DYCf
+         YhzEX/aGWr0bTNgDNYZIpkR/Q0Og8g8xfWIcB47E9c9rAJ9pl7TXyeF7Nxzqw37MPDlm
+         J+PnzwvjmDTIJIGUO/4U/joVhbnCDxwLIxYsR4ZH+uKAP3Dtp1QE9kHNi/eYpSSHZlx1
+         FsUA==
+X-Gm-Message-State: APjAAAUWk1CeicDABEPAKtCUDk0e/r/iE8wSQoAvi41chqEhIHeNkAmU
+        AjpFeqf/hncH2SSgftGRPJCebemitkt/4BFw2ck=
+X-Google-Smtp-Source: APXvYqzDktx7jgwD6BJgywS6VvFnx4Vw5PiOeWLjzlixLk9bShnuYNP9pOlCXdlEUtnAFTWLZjmGg9tX/MfqEkD4oI4=
+X-Received: by 2002:a02:b914:: with SMTP id v20mr2116128jan.83.1559668338874;
+ Tue, 04 Jun 2019 10:12:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190602094607.41840-1-teawaterz@linux.alibaba.com> <20190602094607.41840-2-teawaterz@linux.alibaba.com>
-In-Reply-To: <20190602094607.41840-2-teawaterz@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 4 Jun 2019 10:11:58 -0700
-Message-ID: <CALvZod7WX0_Eu8eDLSwze=Kf07d6ysAM5DdSqqtkscVikPpSWQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] zswap: Add module parameter malloc_movable_if_support
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com,
-        Seth Jennings <sjenning@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-2-nitesh@redhat.com>
+ <CAKgT0Udnc_cmgBLFEZ5udexsc1cfjX1rJR3qQFOW-7bfuFh6gQ@mail.gmail.com>
+ <4cdfee20-126e-bc28-cf1c-2cfd484ca28e@redhat.com> <CAKgT0Ud6uKpcj9HFHYOThCY=0_P0=quBLbsDR7uUMdbwcYeSTw@mail.gmail.com>
+ <09e6caea-7000-b3e4-d297-df6bea78e127@redhat.com> <CAKgT0UeMpcckGpT6OnC2kqgtyT2p9bvNgE2C0eqW1GOJTU-DHA@mail.gmail.com>
+ <13b96507-6347-1702-7822-6efb0f1bbf20@redhat.com>
+In-Reply-To: <13b96507-6347-1702-7822-6efb0f1bbf20@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 4 Jun 2019 10:12:07 -0700
+Message-ID: <CAKgT0UfEevMZu_1B0Og5QdOjj0R2PKJyo8msaHfouaL_oNegTw@mail.gmail.com>
+Subject: Re: [RFC][Patch v10 1/2] mm: page_hinting: core infrastructure
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 2:47 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+On Tue, Jun 4, 2019 at 9:42 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 >
-> This is the second version that was updated according to the comments
-> from Sergey Senozhatsky in https://lkml.org/lkml/2019/5/29/73
 >
-> zswap compresses swap pages into a dynamically allocated RAM-based
-> memory pool.  The memory pool should be zbud, z3fold or zsmalloc.
-> All of them will allocate unmovable pages.  It will increase the
-> number of unmovable page blocks that will bad for anti-fragment.
+> On 6/4/19 12:25 PM, Alexander Duyck wrote:
+> > On Tue, Jun 4, 2019 at 9:08 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>
+> >> On 6/4/19 11:14 AM, Alexander Duyck wrote:
+> >>> On Tue, Jun 4, 2019 at 5:55 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>> On 6/3/19 3:04 PM, Alexander Duyck wrote:
+> >>>>> On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>>> This patch introduces the core infrastructure for free page hinting in
+> >>>>>> virtual environments. It enables the kernel to track the free pages which
+> >>>>>> can be reported to its hypervisor so that the hypervisor could
+> >>>>>> free and reuse that memory as per its requirement.
+> >>>>>>
+> >>>>>> While the pages are getting processed in the hypervisor (e.g.,
+> >>>>>> via MADV_FREE), the guest must not use them, otherwise, data loss
+> >>>>>> would be possible. To avoid such a situation, these pages are
+> >>>>>> temporarily removed from the buddy. The amount of pages removed
+> >>>>>> temporarily from the buddy is governed by the backend(virtio-balloon
+> >>>>>> in our case).
+> >>>>>>
+> >>>>>> To efficiently identify free pages that can to be hinted to the
+> >>>>>> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
+> >>>>>> chunks are reported to the hypervisor - especially, to not break up THP
+> >>>>>> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
+> >>>>>> in the bitmap are an indication whether a page *might* be free, not a
+> >>>>>> guarantee. A new hook after buddy merging sets the bits.
+> >>>>>>
+> >>>>>> Bitmaps are stored per zone, protected by the zone lock. A workqueue
+> >>>>>> asynchronously processes the bitmaps, trying to isolate and report pages
+> >>>>>> that are still free. The backend (virtio-balloon) is responsible for
+> >>>>>> reporting these batched pages to the host synchronously. Once reporting/
+> >>>>>> freeing is complete, isolated pages are returned back to the buddy.
+> >>>>>>
+> >>>>>> There are still various things to look into (e.g., memory hotplug, more
+> >>>>>> efficient locking, possible races when disabling).
+> >>>>>>
+> >>>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> >>>>> So one thing I had thought about, that I don't believe that has been
+> >>>>> addressed in your solution, is to determine a means to guarantee
+> >>>>> forward progress. If you have a noisy thread that is allocating and
+> >>>>> freeing some block of memory repeatedly you will be stuck processing
+> >>>>> that and cannot get to the other work. Specifically if you have a zone
+> >>>>> where somebody is just cycling the number of pages needed to fill your
+> >>>>> hinting queue how do you get around it and get to the data that is
+> >>>>> actually code instead of getting stuck processing the noise?
+> >>>> It should not matter. As every time the memory threshold is met, entire
+> >>>> bitmap
+> >>>> is scanned and not just a chunk of memory for possible isolation. This
+> >>>> will guarantee
+> >>>> forward progress.
+> >>> So I think there may still be some issues. I see how you go from the
+> >>> start to the end, but how to you loop back to the start again as pages
+> >>> are added? The init_hinting_wq doesn't seem to have a way to get back
+> >>> to the start again if there is still work to do after you have
+> >>> completed your pass without queue_work_on firing off another thread.
+> >>>
+> >> That will be taken care as the part of a new job, which will be
+> >> en-queued as soon
+> >> as the free memory count for the respective zone will reach the threshold.
+> > So does that mean that you have multiple threads all calling
+> > queue_work_on until you get below the threshold?
+> Every time a page of order MAX_ORDER - 2 is added to the buddy, free
+> memory count will be incremented if the bit is not already set and its
+> value will be checked against the threshold.
+> >  If so it seems like
+> > that would get expensive since that is an atomic test and set
+> > operation that would be hammered until you get below that threshold.
 >
-> zsmalloc support page migration if request movable page:
->         handle = zs_malloc(zram->mem_pool, comp_len,
->                 GFP_NOIO | __GFP_HIGHMEM |
->                 __GFP_MOVABLE);
->
-> And commit "zpool: Add malloc_support_movable to zpool_driver" add
-> zpool_malloc_support_movable check malloc_support_movable to make
-> sure if a zpool support allocate movable memory.
->
-> This commit adds module parameter malloc_movable_if_support to enable
-> or disable zpool allocate block with gfp __GFP_HIGHMEM | __GFP_MOVABLE
-> if it support allocate movable memory (disabled by default).
->
-> Following part is test log in a pc that has 8G memory and 2G swap.
->
-> When it disabled:
->  echo lz4 > /sys/module/zswap/parameters/compressor
->  echo zsmalloc > /sys/module/zswap/parameters/zpool
->  echo 1 > /sys/module/zswap/parameters/enabled
->  swapon /swapfile
->  cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 3977932 usecs = 667233 KB/s
-> 2717908992 bytes / 4160702 usecs = 637923 KB/s
-> 2717908992 bytes / 4354611 usecs = 609516 KB/s
-> 293359 usecs to free memory
-> 340304 usecs to free memory
-> 205781 usecs to free memory
-> 2717908992 bytes / 5588016 usecs = 474982 KB/s
-> 166124 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable      5     10      9      8      8      5      1      2      3      0      0
-> Node    0, zone    DMA32, type      Movable     15     16     14     12     14     10      9      6      6      5    776
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   7097   6914   6473   5642   4373   2664   1220    319     78      4      0
-> Node    0, zone   Normal, type      Movable   2092   3216   2820   2266   1585    946    559    359    237    258    378
-> Node    0, zone   Normal, type  Reclaimable     47     88    122     80     34      9      5      4      2      1      2
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1652            0            0            0            0
-> Node 0, zone   Normal          834         1572           25            0            0            0
->
-> When it enabled:
->  echo lz4 > /sys/module/zswap/parameters/compressor
->  echo zsmalloc > /sys/module/zswap/parameters/zpool
->  echo 1 > /sys/module/zswap/parameters/enabled
->  echo 1 > /sys/module/zswap/parameters/malloc_movable_if_support
->  swapon /swapfile
->  cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 4721401 usecs = 562165 KB/s
-> 2717908992 bytes / 4783167 usecs = 554905 KB/s
-> 2717908992 bytes / 4802125 usecs = 552715 KB/s
-> 2717908992 bytes / 4866579 usecs = 545395 KB/s
-> 323605 usecs to free memory
-> 414817 usecs to free memory
-> 458576 usecs to free memory
-> 355827 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable      8     10      8      7      7      6      5      3      2      0      0
-> Node    0, zone    DMA32, type      Movable     23     21     18     15     13     14     14     10     11      6    766
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      1
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   2660   1295    460    102     11      5      3     11      2      4      0
-> Node    0, zone   Normal, type      Movable   4178   5760   5045   4137   3324   2306   1482    930    497    254    460
-> Node    0, zone   Normal, type  Reclaimable     50     83    114     93     28     12     10      6      3      3      0
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1650            2            0            0            0
-> Node 0, zone   Normal           81         2325           25            0            0            0
->
-> You can see that the number of unmovable page blocks is decreased
-> when malloc_movable_if_support is enabled.
->
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> ---
->  mm/zswap.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index a4e4d36ec085..2fc45de92383 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -123,6 +123,13 @@ static bool zswap_same_filled_pages_enabled = true;
->  module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
->                    bool, 0644);
->
-> +/* Enable/disable zpool allocate block with gfp __GFP_HIGHMEM | __GFP_MOVABLE
-> + * if it support allocate movable memory (disabled by default).
-> + */
-> +static bool __read_mostly zswap_malloc_movable_if_support;
-> +module_param_cb(malloc_movable_if_support, &param_ops_bool,
-> +               &zswap_malloc_movable_if_support, 0644);
-> +
+> Not sure if I understood "until you get below that threshold".
+> Can you please explain?
+> test_and_set_bit() will be called every time a page with MAX_ORDER -2
+> order is added to the buddy. (Not already hinted)
 
-Any reason for the above tunable? Do we ever want to disable movable
-for zswap+zsmalloc?
+I had overlooked the other paths that are already making use of the
+test_and_set_bit(). What I was getting at specifically is that the
+WORK_PENDING bit in the work struct is going to be getting hit every
+time you add a new page. So it is adding yet another atomic operation
+in addition to the increment and test_and_set_bit() that you were
+already doing.
 
->  /*********************************
->  * data structures
->  **********************************/
-> @@ -1006,6 +1013,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->         char *buf;
->         u8 *src, *dst;
->         struct zswap_header zhdr = { .swpentry = swp_entry(type, offset) };
-> +       gfp_t gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
->
->         /* THP isn't supported */
->         if (PageTransHuge(page)) {
-> @@ -1079,9 +1087,11 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->
->         /* store */
->         hlen = zpool_evictable(entry->pool->zpool) ? sizeof(zhdr) : 0;
-> -       ret = zpool_malloc(entry->pool->zpool, hlen + dlen,
-> -                          __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM,
-> -                          &handle);
-> +       if (zswap_malloc_movable_if_support &&
-> +               zpool_malloc_support_movable(entry->pool->zpool)) {
-> +               gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
-> +       }
-> +       ret = zpool_malloc(entry->pool->zpool, hlen + dlen, gfp, &handle);
->         if (ret == -ENOSPC) {
->                 zswap_reject_compress_poor++;
->                 goto put_dstmem;
-> --
-> 2.20.1 (Apple Git-117)
->
+Generally you may want to look at trying to reduce how often you are
+having to perform these atomic operations. So for example one thing
+you could do is use something like an atomic_read before you do your
+atomic_inc to determine if you are transitioning to a state where you
+were below, and now you are above the threshold. Doing something like
+that could save you on the number of calls you are making and save
+some significant CPU cycles.
