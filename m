@@ -2,157 +2,261 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADB0C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FEBC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440CC24C67
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888182461E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYYfbrVD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAGX3I7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfFDIP4 (ORCPT
+        id S1727331AbfFDIQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:15:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42840 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfFDIPw (ORCPT
+        Tue, 4 Jun 2019 04:16:11 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36050 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfFDIQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:15:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s184so3889488oie.9;
-        Tue, 04 Jun 2019 01:15:52 -0700 (PDT)
+        Tue, 4 Jun 2019 04:16:10 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u22so12220323pfm.3;
+        Tue, 04 Jun 2019 01:16:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0P8XfByoZm6wKL9UI7hjVSwllit04FWD2v61aqDNCsk=;
-        b=QYYfbrVDHfyi4+hEVQ1HJudI8csHpDdfwoBUhZn+mkEtYtDFRbnTMN41mguZKHRST4
-         lIAZ0wCvOXIp4tyw8iqrB5scRQxvrl82Iu64YPGEEYTgEVrNxWUZdpwZnxugqlysi5nL
-         djZv9bZKtJf1PxjQqNKmBHT+7J8ZIlyFxzx7zt/6dkFJCN3NtU5zTQ2BgZYCoU2pTWNT
-         dbIJSBST3vVA8GBgXFr0XJPhnbC58lFsn7hhpRn3d30t+PtXRDpiRYgdvBhYz3ZhxnJB
-         q01kj33P4n7A1/7oXHJL18v9AiUT0KNx8tcYH3JPYhfxciR0p2T4X2f+D4WxjQuyeIRn
-         L5Dg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jCHecnT0sYNlMgEQO4s05IEDfcTXYeUHL4Z0ONFa9so=;
+        b=RAGX3I7NlXEhkSEXwbvcJD6bKhPmmqUcDGtJ2G0lsqekmlIwRD6OnieNZIWJjaRurb
+         OhvXnhdArx7K6vTqUkzqtV7d5wLzlysuhNOQOtqzZfXtRKzZgQ953McbxQAS5prJJuTm
+         pNRolY/qDVu/1+29ypKCfd90jC05n1gwGXZdGpS+A+cvRlbwxHHL6ySQ3BFSw11mGWHb
+         FZ19LFlap68nhqXBs77wkPfG+SWIl1FHjGGeRcmHUk5LhSJv0Cm3s11XwxCOkVFk7wvE
+         41RjlgFVt0CsgKnvHcJ6yjzhKQCUKfCrbDzJdG0gMJVqSC1Lw1rlAksS7QF9P1WiZq+c
+         s/+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0P8XfByoZm6wKL9UI7hjVSwllit04FWD2v61aqDNCsk=;
-        b=KwchwimQ0oh1sjuUoCQfaRtiu7xx1Y+Jqu6CKOgyAsJcNnFERUI2F0IZHOcOCqtiuP
-         EbpV6cfztzgSfYsZj3HmHs/zazpJtSmZ7IabRk/P+zUvyovymtGYdJUQ0MY0s7UhKrlR
-         H67RMO4zOq5ZFSS5ySdCR0QL24i25b9SC2cFZ8emWfL+z9DD2xOh3ysCR2fwTuUJr8+A
-         jcrvyjV+PcORLdToHK6QhSlMPeKGjj/zBPl53gjEPZgF6i6ZyK+ncWBvuZhDzilTIPr3
-         YudZEGD8IMSUMLJxLS3JdjZyxGWKqF68rUngXRCcTaEtEips2r2o4jmSoEe5Tm1TapgG
-         aZPQ==
-X-Gm-Message-State: APjAAAUj+g7Nhi1yztBG3jsWbmS9d6XN01MYuXMugNQKRoL/jdxrihKM
-        NF9c83tWoYDNTMpofh7JU6fa8nzINyxKrUnQTFQ=
-X-Google-Smtp-Source: APXvYqya//7vchAjhVldZPFjCL0IlI3+tfkaf79Di3+SNlnlqeW8B5hzF24LDj31owGDdRMnM7Tlb29sy7d3yadqxnA=
-X-Received: by 2002:aca:b606:: with SMTP id g6mr1605787oif.101.1559636151980;
- Tue, 04 Jun 2019 01:15:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jCHecnT0sYNlMgEQO4s05IEDfcTXYeUHL4Z0ONFa9so=;
+        b=OMw8X7JUe5W7q0vpLEavfkyhzcmIEB+4fwtfw9INEPj5+jKmoCDn9nx5kJvpVwW1of
+         5E1UBSN+r/Sxael/x7brLKfSanSbPcaHT1Dq97KKcHEeyVG2seWNpiEtmT0ztchPWp4p
+         7Wz4o5xYtEaLpR9TajAh8h5/VyoxYQ1AUQT38sxD6eeXjB73g8uiTrEhxnjw0V5SetmM
+         ZPTwXxjwsY/wUJ6vP9PecUmi6yQ3dLTbFr+KJbR7JzqSDNkg4c/+sXGs9gKW4izDpkkc
+         OZejCs1RP5f6fEAOxUBup7ObWKpsmfhDx1RDb+5+JYWkXeMz1GFZnYmd0jnSZZXwvXzk
+         6XoQ==
+X-Gm-Message-State: APjAAAUN9zDqvki5KvyUDA5kNDrYLw6Zy+3aG0RcPQtSei5Vq5LVOOLB
+        uhpTcdIh0zRQOG5KjKmb2Kg=
+X-Google-Smtp-Source: APXvYqzdkxeIJwI3y/8voHOex3X1QneNgzO5Pb81QFjwH3Kphj/oaypdhy/tZMuKtNMVCNdQsNDZ+g==
+X-Received: by 2002:a17:90a:2ec9:: with SMTP id h9mr36459752pjs.130.1559636169132;
+        Tue, 04 Jun 2019 01:16:09 -0700 (PDT)
+Received: from Gentoo ([103.231.91.66])
+        by smtp.gmail.com with ESMTPSA id f21sm37258pjq.2.2019.06.04.01.16.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 01:16:07 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:45:53 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.0.21
+Message-ID: <20190604081553.GB10154@Gentoo>
+References: <20190604073843.GA4985@kroah.com>
 MIME-Version: 1.0
-References: <1559634617-16264-1-git-send-email-92siuyang@gmail.com>
-In-Reply-To: <1559634617-16264-1-git-send-email-92siuyang@gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 4 Jun 2019 09:15:25 +0100
-Message-ID: <CA+V-a8sBe53iZASaT+uJH0kMvJKNJOHYJLbTfEF+9FOVz3H=Rg@mail.gmail.com>
-Subject: Re: [PATCH] media: davinci: vpif_capture: fix memory leak in vpif_probe()
-To:     Young Xiao <92siuyang@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="K8nIJk4ghYZn606h"
+Content-Disposition: inline
+In-Reply-To: <20190604073843.GA4985@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Young,
 
-Thanks for the patch.
+--K8nIJk4ghYZn606h
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-On Tue, Jun 4, 2019 at 8:49 AM Young Xiao <92siuyang@gmail.com> wrote:
+Heads up! this has reached an EOL ...so please move to 5.1 series.
+
+On 09:38 Tue 04 Jun , Greg KH wrote:
+>I'm announcing the release of the 5.0.21 kernel.
 >
-> If vpif_probe() fails on v4l2_device_register() and vpif_probe_complete(),
-> then memory allocated at initialize_vpif() for global vpif_obj.dev[i]
-> become unreleased.
+>All users of the 5.0 kernel series must upgrade.
 >
-> The patch adds deallocation of vpif_obj.dev[i] on the error path.
+>Note, this is the LAST 5.0.y kernel to be released.  It is now
+>end-of-life.  Please move to the 5.1.y kernel tree at this point in
+>time.
 >
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> ---
->  drivers/media/platform/davinci/vpif_capture.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+>The updated 5.0.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.0.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 >
-> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-> index b5aacb0..277d500 100644
-> --- a/drivers/media/platform/davinci/vpif_capture.c
-> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> @@ -1385,6 +1385,14 @@ static int initialize_vpif(void)
->         return err;
->  }
+>thanks,
 >
-> +static void free_vpif_objs(void)
-> +{
-function could be made inline.
-
-> +       int i;
-> +
-> +       for (i = 0; i < VPIF_DISPLAY_MAX_DEVICES; i++)
-
-VPIF_DISPLAY_MAX_DEVICES ? this should be  VPIF_CAPTURE_MAX_DEVICES
-
-> +               kfree(vpif_obj.dev[i]);
-> +}
-> +
->  static int vpif_async_bound(struct v4l2_async_notifier *notifier,
->                             struct v4l2_subdev *subdev,
->                             struct v4l2_async_subdev *asd)
-> @@ -1654,7 +1662,7 @@ static __init int vpif_probe(struct platform_device *pdev)
->         err = v4l2_device_register(vpif_dev, &vpif_obj.v4l2_dev);
->         if (err) {
->                 v4l2_err(vpif_dev->driver, "Error registering v4l2 device\n");
-> -               goto cleanup;
-> +               goto vpif_free;
->         }
+>greg k-h
 >
->         while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, res_idx))) {
-> @@ -1701,7 +1709,10 @@ static __init int vpif_probe(struct platform_device *pdev)
->                                   "registered sub device %s\n",
->                                    subdevdata->name);
->                 }
-> -               vpif_probe_complete();
-> +               err = vpif_probe_complete();
-> +               if (err) {
-> +                       goto probe_subdev_out;
-> +               }
-
-No need for { and } as per kernel coding style.
-
->         } else {
->                 vpif_obj.notifier.ops = &vpif_async_ops;
->                 err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
-> @@ -1720,6 +1731,8 @@ static __init int vpif_probe(struct platform_device *pdev)
->         kfree(vpif_obj.sd);
->  vpif_unregister:
->         v4l2_device_unregister(&vpif_obj.v4l2_dev);
-> +vpif_free:
-> +       free_vpif_objs();
->  cleanup:
->         v4l2_async_notifier_cleanup(&vpif_obj.notifier);
+>------------
 >
-> @@ -1748,8 +1761,8 @@ static int vpif_remove(struct platform_device *device)
->                 ch = vpif_obj.dev[i];
->                 /* Unregister video device */
->                 video_unregister_device(&ch->video_dev);
-> -               kfree(vpif_obj.dev[i]);
->         }
-> +       free_vpif_objs();
+> Makefile                                               |    2
+> drivers/crypto/vmx/ghash.c                             |  212 ++++++-----------
+> drivers/net/bonding/bond_main.c                        |   15 -
+> drivers/net/dsa/mv88e6xxx/chip.c                       |    2
+> drivers/net/ethernet/broadcom/bnxt/bnxt.c              |   19 -
+> drivers/net/ethernet/broadcom/bnxt/bnxt.h              |    6
+> drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c      |    2
+> drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c          |    2
+> drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c   |    5
+> drivers/net/ethernet/chelsio/cxgb4/t4_hw.c             |   11
+> drivers/net/ethernet/freescale/fec_main.c              |    2
+> drivers/net/ethernet/marvell/mvneta.c                  |    4
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c        |   10
+> drivers/net/ethernet/mellanox/mlx5/core/en_main.c      |   13 +
+> drivers/net/ethernet/mellanox/mlx5/core/fs_core.c      |    6
+> drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |   11
+> drivers/net/ethernet/realtek/r8169.c                   |    3
+> drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |    4
+> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c      |    8
+> drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c      |    3
+> drivers/net/phy/marvell10g.c                           |   13 +
+> drivers/net/usb/usbnet.c                               |    6
+> drivers/xen/xen-pciback/pciback_ops.c                  |    2
+> include/linux/siphash.h                                |    5
+> include/net/netns/ipv4.h                               |    2
+> include/uapi/linux/tipc_config.h                       |   10
+> net/core/dev.c                                         |    2
+> net/core/skbuff.c                                      |    6
+> net/ipv4/igmp.c                                        |   47 ++-
+> net/ipv4/ip_output.c                                   |    4
+> net/ipv4/route.c                                       |   12
+> net/ipv6/ip6_output.c                                  |    4
+> net/ipv6/output_core.c                                 |   30 +-
+> net/ipv6/raw.c                                         |    2
+> net/ipv6/route.c                                       |    6
+> net/llc/llc_output.c                                   |    2
+> net/sched/act_api.c                                    |    3
+> net/tipc/core.c                                        |   32 +-
+> net/tipc/subscr.h                                      |    5
+> net/tipc/topsrv.c                                      |   14 -
+> net/tls/tls_device.c                                   |    9
+> 41 files changed, 312 insertions(+), 244 deletions(-)
+>
+>Andy Duan (1):
+>      net: fec: fix the clk mismatch in failed_reset path
+>
+>Antoine Tenart (1):
+>      net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
+>
+>Chris Packham (1):
+>      tipc: Avoid copying bytes beyond the supplied data
+>
+>Daniel Axtens (1):
+>      crypto: vmx - ghash: do nosimd fallback manually
+>
+>David Ahern (1):
+>      ipv6: Fix redirect with VRF
+>
+>David S. Miller (1):
+>      Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+>
+>Eric Dumazet (5):
+>      inet: switch IP ID generator to siphash
+>      ipv4/igmp: fix another memory leak in igmpv3_del_delrec()
+>      ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
+>      llc: fix skb leak in llc_build_and_send_ui_pkt()
+>      net-gro: fix use-after-free read in napi_gro_frags()
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.0.21
+>
+>Heiner Kallweit (1):
+>      r8169: fix MAC address being lost in PCI D3
+>
+>Jakub Kicinski (2):
+>      net/tls: fix state removal with feature flags off
+>      net/tls: don't ignore netdev notifications if no TLS features
+>
+>Jarod Wilson (1):
+>      bonding/802.3ad: fix slave link initialization transition states
+>
+>Jiri Pirko (1):
+>      mlxsw: spectrum_acl: Avoid warning after identical rules insertion
+>
+>Jisheng Zhang (2):
+>      net: mvneta: Fix err code path of probe
+>      net: stmmac: fix reset gpio free missing
+>
+>Junwei Hu (1):
+>      tipc: fix modprobe tipc failed after switch order of device registration
+>
+>Kloetzke Jan (1):
+>      usbnet: fix kernel crash after disconnect
+>
+>Konrad Rzeszutek Wilk (1):
+>      xen/pciback: Don't disable PCI_COMMAND on PCI device reset.
+>
+>Michael Chan (3):
+>      bnxt_en: Fix aggregation buffer leak under OOM condition.
+>      bnxt_en: Fix possible BUG() condition when calling pci_disable_msix().
+>      bnxt_en: Reduce memory usage when running in kdump kernel.
+>
+>Mike Manning (1):
+>      ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
+>
+>Parav Pandit (2):
+>      net/mlx5: Avoid double free in fs init error unwinding path
+>      net/mlx5: Allocate root ns memory using kzalloc to match kfree
+>
+>Raju Rangoju (1):
+>      cxgb4: offload VLAN flows regardless of VLAN ethtype
+>
+>Rasmus Villemoes (1):
+>      net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
+>
+>Russell King (1):
+>      net: phy: marvell10g: report if the PHY fails to boot firmware
+>
+>Saeed Mahameed (1):
+>      net/mlx5e: Disable rxhash when CQE compress is enabled
+>
+>Tan, Tee Min (1):
+>      net: stmmac: fix ethtool flow control not able to get/set
+>
+>Vishal Kulkarni (1):
+>      cxgb4: Revert "cxgb4: Remove SGE_HOST_PAGE_SIZE dependency on page size"
+>
+>Vlad Buslov (1):
+>      net: sched: don't use tc_action->order during action dump
+>
+>Weifeng Voon (1):
+>      net: stmmac: dma channel control register need to be init first
+>
+>Willem de Bruijn (1):
+>      net: correct zerocopy refcnt with udp MSG_MORE
+>
 
-no need for this change, leave it as it is.
 
-Cheers,
-Prabhakar Lad
+
+--K8nIJk4ghYZn606h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlz2KLgACgkQsjqdtxFL
+KRUf+gf/e/yYQox7coZor7MfMrIQwvS9BmksSZ9DYwF9F63rWz8lzbKTN9pT6hKe
+P8/HFFHq5yy9Yvv9tkCsfa+fpfiTo1eIUWQndVgXH2uqjnlBDSF6HTp8W9EPfxs8
+TqHlzjkr7c4WFkZoj2wNKXufFPXf2gdYjwiEM7/8l95rFwwKctXAR7hHeBuLpJEB
+adc7h8tnmcfthEfJ50UEglQn3aHqKoVtf+bvP9eckc3LMz2Xa4g4DY2DpvDMZRso
+QHFrdzhriRXbwRGhBYsNt3ewejlT/ai94cW4QnDD3fa7sfVmVIkvNapS4lrslnB5
+66wlbz7eAwYdu43eG2KdP1/9eXNRsQ==
+=LeE4
+-----END PGP SIGNATURE-----
+
+--K8nIJk4ghYZn606h--
