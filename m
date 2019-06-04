@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F673C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B981C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096D7206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7E0206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691036;
-	bh=Wp1nd7/7yoUmZfC1AgqgHq87Fi4Nb3v611cdU2g8c3s=;
+	s=default; t=1559691042;
+	bh=Qb7YbNznCW8kC+aVurRGbRKhb6EowYJJu3J1fO63EkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPZsXrMPBg+n8p6icLnfM/nAMc+arQsyc0pMfQUwShXDA+DNuYoEP7HNHsrT2EJUO
-	 UUdBwTdA0YTaxqsuxeF8UVMDHHzuMxV5FSEHyaBRDa2m5IiKcDKQtvy7dsBIUQYDPr
-	 6gxo8YHPcmwFGJdcLZPKaEG8IWMIp/UOxMX2O07I=
+	b=USn/FZpVa+0OUpc7kMDLrkDvykx3gZQcwFR0FJB3uh/0po2YEc0GW2G4po20CAlfi
+	 YqzwAae0M1E9BUAVO6Ra9eFL0yfglwh1+YI1R5AXzDg/NGaF8QFIlPCeZa6si58eSb
+	 I3WYGeJ+uTkOpwzSYs0l/z622VRzdzIwRdnK6fBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfFDXaf (ORCPT
+        id S1727561AbfFDXal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727356AbfFDXXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:49 -0400
+        id S1727350AbfFDXXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D3B520862;
-        Tue,  4 Jun 2019 23:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 021DB20859;
+        Tue,  4 Jun 2019 23:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690628;
-        bh=Wp1nd7/7yoUmZfC1AgqgHq87Fi4Nb3v611cdU2g8c3s=;
+        s=default; t=1559690627;
+        bh=Qb7YbNznCW8kC+aVurRGbRKhb6EowYJJu3J1fO63EkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN7fipddJgqRg/01CPtaUAMuVQrIPEcL3ecrdA7ZHLajDjP/tWQJcHa7LaRi32RmI
-         hlielLxLn5IFC8EfPGHwN4BdALuPZKgjkQebdI2pzlECBMQAz1UhwwbvEcZ+E7dDRS
-         eeSqZaplkOwWpX8xADckDZSVPd7Gqpp9BxBnD/XU=
+        b=zXW8QS2thY2Lk9t9w9yY26Z8T0w1x2XvOvuyH/KSh/436mGa29yTgQkv2fd8ekaT7
+         Ctu+yj1oPW7szd1iTyRmru4gYWBBsGZzGGHMgFSSaF4LYBcV53gxf4ci8kYnD4wokg
+         n9ulL6jJL55s7EA1FVkaDEIX+YeVM1Wum+s+jisg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 07/36] driver core: platform: Fix the usage of platform device name(pdev->name)
-Date:   Tue,  4 Jun 2019 19:23:02 -0400
-Message-Id: <20190604232333.7185-7-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/36] s390/kasan: fix strncpy_from_user kasan checks
+Date:   Tue,  4 Jun 2019 19:23:01 -0400
+Message-Id: <20190604232333.7185-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
 References: <20190604232333.7185-1-sashal@kernel.org>
@@ -59,89 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+[ Upstream commit 01eb42afb45719cb41bb32c278e068073738899d ]
 
-Platform core is using pdev->name as the platform device name to do
-the binding of the devices with the drivers. But, when the platform
-driver overrides the platform device name with dev_set_name(),
-the pdev->name is pointing to a location which is freed and becomes
-an invalid parameter to do the binding match.
+arch/s390/lib/uaccess.c is built without kasan instrumentation. Kasan
+checks are performed explicitly in copy_from_user/copy_to_user
+functions. But since those functions could be inlined, calls from
+files like uaccess.c with instrumentation disabled won't generate
+kasan reports. This is currently the case with strncpy_from_user
+function which was revealed by newly added kasan test. Avoid inlining of
+copy_from_user/copy_to_user when the kernel is built with kasan support
+to make sure kasan checks are fully functional.
 
-use-after-free instance:
-
-[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-			G S      W  O      4.19.30+ #3
-[   33.346835] Hardware name: MTP (DT)
-[   33.350419] Call trace:
-[   33.352941]  dump_backtrace+0x0/0x3b8
-[   33.356713]  show_stack+0x24/0x30
-[   33.360119]  dump_stack+0x160/0x1d8
-[   33.363709]  print_address_description+0x84/0x2e0
-[   33.368549]  kasan_report+0x26c/0x2d0
-[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-[   33.377248]  strcmp+0x8c/0xb0
-[   33.380306]  platform_match+0x70/0x1f8
-[   33.384168]  __driver_attach+0x78/0x3a0
-[   33.388111]  bus_for_each_dev+0x13c/0x1b8
-[   33.392237]  driver_attach+0x4c/0x58
-[   33.395910]  bus_add_driver+0x350/0x560
-[   33.399854]  driver_register+0x23c/0x328
-[   33.403886]  __platform_driver_register+0xd0/0xe0
-
-So, use dev_name(&pdev->dev), which fetches the platform device name from
-the kobject(dev->kobj->name) of the device instead of the pdev->name.
-
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/include/asm/uaccess.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index dff82a3c2caa..5721f96a6e63 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -853,7 +853,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	if (len != -ENODEV)
- 		return len;
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+index ad6b91013a05..5332f628c1ed 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -56,8 +56,10 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n);
+ unsigned long __must_check
+ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
  
--	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-+	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
++#ifndef CONFIG_KASAN
+ #define INLINE_COPY_FROM_USER
+ #define INLINE_COPY_TO_USER
++#endif
  
- 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
- }
-@@ -929,7 +929,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		return rc;
+ #ifdef CONFIG_HAVE_MARCH_Z10_FEATURES
  
- 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
--			pdev->name);
-+			dev_name(&pdev->dev));
- 	return 0;
- }
- 
-@@ -938,7 +938,7 @@ static const struct platform_device_id *platform_match_id(
- 			struct platform_device *pdev)
- {
- 	while (id->name[0]) {
--		if (strcmp(pdev->name, id->name) == 0) {
-+		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
- 			pdev->id_entry = id;
- 			return id;
- 		}
-@@ -982,7 +982,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
- 		return platform_match_id(pdrv->id_table, pdev) != NULL;
- 
- 	/* fall-back to driver name match */
--	return (strcmp(pdev->name, drv->name) == 0);
-+	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
- }
- 
- #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
