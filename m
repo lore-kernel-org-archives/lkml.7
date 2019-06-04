@@ -2,329 +2,225 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51CDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C2D23BC0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559659346;
-	bh=5RgxsDt7zC5ReWeri7i5qGiR/C4LihUSzHeFpnaFuuo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gyxOGN0TVLU9m3RVY9LUdrBcSCafrls+nHP4X1UqQPsHWaQKMuXeQUXng5TLVyINt
-	 raTvMLsPlVSLf41hrLRZpG8uW/T/LF3yJt9MtJQLecW64E/QItXG/btqDPQTaOEs0C
-	 Qg2qW/a7OpZ/WXhkLfOXJ6I5WMi5GjIwKZ5z/FM4=
+	by mail.kernel.org (Postfix) with ESMTP id 848EC23D16
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfFDOmZ (ORCPT
+        id S1727805AbfFDOoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:42:25 -0400
-Received: from casper.infradead.org ([85.118.1.10]:35300 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfFDOmY (ORCPT
+        Tue, 4 Jun 2019 10:44:19 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:49322 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727182AbfFDOoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:42:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jGXSZoida99Zr828Wy+I4jTy8nOKQ6SIXYsko2Rk21Y=; b=im6NnmROYWaCWoheaTmjav6Z6P
-        TWTfrKuvkPmYA3LEUgBsghxmirNugZc6IxGlVEOA+SPQlCj1RKSMnGBkIifpt22bUhb93T/+7wZl3
-        CQgKzY1q+601T9vln1RgQB0rgDC9oo6MQUHMPoTJR3CRpI+t7yicJoKUCdUrrVdBkvOrRoFoH8lXJ
-        ytxqc+Lbkp67ZcjuiUM8368BKeKANNbS8XHsIvTExpXw+1RI3+NX2ArnZ3IMrT6CrC5or5i5qC9S6
-        ngnMflbKQLyw4ZB9p9FUwN/lCIwPwfMk/VnyX/iLqDcWrB4lIG7aZ9GGkehyCnI5aUMiwXTnctAz3
-        0n/pvqSg==;
-Received: from [179.182.172.34] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYAdo-0008Fz-26; Tue, 04 Jun 2019 14:42:20 +0000
-Date:   Tue, 4 Jun 2019 11:42:15 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-media@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-Message-ID: <20190604114215.2f8ee483@coco.lan>
-In-Reply-To: <20190604111334.22182-1-yamada.masahiro@socionext.com>
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 4 Jun 2019 10:44:19 -0400
+Received: (qmail 3471 invoked by uid 2102); 4 Jun 2019 10:44:18 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 Jun 2019 10:44:18 -0400
+Date:   Tue, 4 Jun 2019 10:44:18 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
+In-Reply-To: <20190603200301.GM28207@linux.ibm.com>
+Message-ID: <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue,  4 Jun 2019 20:13:34 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> escreveu:
+On Mon, 3 Jun 2019, Paul E. McKenney wrote:
 
-> Linux kernel tolerates C++ style comments these days. Actually, the
-> SPDX License tags for .c files start with //.
->=20
-> On the other hand, uapi headers are written in more strict C, where
-> the C++ comment style is forbidden.
+> On Mon, Jun 03, 2019 at 02:42:00PM +0800, Boqun Feng wrote:
+> > On Mon, Jun 03, 2019 at 01:26:26PM +0800, Herbert Xu wrote:
+> > > On Sun, Jun 02, 2019 at 08:47:07PM -0700, Paul E. McKenney wrote:
+> > > > 
+> > > > 1.	These guarantees are of full memory barriers, -not- compiler
+> > > > 	barriers.
+> > > 
+> > > What I'm saying is that wherever they are, they must come with
+> > > compiler barriers.  I'm not aware of any synchronisation mechanism
+> > > in the kernel that gives a memory barrier without a compiler barrier.
+> > > 
+> > > > 2.	These rules don't say exactly where these full memory barriers
+> > > > 	go.  SRCU is at one extreme, placing those full barriers in
+> > > > 	srcu_read_lock() and srcu_read_unlock(), and !PREEMPT Tree RCU
+> > > > 	at the other, placing these barriers entirely within the callback
+> > > > 	queueing/invocation, grace-period computation, and the scheduler.
+> > > > 	Preemptible Tree RCU is in the middle, with rcu_read_unlock()
+> > > > 	sometimes including a full memory barrier, but other times with
+> > > > 	the full memory barrier being confined as it is with !PREEMPT
+> > > > 	Tree RCU.
+> > > 
+> > > The rules do say that the (full) memory barrier must precede any
+> > > RCU read-side that occur after the synchronize_rcu and after the
+> > > end of any RCU read-side that occur before the synchronize_rcu.
+> > > 
+> > > All I'm arguing is that wherever that full mb is, as long as it
+> > > also carries with it a barrier() (which it must do if it's done
+> > > using an existing kernel mb/locking primitive), then we're fine.
+> > > 
+> > > > Interleaving and inserting full memory barriers as per the rules above:
+> > > > 
+> > > > 	CPU1: WRITE_ONCE(a, 1)
+> > > > 	CPU1: synchronize_rcu	
+> > > > 	/* Could put a full memory barrier here, but it wouldn't help. */
+> > > 
+> > > 	CPU1: smp_mb();
+> > > 	CPU2: smp_mb();
+> > > 
+> > > Let's put them in because I think they are critical.  smp_mb() also
+> > > carries with it a barrier().
+> > > 
+> > > > 	CPU2: rcu_read_lock();
+> > > > 	CPU1: b = 2;	
+> > > > 	CPU2: if (READ_ONCE(a) == 0)
+> > > > 	CPU2:         if (b != 1)  /* Weakly ordered CPU moved this up! */
+> > > > 	CPU2:                 b = 1;
+> > > > 	CPU2: rcu_read_unlock
+> > > > 
+> > > > In fact, CPU2's load from b might be moved up to race with CPU1's store,
+> > > > which (I believe) is why the model complains in this case.
+> > > 
+> > > Let's put aside my doubt over how we're even allowing a compiler
+> > > to turn
+> > > 
+> > > 	b = 1
+> > > 
+> > > into
+> > > 
+> > > 	if (b != 1)
+> > > 		b = 1
 
-I've seen that the current comments are more a discussion about
-c++ style against "normal c" comments.
+Even if you don't think the compiler will ever do this, the C standard
+gives compilers the right to invent read accesses if a plain (i.e.,
+non-atomic and non-volatile) write is present.  The Linux Kernel Memory
+Model has to assume that compilers will sometimes do this, even if it
+doesn't take the exact form of checking a variable's value before
+writing to it.
 
-I don't have any strong opinion about using or not c++ style comments
-on headers.
+(Incidentally, regardless of whether the compiler will ever do this, I 
+have seen examples in the kernel where people did exactly this 
+manually, in order to avoid dirtying a cache line unnecessarily.)
 
-=46rom my side, though, I would prefer to use // for SPDX everywhere,
-as using it on C, but avoiding on headers doesn't seem a good idea
-to me, as people can easily mess with it, but that's just my two
-cents.
+> > > Since you seem to be assuming that (a == 0) is true in this case
+> > 
+> > I think Paul's example assuming (a == 0) is false, and maybe
+> 
+> Yes, otherwise, P0()'s write to "b" cannot have happened.
+> 
+> > speculative writes (by compilers) needs to added into consideration?
 
--
+On the other hand, the C standard does not allow compilers to add
+speculative writes.  The LKMM assumes they will never occur.
 
-Yet, with respect to those headers:
+> I would instead call it the compiler eliminating needless writes
+> by inventing reads -- if the variable already has the correct value,
+> no write happens.  So no compiler speculation.
+> 
+> However, it is difficult to create a solid defensible example.  Yes,
+> from LKMM's viewpoint, the weakly reordered invented read from "b"
+> can be concurrent with P0()'s write to "b", but in that case the value
+> loaded would have to manage to be equal to 1 for anything bad to happen.
+> This does feel wrong to me, but again, it is difficult to create a solid
+> defensible example.
+> 
+> > Please consider the following case (I add a few smp_mb()s), the case may
+> > be a little bit crasy, you have been warned ;-)
+> > 
+> >  	CPU1: WRITE_ONCE(a, 1)
+> >  	CPU1: synchronize_rcu called
+> > 
+> >  	CPU1: smp_mb(); /* let assume there is one here */
+> > 
+> >  	CPU2: rcu_read_lock();
+> >  	CPU2: smp_mb(); /* let assume there is one here */
+> > 
+> > 	/* "if (b != 1) b = 1" reordered  */
+> >  	CPU2: r0 = b;       /* if (b != 1) reordered here, r0 == 0 */
+> >  	CPU2: if (r0 != 1)  /* true */
+> > 	CPU2:     b = 1;    /* b == 1 now, this is a speculative write
+> > 	                       by compiler
+> > 			     */
+> > 
+> > 	CPU1: b = 2;        /* b == 2 */
+> > 
+> >  	CPU2: if (READ_ONCE(a) == 0) /* false */
+> > 	CPU2: ...
+> > 	CPU2  else                   /* undo the speculative write */
+> > 	CPU2:	  b = r0;   /* b == 0 */
+> > 
+> >  	CPU2: smp_mb();
+> > 	CPU2: read_read_unlock();
+> > 
+> > I know this is too crasy for us to think a compiler like this, but this
+> > might be the reason why the model complain about this.
+> > 
+> > Paul, did I get this right? Or you mean something else?
+> 
+> Mostly there, except that I am not yet desperate enough to appeal to
+> compilers speculating stores.  ;-)
 
-	include/uapi/linux/dvb/video.h
-	include/uapi/linux/dvb/osd.h
-	include/uapi/linux/dvb/audio.h
-
-They belong to an old deprecated API, with just two drivers using it, with
-was meant to control MPEG decoder hardware:
-
-1) the av7110 DVB legacy driver - it is for a hardware developed on the
-previous millennium and with is not manufactured anymore for a long time.
-We didn't remove it yet just because we don't have any strong reason why
-doing it;
-
-2) by the V4L2 ivtv driver (with is also for a legacy driver) - with=20
-doesn't support Digital TV. This was a first approach to control its
-internal MPEG decoder and/or encoder. This was replaced several years
-ago by another API designed to work with MPEG encoders/decoders,
-using a more generic approach. The deprecated API is there just for
-the sake of not breaking anything on userspace.
-
-So, if you're working on it just to sanitize the headers, that's
-fine, but please don't use them on any future project.
-
-Regards,
-Mauro
-
->=20
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->=20
->  include/uapi/linux/dvb/audio.h |   2 +-
->  include/uapi/linux/dvb/osd.h   | 170 ++++++++++++++++++++-------------
->  2 files changed, 103 insertions(+), 69 deletions(-)
->=20
-> diff --git a/include/uapi/linux/dvb/audio.h b/include/uapi/linux/dvb/audi=
-o.h
-> index afeae063e640..977bed135e22 100644
-> --- a/include/uapi/linux/dvb/audio.h
-> +++ b/include/uapi/linux/dvb/audio.h
-> @@ -52,7 +52,7 @@ typedef enum {
->  typedef struct audio_mixer {
->  	unsigned int volume_left;
->  	unsigned int volume_right;
-> -  // what else do we need? bass, pass-through, ...
-> +  /* what else do we need? bass, pass-through, ... */
->  } audio_mixer_t;
-> =20
-> =20
-> diff --git a/include/uapi/linux/dvb/osd.h b/include/uapi/linux/dvb/osd.h
-> index e163508b9ae8..723824ce3622 100644
-> --- a/include/uapi/linux/dvb/osd.h
-> +++ b/include/uapi/linux/dvb/osd.h
-> @@ -28,74 +28,108 @@
->  #include <linux/compiler.h>
-> =20
->  typedef enum {
-> -  // All functions return -2 on "not open"
-> -  OSD_Close=3D1,    // ()
-> -  // Disables OSD and releases the buffers
-> -  // returns 0 on success
-> -  OSD_Open,       // (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..=
-15](color&0xF0))
-> -  // Opens OSD with this size and bit depth
-> -  // returns 0 on success, -1 on DRAM allocation error, -2 on "already o=
-pen"
-> -  OSD_Show,       // ()
-> -  // enables OSD mode
-> -  // returns 0 on success
-> -  OSD_Hide,       // ()
-> -  // disables OSD mode
-> -  // returns 0 on success
-> -  OSD_Clear,      // ()
-> -  // Sets all pixel to color 0
-> -  // returns 0 on success
-> -  OSD_Fill,       // (color)
-> -  // Sets all pixel to color <col>
-> -  // returns 0 on success
-> -  OSD_SetColor,   // (color,R{x0},G{y0},B{x1},opacity{y1})
-> -  // set palette entry <num> to <r,g,b>, <mix> and <trans> apply
-> -  // R,G,B: 0..255
-> -  // R=3DRed, G=3DGreen, B=3DBlue
-> -  // opacity=3D0:      pixel opacity 0% (only video pixel shows)
-> -  // opacity=3D1..254: pixel opacity as specified in header
-> -  // opacity=3D255:    pixel opacity 100% (only OSD pixel shows)
-> -  // returns 0 on success, -1 on error
-> -  OSD_SetPalette, // (firstcolor{color},lastcolor{x0},data)
-> -  // Set a number of entries in the palette
-> -  // sets the entries "firstcolor" through "lastcolor" from the array "d=
-ata"
-> -  // data has 4 byte for each color:
-> -  // R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
-> -  OSD_SetTrans,   // (transparency{color})
-> -  // Sets transparency of mixed pixel (0..15)
-> -  // returns 0 on success
-> -  OSD_SetPixel,   // (x0,y0,color)
-> -  // sets pixel <x>,<y> to color number <col>
-> -  // returns 0 on success, -1 on error
-> -  OSD_GetPixel,   // (x0,y0)
-> -  // returns color number of pixel <x>,<y>,  or -1
-> -  OSD_SetRow,     // (x0,y0,x1,data)
-> -  // fills pixels x0,y through  x1,y with the content of data[]
-> -  // returns 0 on success, -1 on clipping all pixel (no pixel drawn)
-> -  OSD_SetBlock,   // (x0,y0,x1,y1,increment{color},data)
-> -  // fills pixels x0,y0 through  x1,y1 with the content of data[]
-> -  // inc contains the width of one line in the data block,
-> -  // inc<=3D0 uses blockwidth as linewidth
-> -  // returns 0 on success, -1 on clipping all pixel
-> -  OSD_FillRow,    // (x0,y0,x1,color)
-> -  // fills pixels x0,y through  x1,y with the color <col>
-> -  // returns 0 on success, -1 on clipping all pixel
-> -  OSD_FillBlock,  // (x0,y0,x1,y1,color)
-> -  // fills pixels x0,y0 through  x1,y1 with the color <col>
-> -  // returns 0 on success, -1 on clipping all pixel
-> -  OSD_Line,       // (x0,y0,x1,y1,color)
-> -  // draw a line from x0,y0 to x1,y1 with the color <col>
-> -  // returns 0 on success
-> -  OSD_Query,      // (x0,y0,x1,y1,xasp{color}}), yasp=3D11
-> -  // fills parameters with the picture dimensions and the pixel aspect r=
-atio
-> -  // returns 0 on success
-> -  OSD_Test,       // ()
-> -  // draws a test picture. for debugging purposes only
-> -  // returns 0 on success
-> -// TODO: remove "test" in final version
-> -  OSD_Text,       // (x0,y0,size,color,text)
-> -  OSD_SetWindow, //  (x0) set window with number 0<x0<8 as current
-> -  OSD_MoveWindow, //  move current window to (x0, y0)
-> -  OSD_OpenRaw,	// Open other types of OSD windows
-> +	/* All functions return -2 on "not open" */
-> +	OSD_Close=3D1,	/* () */
-> +	/*
-> +	 * Disables OSD and releases the buffers
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Open,	/* (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..15](col=
-or&0xF0)) */
-> +	/*
-> +	 * Opens OSD with this size and bit depth
-> +	 * returns 0 on success, -1 on DRAM allocation error, -2 on "already op=
-en"
-> +	 */
-> +	OSD_Show,	/* () */
-> +	/*
-> +	 * enables OSD mode
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Hide,	/* () */
-> +	/*
-> +	 * disables OSD mode
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Clear,	/* () */
-> +	/*
-> +	 * Sets all pixel to color 0
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Fill,	/* (color) */
-> +	/*
-> +	 * Sets all pixel to color <col>
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_SetColor,	/* (color,R{x0},G{y0},B{x1},opacity{y1}) */
-> +	/*
-> +	 * set palette entry <num> to <r,g,b>, <mix> and <trans> apply
-> +	 * R,G,B: 0..255
-> +	 * R=3DRed, G=3DGreen, B=3DBlue
-> +	 * opacity=3D0:      pixel opacity 0% (only video pixel shows)
-> +	 * opacity=3D1..254: pixel opacity as specified in header
-> +	 * opacity=3D255:    pixel opacity 100% (only OSD pixel shows)
-> +	 * returns 0 on success, -1 on error
-> +	 */
-> +	OSD_SetPalette,	/* (firstcolor{color},lastcolor{x0},data) */
-> +	/*
-> +	 * Set a number of entries in the palette
-> +	 * sets the entries "firstcolor" through "lastcolor" from the array "da=
-ta"
-> +	 * data has 4 byte for each color:
-> +	 * R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
-> +	 */
-> +	OSD_SetTrans,	/* (transparency{color}) */
-> +	/*
-> +	 * Sets transparency of mixed pixel (0..15)
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_SetPixel,	/* (x0,y0,color) */
-> +	/*
-> +	 * sets pixel <x>,<y> to color number <col>
-> +	 * returns 0 on success, -1 on error
-> +	 */
-> +	OSD_GetPixel,	/* (x0,y0) */
-> +	/* returns color number of pixel <x>,<y>,  or -1 */
-> +	OSD_SetRow,	/* (x0,y0,x1,data) */
-> +	/*
-> +	 * fills pixels x0,y through  x1,y with the content of data[]
-> +	 * returns 0 on success, -1 on clipping all pixel (no pixel drawn)
-> +	 */
-> +	OSD_SetBlock,	/* (x0,y0,x1,y1,increment{color},data) */
-> +	/*
-> +	 * fills pixels x0,y0 through  x1,y1 with the content of data[]
-> +	 * inc contains the width of one line in the data block,
-> +	 * inc<=3D0 uses blockwidth as linewidth
-> +	 * returns 0 on success, -1 on clipping all pixel
-> +	 */
-> +	OSD_FillRow,	/* (x0,y0,x1,color) */
-> +	/*
-> +	 * fills pixels x0,y through  x1,y with the color <col>
-> +	 * returns 0 on success, -1 on clipping all pixel
-> +	 */
-> +	OSD_FillBlock,	/* (x0,y0,x1,y1,color) */
-> +	/*
-> +	 * fills pixels x0,y0 through  x1,y1 with the color <col>
-> +	 * returns 0 on success, -1 on clipping all pixel
-> +	 */
-> +	OSD_Line,	/* (x0,y0,x1,y1,color) */
-> +	/*
-> +	 * draw a line from x0,y0 to x1,y1 with the color <col>
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Query,	/* (x0,y0,x1,y1,xasp{color}}), yasp=3D11 */
-> +	/*
-> +	 * fills parameters with the picture dimensions and the pixel aspect ra=
-tio
-> +	 * returns 0 on success
-> +	 */
-> +	OSD_Test,       /* () */
-> +	/*
-> +	 * draws a test picture. for debugging purposes only
-> +	 * returns 0 on success
-> +	 * TODO: remove "test" in final version
-> +	 */
-> +	OSD_Text,	/* (x0,y0,size,color,text) */
-> +	OSD_SetWindow,	/* (x0) set window with number 0<x0<8 as current */
-> +	OSD_MoveWindow,	/* move current window to (x0, y0) */
-> +	OSD_OpenRaw,	/* Open other types of OSD windows */
->  } OSD_Command;
-> =20
->  typedef struct osd_cmd_s {
+This example really does point out a weakness in the LKMM's handling of 
+data races.  Herbert's litmus test is a great starting point:
 
 
+C xu
 
-Thanks,
-Mauro
+{}
+
+P0(int *a, int *b)
+{
+	WRITE_ONCE(*a, 1);
+	synchronize_rcu();
+	*b = 2;
+}
+
+P1(int *a, int *b)
+{
+	rcu_read_lock();
+	if (READ_ONCE(*a) == 0)
+		*b = 1;
+	rcu_read_unlock();
+}
+
+exists (~b=2)
+
+
+Currently the LKMM says the test is allowed and there is a data race, 
+but this answer clearly is wrong since it would violate the RCU 
+guarantee.
+
+The problem is that the LKMM currently requires all ordering/visibility
+of plain accesses to be mediated by marked accesses.  But in this case,
+the visibility is mediated by RCU.  Technically, we need to add a
+relation like
+
+	([M] ; po ; rcu-fence ; po ; [M])
+
+into the definitions of ww-vis, wr-vis, and rw-xbstar.  Doing so
+changes the litmus test's result to "not allowed" and no data race.  
+However, I'm not certain that this single change is the entire fix;  
+more thought is needed.
+
+Alan
+
