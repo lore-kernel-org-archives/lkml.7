@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4150C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89914C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F17208CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690739;
-	bh=gdrg2V4WI2+RlDJcD0Du9au/jkt8tjHHyAdAR2qkf5o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HmzOSZJ2zk4ZhRrRzBGUQ8uvOv724e5rhddSkXbKNk+imGXB2R5MwDCDBQSoFmICV
-	 ByMuFXtZIRyS/t+ftI+jpkgiLZ3FR1SDYnS2Do2CCKOINrPY/t3Tnm8sbajLGiXi2R
-	 TqJB3zItRV1bd77RdNYQRGxa6SPYQ9Amrjnp0nxw=
+	s=default; t=1559690742;
+	bh=EJnq8IEeTg02jxtr0X79PQyChSZhrYq4oMizD6LZy2o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sE0ODZm7fm3iO4lVailxZmVVOv/fapQ1UG6envh1RicoQCm8NLbyi+qB9ZqEyUmBb
+	 LfbbxeiyZLABbThrntXPGQT/IaLgKfLH4oXDZD3kAn0TYiZH4HZ2Uc8KcAhr5T2dXW
+	 nt0rzRBJdB4cqqW0WeYQnaq126Kpcpe5awKknAsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfFDXZi (ORCPT
+        id S1728105AbfFDXZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37420 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:25:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbfFDXZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:34 -0400
+        id S1728077AbfFDXZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C2820859;
-        Tue,  4 Jun 2019 23:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EF0E20866;
+        Tue,  4 Jun 2019 23:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690734;
-        bh=gdrg2V4WI2+RlDJcD0Du9au/jkt8tjHHyAdAR2qkf5o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=p1gskzbsmM9eoqaNyMcW9i0OaDSwaRFWnAXbVwEDKjJKpsAl1b5GL0xqpbdTqYjEM
-         m+P1xSt7YSDbwoPrZA9zRO5yyx7Re3f8YeDyEy72eKd/lVK+YcRsjmz+6uQ8/PLuHs
-         KZOIhsjQ84V97HBMZpB+KhFxfE5/cph8D2nLTX7I=
+        s=default; t=1559690736;
+        bh=EJnq8IEeTg02jxtr0X79PQyChSZhrYq4oMizD6LZy2o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D47jP8Ph35zNQC5kOTjIU1iSg0nRKHPXulfC5Y8MhAuNdhSLgvANVhJa2M+1OoeOv
+         4ZVsSdQW2RObjD+eexyCuIZE2BhdIDl4Q6kW+8JdZWoTpTMewaULDHQn/kDAbGScgo
+         9RTs+OwXcefoGOz7uqK/sBagEK+Mb/y75YsrDeQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/10] ALSA: seq: Cover unsubscribe_port() in list_mutex
-Date:   Tue,  4 Jun 2019 19:25:22 -0400
-Message-Id: <20190604232532.7953-1-sashal@kernel.org>
+Cc:     Young Xiao <YangX92@hotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 03/10] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
+Date:   Tue,  4 Jun 2019 19:25:24 -0400
+Message-Id: <20190604232532.7953-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
+References: <20190604232532.7953-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Young Xiao <YangX92@hotmail.com>
 
-[ Upstream commit 7c32ae35fbf9cffb7aa3736f44dec10c944ca18e ]
+[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
 
-The call of unsubscribe_port() which manages the group count and
-module refcount from delete_and_unsubscribe_port() looks racy; it's
-not covered by the group list lock, and it's likely a cause of the
-reported unbalance at port deletion.  Let's move the call inside the
-group list_mutex to plug the hole.
+There is an out-of-bounds access to "config[len - 1]" array when the
+variable "len" is zero.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
+in param_set_kgdboc_var()") for details.
+
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_ports.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/kgdbts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
-index f04714d70bf7..a42e2ce4a726 100644
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -550,10 +550,10 @@ static void delete_and_unsubscribe_port(struct snd_seq_client *client,
- 		list_del_init(list);
- 	grp->exclusive = 0;
- 	write_unlock_irq(&grp->list_lock);
--	up_write(&grp->list_mutex);
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index 99635dd9dbac..bb3a76ad80da 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -1132,7 +1132,7 @@ static void kgdbts_put_char(u8 chr)
  
- 	if (!empty)
- 		unsubscribe_port(client, port, grp, &subs->info, ack);
-+	up_write(&grp->list_mutex);
- }
+ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
+ {
+-	int len = strlen(kmessage);
++	size_t len = strlen(kmessage);
  
- /* connect two ports */
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		printk(KERN_ERR "kgdbts: config string too long\n");
+@@ -1152,7 +1152,7 @@ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
+ 
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+-	if (config[len - 1] == '\n')
++	if (len && config[len - 1] == '\n')
+ 		config[len - 1] = '\0';
+ 
+ 	/* Go and configure with the new params. */
 -- 
 2.20.1
 
