@@ -2,101 +2,357 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2CDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C629C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6005B2473C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02ED22473C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfFDOVa (ORCPT
+        id S1727873AbfFDOVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:21:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45108 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfFDOVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:21:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCFD2341;
-        Tue,  4 Jun 2019 07:21:29 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DC983F690;
-        Tue,  4 Jun 2019 07:21:29 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id ED44168256F; Tue,  4 Jun 2019 15:21:27 +0100 (BST)
-Date:   Tue, 4 Jun 2019 15:21:27 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/2] drm/arm/hdlcd: Allow a bit of clock tolerance
-Message-ID: <20190604142127.GN15316@e110455-lin.cambridge.arm.com>
-References: <9db0bac184d9fa69c4f65bf954ab59b53d431e15.1558111042.git.robin.murphy@arm.com>
- <47fb141ddbf4cf256951758d2e7f90afb6507ded.1558111042.git.robin.murphy@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Tue, 4 Jun 2019 10:21:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42490 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbfFDOVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:21:41 -0400
+Received: from laptop-1.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3D43F2852B8;
+        Tue,  4 Jun 2019 15:21:39 +0100 (BST)
+Message-ID: <01250f19d907151a85673153fdce35d9472b1e07.camel@collabora.com>
+Subject: Re: [PATCH v2 2/3] iio: common: cros_ec_sensors: add sysfs
+ attribute for frequencies
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, kernel@collabora.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-iio@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 04 Jun 2019 16:21:37 +0200
+In-Reply-To: <CAPUE2usTOPA52AYzyY=Gupj55ynn=Gwmkjt_7MZC-UZ4KoeebQ@mail.gmail.com>
+References: <cover.1558601329.git.fabien.lahoudere@collabora.com>
+         <f1891f9da2e9362a4efebf0ebce487b9584d4f5a.1558601329.git.fabien.lahoudere@collabora.com>
+         <20190526184507.45c54053@archlinux>
+         <3af7925c5dad281774b6d12826770cbefb32ea09.camel@collabora.com>
+         <CAPUE2usTOPA52AYzyY=Gupj55ynn=Gwmkjt_7MZC-UZ4KoeebQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <47fb141ddbf4cf256951758d2e7f90afb6507ded.1558111042.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 05:37:22PM +0100, Robin Murphy wrote:
-> On the Arm Juno platform, the HDLCD pixel clock is constrained to 250KHz
-> resolution in order to avoid the tiny System Control Processor spending
-> aeons trying to calculate exact PLL coefficients. This means that modes
-> like my oddball 1600x1200 with 130.89MHz clock get rejected since the
-> rate cannot be matched exactly. In practice, though, this mode works
-> quite happily with the clock at 131MHz, so let's relax the check to
-> allow a little bit of slop.
+Le mardi 28 mai 2019 à 04:04 -0700, Gwendal Grignou a écrit :
+> On Mon, May 27, 2019 at 2:55 AM Fabien Lahoudere
+> <fabien.lahoudere@collabora.com> wrote:
+> > Le dimanche 26 mai 2019 à 18:45 +0100, Jonathan Cameron a écrit :
+> > > On Thu, 23 May 2019 11:07:36 +0200
+> > > Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+> > > 
+> > > > In order to provide minimum and maximum frequencies for each
+> > > > sensors,
+> > > > we use a standard API (sampling_frequency_available) to provide
+> > > > them
+> > > > to userland.
+> > > > As cros_ec_sensors_core_init do not manage default attrs, we
+> > > > change
+> > > > the signature to let all kind of sensors to provide "struct
+> > > > iio_info"
+> > > > with their callback. This change impact drivers using that
+> > > > function.
+> > > > 
+> > > > Then cros_ec_* sensors provides frequencies range in sysfs like
+> > > > this:
+> > > > [min step max]
+> > > > 
+> > > > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com
+> > > > >
+> > > When I was pointing at the _available syntax I was meaning that
+> > > the ideal is to implement this using the associated callbacks
+> > > rather
+> > > than as a custom sysfs attribute.
+> > > 
+> > 
+> > Sorry, I misunderstood. Let me retry with that callback
+> > implemented.
+> > 
+> > > > ---
+> > > >  .../common/cros_ec_sensors/cros_ec_sensors.c  |  6 +--
+> > > >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 38
+> > > > +++++++++++++++++++
+> > > >  drivers/iio/light/cros_ec_light_prox.c        |  6 +--
+> > > >  drivers/iio/pressure/cros_ec_baro.c           |  6 +--
+> > > >  .../linux/iio/common/cros_ec_sensors_core.h   |  4 +-
+> > > >  5 files changed, 50 insertions(+), 10 deletions(-)
+> > > > 
+> > > > diff --git
+> > > > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > > > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > > > index 17af4e0fd5f8..a0ecee15a6c8 100644
+> > > > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > > > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > > > @@ -172,7 +172,7 @@ static int cros_ec_sensors_write(struct
+> > > > iio_dev
+> > > > *indio_dev,
+> > > >     return ret;
+> > > >  }
+> > > > 
+> > > > -static const struct iio_info ec_sensors_info = {
+> > > > +static struct iio_info ec_sensors_info = {
+> > > >     .read_raw = &cros_ec_sensors_read,
+> > > >     .write_raw = &cros_ec_sensors_write,
+> > > >  };
+> > > > @@ -195,11 +195,11 @@ static int cros_ec_sensors_probe(struct
+> > > > platform_device *pdev)
+> > > >     if (!indio_dev)
+> > > >             return -ENOMEM;
+> > > > 
+> > > > -   ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > > > +   ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > > > &ec_sensors_info,
+> > > > +                                   true);
+> > > >     if (ret)
+> > > >             return ret;
+> > > > 
+> > > > -   indio_dev->info = &ec_sensors_info;
+> > > >     state = iio_priv(indio_dev);
+> > > >     for (channel = state->channels, i = CROS_EC_SENSOR_X;
+> > > >          i < CROS_EC_SENSOR_MAX_AXIS; i++, channel++) {
+> > > > diff --git
+> > > > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > > index ac53ea32c1b1..08fb5d3dc7b5 100644
+> > > > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > > @@ -10,6 +10,7 @@
+> > > >  #include <linux/iio/buffer.h>
+> > > >  #include <linux/iio/common/cros_ec_sensors_core.h>
+> > > >  #include <linux/iio/iio.h>
+> > > > +#include <linux/iio/sysfs.h>
+> > > >  #include <linux/iio/kfifo_buf.h>
+> > > >  #include <linux/iio/trigger_consumer.h>
+> > > >  #include <linux/kernel.h>
+> > > > @@ -86,8 +87,42 @@ static int
+> > > > cros_ec_get_host_cmd_version_mask(struct cros_ec_device
+> > > > *ec_dev,
+> > > >     return ret;
+> > > >  }
+> > > > 
+> > > > +/**
+> > > > + * cros_ec_sensors_read_freq() - sysfs function to get
+> > > > available
+> > > > frequencies
+> > > > + * @dev: Device structure for this device.
+> > > > + * @attr: Description of the attribute.
+> > > > + * @buf: Incoming string
+> > > > + *
+> > > > + * The later modes are only relevant to the ring buffer - and
+> > > > depend on current
+> > > > + * mode. Note that data sheet gives rather wide tolerances for
+> > > > these so integer
+> > > > + * division will give good enough answer and not all chips
+> > > > have
+> > > > them specified
+> > > > + * at all.
+> > > > + **/
+> > > > +static ssize_t cros_ec_sensors_read_freq(struct device *dev,
+> > > > +                                    struct device_attribute
+> > > > *attr,
+> > > > +                                    char *buf)
+> > > > +{
+> > > > +   struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> > > > +   struct cros_ec_sensors_core_state *state =
+> > > > iio_priv(indio_dev);
+> > > > +
+> > > > +   return snprintf(buf, PAGE_SIZE, "[%d 1 %d]\n", state-
+> > > > >min_freq,
+> > > > +                   state->max_freq);
+> Step to 1 [Hz?] is not right; EC uses the frequency the sensors
+> supports, rounded up by default.
+> Given EC is hiding the sensors it controls, it is not straight-
+> forward
+> to find the supported frequencies between min_freq and max_freq.
+> However, sensors mostly follow the following rules:
+> - "fast" sensors: accelerometer, gyroscope, magnetometer,  barometer:
+> Supported frequencies are: [ min_freq, max_freq >> n, max_freq >> (n
+> -
+> 1), ... max_freq >> 1, max_freq], where (min_freq >> n) > min_freq.
+> frequency are expressed in mHz resolution.
+> - "Slow" sensors: light, proximity:
+> Any frequencies between min_freq and max_freq are supported.
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-I've pull the two patches into my malidp-fixes branch and I will send a pull
-request today.
-
-Best regards,
-Liviu
-
-> ---
->  drivers/gpu/drm/arm/hdlcd_crtc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Note that frequency 0 is accepted, it puts the given sensor in
+> suspend mode.
 > 
-> diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-> index ecac6fe0b213..a3efa28436ea 100644
-> --- a/drivers/gpu/drm/arm/hdlcd_crtc.c
-> +++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
-> @@ -193,7 +193,8 @@ static enum drm_mode_status hdlcd_crtc_mode_valid(struct drm_crtc *crtc,
->  	long rate, clk_rate = mode->clock * 1000;
->  
->  	rate = clk_round_rate(hdlcd->clk, clk_rate);
-> -	if (rate != clk_rate) {
-> +	/* 0.1% seems a close enough tolerance for the TDA19988 on Juno */
-> +	if (abs(rate - clk_rate) * 1000 > clk_rate) {
->  		/* clock required by mode not supported by hardware */
->  		return MODE_NOCLOCK;
->  	}
-> -- 
-> 2.21.0.dirty
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Given that information, it would make sense to follow the existing
+> macro IIO_DEV_ATTR_SAMP_FREQ_AVAIL and report an array of
+> frequencies,
+> like bmc150_magn_show_samp_freq_avail does.
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Thanks Gwendal.
+IIUC, it is wroing to give a range and better to give a set of value.
+Where can i find all available values for each sensors?
+
+
+> 
+> Gwendal.
+> 
+> > > Whilst it is a bit more fiddly I would much prefer if this was
+> > > done
+> > > with
+> > > the info_mask_shared_by_all_available bit mask in the iio_dev and
+> > > providing
+> > > the read_avail callback.
+> > > 
+> > > The original reason to introduce this form was as part of trying
+> > > to
+> > > (far too slowly) kill off as much hand defined ABI as possible.
+> > > Ultimate aim is to make the IIO interface optional for cases
+> > > where
+> > > the channels are mostly being used by other consumer drivers
+> > > rather
+> > > than
+> > > being directly consumed by userspace.  To do that we need all of
+> > > these elements to be easily accessible from the consumer hooks.
+> > > 
+> > > 
+> > > 
+> > > > +}
+> > > > +
+> > > > +static
+> > > > IIO_DEV_ATTR_SAMP_FREQ_AVAIL(cros_ec_sensors_read_freq);
+> > > > +
+> > > > +static struct attribute *cros_ec_sensors_attributes[] = {
+> > > > +   &iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> > > > +   NULL,
+> > > > +};
+> > > > +
+> > > > +static const struct attribute_group
+> > > > cros_ec_sensors_attribute_group = {
+> > > > +   .attrs = cros_ec_sensors_attributes,
+> > > > +};
+> > > > +
+> > > >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> > > >                           struct iio_dev *indio_dev,
+> > > > +                         struct iio_info *info,
+> > > >                           bool physical_device)
+> > > >  {
+> > > >     struct device *dev = &pdev->dev;
+> > > > @@ -149,6 +184,9 @@ int cros_ec_sensors_core_init(struct
+> > > > platform_device *pdev,
+> > > >             }
+> > > >     }
+> > > > 
+> > > > +   info->attrs = &cros_ec_sensors_attribute_group;
+> > > > +   indio_dev->info = info;
+> > > > +
+> > > >     return 0;
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
+> > > > diff --git a/drivers/iio/light/cros_ec_light_prox.c
+> > > > b/drivers/iio/light/cros_ec_light_prox.c
+> > > > index 308ee6ff2e22..1772e339cf14 100644
+> > > > --- a/drivers/iio/light/cros_ec_light_prox.c
+> > > > +++ b/drivers/iio/light/cros_ec_light_prox.c
+> > > > @@ -161,7 +161,7 @@ static int cros_ec_light_prox_write(struct
+> > > > iio_dev *indio_dev,
+> > > >     return ret;
+> > > >  }
+> > > > 
+> > > > -static const struct iio_info cros_ec_light_prox_info = {
+> > > > +static struct iio_info cros_ec_light_prox_info = {
+> > > >     .read_raw = &cros_ec_light_prox_read,
+> > > >     .write_raw = &cros_ec_light_prox_write,
+> > > >  };
+> > > > @@ -184,11 +184,11 @@ static int
+> > > > cros_ec_light_prox_probe(struct
+> > > > platform_device *pdev)
+> > > >     if (!indio_dev)
+> > > >             return -ENOMEM;
+> > > > 
+> > > > -   ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > > > +   ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > > > +                                   &cros_ec_light_prox_info,
+> > > > true);
+> > > >     if (ret)
+> > > >             return ret;
+> > > > 
+> > > > -   indio_dev->info = &cros_ec_light_prox_info;
+> > > >     state = iio_priv(indio_dev);
+> > > >     state->core.type = state->core.resp->info.type;
+> > > >     state->core.loc = state->core.resp->info.location;
+> > > > diff --git a/drivers/iio/pressure/cros_ec_baro.c
+> > > > b/drivers/iio/pressure/cros_ec_baro.c
+> > > > index 034ce98d6e97..cd3be0f16226 100644
+> > > > --- a/drivers/iio/pressure/cros_ec_baro.c
+> > > > +++ b/drivers/iio/pressure/cros_ec_baro.c
+> > > > @@ -107,7 +107,7 @@ static int cros_ec_baro_write(struct
+> > > > iio_dev
+> > > > *indio_dev,
+> > > >     return ret;
+> > > >  }
+> > > > 
+> > > > -static const struct iio_info cros_ec_baro_info = {
+> > > > +static struct iio_info cros_ec_baro_info = {
+> > > >     .read_raw = &cros_ec_baro_read,
+> > > >     .write_raw = &cros_ec_baro_write,
+> > > >  };
+> > > > @@ -130,11 +130,11 @@ static int cros_ec_baro_probe(struct
+> > > > platform_device *pdev)
+> > > >     if (!indio_dev)
+> > > >             return -ENOMEM;
+> > > > 
+> > > > -   ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > > > +   ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > > > &cros_ec_baro_info,
+> > > > +                                   true);
+> > > >     if (ret)
+> > > >             return ret;
+> > > > 
+> > > > -   indio_dev->info = &cros_ec_baro_info;
+> > > >     state = iio_priv(indio_dev);
+> > > >     state->core.type = state->core.resp->info.type;
+> > > >     state->core.loc = state->core.resp->info.location;
+> > > > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
+> > > > b/include/linux/iio/common/cros_ec_sensors_core.h
+> > > > index 32fd08bbcf52..f170a72ac08d 100644
+> > > > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > > > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > > > @@ -114,12 +114,14 @@ struct platform_device;
+> > > >   * cros_ec_sensors_core_init() - basic initialization of the
+> > > > core
+> > > > structure
+> > > >   * @pdev:          platform device created for the sensors
+> > > >   * @indio_dev:             iio device structure of the device
+> > > > + * @info:          iio info structure with read and write
+> > > > callback
+> > > >   * @physical_device:       true if the device refers to a
+> > > > physical
+> > > > device
+> > > >   *
+> > > >   * Return: 0 on success, -errno on failure.
+> > > >   */
+> > > >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> > > > -                         struct iio_dev *indio_dev, bool
+> > > > physical_device);
+> > > > +                         struct iio_dev *indio_dev, struct
+> > > > iio_info *info,
+> > > > +                         bool physical_device);
+> > > > 
+> > > >  /**
+> > > >   * cros_ec_sensors_capture() - the trigger handler function
+
