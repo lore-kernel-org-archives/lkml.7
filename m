@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F789C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B7EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006F3208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787DD20859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690629;
-	bh=MppWLxJZp3JRP/FR5+sugn5gzovZy4U+haeoJpcmMxo=;
+	s=default; t=1559690632;
+	bh=vZAm1DlagK61SXBT7+XWCmAxFWiQPQzJtpbvOqNavPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnKb1NomtuzGGYPPp+7ipesB3AgXYGRCFa8JQaF/KzYAIhQWFMQghBiHhMXCwLUM+
-	 8Ew7rIjOlzM2Xi78P2+CaPO9DqXHXe+Sjci2k0cGGZCiY1t3WobgbilpB4EiLo7pO/
-	 zokfcKyR+KLHZ9SMQuBqbxduvJ4ZVmb510rVX2Hw=
+	b=UnvA4EtzrGlVuJqXCwG4waYepKGvVcqPLdfQt42shsrJ3+MiCSxvfMe3KcbDmYchd
+	 8eKLPVz8BLcFkG5+FNI4+I2rNSJrnYRQb0I7COJ1hT5KGZViI7sq4UycnQY4NhjSlM
+	 HxVEPG/qWRVzhs9Qch/j290F6iJXvRAfTh0hLad8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfFDXXs (ORCPT
+        id S1727386AbfFDXXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbfFDXXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:37 -0400
+        id S1727360AbfFDXXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E1620862;
-        Tue,  4 Jun 2019 23:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029A620866;
+        Tue,  4 Jun 2019 23:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690617;
-        bh=MppWLxJZp3JRP/FR5+sugn5gzovZy4U+haeoJpcmMxo=;
+        s=default; t=1559690629;
+        bh=vZAm1DlagK61SXBT7+XWCmAxFWiQPQzJtpbvOqNavPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAOrwSuKiyZp55M1MpIkBcE6cshfu2IgQJ5vqCfdjuuhlV/MNX9WRdr25dKXudPOR
-         MDqC/PrC/uTNLYkcVb/x8FetVgOcBZK5EBt4EIW7GH1CP5ovfr/nLApOD3RzPcBMka
-         D2fuCCZ9hUbQdK1XpJGLDp9+ffnzB6+yvHF2E0lQ=
+        b=0jpLYoJbce5A/c1RZlxRPPAwkSXzji0BzBmebg1hsiR5XZBsZXUG5zPd/7ggNGejW
+         1xZMZgAzbKDPOV7kzZjSt7JoSrd6r68VLYKuoQJfodf83S1fM7SNpDSMMUU4D7ukca
+         Q91sQEPdLg3Zc1t8YZ35dAVIBlMPyorQaOHUSl4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 02/36] ALSA: seq: Protect in-kernel ioctl calls with mutex
-Date:   Tue,  4 Jun 2019 19:22:57 -0400
-Message-Id: <20190604232333.7185-2-sashal@kernel.org>
+Cc:     Young Xiao <YangX92@hotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 08/36] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
+Date:   Tue,  4 Jun 2019 19:23:03 -0400
+Message-Id: <20190604232333.7185-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
 References: <20190604232333.7185-1-sashal@kernel.org>
@@ -59,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Young Xiao <YangX92@hotmail.com>
 
-[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
 
-ALSA OSS sequencer calls the ioctl function indirectly via
-snd_seq_kernel_client_ctl().  While we already applied the protection
-against races between the normal ioctls and writes via the client's
-ioctl_mutex, this code path was left untouched.  And this seems to be
-the cause of still remaining some rare UAF as spontaneously triggered
-by syzkaller.
+There is an out-of-bounds access to "config[len - 1]" array when the
+variable "len" is zero.
 
-For the sake of robustness, wrap the ioctl_mutex also for the call via
-snd_seq_kernel_client_ctl(), too.
+See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
+in param_set_kgdboc_var()") for details.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/misc/kgdbts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index b55cb96d1fed..40ae8f67efde 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index 6193270e7b3d..eb4d90b7d99e 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -1139,7 +1139,7 @@ static void kgdbts_put_char(u8 chr)
+ static int param_set_kgdbts_var(const char *kmessage,
+ 				const struct kernel_param *kp)
  {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
-+	int err;
+-	int len = strlen(kmessage);
++	size_t len = strlen(kmessage);
  
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		printk(KERN_ERR "kgdbts: config string too long\n");
+@@ -1159,7 +1159,7 @@ static int param_set_kgdbts_var(const char *kmessage,
  
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd)
--			return handler->func(client, arg);
-+		if (handler->cmd == cmd) {
-+			mutex_lock(&client->ioctl_mutex);
-+			err = handler->func(client, arg);
-+			mutex_unlock(&client->ioctl_mutex);
-+			return err;
-+		}
- 	}
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+-	if (config[len - 1] == '\n')
++	if (len && config[len - 1] == '\n')
+ 		config[len - 1] = '\0';
  
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+ 	/* Go and configure with the new params. */
 -- 
 2.20.1
 
