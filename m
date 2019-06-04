@@ -2,135 +2,134 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9F4C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ABAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5714A20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Neh3CJxm"
+	by mail.kernel.org (Postfix) with ESMTP id 5A14E20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfFDQaV (ORCPT
+        id S1728080AbfFDQaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:30:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41481 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfFDQaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:30:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so16526958wrm.8;
-        Tue, 04 Jun 2019 09:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BsQBIKOAel5fnBJ7QqXJ25YvFcF3acsbydOzLPIsKmY=;
-        b=Neh3CJxmgXFLwtJqcm5/RvHG3XrJvBwVkV9GXw3SPiRijWVpJwq6+YsQMxCTy5KlbN
-         tu8hzH6fOAthfEtmxLrlK1urrNqqwoYo+OCbCp2MSGN1n4lngSZDQ00zNN4afAinX9jR
-         Sr/xMiJk2fIrZpPLdsLZxCOnaE0Y8w2GYyga4Hb9JKFllebZYMO2BHGj1fiYgbQgkXTs
-         eHI5LGD+HC338p62eNbl1v7oAhaLEeM6Kmo6mrfnw27EgWqQrSKD1F1h+NV5mc0bA6/y
-         rrVHyL8Z4xnOrc8Y6/J6fwGESDrMJ3ETnvi7TMyMb1adlzSTIe1wmOVgmUP3oNdHUtpA
-         g9pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BsQBIKOAel5fnBJ7QqXJ25YvFcF3acsbydOzLPIsKmY=;
-        b=A+NS9/2oH8HsMhqldIcTGpXWK41dF4Pad+BcI6cMeJ8E1MI/gN1Xzn3bvyH8Dcmkxf
-         fOjGk+lZzhzW3iTq+F7kZvvX1SjZYebdgirsxoBm9yWMWv3NVgk0zqH+/HEdUp6sQRTY
-         Ppg/i1jxlGWQsxmWwlM8hKC72UbwdwJhhp37pHnRHoRtnCr0MuG6DEUk7ybMCNQUfBYV
-         f3QH2I9pRIu0uE/mdZSeYpkDKghy7kQQ0j5YpDOD7K1TOt7kr9DZtrWsi5X3UTdLBp6Z
-         V7rAN1EGbq0Y//JUhq6+nvRGogSw81uv6WbnZ+gT4OCGGFSO009OuX6ua4akkEPpvkYb
-         Ds+w==
-X-Gm-Message-State: APjAAAW4kOYlCqKXIq1WOvmYATJrsR9z1ktdVX2KP9DKgLhgAihdhvhY
-        Ra1P1oaBdY7UZXjuntq2Mdk=
-X-Google-Smtp-Source: APXvYqw4IUgpTbaVDk3VP/y7dsyc/2s0BvfDiNjuBzNtOuW3TqSFu7Pv5I7AOYT3qOOXVOiKURXImQ==
-X-Received: by 2002:a5d:5283:: with SMTP id c3mr7123707wrv.268.1559665815867;
-        Tue, 04 Jun 2019 09:30:15 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id y12sm15108176wrh.40.2019.06.04.09.30.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 09:30:15 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Igors Makejevs <git_bb@bwzone.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Sean Young <sean@mess.org>
-Subject: [PATCH v4 08/13] arm64: dts: allwinner: a64: Add IR node
-Date:   Tue,  4 Jun 2019 18:29:54 +0200
-Message-Id: <20190604162959.29199-9-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604162959.29199-1-peron.clem@gmail.com>
-References: <20190604162959.29199-1-peron.clem@gmail.com>
+        Tue, 4 Jun 2019 12:30:55 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37305 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbfFDQaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:30:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:30:51 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Jun 2019 09:30:50 -0700
+Date:   Tue, 4 Jun 2019 09:30:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 0/9] security: x86/sgx: SGX vs. LSM
+Message-ID: <20190604163050.GA32350@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654EC5FD@ORSMSX116.amr.corp.intel.com>
+ <20190603171549.GE13384@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654ED042@ORSMSX116.amr.corp.intel.com>
+ <10a49f97-b3be-ed09-2821-68157f01aebe@tycho.nsa.gov>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10a49f97-b3be-ed09-2821-68157f01aebe@tycho.nsa.gov>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igors Makejevs <git_bb@bwzone.com>
+On Tue, Jun 04, 2019 at 11:33:44AM -0400, Stephen Smalley wrote:
+> The RFC series seemed to dispense with the use of the sigstruct file and
+> just used the source file throughout IIUC.  That allowed for reuse of
+> FILE__* permissions without ambiguity rather than introducing separate
+> ENCLAVE__* permissions or using /dev/sgx/enclave inode as the target of all
+> checks.
 
-IR peripheral is completely compatible with A31 one.
+Drat, I meant to explicitly call that out in the cover letter.  Yes, the
+concept of using sigstruct as a proxy was dropped for this RFC.  The
+primary motivation was to avoid having to take a hold a reference to the
+sigstruct file for the lifetime of the enclave, and in general so that
+userspace isn't forced to put sigstruct into a file.
 
-Signed-off-by: Igors Makejevs <git_bb@bwzone.com>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Sean Young <sean@mess.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> Regardless, IIUC, your approach requires that we always check FILE__EXECMOD,
+> and FILE__EXECUTE up front during security_enclave_load() irrespective of
+> prot so that we can save the result in the f_security for later use by the
+> mprotect hook.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8c5b521e6389..b22b0aa89515 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1072,6 +1072,19 @@
- 			#size-cells = <0>;
- 		};
- 
-+		r_ir: ir@1f02000 {
-+			compatible = "allwinner,sun50i-a64-ir",
-+				     "allwinner,sun6i-a31-ir";
-+			reg = <0x01f02000 0x400>;
-+			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
-+			clock-names = "apb", "ir";
-+			resets = <&r_ccu RST_APB0_IR>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_ir_rx_pin>;
-+			status = "disabled";
-+		};
-+
- 		r_pwm: pwm@1f03800 {
- 			compatible = "allwinner,sun50i-a64-pwm",
- 				     "allwinner,sun5i-a13-pwm";
-@@ -1099,6 +1112,11 @@
- 				function = "s_i2c";
- 			};
- 
-+			r_ir_rx_pin: r-ir-rx-pin {
-+				pins = "PL11";
-+				function = "s_cir_rx";
-+			};
-+
- 			r_pwm_pin: r-pwm-pin {
- 				pins = "PL10";
- 				function = "s_pwm";
--- 
-2.20.1
+Correct, this approach requires up front checks.
 
+> This may generate many spurious audit messages for cases
+> where PROT_EXEC will never be requested, and users will be prone to just
+> always allowing it since they cannot tell when it was actually needed.
+
+Userspace will be able to understand when PROT_EXEC is actually needed
+as mprotect() will (eventually) fail.  Of course that assumes userspace
+is being intelligent and isn't blindly declaring permissions they don't
+need, e.g. declaring RWX on all pages even though the enclave never
+actually maps a RWX or RW->RX page.
+
+One thought for handling this in a more user friendly fashion would be
+to immediately return -EACCES instead of modifying @allowed_prot.  An
+enclave that truly needs the permission would fail immediately.
+
+An enclave loader that wants/needs to speculatively declare PROT_EXEC,
+e.g. because the exact requirements of the enclave are unknown, could
+handle -EACCESS gracefully by retrying the SGX ioctl() with different
+@allowed_prot, e.g.:
+
+  region.flags = SGX_ALLOW_READ | SGX_ALLOW_WRITE | SGX_ALLOW_EXEC;
+
+  ret = ioctl(fd, SGX_IOC_ENCLAVE_ADD_REGION, &region);
+  if (ret && errno == EACCES && !(prot & PROT_EXEC)) {
+      region.flags &= ~SGX_ALLOW_EXEC;
+      ret = ioctl(fd, SGX_IOC_ENCLAVE_ADD_REGION, &region);
+  }
+
+This type of enclave loader would still generate spurious audit messages,
+but the spurious messages would be limited to enclave loaders that are
+deliberately probing the allowed permissions.
+
+> >The noexec case should be addressed in IOC_ADD_PAGES by testing
+> >@source_vma->vm_flags & VM_MAYEXEC.
+> >
+> >>
+> >>>* In hook security_file_free(), if @file is an  enclave, free storage
+> >>>   allocated for WRITTEN flags.
+> 
