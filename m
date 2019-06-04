@@ -2,116 +2,173 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0ECC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD281204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C2E248DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559640513;
+	bh=6ETqa+2EBIL2s592Vq0+tBj4SL6ET4j6q8SqOPkcKuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ctUbPGAYtaTTsdheq5CQZg6GYYZkf8mB4rZSQvFYsQEq/cNK3Sca89sXNcczexIQ/
+	 VcP0OOk97m+mazVVLHKXLOlQ50kRCIvlNKuTmJsAscdeyCPSQCAUv7j9LJ7OFRgIFE
+	 YUafo01JAhywer9p4vuST/uN7am4gaj+1dzXNgeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfFDJ2U convert rfc822-to-8bit (ORCPT
+        id S1727133AbfFDJ2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:28:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54998 "EHLO mx1.redhat.com"
+        Tue, 4 Jun 2019 05:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbfFDJ2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:28:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726982AbfFDJ2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 05:28:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4BDF231628E3;
-        Tue,  4 Jun 2019 09:28:19 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ACB5D60C68;
-        Tue,  4 Jun 2019 09:28:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190603144331.16760-1-christian@brauner.io>
-References: <20190603144331.16760-1-christian@brauner.io>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        jannh@google.com, keescook@chromium.org, fweimer@redhat.com,
-        oleg@redhat.com, arnd@arndb.de,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] fork: add clone3
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F296204FD;
+        Tue,  4 Jun 2019 09:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559640511;
+        bh=6ETqa+2EBIL2s592Vq0+tBj4SL6ET4j6q8SqOPkcKuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hEd3fP6V8hlo4nCqa5dKa4wmtNC978msNENPO3/f7cQrwTkoSJQpCq8GbqFkPjEIZ
+         qyAV3dZUz5+bEE5XiWAQipkuAYAiRjFHLZvFYvlHHpPtUOcyOu9aEQ4L2rYvt9BqXQ
+         oF7Z0UdcWtWJIRtUy9Lr2IkDX92UBC7cal1SDhGA=
+Date:   Tue, 4 Jun 2019 11:28:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
+Message-ID: <20190604092828.GA30054@kroah.com>
+References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
+ <20190604073706.GA25045@kroah.com>
+ <87k1e123mc.fsf@linux.intel.com>
+ <20190604082407.GA3783@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4019.1559640492.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 04 Jun 2019 10:28:12 +0100
-Message-ID: <4020.1559640492@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 04 Jun 2019 09:28:19 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604082407.GA3783@kroah.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian@brauner.io> wrote:
+On Tue, Jun 04, 2019 at 10:24:07AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 04, 2019 at 10:47:55AM +0300, Felipe Balbi wrote:
+> > 
+> > Hi,
+> > 
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > >> +struct dentry *usb_debugfs_init(void)
+> > >> +{
+> > >> +	if (!usb_debug_root)
+> > >> +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> > >> +
+> > >> +	atomic_inc(&usb_debug_root_refcnt);
+> > >> +
+> > >> +	return usb_debug_root;
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+> > >> +
+> > >> +void usb_debugfs_cleanup(void)
+> > >> +{
+> > >> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+> > >> +		debugfs_remove_recursive(usb_debug_root);
+> > >> +		usb_debug_root = NULL;
+> > >> +	}
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+> > >
+> > > Only remove the debugfs subdir if the usbcore module is removed.  Create
+> > > the debugfs subdir when the usbcore module is loaded.  No need for any
+> > > reference counting of any sort at all.  No need to overthink this :)
+> > 
+> > There is a slight need to overthink. He wants to use the same directory
+> > for gadget-only builds too :-)
+> 
+> Again, that's fine, this file will be loaded for those builds as well,
+> right?  Otherwise, how would this code even be present?  :)
 
-> +#include <linux/compiler_types.h>
 
-I suspect you don't want to include that directly.
+As it seems to be easier to just write the patch instead of trying to
+describe it in email, and the patch is even simpler than the text,
+here's what I was thinking of:
 
-Also, to avoid bloating linux/sched/task.h yet further, maybe put this in
-linux/sched/clone.h?
+Note, it's not fully correct, now that I think of it, but you get the
+idea...
 
-> -extern long _do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *, unsigned long);
-> +extern long _do_fork(struct kernel_clone_args *kargs);
->  extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
 
-Maybe these could move into linux/sched/clone.h too.
+From foo@baz Tue 04 Jun 2019 11:25:30 AM CEST
+Date: Tue, 04 Jun 2019 11:25:30 +0200
+To: Greg KH <gregkh@linuxfoundation.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] USB: move usb debugfs directory creation to the usb core
 
-> +#define CLONE_MAX ~0U
+The USB gadget subsystem wants to use the USB debugfs root directory, so
+move it to the common "core" USB code so that it is properly initialized
+and removed as needed.
 
-Can you add a comment summarising the meaning?
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +	u64 clone_flags = args->flags;
-> +	int __user *child_tidptr = args->child_tid;
-> +	unsigned long tls = args->tls;
-> +	unsigned long stack_start = args->stack;
-> +	unsigned long stack_size = args->stack_size;
 
-Some of these are only used once, so it's probably not worth sticking them in
-local variables.
-
-> -		if (clone_flags &
-> -		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
-> -			return ERR_PTR(-EINVAL);
-
-Did this error check get lost?  I can see part of it further on, but the check
-on CLONE_PARENT_SETTID is absent.
-
-> +	int __user *parent_tidptr = args->parent_tid;
-
-There's only one usage remaining after this patch, so a local var doesn't gain
-a lot.
-
->  pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
->  {
-> -	return _do_fork(flags|CLONE_VM|CLONE_UNTRACED, (unsigned long)fn,
-> -		(unsigned long)arg, NULL, NULL, 0);
-> +	struct kernel_clone_args args = {
-> +		.flags = ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
-> +		.exit_signal = (flags & CSIGNAL),
-
-Kernel threads can have exit signals?
-
-> +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> +				     struct clone_args __user *uargs,
-> +				     size_t size)
-
-I would make this "noinline".  If it gets inlined, local variable "args" may
-still be on the stack when _do_fork() gets called.
-
-David
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 18f5dcf58b0d..3b5e4263ffef 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -15,6 +15,7 @@
+ #include <linux/usb/of.h>
+ #include <linux/usb/otg.h>
+ #include <linux/of_platform.h>
++#include <linux/debugfs.h>
+ 
+ static const char *const ep_type_names[] = {
+ 	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+@@ -291,4 +292,21 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+ EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+ #endif
+ 
++struct dentry *usb_debug_root;
++EXPORT_SYMBOL_GPL(usb_debug_root);
++
++static int usb_common_init(void)
++{
++	usb_debug_root = debugfs_create_dir("usb", NULL);
++	return 0;
++}
++
++static void usb_common_exit(void)
++{
++	debugfs_remove_recursive(usb_debug_root);
++}
++
++module_init(usb_common_init);
++module_exit(usb_common_exit);
++
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+index 7fcb9f782931..2aa28445277d 100644
+--- a/drivers/usb/core/usb.c
++++ b/drivers/usb/core/usb.c
+@@ -1185,12 +1185,8 @@ static struct notifier_block usb_bus_nb = {
+ 	.notifier_call = usb_bus_notify,
+ };
+ 
+-struct dentry *usb_debug_root;
+-EXPORT_SYMBOL_GPL(usb_debug_root);
+-
+ static void usb_debugfs_init(void)
+ {
+-	usb_debug_root = debugfs_create_dir("usb", NULL);
+ 	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+ 			    &usbfs_devices_fops);
+ }
