@@ -3,107 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA646C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98175C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D1D248CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8C521873
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfFDKjb (ORCPT
+        id S1727339AbfFDKm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:39:31 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33593 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfFDKjb (ORCPT
+        Tue, 4 Jun 2019 06:42:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37761 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727179AbfFDKmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:39:31 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so2828895wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:39:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PA1Zzos5/GV4W8WBqLWjw97Q+q76gYiUhMTLzyflnfQ=;
-        b=iT7PYlIp3xNQotnXSiWvla3mpqSIUwm3rqgCjf5lRoTwQL065LdOy3hyRnP1QBnOqF
-         F/8Atv/w9NWDXxZYqVBRpjjxuRRr+jMkIJhLMxuPnkvzlYZiAJXyubbzN0nNtuXF+TJ5
-         EC1Q5MSduM9HGHnu/GqP02usgCwg8jFIy9fa3ZFtSeGg3aWQePzZDM0XO322au0hWfHK
-         xKtl3f8Po595NUNSC8FLk249UkpIA614tOL/ClYOlrPFOFnLLrUcc0HKZAJSDlVwBpBw
-         vQPVLUS/r8UYHWusmI6OfAM88lwvAZUQmRqd2PvLiRrZPFGEV2WdlDfHdlss5rk1zWzd
-         +6FA==
-X-Gm-Message-State: APjAAAXhOaD823Haidyo/A5JvJnfBp8OtylXE5q/sUt8VQx9lQLw5kRH
-        fDd74zFMskXPISqtbXVV38041A==
-X-Google-Smtp-Source: APXvYqz6IFhBQECP7usz4I6wTPlderjBZlyhpO1cG19aL7hXuEHA4YNvk8qOuDkcH4uOLL3TQLEiew==
-X-Received: by 2002:adf:e583:: with SMTP id l3mr788137wrm.1.1559644770035;
-        Tue, 04 Jun 2019 03:39:30 -0700 (PDT)
-Received: from t460s.bristot.redhat.com ([5.170.68.106])
-        by smtp.gmail.com with ESMTPSA id u13sm2979265wrq.62.2019.06.04.03.39.28
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 03:39:29 -0700 (PDT)
-Subject: Re: [RFC 1/3] softirq: Use preempt_latency_stop/start to trace
- preemption
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-References: <cover.1559051152.git.bristot@redhat.com>
- <b6bb4705efb0c01c11008ae3c46bc74555245303.1559051152.git.bristot@redhat.com>
- <20190529093056.GA146079@google.com>
- <20190529082248.76bb7a6c@oasis.local.home>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <835664be-a8ef-d164-4bf9-e0918413796c@redhat.com>
-Date:   Tue, 4 Jun 2019 12:39:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190529082248.76bb7a6c@oasis.local.home>
-Content-Type: text/plain; charset=utf-8
+        Tue, 4 Jun 2019 06:42:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-165-z4tvthCaPm-9VCDZXg4X-g-1; Tue, 04 Jun 2019 11:42:21 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 4 Jun 2019 11:42:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 4 Jun 2019 11:42:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christian Brauner' <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "fweimer@redhat.com" <fweimer@redhat.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Pavel Emelyanov" <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] fork: add clone3
+Thread-Topic: [PATCH v2 1/2] fork: add clone3
+Thread-Index: AQHVGrn7k0AmpTY+6Eq1szcZbValSaaLTdMw
+Date:   Tue, 4 Jun 2019 10:42:20 +0000
+Message-ID: <8e7f7afb177049ac9f8e7223f19e8767@AcuMS.aculab.com>
+References: <20190603144331.16760-1-christian@brauner.io>
+ <4020.1559640492@warthog.procyon.org.uk>
+ <20190604094317.4wfelmbw4lgxzide@brauner.io>
+In-Reply-To: <20190604094317.4wfelmbw4lgxzide@brauner.io>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: z4tvthCaPm-9VCDZXg4X-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogQ2hyaXN0aWFuIEJyYXVuZXINCj4gU2VudDogMDQgSnVuZSAyMDE5IDEwOjQzDQouLi4N
+Cj4gPiA+ICsJdTY0IGNsb25lX2ZsYWdzID0gYXJncy0+ZmxhZ3M7DQo+ID4gPiArCWludCBfX3Vz
+ZXIgKmNoaWxkX3RpZHB0ciA9IGFyZ3MtPmNoaWxkX3RpZDsNCj4gPiA+ICsJdW5zaWduZWQgbG9u
+ZyB0bHMgPSBhcmdzLT50bHM7DQo+ID4gPiArCXVuc2lnbmVkIGxvbmcgc3RhY2tfc3RhcnQgPSBh
+cmdzLT5zdGFjazsNCj4gPiA+ICsJdW5zaWduZWQgbG9uZyBzdGFja19zaXplID0gYXJncy0+c3Rh
+Y2tfc2l6ZTsNCj4gPg0KPiA+IFNvbWUgb2YgdGhlc2UgYXJlIG9ubHkgdXNlZCBvbmNlLCBzbyBp
+dCdzIHByb2JhYmx5IG5vdCB3b3J0aCBzdGlja2luZyB0aGVtIGluDQo+ID4gbG9jYWwgdmFyaWFi
+bGVzLg0KPiANCj4gWzFdOg0KPiBPaywgd2lsbCBkb3VibGUgY2hlY2suDQo+IFRoaXMgd2FzIGp1
+c3QgdG8gbWluaW1pemUgY29weS1wYXN0ZSBlcnJvcyBmb3IgdmFyaWFibGVzIHdoaWNoIHdlcmUg
+dXNlZA0KPiBtdWx0aXBsZSB0aW1lcy4NCg0KRXZlbiB0aGUgb25lcyB0aGF0IGFyZSB1c2VkIG11
+bHRpcGxlIHRpbWVzIG1heSBiZSBiZXR0ZXIgYmVpbmcNCnJlcGVhdGVkbHkgcmVhZCBmcm9tIGFy
+Z3MtPnh4eC4NCg0KSWYgeW91IGFyZSAibHVja3kiICdhcmdzJyB3aWxsIGJlIGluIGEgcmVnaXN0
+ZXIgdmFyaWFibGVzDQpzbyBhbGwgdGhlIGFjY2Vzc2VzIGFyZSBjaGVhcC4NCldpdGggdG9vIG1h
+bnkgbG9jYWxzIGV2ZXJ5dGhpbmcgZ2V0cyBjb3BpZWQgb250byB0aGUgYWN0dWFsDQpzdGFjayAt
+IGVzcGVjaWFsbHkgbGlrZWx5IGlmIHRoZXJlIGFyZSBhbnkgZnVuY3Rpb24gY2FsbHMNCih0aGF0
+IG1pZ2h0IGNvbmNlaXZhYmx5IGNoYW5nZSAqYXJncykgYWZ0ZXIgdGhlIGxvY2Fscw0KYXJlIGlu
+aXRpYWxpc2VkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
+cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
+c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-
-On 29/05/2019 14:22, Steven Rostedt wrote:
-> On Wed, 29 May 2019 05:30:56 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
->> Yes, I think so. Also this patch changes CALLER_ADDR0 passed to the
->> tracepoint because there's one more level of a non-inlined function call
->> in the call chain right?  Very least the changelog should document this
->> change in functional behavior, IMO.
-
-In practice I am seeing no change in the values printed, but there is another
-problem with this regard: there are cases in which both caller and parent have
-the same address.
-
-I am quite sure it has to do with the in_lock_function() behavior. Anyway, I was
-already planing to propose a cleanup in the in_lock_function/in_sched_function.
-I will investigate it more.
-
-> This sounds more like a break in behavior not a functional change. I
-> guess moving it to a header and making it a static __always_inline
-> should be fine though.
-
-Steve, which header should I use?
-
-Thanks!
-
--- Daniel
-
-> -- Steve
-> 
