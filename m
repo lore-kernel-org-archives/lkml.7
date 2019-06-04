@@ -2,193 +2,256 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC714C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E00C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE59240B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A6C24BA6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559652032;
+	bh=RWXt3aNCMTy+UTAYePZmQNO2QW1YFLu3Odj5H+eyHNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MpZaE/CjPVSRrwCuoevAgt69MQMJqUsWMUDcGG/CWPP88FzU4titLpLpMe1SdAj5b
+	 bjbzylb0M34yH1M2rh+3XdPa5frWX7cDMw7DJnWgGKqL9uV1I6XjjRnfKm1OTVSV3z
+	 THwBg+KpC8T+p0JUTq7rEO/H2GaqZKx1Fe2nYzWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfFDMjw (ORCPT
+        id S1727860AbfFDMkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:39:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34824 "EHLO mga02.intel.com"
+        Tue, 4 Jun 2019 08:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfFDMjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:39:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 05:39:50 -0700
-X-ExtLoop1: 1
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 05:39:46 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2] kbuild: add support for ensuring headers are self-contained
-Date:   Tue,  4 Jun 2019 15:42:48 +0300
-Message-Id: <20190604124248.5564-1-jani.nikula@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604101409.2078-14-yamada.masahiro@socionext.com>
-References: <20190604101409.2078-14-yamada.masahiro@socionext.com>
+        id S1727580AbfFDMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:40:31 -0400
+Received: from localhost (unknown [117.99.94.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2874D240B7;
+        Tue,  4 Jun 2019 12:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559652030;
+        bh=RWXt3aNCMTy+UTAYePZmQNO2QW1YFLu3Odj5H+eyHNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hdr+1cp/fxGQJ56LsNzXwjSNWS4eq1YQTiZBzI4UDMwB6jZ4XgztjczYnU3pwnb8+
+         uMj6WC0yqMcal5zsMrWfkeqHVgnDI8jvswzpowOSD6tG6q/1ioaLm1OIoFsuF8p4gB
+         MDRiRTit4eY9cpz/wqw4nMAh8myb2AiAISowCT5o=
+Date:   Tue, 4 Jun 2019 18:07:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, mark.rutland@arm.com, dan.j.williams@intel.com,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 7/8] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Message-ID: <20190604123722.GF15118@vkoul-mobl>
+References: <20190529090848.34350-1-yibin.gong@nxp.com>
+ <20190529090848.34350-8-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529090848.34350-8-yibin.gong@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it's useful to be able to explicitly ensure certain headers
-remain self-contained, i.e. that they are compilable as standalone
-units, by including and/or forward declaring everything they depend on.
+On 29-05-19, 17:08, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+>   Add edma2 for i.mx7ulp by version v3, since v2 has already
 
-Add special target header-test-y where individual Makefiles can add
-headers to be tested if CONFIG_HEADER_TEST is enabled. This will
-generate a dummy C file per header that gets built as part of extra-y.
+Why leading spaces at start of line?
 
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> been used by mcf-edma.
+> The big changes based on v1 are belows:
+> 1. only one dmamux.
+> 2. another clock dma_clk except dmamux clk.
+> 3. 16 independent interrupts instead of only one interrupt for
+> all channels.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/fsl-edma-common.c | 18 +++++++++++-
+>  drivers/dma/fsl-edma-common.h |  3 ++
+>  drivers/dma/fsl-edma.c        | 67 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 87 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+> index 45d70d3..0d9915c 100644
+> --- a/drivers/dma/fsl-edma-common.c
+> +++ b/drivers/dma/fsl-edma-common.c
+> @@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+>  	iowrite8(val8, addr + off);
+>  }
+>  
+> +void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+> +		     u32 off, u32 slot, bool enable)
+> +{
+> +	u32 val;
+> +
+> +	if (enable)
+> +		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
+> +	else
+> +		val = EDMAMUX_CHCFG_DIS;
+> +
+> +	iowrite32(val, addr + off * 4);
+> +}
+> +
+>  void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+>  			unsigned int slot, bool enable)
+>  {
+> @@ -102,7 +115,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+>  	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+>  	slot = EDMAMUX_CHCFG_SOURCE(slot);
+>  
+> -	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+> +	if (fsl_chan->edma->version == v3)
+> +		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
+> +	else
+> +		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+>  }
+>  EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+>  
+> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+> index 014ab74..07482d2 100644
+> --- a/drivers/dma/fsl-edma-common.h
+> +++ b/drivers/dma/fsl-edma-common.h
+> @@ -125,6 +125,7 @@ struct fsl_edma_chan {
+>  	dma_addr_t			dma_dev_addr;
+>  	u32				dma_dev_size;
+>  	enum dma_data_direction		dma_dir;
+> +	char				chan_name[16];
+>  };
+>  
+>  struct fsl_edma_desc {
+> @@ -139,6 +140,7 @@ struct fsl_edma_desc {
+>  enum edma_version {
+>  	v1, /* 32ch, Vybrid, mpc57x, etc */
+>  	v2, /* 64ch Coldfire */
+> +	v3, /* 32ch, i.mx7ulp */
+>  };
+>  
+>  struct fsl_edma_drvdata {
+> @@ -154,6 +156,7 @@ struct fsl_edma_engine {
+>  	void __iomem		*membase;
+>  	void __iomem		*muxbase[DMAMUX_NR];
+>  	struct clk		*muxclk[DMAMUX_NR];
+> +	struct clk		*dmaclk;
+>  	u32			dmamux_nr;
+>  	struct mutex		fsl_edma_mutex;
+>  	const struct fsl_edma_drvdata *drvdata;
+> diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+> index cf18301..45b26d6 100644
+> --- a/drivers/dma/fsl-edma.c
+> +++ b/drivers/dma/fsl-edma.c
+> @@ -165,6 +165,51 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
+>  	return 0;
+>  }
+>  
+> +static int
+> +fsl_edma2_irq_init(struct platform_device *pdev,
+> +		   struct fsl_edma_engine *fsl_edma)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int i, ret, irq;
+> +	int count = 0;
 
----
+Superflous initialization of count!
 
-v2: changes suggested by Masahiro:
+> +
+> +	count = of_irq_count(np);
+> +	dev_info(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
 
-http://mid.mail-archive.com/CAK7LNAT=nB0=at0X4OnHVKB=y7WwHGm4LXkrQnCw9HpjB5LooA@mail.gmail.com
----
- .gitignore                         | 1 +
- Documentation/dontdiff             | 1 +
- Documentation/kbuild/makefiles.txt | 7 +++++++
- Makefile                           | 1 +
- init/Kconfig                       | 9 +++++++++
- scripts/Makefile.build             | 9 +++++++++
- scripts/Makefile.lib               | 3 +++
- 7 files changed, 31 insertions(+)
+Consider using debug level..
 
-diff --git a/.gitignore b/.gitignore
-index 7587ef56b92d..4bb60f0fa23b 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -22,6 +22,7 @@
- *.elf
- *.gcno
- *.gz
-+*.hdrtest.c
- *.i
- *.ko
- *.lex.c
-diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-index 5eba889ea84d..554dfe4883d2 100644
---- a/Documentation/dontdiff
-+++ b/Documentation/dontdiff
-@@ -19,6 +19,7 @@
- *.grep
- *.grp
- *.gz
-+*.hdrtest.c
- *.html
- *.i
- *.jpeg
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index d65ad5746f94..a31e54bd9ddd 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -1022,6 +1022,13 @@ When kbuild executes, the following steps are followed (roughly):
- 	In this example, extra-y is used to list object files that
- 	shall be built, but shall not be linked as part of built-in.a.
- 
-+    header-test-y
-+
-+	header-test-y specifies headers (*.h) in the current directory that
-+	should be compile tested to ensure they are self-contained,
-+	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
-+	this autogenerates dummy sources to include the headers, and builds them
-+	as part of extra-y.
- 
- --- 6.7 Commands useful for building a boot image
- 
-diff --git a/Makefile b/Makefile
-index 11358153d8f2..b347be697fbb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1646,6 +1646,7 @@ clean: $(clean-dirs)
- 		-o -name '*.dwo' -o -name '*.lst' \
- 		-o -name '*.su'  \
- 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
-+		-o -name '*.hdrtest.c' \
- 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
- 		-o -name '*.asn1.[ch]' \
- 		-o -name '*.symtypes' -o -name 'modules.order' \
-diff --git a/init/Kconfig b/init/Kconfig
-index 36894c9fb420..02d8897b91fb 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -96,6 +96,15 @@ config COMPILE_TEST
- 	  here. If you are a user/distributor, say N here to exclude useless
- 	  drivers to be distributed.
- 
-+config HEADER_TEST
-+	bool "Compile test headers that should be standalone compilable"
-+	help
-+	  Compile test headers listed in header-test-y target to ensure they are
-+	  self-contained, i.e. compilable as standalone units.
-+
-+	  If you are a developer or tester and want to ensure the requested
-+	  headers are self-contained, say Y here. Otherwise, choose N.
-+
- config LOCALVERSION
- 	string "Local version - append to kernel release"
- 	help
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index ae9cf740633e..ee0319560513 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -294,6 +294,15 @@ quiet_cmd_cc_lst_c = MKLST   $@
- $(obj)/%.lst: $(src)/%.c FORCE
- 	$(call if_changed_dep,cc_lst_c)
- 
-+# Dummy C sources for header test (header-test-y target)
-+# ---------------------------------------------------------------------------
-+
-+quiet_cmd_header_test = HDRTEST $@
-+      cmd_header_test = echo "\#include \"$*.h\"" > $@
-+
-+$(obj)/%.hdrtest.c:
-+	$(call cmd,header_test)
-+
- # Compile assembler sources (.S)
- # ---------------------------------------------------------------------------
- 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index f1f38c8cdc74..3e630fcaffd1 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -66,6 +66,9 @@ extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
- extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
- endif
- 
-+# Test self-contained headers
-+extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.hdrtest.o,$(header-test-y))
-+
- # Add subdir path
- 
- extra-y		:= $(addprefix $(obj)/,$(extra-y))
+> +	if (count <= 2) {
+> +		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
+> +		return -EINVAL;
+> +	}
+> +	/*
+> +	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
+> +	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
+> +	 * For now, just simply request irq without IRQF_SHARED flag, since 16
+> +	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
+> +	 */
+> +	for (i = 0; i < count; i++) {
+> +		irq = platform_get_irq(pdev, i);
+> +		if (irq < 0)
+> +			return -ENXIO;
+> +
+> +		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
+> +
+> +		/* The last IRQ is for eDMA err */
+> +		if (i == count - 1)
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +						fsl_edma_err_handler,
+> +						0, "eDMA2-ERR", fsl_edma);
+> +		else
+> +
+
+empty line is waste here
+
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +						fsl_edma_tx_handler, 0,
+> +						fsl_edma->chans[i].chan_name,
+> +						fsl_edma);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void fsl_edma_irq_exit(
+>  		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+>  {
+> @@ -191,8 +236,16 @@ static struct fsl_edma_drvdata vf610_data = {
+>  	.setup_irq = fsl_edma_irq_init,
+>  };
+>  
+> +static struct fsl_edma_drvdata imx7ulp_data = {
+> +	.version = v3,
+> +	.dmamuxs = 1,
+> +	.has_dmaclk = true,
+> +	.setup_irq = fsl_edma2_irq_init,
+> +};
+> +
+>  static const struct of_device_id fsl_edma_dt_ids[] = {
+>  	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
+> +	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+> @@ -242,6 +295,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	fsl_edma_setup_regs(fsl_edma);
+>  	regs = &fsl_edma->regs;
+>  
+> +	if (drvdata->has_dmaclk) {
+> +		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
+> +		if (IS_ERR(fsl_edma->dmaclk)) {
+> +			dev_err(&pdev->dev, "Missing DMA block clock.\n");
+> +			return PTR_ERR(fsl_edma->dmaclk);
+> +		}
+> +
+> +		ret = clk_prepare_enable(fsl_edma->dmaclk);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "DMA clk block failed.\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	for (i = 0; i < fsl_edma->dmamux_nr; i++) {
+>  		char clkname[32];
+>  
+> -- 
+> 2.7.4
+
 -- 
-2.20.1
-
+~Vinod
