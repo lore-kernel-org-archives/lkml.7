@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3091C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F91AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92D520679
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DF2248B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfFDNB5 (ORCPT
+        id S1727452AbfFDNCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:01:57 -0400
+        Tue, 4 Jun 2019 09:02:00 -0400
 Received: from mga07.intel.com ([134.134.136.100]:5100 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfFDNBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:01:55 -0400
+        id S1727411AbfFDNB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:01:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 06:01:54 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 06:01:58 -0700
 X-ExtLoop1: 1
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Jun 2019 06:01:53 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 04 Jun 2019 06:01:56 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Jin Yao <yao.jin@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/19] perf report: Set perf time interval in itrace_synth_ops
-Date:   Tue,  4 Jun 2019 16:00:01 +0300
-Message-Id: <20190604130017.31207-4-adrian.hunter@intel.com>
+Subject: [PATCH 05/19] perf intel-pt: Factor out intel_pt_8b_tsc()
+Date:   Tue,  4 Jun 2019 16:00:03 +0300
+Message-Id: <20190604130017.31207-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604130017.31207-1-adrian.hunter@intel.com>
 References: <20190604130017.31207-1-adrian.hunter@intel.com>
@@ -42,41 +42,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instruction trace decoders can optimize output based on what time intervals
-will be filtered, so pass that information in itrace_synth_ops.
+Factor out intel_pt_8b_tsc() so it can be reused.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/builtin-report.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 26 ++++++++++++-------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1ca533f06a4c..91c40808380d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1428,6 +1428,10 @@ int cmd_report(int argc, const char **argv)
- 						  &report.range_num);
- 		if (ret < 0)
- 			goto error;
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index 13123b195083..c06dceb774e9 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1369,6 +1369,21 @@ static int intel_pt_mode_tsx(struct intel_pt_decoder *decoder, bool *no_tip)
+ 	return 0;
+ }
+ 
++static uint64_t intel_pt_8b_tsc(uint64_t timestamp, uint64_t ref_timestamp)
++{
++	timestamp |= (ref_timestamp & (0xffULL << 56));
 +
-+		itrace_synth_opts__set_time_range(&itrace_synth_opts,
-+						  report.ptime_range,
-+						  report.range_num);
- 	}
- 
- 	if (session->tevent.pevent &&
-@@ -1449,8 +1453,10 @@ int cmd_report(int argc, const char **argv)
- 		ret = 0;
- 
- error:
--	if (report.ptime_range)
-+	if (report.ptime_range) {
-+		itrace_synth_opts__clear_time_range(&itrace_synth_opts);
- 		zfree(&report.ptime_range);
++	if (timestamp < ref_timestamp) {
++		if (ref_timestamp - timestamp > (1ULL << 55))
++			timestamp += (1ULL << 56);
++	} else {
++		if (timestamp - ref_timestamp > (1ULL << 55))
++			timestamp -= (1ULL << 56);
 +	}
- 	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
- 	return ret;
++
++	return timestamp;
++}
++
+ static void intel_pt_calc_tsc_timestamp(struct intel_pt_decoder *decoder)
+ {
+ 	uint64_t timestamp;
+@@ -1376,15 +1391,8 @@ static void intel_pt_calc_tsc_timestamp(struct intel_pt_decoder *decoder)
+ 	decoder->have_tma = false;
+ 
+ 	if (decoder->ref_timestamp) {
+-		timestamp = decoder->packet.payload |
+-			    (decoder->ref_timestamp & (0xffULL << 56));
+-		if (timestamp < decoder->ref_timestamp) {
+-			if (decoder->ref_timestamp - timestamp > (1ULL << 55))
+-				timestamp += (1ULL << 56);
+-		} else {
+-			if (timestamp - decoder->ref_timestamp > (1ULL << 55))
+-				timestamp -= (1ULL << 56);
+-		}
++		timestamp = intel_pt_8b_tsc(decoder->packet.payload,
++					    decoder->ref_timestamp);
+ 		decoder->tsc_timestamp = timestamp;
+ 		decoder->timestamp = timestamp;
+ 		decoder->ref_timestamp = 0;
 -- 
 2.17.1
 
