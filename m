@@ -2,172 +2,154 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB211C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F5CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9212220665
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559651194;
-	bh=zTBxerE09vTlOPqn5WaPjuaF2b5hUb2H7F7qW8I//Hc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wCricoQaJOTU28WXN2g5EIxoNIb9TgABXd4oqFsp7iD9c+i2E/DmgbOVZhfZbexzZ
-	 WH2L0FOH16MpvKbsxPY+D0cYUhs4x1I7YOaRcfSRXVUY+3dDNCNxJad+5Rp7VnWESP
-	 oKLN+BzE52nfThl983bghuDLwor7onBShuZ+JPpI=
+	by mail.kernel.org (Postfix) with ESMTP id C497420665
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfFDM0d (ORCPT
+        id S1727790AbfFDM0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:26:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60454 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfFDM0d (ORCPT
+        Tue, 4 Jun 2019 08:26:52 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:15625 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726994AbfFDM0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:26:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S4Pz7TRu5Lcq2yQdR4kxNmctJu60r/vgdLSlDc7rPg0=; b=eiJuW/BajBOBAudFTNG/cNt5a
-        LupcpeNZRNJyKXf4PQEQBYvCelsX0tWh7MJQKqm8D4c3+W6Bd91f0bvq2YrQcp9rpMnPfL/d7wKjg
-        01E2RaVCrVT1tDzZDM2lS8tqt805U0W6FEZE8lDOFoXI7hPv6hpqz7VDNRWjXvVGYwwsgm1PzuLhU
-        NVxGuSisF6dMxjRDKI8dwiVM8WBwwEg8lbskmgEbmOQrDF9w4DOHvy+PXoJL7CpJFHsA83C+3RRo5
-        2irH7anFq7WNHUOI99LRjjOe/yZK5KW55SIofR+zqhTbefHWW+sO/aBox0n17zSdNY+p23AATvYGi
-        cF5OhO08w==;
-Received: from [187.113.6.249] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hY8WO-000464-B3; Tue, 04 Jun 2019 12:26:32 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hY8WK-000213-FZ; Tue, 04 Jun 2019 09:26:28 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] docs: Kbuild/Makefile: allow check for missing docs at build time
-Date:   Tue,  4 Jun 2019 09:26:27 -0300
-Message-Id: <8ac254a7cf0569f1eeced9c9263cd7b0bfe4ed78.1559651025.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Tue, 4 Jun 2019 08:26:51 -0400
+X-UUID: e64f5e4932bb49efa567b16a9c3a2533-20190604
+X-UUID: e64f5e4932bb49efa567b16a9c3a2533-20190604
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 404720184; Tue, 04 Jun 2019 20:26:42 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 4 Jun
+ 2019 20:26:41 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 4 Jun 2019 20:26:40 +0800
+Message-ID: <1559651200.5871.2.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/2] i3c: master: Add driver for MediaTek IP
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     <bbrezillon@kernel.org>, <devicetree@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <gregkh@linuxfoundation.org>, <xinping.qian@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <liguo.zhang@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <linux-i3c@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 4 Jun 2019 20:26:40 +0800
+In-Reply-To: <20190604095858.38ed9a28@collabora.com>
+References: <1559533863-10292-1-git-send-email-qii.wang@mediatek.com>
+         <1559533863-10292-3-git-send-email-qii.wang@mediatek.com>
+         <20190604095858.38ed9a28@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While this doesn't make sense for production Kernels, in order to
-avoid regressions when documents are touched, let's add a
-check target at the make file.
+On Tue, 2019-06-04 at 09:58 +0200, Boris Brezillon wrote:
+> On Mon, 3 Jun 2019 11:51:03 +0800
+> Qii Wang <qii.wang@mediatek.com> wrote:
+> 
+> 
+> > +static int mtk_i3c_master_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct mtk_i3c_master *master;
+> > +	struct resource *res;
+> > +	int ret, irqnr;
+> > +
+> > +	master = devm_kzalloc(dev, sizeof(*master), GFP_KERNEL);
+> > +	if (!master)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "main");
+> > +	master->regs = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(master->regs))
+> > +		return PTR_ERR(master->regs);
+> > +
+> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
+> > +	master->dma_regs = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(master->dma_regs))
+> > +		return PTR_ERR(master->dma_regs);
+> > +
+> > +	irqnr = platform_get_irq(pdev, 0);
+> > +	if (irqnr < 0)
+> > +		return irqnr;
+> > +
+> > +	ret = devm_request_irq(dev, irqnr, mtk_i3c_master_irq,
+> > +			       IRQF_TRIGGER_NONE, DRV_NAME, master);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Request I3C IRQ %d fail\n", irqnr);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = of_property_read_u32(pdev->dev.of_node, "clock-div",
+> > +				   &master->clk_src_div);
+> 
+> You say in one comment that this clock divider is fixed in HW but might
+> change on a per-SoC basis. If that's the case, you should get rid of
+> this clock-div prop and attach the divider to the compatible (using an
+> mtk_i3c_master_variant struct that contains a divider field).
+> 
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
+ok, I will attach the divider to the compatible.
 
-Jon,
-
-It is very common for people to shift things around and forget to rename
-the documentation files. 
-
-Just on this new Kernel cycle, every time I update from linux-next I get more
-broken stuff.
-
-IMO, the best is to run the check script with COMPILE_TEST, as this will make
-build robots to warn people about such breakages, with will hopefully help
-to avoid regressions due to broken documentation references.
-
-
- Documentation/Kconfig                | 13 +++++++++++++
- Documentation/Makefile               |  5 +++++
- Kconfig                              |  2 ++
- scripts/documentation-file-ref-check |  9 +++++++++
- 4 files changed, 29 insertions(+)
- create mode 100644 Documentation/Kconfig
-
-diff --git a/Documentation/Kconfig b/Documentation/Kconfig
-new file mode 100644
-index 000000000000..66046fa1c341
---- /dev/null
-+++ b/Documentation/Kconfig
-@@ -0,0 +1,13 @@
-+config WARN_MISSING_DOCUMENTS
-+
-+	bool "Warn if there's a missing documentation file"
-+	depends on COMPILE_TEST
-+	help
-+	   It is not uncommon that a document gets renamed.
-+	   This option makes the Kernel to check for missing dependencies,
-+	   warning when something is missing. Works only if the Kernel
-+	   is built from a git tree.
-+
-+	   If unsure, select 'N'.
-+
-+
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 2edd03b1dad6..89857285a024 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -4,6 +4,11 @@
- 
- subdir-y := devicetree/bindings/
- 
-+# Check for broken documentation file references
-+ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
-+$(shell $(srctree)/scripts/documentation-file-ref-check --warn)
-+endif
-+
- # You can set these variables from the command line.
- SPHINXBUILD   = sphinx-build
- SPHINXOPTS    =
-diff --git a/Kconfig b/Kconfig
-index 48a80beab685..990b0c390dfc 100644
---- a/Kconfig
-+++ b/Kconfig
-@@ -30,3 +30,5 @@ source "crypto/Kconfig"
- source "lib/Kconfig"
- 
- source "lib/Kconfig.debug"
-+
-+source "Documentation/Kconfig"
-diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index ff16db269079..440227bb55a9 100755
---- a/scripts/documentation-file-ref-check
-+++ b/scripts/documentation-file-ref-check
-@@ -22,9 +22,16 @@ $scriptname =~ s,.*/([^/]+/),$1,;
- # Parse arguments
- my $help = 0;
- my $fix = 0;
-+my $warn = 0;
-+
-+if (! -d ".git") {
-+	printf "Warning: can't check if file exists, as this is not a git tree";
-+	exit 0;
-+}
- 
- GetOptions(
- 	'fix' => \$fix,
-+	'warn' => \$warn,
- 	'h|help|usage' => \$help,
- );
- 
-@@ -139,6 +146,8 @@ while (<IN>) {
- 			if (!($ref =~ m/(scripts|Kconfig|Kbuild)/)) {
- 				$broken_ref{$ref}++;
- 			}
-+		} elsif ($warn) {
-+			print STDERR "Warning: $f references a file that doesn't exist: $fulref\n";
- 		} else {
- 			print STDERR "$f: $fulref\n";
- 		}
--- 
-2.21.0
+> > +	if (ret < 0)
+> > +		return -EINVAL;
+> > +
+> > +	spin_lock_init(&master->xferqueue.lock);
+> > +	INIT_LIST_HEAD(&master->xferqueue.list);
+> > +
+> > +	if (dma_set_mask(dev, DMA_BIT_MASK(33))) {
+> > +		dev_err(dev, "dma_set_mask return error.\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	master->clk_main = devm_clk_get(dev, "main");
+> > +	if (IS_ERR(master->clk_main)) {
+> > +		dev_err(dev, "cannot get main clock\n");
+> > +		return PTR_ERR(master->clk_main);
+> > +	}
+> > +	master->clk_dma = devm_clk_get(dev, "dma");
+> > +	if (IS_ERR(master->clk_dma)) {
+> > +		dev_err(dev, "cannot get dma clock\n");
+> > +		return PTR_ERR(master->clk_dma);
+> > +	}
+> > +
+> > +	master->clk_arb = devm_clk_get_optional(dev, "arb");
+> > +	if (IS_ERR(master->clk_arb))
+> > +		return PTR_ERR(master->clk_arb);
+> > +
+> > +	ret = mtk_i3c_master_clock_enable(master);
+> > +	if (ret) {
+> > +		dev_err(dev, "clock enable failed!\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	master->dev = dev;
+> > +	platform_set_drvdata(pdev, master);
+> > +
+> > +	ret = i3c_master_register(&master->mas_ctrler, dev,
+> > +				  &mtk_i3c_master_ops, false);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to add i3c bus to i3c core\n");
+> > +		mtk_i3c_master_clock_disable(master);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
 
 
