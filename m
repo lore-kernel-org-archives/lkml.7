@@ -2,129 +2,249 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95737C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED7C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7F624A3A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8E324A32
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3TkCEZ1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCjoVhgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfFDOff (ORCPT
+        id S1727741AbfFDOhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:35:35 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42305 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfFDOff (ORCPT
+        Tue, 4 Jun 2019 10:37:15 -0400
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:37995 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbfFDOhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:35:35 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t28so8801002lje.9;
-        Tue, 04 Jun 2019 07:35:34 -0700 (PDT)
+        Tue, 4 Jun 2019 10:37:13 -0400
+Received: by mail-pf1-f180.google.com with SMTP id a186so12108665pfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tqJBuqEPpW0/G/35TiXjjTPFxqh2poe5DD3UV/6cHjQ=;
-        b=A3TkCEZ1/wrrjxbM6ojxs2I7Y6JlyxMVz24B3dz7fTrWqFDyNE5coXTSPmLbda7n0V
-         hnA5dJeVw9fGH9kVPopJ+/imzouwPANdzmPrdXU4XbyiD9kMFEfuNviZhh01Ag6euVS5
-         d7oy0ZwVgilDk8KxpDiIFrEqFIkdeLaUHmiWK8tQ7/TrOBjKMkoJWscGKQYVstlLPD9e
-         TWpwop0muFEDS0yKqmxFdwv+KLAwoQEuKGDr/kvn8v+a1ck4K4B0iuc+6hdrItFZR5AA
-         HAsrXpJSqQY2SXCcWUVVbpUSlGLEIc1zsZulM6OkI9cpmoryD5vkFwYvwKWu5Ll6r1jB
-         o33Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=otDo9JTAjxXUIL0wLWnsf0TMryCbgHF9GFg/VIogBAs=;
+        b=kCjoVhgdZdcOvP3sZPyHTyIZ85jJnetO5gXKqNfILh57x1IyOoKasY2xq1+oWnqr9O
+         /r9Bm+1nN4LFlCXnZzsQli1WhvGWny5lhx5RBZbe6CGxAslWqt+0ZOTyuKugBd+ZmBV0
+         W6HakKVRh1X6jIsVuCT65dnHppF7xOh2ZvBQaVzLkjTuecQulX4y9Kj64AYCZmDVYHwf
+         gy/o5wgQm1NT4XDchxHwTFkv8BLAEjDwyqbYRrWa84wgkO0wPBlv1V/NE06sy7s8cyt4
+         ws4vpjKnoYQr6lTzKQ4k31QbHihv/TDa2QPSBgzz9P8tsNf4bVI28k/+cjVw/fxMyG6/
+         HZmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tqJBuqEPpW0/G/35TiXjjTPFxqh2poe5DD3UV/6cHjQ=;
-        b=omy1l0v6pxLjDAAwhOed2XGf2x8fBhtq0ldjTK+BkhK3agaBspAQ2U2s/leM5FLM9u
-         dYznRK2nTVlx1LA4KlDLSqs8wAI9/u2epuptG6OQPrfaEb4WtQqQOPjzO7rg65udAouR
-         vXx57E+g1LtJFg9LWHBwpDLTHv81E++XVfu4fv6jczPslpL34HzpN4nmAMrsmQNLkuYP
-         1WNeMu9rDLfhj7pKIfGh+H4kzZEmtwwYcjYWUo7Yh/JDHMB11GFNNXTCauxxHJP3z7iE
-         HNoutS0jCQb8Qy84JUCqV7Kk357V4NMvPRU+ZfPf8MkDPzsLZPyUeDYtDBp4pVvNTn9f
-         z2mg==
-X-Gm-Message-State: APjAAAW+t29QPFy9s+YaPY6MLai9LYGXetsJ1nhmsFNpXz5+ZJTVxRDh
-        oli8o35e8MWWk/vl1FoLar0s06Pe
-X-Google-Smtp-Source: APXvYqxNnkAa+XVdvuRuE4JkklgBcKCEczDGSWjqykwVTZIbQnnwH8TF9WyZitk3FfAOh4H1CUDHjw==
-X-Received: by 2002:a2e:9a19:: with SMTP id o25mr4677921lji.63.1559658933190;
-        Tue, 04 Jun 2019 07:35:33 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id c4sm3190976ljj.22.2019.06.04.07.35.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=otDo9JTAjxXUIL0wLWnsf0TMryCbgHF9GFg/VIogBAs=;
+        b=C20uYjLrCQZ4zf/423OXxIpsUokwjY0f5kqlVVOJemVdrRlvqDIICU0NGSRGpuOVc3
+         Lqi7ofb397eRh6+uaoNfXrZF4x92IiszZ7LCGS8SVE7/wniwu010AJok4WBM5aK1qxev
+         wzqVU4rXjrmk/a4eie3SGpy8ZdwQfJmaMVpayxytVf4WuZMR7p6uXBj3azulCtPl21JN
+         hYJ35Q7fn9FamgfAv91RdigYEjT2kG71EB6HUmVVCY9P1AmplxKl/Jg0B7lyIjgKyJ7J
+         JVHK7l3k9huFjQzXxW2fBiz+HFlTK9ytW9XagIB//D38ZQ793yypvhpBl5lJDfBKwptk
+         xsvQ==
+X-Gm-Message-State: APjAAAUqQGbXPPn3WQ3MmhXqwDqwF+/A4i6hzuLcvPs1lZnSoMiFf46t
+        7OJ+AGHoceLrGttXUaSn8n8=
+X-Google-Smtp-Source: APXvYqztDa4a+0/SfVTcijqZh9u/FsWU/PgCbhPoSykbGim4IEpdZHtUKjIpGmXvgwX9fgyFt3scZQ==
+X-Received: by 2002:a17:90a:4814:: with SMTP id a20mr38088311pjh.62.1559659032979;
+        Tue, 04 Jun 2019 07:37:12 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id m6sm24156872pjl.18.2019.06.04.07.37.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:35:32 -0700 (PDT)
-Subject: Re: [PATCH v4 15/16] PM / devfreq: tegra: Rename tegra-devfreq.c to
- tegra30-devfreq.c
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-16-digetx@gmail.com> <20190604112323.GO16519@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f96a88fd-5d99-12e8-abbd-82c32d60fab8@gmail.com>
-Date:   Tue, 4 Jun 2019 17:35:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190604112323.GO16519@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 04 Jun 2019 07:37:12 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v2 1/3] mtd: nand: raw: brcmnand: Refactored code to introduce helper functions
+Date:   Tue,  4 Jun 2019 10:36:29 -0400
+Message-Id: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.06.2019 14:23, Thierry Reding пишет:
-> On Thu, May 02, 2019 at 02:38:14AM +0300, Dmitry Osipenko wrote:
->> In order to reflect that driver serves NVIDIA Tegra30 and later SoC
->> generations, let's rename the driver's source file to "tegra30-devfreq.c".
->> This will make driver files to look more consistent after addition of a
->> driver for Tegra20.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/Makefile                               | 2 +-
->>  drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} | 0
->>  2 files changed, 1 insertion(+), 1 deletion(-)
->>  rename drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} (100%)
->>
->> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->> index 32b8d4d3f12c..47e5aeeebfd1 100644
->> --- a/drivers/devfreq/Makefile
->> +++ b/drivers/devfreq/Makefile
->> @@ -10,7 +10,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
->>  # DEVFREQ Drivers
->>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
->>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
->> -obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
->> +obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
-> 
-> Technically this changes the name of the driver. Sometimes boot or other
-> scripts rely on those names. Perhaps a better way of keeping backwards-
-> compatibility would be to do:
-> 
-> 	obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
-> 	tegra-devfreq-y				+= tegra30-devfreq.o
-> 
-> That way you can later on just add the tegra20-devfreq.o to that driver
-> as well and have them both ship in one .ko.
+Refactored NAND ECC and CMD address configuration code to use helper
+functions.
 
-Combining two drivers into a single kernel object certainly doesn't work
-("multiple definition of `init_module'" error, etc).
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 100 +++++++++++++++++++------------
+ 1 file changed, 62 insertions(+), 38 deletions(-)
 
-Indeed, this changes the name of the driver. It should be fine as long
-as it doesn't hurt anybody, so what about to keep this change as-is for
-now and wait for complains? I promise to make a revert if this will
-cause real problems for anyone. Let's be realistic, there should be a
-very little chance that somebody will notice this change. ACK?
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index ce0b8ff..c534ea8 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -588,6 +588,54 @@ static inline void brcmnand_write_fc(struct brcmnand_controller *ctrl,
+ 	__raw_writel(val, ctrl->nand_fc + word * 4);
+ }
+ 
++static void brcmnand_clear_ecc_addr(struct brcmnand_controller *ctrl)
++{
++
++	/* Clear error addresses */
++	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
++	brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
++	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
++	brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
++}
++
++static u64 brcmnand_get_uncorrecc_addr(struct brcmnand_controller *ctrl)
++{
++	u64 err_addr;
++
++	err_addr = brcmnand_read_reg(ctrl, BRCMNAND_UNCORR_ADDR);
++	err_addr |= ((u64)(brcmnand_read_reg(ctrl,
++					     BRCMNAND_UNCORR_EXT_ADDR)
++					     & 0xffff) << 32);
++
++	return err_addr;
++}
++
++static u64 brcmnand_get_correcc_addr(struct brcmnand_controller *ctrl)
++{
++	u64 err_addr;
++
++	err_addr = brcmnand_read_reg(ctrl, BRCMNAND_CORR_ADDR);
++	err_addr |= ((u64)(brcmnand_read_reg(ctrl,
++					     BRCMNAND_CORR_EXT_ADDR)
++					     & 0xffff) << 32);
++
++	return err_addr;
++}
++
++static void brcmnand_set_cmd_addr(struct mtd_info *mtd, u64 addr)
++{
++	struct nand_chip *chip =  mtd_to_nand(mtd);
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
++
++	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
++			   (host->cs << 16) | ((addr >> 32) & 0xffff));
++	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
++	brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
++			   lower_32_bits(addr));
++	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
++}
++
+ static inline u16 brcmnand_cs_offset(struct brcmnand_controller *ctrl, int cs,
+ 				     enum brcmnand_cs_reg reg)
+ {
+@@ -1213,9 +1261,12 @@ static void brcmnand_send_cmd(struct brcmnand_host *host, int cmd)
+ {
+ 	struct brcmnand_controller *ctrl = host->ctrl;
+ 	int ret;
++	u64 cmd_addr;
++
++	cmd_addr = brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
++
++	dev_dbg(ctrl->dev, "send native cmd %d addr 0x%llx\n", cmd, cmd_addr);
+ 
+-	dev_dbg(ctrl->dev, "send native cmd %d addr_lo 0x%x\n", cmd,
+-		brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS));
+ 	BUG_ON(ctrl->cmd_pending != 0);
+ 	ctrl->cmd_pending = cmd;
+ 
+@@ -1374,12 +1425,7 @@ static void brcmnand_cmdfunc(struct nand_chip *chip, unsigned command,
+ 	if (!native_cmd)
+ 		return;
+ 
+-	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+-		(host->cs << 16) | ((addr >> 32) & 0xffff));
+-	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+-	brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS, lower_32_bits(addr));
+-	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
+-
++	brcmnand_set_cmd_addr(mtd, addr);
+ 	brcmnand_send_cmd(host, native_cmd);
+ 	brcmnand_waitfunc(chip);
+ 
+@@ -1597,20 +1643,10 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+ 	struct brcmnand_controller *ctrl = host->ctrl;
+ 	int i, j, ret = 0;
+ 
+-	/* Clear error addresses */
+-	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
+-	brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
+-	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
+-	brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
+-
+-	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+-			(host->cs << 16) | ((addr >> 32) & 0xffff));
+-	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
++	brcmnand_clear_ecc_addr(ctrl);
+ 
+ 	for (i = 0; i < trans; i++, addr += FC_BYTES) {
+-		brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
+-				   lower_32_bits(addr));
+-		(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
++		brcmnand_set_cmd_addr(mtd, addr);
+ 		/* SPARE_AREA_READ does not use ECC, so just use PAGE_READ */
+ 		brcmnand_send_cmd(host, CMD_PAGE_READ);
+ 		brcmnand_waitfunc(chip);
+@@ -1630,21 +1666,15 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+ 					host->hwcfg.sector_size_1k);
+ 
+ 		if (!ret) {
+-			*err_addr = brcmnand_read_reg(ctrl,
+-					BRCMNAND_UNCORR_ADDR) |
+-				((u64)(brcmnand_read_reg(ctrl,
+-						BRCMNAND_UNCORR_EXT_ADDR)
+-					& 0xffff) << 32);
++			*err_addr = brcmnand_get_uncorrecc_addr(ctrl);
++
+ 			if (*err_addr)
+ 				ret = -EBADMSG;
+ 		}
+ 
+ 		if (!ret) {
+-			*err_addr = brcmnand_read_reg(ctrl,
+-					BRCMNAND_CORR_ADDR) |
+-				((u64)(brcmnand_read_reg(ctrl,
+-						BRCMNAND_CORR_EXT_ADDR)
+-					& 0xffff) << 32);
++			*err_addr = brcmnand_get_correcc_addr(ctrl);
++
+ 			if (*err_addr)
+ 				ret = -EUCLEAN;
+ 		}
+@@ -1711,7 +1741,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+ 	dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
+ 
+ try_dmaread:
+-	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_COUNT, 0);
++	brcmnand_clear_ecc_addr(ctrl);
+ 
+ 	if (has_flash_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
+ 		err = brcmnand_dma_trans(host, addr, buf, trans * FC_BYTES,
+@@ -1858,15 +1888,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
+ 		goto out;
+ 	}
+ 
+-	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
+-			(host->cs << 16) | ((addr >> 32) & 0xffff));
+-	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
+-
+ 	for (i = 0; i < trans; i++, addr += FC_BYTES) {
+ 		/* full address MUST be set before populating FC */
+-		brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
+-				   lower_32_bits(addr));
+-		(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
++		brcmnand_set_cmd_addr(mtd, addr);
+ 
+ 		if (buf) {
+ 			brcmnand_soc_data_bus_prepare(ctrl->soc, false);
+-- 
+1.9.0.138.g2de3478
+
