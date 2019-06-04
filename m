@@ -2,91 +2,63 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46840C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A50C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA00E207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559674958;
-	bh=OHd6h6SqmatjLqX221rCnsqaDitqTk1LE3dD1iixchA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SCty6o2I5sG1ZSgH9OSEhJBI1QzuCAWQFdBzMLyzyI/d1QJ4n0vCsymnx4w7KG3tJ
-	 1LpkhNcbYxF60wC443Z7nuSZQVW6QM9b3SS5EyFqH3hkkFwmpxNO1QfBYHzkVpt5UH
-	 w8DvODBBUM4U/Xgf9b9g+cjDOEbl0hGOptOgF1cc=
+	by mail.kernel.org (Postfix) with ESMTP id 438062070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfFDTCh (ORCPT
+        id S1726317AbfFDTIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 15:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56680 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 15:08:39 -0400
+Received: from ms.lwn.net ([45.79.88.28]:56986 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbfFDTCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 15:02:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725933AbfFDTIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 15:08:39 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F622075C;
-        Tue,  4 Jun 2019 19:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559674957;
-        bh=OHd6h6SqmatjLqX221rCnsqaDitqTk1LE3dD1iixchA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HzDsQh8fhheFUMlik+jJwVJALLlFygf/JIbS8DkzuCyfzt+qdBxN2BbmZJcXac/Li
-         u8x7K8VXEsFoq1p6801Qgo+njBOzvs89tzpoOOw6fsJNsdyxxBkBApAe84o4NGp09x
-         1NkbtxzTs5KBL4oqaxEdNNv4IOLFylD+dCxkCm48=
-Date:   Tue, 4 Jun 2019 21:02:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     Jiri Slaby <jslaby@suse.com>, Gen Zhang <blackgod016574@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "consolemap: Fix a memory leaking bug in
- drivers/tty/vt/consolemap.c"
-Message-ID: <20190604190234.GA10572@kroah.com>
-References: <20190604180039.gai2phwdxn7ias6n@decadent.org.uk>
+        by ms.lwn.net (Postfix) with ESMTPSA id EFEA07DE;
+        Tue,  4 Jun 2019 19:08:38 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 13:08:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
+Message-ID: <20190604130837.24ea1d7b@lwn.net>
+In-Reply-To: <20190601154248.GA17800@mit.edu>
+References: <20190530135317.3c8d0d7b@lwn.net>
+        <20190601154248.GA17800@mit.edu>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604180039.gai2phwdxn7ias6n@decadent.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:00:39PM +0100, Ben Hutchings wrote:
-> This reverts commit 84ecc2f6eb1cb12e6d44818f94fa49b50f06e6ac.
-> 
-> con_insert_unipair() is working with a sparse 3-dimensional array:
-> 
-> - p->uni_pgdir[] is the top layer
-> - p1 points to a middle layer
-> - p2 points to a bottom layer
-> 
-> If it needs to allocate a new middle layer, and then fails to allocate
-> a new bottom layer, it would previously free only p2, and now it frees
-> both p1 and p2.  But since the new middle layer was already registered
-> in the top layer, it was not leaked.
-> 
-> However, if it looks up an *existing* middle layer and then fails to
-> allocate a bottom layer, it now frees both p1 and p2 but does *not*
-> free any other bottom layers under p1.  So it *introduces* a memory
-> leak.
-> 
-> The error path also cleared the wrong index in p->uni_pgdir[],
-> introducing a use-after-free.
-> 
-> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+On Sat, 1 Jun 2019 11:42:48 -0400
+"Theodore Ts'o" <tytso@mit.edu> wrote:
 
-Now applied, thanks.
+> Finally, I'm bit concerned about anything which states absolutes,
+> because there are people who tend to be real stickler for the rules,
+> and if they see something stated in absolute terms, they fail to
+> understand that there are exceptions that are well understood, and in
+> use for years before the existence of the document which is trying to
+> codify best practices.
 
-Gen, please be careful with these types of "fixes"...
+Hence the "there are exceptions" text at the bottom of the document :)
 
-thanks,
+Anyway, I'll rework it to try to take your comments into account.  Maybe
+we should consistently say "rebasing" for changing the parent commit of a
+patch set, and "history modification" for the other tricks...?
 
-greg k-h
+Thanks for taking a look,
+
+jon
