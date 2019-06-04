@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1512FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B081C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDECA20859
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FBB20862
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690612;
-	bh=tcFeKTFL4do6VJHEWx2rhqnrGDN0pPB/z6+w4Ik1wxU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1/YFy9rXyePJZ2PoLQUQx9bgEmWv3Sd3a9MZMbiLrWoM6GmTOZiKitio+9nDl0Z9A
-	 nW0rTQSgYplf6/MYQdOuVYo6WCkm+oxUdR5QcxbLiGU1QJs5Ws7TTUWrUU3wBL4jDY
-	 HnHCc2Ufc4W8d58FE6NCT69m4IrxHAOHD1nwSkPE=
+	s=default; t=1559690620;
+	bh=GA6AWIZ/drNkUqAwP/nG9DHIRKh7kxZE5uDCfLBiBLU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=K7oFZQYYk/533mkl8tcAa6bQt+1WYRtiwwDqW4FO/5TYg0pRe6cu9kvCUHDv65cki
+	 yrLtScooqZYkHGHDb7/jPopPu2QoVW58Ck9nCL8pRBuQwRul/6tIFe/b2VVMfTEs+N
+	 MaBXi0pK9z0JkSVhxONHNDTQ6OGWUPr/OjX+cf3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfFDXXc (ORCPT
+        id S1727332AbfFDXXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfFDXXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:09 -0400
+        id S1727321AbfFDXXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CFB120863;
-        Tue,  4 Jun 2019 23:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1167D20859;
+        Tue,  4 Jun 2019 23:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690588;
-        bh=tcFeKTFL4do6VJHEWx2rhqnrGDN0pPB/z6+w4Ik1wxU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhdJN/SaNpc/R0ethCkkir3jggRLg3aGm2ROJnPggE7h15CC+AaWoumrp8Zt+3EJa
-         LHysd5xwcXIsvn8vlhxT8m/jhWMhDMhzpn8wA8plpydBtyDHuqTLs2OVx6sdNtX+aW
-         bOQnu09Ur9PTGqVZB2VEDTm2qM5Ekkz6e/Toim7k=
+        s=default; t=1559690615;
+        bh=GA6AWIZ/drNkUqAwP/nG9DHIRKh7kxZE5uDCfLBiBLU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Xkd850MSOxAqQuArNtFSMsAeSkLGPC9Ywjn66T6qfXEt4fCFKeRjmZSdf7aAjYeQo
+         leM+xgqzvKHNZZxCF9Ppb5IULoeCBwUU4Mw+9ib1iK7omMcYkj+p7a/pfdpz2V7t62
+         LrvmLvWT/hwV1QpZp3RMCwZMuT/WZPn7//CkMBP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 37/60] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
-Date:   Tue,  4 Jun 2019 19:21:47 -0400
-Message-Id: <20190604232212.6753-37-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/36] x86/uaccess, kcov: Disable stack protector
+Date:   Tue,  4 Jun 2019 19:22:56 -0400
+Message-Id: <20190604232333.7185-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
-References: <20190604232212.6753-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
+[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
 
-Currently an int is being shifted and the result is being cast to a u64
-which leads to undefined behaviour if the shift is more than 31 bits. Fix
-this by casting the integer value 1 to u64 before the shift operation.
+New tooling noticed this mishap:
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
+  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+
+All the other instrumentation (KASAN,UBSAN) also have stack protector
+disabled.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-index 039328d9ef13..30e6d78e82f0 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-@@ -830,7 +830,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
- 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
- 			(u64)err_entry->data.err_warn_bitmap_lo;
- 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
--			if (err_warn_bit_map & (u64) (1 << i)) {
-+			if (err_warn_bit_map & ((u64)1 << i)) {
- 				err_warn = i;
- 				break;
- 			}
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 7a63d567fdb5..df5e3ca30acd 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -30,6 +30,7 @@ KCOV_INSTRUMENT_extable.o := n
+ # Don't self-instrument.
+ KCOV_INSTRUMENT_kcov.o := n
+ KASAN_SANITIZE_kcov.o := n
++CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ 
+ # cond_syscall is currently not LTO compatible
+ CFLAGS_sys_ni.o = $(DISABLE_LTO)
 -- 
 2.20.1
 
