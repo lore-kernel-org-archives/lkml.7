@@ -2,93 +2,205 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD82C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E8FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A0024A93
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0C924A90
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RtBWZujo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X8Atb4xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfFDHUF (ORCPT
+        id S1726968AbfFDHUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:20:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34988 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfFDHUF (ORCPT
+        Tue, 4 Jun 2019 03:20:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45131 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfFDHUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:20:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so12147913pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:20:04 -0700 (PDT)
+        Tue, 4 Jun 2019 03:20:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id s11so12113093pfm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=cW54g37zzSz4GWvh5hRmHVol1ElNCqsUtdX3i5TDki8=;
-        b=RtBWZujoWwW3pFIZuHpnWrxTc8YvUZAJEdbpx9IY/AVKKprlylZPo4sQDdv+iGW4f3
-         BD2uhbla9+ITaG+pHmSjpvZ6jmb9i7Shw7kH3FG1mQIuzf6Lc60QAFndAoaY80zc7gQJ
-         b6BcwbyIqhZa1t93ZOHF4wBec3eumarIxn2Y44vVRphfZg4giYiVNtIVx84AMWaSVzuX
-         PFJT4EEWaOVsk+nBA8U2nC7/MZsLgO3a/rr5LOrZjkeCAcCqHViQKrKWGsR2i4iWgU37
-         21RwAgEHaunjZ0eB5GI7IrxjfCr8qk8hEo4yHZAjJoUbLTjoKrKTC2mGKsZ5u1aX6TLe
-         UlkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=D3XWMIqhXFSeKwJRGJ6IYznTDgg0AaloPMfGvuC80wY=;
+        b=X8Atb4xA74DTxVSx/Ukx/fVa0wQKoezZtlxqvBf96Cf95zR2X1FfRXwJesGaQZdL81
+         Ki3C59Rptp13xpbiX/YwbAQriKHHYOP8RB57asRp25JOM9bmtIgLSecC3+xGNnzsRB/h
+         Xr8W/s+GvDudZP7kUJBeUMf4LPBBKOwKQvyhcIF2pPwUc4M0COinI0f0F9NFxjWqY2y3
+         KsN2qiYtNfie3Dyb5EO7qO13QROoyWkuFLfEc7m74O01zBpWkQw0GTg2EdHfBiZeD+d9
+         cZDV5H3fJjtubbILssEhG3IOyBv9mAKLCWwsDVQupXFYhQ5+6TLcCZRQv7dhqVJGWL6z
+         8CAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cW54g37zzSz4GWvh5hRmHVol1ElNCqsUtdX3i5TDki8=;
-        b=Mc+SOTWl/hWBUrPURgBneXgT4aXCCiIqM6VfYq2RKGZFaBKoKs3WduqdHK5GakqQVb
-         DvPS7ZvQauJX08+ov34+9QVIEBWYBWD44kDy/6/G5EwjJjtVy+XnEI1fnb+6tXSpiEAv
-         hle5pkJx+E7BUKW1QrTs6aBV7cb7u1lwRyd68tgzBygua0sU1tnGvI8wQ4rOZ9EUqoj0
-         gU5NRU6ExKSYzrmOnF/dc9G5YI2nD6HkoGRXuLxeW3NcwwFWIEt9yWhShnwRTZF8Dxg/
-         9hHOeWdOFBRpLrRPPhhvQ3KbROB5hfqzOZxEUlkqQdug0ptuL4Bcq+lQfb2WAlpbLHRO
-         R0Fg==
-X-Gm-Message-State: APjAAAXYfeOmq+Ystj84h6vN/72iOp555oqHYfCqx5a2euhGes8OO0/L
-        WpbwhSNgU6gcLIg24IqMv0YM1Q==
-X-Google-Smtp-Source: APXvYqx5aLQZoHyol1PmiF+AvixuAC4swlY3kkqgRqnYCzZ0I1A/uWV/nxPZxmDkkkzGfx3kB+M9PQ==
-X-Received: by 2002:a17:90b:8d3:: with SMTP id ds19mr34718088pjb.135.1559632804480;
-        Tue, 04 Jun 2019 00:20:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=D3XWMIqhXFSeKwJRGJ6IYznTDgg0AaloPMfGvuC80wY=;
+        b=Fi2uB3NQqDGnDKXEhWS2DmH8AhU47Xb9mIsb0f5Mb4lcxtkLDgSP8a6l7TGPId3Sgl
+         uO6nJyymvn2qX1peejxhy0hxw/tkWddmFNCdkbFvCHLxthV8SXPNJnbe0RfitXTegbOS
+         NkNumnXEP9fvQDx+67Sax81ArGJl1//n+flMYj4aNEcNKR442g4/abAq0VNtA6HZnO5t
+         o9oq77fWasVvbc6qNFKCNgU/9svB21vzRPocxJ5lJYI3Jjwyyl/C9PsK2VtylnZURpEZ
+         gJTIhtKFHPOKy2ZPAfcuEWFH83htgucQdiB2LLp9AKt+78dqgv5fdRchraxbMr+1V5Yd
+         9G5w==
+X-Gm-Message-State: APjAAAUZOQwtX7cYx3BYYPGwOsb88EQpCiojSC4L7g9oOr7cj4rO+w1Z
+        d5POZJ6ER7opylgQlBpOqcJvMw==
+X-Google-Smtp-Source: APXvYqwIp0yPQVLkTzYfOYL8foJhru05lDR4yF3ReVF/y76RzLLNdJInPRCaoMp0xsnrSEllMGMDiQ==
+X-Received: by 2002:a17:90a:9504:: with SMTP id t4mr35609032pjo.100.1559632806648;
+        Tue, 04 Jun 2019 00:20:06 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d6sm17747446pgv.4.2019.06.04.00.20.03
+        by smtp.gmail.com with ESMTPSA id d6sm17747446pgv.4.2019.06.04.00.20.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 00:20:04 -0700 (PDT)
+        Tue, 04 Jun 2019 00:20:06 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [PATCH 0/3] (Qualcomm) UFS device reset support
-Date:   Tue,  4 Jun 2019 00:19:58 -0700
-Message-Id: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+Subject: [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Date:   Tue,  4 Jun 2019 00:20:00 -0700
+Message-Id: <20190604072001.9288-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
-acquire and toggle this and then adds this to SDM845 MTP.
+Acquire the device-reset GPIO and toggle this to reset the UFS device
+during initialization and host reset.
 
-Bjorn Andersson (3):
-  pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-  scsi: ufs: Allow resetting the UFS device
-  arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 44 +++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshcd.h |  4 ++++
+ 2 files changed, 48 insertions(+)
 
- .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  |  2 +-
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  2 +
- drivers/pinctrl/qcom/pinctrl-sdm845.c         | 12 ++---
- drivers/scsi/ufs/ufshcd.c                     | 44 +++++++++++++++++++
- drivers/scsi/ufs/ufshcd.h                     |  4 ++
- 5 files changed, 57 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 8c1c551f2b42..951a0efee536 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -42,6 +42,7 @@
+ #include <linux/nls.h>
+ #include <linux/of.h>
+ #include <linux/bitfield.h>
++#include <linux/gpio/consumer.h>
+ #include "ufshcd.h"
+ #include "ufs_quirks.h"
+ #include "unipro.h"
+@@ -6104,6 +6105,25 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 	return err;
+ }
+ 
++/**
++ ufshcd_device_reset() - toggle the (optional) device reset line
++ * @hba: per-adapter instance
++ *
++ * Toggles the (optional) reset line to reset the attached device.
++ */
++static void ufshcd_device_reset(struct ufs_hba *hba)
++{
++	/*
++	 * The USB device shall detect reset pulses of 1us, sleep for 10us to
++	 * be on the safe side.
++	 */
++	gpiod_set_value_cansleep(hba->device_reset, 1);
++	usleep_range(10, 15);
++
++	gpiod_set_value_cansleep(hba->device_reset, 0);
++	usleep_range(10, 15);
++}
++
+ /**
+  * ufshcd_host_reset_and_restore - reset and restore host controller
+  * @hba: per-adapter instance
+@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ 	int retries = MAX_HOST_RESET_RETRIES;
+ 
+ 	do {
++		/* Reset the attached device */
++		ufshcd_device_reset(hba);
++
+ 		err = ufshcd_host_reset_and_restore(hba);
+ 	} while (err && --retries);
+ 
+@@ -7355,6 +7378,18 @@ static void ufshcd_variant_hba_exit(struct ufs_hba *hba)
+ 	ufshcd_vops_exit(hba);
+ }
+ 
++static int ufshcd_init_device_reset(struct ufs_hba *hba)
++{
++	hba->device_reset = devm_gpiod_get_optional(hba->dev, "device-reset",
++						    GPIOD_OUT_HIGH);
++	if (IS_ERR(hba->device_reset)) {
++		dev_err(hba->dev, "failed to acquire reset gpio: %ld\n",
++			PTR_ERR(hba->device_reset));
++	}
++
++	return PTR_ERR_OR_ZERO(hba->device_reset);
++}
++
+ static int ufshcd_hba_init(struct ufs_hba *hba)
+ {
+ 	int err;
+@@ -7394,9 +7429,15 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
+ 	if (err)
+ 		goto out_disable_vreg;
+ 
++	err = ufshcd_init_device_reset(hba);
++	if (err)
++		goto out_disable_variant;
++
+ 	hba->is_powered = true;
+ 	goto out;
+ 
++out_disable_variant:
++	ufshcd_vops_setup_regulators(hba, false);
+ out_disable_vreg:
+ 	ufshcd_setup_vreg(hba, false);
+ out_disable_clks:
+@@ -8290,6 +8331,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 		goto exit_gating;
+ 	}
+ 
++	/* Reset the attached device */
++	ufshcd_device_reset(hba);
++
+ 	/* Host controller enable */
+ 	err = ufshcd_hba_enable(hba);
+ 	if (err) {
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index ecfa898b9ccc..d8be67742168 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -72,6 +72,8 @@
+ #define UFSHCD "ufshcd"
+ #define UFSHCD_DRIVER_VERSION "0.2"
+ 
++struct gpio_desc;
++
+ struct ufs_hba;
+ 
+ enum dev_cmd_type {
+@@ -706,6 +708,8 @@ struct ufs_hba {
+ 
+ 	struct device		bsg_dev;
+ 	struct request_queue	*bsg_queue;
++
++	struct gpio_desc *device_reset;
+ };
+ 
+ /* Returns true if clocks can be gated. Otherwise false */
 -- 
 2.18.0
 
