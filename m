@@ -2,213 +2,90 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA01BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7CBC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF10924A57
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A57924A57
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ItdVXloc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfFDK6y (ORCPT
+        id S1727678AbfFDK7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:58:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62569 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfFDK6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:58:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 03:58:51 -0700
-X-ExtLoop1: 1
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga008.jf.intel.com with ESMTP; 04 Jun 2019 03:58:47 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH net-next v6 5/5] net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
-Date:   Wed,  5 Jun 2019 02:58:56 +0800
-Message-Id: <1559674736-2190-6-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
-References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+        Tue, 4 Jun 2019 06:59:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35720 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfFDK7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:59:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qzOjyBSpF7RZNnNR9zgoOURs0pNhwQE02Z05N1I+GE8=; b=ItdVXloco/vqVF2c61wLS40uf
+        YoCfqtnz9ks9UgkIDCA/7rJWTNljX+lKTlG79Vt24gCXuMqa7Ve8u+Ps2ySshFf3SOREsO2x6YtBC
+        pgVWQrfBW97hGusznuTbHpaRCTz3PyR9WjXVpXTrg8Hk4udfzuLjA/12ek+Xgxh1/Lkn3ebqnwAa0
+        B4o+m0hYBCZYyNg9K6RZHVIlIziU/PcZK6CFxD7m/C8eNz26PHdCBRxzKFZ5XWqRgunU4fkJvoc+g
+        NFME0Z8h1NGQL7vSstDdmCz0H3RGYL0tLRi4Xo1EFRsDDVJu+Jb+pHid1xOF16qjwClhB6N0teF1n
+        BqeXmf1rg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hY79X-0003uC-M5; Tue, 04 Jun 2019 10:58:51 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D14F920761B69; Tue,  4 Jun 2019 12:58:48 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 12:58:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190604105848.GL3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520205918.22251-16-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added EHL SGMII 1Gbps PCI ID. Different MII and speed will have
-different PCI ID.
+On Mon, May 20, 2019 at 04:59:14PM -0400, Waiman Long wrote:
+> +static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
+> +					      long last_rowner)
+> +{
+> +	long owner = atomic_long_read(&sem->owner);
+> +
+> +	if (!(owner & RWSEM_READER_OWNED))
+> +		return false;
+> +
+> +	owner	    &= ~RWSEM_OWNER_FLAGS_MASK;
+> +	last_rowner &= ~RWSEM_OWNER_FLAGS_MASK;
+> +	if ((owner != last_rowner) && rwsem_try_read_lock_unqueued(sem)) {
 
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 111 +++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+just because I'm struggling with sleep deprivation and the big picture
+isn't making sense,.. you can write that like:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 7cbc01f316fa..1bdf716bfcbb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -23,6 +23,7 @@
- #include <linux/dmi.h>
- 
- #include "stmmac.h"
-+#include "dwxpcs.h"
- 
- /*
-  * This struct is used to associate PCI Function of MAC controller on a board,
-@@ -118,6 +119,113 @@ static int stmmac_default_data(struct pci_dev *pdev,
- 	.setup = stmmac_default_data,
- };
- 
-+static int ehl_common_data(struct pci_dev *pdev,
-+			   struct plat_stmmacenet_data *plat)
-+{
-+	int i;
-+
-+	plat->bus_id = 1;
-+	plat->phy_addr = 0;
-+	plat->clk_csr = 5;
-+	plat->has_gmac = 0;
-+	plat->has_gmac4 = 1;
-+	plat->xpcs_phy_addr = 0x16;
-+	plat->pcs_mode = AN_CTRL_PCS_MD_C37_SGMII;
-+	plat->force_sf_dma_mode = 0;
-+	plat->tso_en = 1;
-+
-+	plat->rx_queues_to_use = 8;
-+	plat->tx_queues_to_use = 8;
-+	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
-+
-+	for (i = 0; i < plat->rx_queues_to_use; i++) {
-+		plat->rx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+		plat->rx_queues_cfg[i].chan = i;
-+
-+		/* Disable Priority config by default */
-+		plat->rx_queues_cfg[i].use_prio = false;
-+
-+		/* Disable RX queues routing by default */
-+		plat->rx_queues_cfg[i].pkt_route = 0x0;
-+	}
-+
-+	for (i = 0; i < plat->tx_queues_to_use; i++) {
-+		plat->tx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+
-+		/* Disable Priority config by default */
-+		plat->tx_queues_cfg[i].use_prio = false;
-+	}
-+
-+	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WRR;
-+	plat->tx_queues_cfg[0].weight = 0x09;
-+	plat->tx_queues_cfg[1].weight = 0x0A;
-+	plat->tx_queues_cfg[2].weight = 0x0B;
-+	plat->tx_queues_cfg[3].weight = 0x0C;
-+	plat->tx_queues_cfg[4].weight = 0x0D;
-+	plat->tx_queues_cfg[5].weight = 0x0E;
-+	plat->tx_queues_cfg[6].weight = 0x0F;
-+	plat->tx_queues_cfg[7].weight = 0x10;
-+
-+	plat->mdio_bus_data->phy_reset = NULL;
-+	plat->mdio_bus_data->phy_mask = 0;
-+
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+	plat->dma_cfg->fixed_burst = 0;
-+	plat->dma_cfg->mixed_burst = 0;
-+	plat->dma_cfg->aal = 0;
-+
-+	plat->axi = devm_kzalloc(&pdev->dev, sizeof(*plat->axi),
-+				 GFP_KERNEL);
-+	if (!plat->axi)
-+		return -ENOMEM;
-+
-+	plat->axi->axi_lpi_en = 0;
-+	plat->axi->axi_xit_frm = 0;
-+	plat->axi->axi_wr_osr_lmt = 1;
-+	plat->axi->axi_rd_osr_lmt = 1;
-+	plat->axi->axi_blen[0] = 4;
-+	plat->axi->axi_blen[1] = 8;
-+	plat->axi->axi_blen[2] = 16;
-+
-+	/* Set default value for multicast hash bins */
-+	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-+
-+	/* Set default value for unicast filter entries */
-+	plat->unicast_filter_entries = 1;
-+
-+	/* Set the maxmtu to a default of JUMBO_LEN */
-+	plat->maxmtu = JUMBO_LEN;
-+
-+	/* Set 32KB fifo size as the advertised fifo size in
-+	 * the HW features is not the same as the HW implementation
-+	 */
-+	plat->tx_fifo_size = 32768;
-+	plat->rx_fifo_size = 32768;
-+
-+	return 0;
-+}
-+
-+static int ehl_sgmii1g_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	int ret;
-+
-+	/* Set common default data first */
-+	ret = ehl_common_data(pdev, plat);
-+	if (ret)
-+		return ret;
-+
-+	plat->interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->has_xpcs = 1;
-+
-+	return 0;
-+}
-+
-+static struct stmmac_pci_info ehl_sgmii1g_pci_info = {
-+	.setup = ehl_sgmii1g_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -290,6 +398,7 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 	res.addr = pcim_iomap_table(pdev)[i];
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
-+	res.xpcs_irq = 0;
- 
- 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
- }
-@@ -359,6 +468,7 @@ static int __maybe_unused stmmac_pci_resume(struct device *dev)
- 
- #define STMMAC_QUARK_ID  0x0937
- #define STMMAC_DEVICE_ID 0x1108
-+#define STMMAC_EHL_SGMII1G_ID   0x4b31
- 
- #define STMMAC_DEVICE(vendor_id, dev_id, info)	{	\
- 	PCI_VDEVICE(vendor_id, dev_id),			\
-@@ -369,6 +479,7 @@ static int __maybe_unused stmmac_pci_resume(struct device *dev)
- 	STMMAC_DEVICE(STMMAC, STMMAC_DEVICE_ID, stmmac_pci_info),
- 	STMMAC_DEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_MAC, stmmac_pci_info),
- 	STMMAC_DEVICE(INTEL, STMMAC_QUARK_ID, quark_pci_info),
-+	STMMAC_DEVICE(INTEL, STMMAC_EHL_SGMII1G_ID, ehl_sgmii1g_pci_info),
- 	{}
- };
- 
--- 
-1.9.1
+	((owner ^ last_rowner) & ~RWSEM_OWNER_FLAGS_MASK)
 
+> +		lockevent_inc(rwsem_opt_rlock2);
+> +		lockevent_add(rwsem_opt_fail, -1);
+> +		return true;
+> +	}
+> +	return false;
+> +}
