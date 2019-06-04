@@ -2,132 +2,106 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D963DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2847C04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B737925A4B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36BC25A4B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:54:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JRSJhPLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFDAxc (ORCPT
+        id S1726536AbfFDAyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:53:32 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:23797 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfFDAxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:53:32 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x540qiIv045850;
-        Tue, 4 Jun 2019 08:52:44 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 6E1518B48C5379D5623A;
-        Tue,  4 Jun 2019 08:52:44 +0800 (CST)
-In-Reply-To: <20190603130235.GW4797@dell>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw> <20190603130235.GW4797@dell>
-To:     "Lee Jones" <lee.jones@linaro.org>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
-        mark.rutland@arm.com, miquel.raynal@bootlin.com,
-        robh+dt@kernel.org, sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH v13 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+        Mon, 3 Jun 2019 20:54:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60137 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfFDAyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 20:54:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45HtjR1w6dz9s6w;
+        Tue,  4 Jun 2019 10:54:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559609659;
+        bh=29Af5Da3Gy9HkvXtsrJqHRst1Vyy8QIp5xkkLN5QRro=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JRSJhPLnMgPZMHpKhjCR8wUtl35ScCGyV5h1aHqk1Od2Fqfj7mbSnX9gI9tseyLOZ
+         4qwcFbSfCjEl9hm1+yLxZox73SiCtdH72LM0uO+lfUx/Gg/Q1VtGZb1/EL6qEYSngN
+         rDA2L9xehm/tpwOmLajGBfQ7OBIAuru0ZGP7Zdc/g+OWMWY9DF2UXeqJ3CcWjtBwVv
+         /i6DclixJLjr0gfDr7mpBhMFEGgWwb28n3L9JvUMWb9/6o32QdBMtdtlKSjiZRNi87
+         UMIWLFQH4ETrKWWND0YTm7LuldmMlZXnHrtBJyg0QRGhHJFPC9/kvoPQ0WCFDE0nI5
+         37sq5mKNVN8Og==
+Date:   Tue, 4 Jun 2019 10:54:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: linux-next: manual merge of the nand tree with Linus' tree
+Message-ID: <20190604105418.58da18b2@canb.auug.org.au>
 MIME-Version: 1.0
-X-KeepSent: 6FE801F4:46B471FF-4825840F:0003D358;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF6FE801F4.46B471FF-ON4825840F.0003D358-4825840F.0004D419@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 4 Jun 2019 08:52:44 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/04 AM 08:52:44,
-        Serialize complete at 2019/06/04 AM 08:52:44
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x540qiIv045850
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/nVE9Xfja1ymcpznMa6jaV1r"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/nVE9Xfja1ymcpznMa6jaV1r
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jones,
+Hi all,
 
-> > +static int rpc_mfd_probe(struct platform_device *pdev)
-> 
-> Remove the "mfd" from the nomenclature.
+Today's linux-next merge of the nand tree got a conflict in:
 
-okay, will fix.
+  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
 
-> 
-> > +   struct device_node *flash;
-> > +   const struct mfd_cell *cell;
-> > +   struct resource *res;
-> > +   struct rpc_mfd *rpc;
-> > +   void __iomem *base;
-> > +
-> > +   flash = of_get_next_child(pdev->dev.of_node, NULL);
-> > +   if (!flash) {
-> > +      dev_warn(&pdev->dev, "no flash node found\n");
-> > +      return -ENODEV;
-> > +   }
-> > +
-> > +   if (of_device_is_compatible(flash, "jedec,spi-nor")) {
-> > +      cell = &rpc_spi_ctlr;
-> > +   } else if (of_device_is_compatible(flash, "cfi-flash")) {
-> > +      cell = &rpc_hf_ctlr;
-> > +   } else {
-> > +      dev_warn(&pdev->dev, "unknown flash type\n");
-> > +      return -ENODEV;
-> > +   }
-> 
-> Are there going to be more children coming?
+between commit:
 
-No, just spi-nor or cfi-flash.
+  a5f2246fb913 ("dt: bindings: mtd: replace references to nand.txt with nan=
+d-controller.yaml")
 
-The operation mode is decided at booting time by HW pin configuration.
-Can't change spi-nor or cfi-flash mode at run-time.
+from Linus' tree and commit:
 
-> 
-> If not, I'd argue that this is not an MFD.
-> 
+  33cc5bd0b87a ("dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nan=
+d-ecc-step-size optional")
 
-umm, agreed.
+from the nand tree.
 
-thanks & best regards,
-Mason
+I fixed it up (the latter included the changes from the former, so I
+just used that) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
 
-CONFIDENTIALITY NOTE:
+--=20
+Cheers,
+Stephen Rothwell
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
+--Sig_/nVE9Xfja1ymcpznMa6jaV1r
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Macronix International Co., Ltd.
+-----BEGIN PGP SIGNATURE-----
 
-=====================================================================
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz1wToACgkQAVBC80lX
+0GyL7gf+NmJyIgxpzBKZ26V9d83sLzSIb6qeJXc0Xmp0nDOznqTlqXboyJzSaGQ4
+7P7DLWPqEzwizk7VCHgU6DD8bRy8fe1Z3yaXq0y+p3IxDH0m2JOP7JEg4V/Shn7M
+PgmecUFYCXi+lNXB8GhMWWWarP7qDZQZc95wIC6aD3rR/XxU6IB69NJ64kTgMHGg
+BvmEuOciX77oi2pE9hl+3rMwd+6YOYTMTStyeYEslRlLPcHYLhL0E7dyYhvZyRfP
+J5KHz7R7aI8PTfoO6i9HEahe8iKS46G+zxayMNNFC3akz3kixyL0/hB1sUkXHtkB
+2ORP1xhi/2eInXyquoAuJM9cYsQeMA==
+=i+6a
+-----END PGP SIGNATURE-----
 
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+--Sig_/nVE9Xfja1ymcpznMa6jaV1r--
