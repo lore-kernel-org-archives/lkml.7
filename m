@@ -2,249 +2,101 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED7C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6338DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8E324A32
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CAA2473C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCjoVhgd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zwz6SgMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfFDOhP (ORCPT
+        id S1727588AbfFDOhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:37:15 -0400
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:37995 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbfFDOhN (ORCPT
+        Tue, 4 Jun 2019 10:37:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36733 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727182AbfFDOhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:37:13 -0400
-Received: by mail-pf1-f180.google.com with SMTP id a186so12108665pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:37:13 -0700 (PDT)
+        Tue, 4 Jun 2019 10:37:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v22so340674wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=otDo9JTAjxXUIL0wLWnsf0TMryCbgHF9GFg/VIogBAs=;
-        b=kCjoVhgdZdcOvP3sZPyHTyIZ85jJnetO5gXKqNfILh57x1IyOoKasY2xq1+oWnqr9O
-         /r9Bm+1nN4LFlCXnZzsQli1WhvGWny5lhx5RBZbe6CGxAslWqt+0ZOTyuKugBd+ZmBV0
-         W6HakKVRh1X6jIsVuCT65dnHppF7xOh2ZvBQaVzLkjTuecQulX4y9Kj64AYCZmDVYHwf
-         gy/o5wgQm1NT4XDchxHwTFkv8BLAEjDwyqbYRrWa84wgkO0wPBlv1V/NE06sy7s8cyt4
-         ws4vpjKnoYQr6lTzKQ4k31QbHihv/TDa2QPSBgzz9P8tsNf4bVI28k/+cjVw/fxMyG6/
-         HZmA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=4BkP7vL18hh/Y2SYGfaK20f4ZMauMq57h6342TGfhGs=;
+        b=zwz6SgMY3ch+xUVaDLBu8CesXxZYj8excN9ZvfYtO9uZjTtjKhvtwDPZ1Nu9AC1ttH
+         nuHWUq+Xf8/Y66jY55H3hHAfYr118Omduae13KxQxUid/39xMjcymjuGI5BdstieMDhw
+         SjFgxmqYNp+19t2UYhwSYl70IRKuqajNiu3fJ3GeR02OvaOw1LKwDD889i+aWsUfT5wT
+         E5Col1tPqrpUpbOz7ILdjxhdMWGcjuz9kjPqCcIjcuP5AHXmaTFLBLzj1SWlfHa/f2bG
+         2WtInzVZJ+H5jzA6gBai6HCAjAeMtP8VWcXRwqPWcSQhJCg+jbkoxwEECL+cYkhiVnum
+         Endw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=otDo9JTAjxXUIL0wLWnsf0TMryCbgHF9GFg/VIogBAs=;
-        b=C20uYjLrCQZ4zf/423OXxIpsUokwjY0f5kqlVVOJemVdrRlvqDIICU0NGSRGpuOVc3
-         Lqi7ofb397eRh6+uaoNfXrZF4x92IiszZ7LCGS8SVE7/wniwu010AJok4WBM5aK1qxev
-         wzqVU4rXjrmk/a4eie3SGpy8ZdwQfJmaMVpayxytVf4WuZMR7p6uXBj3azulCtPl21JN
-         hYJ35Q7fn9FamgfAv91RdigYEjT2kG71EB6HUmVVCY9P1AmplxKl/Jg0B7lyIjgKyJ7J
-         JVHK7l3k9huFjQzXxW2fBiz+HFlTK9ytW9XagIB//D38ZQ793yypvhpBl5lJDfBKwptk
-         xsvQ==
-X-Gm-Message-State: APjAAAUqQGbXPPn3WQ3MmhXqwDqwF+/A4i6hzuLcvPs1lZnSoMiFf46t
-        7OJ+AGHoceLrGttXUaSn8n8=
-X-Google-Smtp-Source: APXvYqztDa4a+0/SfVTcijqZh9u/FsWU/PgCbhPoSykbGim4IEpdZHtUKjIpGmXvgwX9fgyFt3scZQ==
-X-Received: by 2002:a17:90a:4814:: with SMTP id a20mr38088311pjh.62.1559659032979;
-        Tue, 04 Jun 2019 07:37:12 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id m6sm24156872pjl.18.2019.06.04.07.37.10
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4BkP7vL18hh/Y2SYGfaK20f4ZMauMq57h6342TGfhGs=;
+        b=lWvZh/QWo52UXxqnfeHR4wwajqaAno06iMX0EOGMP9rghHBznsPHc4ai6ygGRfec2+
+         JNJ0WN5ktYn3iVr1h0d98tDOkpnWhlxG2UhVtx+Jun60BVQXXdwVErxQ+vXJq+Y+vKLI
+         lX5iGdnZyradpAus9hVG3uZIQx10MmyqDA+WnBHPvQGpkpZPQSOA5UevhOqAqmKmyBTm
+         G2quAt1CPwZZMJuh9MPl0zLeCE8Rn7zEAwnLTF4RD2KpRX9H4h5FSExOMP+fasEVMEwc
+         rlkXvVAgYN0gYqQy/6P0yDWYy95R1TBpe//19iWfEx4w5CoLAlwVc8rhRleZk8L+9Fjh
+         wUpw==
+X-Gm-Message-State: APjAAAWiVEG+aKdAmC9J9f6eyWErYDZPVooN5YfeWfM3QuqHi0oO3kDN
+        JhUrG1UkxtF01FZAVj7GdrBQJQ==
+X-Google-Smtp-Source: APXvYqxGadUkWTjW4QvcK05BF6VgFxTONXlpWUID2n0UK6pxnIxdvT5GzX5nOsiVPLz/AMK5qgbF8A==
+X-Received: by 2002:a7b:c94a:: with SMTP id i10mr15828555wml.97.1559659029834;
+        Tue, 04 Jun 2019 07:37:09 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x129sm14348068wmg.44.2019.06.04.07.37.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:37:12 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v2 1/3] mtd: nand: raw: brcmnand: Refactored code to introduce helper functions
-Date:   Tue,  4 Jun 2019 10:36:29 -0400
-Message-Id: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
+        Tue, 04 Jun 2019 07:37:09 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc:     Paul Walmsley <paul@pwsan.com>, Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files from DT source data
+In-Reply-To: <20190602080500.31700-2-paul.walmsley@sifive.com>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-2-paul.walmsley@sifive.com>
+Date:   Tue, 04 Jun 2019 16:37:07 +0200
+Message-ID: <86v9xlh0x8.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactored NAND ECC and CMD address configuration code to use helper
-functions.
+On Sun 02 Jun 2019 at 01:04, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 100 +++++++++++++++++++------------
- 1 file changed, 62 insertions(+), 38 deletions(-)
+> Similar to ARM64, add support for building DTB files from DT source
+> data for RISC-V boards.
+>
+> This patch starts with the infrastructure needed for SiFive boards.
+> Boards from other vendors would add support here in a similar form.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> ---
+>  arch/riscv/boot/dts/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/Makefile
+>
+> diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+> new file mode 100644
+> index 000000000000..dcc3ada78455
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +subdir-y += sifive
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index ce0b8ff..c534ea8 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -588,6 +588,54 @@ static inline void brcmnand_write_fc(struct brcmnand_controller *ctrl,
- 	__raw_writel(val, ctrl->nand_fc + word * 4);
- }
- 
-+static void brcmnand_clear_ecc_addr(struct brcmnand_controller *ctrl)
-+{
-+
-+	/* Clear error addresses */
-+	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
-+	brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
-+	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
-+	brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
-+}
-+
-+static u64 brcmnand_get_uncorrecc_addr(struct brcmnand_controller *ctrl)
-+{
-+	u64 err_addr;
-+
-+	err_addr = brcmnand_read_reg(ctrl, BRCMNAND_UNCORR_ADDR);
-+	err_addr |= ((u64)(brcmnand_read_reg(ctrl,
-+					     BRCMNAND_UNCORR_EXT_ADDR)
-+					     & 0xffff) << 32);
-+
-+	return err_addr;
-+}
-+
-+static u64 brcmnand_get_correcc_addr(struct brcmnand_controller *ctrl)
-+{
-+	u64 err_addr;
-+
-+	err_addr = brcmnand_read_reg(ctrl, BRCMNAND_CORR_ADDR);
-+	err_addr |= ((u64)(brcmnand_read_reg(ctrl,
-+					     BRCMNAND_CORR_EXT_ADDR)
-+					     & 0xffff) << 32);
-+
-+	return err_addr;
-+}
-+
-+static void brcmnand_set_cmd_addr(struct mtd_info *mtd, u64 addr)
-+{
-+	struct nand_chip *chip =  mtd_to_nand(mtd);
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+
-+	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
-+			   (host->cs << 16) | ((addr >> 32) & 0xffff));
-+	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
-+	brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
-+			   lower_32_bits(addr));
-+	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
-+}
-+
- static inline u16 brcmnand_cs_offset(struct brcmnand_controller *ctrl, int cs,
- 				     enum brcmnand_cs_reg reg)
- {
-@@ -1213,9 +1261,12 @@ static void brcmnand_send_cmd(struct brcmnand_host *host, int cmd)
- {
- 	struct brcmnand_controller *ctrl = host->ctrl;
- 	int ret;
-+	u64 cmd_addr;
-+
-+	cmd_addr = brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
-+
-+	dev_dbg(ctrl->dev, "send native cmd %d addr 0x%llx\n", cmd, cmd_addr);
- 
--	dev_dbg(ctrl->dev, "send native cmd %d addr_lo 0x%x\n", cmd,
--		brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS));
- 	BUG_ON(ctrl->cmd_pending != 0);
- 	ctrl->cmd_pending = cmd;
- 
-@@ -1374,12 +1425,7 @@ static void brcmnand_cmdfunc(struct nand_chip *chip, unsigned command,
- 	if (!native_cmd)
- 		return;
- 
--	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
--		(host->cs << 16) | ((addr >> 32) & 0xffff));
--	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
--	brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS, lower_32_bits(addr));
--	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
--
-+	brcmnand_set_cmd_addr(mtd, addr);
- 	brcmnand_send_cmd(host, native_cmd);
- 	brcmnand_waitfunc(chip);
- 
-@@ -1597,20 +1643,10 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
- 	struct brcmnand_controller *ctrl = host->ctrl;
- 	int i, j, ret = 0;
- 
--	/* Clear error addresses */
--	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_ADDR, 0);
--	brcmnand_write_reg(ctrl, BRCMNAND_CORR_ADDR, 0);
--	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_EXT_ADDR, 0);
--	brcmnand_write_reg(ctrl, BRCMNAND_CORR_EXT_ADDR, 0);
--
--	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
--			(host->cs << 16) | ((addr >> 32) & 0xffff));
--	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
-+	brcmnand_clear_ecc_addr(ctrl);
- 
- 	for (i = 0; i < trans; i++, addr += FC_BYTES) {
--		brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
--				   lower_32_bits(addr));
--		(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
-+		brcmnand_set_cmd_addr(mtd, addr);
- 		/* SPARE_AREA_READ does not use ECC, so just use PAGE_READ */
- 		brcmnand_send_cmd(host, CMD_PAGE_READ);
- 		brcmnand_waitfunc(chip);
-@@ -1630,21 +1666,15 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
- 					host->hwcfg.sector_size_1k);
- 
- 		if (!ret) {
--			*err_addr = brcmnand_read_reg(ctrl,
--					BRCMNAND_UNCORR_ADDR) |
--				((u64)(brcmnand_read_reg(ctrl,
--						BRCMNAND_UNCORR_EXT_ADDR)
--					& 0xffff) << 32);
-+			*err_addr = brcmnand_get_uncorrecc_addr(ctrl);
-+
- 			if (*err_addr)
- 				ret = -EBADMSG;
- 		}
- 
- 		if (!ret) {
--			*err_addr = brcmnand_read_reg(ctrl,
--					BRCMNAND_CORR_ADDR) |
--				((u64)(brcmnand_read_reg(ctrl,
--						BRCMNAND_CORR_EXT_ADDR)
--					& 0xffff) << 32);
-+			*err_addr = brcmnand_get_correcc_addr(ctrl);
-+
- 			if (*err_addr)
- 				ret = -EUCLEAN;
- 		}
-@@ -1711,7 +1741,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
- 	dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
- 
- try_dmaread:
--	brcmnand_write_reg(ctrl, BRCMNAND_UNCORR_COUNT, 0);
-+	brcmnand_clear_ecc_addr(ctrl);
- 
- 	if (has_flash_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
- 		err = brcmnand_dma_trans(host, addr, buf, trans * FC_BYTES,
-@@ -1858,15 +1888,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
- 		goto out;
- 	}
- 
--	brcmnand_write_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS,
--			(host->cs << 16) | ((addr >> 32) & 0xffff));
--	(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_EXT_ADDRESS);
--
- 	for (i = 0; i < trans; i++, addr += FC_BYTES) {
- 		/* full address MUST be set before populating FC */
--		brcmnand_write_reg(ctrl, BRCMNAND_CMD_ADDRESS,
--				   lower_32_bits(addr));
--		(void)brcmnand_read_reg(ctrl, BRCMNAND_CMD_ADDRESS);
-+		brcmnand_set_cmd_addr(mtd, addr);
- 
- 		if (buf) {
- 			brcmnand_soc_data_bus_prepare(ctrl->soc, false);
--- 
-1.9.0.138.g2de3478
-
+Always build it ?
+Any particular reason to drop ARCH_SIFIVE ?
