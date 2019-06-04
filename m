@@ -2,127 +2,74 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04F7C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25564C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5622053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66382053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfFDQAu (ORCPT
+        id S1728265AbfFDQCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:00:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47682 "EHLO mx1.redhat.com"
+        Tue, 4 Jun 2019 12:02:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4025 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbfFDQAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:00:47 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EBE6F30C31AF;
-        Tue,  4 Jun 2019 16:00:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F12517CFA;
-        Tue,  4 Jun 2019 16:00:34 +0000 (UTC)
-Subject: Re: [PATCH v8 07/19] locking/rwsem: Implement lock handoff to prevent
- lock starvation
-To:     Boqun Feng <boqun.feng@gmail.com>, Yuyang Du <duyuyang@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190520205918.22251-1-longman@redhat.com>
- <20190520205918.22251-8-longman@redhat.com>
- <CAHttsrYx=pgen5yVpYfCKaymoCaA7iJ52B8t_ycD2UcDR2848Q@mail.gmail.com>
- <CAHttsrZCGMqBi4ifj7A1rO3G3nOz-0pbD8TXRtUQ1rGQRAGiUw@mail.gmail.com>
- <20190604091220.GA29633@tardis>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d1a2894e-144e-d30b-966d-c2fd7b6f3f7e@redhat.com>
-Date:   Tue, 4 Jun 2019 12:00:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727422AbfFDQCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:02:00 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:02:00 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 09:01:57 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hYBsr-0000jd-Fb; Tue, 04 Jun 2019 19:01:57 +0300
+Date:   Tue, 4 Jun 2019 19:01:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable
+ 'pwm'
+Message-ID: <20190604160157.GL9224@smile.fi.intel.com>
+References: <20190601035709.85379-1-yuehaibing@huawei.com>
+ <CAGngYiXZM0QUdKE_zDK763J9iDuiKSbmFeTVA1PJ_4WvjntjQQ@mail.gmail.com>
+ <20190601160459.baedo5pp5hsrltzs@pengutronix.de>
+ <CAGngYiUfGGF+PwaT4SE2ZJkrCidc7-QWeuRsPTDwrLL1onm88w@mail.gmail.com>
+ <20190603114029.GC2781@lahna.fi.intel.com>
+ <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604091220.GA29633@tardis>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 04 Jun 2019 16:00:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/19 5:12 AM, Boqun Feng wrote:
-> On Tue, Jun 04, 2019 at 11:26:30AM +0800, Yuyang Du wrote:
->> On Tue, 4 Jun 2019 at 11:03, Yuyang Du <duyuyang@gmail.com> wrote:
->>> Hi Waiman,
->>>
->>> On Tue, 21 May 2019 at 05:01, Waiman Long <longman@redhat.com> wrote:
->>>> Because of writer lock stealing, it is possible that a constant
->>>> stream of incoming writers will cause a waiting writer or reader to
->>>> wait indefinitely leading to lock starvation.
->>>>
->>>> This patch implements a lock handoff mechanism to disable lock stealing
->>>> and force lock handoff to the first waiter or waiters (for readers)
->>>> in the queue after at least a 4ms waiting period unless it is a RT
->>>> writer task which doesn't need to wait. The waiting period is used to
->>>> avoid discouraging lock stealing too much to affect performance.
->>> I was working on a patchset to solve read-write lock deadlock
->>> detection problem (https://lkml.org/lkml/2019/5/16/93).
->>>
->>> One of the mistakes in that work is that I considered the following
->>> case as deadlock:
->> Sorry everyone, but let me rephrase:
->>
->> One of the mistakes in that work is that I considered the following
->> case as no deadlock:
->>
->>>   T1            T2
->>>   --            --
->>>
->>>   down_read1    down_write2
->>>
->>>   down_write2   down_read1
->>>
-> Not sure I understand the whole context here, but isn't adding a third
-> independent task makes this a deadlock?
->
-> 	 T1            T2		T3
-> 	 --            --		--
->
-> 	 down_read1    down_write2
-> 	 				down_write1
-> 	 down_write2   down_read1
->
-> from the perspective of lockdep, we cannot be sure whether there will
-> a T3 or not.
+On Mon, Jun 03, 2019 at 11:08:06AM -0400, Sven Van Asbroeck wrote:
+> On Mon, Jun 3, 2019 at 7:40 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
 
-Yes, that will be a deadlock even with the my rwsem patch applied, as it
-will still try to preserve the reader-writer ordering. So it will
-certainly be safer to have the same lock ordering for both tasks.
+> Unfortunately, I no longer have any test hardware. The project that
+> required this chip is long dead.
 
->
-> In case that I mis-understood you, maybe your point is about in the
-> above case whether "down_read1" on T2 can *gauranteedly* steal (in the
-> sense of breaking the fairness) the read lock after Waiman modification?
-> If so, I will wait for Waiman's response ;-)
+Anyone in possession of Intel Galileo Gen 2 can test this.
 
-With my patchset applied, the reader-writer ordering is still supposed
-to be preserved. Of course, there can be exceptions depending on the
-exact timing, but we can't rely on that to prevent deadlock.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Cheers,
-Longman
 
