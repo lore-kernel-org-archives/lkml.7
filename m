@@ -2,126 +2,123 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C047BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71802C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4F724635
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBDC24619
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfFDJZA convert rfc822-to-8bit (ORCPT
+        id S1727061AbfFDJ0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:25:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55350 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726877AbfFDJY7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:24:59 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x549HbX7104005
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 05:24:58 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swjwvrdee-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:24:58 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
-        Tue, 4 Jun 2019 10:24:56 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 10:24:54 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x549OrfL62914798
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 09:24:53 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A1B2A4065;
-        Tue,  4 Jun 2019 09:24:53 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6F7FA4054;
-        Tue,  4 Jun 2019 09:24:52 +0000 (GMT)
-Received: from [9.109.244.70] (unknown [9.109.244.70])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Jun 2019 09:24:52 +0000 (GMT)
-From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: [PowerPC][next-20190603] WARNING: at kernel/fork.c:721
-Date:   Tue, 4 Jun 2019 14:54:51 +0530
-Cc:     linux-next@vger.kernel.org
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-X-Mailer: Apple Mail (2.3445.104.11)
-X-TM-AS-GCONF: 00
-x-cbid: 19060409-0012-0000-0000-00000322F38A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060409-0013-0000-0000-0000215BD195
-Message-Id: <ED78D3E2-CDCB-494F-9918-2C086F9BC158@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=604 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040062
+        Tue, 4 Jun 2019 05:26:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38780 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726933AbfFDJ0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 05:26:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D819A78;
+        Tue,  4 Jun 2019 02:26:43 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62673F246;
+        Tue,  4 Jun 2019 02:26:41 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 10:26:39 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] KVM: arm64: Drop 'const' from argument of vq_present()
+Message-ID: <20190604092639.GS28398@e103592.cambridge.arm.com>
+References: <699121e5c938c6f4b7b14a7e2648fa15af590a4a.1559623368.git.viresh.kumar@linaro.org>
+ <20190604084349.prnnvjvjaeuhsmgs@mbp>
+ <20190604085545.hsmxfqkpt2cbrhtw@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604085545.hsmxfqkpt2cbrhtw@vireshk-i7>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While booting linux-next [20190603] on a POWER9 LPAR ran into
-following warning
+On Tue, Jun 04, 2019 at 02:25:45PM +0530, Viresh Kumar wrote:
+> On 04-06-19, 09:43, Catalin Marinas wrote:
+> > On Tue, Jun 04, 2019 at 10:13:19AM +0530, Viresh Kumar wrote:
+> > > We currently get following compilation warning:
+> > > 
+> > > arch/arm64/kvm/guest.c: In function 'set_sve_vls':
+> > > arch/arm64/kvm/guest.c:262:18: warning: passing argument 1 of 'vq_present' from incompatible pointer type
+> > > arch/arm64/kvm/guest.c:212:13: note: expected 'const u64 (* const)[8]' but argument is of type 'u64 (*)[8]'
+> > 
+> > Since the vq_present() function does not modify the vqs array, I don't
+> > understand why this warning. Compiler bug?
+> 
+> Probably yes. Also marking array argument to functions as const is a
+> right thing to do, to declare that the function wouldn't change the
+> array values.
+> 
+> I tried a recent toolchain and this doesn't happen anymore.
+> 
+> Sorry for the noise.
 
-[    9.002935] WARNING: CPU: 0 PID: 1 at kernel/fork.c:721 __put_task_struct+0x34/0x170
-[    9.002947] Modules linked in: dm_mirror dm_region_hash dm_log dm_mod
-[    9.002960] CPU: 0 PID: 1 Comm: systemd Not tainted 5.2.0-rc3-next-20190603-autotest #1
-[    9.002971] NIP:  c0000000001191e4 LR: c00000000020c53c CTR: 0000000000000000
-[    9.002980] REGS: c0000008b2783810 TRAP: 0700   Not tainted  (5.2.0-rc3-next-20190603-autotest)
-[    9.002990] MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24222842  XER: 20040000
-[    9.003004] CFAR: c00000000020c538 IRQMASK: 0 
-[    9.003004] GPR00: c00000000020c53c c0000008b2783aa0 c00000000138ca00 c0000008b92e19f8 
-[    9.003004] GPR04: c0000008b2783b98 c0000008b2783b98 c0000008b92e24b0 0000000000000000 
-[    9.003004] GPR08: 0000000000000000 0000000000000001 0000000000000000 c000000000a81060 
-[    9.003004] GPR12: 0000000024224842 c0000000017c0000 0000000000000000 0000000000000000 
-[    9.003004] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000001 
-[    9.003004] GPR20: 0000000000000000 00007fff95f90000 c0000008b2756dc0 c0000008b2783df0 
-[    9.003004] GPR24: 0000000000002000 c0000008ad74d200 c0000008b926a218 0000000000000000 
-[    9.003004] GPR28: c0000008b92e1400 0000000000000000 0000000000000000 c0000008b92e19f8 
-[    9.003083] NIP [c0000000001191e4] __put_task_struct+0x34/0x170
-[    9.003094] LR [c00000000020c53c] css_task_iter_end+0x11c/0x1b0
-[    9.003101] Call Trace:
-[    9.003108] [c0000008b2783aa0] [c0000008b92e1400] 0xc0000008b92e1400 (unreliable)
-[    9.003119] [c0000008b2783ad0] [c00000000020c53c] css_task_iter_end+0x11c/0x1b0
-[    9.003129] [c0000008b2783b10] [c00000000020f60c] pidlist_array_load+0x12c/0x390
-[    9.003140] [c0000008b2783bf0] [c00000000020fa20] cgroup_pidlist_start+0x1b0/0x1e0
-[    9.003151] [c0000008b2783c40] [c0000000001ffd98] cgroup_seqfile_start+0x38/0x50
-[    9.003163] [c0000008b2783c60] [c00000000049c270] kernfs_seq_start+0x80/0x120
-[    9.003175] [c0000008b2783ca0] [c0000000003fea08] seq_read+0x208/0x540
-[    9.003184] [c0000008b2783d20] [c00000000049cdd4] kernfs_fop_read+0x1a4/0x260
-[    9.003196] [c0000008b2783d70] [c0000000003c3cec] __vfs_read+0x3c/0x70
-[    9.003205] [c0000008b2783d90] [c0000000003c3dd4] vfs_read+0xb4/0x1b0
-[    9.003214] [c0000008b2783dd0] [c0000000003c42bc] ksys_read+0x7c/0x130
-[    9.003224] [c0000008b2783e20] [c00000000000b688] system_call+0x5c/0x70
-[    9.003232] Instruction dump:
-[    9.003237] 38423850 7c0802a6 60000000 7c0802a6 fbc1fff0 fbe1fff8 f8010010 f821ffd1 
-[    9.003251] 7c7f1b78 8123067c 7d290034 5529d97e <0b090000> 81230110 7d290034 5529d97e 
-[    9.003264] ---[ end trace 2194bb4cf2567482 ]—
+Sparse is already warning about this, but I had dismissed it as a false
+positive.
 
-Have not seen this warning previously and is new with this next build.
+I think this is an instance of disallowing implicit conversions of the
+form
 
-void __put_task_struct(struct task_struct *tsk)
+	T ** -> T const **
+
+because this allows a const pointer to be silently de-consted, e.g.:
+
+static const T bar;
+
+void foo(T const **p)
 {
-        WARN_ON(!tsk->exit_state);     <<== 
-        WARN_ON(refcount_read(&tsk->usage));
+	*p = &bar;
+}
 
-Since I am running into various boot failures with next tree for last week or so
-am not able to bisect.
+T *baz(void)
+{
+	T *q; 
+	foo(&q);
+	return q;
+}
 
-Thanks
--Sachin
+
+I _suspect_ that what's going on here is that the compiler is
+eliminating a level of indirection during inlining (i.e. converting
+pass-by-reference to direct access, which is precisely what I wanted
+to happen).  This removes the potentially invalid behaviour as a
+side-effect.
+
+This relies on the compiler optimising / analysing the code
+aggressively enough though.
+
+So, I don't have a problem with dropping the extra extra const, e.g.:
+
+static bool vq_present(
+	u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
+	unsigned int vq)
+
+Since this function is static and only used very locally, I don't see a
+big risk: the only reason for the extra const was to check that
+vq_present() doesn't modify vqs when it shouldn't.  But it's a trivial
+function, and the intent is pretty clear without the extra type
+modifier.
+
+
+I'm in two minds about whether this is worth fixing, but if you want to
+post a patch to remove the extra const (or convert vq_present() to a
+macro), I'll take a look at it.
+
+Cheers
+---Dave
