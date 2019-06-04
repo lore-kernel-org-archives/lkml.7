@@ -2,263 +2,157 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24375C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC21C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080EB261E8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1CA26155
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GBjCdM45";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="IYVmL2sp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfFDC7d (ORCPT
+        id S1726465AbfFDDEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 22:59:33 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39892 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfFDC7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 22:59:32 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E30031A05CB;
-        Tue,  4 Jun 2019 04:59:29 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C5171A05B0;
-        Tue,  4 Jun 2019 04:59:26 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BA86D402A6;
-        Tue,  4 Jun 2019 10:59:21 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com
-Cc:     daniel.lezcano@linaro.org, leoyang.li@nxp.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH] thermal: qoriq: add thermal monitor unit version 2 support
-Date:   Tue,  4 Jun 2019 10:51:14 +0800
-Message-Id: <20190604025114.46085-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 3 Jun 2019 23:04:09 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:60704 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726076AbfFDDEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Jun 2019 23:04:09 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x542tvQK000344;
+        Mon, 3 Jun 2019 20:04:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=unhx8NRTUbXuqBmrTMa9hXJj0NkRcaeMiEyye/d8ddE=;
+ b=GBjCdM45TS/UJGhZk7wp0BvD+vw+SRE4j1y6ODDM8iy2TsnJCfBf/33Hg9y2nLKCzSl1
+ Hs+kDyw4awFH5tmzSu7IfRwaybSmU8tlmX+XSe12d1KH1v0kuMdi0h5dSYyPaHNJhm1i
+ ZsPb86rjKVYuWweDOwSsj7wc/xQ9e7hdfICgR1SdtiTYJhE+2SbcKfEVGWlFp6BQ0FiY
+ 4RH33kNqJ1eQGeCXXYZiHe78HVzejc6bQuzdDgPFBJ+Z4b4xERApVw/vu4oqAZNgrusc
+ CpnJU73Utt7+6aoXG7ILHdwcPy+kVV/Hx9LDet9OsOM8Kb4YKnv2FgxgFXGpItZuSEzw VQ== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2swejx8cy8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jun 2019 20:04:05 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 3 Jun
+ 2019 20:04:04 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.55) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 3 Jun 2019 20:04:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=unhx8NRTUbXuqBmrTMa9hXJj0NkRcaeMiEyye/d8ddE=;
+ b=IYVmL2spx+KW5rCGXOgWSpZ8h1nucxr4/ckRPIEmWFnSHxGzW/wnAnxCy2FAHlANfkVAg35CTR8bd1X6iUIcwB9ub4crL/KvKnwo2oijHkezm0Fyo2YWgblbJ7ObS29Rd5YdaQw2S2x6cRztSXzz08gHZhfNuMNBx9gO/JZQgKA=
+Received: from MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) by
+ MN2PR18MB2752.namprd18.prod.outlook.com (20.179.21.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.18; Tue, 4 Jun 2019 03:03:59 +0000
+Received: from MN2PR18MB2637.namprd18.prod.outlook.com
+ ([fe80::3c77:9f53:7e47:7eb8]) by MN2PR18MB2637.namprd18.prod.outlook.com
+ ([fe80::3c77:9f53:7e47:7eb8%7]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 03:03:59 +0000
+From:   Ganapathi Bhat <gbhat@marvell.com>
+To:     Brian Norris <briannorris@chromium.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Amitkumar Karwar" <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [EXT] Re: [4.20 PATCH] Revert "mwifiex: restructure
+ rx_reorder_tbl_lock usage"
+Thread-Topic: [EXT] Re: [4.20 PATCH] Revert "mwifiex: restructure
+ rx_reorder_tbl_lock usage"
+Thread-Index: AQHU1VdpBggtVOS6I0GyhcvAXdDin6aLWDtA
+Date:   Tue, 4 Jun 2019 03:03:59 +0000
+Message-ID: <MN2PR18MB26376D3A660956396D0E60AFA0150@MN2PR18MB2637.namprd18.prod.outlook.com>
+References: <20181130175957.167031-1-briannorris@chromium.org>
+ <20190308023401.GA121759@google.com>
+In-Reply-To: <20190308023401.GA121759@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [117.241.207.104]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3f628d0d-b000-48d8-cb20-08d6e8994a77
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2752;
+x-ms-traffictypediagnostic: MN2PR18MB2752:
+x-microsoft-antispam-prvs: <MN2PR18MB27527162C73774581B2842DCA0150@MN2PR18MB2752.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(136003)(396003)(346002)(199004)(189003)(66066001)(33656002)(66446008)(68736007)(66476007)(64756008)(81166006)(81156014)(66556008)(76176011)(11346002)(8676002)(8936002)(476003)(446003)(26005)(186003)(25786009)(76116006)(54906003)(73956011)(66946007)(486006)(305945005)(7736002)(6506007)(71190400001)(74316002)(4326008)(55016002)(5660300002)(52536014)(9686003)(53936002)(6436002)(229853002)(14444005)(256004)(71200400001)(86362001)(7696005)(14454004)(6916009)(6116002)(3846002)(316002)(102836004)(99286004)(478600001)(2906002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2752;H:MN2PR18MB2637.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: P8LEtjR4Y6kHJSS9kkMn0nTRulfCP9gmuxGMu0frxW3I4xPsdLj/0bU/ImbXUZIkUcV7DHlAgkJwZgDKcs7g4HBDkexu1aOKvleGjxWus1cCH3bVwaQ2GY0X5xwZSWeuc5Ospu/Zn3/lAiUq/6Ixue8ji0O26yGTMU4KefS9qor0b+hgu3cZ6jUIWo8e+ax3pIAvXOSEc/5FukvLpyeieo8LbZfvL59oIqVBkYowhrF0dkno3fmmcowNKKyPT6EC9roLcUs8x+AmlcDCmSGua27x0vVOsDjqSGc6HxXQnu8FtwTiJisOvP2LGSVM0DRSAKdc2xJtelHS4E1Kt8dCPLfsj9xyjk/LHBFOI5YGKqs7bWvn7byxkMV2ObimYyPrYq1eJRtmbmYNv8ebyyydn08dov1Dssikp0m2H1rWuRQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f628d0d-b000-48d8-cb20-08d6e8994a77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 03:03:59.6029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gbhat@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2752
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal Monitor Unit v2 is introduced on new Layscape SoC.
-Compared to v1, TMUv2 has a little different register layout
-and digital output is fairly linear.
+Hi Brian,
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
- drivers/thermal/qoriq_thermal.c | 122 +++++++++++++++++++++++++-------
- 1 file changed, 98 insertions(+), 24 deletions(-)
+> >    netif_rx_ni+0xe8/0x120
+> >    mwifiex_recv_packet+0xfc/0x10c [mwifiex]
+> >    mwifiex_process_rx_packet+0x1d4/0x238 [mwifiex]
+> >    mwifiex_11n_dispatch_pkt+0x190/0x1ac [mwifiex]
+> >    mwifiex_11n_rx_reorder_pkt+0x28c/0x354 [mwifiex]
+>=20
+> TL;DR: the problem was right here ^^^
+> where you started running mwifiex_11n_dispatch_pkt() (via
+> mwifiex_11n_scan_and_dispatch()) while holding a spinlock.
+>=20
+> When you do that, you eventually call netif_rx_ni(), which specifically d=
+efers
+> to softirq contexts. Then, if you happen to have your flush timer expirin=
+g just
+> before that, you end up in mwifiex_flush_data(), which also needs that
+> spinlock.
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 3b5f5b3fb1bc..0df6dfddf804 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -13,6 +13,15 @@
- #include "thermal_core.h"
- 
- #define SITES_MAX	16
-+#define TMR_DISABLE	0x0
-+#define TMR_ME		0x80000000
-+#define TMR_ALPF	0x0c000000
-+#define TMR_ALPF_V2	0x03000000
-+#define TMTMIR_DEFAULT	0x0000000f
-+#define TIER_DISABLE	0x0
-+#define TEUMR0_V2	0x51009C00
-+#define TMU_VER1	0x1
-+#define TMU_VER2	0x2
- 
- /*
-  * QorIQ TMU Registers
-@@ -23,17 +32,55 @@ struct qoriq_tmu_site_regs {
- 	u8 res0[0x8];
- };
- 
--struct qoriq_tmu_regs {
-+struct qoriq_tmu_regs_v2 {
-+	u32 tmr;		/* Mode Register */
-+	u32 tsr;		/* Status Register */
-+	u32 tmsr;		/* monitor site register */
-+	u32 tmtmir;		/* Temperature measurement interval Register */
-+	u8 res0[0x10];
-+	u32 tier;		/* Interrupt Enable Register */
-+	u32 tidr;		/* Interrupt Detect Register */
-+	u8 res1[0x8];
-+	u32 tiiscr;		/* interrupt immediate site capture register */
-+	u32 tiascr;		/* interrupt average site capture register */
-+	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-+	u32 res2;
-+	u32 tmhtcr;		/* monitor high temperature capture register */
-+	u32 tmltcr;		/* monitor low temperature capture register */
-+	u32 tmrtrcr;	/* monitor rising temperature rate capture register */
-+	u32 tmftrcr;	/* monitor falling temperature rate capture register */
-+	u32 tmhtitr;	/* High Temperature Immediate Threshold */
-+	u32 tmhtatr;	/* High Temperature Average Threshold */
-+	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
-+	u32 res3;
-+	u32 tmltitr;	/* monitor low temperature immediate threshold */
-+	u32 tmltatr;	/* monitor low temperature average threshold register */
-+	u32 tmltactr;	/* monitor low temperature average critical threshold */
-+	u32 res4;
-+	u32 tmrtrctr;	/* monitor rising temperature rate critical threshold */
-+	u32 tmftrctr;	/* monitor falling temperature rate critical threshold*/
-+	u8 res5[0x8];
-+	u32 ttcfgr;	/* Temperature Configuration Register */
-+	u32 tscfgr;	/* Sensor Configuration Register */
-+	u8 res6[0x78];
-+	struct qoriq_tmu_site_regs site[SITES_MAX];
-+	u8 res7[0x9f8];
-+	u32 ipbrr0;		/* IP Block Revision Register 0 */
-+	u32 ipbrr1;		/* IP Block Revision Register 1 */
-+	u8 res8[0x300];
-+	u32 teumr0;
-+	u32 teumr1;
-+	u32 teumr2;
-+	u32 res9;
-+	u32 ttrcr[4];	/* Temperature Range Control Register */
-+};
-+
-+struct qoriq_tmu_regs_v1 {
- 	u32 tmr;		/* Mode Register */
--#define TMR_DISABLE	0x0
--#define TMR_ME		0x80000000
--#define TMR_ALPF	0x0c000000
- 	u32 tsr;		/* Status Register */
- 	u32 tmtmir;		/* Temperature measurement interval Register */
--#define TMTMIR_DEFAULT	0x0000000f
- 	u8 res0[0x14];
- 	u32 tier;		/* Interrupt Enable Register */
--#define TIER_DISABLE	0x0
- 	u32 tidr;		/* Interrupt Detect Register */
- 	u32 tiscr;		/* Interrupt Site Capture Register */
- 	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-@@ -53,10 +100,7 @@ struct qoriq_tmu_regs {
- 	u32 ipbrr0;		/* IP Block Revision Register 0 */
- 	u32 ipbrr1;		/* IP Block Revision Register 1 */
- 	u8 res6[0x310];
--	u32 ttr0cr;		/* Temperature Range 0 Control Register */
--	u32 ttr1cr;		/* Temperature Range 1 Control Register */
--	u32 ttr2cr;		/* Temperature Range 2 Control Register */
--	u32 ttr3cr;		/* Temperature Range 3 Control Register */
-+	u32 ttrcr[4];		/* Temperature Range Control Register */
- };
- 
- struct qoriq_tmu_data;
-@@ -71,7 +115,9 @@ struct qoriq_sensor {
- };
- 
- struct qoriq_tmu_data {
--	struct qoriq_tmu_regs __iomem *regs;
-+	int ver;
-+	struct qoriq_tmu_regs_v1 __iomem *regs;
-+	struct qoriq_tmu_regs_v2 __iomem *regv2;
- 	bool little_endian;
- 	struct qoriq_sensor	*sensor[SITES_MAX];
- };
-@@ -111,7 +157,7 @@ static const struct thermal_zone_of_device_ops tmu_tz_ops = {
- static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
- {
- 	struct qoriq_tmu_data *qdata = platform_get_drvdata(pdev);
--	int id, sites = 0;
-+	int id, sites = 0, sv2 = 0;
- 
- 	for (id = 0; id < SITES_MAX; id++) {
- 		qdata->sensor[id] = devm_kzalloc(&pdev->dev,
-@@ -130,12 +176,24 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
- 				return PTR_ERR(qdata->sensor[id]->tzd);
- 		}
- 
--		sites |= 0x1 << (15 - id);
-+		if (qdata->ver == TMU_VER1)
-+			sites |= 0x1 << (15 - id);
-+		else
-+			sv2 |= 0x1 << id;
- 	}
- 
- 	/* Enable monitoring */
--	if (sites != 0)
--		tmu_write(qdata, sites | TMR_ME | TMR_ALPF, &qdata->regs->tmr);
-+	if (qdata->ver == TMU_VER1) {
-+		if (sites != 0)
-+			tmu_write(qdata, sites | TMR_ME | TMR_ALPF,
-+					&qdata->regs->tmr);
-+	} else {
-+		if (sv2 != 0) {
-+			tmu_write(qdata, sv2, &qdata->regv2->tmsr);
-+			tmu_write(qdata, TMR_ME | TMR_ALPF_V2,
-+					&qdata->regv2->tmr);
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -148,16 +206,20 @@ static int qoriq_tmu_calibration(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
- 
--	if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
--		dev_err(&pdev->dev, "missing calibration range.\n");
--		return -ENODEV;
-+	len = of_property_count_u32_elems(np, "fsl,tmu-range");
-+	if (len == -ENODATA || len == -EINVAL || len > 4) {
-+		dev_err(&pdev->dev, "invalid range data.\n");
-+		return len;
- 	}
- 
--	/* Init temperature range registers */
--	tmu_write(data, range[0], &data->regs->ttr0cr);
--	tmu_write(data, range[1], &data->regs->ttr1cr);
--	tmu_write(data, range[2], &data->regs->ttr2cr);
--	tmu_write(data, range[3], &data->regs->ttr3cr);
-+	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
-+	if (val != 0) {
-+		dev_err(&pdev->dev, "invalid range data.\n");
-+		return val;
-+	}
-+
-+	for (i = 0; i < len; i++)
-+		tmu_write(data, range[i], &data->regs->ttrcr[i]);
- 
- 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
- 	if (calibration == NULL || len % 8) {
-@@ -181,7 +243,12 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- 	tmu_write(data, TIER_DISABLE, &data->regs->tier);
- 
- 	/* Set update_interval */
--	tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-+	if (data->ver == TMU_VER1) {
-+		tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-+	} else {
-+		tmu_write(data, TMTMIR_DEFAULT, &data->regv2->tmtmir);
-+		tmu_write(data, TEUMR0_V2, &data->regv2->teumr0);
-+	}
- 
- 	/* Disable monitoring */
- 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
-@@ -190,6 +257,7 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- static int qoriq_tmu_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	u32 ver;
- 	struct qoriq_tmu_data *data;
- 	struct device_node *np = pdev->dev.of_node;
- 
-@@ -214,6 +282,12 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 		goto err_iomap;
- 	}
- 
-+	/* version register offset at: 0xbf8 on both v1 and v2 */
-+	ver = tmu_read(data, &data->regs->ipbrr0);
-+	data->ver = (ver >> 8) & 0xff;
-+	if (data->ver == TMU_VER2)
-+		data->regv2 = (void __iomem *)data->regs;
-+
- 	qoriq_tmu_init_device(data);	/* TMU initialization */
- 
- 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
--- 
-2.17.1
+Understood; Thanks for this detail;
 
+>=20
+> There are a few possible ways to handle this:
+> (a) prevent processing softirqs in that context; e.g., with
+>     local_bh_disable(). This seems somewhat of a hack.
+>     (Side note: I think most of the locks in this driver really could be
+>     spin_lock_bh(), not spin_lock_irqsave() -- we don't really care
+>     about hardirq context for 99% of these locks.)
+> (b) restructure so that packet processing (e.g., netif_rx_ni()) is done
+>     outside of the spinlock.
+>=20
+> It's actually not that hard to do (b). You can just queue your skb's up i=
+n a
+> temporary sk_buff_head list and process them all at once after you've
+> finished processing the reorder table. I have a local patch to do this, a=
+nd I
+> might send it your way if I can give it a bit more testing.
+
+
+OK; That will be good; We will run a complete test after the patch; (OR we =
+can work on this, share for review);
+
+Regards,
+Ganapathi
