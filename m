@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C86C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A51C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A5E206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A48B206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690802;
-	bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
+	s=default; t=1559690812;
+	bh=AR4eTHwSeJQcxxIju8U2g2uV2eCRmqIjgfKgnmshzos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJYCde74185N/mjMRlJJFzHpp5UaX7s5MT9X9L+RkHWYkuhkqjhIHz/qjUPlKLccq
-	 UDCaPLJCJ9LrqD85wT6mnefXNN1X2nC9ECk6PBnP8KHHV4VINjXzrGkR2lT+v/3kn4
-	 DJ4aif+iT/70sLDXs8KhYyPsow7EuyAOSuqpPsRk=
+	b=xKn45Nm9UfdzdON9+cQ4QF+124In8TZ31qJ863Drj/PkyhiigLIbYs9dagsxvC0Y5
+	 +WCZniF37uKIvJZMLm3odMci7Lsv4wNsSoawRIfD5OGLOQzKUFqooqrQka80R/YW7E
+	 E5OFeVlhKBYmlz2TgOT7VesiVqQAgXWsOI5nMVjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfFDXZf (ORCPT
+        id S1727591AbfFDX0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbfFDXZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:28 -0400
+        id S1728044AbfFDXZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F43B20859;
-        Tue,  4 Jun 2019 23:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E299208CB;
+        Tue,  4 Jun 2019 23:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690727;
-        bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
+        s=default; t=1559690730;
+        bh=AR4eTHwSeJQcxxIju8U2g2uV2eCRmqIjgfKgnmshzos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xaX56KFMYM7d4pz1lW5s97a13pRkjKCGjZW+80qg0vx+qBytAebEhK12Kh3PCZ+fg
-         u5MU43oIbvpDxReWSVhhcOfRxc5XEeg9WV52si2/QEO9ZSaKcUdcXzaJkpnvVobk1f
-         OffBHT0TWVkx1F9i6o9GFvPUnZGACKOcB7JPPJJ0=
+        b=cCCLfOLUDhE8RJ6dT7Gx+EDgypg1KTOgVPAsVBE3UkJ3yQ3vf+MbaeuC3ZiacqwPL
+         bmkbK1OkVSCNXOAkuFKRz+jhViuV4IPF3Ys/QmFw4QVZPWyUgnG2niGBlF1XiDpI57
+         NUaadR2BTPWpAzokiiFtGNCqHi2YFCpa4EUpl/9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bernd Eckstein <3erndeckstein@gmail.com>,
-        Oliver Zweigle <Oliver.Zweigle@faro.com>,
-        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/17] usbnet: ipheth: fix racing condition
-Date:   Tue,  4 Jun 2019 19:24:55 -0400
-Message-Id: <20190604232459.7745-14-sashal@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/17] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
+Date:   Tue,  4 Jun 2019 19:24:58 -0400
+Message-Id: <20190604232459.7745-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
 References: <20190604232459.7745-1-sashal@kernel.org>
@@ -62,62 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernd Eckstein <3erndeckstein@gmail.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
+[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
 
-Fix a racing condition in ipheth.c that can lead to slow performance.
+kselftests exposed a problem in the s390 handling for memory slots.
+Right now we only do proper memory slot handling for creation of new
+memory slots. Neither MOVE, nor DELETION are handled properly. Let us
+implement those.
 
-Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
-ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
-When this happens, the queue is stopped longer than it needs to be,
-thus reducing network performance.
-
-Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
-is always correct. In case, usb_submit_urb() fails, the queue is woken up
-again as callback will not fire.
-
-Testing: This racing condition is usually not noticeable, as it has to
-occur very frequently to slowdown the network. The callback from the USB
-is usually triggered slow enough, so the situation does not appear.
-However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
-the we loose the race quite often and the following speedup can be noticed:
-
-Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
-With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
-
-Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
-Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/ipheth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
-index 01f95d192d25..2b16a5fed9de 100644
---- a/drivers/net/usb/ipheth.c
-+++ b/drivers/net/usb/ipheth.c
-@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
- 			  dev);
- 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 2032ab81b2d7..07f571900676 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3288,21 +3288,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
+ {
+-	int rc;
+-
+-	/* If the basics of the memslot do not change, we do not want
+-	 * to update the gmap. Every update causes several unnecessary
+-	 * segment translation exceptions. This is usually handled just
+-	 * fine by the normal fault handler + gmap, but it will also
+-	 * cause faults on the prefix page of running guest CPUs.
+-	 */
+-	if (old->userspace_addr == mem->userspace_addr &&
+-	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
+-	    old->npages * PAGE_SIZE == mem->memory_size)
+-		return;
++	int rc = 0;
  
-+	netif_stop_queue(net);
- 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
- 	if (retval) {
- 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
- 			__func__, retval);
- 		dev->net->stats.tx_errors++;
- 		dev_kfree_skb_any(skb);
-+		netif_wake_queue(net);
- 	} else {
- 		dev->net->stats.tx_packets++;
- 		dev->net->stats.tx_bytes += skb->len;
- 		dev_consume_skb_any(skb);
--		netif_stop_queue(net);
- 	}
- 
- 	return NETDEV_TX_OK;
+-	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+-		mem->guest_phys_addr, mem->memory_size);
++	switch (change) {
++	case KVM_MR_DELETE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		break;
++	case KVM_MR_MOVE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		if (rc)
++			break;
++		/* FALLTHROUGH */
++	case KVM_MR_CREATE:
++		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
++				      mem->guest_phys_addr, mem->memory_size);
++		break;
++	case KVM_MR_FLAGS_ONLY:
++		break;
++	default:
++		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
++	}
+ 	if (rc)
+ 		pr_warn("failed to commit memory region\n");
+ 	return;
 -- 
 2.20.1
 
