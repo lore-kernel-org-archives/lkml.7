@@ -2,114 +2,109 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51103C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE9C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3315F23F04
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E724E24C43
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ha1kdGk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfFDIx0 (ORCPT
+        id S1727055AbfFDIyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:53:26 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44492 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfFDIxZ (ORCPT
+        Tue, 4 Jun 2019 04:54:08 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1828 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfFDIyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:53:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x47so12766176qtk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sVr7blrSWK0UByMgK8SdANdy6UgQTdw57Gh17vSspak=;
-        b=dsMHO875mIiCL/RxUBgrN9MyzSsleL/hGUT7guB1drfPQieqJgVEZfuCpbMh62GKDk
-         Qf7ozeOI9ZnCMXf9WVPuSuvCIjc9DJdObXIv40OTl9A+mmdUhFU+4LG7i8jJgyFxmOU1
-         ITQn/yUCrHH8iSYoIPhAIf9/zGCEZRjEhM950zoocP1B2XOFTcHcNN1vkZgvZOFFP8vm
-         F/Tt9oT1MtLabBgGvySVZOWBHYFLJvPSkH2bDuhVjK4xQ45KC64r1EG4EJbhLAZq5Si+
-         Xd+6K4MCuMAy+Oir9+qxnYt0VFZkNli/nGbnPnUlEGbkUOuYRRj5FYxkQbMCauiMEjK+
-         KkCw==
-X-Gm-Message-State: APjAAAUZZrr6UuoHGM0azDZXeG0qWsM4eFDYOeAAl2osAzRgqj21EeAU
-        fRpgZy8pOluW/VY6xMWxD3x8tbtMlEbQH7NEfwyilw==
-X-Google-Smtp-Source: APXvYqwcmdQn7jDdAX4WgObYwtS3WxheoXf60Q29VNVzRPMwaGTHOaSlfLpwLzwB163jQdXsgkYWrER3QOHoHJmUpZk=
-X-Received: by 2002:ac8:2998:: with SMTP id 24mr26315694qts.31.1559638404643;
- Tue, 04 Jun 2019 01:53:24 -0700 (PDT)
+        Tue, 4 Jun 2019 04:54:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf631a10000>; Tue, 04 Jun 2019 01:53:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 01:54:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 01:54:06 -0700
+Received: from [10.19.120.158] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 08:54:04 +0000
+Subject: Re: [PATCH v11 0/2] usb: xhci: Add Clear_TT_Buffer
+To:     Greg KH <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>
+References: <1559559224-9845-1-git-send-email-jilin@nvidia.com>
+ <20190603122303.GA16267@kroah.com>
+CC:     <mathias.nyman@intel.com>, <kai.heng.feng@canonical.com>,
+        <drinkcat@chromium.org>, <Thinh.Nguyen@synopsys.com>,
+        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Jim Lin <jilin@nvidia.com>
+Message-ID: <e7ccbc27-2ff4-b1b9-aa1b-c77da5e122ca@nvidia.com>
+Date:   Tue, 4 Jun 2019 16:53:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
- <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm> <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
- <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com> <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
- <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com> <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
- <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com> <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
- <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
- <e431dafc-0fb4-4be3-ac29-dcf125929090@redhat.com> <CAO-hwJ+5UYJMnuCS0UL4g45Xc181LraAzc-CMuYB2rcqKGe_Sw@mail.gmail.com>
- <4548d196-b75f-c4d0-8f3c-3e734b9a758c@redhat.com> <c05929f4-00b6-e098-cd69-cd6539ccd3f1@redhat.com>
-In-Reply-To: <c05929f4-00b6-e098-cd69-cd6539ccd3f1@redhat.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 4 Jun 2019 10:53:12 +0200
-Message-ID: <CAO-hwJJWWRf8cCLCB3JdfFGCGPnp9ar9HC_QAg7crJ0y+pA-hg@mail.gmail.com>
-Subject: Re: hid-related 5.2-rc1 boot hang
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190603122303.GA16267@kroah.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559638434; bh=mLYTPQ/PfK0tfvP0/dpg+Xz6JZOJSrJlWomfCeFvWF0=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=Ha1kdGk8vETSu44OZuYpp04n6UVlNEIZa2AkRiukbCzOe6wCs/l2MCJnx/tG8eW/0
+         T6rHuCxPRov8L9y1pH9vGiKTuXeKMUlDbGIC6GZOPnPXVPrnNwK6ieY3D2TNW7NuLx
+         omS65L97W8yDVe06AGeGrPO40aNmLMEcj4IwU/pGGXX5+yCUNoS+OctYiaspZ61Qa0
+         Us/eClklU2+ZX1YD8yzE0/BxYV5eMstMXNmHsp1dAz/ygfxVVBR6EjzrpKFLnGFkAA
+         os/ImDtfVuE77QuhfTdZCmQQD4xmnPN0LyZoFCYJmgB38ZdaKnQE1ItAxEXZBvTdYJ
+         Jlm5elF24Mv6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 10:36 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 04-06-19 10:05, Hans de Goede wrote:
->
-> <snip>
->
-> >>>> We should likely just remove c52f from the list of supported devices.
-> >>>> C52f receivers seem to have a different firmware as they are meant to
-> >>>> work with different devices than C534. So I guess it is safer to not
-> >>>> handle those right now and get the code in when it is ready.
-> >>>
-> >>> Ack. Can you prepare a patch to drop the c52f id?
-> >>
-> >> Yes. I have an other revert never submitted that I need to push, so I
-> >> guess I can do a revert session today.
-> >>
-> >> I think I'll also buy one device with hopefully the C52F receiver as
-> >> the report descriptors attached in
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=203619 seems different to
-> >> what I would have expected.
-> >
-> > They are actually what I expected :)
-> >
-> > The first USB interface is a mouse boot class device, since this is a mouse
-> > only receiver. This means that the mouse report is unnumbered and we need to
-> > extend the unnumbered mouse-report handling to handle this case. Also the
-> > device is using the same highres mouse-reports as the gaming receiver is.
-> >
-> > I'm actually preparing a patch right now which should fix this. Still might
-> > be better to do the revert for 5.2 and get proper support for the c52f
-> > receiver into 5.3.
->
-> I've attached a patch to the bug:
-> https://bugzilla.kernel.org/show_bug.cgi?id=203619
 
-Cool, thanks.
 
->
-> Which should fix this. It is quite simple and safe, so if we get testing
-> feedback relatively soon, we could go with the fix instead of dropping the
-> product-id, your call.
+On 2019=E5=B9=B406=E6=9C=8803=E6=97=A5 20:23, Greg KH wrote:
+> On Mon, Jun 03, 2019 at 06:53:42PM +0800, Jim Lin wrote:
+>> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+>> processing for full-/low-speed endpoints connected via a TT, the host
+>> software must use the Clear_TT_Buffer request to the TT to ensure
+>> that the buffer is not in the busy state".
+>>
+>> In our case, a full-speed speaker (ConferenceCam) is behind a high-
+>> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+>> request we may continue to get STALL with the folllowing requests,
+>> like Set_Interface.
+>>
+>> Solution is to invoke usb_hub_clear_tt_buffer() to send
+>> Clear_TT_Buffer request to the hub of the device for the following
+>> Set_Interface requests to the device to get ACK successfully.
+>>
+>> The Clear_TT_Buffer request sent to the hub includes the address of
+>> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
+>> uses udev->devnum to set the address wValue. This won't work for
+>> devices connected to xHC.
+>>
+>> For other host controllers udev->devnum is the same as the address of
+>> the usb device, chosen and set by usb core. With xHC the controller
+>> hardware assigns the address, and won't be the same as devnum.
+>>
+>> Here we have two patches.
+>> One is to add devaddr in struct usb_device for
+>> usb_hub_clear_tt_buffer() to use.
+>> Another is to invoke usb_hub_clear_tt_buffer() for halt processing.
+> Why did you resend patch series 11?
+Didn't get response in 2 or 3 days.
+Will be more patient next time.
 
-I should receive the M280 tomorrow, hopefully with the C52F. If the
-receiver is correct and the tests are successful, I'd prefer to take
-this one over the revert :)
+May I get patch v11 1/2 acked or reviewed by Alan?
 
-Cheers,
-Benjamin
+Thanks,
+Jim
