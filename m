@@ -2,137 +2,119 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C9BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FD423426
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342EE24A74
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lQ08PYzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfFDOyS (ORCPT
+        id S1727838AbfFDOyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:54:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17665 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727563AbfFDOyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:54:18 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5E0234E8820ACC109B4F;
-        Tue,  4 Jun 2019 22:54:14 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
- 22:54:04 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <ebiggers@google.com>, <rob.rice@broadcom.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] crypto: bcm - Make some symbols static
-Date:   Tue, 4 Jun 2019 22:53:51 +0800
-Message-ID: <20190604145351.19392-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 4 Jun 2019 10:54:33 -0400
+Received: from vps.xff.cz ([195.181.215.36]:35170 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727586AbfFDOyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:54:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559660071; bh=95GYOgwl829tExfkDRtkMvcWLHLqIMDdOvd0ItQBRPA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lQ08PYzAowbpDALh/bdzfBKo2Glb31I+mPrDYyfuk3YUz7jUjP2TtF05N7MRU/ABy
+         ys6ZI84RcheuM7k2KhWKh1CcT2ElO9D+OfXrBtTR/YWsT7VFHVOTIUXA0gPdGnbJtF
+         tNWOQaooGXJWtgGvUEWRkvO6/e0ePeOF9ehbh9GQ=
+Date:   Tue, 4 Jun 2019 16:54:30 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v3 03/12] media: rc: sunxi: Add A31 compatible
+Message-ID: <20190604145430.xqufpyosetgb4bo7@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-4-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528161440.27172-4-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On Tue, May 28, 2019 at 06:14:31PM +0200, Clément Péron wrote:
+> Allwiner A31 has a different memory mapping so add the compatible
+> we will need it later.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/media/rc/sunxi-cir.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+> index d02dcb6fd0a5..0504ebfc831f 100644
+> --- a/drivers/media/rc/sunxi-cir.c
+> +++ b/drivers/media/rc/sunxi-cir.c
+> @@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_quirks = {
+>  	.fifo_size = 64,
+>  };
+>  
+> +static const struct sunxi_ir_quirks sun6i_a31_ir_quirks = {
+> +	.has_reset = true,
+> +	.fifo_size = 64,
+> +};
+> +
 
-drivers/crypto/bcm/cipher.c:99:6: warning: symbol 'BCMHEADER' was not declared. Should it be static?
-drivers/crypto/bcm/cipher.c:2096:6: warning: symbol 'spu_no_incr_hash' was not declared. Should it be static?
-drivers/crypto/bcm/cipher.c:4823:5: warning: symbol 'bcm_spu_probe' was not declared. Should it be static?
-drivers/crypto/bcm/cipher.c:4867:5: warning: symbol 'bcm_spu_remove' was not declared. Should it be static?
-drivers/crypto/bcm/spu2.c:52:6: warning: symbol 'spu2_cipher_type_names' was not declared. Should it be static?
-drivers/crypto/bcm/spu2.c:56:6: warning: symbol 'spu2_cipher_mode_names' was not declared. Should it be static?
-drivers/crypto/bcm/spu2.c:60:6: warning: symbol 'spu2_hash_type_names' was not declared. Should it be static?
-drivers/crypto/bcm/spu2.c:66:6: warning: symbol 'spu2_hash_mode_names' was not declared. Should it be static?
+BTW, H6 BSP uses FIFO size 40:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/crypto/bcm/cipher.c |  8 ++++----
- drivers/crypto/bcm/spu2.c   | 10 +++++-----
- 2 files changed, 9 insertions(+), 9 deletions(-)
+https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/drivers/media/rc/sunxi-ir-dev.c#L290
 
-diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-index 25f8d39..d972ffa 100644
---- a/drivers/crypto/bcm/cipher.c
-+++ b/drivers/crypto/bcm/cipher.c
-@@ -96,7 +96,7 @@ MODULE_PARM_DESC(aead_pri, "Priority for AEAD algos");
-  * 0x70 - ring 2
-  * 0x78 - ring 3
-  */
--char BCMHEADER[] = { 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28 };
-+static char BCMHEADER[] = { 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28 };
- /*
-  * Some SPU hw does not use BCM header on SPU messages. So BCM_HDR_LEN
-  * is set dynamically after reading SPU type from device tree.
-@@ -2094,7 +2094,7 @@ static int __ahash_init(struct ahash_request *req)
-  * Return: true if incremental hashing is not supported
-  *         false otherwise
-  */
--bool spu_no_incr_hash(struct iproc_ctx_s *ctx)
-+static bool spu_no_incr_hash(struct iproc_ctx_s *ctx)
- {
- 	struct spu_hw *spu = &iproc_priv.spu;
- 
-@@ -4820,7 +4820,7 @@ static int spu_dt_read(struct platform_device *pdev)
- 	return 0;
- }
- 
--int bcm_spu_probe(struct platform_device *pdev)
-+static int bcm_spu_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct spu_hw *spu = &iproc_priv.spu;
-@@ -4864,7 +4864,7 @@ int bcm_spu_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--int bcm_spu_remove(struct platform_device *pdev)
-+static int bcm_spu_remove(struct platform_device *pdev)
- {
- 	int i;
- 	struct device *dev = &pdev->dev;
-diff --git a/drivers/crypto/bcm/spu2.c b/drivers/crypto/bcm/spu2.c
-index bf7ac62..960b472 100644
---- a/drivers/crypto/bcm/spu2.c
-+++ b/drivers/crypto/bcm/spu2.c
-@@ -49,21 +49,21 @@ enum spu2_proto_sel {
- 	SPU2_DTLS_AEAD = 10
- };
- 
--char *spu2_cipher_type_names[] = { "None", "AES128", "AES192", "AES256",
-+static char *spu2_cipher_type_names[] = { "None", "AES128", "AES192", "AES256",
- 	"DES", "3DES"
- };
- 
--char *spu2_cipher_mode_names[] = { "ECB", "CBC", "CTR", "CFB", "OFB", "XTS",
--	"CCM", "GCM"
-+static char *spu2_cipher_mode_names[] = { "ECB", "CBC", "CTR", "CFB", "OFB",
-+	"XTS", "CCM", "GCM"
- };
- 
--char *spu2_hash_type_names[] = { "None", "AES128", "AES192", "AES256",
-+static char *spu2_hash_type_names[] = { "None", "AES128", "AES192", "AES256",
- 	"Reserved", "Reserved", "MD5", "SHA1", "SHA224", "SHA256", "SHA384",
- 	"SHA512", "SHA512/224", "SHA512/256", "SHA3-224", "SHA3-256",
- 	"SHA3-384", "SHA3-512"
- };
- 
--char *spu2_hash_mode_names[] = { "CMAC", "CBC-MAC", "XCBC-MAC", "HMAC",
-+static char *spu2_hash_mode_names[] = { "CMAC", "CBC-MAC", "XCBC-MAC", "HMAC",
- 	"Rabin", "CCM", "GCM", "Reserved"
- };
- 
--- 
-2.7.4
+Have you tried filling the fifo with over 40 words on H6, to see if it works?
 
+I know it's docummented as having 64 words in the manual, so maybe Allwiner
+just didn't care enough to make the driver configurable, and the H6
+FIFO really has that depth.
 
+regards,
+	o.
+
+>  static const struct of_device_id sunxi_ir_match[] = {
+>  	{
+>  		.compatible = "allwinner,sun4i-a10-ir",
+> @@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] = {
+>  		.compatible = "allwinner,sun5i-a13-ir",
+>  		.data = &sun5i_a13_ir_quirks,
+>  	},
+> +	{
+> +		.compatible = "allwinner,sun6i-a31-ir",
+> +		.data = &sun6i_a31_ir_quirks,
+> +	},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, sunxi_ir_match);
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
