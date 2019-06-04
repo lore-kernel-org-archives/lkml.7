@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C08C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855A920717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E898220B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LSVcOA+Y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p/w+dePU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfFDNRv (ORCPT
+        id S1727626AbfFDNSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:17:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50334 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727149AbfFDNRt (ORCPT
+        Tue, 4 Jun 2019 09:18:00 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54942 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfFDNR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:17:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHOCZ082297;
-        Tue, 4 Jun 2019 08:17:24 -0500
+        Tue, 4 Jun 2019 09:17:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHZbs028030;
+        Tue, 4 Jun 2019 08:17:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654244;
-        bh=r7Ei7rsj5lX30OaH2FuRyDzaWU4cllou71wNl6pyjGU=;
+        s=ti-com-17Q1; t=1559654255;
+        bh=NQisG6of0th5e5nh0dWxjvqkrQFUAwxLaJ6uQ3mRLhk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LSVcOA+Yvgp5r4q37wsXmkUbV/VfLRgfiNv3EB13v74k4jJgbghcsXk7Gnb59nUyf
-         jSgBO6w/fIVnaXDF1mZkeFCQcxOtdDnsWypr0fkDmTYMDir+xvtwJ6WCRweqfrkiJy
-         cZC3MNhpjHt2TvSlI8WXEamLJPJiycennA//lZtg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHOIc042670
+        b=p/w+dePUAOZBdhfQ0h69WotHcCUiE55mkIh05kVLvDhwP57FXWOS0v2PQ6GB0z8oC
+         Ns6QDwgoGcD3juTUBM6xVmTZQPxxn6BDTSRI/PTavSeixh1+Sxn+walG/sXKZKphGO
+         ByoDc+Hj6QGTVHa+raGna/KVWeHm4VUgqn4VBy50=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHZFO052752
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:17:24 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:17:35 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:17:24 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:17:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:17:24 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:17:34 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGN098972;
-        Tue, 4 Jun 2019 08:17:19 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGP098972;
+        Tue, 4 Jun 2019 08:17:30 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -63,9 +63,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 07/30] PCI: cadence: Add read and write accessors to perform only 32-bit accesses
-Date:   Tue, 4 Jun 2019 18:44:53 +0530
-Message-ID: <20190604131516.13596-8-kishon@ti.com>
+Subject: [RFC PATCH 09/30] PCI: cadence: Add platform_data to start link and check link status
+Date:   Tue, 4 Jun 2019 18:44:55 +0530
+Message-ID: <20190604131516.13596-10-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -77,77 +77,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain platforms like TI's J721E allows only 32-bit register accesses.
-Add read and write accessor to perform only 32-bit accesses in order to
-support platfroms like TI's J721E.
+Add support in cadence driver to read platform_data passed to it from
+platform specific drivers. The platform_data right now contains two
+ops, one to start link and the other to check the link status.
+This is required since the registers for starting a link and for
+checking link status is in the wrapper and not in Cadence PCIe core.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence.c | 40 +++++++++++++++++++++++++++
- drivers/pci/controller/pcie-cadence.h |  2 ++
- 2 files changed, 42 insertions(+)
+ drivers/pci/controller/pcie-cadence-ep.c   |  1 +
+ drivers/pci/controller/pcie-cadence-host.c |  1 +
+ drivers/pci/controller/pcie-cadence.c      | 41 ++++++++++++++++++++++
+ drivers/pci/controller/pcie-cadence.h      | 13 +++++++
+ 4 files changed, 56 insertions(+)
 
+diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+index 07f840cfba23..b044167071e6 100644
+--- a/drivers/pci/controller/pcie-cadence-ep.c
++++ b/drivers/pci/controller/pcie-cadence-ep.c
+@@ -462,6 +462,7 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+ 
+ 	pcie = &ep->pcie;
+ 	pcie->is_rc = false;
++	pcie->plat_data = pdev->dev.platform_data;
+ 
+ 	data = (struct cdns_pcie_ep_data *)match->data;
+ 	if (data) {
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index ab6491b23775..2363f05e7c58 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -304,6 +304,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	rc->dev = dev;
+ 
+ 	pcie = &rc->pcie;
++	pcie->plat_data = pdev->dev.platform_data;
+ 	pcie->is_rc = true;
+ 
+ 	data = (struct cdns_pcie_host_data *)match->data;
 diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
-index cd795f6fc1e2..de5b3b06f2d0 100644
+index de5b3b06f2d0..5ac42b19bb63 100644
 --- a/drivers/pci/controller/pcie-cadence.c
 +++ b/drivers/pci/controller/pcie-cadence.c
-@@ -7,6 +7,46 @@
+@@ -3,6 +3,7 @@
+ // Cadence PCIe controller driver.
+ // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+ 
++#include <linux/delay.h>
+ #include <linux/kernel.h>
  
  #include "pcie-cadence.h"
+@@ -47,6 +48,46 @@ void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
+ 	writel(val, aligned_addr);
+ }
  
-+u32 cdns_pcie_read32(void __iomem *addr, int size)
++int cdns_pcie_start_link(struct cdns_pcie *pci, bool start)
 +{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 val = readl(aligned_addr);
++	struct cdns_pcie_plat_data *plat_data;
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
++	plat_data = pci->plat_data;
++	if (!plat_data)
 +		return 0;
-+	}
 +
-+	if (size > 2)
-+		return val;
-+
-+	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
++	return plat_data->start_link(plat_data, start);
 +}
 +
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
++static bool cdns_pcie_is_link_up(struct cdns_pcie *pci)
 +{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 mask;
-+	u32 val;
++	struct cdns_pcie_plat_data *plat_data;
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
-+		return;
++	plat_data = pci->plat_data;
++	if (!plat_data)
++		return true;
++
++	return plat_data->is_link_up(plat_data);
++}
++
++int cdns_pcie_wait_for_link(struct device *dev, struct cdns_pcie *pci)
++{
++	int retries;
++
++	/* Check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (cdns_pcie_is_link_up(pci)) {
++			dev_info(dev, "Link up\n");
++			return 0;
++		}
++		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
 +	}
 +
-+	if (size > 2) {
-+		writel(value, addr);
-+		return;
-+	}
++	dev_err(dev, "Phy link never came up\n");
 +
-+	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
-+	val = readl(aligned_addr) & mask;
-+	val |= value << (offset * 8);
-+	writel(val, aligned_addr);
++	return -ETIMEDOUT;
 +}
 +
  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
  				   u32 r, bool is_io,
  				   u64 cpu_addr, u64 pci_addr, size_t size)
 diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-index 0134c1b1ad65..d157bf5eabd5 100644
+index d157bf5eabd5..3cef398b50da 100644
 --- a/drivers/pci/controller/pcie-cadence.h
 +++ b/drivers/pci/controller/pcie-cadence.h
-@@ -406,6 +406,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
+@@ -10,6 +10,11 @@
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+ 
++/* Parameters for the waiting for link up routine */
++#define LINK_WAIT_MAX_RETRIES	10
++#define LINK_WAIT_USLEEP_MIN	90000
++#define LINK_WAIT_USLEEP_MAX	100000
++
+ /*
+  * Local Management Registers
+  */
+@@ -221,6 +226,11 @@ enum cdns_pcie_msg_routing {
+ 	MSG_ROUTING_GATHER,
+ };
+ 
++struct cdns_pcie_plat_data {
++	int (*start_link)(struct cdns_pcie_plat_data *data, bool start);
++	bool (*is_link_up)(struct cdns_pcie_plat_data *data);
++};
++
+ /**
+  * struct cdns_pcie - private data for Cadence PCIe controller drivers
+  * @reg_base: IO mapped register base
+@@ -236,6 +246,7 @@ struct cdns_pcie {
+ 	int			phy_count;
+ 	struct phy		**phy;
+ 	struct device_link	**link;
++	struct cdns_pcie_plat_data *plat_data;
+ 	u32 (*read)(void __iomem *addr, int size);
+ 	void (*write)(void __iomem *addr, int size, u32 value);
+ };
+@@ -408,6 +419,8 @@ int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
  int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-+u32 cdns_pcie_read32(void __iomem *addr, int size);
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
+ u32 cdns_pcie_read32(void __iomem *addr, int size);
+ void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
++int cdns_pcie_start_link(struct cdns_pcie *pci, bool start);
++int cdns_pcie_wait_for_link(struct device *dev, struct cdns_pcie *pci);
  extern const struct dev_pm_ops cdns_pcie_pm_ops;
  
  #endif /* _PCIE_CADENCE_H */
