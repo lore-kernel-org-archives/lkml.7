@@ -2,144 +2,145 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F5DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179E9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389212462B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B423B18
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b9g0hMic"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ihm/uBLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfFDNmd (ORCPT
+        id S1727461AbfFDNr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:42:33 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35838 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727129AbfFDNmd (ORCPT
+        Tue, 4 Jun 2019 09:47:26 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:2489 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFDNrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:42:33 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54DfteG014985;
-        Tue, 4 Jun 2019 15:41:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=M1ARtYLXli88iDKYpkMnq7TdIq5neeJeurB8IVq3Y8M=;
- b=b9g0hMiciQtFL5y2yOY571VXhnDx2lIN/CI7j+1MLpKo1hrGXeSH497fap8dykQRQigX
- 5zC0ptZgKu3QpKYo/dSuF/bywTIktJ0N1OQK6gPHDE+Q4fGPxm/oglW40BWHia+02+Yf
- dJE6nj4/ah802DrCqnbpweoyHTZpFes4l6OGcXBVtO/K86WFtANxHqVvRnyWV1KkCRnp
- 3tYasdyHASH/fqtLBw6FH6A9TM0z75LgXQcdIytLXF75wWfGpY4rdDhXcyS6Fam9BFS0
- dpCJjP+1epNmXoLPgp6uCfpf1GEZczW4Z5oDWXEJBAkehXQa8+wiY6i3wlnC/kW6A3Xe YA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sunds15t3-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 04 Jun 2019 15:41:56 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6908F70;
-        Tue,  4 Jun 2019 13:41:47 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 36F7D2AEA;
-        Tue,  4 Jun 2019 13:41:47 +0000 (GMT)
-Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Jun
- 2019 15:41:47 +0200
-Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
- SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
- 15.00.1347.000; Tue, 4 Jun 2019 15:41:46 +0200
-From:   Erwan LE RAY <erwan.leray@st.com>
-To:     Borut Seljak <borut.seljak@t-2.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "\"; linux-arm-kernel\"@lists.infradead.org" 
-        <"; linux-arm-kernel"@lists.infradead.org>
-Subject: Re: Fwd: [PATCH] serial: stm32: fix a recursive locking in
- stm32_config_rs485
-Thread-Topic: Fwd: [PATCH] serial: stm32: fix a recursive locking in
- stm32_config_rs485
-Thread-Index: AQHVGr0egfGBr+I5bUuvhxEmcTN9eaaLX30A
-Date:   Tue, 4 Jun 2019 13:41:46 +0000
-Message-ID: <41dddd5f-5c1c-3346-890a-8018f26ebd49@st.com>
-References: <20190604095452.6360-1-borut.seljak@t-2.net>
- <f2a264ac-e334-63b7-18c9-e45cde7bdf95@st.com>
-In-Reply-To: <f2a264ac-e334-63b7-18c9-e45cde7bdf95@st.com>
-Accept-Language: en-US, fr-FR
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <524BAF3F71F59E4E93DCC9EEEDA70D24@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Jun 2019 09:47:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf6766a0000>; Tue, 04 Jun 2019 06:47:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 06:47:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 06:47:24 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 13:47:24 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id BF5AE40609; Tue,  4 Jun 2019 16:47:21 +0300 (EEST)
+Date:   Tue, 4 Jun 2019 16:47:21 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V2 00/12] LP0 entry and exit support for Tegra210
+Message-ID: <20190604134721.GF29894@pdeschrijver-desktop.Nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_09:,,
- signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559656043; bh=h2xwZU1WNNFX816oKRNQbyQ51t2yd2F/AsXBiGhNVVk=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=Ihm/uBLRIn2ScqSaz1oj9l2NqVNY2fx/8jNAdJuDV2k7hPZN0F6YMR+H89uEZlbvF
+         5gZlKQUiCv+o1kUWAUYDId4E6gq8AFCJru2x7UhTJiSSZwleuzzLOFm5sgoyx5/RB4
+         +ODZhkNY91JcdP3rG2e2Y7dFsgyn0kt42+YLExcWHHZQfkHa9RWtk/2yDnOvO0rlVy
+         9uzx7SEaDXA9sMIQq3OI+L69734Z9xUTLEdxN5UFSvInL0P7z5amkewPmCHv3TnWcK
+         W4+VabqiTRMpFgdGbJiF5wOVwc16RtEYK8+bD/jwukJ340ZhBqnjl0EZRfvyJFK6mb
+         EWaD5HOuqDx+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borut,
+On Tue, May 28, 2019 at 04:08:44PM -0700, Sowjanya Komatineni wrote:
+> This patch series includes Tegra210 deepsleep/LP0 support with
+> deep sleep exit through RTC alarm wake and power button wake events.
+> 
 
-Please add the following line in the commit message (before your=20
-sign-off) in a V2 of your patch:
+We have been calling this SC7 (system C-state 7) for quite a while now.
 
-fixes: 1bcda09d291081 ("serial: stm32: add support for RS485 hardware=20
-control mode")
+Peter.
 
-I'm OK with the patch itself.
-
-Erwan.
-
-
-Subject: [PATCH] serial: stm32: fix a recursive locking in
-> stm32_config_rs485
-> Date: Tue,  4 Jun 2019 11:54:51 +0200
-> From: Borut Seljak <borut.seljak@t-2.net>
-> CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
-> <alexandre.torgue@st.com>, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-> borut.seljak@t-2.net, linux-serial@vger.kernel.org, Jiri Slaby
-> <jslaby@suse.com>, linux-stm32@st-md-mailman.stormreply.com,
-> linux-arm-kernel@lists.infradead.org
->
-> Remove spin_lock_irqsave in stm32_config_rs485, it cause recursive lockin=
-g.
-> Already locked in uart_set_rs485_config.
->
-> Signed-off-by: Borut Seljak <borut.seljak@t-2.net>
-> ---
->   drivers/tty/serial/stm32-usart.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/tty/serial/stm32-usart.c
-> b/drivers/tty/serial/stm32-usart.c
-> index e8d7a7bb4339..da373a465f51 100644
-> --- a/drivers/tty/serial/stm32-usart.c
-> +++ b/drivers/tty/serial/stm32-usart.c
-> @@ -107,7 +107,6 @@ static int stm32_config_rs485(struct uart_port *port,
->   	bool over8;
->   	unsigned long flags;
->   -	spin_lock_irqsave(&port->lock, flags);
->   	stm32_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
->    	port->rs485 =3D *rs485conf;
-> @@ -147,7 +146,6 @@ static int stm32_config_rs485(struct uart_port *port,
->   	}
->    	stm32_set_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
-> -	spin_unlock_irqrestore(&port->lock, flags);
->    	return 0;
->   }=
+> Note: Wake on power button is through gpio-keys node in device tree.
+> 
+> This series also includes save and restore of PLLs, clocks, OSC contexts
+> for basic LP0 exit.
+> 
+> This patch series doesn't support 100% suspend/resume to allow fully
+> functional state upon resume and we are working on some more drivers suspend
+> and resume implementations.
+> 
+> [V2] : V1 feedback fixes
+> 	Patch 0002: This version still using syscore. Thierry suggest not to
+> 	use syscore and waiting on suggestion from Linux Walleij for any better
+> 	way of storing current state of pins before suspend entry and restoring
+> 	them on resume at very early stage. So left this the same way as V1 and
+> 	will address once I get more feedback on this.
+> 	Also need to findout and implement proper way of forcing resume order
+> 	between pinctrl and gpio driver.
+> 
+> 
+> Sowjanya Komatineni (12):
+>   irqchip: tegra: do not disable COP IRQ during suspend
+>   pinctrl: tegra: add suspend and resume support
+>   clk: tegra: save and restore PLLs state for system
+>   clk: tegra: add support for peripheral clock suspend and resume
+>   clk: tegra: add support for OSC clock resume
+>   clk: tegra: add suspend resume support for DFLL clock
+>   clk: tegra: support for Tegra210 clocks suspend-resume
+>   soc/tegra: pmc: allow support for more tegra wake models
+>   soc/tegra: pmc: add pmc wake support for tegra210
+>   gpio: tegra: implement wake event support for Tegra210 and prior GPIO
+>   arm64: tegra: enable wake from deep sleep on RTC alarm.
+>   soc/tegra: pmc: configure tegra deep sleep control settings
+> 
+>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
+>  drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
+>  drivers/clk/tegra/clk-dfll.h                   |   2 +
+>  drivers/clk/tegra/clk-divider.c                |  19 ++
+>  drivers/clk/tegra/clk-pll-out.c                |  25 ++
+>  drivers/clk/tegra/clk-pll.c                    |  99 +++++--
+>  drivers/clk/tegra/clk-tegra-fixed.c            |  16 ++
+>  drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.c                        |  74 ++++-
+>  drivers/clk/tegra/clk.h                        |  13 +
+>  drivers/gpio/gpio-tegra.c                      | 116 +++++++-
+>  drivers/irqchip/irq-tegra.c                    |  22 +-
+>  drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
+>  drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
+>  drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
+>  drivers/soc/tegra/pmc.c                        | 150 +++++++++-
+>  21 files changed, 1053 insertions(+), 35 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
