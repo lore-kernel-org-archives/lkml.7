@@ -2,93 +2,132 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634F7C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89B9C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D6D20874
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awN7mKbe"
+	by mail.kernel.org (Postfix) with ESMTP id A919C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559680347;
+	bh=S4TVF7E2iuUumroeAZ+UX1mM+MIND0JGN/wS2NYA7x4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S0qdhvWn0GNszqM/VtwA4M9Gapr+3xhdT7yKEIPPk/BeKdJRfsNagyyfCYNigjcgN
+	 PulgPIT+BrTWJORvZWns3MlcMqZqVFHPa58TeCeEbPo3V+rn0ozyisx7ZVr6x8y0ZH
+	 icBW5ZTXCk2H+mEouyi37R1oZUtLCT/IctjE6qAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFDUcU (ORCPT
+        id S1726819AbfFDUc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:32:20 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38461 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfFDUcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:32:19 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f97so8807309plb.5;
-        Tue, 04 Jun 2019 13:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xLHsidjC5TLzbHioLfQ/skWWJtGlKTXo0ay/yNwMEDo=;
-        b=awN7mKbeTcY9AsQ8syaHantastQxe52wkpM2tURdsXS/KSq1nrBHZQlSxjo3nrFO3+
-         RpgC9UHJ2884dsRAYswNHhjftonjqzU2NbQB0DI+W56XMMU4vjIddip6gwoQqYzHfZMG
-         lbhmf1W3uokioh7ji+Thc8qDRU4X9lv4aTPNjGoXY+TBWXxB+G3sxZylJlmkfHerTijA
-         cMWXmGptey2qU3G1sS+xPH2UM85/+g0OQGG2+a9vf8i0l5jmQew76xqqWCcy+PfAapSa
-         nmGla4Lr2h4aw57qVsCQqSkfYz7kE2fx6saPklMmCo8GujSvcths+i7H+RZA6GaUWjMp
-         cmVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xLHsidjC5TLzbHioLfQ/skWWJtGlKTXo0ay/yNwMEDo=;
-        b=Mev3omk1u3NNhCKrDB8yJRRTPDJHvAmoyeGAvoZ4AH/9FKWs6ITCk72knmPMGBgYuR
-         FIH/qKJMLpJmBZJi4+i3E2R2UMLMwyddxLtWSxZDq5vYDi0cyHTvHEzOxh9hS42GgqEW
-         IlhxAubfcX0e2qwAgOHpN5qucc+DJZNiol01re5lrSiBqXR3/aIoIAfn0nbsZkS5QDe9
-         3PYXxaF3seCJQE8JJwlgjNw5WEZjhnze8CrAjF852gwaqHzoq4iIHeV0m0pUhETwOV9Q
-         tQ70nYUuCHXbd6sZuueb2I7vCa4NsYksNuXa8tUWC2zAvnlJMdtyxmVaIiEAlJk7a51N
-         l6mQ==
-X-Gm-Message-State: APjAAAU/SMU7z+CkDJ8RLIld/8aqCr78pqR+LwM64UjutkACdiIqVrgn
-        4ZTAheDS6Ik1s1GJUj19FIJLoF1+
-X-Google-Smtp-Source: APXvYqyvIJjRbt1Sc1EJ9hgbD7h4lVdmDsmmzUZTgZFnWuNV2Z6CMyTE2wUNQuX+HUsMvSoKMUrErA==
-X-Received: by 2002:a17:902:7e0e:: with SMTP id b14mr13632906plm.257.1559680338779;
-        Tue, 04 Jun 2019 13:32:18 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id t18sm17751967pgm.69.2019.06.04.13.32.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:32:18 -0700 (PDT)
-Subject: Re: [PATCH v3 net-next 02/17] net: dsa: Add teardown callback for
- drivers
-To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
-        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604170756.14338-3-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <8de3b62d-bb60-fb00-4c03-022b209729d6@gmail.com>
-Date:   Tue, 4 Jun 2019 13:32:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 16:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfFDUcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:32:24 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D7A21479
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:26:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559679979;
+        bh=S4TVF7E2iuUumroeAZ+UX1mM+MIND0JGN/wS2NYA7x4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TZBQqTNxxTzP1mGVaees7RCepfLJrDp5RqAlHnL/Ymc/ao63W7bUZ2+GUYPGLR70H
+         NfXQhyKCul5pGMw0cZZoSHpg0S1JbeoCbhmSuGPei3w66RYX2/ENL8maMPOo/zBUsi
+         cFK3D30x08WNFrS12M+rfNw1TJIvGfAx/SxwGo54=
+Received: by mail-wr1-f49.google.com with SMTP id m3so1365783wrv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:26:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAWh18dFWuf4kIzVgjvKJ4Lwek+ofbwp7sKlau3KnF7oml+6R/z6
+        LBHwAn4T6Jb7aXfU3l4OnAKVdy2FCfJ9xOPGF9rUcQ==
+X-Google-Smtp-Source: APXvYqwa0ftoy0sMT67Ri2vN0Uz4JEOrVwQyRXQKgM3vFKhn6zeRoO/sOuA5vu06dNe8x+pyx4YNLtPF6kNlT7kOoDU=
+X-Received: by 2002:a5d:610e:: with SMTP id v14mr22433987wrt.343.1559679977366;
+ Tue, 04 Jun 2019 13:26:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190604170756.14338-3-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-8-sean.j.christopherson@intel.com> <960B34DE67B9E140824F1DCDEC400C0F654ECC53@ORSMSX116.amr.corp.intel.com>
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654ECC53@ORSMSX116.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 13:26:06 -0700
+X-Gmail-Original-Message-ID: <CALCETrVnpFFxNr0=PB9DWqQLeuNoFaa8_iihAcxcQMNrm5ChzA@mail.gmail.com>
+Message-ID: <CALCETrVnpFFxNr0=PB9DWqQLeuNoFaa8_iihAcxcQMNrm5ChzA@mail.gmail.com>
+Subject: Re: [RFC PATCH 7/9] x86/sgx: Enforce noexec filesystem restriction
+ for enclaves
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 2, 2019 at 11:29 PM Xing, Cedric <cedric.xing@intel.com> wrote:
+>
+> > From: Christopherson, Sean J
+> > Sent: Friday, May 31, 2019 4:32 PM
+> >
+> > Do not allow an enclave page to be mapped with PROT_EXEC if the source page is backed by a
+> > file on a noexec file system.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/sgx/driver/ioctl.c | 26 ++++++++++++++++++++++++--
+> >  1 file changed, 24 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> > b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> > index c30acd3fbbdd..5f71be7cbb01 100644
+> > --- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> > +++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+> > @@ -576,6 +576,27 @@ static int __sgx_encl_add_page(struct sgx_encl *encl, unsigned long
+> > addr,
+> >       return ret;
+> >  }
+> >
+> > +static int sgx_encl_page_protect(unsigned long src, unsigned long prot,
+> > +                              unsigned long *allowed_prot)
+> > +{
+> > +     struct vm_area_struct *vma;
+> > +
+> > +     if (!(*allowed_prot & VM_EXEC))
+> > +             goto do_check;
+> > +
+> > +     down_read(&current->mm->mmap_sem);
+> > +     vma = find_vma(current->mm, src);
+> > +     if (!vma || (vma->vm_file && path_noexec(&vma->vm_file->f_path)))
+> > +             *allowed_prot &= ~VM_EXEC;
+>
+> Testing (vma->vm_flags & VM_MAYEXEC) == 0 should be a better approach.
 
-
-On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
-> This is helpful for e.g. draining per-driver (not per-port) tagger
-> queues.
-> 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I think I agree, although that would need a comment explaining why it works.
