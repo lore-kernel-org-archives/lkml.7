@@ -2,167 +2,286 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C472C46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73EFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A58248A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7849223B41
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atzLld6h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmNPKYI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfFDOKg (ORCPT
+        id S1727552AbfFDOMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:10:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37946 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFDOKg (ORCPT
+        Tue, 4 Jun 2019 10:12:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33701 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFDOMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:10:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so220412wmh.3;
-        Tue, 04 Jun 2019 07:10:34 -0700 (PDT)
+        Tue, 4 Jun 2019 10:12:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so2913702qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MQWqnTPlMzq7RFdsPJKNaftIwxm2Lc34V6bRTX+Tfwo=;
-        b=atzLld6h4CKQyI/4lFPboJMv2pm8uRk7p6FD7sjdir1Th3+kWeM3IPGivKigl19Ev6
-         Yg1bdCDK3UMamefNtAfjc2oxK6BpDw4URX5BPhaGGTyqXsfOeliOLn4QIGGfoRpUed7+
-         9H+Ia0aaX52Cm8d3/1eZctHnuqV+zK3DdQQDG3cw0gPaVzas763IK0a+2Q4O04bwvWhh
-         AdeopgfwAwFltVeSNDtdqZ9p6fh3uLNW+EBQrqxwNf3mgOv43FvVZhjKQRQXdVDJOMUT
-         ljATMS9tS+nrLWjCvngi2o32M8qh4nuSt0/zrkJ5UsUt32qLAola+5Hvhhi0kSAsPpRC
-         LUkA==
+        bh=LbDjk+CvjqnOpOZq/owJIOd/cs1uUyqvR8yTCc20Lws=;
+        b=PmNPKYI0naiSGLMrEoJC3digUXIEGsaCbuzKcbErtgcB0sPHq1b5ILlaYE49kF/fG5
+         vJ0dZXX6fmyKmCnjoe17nmJAp5vXkW34KWVjt7NZOHLMT6uLAjnoLnBZhT87TNhUez0S
+         U0B2mVrMFEpCcaWuTwDJ7fARJrrNqsereeN1Nk/hgzmn5qWkoLxcOSWsiNaoRPGFvfbs
+         ggPm1fuWuKic70jkpzcJRBLsW15WU1TSOOlDZmYYgwSK7guI6ZSJvaH/1xXVCT2OZjoj
+         HQfAZLLhOpS4sBdOVYQXZI+QhuzU1qY+cnGHYSCRWZ38A42AvT2znA+XVHKxdSVCSk0i
+         ZX7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MQWqnTPlMzq7RFdsPJKNaftIwxm2Lc34V6bRTX+Tfwo=;
-        b=cMLeXw7+HDYhMplrSeTCwSKDcSXTu9SEjK6y/rTXXkWWkvY4x8uf9W+yS2vc5nBeEf
-         9u+lPWIgkf+wxkATfKZrnmLCAykgdUChRcoinThGuwhnzKoORcrXmjJFqW3xrwnfWyLp
-         CI4wlQDE7H4b6neJPf7JrK3LPEU5L5rKykw4lPgnD1PB/+fLocH61GSy+0CYNAmyQpBT
-         HhzQV2KjYt3Z8zk33TLw7vjYj6n+osv1stzs08KD65Ai+ChCyD1LFH5GpeIfP4NG3ihS
-         124xh5cFKIJ4k0wLnNQKnlgyfKKtkCWuXMYSuzZwBNTunh3hj/fn5eXJN3z4owA8X+Gv
-         TmqA==
-X-Gm-Message-State: APjAAAU/pQZAKRbycdMBGKzxLymntYXHa5sMMzTGTY7+6cvftnHw8Lx1
-        HqJYZqEnIwXBLLeAxKWnSJ8=
-X-Google-Smtp-Source: APXvYqwSjpawjPwIm+UKAqYA7R7GBTeTSB6g2Oebf3dshW7QAiQVDwb9DUK+sLE7TJ9uv/c7BLw2bg==
-X-Received: by 2002:a1c:9c02:: with SMTP id f2mr18695262wme.8.1559657433513;
-        Tue, 04 Jun 2019 07:10:33 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id f197sm18574336wme.39.2019.06.04.07.10.32
+        bh=LbDjk+CvjqnOpOZq/owJIOd/cs1uUyqvR8yTCc20Lws=;
+        b=tOlUVrcWFVdAzOndRXIAYpk+GbaEaB4URfkczOkTLBAvKp4Cvi36vnmgH/vXgR9QWp
+         Wl11eEP2CMLj/5jZRoemkJDmQ/IJfB6ISMMeCakpFcKyGRGOb4v+c/ibfGBYk+IiDUgs
+         wjeZMSzWE+BCvSx5UOn9LelFv2m8h5pcIUITzfkhNuI9sYrp3bVPJ6L2cNIUTOsgaxtF
+         7BCxnBqNHEiYGsJFFlpGGrrKFltJEJbgRfOamGl5KH6XW7Qp1+fHbqZuN+kSlL75FLR0
+         NzTBZXIHi+9VmpdOlWA+AOKppGCrMs77xQw9Q2hDs8IAt6r0++/u77PU3Ja/5XgrCRnL
+         RNhg==
+X-Gm-Message-State: APjAAAWZWGJ2IlAFqVxmXULPnQrTEqeura22CUrK/wsup6MY/gb7GB7H
+        RoFdyAn/9P97fkLQweu7LTY=
+X-Google-Smtp-Source: APXvYqz53n4RZyjg1WtMY6NUpaKrreYOTNnuvBbcezJYzK9Xx1vtdu0ztmQuy9JV3td4nEb9CNXbhA==
+X-Received: by 2002:a37:5c8:: with SMTP id 191mr16010086qkf.188.1559657543466;
+        Tue, 04 Jun 2019 07:12:23 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id f9sm11027927qkb.97.2019.06.04.07.12.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 07:10:32 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 16:10:31 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for
- the driver
-Message-ID: <20190604141031.GB397@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-15-digetx@gmail.com>
- <20190604112026.GN16519@ulmo>
- <ed2c502f-8f49-d89b-32c6-4b5415e1fa47@gmail.com>
+        Tue, 04 Jun 2019 07:12:22 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3A49E41149; Tue,  4 Jun 2019 11:12:20 -0300 (-03)
+Date:   Tue, 4 Jun 2019 11:12:20 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5] perf record: collect user registers set jointly with
+ dwarf stacks
+Message-ID: <20190604141220.GG24504@kernel.org>
+References: <e7fd37b1-af22-0d94-a0dc-5895e803bbfe@linux.intel.com>
+ <20190530194111.GA6540@kernel.org>
+ <3dc0c67e-9ea3-b9f5-1aa2-e87603b29c37@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed2c502f-8f49-d89b-32c6-4b5415e1fa47@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <3dc0c67e-9ea3-b9f5-1aa2-e87603b29c37@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 04, 2019 at 04:53:17PM +0300, Dmitry Osipenko wrote:
-> 04.06.2019 14:20, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, May 02, 2019 at 02:38:13AM +0300, Dmitry Osipenko wrote:
-> >> The driver's compilation doesn't have any specific dependencies, hence
-> >> the COMPILE_TEST option can be supported in Kconfig.
+Em Fri, May 31, 2019 at 09:27:38AM +0300, Alexey Budankov escreveu:
+> On 30.05.2019 22:41, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, May 30, 2019 at 10:03:36PM +0300, Alexey Budankov escreveu:
+> >> When dwarf stacks are collected jointly with user specified register
+> >> set using --user-regs option like below the full register context is
+> >> captured on a sample:
 > >>
-> >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >>  drivers/devfreq/Kconfig | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
 > >>
-> >> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> >> index 56db9dc05edb..a6bba6e1e7d9 100644
-> >> --- a/drivers/devfreq/Kconfig
-> >> +++ b/drivers/devfreq/Kconfig
-> >> @@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
-> >> =20
-> >>  config ARM_TEGRA_DEVFREQ
-> >>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
-> >> -	depends on ARCH_TEGRA
-> >> +	depends on ARCH_TEGRA || COMPILE_TEST
-> >>  	select PM_OPP
-> >>  	help
-> >>  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
-> >=20
-> > You need to be careful with these. You're using I/O register accessors,
-> > which are not supported on the UM architecture, for example.
-> >=20
-> > This may end up getting flagged during build testing.
->=20
-> We have similar cases in other drivers and it doesn't cause any known
-> problems because (I think) build-bots are aware of this detail. Hence
+> >>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+> >>   ... FP chain: nr:0
+> >>   ... user regs: mask 0xff0fff ABI 64-bit
+> >>   .... AX    0x53b
+> >>   .... BX    0x7ffedbdd3cc0
+> >>   .... CX    0xffffffff
+> >>   .... DX    0x33d3a
+> >>   .... SI    0x7f09b74c38d0
+> >>   .... DI    0x0
+> >>   .... BP    0x401260
+> >>   .... SP    0x7ffedbdd3cc0
+> >>   .... IP    0x401236
+> >>   .... FLAGS 0x20a
+> >>   .... CS    0x33
+> >>   .... SS    0x2b
+> >>   .... R8    0x7f09b74c3800
+> >>   .... R9    0x7f09b74c2da0
+> >>   .... R10   0xfffffffffffff3ce
+> >>   .... R11   0x246
+> >>   .... R12   0x401070
+> >>   .... R13   0x7ffedbdd5db0
+> >>   .... R14   0x0
+> >>   .... R15   0x0
+> >>   ... ustack: size 1024, offset 0xe0
+> >>    . data_src: 0x5080021
+> >>    ... thread: stack_test2.g.O:23828
+> >>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+> >>
+> >> After applying the change suggested in the patch the sample data contain
+> >> only user specified register values. IP and SP registers (DWARF_MINIMAL_REGS)
+> >> are collected anyways regardless of the --user-regs value provided from
+> >> the command line:
+> > 
+> > Applied, changed the subject and description to:
+> > 
+> > perf record: Allow mixing --user-regs with --call-graph=dwarf
+> > 
+> > When DWARF stacks were requested and at the same time that the user
+> > specifies a register set using the --user-regs option the full register
+> > context was being captured on samples:
+> > 
+> >   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
+> > 
+> >   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+> >   ... FP chain: nr:0
+> >   ... user regs: mask 0xff0fff ABI 64-bit
+> >   .... AX    0x53b
+> >   .... BX    0x7ffedbdd3cc0
+> >   .... CX    0xffffffff
+> >   .... DX    0x33d3a
+> >   .... SI    0x7f09b74c38d0
+> >   .... DI    0x0
+> >   .... BP    0x401260
+> >   .... SP    0x7ffedbdd3cc0
+> >   .... IP    0x401236
+> >   .... FLAGS 0x20a
+> >   .... CS    0x33
+> >   .... SS    0x2b
+> >   .... R8    0x7f09b74c3800
+> >   .... R9    0x7f09b74c2da0
+> >   .... R10   0xfffffffffffff3ce
+> >   .... R11   0x246
+> >   .... R12   0x401070
+> >   .... R13   0x7ffedbdd5db0
+> >   .... R14   0x0
+> >   .... R15   0x0
+> >   ... ustack: size 1024, offset 0xe0
+> >    . data_src: 0x5080021
+> >    ... thread: stack_test2.g.O:23828
+> >    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+> > 
+> > I.e. the --user-regs=IP,SP,BP was being ignored, being overridden by the
+> > needs of --call-graph=dwarf.
+> > 
+> > After applying the change in this patch the sample data contains the
+> > user specified register, but making sure that at least the minimal set
+> > of register needed for DWARF unwinding (DWARF_MINIMAL_REGS) is
+> > requested.
+> > 
+> > The user is warned that DWARF unwinding may not work if extra registers
+> > end up being needed.
+> > 
+> >   -g call-graph dwarf,K                         full_regs
+> >   --user-regs=user_regs                         user_regs
+> >   -g call-graph dwarf,K --user-regs=user_regs   user_regs + DWARF_MINIMAL_REGS
+> > <REST remains the same>
+> > 
+> 
+> Sounds better. Thanks!
+> 
+> ~Alexey
 
-I don't understand how the build-bots would be aware of this detail.
-Unless you explicitly state what the dependencies are, how would the
-build-bots know? Perhaps there's some logic built-in somewhere that I
-don't know about?
+Now cross building to a few arches is failing, so far:
 
-> there is no real need to be overreactive here and in this particular
-> case it's better to react to real problems once they show up (we already
-> did that by fixing build breakage caused by a CLK API problem found by
-> bot in v3). Does it sound like a good argument to you? ACK?
+[perfbuilder@quaco ~]$ cat /tmp/dm.log/summary
+ alpine:3.4: Ok
+ alpine:3.5: Ok
+ alpine:3.6: Ok
+ alpine:3.7: Ok
+ alpine:3.8: Ok
+ alpine:3.9: Ok
+ alpine:edge: Ok
+ amazonlinux:1: Ok
+ amazonlinux:2: Ok
+ android-ndk:r12b-arm: Ok
+ android-ndk:r15c-arm: Ok
+ centos:5: Ok
+ centos:6: Ok
+ centos:7: Ok
+ clearlinux:latest: Ok
+ debian:8: Ok
+ debian:9: Ok
+ debian:experimental: Ok
+ debian:experimental-x-arm64: Ok
+ debian:experimental-x-mips: FAIL
+ debian:experimental-x-mips64: FAIL
+ debian:experimental-x-mipsel: FAIL
+ fedora:20: Ok
+ fedora:22: Ok
+ fedora:23: Ok
+ fedora:24: Ok
+ fedora:24-x-ARC-uClibc: FAIL
+ fedora:25: Ok
+ fedora:26: Ok
+ fedora:27: Ok
+[perfbuilder@quaco ~]$
 
-No. This strikes me as a strange argument. I'm pointing out a potential
-source of problems and you just brush it aside claiming that it's not
-true, or even if it was true that we'll see eventually and we can fix it
-up when there's an actual problem.
+For instance:
 
-Why would you want to have to fix things up if you can avoid breakage in
-the first place by being a little proactive?
+[perfbuilder@quaco ~]$ cat /tmp/dm.log/debian\:experimental-x-mips64
+<SNIP>
+  CC       /tmp/build/perf/tests/pmu.o
+util/evsel.c: In function '__perf_evsel__config_callchain':
+util/evsel.c:672:38: error: 'PERF_REG_IP' undeclared (first use in this function); did you mean 'PERF_REGS_MAX'?
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                      ^~~~~~~~~~~
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+util/evsel.c:672:38: note: each undeclared identifier is reported only once for each function it appears in
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                      ^~~~~~~~~~~
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+util/evsel.c:672:62: error: 'PERF_REG_SP' undeclared (first use in this function); did you mean 'PERF_MEM_S'?
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                                              ^~~~~~~~~~~
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+  LD       /tmp/build/perf/bench/perf-in.o
+  CC       /tmp/build/perf/tests/hists_common.o
+mv: cannot stat '/tmp/build/perf/util/.evsel.o.tmp': No such file or directory
+make[4]: *** [/git/linux/tools/build/Makefile.build:97: /tmp/build/perf/util/evsel.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+<SNIP>
 
-Thierry
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+[perfbuilder@quaco ~]$ cat /tmp/dm.log/fedora\:24-x-ARC-uClibc
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2e9cACgkQ3SOs138+
-s6E4kw/+I6WkfUA6GnWVtk4560uJsTWMw63natQl7Vz+UpCHky4vw7eUN+Pt7Erc
-eiN0fPVTsblMKeZ6LuweWk8ZtZ5iqNAaeBYu43DbiqJ60x+WxShfucYjgnLM+4F+
-G/fuIInBSMDbe3TzIMS1C/C7pIgWbkdrsadU+j0Z/PFp/WJ4JElXWgxG+aeOW3wo
-lIIgU7Wzz9aCVktOkVkz738FCzv84dE79zoeMpMPTSpjCha3d5NkXmFhzvcNTJ3z
-vOFt0MWiFwzLjzR2oxfWNUgleB4oGNeRslL7uEakleZEPcDquDS31fNyzlZ/1iPU
-ZC7EH5aWc9GCGXhUFLkQrMt30PJa+huwCIFL20fWwpLhoHdSzdBMOmEg2z4xIpoY
-1DsWC52KpF1soSoYN3EHhqd/9GKGMW9ZSGicsXuI+i0ZY5lW02O11pvC9ZgVUwKY
-xHIY6+9oDmnVAHNIxRN3VwrfaeEgu+snV4cngeBtv/Lmh0XHPVKelUSjgAlVJ3nB
-8x/r+tjq18K6XGOWSxHFggtxFMwdGRmJnfCBrNItemdOZsQ8vTRUvjM29bgLD7EU
-kVj1JQIDKDqnVIyYDBwo2OquIPyznVMXXNMhoP3M/QGp70OWnj9Y2sWod0vr1zSh
-2Pj6WiWBwhBcZXQQKv9McEbxgQBnE0Gca8u1BBKlin5Jc/V1Dl8=
-=uV5V
------END PGP SIGNATURE-----
+<SNIP>
+  CC       /tmp/build/perf/tests/mmap-basic.o
+  CC       /tmp/build/perf/ui/hist.o
+util/evsel.c: In function '__perf_evsel__config_callchain':
+util/evsel.c:672:38: error: 'PERF_REG_IP' undeclared (first use in this function); did you mean 'PERF_MEM_S'?
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                      ^
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+util/evsel.c:672:38: note: each undeclared identifier is reported only once for each function it appears in
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                      ^
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+util/evsel.c:672:62: error: 'PERF_REG_SP' undeclared (first use in this function); did you mean 'PERF_REG_IP'?
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+                                                              ^
+util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+     attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+                               ^~~~~~~~~~~~~~~~~~
+  MKDIR    /tmp/build/perf/ui/stdio/
+mv: cannot stat '/tmp/build/perf/util/.evsel.o.tmp': No such file or directory
+/git/linux/tools/build/Makefile.build:96: recipe for target '/tmp/build/perf/util/evsel.o' failed
+make[4]: *** [/tmp/build/perf/util/evsel.o] Error 1
 
---O5XBE6gyVG5Rl6Rj--
