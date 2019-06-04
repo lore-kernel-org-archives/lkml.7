@@ -2,267 +2,123 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EBFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABFEC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C634224B6F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8D524B7B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ShGen+o8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PS0BosOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfFDLOp (ORCPT
+        id S1727417AbfFDLOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:14:45 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:53228 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfFDLOp (ORCPT
+        Tue, 4 Jun 2019 07:14:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40809 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfFDLOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:14:45 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x54BDaaN019787;
-        Tue, 4 Jun 2019 20:13:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x54BDaaN019787
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559646817;
-        bh=i87f1EzLAVXjNr+Xr7KY6Eno863iAYx32VAHpgBSDhU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ShGen+o8KRrLorQiNuoKnRzGUmpt/AggzUoBpdSASuh6Cu4qRFrDy6BbXYaDAuu+q
-         IRk5ZXVM9KDM45zAyZW7Xdq1gZ2J8emn/vuVELUqa6VxYcTXSkXA0PPg6XvyiFp3qb
-         OiHsXQzvNEBPjKAwMj430y9UnmWaj6vT/VB0B5LEI3ZEru8JuCpJeOqtKb9BTmLwZ6
-         1lVkxUOF3qx8xQJ/fD23CbBUM2YzYT4+YMLKYuGMYpUA+Jmsn0lLgkwCNhyqGIk+jy
-         e3h0JmwYE24u3QTu3eEqSDuW7NFCFfCUt3gcppjGMZP49M8i6Zxul/ZOHbkgvY4LfY
-         nSQTymT3Rhk4Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tue, 4 Jun 2019 07:14:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u16so9037054wmc.5;
+        Tue, 04 Jun 2019 04:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UHpoqEIPVFN73QVMG6iTW6d+vLyYK0k9FyU9x72I4nA=;
+        b=PS0BosODzcinyT95mKwyWfLaMjlR61jQhTGGjikJdskCVpyAadUM0YKA1AXfpfZcV5
+         hSxhANc9lRj4lbQxmjRGjFdsUejNzSIA/oRyDuGIBtV5WhQDiZSu7IjSDaFXSVVOr/sr
+         138pZBHj53u4uxOfHbZ+538l2pBejoW4p1IqKzds6WlXWpV+3taAE3hiLD+KUvg7ti6y
+         YJ7ML57l8UsWZaOjala4xnge3/d4V5vyGPq6lYiSXMXYMcz3F6tClwb7IhSQFtw4NeWY
+         0eNb7g6IhTDHDZnwjmbIAjJCQaEQaZSESggZ6ayPcc6RAYSiFfLe6xDgwdAHkE6NtElJ
+         0G1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UHpoqEIPVFN73QVMG6iTW6d+vLyYK0k9FyU9x72I4nA=;
+        b=tauKXzvpZrHUCtvi4YgxbLQipkpcdFY9X4hIqwa41DRHs+/woVQyuGQgmisVGdqJdl
+         Dg8SqixpySztgV0FNnSQMkvpJVfH5sbCNfKr7BteFVloaAo2I9XYpPijbPN2J4fa7Af4
+         PszvO5evzxUlwWHope4pIe7c9F/UhBvAYECz4O4kYQHsT+Rmk1N4PDGt5S6d4pXgI716
+         eCDUPjPnK2wnPEckM5fX2/eRXhZrNVkLyVTixIStaXkpa/1LOiZHT7I3l3y94Zp4UVov
+         2IlLLNItSe9tnqUzI/8QUbA2WqR9Tsr5F+KjwCddDjrN5tVn8ufdJ0q0BfxjLG8RkaAG
+         lBwA==
+X-Gm-Message-State: APjAAAWeo+tOPFTINTRa4By3h+F8f65445EBpM65gvQy+iytJAYlg5e9
+        rFgSQGlSHY/6gB1oY7MoP/KQ6rdq
+X-Google-Smtp-Source: APXvYqyhveJv6T9hqJK48nqD4r541Pl2b37S7gtRpqYDRmq1Uls9NPqAiqGLpp4QKeVW5yxTVDUzcA==
+X-Received: by 2002:a1c:9eca:: with SMTP id h193mr17417147wme.125.1559646884741;
+        Tue, 04 Jun 2019 04:14:44 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id e6sm9778196wrw.83.2019.06.04.04.14.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 04:14:44 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:14:42 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] media: do not use C++ style comments in uapi headers
-Date:   Tue,  4 Jun 2019 20:13:34 +0900
-Message-Id: <20190604111334.22182-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH v4 09/16] PM / devfreq: tegra: Avoid inconsistency of
+ current frequency value
+Message-ID: <20190604111442.GI16519@ulmo>
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-10-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X+nYw8KZ/oNxZ8JS"
+Content-Disposition: inline
+In-Reply-To: <20190501233815.32643-10-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel tolerates C++ style comments these days. Actually, the
-SPDX License tags for .c files start with //.
 
-On the other hand, uapi headers are written in more strict C, where
-the C++ comment style is forbidden.
+--X+nYw8KZ/oNxZ8JS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On Thu, May 02, 2019 at 02:38:08AM +0300, Dmitry Osipenko wrote:
+> The frequency value potentially could change in-between. It doesn't
+> cause any real problem at all right now, but that could change in the
+> future. Hence let's avoid the inconsistency.
+>=20
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
- include/uapi/linux/dvb/audio.h |   2 +-
- include/uapi/linux/dvb/osd.h   | 170 ++++++++++++++++++++-------------
- 2 files changed, 103 insertions(+), 69 deletions(-)
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/include/uapi/linux/dvb/audio.h b/include/uapi/linux/dvb/audio.h
-index afeae063e640..977bed135e22 100644
---- a/include/uapi/linux/dvb/audio.h
-+++ b/include/uapi/linux/dvb/audio.h
-@@ -52,7 +52,7 @@ typedef enum {
- typedef struct audio_mixer {
- 	unsigned int volume_left;
- 	unsigned int volume_right;
--  // what else do we need? bass, pass-through, ...
-+  /* what else do we need? bass, pass-through, ... */
- } audio_mixer_t;
- 
- 
-diff --git a/include/uapi/linux/dvb/osd.h b/include/uapi/linux/dvb/osd.h
-index e163508b9ae8..723824ce3622 100644
---- a/include/uapi/linux/dvb/osd.h
-+++ b/include/uapi/linux/dvb/osd.h
-@@ -28,74 +28,108 @@
- #include <linux/compiler.h>
- 
- typedef enum {
--  // All functions return -2 on "not open"
--  OSD_Close=1,    // ()
--  // Disables OSD and releases the buffers
--  // returns 0 on success
--  OSD_Open,       // (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..15](color&0xF0))
--  // Opens OSD with this size and bit depth
--  // returns 0 on success, -1 on DRAM allocation error, -2 on "already open"
--  OSD_Show,       // ()
--  // enables OSD mode
--  // returns 0 on success
--  OSD_Hide,       // ()
--  // disables OSD mode
--  // returns 0 on success
--  OSD_Clear,      // ()
--  // Sets all pixel to color 0
--  // returns 0 on success
--  OSD_Fill,       // (color)
--  // Sets all pixel to color <col>
--  // returns 0 on success
--  OSD_SetColor,   // (color,R{x0},G{y0},B{x1},opacity{y1})
--  // set palette entry <num> to <r,g,b>, <mix> and <trans> apply
--  // R,G,B: 0..255
--  // R=Red, G=Green, B=Blue
--  // opacity=0:      pixel opacity 0% (only video pixel shows)
--  // opacity=1..254: pixel opacity as specified in header
--  // opacity=255:    pixel opacity 100% (only OSD pixel shows)
--  // returns 0 on success, -1 on error
--  OSD_SetPalette, // (firstcolor{color},lastcolor{x0},data)
--  // Set a number of entries in the palette
--  // sets the entries "firstcolor" through "lastcolor" from the array "data"
--  // data has 4 byte for each color:
--  // R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
--  OSD_SetTrans,   // (transparency{color})
--  // Sets transparency of mixed pixel (0..15)
--  // returns 0 on success
--  OSD_SetPixel,   // (x0,y0,color)
--  // sets pixel <x>,<y> to color number <col>
--  // returns 0 on success, -1 on error
--  OSD_GetPixel,   // (x0,y0)
--  // returns color number of pixel <x>,<y>,  or -1
--  OSD_SetRow,     // (x0,y0,x1,data)
--  // fills pixels x0,y through  x1,y with the content of data[]
--  // returns 0 on success, -1 on clipping all pixel (no pixel drawn)
--  OSD_SetBlock,   // (x0,y0,x1,y1,increment{color},data)
--  // fills pixels x0,y0 through  x1,y1 with the content of data[]
--  // inc contains the width of one line in the data block,
--  // inc<=0 uses blockwidth as linewidth
--  // returns 0 on success, -1 on clipping all pixel
--  OSD_FillRow,    // (x0,y0,x1,color)
--  // fills pixels x0,y through  x1,y with the color <col>
--  // returns 0 on success, -1 on clipping all pixel
--  OSD_FillBlock,  // (x0,y0,x1,y1,color)
--  // fills pixels x0,y0 through  x1,y1 with the color <col>
--  // returns 0 on success, -1 on clipping all pixel
--  OSD_Line,       // (x0,y0,x1,y1,color)
--  // draw a line from x0,y0 to x1,y1 with the color <col>
--  // returns 0 on success
--  OSD_Query,      // (x0,y0,x1,y1,xasp{color}}), yasp=11
--  // fills parameters with the picture dimensions and the pixel aspect ratio
--  // returns 0 on success
--  OSD_Test,       // ()
--  // draws a test picture. for debugging purposes only
--  // returns 0 on success
--// TODO: remove "test" in final version
--  OSD_Text,       // (x0,y0,size,color,text)
--  OSD_SetWindow, //  (x0) set window with number 0<x0<8 as current
--  OSD_MoveWindow, //  move current window to (x0, y0)
--  OSD_OpenRaw,	// Open other types of OSD windows
-+	/* All functions return -2 on "not open" */
-+	OSD_Close=1,	/* () */
-+	/*
-+	 * Disables OSD and releases the buffers
-+	 * returns 0 on success
-+	 */
-+	OSD_Open,	/* (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..15](color&0xF0)) */
-+	/*
-+	 * Opens OSD with this size and bit depth
-+	 * returns 0 on success, -1 on DRAM allocation error, -2 on "already open"
-+	 */
-+	OSD_Show,	/* () */
-+	/*
-+	 * enables OSD mode
-+	 * returns 0 on success
-+	 */
-+	OSD_Hide,	/* () */
-+	/*
-+	 * disables OSD mode
-+	 * returns 0 on success
-+	 */
-+	OSD_Clear,	/* () */
-+	/*
-+	 * Sets all pixel to color 0
-+	 * returns 0 on success
-+	 */
-+	OSD_Fill,	/* (color) */
-+	/*
-+	 * Sets all pixel to color <col>
-+	 * returns 0 on success
-+	 */
-+	OSD_SetColor,	/* (color,R{x0},G{y0},B{x1},opacity{y1}) */
-+	/*
-+	 * set palette entry <num> to <r,g,b>, <mix> and <trans> apply
-+	 * R,G,B: 0..255
-+	 * R=Red, G=Green, B=Blue
-+	 * opacity=0:      pixel opacity 0% (only video pixel shows)
-+	 * opacity=1..254: pixel opacity as specified in header
-+	 * opacity=255:    pixel opacity 100% (only OSD pixel shows)
-+	 * returns 0 on success, -1 on error
-+	 */
-+	OSD_SetPalette,	/* (firstcolor{color},lastcolor{x0},data) */
-+	/*
-+	 * Set a number of entries in the palette
-+	 * sets the entries "firstcolor" through "lastcolor" from the array "data"
-+	 * data has 4 byte for each color:
-+	 * R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
-+	 */
-+	OSD_SetTrans,	/* (transparency{color}) */
-+	/*
-+	 * Sets transparency of mixed pixel (0..15)
-+	 * returns 0 on success
-+	 */
-+	OSD_SetPixel,	/* (x0,y0,color) */
-+	/*
-+	 * sets pixel <x>,<y> to color number <col>
-+	 * returns 0 on success, -1 on error
-+	 */
-+	OSD_GetPixel,	/* (x0,y0) */
-+	/* returns color number of pixel <x>,<y>,  or -1 */
-+	OSD_SetRow,	/* (x0,y0,x1,data) */
-+	/*
-+	 * fills pixels x0,y through  x1,y with the content of data[]
-+	 * returns 0 on success, -1 on clipping all pixel (no pixel drawn)
-+	 */
-+	OSD_SetBlock,	/* (x0,y0,x1,y1,increment{color},data) */
-+	/*
-+	 * fills pixels x0,y0 through  x1,y1 with the content of data[]
-+	 * inc contains the width of one line in the data block,
-+	 * inc<=0 uses blockwidth as linewidth
-+	 * returns 0 on success, -1 on clipping all pixel
-+	 */
-+	OSD_FillRow,	/* (x0,y0,x1,color) */
-+	/*
-+	 * fills pixels x0,y through  x1,y with the color <col>
-+	 * returns 0 on success, -1 on clipping all pixel
-+	 */
-+	OSD_FillBlock,	/* (x0,y0,x1,y1,color) */
-+	/*
-+	 * fills pixels x0,y0 through  x1,y1 with the color <col>
-+	 * returns 0 on success, -1 on clipping all pixel
-+	 */
-+	OSD_Line,	/* (x0,y0,x1,y1,color) */
-+	/*
-+	 * draw a line from x0,y0 to x1,y1 with the color <col>
-+	 * returns 0 on success
-+	 */
-+	OSD_Query,	/* (x0,y0,x1,y1,xasp{color}}), yasp=11 */
-+	/*
-+	 * fills parameters with the picture dimensions and the pixel aspect ratio
-+	 * returns 0 on success
-+	 */
-+	OSD_Test,       /* () */
-+	/*
-+	 * draws a test picture. for debugging purposes only
-+	 * returns 0 on success
-+	 * TODO: remove "test" in final version
-+	 */
-+	OSD_Text,	/* (x0,y0,size,color,text) */
-+	OSD_SetWindow,	/* (x0) set window with number 0<x0<8 as current */
-+	OSD_MoveWindow,	/* move current window to (x0, y0) */
-+	OSD_OpenRaw,	/* Open other types of OSD windows */
- } OSD_Command;
- 
- typedef struct osd_cmd_s {
--- 
-2.17.1
+--X+nYw8KZ/oNxZ8JS
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2UqIACgkQ3SOs138+
+s6FdDw//XYp02JzFYTmM5pd+HyO9uQsHazV0k4wuxheR+J2EbT+HOp4DBtstdbNv
+jEg35xHhbQ4xXgt67Uc6aJt74WQpSDOXX6SMLa7Mu9inUodKqFSoivMW+u0DsSRe
+4Bz5uAcB7jX1e4vxA5toS5th+CKCi9oz1K4PJAQVBuRldO6Noo75hN6ojLx469As
+Ary2EfGIQZ3fSutmmNJ6FC+HNx69MHy/pL30HIEEMqqi2xfQzDr8692zMPi3rZ/T
+XJjVr6+MBs3Mn+z6QgQbvYeQPekSIOWIGj3RGvcXwKzi3jEGpG0s9sQPMaLDqsDk
+BvhRa27hNvGUppGg8kx14UyYdxxahc0ZERwnerjEpyWzfsAa2EKvX9fyF/tOQ6PG
+JXYy4E+vj8bkvxD9G6DdHwn7mugkqMD21PQVCrygfsSBfjyYvCdRUMIKzsoItVVB
+08hJQeTBTZV9vAnfwvNwzjm38BDlZum+nO+SMewQtmtf1s7p+I1HO+kAmFhqhE+M
+7cV/EeMhuGN8U7qWig2NxbcBNjmC650hthxgb2ntk5Q88NxpCfsay6+ESKIHGYzg
+dEuaxVzAuU28snKN8KQgXWTIJpxy/Yt5XrGRaNqbChgyb6SHOydCOQW8hbexSuZm
+eXgfZ+MJP2q/oc/a/f/b9iDoB3LrDKKSLtEUH2DJhjYdvoMW/e8=
+=/qKL
+-----END PGP SIGNATURE-----
+
+--X+nYw8KZ/oNxZ8JS--
