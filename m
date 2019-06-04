@@ -2,221 +2,179 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9FEC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1DEC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A6723CE8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DF023CEC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="R65lslW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfFDQsh (ORCPT
+        id S1727973AbfFDQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:48:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33018 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfFDQsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:48:36 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E07753087944;
-        Tue,  4 Jun 2019 16:48:35 +0000 (UTC)
-Received: from [10.40.205.182] (unknown [10.40.205.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E296611D6;
-        Tue,  4 Jun 2019 16:48:15 +0000 (UTC)
-Subject: Re: [QEMU PATCH] KVM: Support for page hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
+        Tue, 4 Jun 2019 12:49:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37864 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbfFDQtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:49:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so1384678eds.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=htJGxlotLvs1Z4U6dZKpFxplNjTIfrsnnYtpYuTDheU=;
+        b=R65lslW41TgbT3+HYxMMjdC1uaQkK3+KBb3U0Ny04v00ZXQz0M5njpJO0tzBd/YuNW
+         RxIApA/5BN6eLgog0OTyD225kmO2K54y61DD+jOoUglq8uH3oRxCm/TWybHsmKXMFkWn
+         c/6tNH9A+v0XZFWm5dCH8txy2CUadmZk/a7Gk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=htJGxlotLvs1Z4U6dZKpFxplNjTIfrsnnYtpYuTDheU=;
+        b=cLknR2KSJR0J7EGl/6ZVNjRIqDqK7rcPqwrXHc1aosL3K0Wspyf/yNGm/I46KoPj4o
+         Ai4GX24tC1vXVtDxTmB0KJoFcV1v2ZE8+uEDhcsp/eSOmqftPDS5XaGEV9EhGkipsqtX
+         VUp+jmBvwhFFD59mGHmcqffyT5mx10U0ZF9MW21B4sqQQrFJmMGwoUuK+P1l5aolQHZh
+         4zNkVmPS4JvOH/Bx2Tk3/UGfMvYNTSG93GNimFZZKNQPV/GYxBopHM5dByN6W4n/pXp3
+         rx8ZtMF1jAKHaWhpl2Qh421dADuA3wBYNHIhNXbhpPovTSGE8sWcM6D3XSYR6u3Hhu47
+         L6nw==
+X-Gm-Message-State: APjAAAWaQOth2Z8MpxLWaPU9jBPpXdYMNJLfGbVtghMYQQB1C3DCykyG
+        fk1aZ4d0d9UOjVa2YCK1r1HS0Q==
+X-Google-Smtp-Source: APXvYqztipAoz79D/S8ve0jSHSJoCk4kQevwSEFXnnm7enKqQcPjs6vXyDkTT7yXt9aaPM5FJWIVHw==
+X-Received: by 2002:a17:906:d7ab:: with SMTP id pk11mr11277278ejb.216.1559666943273;
+        Tue, 04 Jun 2019 09:49:03 -0700 (PDT)
+Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
+        by smtp.gmail.com with ESMTPSA id e45sm4818556edb.12.2019.06.04.09.48.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 04 Jun 2019 09:49:02 -0700 (PDT)
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+To:     Doug Anderson <dianders@chromium.org>,
+        Wright Feng <Wright.Feng@cypress.com>
+CC:     Kalle Valo <kvalo@codeaurora.org>,
+        Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <20190603170306.49099-1-nitesh@redhat.com>
- <20190603170432.1195-1-nitesh@redhat.com>
- <CAKgT0UeRzF24WeVkTN2WW41iKSUpXpZbpD55-g=MBHf814RV+A@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <0194ca6a-ec00-2a43-545d-aee6459a7582@redhat.com>
-Date:   Tue, 4 Jun 2019 12:48:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        "Chi-Hsien Lin" <Chi-Hsien.Lin@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        "linux-wireless" <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Naveen Gupta <Naveen.Gupta@cypress.com>,
+        "brcm80211-dev-list" <brcm80211-dev-list@cypress.com>,
+        Double Lo <Double.Lo@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>
+Date:   Tue, 04 Jun 2019 18:48:57 +0200
+Message-ID: <16b2364c8c0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <CAD=FV=Wr4WsO7Xmei5GB4X91L_sDN331B1_oH+CPZOeFUkxyMg@mail.gmail.com>
+References: <20190517225420.176893-2-dianders@chromium.org>
+ <20190528121833.7D3A460A00@smtp.codeaurora.org>
+ <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+ <16aff33f3e0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <16aff358a20.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <40587a64-490b-8b1e-8a11-1e1aebdab2f3@cypress.com>
+ <CAD=FV=Wr4WsO7Xmei5GB4X91L_sDN331B1_oH+CPZOeFUkxyMg@mail.gmail.com>
+User-Agent: AquaMail/1.20.0-1451 (build: 102000001)
+Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UeRzF24WeVkTN2WW41iKSUpXpZbpD55-g=MBHf814RV+A@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="TLcRB331klf72kYiAgAoPavq6ytwUZyUY"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 04 Jun 2019 16:48:36 +0000 (UTC)
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TLcRB331klf72kYiAgAoPavq6ytwUZyUY
-Content-Type: multipart/mixed; boundary="4e4kVK3A45X5fOFtNPeg6Nk226eTMC0od";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: kvm list <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm <linux-mm@kvack.org>, Paolo Bonzini <pbonzini@redhat.com>,
- lcapitulino@redhat.com, pagupta@redhat.com, wei.w.wang@intel.com,
- Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
- David Hildenbrand <david@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Message-ID: <0194ca6a-ec00-2a43-545d-aee6459a7582@redhat.com>
-Subject: Re: [QEMU PATCH] KVM: Support for page hinting
-References: <20190603170306.49099-1-nitesh@redhat.com>
- <20190603170432.1195-1-nitesh@redhat.com>
- <CAKgT0UeRzF24WeVkTN2WW41iKSUpXpZbpD55-g=MBHf814RV+A@mail.gmail.com>
-In-Reply-To: <CAKgT0UeRzF24WeVkTN2WW41iKSUpXpZbpD55-g=MBHf814RV+A@mail.gmail.com>
+On June 4, 2019 6:01:26 PM Doug Anderson <dianders@chromium.org> wrote:
 
---4e4kVK3A45X5fOFtNPeg6Nk226eTMC0od
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-
-On 6/4/19 12:41 PM, Alexander Duyck wrote:
-> On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> =
-wrote:
->> Enables QEMU to call madvise on the pages which are reported
->> by the guest kernel.
->>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  hw/virtio/trace-events                        |  1 +
->>  hw/virtio/virtio-balloon.c                    | 85 ++++++++++++++++++=
-+
->>  include/hw/virtio/virtio-balloon.h            |  2 +-
->>  include/qemu/osdep.h                          |  7 ++
->>  .../standard-headers/linux/virtio_balloon.h   |  1 +
->>  5 files changed, 95 insertions(+), 1 deletion(-)
-> <snip>
+> Hi,
 >
->> diff --git a/include/qemu/osdep.h b/include/qemu/osdep.h
->> index 840af09cb0..4d632933a9 100644
->> --- a/include/qemu/osdep.h
->> +++ b/include/qemu/osdep.h
->> @@ -360,6 +360,11 @@ void qemu_anon_ram_free(void *ptr, size_t size);
->>  #else
->>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
->>  #endif
->> +#ifdef MADV_FREE
->> +#define QEMU_MADV_FREE MADV_FREE
->> +#else
->> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
->> +#endif
-> Is there a specific reason for making this default to INVALID instead
-> of just using DONTNEED?
-No specific reason.
->  I ran into some issues as my host kernel
-> didn't have support for MADV_FREE in the exported kernel headers
-> apparently so I was getting no effect. It seems like it would be
-> better to fall back to doing DONTNEED instead of just disabling the
-> functionality all together.
-Possibly, I will further look into it.
->>  #elif defined(CONFIG_POSIX_MADVISE)
+> On Mon, Jun 3, 2019 at 8:20 PM Wright Feng <Wright.Feng@cypress.com> wrote:
 >>
->> @@ -373,6 +378,7 @@ void qemu_anon_ram_free(void *ptr, size_t size);
->>  #define QEMU_MADV_HUGEPAGE  QEMU_MADV_INVALID
->>  #define QEMU_MADV_NOHUGEPAGE  QEMU_MADV_INVALID
->>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
->> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
-> Same here. If you already have MADV_DONTNEED you could just use that
-> instead of disabling the functionality.
+>> On 2019/5/29 上午 12:11, Arend Van Spriel wrote:
+>> > On May 28, 2019 6:09:21 PM Arend Van Spriel
+>> > <arend.vanspriel@broadcom.com> wrote:
+>> >
+>> >> On May 28, 2019 5:52:10 PM Doug Anderson <dianders@chromium.org> wrote:
+>> >>
+>> >>> Hi,
+>> >>>
+>> >>> On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>> >>>>
+>> >>>> Douglas Anderson <dianders@chromium.org> wrote:
+>> >>>>
+>> >>>> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
+>> >>>> > sdio_aos") we disabled something called "command decode in sdio_aos"
+>> >>>> > for a whole bunch of Broadcom SDIO WiFi parts.
+>> >>>> >
+>> >>>> > After that patch landed I find that my kernel log on
+>> >>>> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+>> >>>> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep
+>> >>>> state -110
+>> >>>> >
+>> >>>> > This seems to happen every time the Broadcom WiFi transitions out of
+>> >>>> > sleep mode.  Reverting the part of the commit that affects the
+>> >>>> WiFi on
+>> >>>> > my boards fixes the problem for me, so that's what this patch does.
+>> >>>> >
+>> >>>> > Note that, in general, the justification in the original commit
+>> >>>> seemed
+>> >>>> > a little weak.  It looked like someone was testing on a SD card
+>> >>>> > controller that would sometimes die if there were CRC errors on the
+>> >>>> > bus.  This used to happen back in early days of dw_mmc (the
+>> >>>> controller
+>> >>>> > on my boards), but we fixed it.  Disabling a feature on all boards
+>> >>>> > just because one SD card controller is broken seems bad.  ...so
+>> >>>> > instead of just this patch possibly the right thing to do is to fully
+>> >>>> > revert the original commit.
+>> >>>> >
+>> Since the commit 29f6589140a1 ("brcmfmac: disable command decode in
+>> sdio_aos") causes the regression on other SD card controller, it is
+>> better to revert it as you mentioned.
+>> Actually, without the commit, we hit MMC timeout(-110) and hanged
+>> instead of CRC error in our test.
 >
->>  #else /* no-op */
->>
->> @@ -386,6 +392,7 @@ void qemu_anon_ram_free(void *ptr, size_t size);
->>  #define QEMU_MADV_HUGEPAGE  QEMU_MADV_INVALID
->>  #define QEMU_MADV_NOHUGEPAGE  QEMU_MADV_INVALID
->>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
->> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
->>
->>  #endif
->>
---=20
-Regards
-Nitesh
+> Any chance I can convince you to provide some official tags like
+> Reviewed-by or Tested-by on the revert?
+>
+>> Would you please share the analysis of
+>> dw_mmc issue which you fixed? We'd like to compare whether we got the
+>> same issue.
+>
+> I'm not sure there's any single magic commit I can point to.  When I
+> started working on dw_mmc it was terrible at handling error cases and
+> would often crash / hang / stop all future communication upon certain
+> classes or efforts.  There were dozens of problems we've had to fix
+> over the years.  These problems showed up when we started supporting
+> HS200 / UHS since the tuning phase really stress the error handling of
+> the host controller.
+>
+> I searched and by the time we were supporting Broadcom SDIO cards the
+> error handling was already pretty good.  ...but if we hadn't already
+> made the error handling more robust for UHS tuning then we would have
+> definitely hit these types of problems.  The only problem I remember
+> having to solve in dw_mmc that was unique to Broadcom was commit
+> 0bdbd0e88cf6 ("mmc: dw_mmc: Don't start commands while busy").  Any
+> chance that could be what you're hitting?
+
+That is indeed an issue I recall resulting in -110 errors.
+
+> What host controller are you having problems with?
+
+Knowing that will be a good start.
+
+Regards,
+Arend
 
 
---4e4kVK3A45X5fOFtNPeg6Nk226eTMC0od--
-
---TLcRB331klf72kYiAgAoPavq6ytwUZyUY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlz2oM0ACgkQo4ZA3AYy
-ozkA/Q//ZRIMGLMXhxoYzE4ppch83oeD+378YExYsIKrUaWCfG8x6PaEjZ/mfSiF
-YmKSq9CHK8MhELTPPwbba/9/SHGtWa0rD3LL1RHR2GO7QtpcF3YbUR74GipuGbNM
-WlLicfK0xAupX8iYaTntB9FWO4GOfadQOAfWO5bLT0C2PcYA6ChKQMmVBGDnKtiI
-wORJjlYLfW5NQ2Yqe8UjI5+GeqIiDsT32T41vbdV7g4LC1HCQhhsXrSYnq7AgLpj
-e7DtZP1KAse3hN7Wdya4QONN4yqDcUgCZHH/H6Eq60hOjE7vIWO5JP8+kDIae/I1
-sAzobLZi1SF7ZrwaT9C41jUkKojjnb7/rm/YjAX1W1fgbxQOaTV2j/ipSnguBMC+
-jx6KQdS2ybiikGLb9jaT/vxkQHuSMwPU7+9rmAlkd//H3zA966yh84ZSGUku7jeI
-I/ONAtGzd5u+CyPg/2wfFKEZHYa7336ts8yIXIUbQisvgt21nfDR6y9V8WZEHLul
-aQJeGYrJPHeAaaBFdV0O8JD4nWoct5X7jbnWXIFf6h8FepV5aVjxtGKnH7JyAQmQ
-KMx72W2gEqUKGf33iAWh/4IzmpPdefNzFkucKe/KpTMOCHiTvx1qZ9KKBzq5gXUp
-E1WPdIoxrWxi7KOtRzYmGZimN0zqo4oAjbCxHG4ogFtWu/nPUIQ=
-=4/9C
------END PGP SIGNATURE-----
-
---TLcRB331klf72kYiAgAoPavq6ytwUZyUY--
