@@ -2,188 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAADC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D069C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C626A20851
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559679834;
-	bh=Q1cile9P1BeRtbU7f54V0HvX+wlr5/zEe0r+8JmcA24=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XGCeBTvdR1DSvYR241jVALsFkZVYYi0E3ydI9lRrJ7p27Kfb6ekoW1E/qBaItjQr/
-	 mesUXd+h9YBPeLiOaQD4dTrD5FMG3Zy1I25JhFbt+pIEtIX6frHkQdOCstKKRY9p0r
-	 NhusxW7RrAotcuyKA2KgIY9DUrvVnbiO9+TXUmCs=
+	by mail.kernel.org (Postfix) with ESMTP id 6B56020874
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFDUXy (ORCPT
+        id S1726477AbfFDU3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfFDUXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:23:54 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE7220862
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559679832;
-        bh=Q1cile9P1BeRtbU7f54V0HvX+wlr5/zEe0r+8JmcA24=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ni8Mao9ymvJnv6YkpaQA8KpjdHJWO5zC+kqqlz92Th3RfTmiT5OdYwDksSx2D5//0
-         YW3xOyQexHGWCbY/d7qMKCD57/vrPJj+XHMuWNJpYGtUVloD/BFpoyE7H1C7Yf3gmk
-         bOwLzNftE7X8wFeSHWB3nbIJgBmpvRnGXQhWmi0E=
-Received: by mail-wm1-f43.google.com with SMTP id w9so241288wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:23:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAXRIAn/uRNvJku29LV2buGYMDXGeomkHJa3pJnU/r+n0d0LFjBV
-        OTKVEKqtC2Zm6ZITY9uhd4XW7HqtqJSyMzHZ8Es6fw==
-X-Google-Smtp-Source: APXvYqxttHOHoYrVfNwbnoF4AjBX9KYICjmss2q13A1PhtTVNk/y4AIjl6szEFJt0Q4AjwSwuOho/tYnWwU8XuLYdvQ=
-X-Received: by 2002:a1c:6242:: with SMTP id w63mr15855116wmb.161.1559679830930;
- Tue, 04 Jun 2019 13:23:50 -0700 (PDT)
+        Tue, 4 Jun 2019 16:29:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46766 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfFDU3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:29:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z23so5878179ote.13;
+        Tue, 04 Jun 2019 13:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShuaCglHMPdgyal6GGIwZRaEUD77Ogg+O3HSaYQ63/E=;
+        b=CVlglNZ3fYT4sh8jRWA/ENRM9vOKKJjFYdOARzZ1z7pILRDYvcSXjw8hfk1n5DZB46
+         +Wpw97xUeg2KhxiPjzKvwzLsF4dV6hXeSdH9knYD608BgLnxcm9eaq0nwetMrWFA2ApI
+         rxwP6BdCLtfkLy2d0piYEl8AX12J58q19PkEWtxIrskemvH+Wl+qSz0NsaWJSBBECyqI
+         Lb5R+24tRU25cY7s9uj8/UoIX3Xrsr5ytlM3S4XF1ZmnG0bNJ/XY8onMb37q18vDnRAi
+         J1WW72rkqXCF3ZWLffe8szpKfcSSq/sg6akDLZqg3VKxZlCt/f+y/nNBeEmHOkipSmIY
+         20YA==
+X-Gm-Message-State: APjAAAXu9ecDkXRoi33uMBcaZLaumAoKA0RyxksZQ/bcH53NIoGyd+Ie
+        8NZFDzxcoDMTtK5VX6G2HzcEB4nGkdQ=
+X-Google-Smtp-Source: APXvYqzdjcPNxGvRaK3k9+6Xl7HY5PmwVR+6Vap5/aUXIsaKiT4UalW3DZdexmg8fg9F9Ie21T4Lqw==
+X-Received: by 2002:a9d:6c46:: with SMTP id g6mr457114otq.162.1559680175033;
+        Tue, 04 Jun 2019 13:29:35 -0700 (PDT)
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
+        by smtp.gmail.com with ESMTPSA id v13sm6022078oth.23.2019.06.04.13.29.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 13:29:34 -0700 (PDT)
+Received: by mail-ot1-f54.google.com with SMTP id t24so7102820otl.12;
+        Tue, 04 Jun 2019 13:29:33 -0700 (PDT)
+X-Received: by 2002:a9d:6058:: with SMTP id v24mr441623otj.110.1559680173629;
+ Tue, 04 Jun 2019 13:29:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com> <20190531233159.30992-7-sean.j.christopherson@intel.com>
-In-Reply-To: <20190531233159.30992-7-sean.j.christopherson@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 4 Jun 2019 13:23:40 -0700
-X-Gmail-Original-Message-ID: <CALCETrU1mV0NQoG=ba0BVf5WpeqfdJkhcGnyo9Jk+hFo9eCXUw@mail.gmail.com>
-Message-ID: <CALCETrU1mV0NQoG=ba0BVf5WpeqfdJkhcGnyo9Jk+hFo9eCXUw@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/9] x86/sgx: Require userspace to provide allowed
- prots to ADD_PAGES
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
+References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk> <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 4 Jun 2019 15:29:22 -0500
+X-Gmail-Original-Message-ID: <CADRPPNRfAk2ZWJQt=Wx5SEqvw4iSpzkj8_XvHa_CZYHDAxFgxg@mail.gmail.com>
+Message-ID: <CADRPPNRfAk2ZWJQt=Wx5SEqvw4iSpzkj8_XvHa_CZYHDAxFgxg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] soc/fsl/qe: cleanups and new DT binding
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 4:32 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Mon, May 13, 2019 at 6:17 AM Rasmus Villemoes
+<rasmus.villemoes@prevas.dk> wrote:
 >
-> ...to support (the equivalent) of existing Linux Security Module
-> functionality.
+> This small series consists of some small cleanups and simplifications
+> of the QUICC engine driver, and introduces a new DT binding that makes
+> it much easier to support other variants of the QUICC engine IP block
+> that appears in the wild: There's no reason to expect in general that
+> the number of valid SNUMs uniquely determines the set of such, so it's
+> better to simply let the device tree specify the values (and,
+> implicitly via the array length, also the count).
 >
-> Because SGX manually manages EPC memory, all enclave VMAs are backed by
-> the same vm_file, i.e. /dev/sgx/enclave, so that SGX can implement the
-> necessary hooks to move pages in/out of the EPC.  And because EPC pages
-> for any given enclave are fundamentally shared between processes, i.e.
-> CoW semantics are not possible with EPC pages, /dev/sgx/enclave must
-> always be MAP_SHARED.  Lastly, all real world enclaves will need read,
-> write and execute permissions to EPC pages.  As a result, SGX does not
-> play nice with existing LSM behavior as it is impossible to apply
-> policies to enclaves with any reasonable granularity, e.g. an LSM can
-> deny access to EPC altogether, but can't deny potentially dangerous
-> behavior such as mapping pages RW->RW or RWX.
+> Which tree should this go through?
 >
-> To give LSMs enough information to implement their policies without
-> having to resort to ugly things, e.g. holding a reference to the vm_file
-> of each enclave page, require userspace to explicitly state the allowed
-> protections for each page (region), i.e. take ALLOW_{READ,WRITE,EXEC}
-> in the ADD_PAGES ioctl.
+> v3:
+> - Move example from commit log into binding document (adapting to
+>   MPC8360 which the existing example pertains to).
+> - Add more review tags.
+> - Fix minor style issue.
 >
-> The ALLOW_* flags will be passed to LSMs so that they can make informed
-> decisions when the enclave is being built, i.e. when the source vm_file
-> is available.  For example, SELinux's EXECMOD permission can be
-> required if an enclave is requesting both ALLOW_WRITE and ALLOW_EXEC.
+> v2:
+> - Address comments from Christophe Leroy
+> - Add his Reviewed-by to 1/6 and 3/6
+> - Split DT binding update to separate patch as per
+>   Documentation/devicetree/bindings/submitting-patches.txt
 >
-> Update the mmap()/mprotect() hooks to enforce the ALLOW_* protections,
-> a la the standard VM_MAY{READ,WRITE,EXEC} flags.
->
-> The ALLOW_EXEC flag also has a second (important) use in that it can
-> be used to prevent loading an enclave from a noexec file system, on
-> SGX2 hardware (regardless of kernel support for SGX2), userspace could
-> EADD from a noexec path using read-only permissions and later mprotect()
-> and ENCLU[EMODPE] the page to gain execute permissions.  By requiring
-> ALLOW_EXEC up front, SGX will be able to enforce noexec paths when
-> building the enclave.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/uapi/asm/sgx.h        |  9 ++++++++-
->  arch/x86/kernel/cpu/sgx/driver/ioctl.c | 23 +++++++++++++++++------
->  arch/x86/kernel/cpu/sgx/encl.c         |  2 +-
->  arch/x86/kernel/cpu/sgx/encl.h         |  1 +
->  4 files changed, 27 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-> index 4a12d6abbcb7..4489e92fa0dc 100644
-> --- a/arch/x86/include/uapi/asm/sgx.h
-> +++ b/arch/x86/include/uapi/asm/sgx.h
-> @@ -31,6 +31,11 @@ struct sgx_enclave_create  {
->         __u64   src;
->  };
->
-> +/* Supported flags for struct sgx_enclave_add_pages. */
-> +#define SGX_ALLOW_READ VM_READ
-> +#define SGX_ALLOW_WRITE        VM_WRITE
-> +#define SGX_ALLOW_EXEC VM_EXEC
-> +
->  /**
->   * struct sgx_enclave_add_pages - parameter structure for the
->   *                                %SGX_IOC_ENCLAVE_ADD_PAGES ioctl
-> @@ -39,6 +44,7 @@ struct sgx_enclave_create  {
->   * @secinfo:   address for the SECINFO data (common to all pages)
->   * @nr_pages:  number of pages (must be virtually contiguous)
->   * @mrmask:    bitmask for the measured 256 byte chunks (common to all pages)
-> + * @flags:     flags, e.g. SGX_ALLOW_{READ,WRITE,EXEC} (common to all pages)
->   */
->  struct sgx_enclave_add_pages {
->         __u64   addr;
-> @@ -46,7 +52,8 @@ struct sgx_enclave_add_pages {
->         __u64   secinfo;
->         __u32   nr_pages;
->         __u16   mrmask;
-> -} __attribute__((__packed__));
-> +       __u16   flags;
+> Rasmus Villemoes (6):
+>   soc/fsl/qe: qe.c: drop useless static qualifier
+>   soc/fsl/qe: qe.c: reduce static memory footprint by 1.7K
+>   soc/fsl/qe: qe.c: introduce qe_get_device_node helper
+>   dt-bindings: soc/fsl: qe: document new fsl,qe-snums binding
+>   soc/fsl/qe: qe.c: support fsl,qe-snums property
+>   soc/fsl/qe: qe.c: fold qe_get_num_of_snums into qe_snums_init
 
-Minor nit: I would use at least u32 for flags.  It's not like the size
-saving is important.
+Series applied to soc/fsl for-next.  Thanks!
 
->  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long addr,
->                              unsigned long src, struct sgx_secinfo *secinfo,
-> -                            unsigned int mrmask)
-> +                            unsigned int mrmask, unsigned int flags)
->  {
-> +       unsigned long prot = secinfo->flags & (VM_READ | VM_WRITE | VM_EXEC);
-> +       unsigned long allowed_prot = flags & (VM_READ | VM_WRITE | VM_EXEC);
+Regards,
+Leo
 
-...
-
-> +       if (prot & ~allowed_prot)
-> +               return -EACCES;
-
-This seems like a well-intentioned sanity check, but it doesn't really
-accomplish anything with SGX2, so I tend to think it would be better
-to omit it.
+>
+>  .../devicetree/bindings/soc/fsl/cpm_qe/qe.txt |  13 +-
+>  drivers/soc/fsl/qe/qe.c                       | 163 +++++++-----------
+>  2 files changed, 77 insertions(+), 99 deletions(-)
+>
+> --
+> 2.20.1
+>
