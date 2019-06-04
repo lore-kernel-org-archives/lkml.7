@@ -2,94 +2,149 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C032DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C019DC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A770206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931EC20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGy78BX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfFDXEq (ORCPT
+        id S1726477AbfFDXJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:04:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36672 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfFDXEo (ORCPT
+        Tue, 4 Jun 2019 19:09:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40438 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfFDXJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:04:44 -0400
-Received: from 95.172.237.253.ip.static.uno.uk.net ([95.172.237.253] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <chris.coulson@canonical.com>)
-        id 1hYITz-0006ef-69; Tue, 04 Jun 2019 23:04:43 +0000
-From:   Chris Coulson <chris.coulson@canonical.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Chris Coulson <chris.coulson@canonical.com>,
-        linux-efi@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Garrett <mjg59@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tue, 4 Jun 2019 19:09:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so6136725ljh.7;
+        Tue, 04 Jun 2019 16:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K1IVLJHW+wse8iHPWZib5MduTyZalBml9Mx3YwjCNVs=;
+        b=KGy78BX24O/XMl+lMRP9JBqMnq6XmuiNrRDHkmEvA2xCzdDsBfnIWOyBJQZDflqa6i
+         +ZU8PD2saF2XEWqc8ZbbBG8Hd1uZhveYSWEaEA6EsyGyqT4rpjYjz6J5Us/PsmlzZF1B
+         vgVDhmOCfUTO7OFKBe7k6lEysbAX/pkDWHaC03ZhiVeuzLQWF4LAEI6WQ/kh00gPtjT4
+         xwwp8HN0u5/42fbp+4XldJwxRenD/JZxA1wBGkq5AINxnaKQNlpovOLchPQweijxYUW6
+         bHBglUbeG4nnTYGUd0jqLUDiK2zBOkhynk4rvzsKJJGQFLp00jF2gv3xLydKKngAAEx/
+         Bcew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K1IVLJHW+wse8iHPWZib5MduTyZalBml9Mx3YwjCNVs=;
+        b=e/CfKvTJu5bGwGSPhy57UfEHW03KrZLXv3HYX4w0GD1ugVGH88JmRqm75vqy/zs9A6
+         i0q3OUXAhmkqgJK/iwAhuDz0CISljcdgihbGFpxnL6V02wXtEThb0Y40xPJo0NKNIV8D
+         7Ld3WeJuZFsPOjBDNavrah5JXtK93rdLX9yDCtcYi0KAhZ5pi1E6GDFE5dggiGHW2hAn
+         NQTtYOVvkZFG4v+J9gejG5PU9FbZpMeAV6++y1gZPAr3YmJ0d1e+qXy2pC94BWocH/kX
+         YyNbcVo2pXXC7w74n5Dn+jvi2cQqSAmN+XLkNlOu7gm9hTvpnr1ld11GF0fNAaqIr4eW
+         E8tA==
+X-Gm-Message-State: APjAAAX8NVy1XJaDe2RJFLRCylwOnaDbEH9lbhWlRuBVddn5OvGetBTo
+        fNNYYR710tTpv0KBy38AWQMRrTH4
+X-Google-Smtp-Source: APXvYqz8xeZOwD8lYb+7xMSDkOdRhGqp8EELx75Pgj+nLNKQ+tpKPZLbRcJ/8VXbhrpTTPQbAdRjdQ==
+X-Received: by 2002:a2e:9a19:: with SMTP id o25mr6021245lji.63.1559689770661;
+        Tue, 04 Jun 2019 16:09:30 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id o184sm3984501lfo.37.2019.06.04.16.09.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 16:09:29 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30
+ support
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] tpm: Don't dereference event after it's unmapped in __calc_tpm2_event_size
-Date:   Wed,  5 Jun 2019 00:04:33 +0100
-Message-Id: <20190604230433.20936-2-chris.coulson@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604230433.20936-1-chris.coulson@canonical.com>
-References: <20190604230433.20936-1-chris.coulson@canonical.com>
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+ <20190501233815.32643-1-digetx@gmail.com>
+ <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+ <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+ <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
+ <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
+Date:   Wed, 5 Jun 2019 02:09:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pointer to the event header is dereferenced on each loop iteration in
-order to obtain the digest count, but when called from
-tpm2_calc_event_log_size, the event header is unmapped on the first
-iteration of the loop. This results in an invalid access for on subsequent
-loop iterations for log entries that have more than one digest.
+04.06.2019 3:49, Chanwoo Choi пишет:
+> On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
+>> 03.05.2019 3:52, Dmitry Osipenko пишет:
+>>> 03.05.2019 3:31, Chanwoo Choi пишет:
+>>>> Hi Dmitry,
+>>>>
+>>>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>>>>> Changelog:
+>>>>>
+>>>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+>>>>>
+>>>>>     - changed the driver removal order to match the probe exactly
+>>>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>>>>
+>>>>>     Chanwoo, please also note that the clk patch that should fix
+>>>>>     compilation problem that was reported the kbuild-test-robot is already
+>>>>>     applied and available in the recent linux-next.
+>>>>
+>>>> I knew that Stephen picked up your path about clock.
+>>>
+>>> Hi Chanwoo,
+>>>
+>>> Okay, good. Thank you very much for reviewing this series! I assume it's
+>>> too late now for v5.2, but it should be good to go for v5.3.
+>>>
+>>
+>> Hello Chanwoo,
+>>
+>> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
+>> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
+>> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
+>> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
+>> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
+>> we'll be able to work out that with Thierry and Jon if necessary.
+>>
+>>
+> 
+> Hi Dmitry,
+> I think that it is enough for applying to mainline branch.
+> The devfreq.git is maintained by Myungjoo. He will be merged or
+> reviewed if there are th remained review point.
 
-Signed-off-by: Chris Coulson <chris.coulson@canonical.com>
----
- include/linux/tpm_eventlog.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thank you very much!
 
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 63238c84dc0b..7b76abbff7d8 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -165,6 +165,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	int mapping_size;
- 	void *marker;
- 	void *marker_start;
-+	u32 count;
- 	u32 halg_size;
- 	size_t size;
- 	u16 halg;
-@@ -190,16 +191,17 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	}
- 
- 	event = (struct tcg_pcr_event2_head *)mapping;
-+	count = event->count;
- 
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
- 
- 	/* Check if event is malformed. */
--	if (event->count > efispecid->num_algs) {
-+	if (count > efispecid->num_algs) {
- 		size = 0;
- 		goto out;
- 	}
- 
--	for (i = 0; i < event->count; i++) {
-+	for (i = 0; i < count; i++) {
- 		halg_size = sizeof(event->digests[i].alg_id);
- 
- 		/* Map the digest's algorithm identifier */
--- 
-2.17.1
+> 
+> Hi Myungjoo,
+> I reviewed the Dmitry's patches from v1 to v4 patches.
+> And then I tested them on my testing branch[1] for catching
+> the build warning and error. In result, it is clean.
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
+> 
+> Please review or apply these patches for v5.3.
+> 
 
+Hello Myungjoo,
+
+I think this patchset should be completed now. Thierry has some extra
+comments to the patches, but seems nothing critical so far and all the
+concerns could be addressed in a follow-up series. Please let me know if
+you're fine with this, I can re-spin v5 as well if necessary.
