@@ -2,112 +2,81 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D0AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFBAC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D14A2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53224218D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ZYNwKBfh"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="JdK3vq0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfFDPiV (ORCPT
+        id S1728149AbfFDPkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:38:21 -0400
-Received: from a9-99.smtp-out.amazonses.com ([54.240.9.99]:50926 "EHLO
-        a9-99.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727972AbfFDPiV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:38:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1559662700;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=OIhqYY+SOkOUs9T6s6IEPEZv9lMASXYu4UBAM6SEZvE=;
-        b=ZYNwKBfhOkfV60g9kU9G7VB5OM0s231pfDNM3QuvIazUXNFVO7bjE5m0pNNNMQec
-        mEU2+GxAR9kUbYrODxURkYyW8OfS7B5BnJz4CvBknHYYByKfjas7oyCwT1qOsv54YQE
-        sODGtZoWQg96VqyeEDuBs0l2tlZz6jNwzoqkr9iE=
-Date:   Tue, 4 Jun 2019 15:38:20 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Minchan Kim <minchan@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [PATCH v1 4/4] mm: introduce MADV_PAGEOUT
-In-Reply-To: <20190603053655.127730-5-minchan@kernel.org>
-Message-ID: <0100016b232425c9-64a09298-59ba-48b8-9aa3-e7e1ad2d316c-000000@email.amazonses.com>
-References: <20190603053655.127730-1-minchan@kernel.org> <20190603053655.127730-5-minchan@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 4 Jun 2019 11:40:49 -0400
+Received: from vps.xff.cz ([195.181.215.36]:36234 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727422AbfFDPks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:40:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559662847; bh=ixO4OiS3QbgO7fFYohnpcpN7u8/7cH3Nz5L9p88LaWk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JdK3vq0qTtY0P1vh2J2iPVNVrt6oX1xCuB9PL2mWwwSoNsb/fzedpXZT8zeiSK5XC
+         k6+m8i4vso6+HoTDxtS5OQCxRZqbbJuDIqxRmtlRS47msA6xOSbiU+GszvUCwGnmc1
+         lOPJQI7X4rdtx9nWEjSzxZg7BOwHUFABmGzG2SAY=
+From:   megous@megous.com
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support),
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] clk: sunxi-ng: sun50i-h6-r: Fix incorrect W1 clock gate register
+Date:   Tue,  4 Jun 2019 17:40:36 +0200
+Message-Id: <20190604154036.23211-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.06.04-54.240.9.99
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019, Minchan Kim wrote:
+From: Ondrej Jirman <megous@megous.com>
 
-> @@ -415,6 +416,128 @@ static long madvise_cold(struct vm_area_struct *vma,
->  	return 0;
->  }
->
-> +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> +				unsigned long end, struct mm_walk *walk)
-> +{
-> +	pte_t *orig_pte, *pte, ptent;
-> +	spinlock_t *ptl;
-> +	LIST_HEAD(page_list);
-> +	struct page *page;
-> +	int isolated = 0;
-> +	struct vm_area_struct *vma = walk->vma;
-> +	unsigned long next;
-> +
-> +	if (fatal_signal_pending(current))
-> +		return -EINTR;
-> +
-> +	next = pmd_addr_end(addr, end);
-> +	if (pmd_trans_huge(*pmd)) {
-> +		ptl = pmd_trans_huge_lock(pmd, vma);
-> +		if (!ptl)
-> +			return 0;
-> +
-> +		if (is_huge_zero_pmd(*pmd))
-> +			goto huge_unlock;
-> +
-> +		page = pmd_page(*pmd);
-> +		if (page_mapcount(page) > 1)
-> +			goto huge_unlock;
-> +
-> +		if (next - addr != HPAGE_PMD_SIZE) {
-> +			int err;
-> +
-> +			get_page(page);
-> +			spin_unlock(ptl);
-> +			lock_page(page);
-> +			err = split_huge_page(page);
-> +			unlock_page(page);
-> +			put_page(page);
-> +			if (!err)
-> +				goto regular_page;
-> +			return 0;
-> +		}
+The current code defines W1 clock gate to be at 0x1cc, overlaying it
+with the IR gate.
 
-I have seen this before multiple times. Is there a way to avoid
-replicating the whole shebang?
+Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
+causing interrupt floods on H6 (because interrupt flags can't be cleared,
+due to IR module's bus being disabled).
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU")
+---
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 27554eaf6929..8d05d4f1f8a1 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -104,7 +104,7 @@ static SUNXI_CCU_GATE(r_apb2_i2c_clk,	"r-apb2-i2c",	"r-apb2",
+ static SUNXI_CCU_GATE(r_apb1_ir_clk,	"r-apb1-ir",	"r-apb1",
+ 		      0x1cc, BIT(0), 0);
+ static SUNXI_CCU_GATE(r_apb1_w1_clk,	"r-apb1-w1",	"r-apb1",
+-		      0x1cc, BIT(0), 0);
++		      0x1ec, BIT(0), 0);
+ 
+ /* Information of IR(RX) mod clock is gathered from BSP source code */
+ static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
+-- 
+2.21.0
 
