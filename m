@@ -2,172 +2,94 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D18C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38424CB3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8E924CB3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:10:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QhMtqMIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfFDJKF (ORCPT
+        id S1727164AbfFDJKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:10:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726988AbfFDJKF (ORCPT
+        Tue, 4 Jun 2019 05:10:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34422 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFDJKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:10:05 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5497kcA086100
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 05:10:04 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swmh0uqru-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:10:03 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Tue, 4 Jun 2019 10:10:02 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 10:09:58 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5499vQ015728696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 09:09:57 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65482AE06D;
-        Tue,  4 Jun 2019 09:09:56 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC025AE063;
-        Tue,  4 Jun 2019 09:09:54 +0000 (GMT)
-Received: from skywalker.in.ibm.com (unknown [9.124.35.234])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Jun 2019 09:09:54 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH] mm/mmap: Move common defines to mman-common.h
-Date:   Tue,  4 Jun 2019 14:39:50 +0530
-X-Mailer: git-send-email 2.21.0
+        Tue, 4 Jun 2019 05:10:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m/c3FgrUfhn4KG9UznydNu1bp5nGuO9Yr6Nn9DVwU2I=; b=QhMtqMIcZIv85zDrVleDnKMDE
+        jGU0NCY8syc8w7oZYS3KIKp2VW+nsL2rTgZIGec4AUU07p4Ir7ab+bmy5FbBm12opml274lqfHQVv
+        xLVD1Vhd/Avw0GtIiHp+wBt3csju+DK58d+8pwWaK9is9EvmmMcc2iLoW59iA6ShyN8OVL03SAzlb
+        dm83B+UgB142Eg53DlUT0azEuitwt69Cm/d7mML1j+O/DAncHSpvQRBNEusrnAEfij04W63Xw6lO4
+        6M+g6O3XFHClcCwqOy7lROGTwuZSWtj7t3RSa11ByBbrvu9aQNMfEp34qIdJaqApt2qtGVRflriHW
+        CXNNaDrfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hY5SD-00033n-GM; Tue, 04 Jun 2019 09:10:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 438742083FE28; Tue,  4 Jun 2019 11:10:00 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 11:10:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190604091000.GH3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060409-0064-0000-0000-000003E974B8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011212; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01213036; UDB=6.00637527; IPR=6.00994103;
- MB=3.00027178; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-04 09:10:00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060409-0065-0000-0000-00003DBBE0F9
-Message-Id: <20190604090950.31417-1-aneesh.kumar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=397 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040061
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520205918.22251-16-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two architecture that use arch specific MMAP flags are powerpc and sparc.
-We still have few flag values common across them and other architectures.
-Consolidate this in mman-common.h.
+On Mon, May 20, 2019 at 04:59:14PM -0400, Waiman Long wrote:
+> Reader optimistic spinning is helpful when the reader critical section
+> is short and there aren't that many readers around. It makes readers
+> relatively more preferred than writers. When a writer times out spinning
+> on a reader-owned lock and set the nospinnable bits, there are two main
+> reasons for that.
+> 
+>  1) The reader critical section is long, perhaps the task sleeps after
+>     acquiring the read lock.
+>  2) There are just too many readers contending the lock causing it to
+>     take a while to service all of them.
+> 
+> In the former case, long reader critical section will impede the progress
+> of writers which is usually more important for system performance.
+> In the later case, reader optimistic spinning tends to make the reader
+> groups that contain readers that acquire the lock together smaller
+> leading to more of them. That may hurt performance in some cases. In
+> other words, the setting of nonspinnable bits indicates that reader
+> optimistic spinning may not be helpful for those workloads that cause it.
+> 
+> Therefore, any writers that have observed the setting of the writer
+> nonspinnable bit for a given rwsem after they fail to acquire the lock
+> via optimistic spinning will set the reader nonspinnable bit once they
+> acquire the write lock. Similarly, readers that observe the setting
+> of reader nonspinnable bit at slowpath entry will also set the reader
+> nonspinnable bit when they acquire the read lock via the wakeup path.
 
-Also update the comment to indicate where to find HugeTLB specific reserved
-values
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- arch/powerpc/include/uapi/asm/mman.h   | 6 +-----
- arch/sparc/include/uapi/asm/mman.h     | 6 ------
- include/uapi/asm-generic/mman-common.h | 6 +++++-
- include/uapi/asm-generic/mman.h        | 9 ++++-----
- 4 files changed, 10 insertions(+), 17 deletions(-)
-
-diff --git a/arch/powerpc/include/uapi/asm/mman.h b/arch/powerpc/include/uapi/asm/mman.h
-index 65065ce32814..c0c737215b00 100644
---- a/arch/powerpc/include/uapi/asm/mman.h
-+++ b/arch/powerpc/include/uapi/asm/mman.h
-@@ -21,15 +21,11 @@
- #define MAP_DENYWRITE	0x0800		/* ETXTBSY */
- #define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
- 
-+
- #define MCL_CURRENT     0x2000          /* lock all currently mapped pages */
- #define MCL_FUTURE      0x4000          /* lock all additions to address space */
- #define MCL_ONFAULT	0x8000		/* lock all pages that are faulted in */
- 
--#define MAP_POPULATE	0x8000		/* populate (prefault) pagetables */
--#define MAP_NONBLOCK	0x10000		/* do not block on IO */
--#define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
--#define MAP_HUGETLB	0x40000		/* create a huge page mapping */
--
- /* Override any generic PKEY permission defines */
- #define PKEY_DISABLE_EXECUTE   0x4
- #undef PKEY_ACCESS_MASK
-diff --git a/arch/sparc/include/uapi/asm/mman.h b/arch/sparc/include/uapi/asm/mman.h
-index f6f99ec65bb3..cec9f4109687 100644
---- a/arch/sparc/include/uapi/asm/mman.h
-+++ b/arch/sparc/include/uapi/asm/mman.h
-@@ -22,10 +22,4 @@
- #define MCL_FUTURE      0x4000          /* lock all additions to address space */
- #define MCL_ONFAULT	0x8000		/* lock all pages that are faulted in */
- 
--#define MAP_POPULATE	0x8000		/* populate (prefault) pagetables */
--#define MAP_NONBLOCK	0x10000		/* do not block on IO */
--#define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
--#define MAP_HUGETLB	0x40000		/* create a huge page mapping */
--
--
- #endif /* _UAPI__SPARC_MMAN_H__ */
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index bea0278f65ab..ef4623f03156 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -25,7 +25,11 @@
- # define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
- #endif
- 
--/* 0x0100 - 0x40000 flags are defined in asm-generic/mman.h */
-+/* 0x0100 - 0x4000 flags are defined in asm-generic/mman.h */
-+#define MAP_POPULATE		0x008000	/* populate (prefault) pagetables */
-+#define MAP_NONBLOCK		0x010000	/* do not block on IO */
-+#define MAP_STACK		0x020000	/* give out an address that is best suited for process/thread stacks */
-+#define MAP_HUGETLB		0x040000	/* create a huge page mapping */
- #define MAP_SYNC		0x080000 /* perform synchronous page faults for the mapping */
- #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
- 
-diff --git a/include/uapi/asm-generic/mman.h b/include/uapi/asm-generic/mman.h
-index 2dffcbf705b3..57e8195d0b53 100644
---- a/include/uapi/asm-generic/mman.h
-+++ b/include/uapi/asm-generic/mman.h
-@@ -9,12 +9,11 @@
- #define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
- #define MAP_LOCKED	0x2000		/* pages are locked */
- #define MAP_NORESERVE	0x4000		/* don't check for reservations */
--#define MAP_POPULATE	0x8000		/* populate (prefault) pagetables */
--#define MAP_NONBLOCK	0x10000		/* do not block on IO */
--#define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
--#define MAP_HUGETLB	0x40000		/* create a huge page mapping */
- 
--/* Bits [26:31] are reserved, see mman-common.h for MAP_HUGETLB usage */
-+/*
-+ * Bits [26:31] are reserved, see asm-generic/hugetlb_encode.h
-+ * for MAP_HUGETLB usage
-+ */
- 
- #define MCL_CURRENT	1		/* lock all current mappings */
- #define MCL_FUTURE	2		/* lock all future mappings */
--- 
-2.21.0
-
+So both cases set the _reader_ nonspinnable bit?
