@@ -2,270 +2,97 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6DBC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2A7218CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AE2218CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="m3lilr1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfFDMNZ (ORCPT
+        id S1727720AbfFDMNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:13:25 -0400
-Received: from foss.arm.com ([217.140.101.70]:41718 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfFDMNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:13:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DD5980D;
-        Tue,  4 Jun 2019 05:13:24 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1A9C3F690;
-        Tue,  4 Jun 2019 05:13:20 -0700 (PDT)
-Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-19-vincenzo.frascino@arm.com>
- <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <97175325-1619-fd38-2a5c-c71b3b161808@arm.com>
-Date:   Tue, 4 Jun 2019 13:13:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 08:13:33 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:36786 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfFDMNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:13:32 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x54CDEKR026129
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 21:13:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x54CDEKR026129
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559650395;
+        bh=j4ooK2TXA9XEPYH9036qD0m6269InPrHu8MiGbjtEI8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m3lilr1biUthCuT3Fwb+7h7x3OjfKAVGp2bE9jsxFdz480cpK4zWyzWgX0dKePLGR
+         mZgdShIwhX49q0ci93vDu4QMpb3zu1PBaoyEXspH1/tGh9Yz05fmjmiw+H54h3mvG9
+         CE27QOl3GpPGUyGx+EyypLmb9OnDengqyh6NLeeKlWpSL8p0ZCExPOJnWOY93Eb+eC
+         xIBTysqsJhGAJnIDOBGDroEPy+9ky7qW+3FlZs0wDfGb/P/BHjgju6X+QjLBL1Fu5n
+         c6EHM0wI2SdESGglwNFIbv6slL+rSBQrDZt2ch3jhU1JHtuRD1pOtBlpkeOLQ1L8Ya
+         W12YaCpqjT5DQ==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id e9so7687671uar.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:13:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAUzPq2LIMlrbuMlX3r3seqLQn2mQEa2BtQSRfQQ82IAbdvN5iRR
+        pOASzed0cP3wOq9Cuei+Hjil47r3DA+zDBFj1sY=
+X-Google-Smtp-Source: APXvYqz4S65tSxS052C5ndvPnTtlUmiHYxC0T11Z+OAFLZHKhv7vZjxFm8n9N1K3MCaX2SBo2i2B1jVPvSDV1C8QIe0=
+X-Received: by 2002:a9f:25e9:: with SMTP id 96mr392723uaf.95.1559650393956;
+ Tue, 04 Jun 2019 05:13:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190604111632.22479-1-yamada.masahiro@socionext.com> <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
+In-Reply-To: <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 4 Jun 2019 21:12:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
+Message-ID: <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
+Subject: Re: [PATCH] ocxl: do not use C++ style comments in uapi header
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On 30/05/2019 16:41, Michael Kelley wrote:
-> From: Vincenzo Frascino <vincenzo.frascino@arm.com> On Thursday, May 30, 2019 7:16 AM
->>
->> The x86 vDSO library requires some adaptations to take advantage of the
->> newly introduced generic vDSO library.
->>
->> Introduce the following changes:
->>  - Modification of vdso.c to be compliant with the common vdso datapage
->>  - Use of lib/vdso for gettimeofday
->>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->>
->>
->> diff --git a/arch/x86/include/asm/mshyperv-tsc.h b/arch/x86/include/asm/mshyperv-tsc.h
->> new file mode 100644
->> index 000000000000..99c98ccea0bf
->> --- /dev/null
->> +++ b/arch/x86/include/asm/mshyperv-tsc.h
->> @@ -0,0 +1,76 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _ASM_X86_MSHYPER_TSCPAGE_H
->> +#define _ASM_X86_MSHYPER_TSCPAGE_H
->> +
->> +#include <asm/hyperv-tlfs.h>
->> +
->> +#ifdef CONFIG_HYPERV_TSCPAGE
->> +struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
->> +static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
->> +				       u64 *cur_tsc)
->> +{
->> +	u64 scale, offset;
->> +	u32 sequence;
->> +
->> +	/*
->> +	 * The protocol for reading Hyper-V TSC page is specified in Hypervisor
->> +	 * Top-Level Functional Specification ver. 3.0 and above. To get the
->> +	 * reference time we must do the following:
->> +	 * - READ ReferenceTscSequence
->> +	 *   A special '0' value indicates the time source is unreliable and we
->> +	 *   need to use something else. The currently published specification
->> +	 *   versions (up to 4.0b) contain a mistake and wrongly claim '-1'
->> +	 *   instead of '0' as the special value, see commit c35b82ef0294.
->> +	 * - ReferenceTime =
->> +	 *        ((RDTSC() * ReferenceTscScale) >> 64) + ReferenceTscOffset
->> +	 * - READ ReferenceTscSequence again. In case its value has changed
->> +	 *   since our first reading we need to discard ReferenceTime and repeat
->> +	 *   the whole sequence as the hypervisor was updating the page in
->> +	 *   between.
->> +	 */
->> +	do {
->> +		sequence = READ_ONCE(tsc_pg->tsc_sequence);
->> +		if (!sequence)
->> +			return U64_MAX;
->> +		/*
->> +		 * Make sure we read sequence before we read other values from
->> +		 * TSC page.
->> +		 */
->> +		smp_rmb();
->> +
->> +		scale = READ_ONCE(tsc_pg->tsc_scale);
->> +		offset = READ_ONCE(tsc_pg->tsc_offset);
->> +		*cur_tsc = rdtsc_ordered();
->> +
->> +		/*
->> +		 * Make sure we read sequence after we read all other values
->> +		 * from TSC page.
->> +		 */
->> +		smp_rmb();
->> +
->> +	} while (READ_ONCE(tsc_pg->tsc_sequence) != sequence);
->> +
->> +	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
->> +}
->> +
->> +static inline u64 hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
->> +{
->> +	u64 cur_tsc;
->> +
->> +	return hv_read_tsc_page_tsc(tsc_pg, &cur_tsc);
->> +}
->> +
->> +#else
->> +static inline struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
->> +				       u64 *cur_tsc)
->> +{
->> +	BUG();
->> +	return U64_MAX;
->> +}
->> +#endif
->> +#endif
->> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> index cc60e617931c..db095a992f3e 100644
->> --- a/arch/x86/include/asm/mshyperv.h
->> +++ b/arch/x86/include/asm/mshyperv.h
->> @@ -7,6 +7,7 @@
->>  #include <linux/nmi.h>
->>  #include <asm/io.h>
->>  #include <asm/hyperv-tlfs.h>
->> +#include <asm/mshyperv-tsc.h>
->>  #include <asm/nospec-branch.h>
->>
->>  #define VP_INVAL	U32_MAX
->> @@ -387,73 +388,4 @@ static inline int hyperv_flush_guest_mapping_range(u64 as,
->>  }
->>  #endif /* CONFIG_HYPERV */
->>
->> -#ifdef CONFIG_HYPERV_TSCPAGE
->> -struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
->> -static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
->> -				       u64 *cur_tsc)
->> -{
->> -	u64 scale, offset;
->> -	u32 sequence;
->> -
->> -	/*
->> -	 * The protocol for reading Hyper-V TSC page is specified in Hypervisor
->> -	 * Top-Level Functional Specification ver. 3.0 and above. To get the
->> -	 * reference time we must do the following:
->> -	 * - READ ReferenceTscSequence
->> -	 *   A special '0' value indicates the time source is unreliable and we
->> -	 *   need to use something else. The currently published specification
->> -	 *   versions (up to 4.0b) contain a mistake and wrongly claim '-1'
->> -	 *   instead of '0' as the special value, see commit c35b82ef0294.
->> -	 * - ReferenceTime =
->> -	 *        ((RDTSC() * ReferenceTscScale) >> 64) + ReferenceTscOffset
->> -	 * - READ ReferenceTscSequence again. In case its value has changed
->> -	 *   since our first reading we need to discard ReferenceTime and repeat
->> -	 *   the whole sequence as the hypervisor was updating the page in
->> -	 *   between.
->> -	 */
->> -	do {
->> -		sequence = READ_ONCE(tsc_pg->tsc_sequence);
->> -		if (!sequence)
->> -			return U64_MAX;
->> -		/*
->> -		 * Make sure we read sequence before we read other values from
->> -		 * TSC page.
->> -		 */
->> -		smp_rmb();
->> -
->> -		scale = READ_ONCE(tsc_pg->tsc_scale);
->> -		offset = READ_ONCE(tsc_pg->tsc_offset);
->> -		*cur_tsc = rdtsc_ordered();
->> -
->> -		/*
->> -		 * Make sure we read sequence after we read all other values
->> -		 * from TSC page.
->> -		 */
->> -		smp_rmb();
->> -
->> -	} while (READ_ONCE(tsc_pg->tsc_sequence) != sequence);
->> -
->> -	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
->> -}
->> -
->> -static inline u64 hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
->> -{
->> -	u64 cur_tsc;
->> -
->> -	return hv_read_tsc_page_tsc(tsc_pg, &cur_tsc);
->> -}
->> -
->> -#else
->> -static inline struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
->> -{
->> -	return NULL;
->> -}
->> -
->> -static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
->> -				       u64 *cur_tsc)
->> -{
->> -	BUG();
->> -	return U64_MAX;
->> -}
->> -#endif
->>  #endif
-> 
-> Vincenzo -- these changes for Hyper-V are a subset of a larger patch set
-> I have that moves all of the Hyper-V clock/timer code into a separate
-> clocksource driver in drivers/clocksource, with an include file in
-> includes/clocksource.  That new include file should be able to work
-> instead of your new mshyperv-tsc.h.  It also has the benefit of being
-> ISA neutral, so it will work with my in-progress patch set to support
-> Linux on Hyper-V on ARM64.  See https://lkml.org/lkml/2019/5/27/231
-> for the new clocksource driver patch set.
+On Tue, Jun 4, 2019 at 8:54 PM Frederic Barrat <fbarrat@linux.ibm.com> wrot=
+e:
+>
+>
+>
+> Le 04/06/2019 =C3=A0 13:16, Masahiro Yamada a =C3=A9crit :
+> > Linux kernel tolerates C++ style comments these days. Actually, the
+> > SPDX License tags for .c files start with //.
+> >
+> > On the other hand, uapi headers are written in more strict C, where
+> > the C++ comment style is forbidden.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+>
+> Thanks!
+> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 >
 
-Thank you for pointing this out, I will rebase my changes on your patches.
+Please hold on this patch until
+we get consensus about the C++ comment style.
+
+Discussion just started here:
+https://lore.kernel.org/patchwork/patch/1083801/
 
 
-> Michael
-> 
-
--- 
-Regards,
-Vincenzo
+--=20
+Best Regards
+Masahiro Yamada
