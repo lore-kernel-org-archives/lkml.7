@@ -2,93 +2,156 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2FEC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94215C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EB824AC0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A29C24AC0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDr3GyLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfFDNbT (ORCPT
+        id S1727607AbfFDNbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:31:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43858 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfFDNbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:31:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2916DA78;
-        Tue,  4 Jun 2019 06:31:19 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C2E63F690;
-        Tue,  4 Jun 2019 06:31:15 -0700 (PDT)
-Subject: Re: [RFC PATCH 20/57] platform: Add a helper to find device by driver
-To:     heiko@sntech.de
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
-        hjc@rock-chips.com, eric@anholt.net
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-21-git-send-email-suzuki.poulose@arm.com>
- <2117016.xXqOXZeE10@phil>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <fdd6822e-866a-5483-42ce-3a1131f35f3b@arm.com>
-Date:   Tue, 4 Jun 2019 14:31:12 +0100
+        Tue, 4 Jun 2019 09:31:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37208 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfFDNbc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:31:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a23so12713657pff.4;
+        Tue, 04 Jun 2019 06:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=3b5aub+eecNpo+4U92Rj62KFwfdLX+w3MzlhVC2SeQ0=;
+        b=nDr3GyLSyEbLOjZ9Kc+s6Gi2ZoFfHg9lNRMq6CdYJRbZJrSjQnpOJZ1/A21Zr+7Jz8
+         Bjr2dkpMZu6188dW0lBPP5JSEYTPmjlCXRnbtKMTBzMOO1bvVj01fkQiD6eNMotQ6p+N
+         0rCYw3UkWqbvUFw3LCUvtF6sI4iL34c7cNgg4JYHgC/0ObVA+BN5q1C/Jmc0eYfivG+J
+         eTrk46MFrtKj/4xjj/ZrQQxsPnwdg6+hH+bejYT5ePWNkVMvt0m3sB2NwM2LcAtHVGPf
+         BflIm5CRvE0Nm3swYtM70TbGRXCaimgvLr3KQWN4pkNQUd1gUDe1tge6v9xwH3zB0HIG
+         WZaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3b5aub+eecNpo+4U92Rj62KFwfdLX+w3MzlhVC2SeQ0=;
+        b=ATXEhslJTtIjK4z8fWkDGt8WzR3vYdwxxBX6cNutv03lg/cXRHETcMeMByP1fyRLN7
+         71Wfwore1O838SYJXVTQL+MEpyX3lP8YkatRXI9o5HcsBDW/QF2Hp3+55/u7W58LhjFR
+         rtRVGlSaOnHS5bTCAYRQ94qF8FGQCZisUxXO5sJ2tk+8h/wEkDSZOQUIr5EnlefJIXca
+         HoZisftyHJmlUx6JtU1vQJhQOIFlyr3lRa4kpIxISfh2OE48aM73zoyPpPYJwY+isb1m
+         0qnhjysZA2g432ko3dLt4AT9Q8Dixt54ECLlbClOHIvjS+4JAO6FREXOVhmAXbX5BarH
+         Hijg==
+X-Gm-Message-State: APjAAAXVRGqR2q7OSS96P0BuEwhtJwRIoO0oXzxMqjh8XWw0Xyc2cS91
+        NWTkW3xE+AadgcXqMdjpg88CqY6e
+X-Google-Smtp-Source: APXvYqyvUvoqZQRwD3+IAd/XJ22hnRVQk6nNZvcu9NNlpa4H7aEFxjUBMjmxaQ/jZhpt4l5kPXeS2w==
+X-Received: by 2002:a17:90a:a596:: with SMTP id b22mr24671756pjq.20.1559655091975;
+        Tue, 04 Jun 2019 06:31:31 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id u123sm18874576pfu.67.2019.06.04.06.31.30
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 06:31:31 -0700 (PDT)
+Subject: Re: [PATCH] rose: af_rose: avoid overflows in rose_setsockopt()
+To:     Young Xiao <92siuyang@gmail.com>, ralf@linux-mips.org,
+        davem@davemloft.net, linux-hams@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1559650290-17054-1-git-send-email-92siuyang@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a3ac9063-b11a-347d-713b-846907765366@gmail.com>
+Date:   Tue, 4 Jun 2019 06:31:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2117016.xXqOXZeE10@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1559650290-17054-1-git-send-email-92siuyang@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
 
-On 04/06/2019 14:29, Heiko Stuebner wrote:
-> Hi,
+
+On 6/4/19 5:11 AM, Young Xiao wrote:
+> Check setsockopt arguments to avoid overflows and return -EINVAL for
+> too large arguments.
 > 
-> Am Montag, 3. Juni 2019, 17:49:46 CEST schrieb Suzuki K Poulose:
->> There are a couple of places where we reuse platform specific
->> match to find a device. Instead of spilling the global varilable
->> everywhere, let us provide a helper to do the same.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Inki Dae <inki.dae@samsung.com>
->> Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
->> Cc: Sandy Huang <hjc@rock-chips.com>
->> Cc: "Heiko Stübner" <heiko@sntech.de>
->> Cc: Eric Anholt <eric@anholt.net>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> See commit 32288eb4d940 ("netrom: avoid overflows in nr_setsockopt()")
+> for details.
 > 
->> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
->> index cc46485..a82b3ec 100644
->> --- a/include/linux/platform_device.h
->> +++ b/include/linux/platform_device.h
->> @@ -52,6 +52,9 @@ extern struct device platform_bus;
->>   extern void arch_setup_pdev_archdata(struct platform_device *);
->>   extern struct resource *platform_get_resource(struct platform_device *,
->>   					      unsigned int, unsigned int);
->> +extern struct device *
->> +platform_find_device_by_driver(struct device dev*,
->> +			       const struct device_driver *drv);
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> ---
+>  net/rose/af_rose.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> the "dev*" causes compilation errors and also doesn't match the
-> function definition. With "dev*" -> "*start" it compiles again and
-> my rockchip drm driver still manages to find its components, so
-> after the above issue is fixed:
+> diff --git a/net/rose/af_rose.c b/net/rose/af_rose.c
+> index e274bc6..af831ee9 100644
+> --- a/net/rose/af_rose.c
+> +++ b/net/rose/af_rose.c
+> @@ -372,15 +372,15 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
+>  {
+>  	struct sock *sk = sock->sk;
+>  	struct rose_sock *rose = rose_sk(sk);
+> -	int opt;
+> +	unsigned long opt;
+>  
+>  	if (level != SOL_ROSE)
+>  		return -ENOPROTOOPT;
+>  
+> -	if (optlen < sizeof(int))
+> +	if (optlen < sizeof(unsigned int))
+>  		return -EINVAL;
+>  
+> -	if (get_user(opt, (int __user *)optval))
+> +	if (get_user(opt, (unsigned int __user *)optval))
+>  		return -EFAULT;
+>  
+>  	switch (optname) {
+> @@ -389,31 +389,31 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
+>  		return 0;
+>  
+>  	case ROSE_T1:
+> -		if (opt < 1)
+> +		if (opt < 1 || opt > ULONG_MAX / HZ)
+>  			return -EINVAL;
+>  		rose->t1 = opt * HZ;
+>  		return 0;
+>  
+>  	case ROSE_T2:
+> -		if (opt < 1)
+> +		if (opt < 1 || opt > ULONG_MAX / HZ)
+>  			return -EINVAL;
+>  		rose->t2 = opt * HZ;
+>  		return 0;
+>  
+>  	case ROSE_T3:
+> -		if (opt < 1)
+> +		if (opt < 1 || opt > ULONG_MAX / HZ)
+>  			return -EINVAL;
+>  		rose->t3 = opt * HZ;
+>  		return 0;
+>  
+>  	case ROSE_HOLDBACK:
+> -		if (opt < 1)
+> +		if (opt < 1 || opt > ULONG_MAX / HZ)
+>  			return -EINVAL;
+>  		rose->hb = opt * HZ;
+>  		return 0;
+>  
+>  	case ROSE_IDLE:
+> -		if (opt < 0)
+> +		if (opt < 0 || opt > ULONG_MAX / HZ)
+
+Buggy check.
+
+>  			return -EINVAL;
+>  		rose->idle = opt * 60 * HZ;
+>  		return 0;
 > 
-
-Thanks for spotting, I have fixed this already locally.
-
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-
-Thanks a lot for the testing !
-
-Suzuki
