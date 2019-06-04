@@ -2,116 +2,91 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF04C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068D2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7102070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04392070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:53:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NMXueQNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfFDVxi (ORCPT
+        id S1726695AbfFDVxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:53:38 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:58767 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfFDVxg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:53:36 -0400
-X-AuditID: ac10606f-bbfff70000003de9-9b-5cf6e85fb469
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 2A.12.15849.F58E6FC5; Tue,  4 Jun 2019 17:53:35 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 4 Jun 2019 17:53:35 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Joel Stanley <joel@jms.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Hongwei Zhang <hongweiz@ami.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
-Date:   Tue, 4 Jun 2019 17:53:32 -0400
-Message-ID: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Jun 2019 17:53:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:41523 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbfFDVxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:53:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45JQfV4RwXz9sNl;
+        Wed,  5 Jun 2019 07:53:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559685219;
+        bh=cHNqCa+2DKAV6M0vMR9bkHDYjtCKwtQoZhwxJ+54gVI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NMXueQNnTEcIDQt5X450JA3xwHhFoOXBn4Buv4VarPzSbw1U7RY8/uFkNlOAjMNx9
+         XnOibpQFQrCnnfH4JV6YC/AwqIR/0E21n3x/J1KZtDo6vK3glguw/IP+Jich2tF89s
+         rnB8uEPXsAJeT1r9IzY8dRoX5F6eY5+4ovSeqAXy5ACxFg3yyeH2NQ9NUenQOmJbTZ
+         46GjhyFA4k90W/W/E7VR0v57MxE0VXHKWgFHz7GI9RFCu5jMY+9zhxRhSLzV8HMp3a
+         AUbtC+RN8okV9Un8bFt+glmqRL3hnKl1YxzqU9azJnVGlxeLBY7S2VSNN3ROjR3iwl
+         WyHbMiCslZlTQ==
+Date:   Wed, 5 Jun 2019 07:53:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Benson Leung <bleung@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the chrome-platform
+ tree
+Message-ID: <20190605075330.79a4725d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsWyRiBhgm78i28xBtuOmlnsusxhMf/IOVaL
-        3+f/MltM+bOcyWLT42usFs2rzzFbbJ7/h9Hi8q45bBZLr19ksmjde4Tdgcvjavsudo8189Yw
-        elz8eIzZY9OqTjaPO9f2sHlsXlLvcX7GQkaPz5vkAjiiuGxSUnMyy1KL9O0SuDK+HJzGXrBU
-        pOLGm2fMDYz7BbsYOTgkBEwk2ldmdjFycggJ7GKSuDpPqouRC8g+xCjxd9ULJpAEm4CaxN7N
-        c5hAEiICOxglOue3sYI4zAJnGSU2PNzLDFIlLOAusfnjA0YQm0VARaJpwyI2EJtXwEGifecM
-        sBoJATmJm+c6mSHighInZz5hAbGZBSQkDr54wQxxhqzErUOPmSDqFSSe9z1mmcDINwtJyywk
-        LQsYmVYxCiWW5OQmZuaklxvpJeZm6iXn525ihAR0/g7Gjx/NDzEycTACvcTBrCTCm3j7S4wQ
-        b0piZVVqUX58UWlOavEhRmkOFiVx3lVrvsUICaQnlqRmp6YWpBbBZJk4OKUaGFmuC7473/RG
-        p23hviWB7gezwvuk102f8PmA3gqzF9umZluYTr/S8l28QH5l95w9JuvibYwZ9LfLzkx5eqZG
-        63z/tHutkoLuyeZXyzyqXi/qUPRiPjmxLUhps72pbeHu3nNXFFp6Hk8QPn339kONji0192c8
-        2yQaUWvn48MYKHywZemsek5rWSWW4oxEQy3mouJEACilowFWAgAA
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/un..cX/b10_C=VlA+JHf84O"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
-supporting SGPIO in AST2500 SoC.
+--Sig_/un..cX/b10_C=VlA+JHf84O
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-index 3b7266c..8f1c5c4 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-@@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4 NRI1 NRI2
- NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 PWM3 PWM4
- PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 SALT10
- SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
--SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
-+SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
- SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
- SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
- TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index 187abd7..0c89647 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
- SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
- SS_PIN_DECL(N4, GPIOJ3, SGPMI);
- 
-+FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
-+
- #define N5 76
- SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
- SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
-@@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
- 	ASPEED_PINCTRL_GROUP(SD2),
- 	ASPEED_PINCTRL_GROUP(SDA1),
- 	ASPEED_PINCTRL_GROUP(SDA2),
-+	ASPEED_PINCTRL_GROUP(SGPM),
- 	ASPEED_PINCTRL_GROUP(SGPS1),
- 	ASPEED_PINCTRL_GROUP(SGPS2),
- 	ASPEED_PINCTRL_GROUP(SIOONCTRL),
-@@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
- 	ASPEED_PINCTRL_FUNC(SD2),
- 	ASPEED_PINCTRL_FUNC(SDA1),
- 	ASPEED_PINCTRL_FUNC(SDA2),
-+	ASPEED_PINCTRL_FUNC(SGPM),
- 	ASPEED_PINCTRL_FUNC(SGPS1),
- 	ASPEED_PINCTRL_FUNC(SGPS2),
- 	ASPEED_PINCTRL_FUNC(SIOONCTRL),
--- 
-2.7.4
+Commit
 
+  4c1bd8b0e181 ("platform/chrome: wilco_ec: Add telemetry char device inter=
+face")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/un..cX/b10_C=VlA+JHf84O
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz26FoACgkQAVBC80lX
+0GyYRQgAjUyXj7QxTT/MRJDPEt2YlXkC9JAXiSGE/tkj/mzpB1FUpu990OmwCd9c
+lKU1B0omKGxnKC84cvnt1N4YSu6WQNDaaOkOCB3qIu/mb8Zn8b5WcocYQUq/yafp
+5+gD+Tl+ZZV0myVGRN1eDxtSNw2TMev9kcnwGJRAhdGwNss1nwUI9iyYb0f0igFC
+l98oov21u6QGO2MvUhNW9cRyeqrY+7a1Y6z415RJyAV6HJdh+MqKYyvlkoedRtd/
+fUO2543RDNhEzW+3Eu4oVgYXr2Dgl1V9YhK3g7Efw108yZM6+qMwQcJCYccw1b8C
+VF5U/dE+BZrbQV3l8m+4/r93aODTAQ==
+=19ng
+-----END PGP SIGNATURE-----
+
+--Sig_/un..cX/b10_C=VlA+JHf84O--
