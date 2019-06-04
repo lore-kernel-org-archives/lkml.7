@@ -2,95 +2,98 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A136C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98599C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8E52075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559681871;
-	bh=ihQrR3672ZM/DzWjZDVj/EkCVxnHXupxxQEbDR/4vAg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MJOS/GRvZ4LmJpR0pDMDP9ApOiwIH+Ak2vCzAfp+f8md2IpICaeKn8YGepI2Jw6js
-	 pJqqxwt5UTwEADsjCitDNwqRuDj5boU19A3bzngwP4lRpdJNt6/52sFDxGfYU/X8v7
-	 ixmg8T4F0jvDkLiYzTqoJvKRKSw7xD7914QQWA/0=
+	by mail.kernel.org (Postfix) with ESMTP id 685DE2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8uaauFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFDU5u (ORCPT
+        id S1726690AbfFDU6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfFDU5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:57:43 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9382D2085A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559681862;
-        bh=ihQrR3672ZM/DzWjZDVj/EkCVxnHXupxxQEbDR/4vAg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=I4PRguwk4bMuMypdm5AOXXn53k/m+L5N9pyKwSfTNHLewnh8M65uGMG7NNR3Ebc8l
-         rsRnH3DUUzV1SO4+TidtsVDH9S4H4Orx7UfDX0ta38L+l5LFNUqPzgkVOGyqiElmZe
-         nHeIlBvnyw6Sot3eJ4IIqxcrsiVBsK6rjKdIv0AM=
-Received: by mail-wm1-f42.google.com with SMTP id f10so144564wmb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:57:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAWH66ne9WVxMUyhrxJkeIzBPi/l8Cb0juCnRtDVGVS/gpTo9ATi
-        aST7xm2XWpfe8P2deQghTN/89oO3praFqKNo5mkMOw==
-X-Google-Smtp-Source: APXvYqzjigMmzQseLoEe4mdRuIyW/gpGOaqBUS3DaksOo5KC4LVSwBy+ViDmwuhEPpoWAnb6UhQhHp6vTImgw+QurWo=
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr19833827wmi.0.1559681861171;
- Tue, 04 Jun 2019 13:57:41 -0700 (PDT)
+        Tue, 4 Jun 2019 16:58:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36783 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfFDU6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:58:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a3so3651768pgb.3;
+        Tue, 04 Jun 2019 13:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jU6FCdbmVH25cMl/Qsrg2wb7Hc352jmBOfOPp6LTdmI=;
+        b=E8uaauFKmiHlCMOswFL03QRgZYM2sXYQsHTtMiX9Wfx6Rwz2Mr4GLkrW3ngpezfNts
+         vq8BDh4fkYHoTyh9i0IcYmqvHmAfRuMYB3p0M9tga9dWXbQQgEeS+v9i77Nl6a9YaCOr
+         hFUExwlLyySszQIN4gaYrotPp0DdHmtY8SE1l0K6N2XCB7SqicxRhthsw1wwgtBSEkTI
+         H81SzIPcAzmNxery7iGq9VVDEhCghFsZhXmIH3JP9LiV4cEEulnAUchF13hpbPtDAd6u
+         WFOMtDlSYFz3QAP5aGP8a0oNIUgr8Nfxzw2mtqL3zdeMacUScOck7Ar6Jy91mnTxcnGU
+         IwYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jU6FCdbmVH25cMl/Qsrg2wb7Hc352jmBOfOPp6LTdmI=;
+        b=buyJA+QHCg90IhF4XigrHir0YBUiiBPLN5VPfdEHNR4+QMw+ZRA0xayTuuOHBKojwi
+         VZ6yKENd46BRHw51dqBuImMAhZyGFEJK92FaT5vhc/8s51+7hPc4k9WQjiEG4cnZpj0p
+         nJ8wgxA+JIFArSzG59X+6LtbmfhLnv2GmoPxf1HY3ZP/7oXVTfCG7X/YeErn3B2xpqKe
+         290n2eUYUrazMclS/UC3451/tEbPxtsdrAXzAYW8lXmSQ+Naz4WHnbvUh+b/1vIqfNhS
+         HcLa6w2xLtoDV0jiwtViYnWXcXPoNDWMqaiVhJuJ6jgjg12koUJXhuvPV5KRkWY19Gri
+         Nh3A==
+X-Gm-Message-State: APjAAAVVdjS8yrrLJ4yhutdpbq+2ZTNdR0tMkIujAz1ju+agqXwgAoL2
+        Nzasu7ykPb46spwSFfOXuYS5ToLJ
+X-Google-Smtp-Source: APXvYqwnLTC0pcBq0l3nuM3ilLst6xsUAtObSzzO/XGbx51JYoODK9jAMcO2zRxZrjgVkpLuaYCvgg==
+X-Received: by 2002:aa7:8e46:: with SMTP id d6mr40716895pfr.91.1559681894225;
+        Tue, 04 Jun 2019 13:58:14 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id z4sm18628064pfa.142.2019.06.04.13.58.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 13:58:13 -0700 (PDT)
+Subject: Re: [PATCH v3 net-next 04/17] net: dsa: sja1105: Move
+ sja1105_change_tpid into sja1105_vlan_filtering
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
+        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190604170756.14338-1-olteanv@gmail.com>
+ <20190604170756.14338-5-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <31e5c5ab-7188-2ebb-d090-3e31f737adf5@gmail.com>
+Date:   Tue, 4 Jun 2019 13:58:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
- <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com> <1207.1559680778@warthog.procyon.org.uk>
-In-Reply-To: <1207.1559680778@warthog.procyon.org.uk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 4 Jun 2019 13:57:30 -0700
-X-Gmail-Original-Message-ID: <CALCETrXmjpSvVj_GROhgouNtbzLm5U9B4b364wycMaqApqDVNA@mail.gmail.com>
-Message-ID: <CALCETrXmjpSvVj_GROhgouNtbzLm5U9B4b364wycMaqApqDVNA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190604170756.14338-5-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 1:39 PM David Howells <dhowells@redhat.com> wrote:
->
-> Andy Lutomirski <luto@kernel.org> wrote:
->
-> > > Here's a set of patches to add a general variable-length notification queue
-> > > concept and to add sources of events for:
-> >
-> > I asked before and didn't see a response, so I'll ask again.  Why are you
-> > paying any attention at all to the creds that generate an event?
->
-> Casey responded to you.  It's one of his requirements.
->
 
-It being a "requirement" doesn't make it okay.
 
-> However, the LSMs (or at least SELinux) ignore f_cred and use current_cred()
-> when checking permissions.  See selinux_revalidate_file_permission() for
-> example - it uses current_cred() not file->f_cred to re-evaluate the perms,
-> and the fd might be shared between a number of processes with different creds.
+On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
+> This is a cosmetic patch, pre-cursor to making another change to the
+> General Parameters Table (incl_srcpt) which does not logically pertain
+> to the sja1105_change_tpid function name, but not putting it there would
+> otherwise create a need of resetting the switch twice.
+> 
+> So simply move the existing code into the .port_vlan_filtering callback,
+> where the incl_srcpt change will be added as well.
+> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
-That's a bug.  It's arguably a rather severe bug.  If I ever get
-around to writing the patch I keep thinking of that will warn if we
-use creds from invalid contexts, it will warn.
-
-Let's please not repeat this.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
