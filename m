@@ -2,224 +2,75 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9272C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBBAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9460B247F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:18:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="anXrne3z"
+	by mail.kernel.org (Postfix) with ESMTP id 10A0F24AD6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559650766;
+	bh=5mDhuWW9AhtrNyi3+kKWCarCqtJksnkX7XioSL9hjMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DUBLDJNmQp8fpR6qiqQfkpkWoJ3B8/lzGuzSw0pF/XHjY03ASvAT0qT/xeNs0uMXG
+	 /lO2j4HsDSCRoV8JqtQEoU67nMrTobiGAoqyKtyPVErX6uKVwHaj+AlH65io5egqOF
+	 ziBmS2nQYAtEVT3QWsDZvg0GZerbLsdMeUoMx3C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfFDMSb (ORCPT
+        id S1727681AbfFDMTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:18:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35493 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbfFDMSb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:18:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d126so12604196pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=izP2xVkH+lJ1XiJaz25EL/2sjI5XZqFKPi8rAth3/y8=;
-        b=anXrne3zDdmEVildSzDwGKYMdshtpWiEi/bSjfUgHwDoCg62X8GEgJ1oLKPrpJDBTp
-         sCO27Nd8vGOH1LG/aPfklMvFylAFcLd0duV9qTE0Uw2bgUkgehc21vjcK8KjtBKBSIeh
-         hbrrSVL1q8qPT28KLxALn+5w5v0FjrGnKuEQGLgwne0GhOjJGw91IA05Yw5AYbDH2v2V
-         eAfpEy7jnKgsdj8ID/iHcGjtOrlCN+u9PocCqqNSQrn/Xx8uaOQ0ef5ELA37nbSJameE
-         4YvdhcrfbGwQSFgLEIgyOhrMQbK4CtUaCUAqm4fpOOKP+JqNZLGloD+rwiN3Vuf1ojqO
-         poUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=izP2xVkH+lJ1XiJaz25EL/2sjI5XZqFKPi8rAth3/y8=;
-        b=ckIy0ofiCqlAMOJMiYGCbsD6DdwKKsJ+L+rNVUNj3g4ZVmWUb7rW6ghqZzCS0vTsWW
-         vwKqP0R/xqZNcBFuJlD/UjFLJVFVjMv4he8RvZJjDjEMXuYWfcBbY5ZqSphMwuVibK+v
-         VD+JeVG8A24kr/HLZotjv70ClW7j0xbEQSZIYNy7Y/hp76vKFS8Arnu/HEQ2z0JASK0W
-         NTN7yah9EJP0fqd1KC/Li2emn3Uc+ZpAVKb6ZMb/dNmHqN04Iy8SHr0yqTbcp30W5pZu
-         lJhjYDmgTI4zSu/EY6SvzagpKk2xiRBiCToSKhKqYtFjKSWq86QdqPkpzP9S5KBLxM4a
-         lrzQ==
-X-Gm-Message-State: APjAAAWcA+vAkot9jCYRkM1cWfCkprpBetnyl520/nNXkpJXDMkTHbPA
-        zMd85wN2MmNWux0YICdZvTA1XjioLY4NQAmWQUTAaQ==
-X-Google-Smtp-Source: APXvYqz1BnXRogJ38HsJg+YXXm2v0kW8wf81Q7/M4AVfD5zoRhp7qhUtn8D86raEkRJz58lLKdDFOynhTkL7EDkBRUg=
-X-Received: by 2002:a63:1919:: with SMTP id z25mr35448936pgl.440.1559650710127;
- Tue, 04 Jun 2019 05:18:30 -0700 (PDT)
+        Tue, 4 Jun 2019 08:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfFDMTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:19:24 -0400
+Received: from localhost (unknown [117.99.94.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EC95247F9;
+        Tue,  4 Jun 2019 12:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559650764;
+        bh=5mDhuWW9AhtrNyi3+kKWCarCqtJksnkX7XioSL9hjMQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vHCMyNsNztRQezlvHEmUk9aqrMCdYbMy0Mdyfos6pISt0WgXVGPcBTDQqAEruEflY
+         BsWnL1h5qIH90UBz4tpmenjYSZYYgFGgYl+y4rxhPf1geZsPdf6rX2Ld0JToHN7uvP
+         FaK2332k1zX7wk9PeLuoCWFNj79Ebqi+LQ1OZNeU=
+Date:   Tue, 4 Jun 2019 17:46:16 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT
+ flag is unset
+Message-ID: <20190604121616.GX15118@vkoul-mobl>
+References: <20190529214355.15339-1-digetx@gmail.com>
 MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <c829f93b19ad6af1b13be8935ce29baa8e58518f.1559580831.git.andreyknvl@google.com>
- <20190603174619.GC11474@ziepe.ca>
-In-Reply-To: <20190603174619.GC11474@ziepe.ca>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 4 Jun 2019 14:18:19 +0200
-Message-ID: <CAAeHK+xy-dx4dLDLLj9dRzRNSVG9H5nDPPnjpYF38qKZNNCh_g@mail.gmail.com>
-Subject: Re: [PATCH v16 12/16] IB, arm64: untag user pointers in ib_uverbs_(re)reg_mr()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529214355.15339-1-digetx@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 7:46 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Mon, Jun 03, 2019 at 06:55:14PM +0200, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
-> > e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
-> >
-> > Untag user pointers in these functions.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> >  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-> > index 5a3a1780ceea..f88ee733e617 100644
-> > +++ b/drivers/infiniband/core/uverbs_cmd.c
-> > @@ -709,6 +709,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
-> >       if (ret)
-> >               return ret;
-> >
-> > +     cmd.start = untagged_addr(cmd.start);
-> > +
-> >       if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
-> >               return -EINVAL;
->
-> I feel like we shouldn't thave to do this here, surely the cmd.start
-> should flow unmodified to get_user_pages, and gup should untag it?
->
-> ie, this sort of direction for the IB code (this would be a giant
-> patch, so I didn't have time to write it all, but I think it is much
-> saner):
+On 30-05-19, 00:43, Dmitry Osipenko wrote:
+> Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
+> unset since it completely disables interrupt handling instead of skipping
+> the callbacks invocations, hence putting channel into unusable state.
+> 
+> The flag is always set by all of kernel drivers that use APB DMA, so let's
+> error out in otherwise case for consistency. It won't be difficult to
+> support that case properly if ever will be needed.
 
-Hi Jason,
+Applied, thanks
 
-ib_uverbs_reg_mr() passes cmd.start to mlx4_get_umem_mr(), which calls
-find_vma(), which only accepts untagged addresses. Could you explain
-how your patch helps?
-
-Thanks!
-
->
-> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-> index 54628ef879f0ce..7b3b736c87c253 100644
-> --- a/drivers/infiniband/core/umem.c
-> +++ b/drivers/infiniband/core/umem.c
-> @@ -193,7 +193,7 @@ EXPORT_SYMBOL(ib_umem_find_best_pgsz);
->   * @access: IB_ACCESS_xxx flags for memory being pinned
->   * @dmasync: flush in-flight DMA when the memory region is written
->   */
-> -struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
-> +struct ib_umem *ib_umem_get(struct ib_udata *udata, void __user *addr,
->                             size_t size, int access, int dmasync)
->  {
->         struct ib_ucontext *context;
-> @@ -201,7 +201,7 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
->         struct page **page_list;
->         unsigned long lock_limit;
->         unsigned long new_pinned;
-> -       unsigned long cur_base;
-> +       void __user *cur_base;
->         struct mm_struct *mm;
->         unsigned long npages;
->         int ret;
-> diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-> index 5a3a1780ceea4d..94389e7f12371f 100644
-> --- a/drivers/infiniband/core/uverbs_cmd.c
-> +++ b/drivers/infiniband/core/uverbs_cmd.c
-> @@ -735,7 +735,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
->                 }
->         }
->
-> -       mr = pd->device->ops.reg_user_mr(pd, cmd.start, cmd.length, cmd.hca_va,
-> +       mr = pd->device->ops.reg_user_mr(pd, u64_to_user_ptr(cmd.start),
-> +                                        cmd.length, cmd.hca_va,
->                                          cmd.access_flags,
->                                          &attrs->driver_udata);
->         if (IS_ERR(mr)) {
-> diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-> index 4d033796dcfcc2..bddbb952082fc5 100644
-> --- a/drivers/infiniband/hw/mlx5/mr.c
-> +++ b/drivers/infiniband/hw/mlx5/mr.c
-> @@ -786,7 +786,7 @@ static int mr_cache_max_order(struct mlx5_ib_dev *dev)
->  }
->
->  static int mr_umem_get(struct mlx5_ib_dev *dev, struct ib_udata *udata,
-> -                      u64 start, u64 length, int access_flags,
-> +                      void __user *start, u64 length, int access_flags,
->                        struct ib_umem **umem, int *npages, int *page_shift,
->                        int *ncont, int *order)
->  {
-> @@ -1262,8 +1262,8 @@ struct ib_mr *mlx5_ib_reg_dm_mr(struct ib_pd *pd, struct ib_dm *dm,
->                                  attr->access_flags, mode);
->  }
->
-> -struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
-> -                                 u64 virt_addr, int access_flags,
-> +struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, void __user *start,
-> +                                 u64 length, u64 virt_addr, int access_flags,
->                                   struct ib_udata *udata)
->  {
->         struct mlx5_ib_dev *dev = to_mdev(pd->device);
-> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-> index ec6446864b08e9..b3c8eaaa35c760 100644
-> --- a/include/rdma/ib_verbs.h
-> +++ b/include/rdma/ib_verbs.h
-> @@ -2464,8 +2464,8 @@ struct ib_device_ops {
->         struct ib_mr *(*reg_user_mr)(struct ib_pd *pd, u64 start, u64 length,
->                                      u64 virt_addr, int mr_access_flags,
->                                      struct ib_udata *udata);
-> -       int (*rereg_user_mr)(struct ib_mr *mr, int flags, u64 start, u64 length,
-> -                            u64 virt_addr, int mr_access_flags,
-> +       int (*rereg_user_mr)(struct ib_mr *mr, int flags, void __user *start,
-> +                            u64 length, u64 virt_addr, int mr_access_flags,
->                              struct ib_pd *pd, struct ib_udata *udata);
->         int (*dereg_mr)(struct ib_mr *mr, struct ib_udata *udata);
->         struct ib_mr *(*alloc_mr)(struct ib_pd *pd, enum ib_mr_type mr_type,
+-- 
+~Vinod
