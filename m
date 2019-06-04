@@ -2,82 +2,214 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD72C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A5DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14C320843
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C917D2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ugq8j9ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfFDQJw (ORCPT
+        id S1728342AbfFDQKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:09:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36574 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfFDQJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:09:51 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C99DFC0624A1;
-        Tue,  4 Jun 2019 16:09:44 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00EF65D9D2;
-        Tue,  4 Jun 2019 16:09:41 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        KarimAllah Ahmed <karahmed@amazon.de>
-Subject: [PATCH] KVM/nSVM: properly map nested VMCB
-Date:   Tue,  4 Jun 2019 18:09:39 +0200
-Message-Id: <20190604160939.17031-1-vkuznets@redhat.com>
+        Tue, 4 Jun 2019 12:10:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34798 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbfFDQKA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:10:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e16so8199538wrn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ygMGl15yL8Dl/CKxDv58CFgXErk1JZawsiPT7PZu59c=;
+        b=Ugq8j9ea6T6m2QJYNrHxhrwF0Gfbdtq8EVLSsuEpeXNBxuPCF1eyBO0rdgcAhxHjlU
+         a4SO8JY6dra7YmOYqhoAsKfOR7vbCsFCacO5FpAsmS0jFl4+Zhvlb4Dh4S0hdP7ZRL6S
+         Pp5sDM0b/05jQIonO7S6jG2u200oGGYlwVHW5JFYRj9S4y/UhHJBfoynyuzBCeKzEAqo
+         5MtXRUUfco1DLg/7OIsMowDvKTd8Xt548bUkDZthXP38d/cbyEKRls+Nx6TpBtsYjyPa
+         v+Z41qiuP582owphpatCNRAmB7NK7TzOht+2VeefvCYV9aX54HC/QTdjVr6DTTDHWkhZ
+         dHYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ygMGl15yL8Dl/CKxDv58CFgXErk1JZawsiPT7PZu59c=;
+        b=XmX55KimTe8QBLMxTfbs+gGKC/x8ByWDKQ/koa+0CJJah4eT8JzUhSBsa6yA+UQ9jN
+         agBc6JgqHiNVeQTsdWVAlECNdEVnQxjEzwcM+NBgoc4X1SPrVd14eR/B5q18g9rN1SFW
+         hs8yqaujE22JkoPfCPRcv4f6NEjnin9/6mUeXyUY482zcCtRpygs2E6w/E2IlWt5Czvs
+         l+a24fU/TVuy1CIsg9YczPXKBNnyoJqNdjtPW1mxj6l0TgA41KsHhICTDaHLaEFgxwxZ
+         4MegiiAziSo39Ks/N8TzxKuAouyWuOV9RHwO07CsEE9dzAdl0+TAdZmAoqWM9yZGHpiS
+         2Mdw==
+X-Gm-Message-State: APjAAAV8oEElR/+NcYjgKywIKW8mlnoGgROPcikQKi2ZKly0K3wLM/JT
+        PixsK1TcZXf9TJB23IsI2hffKg==
+X-Google-Smtp-Source: APXvYqx9i1pt2SCjFhQVYdpuY6VDAIjUCZcF1txJy0/ITOaZoGzSMolb0o0Ld1KzyHQYmwpTjyKRAw==
+X-Received: by 2002:a5d:4b49:: with SMTP id w9mr7207099wrs.113.1559664598427;
+        Tue, 04 Jun 2019 09:09:58 -0700 (PDT)
+Received: from localhost.localdomain (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
+        by smtp.gmail.com with ESMTPSA id e6sm10578055wrw.83.2019.06.04.09.09.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 09:09:57 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com
+Cc:     keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
+        arnd@arndb.de, dhowells@redhat.com,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Date:   Tue,  4 Jun 2019 18:09:44 +0200
+Message-Id: <20190604160944.4058-2-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190604160944.4058-1-christian@brauner.io>
+References: <20190604160944.4058-1-christian@brauner.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 04 Jun 2019 16:09:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping guest
-memory") broke nested SVM completely: kvm_vcpu_map()'s second parameter is
-GFN so vmcb_gpa needs to be converted with gpa_to_gfn(), not the other way
-around.
+Wire up the clone3() call on all arches that don't require hand-rolled
+assembly.
 
-Fixes: 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping guest memory")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Some of the arches look like they need special assembly massaging and it is
+probably smarter if the appropriate arch maintainers would do the actual
+wiring. Arches that are wired-up are:
+- x86{_32,64}
+- arm{64}
+- xtensa
+
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Adrian Reber <adrian@lisas.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: linux-api@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: x86@kernel.org
 ---
- arch/x86/kvm/svm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1: unchanged
+v2: unchanged
+v3:
+- Christian Brauner <christian@brauner.io>:
+  - wire up clone3 on all arches that don't have hand-rolled entry points
+    for clone
+---
+ arch/arm/tools/syscall.tbl                  | 1 +
+ arch/arm64/include/asm/unistd.h             | 2 +-
+ arch/arm64/include/asm/unistd32.h           | 2 ++
+ arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
+ include/uapi/asm-generic/unistd.h           | 4 +++-
+ 8 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 735b8c01895e..5beca1030c9a 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3293,7 +3293,7 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
- 				       vmcb->control.exit_int_info_err,
- 				       KVM_ISA_SVM);
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index aaf479a9e92d..e99a82bdb93a 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -447,3 +447,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++436	common	clone3				sys_clone3
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 70e6882853c0..24480c2d95da 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -44,7 +44,7 @@
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+ #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
  
--	rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(svm->nested.vmcb), &map);
-+	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb), &map);
- 	if (rc) {
- 		if (rc == -EINVAL)
- 			kvm_inject_gp(&svm->vcpu, 0);
-@@ -3583,7 +3583,7 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
+-#define __NR_compat_syscalls		434
++#define __NR_compat_syscalls		437
+ #endif
  
- 	vmcb_gpa = svm->vmcb->save.rax;
+ #define __ARCH_WANT_SYS_CLONE
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index c39e90600bb3..b144ea675d70 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+ __SYSCALL(__NR_fsmount, sys_fsmount)
+ #define __NR_fspick 433
+ __SYSCALL(__NR_fspick, sys_fspick)
++#define __NR_clone3 436
++__SYSCALL(__NR_clone3, sys_clone3)
  
--	rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(vmcb_gpa), &map);
-+	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map);
- 	if (rc) {
- 		if (rc == -EINVAL)
- 			kvm_inject_gp(&svm->vcpu, 0);
+ /*
+  * Please add new compat syscalls above this comment and update
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index 26339e417695..3110440bcc31 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -439,3 +439,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++436	common	clone3				sys_clone3
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index ad968b7bac72..80e26211feff 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -438,3 +438,4 @@
+ 431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+ 432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+ 433	i386	fspick			sys_fspick			__ia32_sys_fspick
++436	i386	clone3			sys_clone3			__ia32_sys_clone3
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index b4e6f9e6204a..7968f0b5b5e8 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -355,6 +355,7 @@
+ 431	common	fsconfig		__x64_sys_fsconfig
+ 432	common	fsmount			__x64_sys_fsmount
+ 433	common	fspick			__x64_sys_fspick
++436	common	clone3			__x64_sys_clone3/ptregs
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 5fa0ee1c8e00..b2767c8c2b4e 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -404,3 +404,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++436	common	clone3				sys_clone3
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index a87904daf103..45bc87687c47 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+ __SYSCALL(__NR_fsmount, sys_fsmount)
+ #define __NR_fspick 433
+ __SYSCALL(__NR_fspick, sys_fspick)
++#define __NR_clone3 436
++__SYSCALL(__NR_clone3, sys_clone3)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 434
++#define __NR_syscalls 437
+ 
+ /*
+  * 32 bit systems traditionally used different
 -- 
-2.20.1
+2.21.0
 
