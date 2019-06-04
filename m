@@ -2,87 +2,152 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22405C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8062206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3664D206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559688209;
+	bh=McnH01l012LgpITPnazCqRJYDfp8SFNlTpLeOyd0rDk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vgyDyNgaY7lEvqChEw9FhmQCtswinMvCCucHKyJL5J4SI7dRVrqUF3/juDaBmC/QV
+	 DgEa5g7FvsMYQ0/JE2U54NTKpf7p2Z2BsCpHyRtLfX9lRTyPHbYmgMb3GVMwAQpoNi
+	 B3mLoWqu/VLAgjsWoIUR4M+UidBHJ0YREcT5siCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFDWkW (ORCPT
+        id S1726521AbfFDWn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:40:22 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44460 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDWkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:40:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c5so8904776pll.11;
-        Tue, 04 Jun 2019 15:40:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Aw/iJs+AOiEaavB7sKDwC9ReJ1P0mis+S4Hs1ITT4s=;
-        b=ocPJNDGSew1IAOKWCKFWr79Te0dbmO0g/k8qf5Q4MoluLA2Hf+06JLCfX/L74pFi9t
-         BF+vN5tOnL+0uG48KHjElCC+pKRo9zzoNK5TUSflL7aNiEL3uW1P2/ELcAN3UwDmUMks
-         SQwOND4IYQOa5Gf2sqP769bAyycSUQ47rulFIuVNmpWkrBCggQ0mqrpZGzNuveQoIZ4w
-         sTvm4g2KvRsY84btLaxNxAjJV5UCOqyBnXXuWDce0/4qrfCwiuF1pACA8eFGChdiabGO
-         Ly10i3ez9A5FDnsbQVFzXo75lD5xo85gMCHKRlUbCRCaOrCgb3yYgY+WDtq6/PTi7ZMc
-         YuZA==
-X-Gm-Message-State: APjAAAWo2BGkuiyKJKIbmfF+VBbdnsXH32L9tlbOnymzsRy4Jh+XNUYU
-        7+ex89JbzqSKsVX+fYznsIIldW7x
-X-Google-Smtp-Source: APXvYqzrSBsiBoxLDSKZ/Cy5U/3OP8lrINu/hou4BgEFpIUfSzPZtZDQT9mpZvNqAF+EbdOg1gi6wg==
-X-Received: by 2002:a17:902:b102:: with SMTP id q2mr29846224plr.149.1559688020767;
-        Tue, 04 Jun 2019 15:40:20 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id s1sm15129820pgp.94.2019.06.04.15.40.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 15:40:19 -0700 (PDT)
-Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, stefanha@redhat.com
-References: <20190530112811.3066-1-pbonzini@redhat.com>
- <20190530112811.3066-2-pbonzini@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <c175c8ae-2cec-6423-5cda-b1abcc4b42e5@acm.org>
-Date:   Tue, 4 Jun 2019 15:40:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190530112811.3066-2-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 4 Jun 2019 18:43:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfFDWn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 18:43:28 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F10206B8;
+        Tue,  4 Jun 2019 22:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559688207;
+        bh=McnH01l012LgpITPnazCqRJYDfp8SFNlTpLeOyd0rDk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iMpvIC1KpLUBc26GINzifM0DVnm8whlDtaLjgjFzkGsUuxLi4URKQ7Kz86LO1axJb
+         ROYDLOE5iJKCfO3e/mDuVFq36lJWgmDFCC1r7h0nwP2pLpHpITo/a8kmnu+8Xlf8E5
+         EsXgRa+o7Hse3+A4mDjXy7HiDjwS37jUW3oVHF+8=
+Date:   Tue, 4 Jun 2019 15:43:26 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Maninder Singh <maninder1.s@samsung.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to
+ functions
+Message-Id: <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
+In-Reply-To: <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+        <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
+        <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 4:28 AM, Paolo Bonzini wrote:
-> This allows a list of requests to be issued, with the LLD only writing
-> the hardware doorbell when necessary, after the last request was prepared.
-> This is more efficient if we have lists of requests to issue, particularly
-> on virtualized hardware, where writing the doorbell is more expensive than
-> on real hardware.
-> 
-> The use case for this is plugged IO, where blk-mq flushes a batch of
-> requests all at once.
-> 
-> The API is the same as for blk-mq, just with blk-mq concepts tweaked to
-> fit the SCSI subsystem API: the "last" flag in blk_mq_queue_data becomes
-> a flag in scsi_cmnd, while the queue_num in the commit_rqs callback is
-> extracted from the hctx and passed as a parameter.
-> 
-> The only complication is that blk-mq uses different plugging heuristics
-> depending on whether commit_rqs is present or not.  So we have two
-> different sets of blk_mq_ops and pick one depending on whether the
-> scsi_host template uses commit_rqs or not.
+On Mon,  3 Jun 2019 14:32:03 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> currently params structure is passed in all functions, which increases
+> stack usage in all the function and lead to stack overflow on target like
+> ARM with kernel stack size of 8 KB so better to pass pointer.
+> 
+> Checked for ARM:
+> 
+>                                 Original               Patched
+> Call FLow Size:                  1264                   1040
+> ....
+> (HUF_sort)                      -> 296
+> (HUF_buildCTable_wksp)          -> 144
+> (HUF_compress4X_repeat)         -> 88
+> (ZSTD_compressBlock_internal)   -> 200
+> (ZSTD_compressContinue_internal)-> 136                  -> 88
+> (ZSTD_compressCCtx)             -> 192                  -> 64
+> (zstd_compress)                 -> 144                  -> 96
+> (crypto_compress)               -> 32
+> (zcomp_compress)                -> 32
+> ....
+> 
+> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
+> 
+
+You missed btrfs.  This needs review, please - particularly the
+kernel-wide static ZSTD_parameters in zstd_get_btrfs_parameters().
+
+The base patch is here:
+
+http://lkml.kernel.org/r/1559552526-4317-2-git-send-email-maninder1.s@samsung.com  
+
+--- a/fs/btrfs/zstd.c~zstd-pass-pointer-rathen-than-structure-to-functions-fix
++++ a/fs/btrfs/zstd.c
+@@ -27,15 +27,17 @@
+ /* 307s to avoid pathologically clashing with transaction commit */
+ #define ZSTD_BTRFS_RECLAIM_JIFFIES (307 * HZ)
+ 
+-static ZSTD_parameters zstd_get_btrfs_parameters(unsigned int level,
++static ZSTD_parameters *zstd_get_btrfs_parameters(unsigned int level,
+ 						 size_t src_len)
+ {
+-	ZSTD_parameters params = ZSTD_getParams(level, src_len, 0);
++	static ZSTD_parameters params;
++
++	params = ZSTD_getParams(level, src_len, 0);
+ 
+ 	if (params.cParams.windowLog > ZSTD_BTRFS_MAX_WINDOWLOG)
+ 		params.cParams.windowLog = ZSTD_BTRFS_MAX_WINDOWLOG;
+ 	WARN_ON(src_len > ZSTD_BTRFS_MAX_INPUT);
+-	return params;
++	return &params;
+ }
+ 
+ struct workspace {
+@@ -155,11 +157,12 @@ static void zstd_calc_ws_mem_sizes(void)
+ 	unsigned int level;
+ 
+ 	for (level = 1; level <= ZSTD_BTRFS_MAX_LEVEL; level++) {
+-		ZSTD_parameters params =
+-			zstd_get_btrfs_parameters(level, ZSTD_BTRFS_MAX_INPUT);
+-		size_t level_size =
+-			max_t(size_t,
+-			      ZSTD_CStreamWorkspaceBound(params.cParams),
++		ZSTD_parameters *params;
++		size_t level_size;
++
++		params = zstd_get_btrfs_parameters(level, ZSTD_BTRFS_MAX_INPUT);
++		level_size = max_t(size_t,
++			      ZSTD_CStreamWorkspaceBound(params->cParams),
+ 			      ZSTD_DStreamWorkspaceBound(ZSTD_BTRFS_MAX_INPUT));
+ 
+ 		max_size = max_t(size_t, max_size, level_size);
+@@ -385,8 +388,9 @@ static int zstd_compress_pages(struct li
+ 	unsigned long len = *total_out;
+ 	const unsigned long nr_dest_pages = *out_pages;
+ 	unsigned long max_out = nr_dest_pages * PAGE_SIZE;
+-	ZSTD_parameters params = zstd_get_btrfs_parameters(workspace->req_level,
+-							   len);
++	ZSTD_parameters *params;
++
++	params = zstd_get_btrfs_parameters(workspace->req_level, len);
+ 
+ 	*out_pages = 0;
+ 	*total_out = 0;
+_
+
