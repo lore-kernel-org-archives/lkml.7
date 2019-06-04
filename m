@@ -2,81 +2,127 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211A7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649F52498F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79DD2498F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="gyHWCuCW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BbQdUxnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfFDOap (ORCPT
+        id S1727785AbfFDObh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:30:45 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52916 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfFDOa3 (ORCPT
+        Tue, 4 Jun 2019 10:31:37 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33657 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfFDObg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:30:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559658628; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=viJUkG4rMZjmr4ujhcAN08ahuisy1yD+ApHwFnkhEr8=;
-        b=gyHWCuCWqmd/onBzcGjlDALLWXoBVHEuV/qyP33BPSkEJSFaJMQmtPrN6lIiE+e5mq1V5o
-        fAow2rJl84OeSge1x9MtvHtfMtG6XD0UUAgmMCVeCZZSMfOzVi5bneyqm2qhnBx8dGk4HM
-        V5CUD2ZlVdO9oLeh7LW7ZegOUKX1uX8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [RE-RESEND PATCH v3 3/4] memory: jz4780-nemc: Reduce size of const array
-Date:   Tue,  4 Jun 2019 16:30:17 +0200
-Message-Id: <20190604143018.11644-3-paul@crapouillou.net>
-In-Reply-To: <20190604143018.11644-1-paul@crapouillou.net>
-References: <20190604143018.11644-1-paul@crapouillou.net>
+        Tue, 4 Jun 2019 10:31:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so2427123wmh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:in-reply-to:date:message-id:mime-version;
+        bh=iZarr12ESEXM+3F555ibf1PVEySArgP2BdGs23qHHOA=;
+        b=BbQdUxnvVlxCxjXC7jUR55mdDIO8JQj5nGqaIpxfqMhT4ghZzSoCZx77DBgbcsqwrz
+         rMZbiCqwmEVBq64HEj4vliR38yhgwyeYzCZ/RBfJwQiJpgi1x5jXQaS1gD2Q3n+TZAmu
+         hY6gIZhMkdbXSsd8cmATmf9FyREaXKDKS9BgV5x0lI3F1liX4vtXHHgABkBTTKwZ43Xb
+         jcCbcwKCJq26Xg2itgXgPZARdQDLxsSX7/GOdiwm6EtOU93u4mcdHEd6KmnhrDeKAfCw
+         JL7/VJIAysoim+22ES9fVyDvkzGOV8TNKWJfdoKXyf/8vJVIBTggZi9+alvNGmt9A7Or
+         vV4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=iZarr12ESEXM+3F555ibf1PVEySArgP2BdGs23qHHOA=;
+        b=ZMLcr5RCem6hkK+hzrPPmiMI72oE7tIp0SAir/Wf5lAgETVNxcZyfrxYkAgYpAf9MB
+         2ezlpHcmPqoQJsEpxoBJicXw2dVWIuXwZoFMT+vZnr5GfCxNDlxMnzq9zohi3kqR0uiK
+         6uWVN4wW0HfAFNUWmd2akKMnOpi21xGWVHkovETliXkep4NA5z0ESabgM4eOhzBTSWZB
+         4jsDpyZ+hg2ZKAoWIj0gUNxKCO3nJ8T/agi33NagV/EjhkPpnNmJGIFFYLhLpDLmv+yv
+         +81jDoBebZIbcH3fLRGulQKtMwN4gyXTIqAK5iiHdxCvxgmLLD6HsvvGmf7DVHK6A3f7
+         fNWg==
+X-Gm-Message-State: APjAAAWpX8osnvKOe8UDglQQRsF0uqkbGCii6TzKPiStFDDlTvKJbuFk
+        l1CkizG7j3dTxIh577qDMQnTeQ==
+X-Google-Smtp-Source: APXvYqyIooETwPZrZMrF2j6qHwH8bld2cOLZ1ydsgGSFZ6macMr3fCWCAcQrNOmgK6emptf2WEzGxg==
+X-Received: by 2002:a1c:4184:: with SMTP id o126mr6303600wma.68.1559658695037;
+        Tue, 04 Jun 2019 07:31:35 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id w3sm12685803wmc.8.2019.06.04.07.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 07:31:34 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 0/5] arch: riscv: add board and SoC DT file support
+In-Reply-To: <20190602080500.31700-1-paul.walmsley@sifive.com>
+Date:   Tue, 04 Jun 2019 16:31:32 +0200
+Message-ID: <86y32hh16j.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maximum value found in that array is 15, there's no need to store
-these values as uint32_t, a uint8_t is enough.
+On Sun 02 Jun 2019 at 01:04, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+> Add support for building flattened DT files from DT source files under
+> arch/riscv/boot/dts.  Follow existing kernel precedent from other SoC
+> architectures.  Start our board support by adding initial support for
+> the SiFive FU540 SoC and the first development board that uses it, the
+> SiFive HiFive Unleashed A00.
+>
+> This third version of the patch set adds I2C data for the chip,
+> incorporates all remaining changes that riscv-pk was making
+> automatically, and addresses a comment from Rob Herring
+> <robh@kernel.org>.
+>
+> Boot-tested on v5.2-rc1 on a HiFive Unleashed A00 board, using the
+> BBL and open-source FSBL, with modifications to pass in the DTB
+> file generated by these patches.
+>
+> This patch series can be found, along with the PRCI patch set
+> and the DT macro prerequisite patch, at:
+>
+> https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1
+>
+>
+> - Paul
+>
 
-Notes:
-    v2: Remove casts to uint32_t
-    
-    v3: No change
+Tested patch 1, 4 and 5 using FSBL + OpenSBI + U-Boot on HiFive Unleashed.
+Tested-by: Loys Ollivier <lollivier@baylibre.com>
 
- drivers/memory/jz4780-nemc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Paul Walmsley (5):
+>   arch: riscv: add support for building DTB files from DT source data
+>   dt-bindings: riscv: sifive: add YAML documentation for the SiFive
+>     FU540
+>   dt-bindings: riscv: convert cpu binding to json-schema
+>   riscv: dts: add initial support for the SiFive FU540-C000 SoC
+>   riscv: dts: add initial board data for the SiFive HiFive Unleashed
+>
+>  .../devicetree/bindings/riscv/cpus.yaml       | 168 ++++++++++++++
+>  .../devicetree/bindings/riscv/sifive.yaml     |  25 ++
+>  MAINTAINERS                                   |   9 +
+>  arch/riscv/boot/dts/Makefile                  |   2 +
+>  arch/riscv/boot/dts/sifive/Makefile           |   2 +
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    | 215 ++++++++++++++++++
+>  .../boot/dts/sifive/hifive-unleashed-a00.dts  |  67 ++++++
+>  7 files changed, 488 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/riscv/cpus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
+>  create mode 100644 arch/riscv/boot/dts/Makefile
+>  create mode 100644 arch/riscv/boot/dts/sifive/Makefile
+>  create mode 100644 arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index bcf06adefc96..66b8b43eaeff 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	 * Conversion of tBP and tAW cycle counts to values supported by the
- 	 * hardware (round up to the next supported value).
- 	 */
--	static const uint32_t convert_tBP_tAW[] = {
-+	static const u8 convert_tBP_tAW[] = {
- 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
- 
- 		/* 11 - 12 -> 12 cycles */
--- 
-2.21.0.593.g511ec345e18
+Note: the -fu540 was dropped from the previous version which results in
+a different dtb file.
 
+Loys
