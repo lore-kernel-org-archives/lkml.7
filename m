@@ -2,484 +2,187 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A251C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54B2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E9E207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A796207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PglzN+HF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bhX3hmEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfFDUqE (ORCPT
+        id S1726556AbfFDUqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:46:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46726 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDUqD (ORCPT
+        Tue, 4 Jun 2019 16:46:19 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39421 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfFDUqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:46:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e5so7063181pls.13;
-        Tue, 04 Jun 2019 13:46:03 -0700 (PDT)
+        Tue, 4 Jun 2019 16:46:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i34so2078616qta.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=966+N7ccmkYRjH2WFNEfk5YVx0RXBeuKP5qbRTNRyuI=;
-        b=PglzN+HFFV+M/7XgYVTVJ4niF/AJMFnOu7CLPfTqi0p98A1vc2OOhck18EjW72dktG
-         xxQghoda9dDeqJpva8i/t2sgJmfGTrCEYMu8TviN3n7TkM0V8Mnmz3Vm4TKJRzF5aCRg
-         p+leRS3umXiM7jGIBQgYIgusKYIVakqzFLDU6pJl62sE1XUx9xZKPNOLHa1mk5pOMkFj
-         My5MfovdWNBeq8EDUhw6rzSz28Vj5Y1uF9cXXGqVSNgC/5MdN8auQ4bwfbZDtzlwJrjq
-         M2aRi0V9hY7xU6bNkrcZ+0X4JKmNgzCw1t62LbbEKkgREqytSh0zaJCMqTBz3GjqBFka
-         VCJg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=c88XoKITMsSgEqIMyQ3drS89O9rn+/C1xXVo2kxkkPs=;
+        b=bhX3hmENQOddONUbQsso6uoqnqEX315jBUeFm9A+Eanve4Mu9lg/q2VdZL/JKlS5KJ
+         ALmgVpmXrl2TOmnLD7Tm3rIeRM21K722em987mLSPYPd+Na7AN3j7IED16k0krS4YM4r
+         mSxIF/JFCTLp5wDupniIPH5olUw6Xl6GnswdV0bpRUXsuiK9jsFmECTzlYIvc1HbO5hM
+         0wEDlpG8f7nRvVcD81suVdYIB5kKlk9lFpUIM/ZbGVahKjcX/qgR+eHIlH1jJolXkw3u
+         mq7drs5JEiqcDo7fDf1pWefRO9t0/BFEw5xKfCbXbzPeXKKRWGNRQzcuineL3mQtkEzG
+         GDjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=966+N7ccmkYRjH2WFNEfk5YVx0RXBeuKP5qbRTNRyuI=;
-        b=dYKZ7LNeEDbd5Bt77o9jmzzi4TalIxFlfFgaVN0Zy3qadGQW+8qoaMXSwSv7RMYFTf
-         eJzHnn9Rswd7mINwDOC3sBaHk+iQ+o27HU1cOb6hZo7uNXYSA7pBnX3ILopAV1K13YpV
-         eVlxOZOLA++2a8si8lQDBIs9R4yOoATuBDwT1mVSGD43oIwaQn/NwY0dztB5n/w+c1eH
-         rJ+UR6wBtlF+0gHBFH0eBo6IfMpfJ52SIFp8NkC5mRjBMLFb9kyADVhtkB9v3EnA/AAU
-         3cMzFRuDgFZq/WmFvRIcN2TsKmQkg7mWkQJtf9GNyOuQ9aqD0KMosi6lNVw5lC6wvBw/
-         WmuA==
-X-Gm-Message-State: APjAAAWuymtV8P4FPr1zpx/GKTZ7iU3iJnrnOeTE4RHAERSU07hgKxd0
-        qt44A2aV75KjXG6iCnvfVTY=
-X-Google-Smtp-Source: APXvYqyY0b1jzIL0ifex6cTy5GObi69PPA247k+oXFQ3v5VQMrs5BJrhALsxfxEqESBZXTHVPFfG3g==
-X-Received: by 2002:a17:902:5ac9:: with SMTP id g9mr39278813plm.134.1559681162457;
-        Tue, 04 Jun 2019 13:46:02 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id j22sm18171487pfh.71.2019.06.04.13.46.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c88XoKITMsSgEqIMyQ3drS89O9rn+/C1xXVo2kxkkPs=;
+        b=Qgb8B/de5dCWTFASvamuJTCfJ+vKnWjxQzwN8fNstJNtnK/eVtX1eC2XR+1z4ALtG+
+         4DsE7GDdvEUxvWFbxRMKIsBnfvhtcaFmv0ytMb8cxu29cPVqcMFEOsoVHeZnNaZYvPae
+         w5JWqItmjsT8X/SZAr9wCOabARW9k84myFD/PfNNT7/V2VB4I9zJCzpOI7AY0dNSDGxU
+         65W7XYTZ9guMMBlPZL39uMnhARxuEsOSYRI0bRRCOZ5IsoeOpvLzSlHWyym8danRyCnI
+         r1UL0dB5xD+JM3RJhAyTvMjreGt5TTVRXaQCOV4Txgects4v8u1iWPd4VbvQtiy+kNli
+         8NbQ==
+X-Gm-Message-State: APjAAAVw1gwjxh+GcUdthJdtY6J5Gb/C5N7RJYYdmXQezEcX35UNiKPo
+        qltATX8vJ732/YY9nzByOuLYzq+Zv4k=
+X-Google-Smtp-Source: APXvYqwSI+Wr/W+nZDzv1n87lVgwwCy6mvnUaqk5IrIbaL1CFL77k9ENrSpg1Z+II+3QbZY8B94tbA==
+X-Received: by 2002:aed:3fc3:: with SMTP id w3mr2687259qth.168.1559681178163;
+        Tue, 04 Jun 2019 13:46:18 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id p62sm9217928qkc.42.2019.06.04.13.46.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:46:01 -0700 (PDT)
-Subject: Re: [PATCH net-next v6 2/5] net: stmmac: introducing support for DWC
- xPCS logics
-To:     Voon Weifeng <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>
-References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
- <1559674736-2190-3-git-send-email-weifeng.voon@intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <05cf54dc-7c40-471e-f08a-7fdf5fe4ef54@gmail.com>
-Date:   Tue, 4 Jun 2019 13:46:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1559674736-2190-3-git-send-email-weifeng.voon@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 04 Jun 2019 13:46:17 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mingo@kernel.org, peterz@infradead.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] sched/core: clean up sched_init() a bit
+Date:   Tue,  4 Jun 2019 16:46:02 -0400
+Message-Id: <1559681162-5385-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Russell,
+Compiling a kernel with both FAIR_GROUP_SCHED=n and RT_GROUP_SCHED=n
+will generate a warning using W=1:
 
-On 6/4/2019 11:58 AM, Voon Weifeng wrote:
-> From: Ong Boon Leong <boon.leong.ong@intel.com>
-> 
-> xPCS is DWC Ethernet Physical Coding Sublayer that may be integrated
-> into a GbE controller that uses DWC EQoS MAC controller. An example of
-> HW configuration is shown below:-
-> 
->   <-----------------GBE Controller---------->|<--External PHY chip-->
-> 
->   +----------+         +----+    +---+               +--------------+
->   |   EQoS   | <-GMII->| DW |<-->|PHY| <-- SGMII --> | External GbE |
->   |   MAC    |         |xPCS|    |IF |               | PHY Chip     |
->   +----------+         +----+    +---+               +--------------+
->          ^               ^                                  ^
->          |               |                                  |
->          +---------------------MDIO-------------------------+
-> 
-> xPCS is a Clause-45 MDIO Manageable Device (MMD) and we need a way to
-> differentiate it from external PHY chip that is discovered over MDIO.
-> Therefore, xpcs_phy_addr is introduced in stmmac platform data
-> (plat_stmmacenet_data) for differentiating xPCS from 'phy_addr' that
-> belongs to external PHY.
+  kernel/sched/core.c: In function 'sched_init':
+  kernel/sched/core.c:5906:32: warning: variable 'ptr' set but not used
 
-Assuming this DW xPCS can be found with designs other than STMMAC would
-not it make sense to model this as some kind of PHY/MDIO bridge? A
-little bit like what drivers/net/phy/xilinx_gmii2rgmii.c tries to do?
+Use this opportunity to tidy up a code a bit by removing unnecssary
+indentations, #endif comments and lines.
 
-> 
-> Basic functionalities for initializing xPCS and configuring auto
-> negotiation (AN), loopback, link status, AN advertisement and Link
-> Partner ability are implemented. The implementation supports the C37
-> AN for 1000BASE-X and SGMII (MAC side SGMII only).
-> 
-> Tested-by: Tan, Tee Min <tee.min.tan@intel.com>
-> Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
-> Reviewed-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-> Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-> Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Makefile |   2 +-
->  drivers/net/ethernet/stmicro/stmmac/common.h |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwxpcs.c | 208 +++++++++++++++++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/dwxpcs.h |  51 +++++++
->  drivers/net/ethernet/stmicro/stmmac/hwif.h   |  19 +++
->  include/linux/stmmac.h                       |   1 +
->  6 files changed, 281 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> index c59926d96bcc..f007fb873455 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> @@ -6,7 +6,7 @@ stmmac-objs:= stmmac_main.o stmmac_ethtool.o stmmac_mdio.o ring_mode.o	\
->  	      mmc_core.o stmmac_hwtstamp.o stmmac_ptp.o dwmac4_descs.o	\
->  	      dwmac4_dma.o dwmac4_lib.o dwmac4_core.o dwmac5.o hwif.o \
->  	      stmmac_tc.o dwxgmac2_core.o dwxgmac2_dma.o dwxgmac2_descs.o \
-> -	      $(stmmac-y)
-> +	      dwxpcs.o $(stmmac-y)
->  
->  stmmac-$(CONFIG_STMMAC_SELFTESTS) += stmmac_selftests.o
->  
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-> index 1961fe9144ca..83df093c4636 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-> @@ -419,6 +419,7 @@ struct mii_regs {
->  
->  struct mac_device_info {
->  	const struct stmmac_ops *mac;
-> +	const struct stmmac_xpcs_ops *xpcs;
->  	const struct stmmac_desc_ops *desc;
->  	const struct stmmac_dma_ops *dma;
->  	const struct stmmac_mode_ops *mode;
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxpcs.c b/drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
-> new file mode 100644
-> index 000000000000..7e850b9dd7b7
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Intel Corporation.
-> + * DWC Ethernet Physical Coding Sublayer
-> + */
-> +#include <linux/bitops.h>
-> +#include <linux/mdio.h>
-> +#include "dwxpcs.h"
-> +#include "stmmac.h"
-> +
-> +/* DW xPCS mdiobus_read and mdiobus_write helper functions */
-> +#define xpcs_read(dev, reg) \
-> +	mdiobus_read(priv->mii, xpcs_phy_addr, \
-> +		     MII_ADDR_C45 | (reg) | \
-> +		     ((dev) << MII_DEVADDR_C45_SHIFT))
-> +#define xpcs_write(dev, reg, val) \
-> +	mdiobus_write(priv->mii, xpcs_phy_addr, \
-> +		      MII_ADDR_C45 | (reg) | \
-> +		      ((dev) << MII_DEVADDR_C45_SHIFT), val)
-> +
-> +static void dw_xpcs_init(struct net_device *ndev, int pcs_mode)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int xpcs_phy_addr;
-> +	int phydata;
-> +
-> +	xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-> +
-> +	if (pcs_mode == AN_CTRL_PCS_MD_C37_SGMII) {
-> +		/* For AN for SGMII mode, the settings are :-
-> +		 * 1) VR_MII_AN_CTRL Bit(2:1)[PCS_MODE] = 10b (SGMII AN)
-> +		 * 2) VR_MII_AN_CTRL Bit(3) [TX_CONFIG] = 0b (MAC side SGMII)
-> +		 *    DW xPCS used with DW EQoS MAC is always MAC
-> +		 *    side SGMII.
-> +		 * 3) VR_MII_AN_CTRL Bit(0) [AN_INTR_EN] = 1b (AN Interrupt
-> +		 *    enabled)
-> +		 * 4) VR_MII_DIG_CTRL1 Bit(9) [MAC_AUTO_SW] = 1b (Automatic
-> +		 *    speed mode change after SGMII AN complete)
-> +		 * Note: Since it is MAC side SGMII, there is no need to set
-> +		 *	 SR_MII_AN_ADV. MAC side SGMII receives AN Tx Config
-> +		 *	 from PHY about the link state change after C28 AN
-> +		 *	 is completed between PHY and Link Partner.
-> +		 */
-> +		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL);
-> +		phydata &= ~MDIO_MII_MMD_AN_CTRL_PCS_MD;
-> +		phydata |= MDIO_MII_MMD_AN_CTRL_AN_INTR_EN |
-> +			   (AN_CTRL_PCS_MD_C37_SGMII <<
-> +			    MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT &
-> +			    MDIO_MII_MMD_AN_CTRL_PCS_MD) |
-> +			   (AN_CTRL_TX_CONF_MAC_SIDE_SGMII <<
-> +			    MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT);
-> +		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL, phydata);
-> +
-> +		phydata = xpcs_read(XPCS_MDIO_MII_MMD,
-> +				    MDIO_MII_MMD_DIGITAL_CTRL_1);
-> +		phydata |= MDIO_MII_MMD_DIGI_CTRL_1_MAC_AUTO_SW;
-> +		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_DIGITAL_CTRL_1,
-> +			   phydata);
-> +	} else {
-> +		/* For AN for 1000BASE-X mode, the settings are :-
-> +		 * 1) VR_MII_AN_CTRL Bit(2:1)[PCS_MODE] = 00b (1000BASE-X C37)
-> +		 * 2) VR_MII_AN_CTRL Bit(0) [AN_INTR_EN] = 1b (AN Interrupt
-> +		 *    enabled)
-> +		 * 3) SR_MII_AN_ADV Bit(6)[FD] = 1b (Full Duplex)
-> +		 *    Note: Half Duplex is rarely used, so don't advertise.
-> +		 * 4) SR_MII_AN_ADV Bit(8:7)[PSE] = 11b (Sym & Asym Pause)
-> +		 */
-> +		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL);
-> +		phydata &= ~MDIO_MII_MMD_AN_CTRL_PCS_MD;
-> +		phydata |= MDIO_MII_MMD_AN_CTRL_AN_INTR_EN |
-> +			   (AN_CTRL_PCS_MD_C37_1000BASEX <<
-> +			    MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT &
-> +			    MDIO_MII_MMD_AN_CTRL_PCS_MD);
-> +		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL, phydata);
-> +
-> +		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MII_ADVERTISE);
-> +		phydata |= MDIO_MII_MMD_FD |
-> +			   (MDIO_MII_MMD_PSE_BOTH << MDIO_MII_MMD_PSE_SHIFT);
-> +		xpcs_write(XPCS_MDIO_MII_MMD, MII_ADVERTISE, phydata);
-> +	}
-> +}
-> +
-> +static void dw_xpcs_ctrl_ane(struct net_device *ndev, bool ane,
-> +			     bool loopback)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int xpcs_phy_addr;
-> +	int phydata;
-> +
-> +	xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-> +	phydata = xpcs_read(XPCS_MDIO_MII_MMD, MII_BMCR);
-> +
-> +	if (ane)
-> +		phydata |= (BMCR_ANENABLE | BMCR_ANRESTART);
-> +
-> +	if (loopback)
-> +		phydata |= BMCR_LOOPBACK;
-> +
-> +	xpcs_write(XPCS_MDIO_MII_MMD, MII_BMCR, phydata);
-> +}
-> +
-> +static void dw_xpcs_get_adv_lp(struct net_device *ndev,
-> +			       struct rgmii_adv *adv_lp,
-> +			       int pcs_mode)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int xpcs_phy_addr;
-> +	int value;
-> +
-> +	xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-> +
-> +	/* AN Advertisement Ability */
-> +	value = xpcs_read(XPCS_MDIO_MII_MMD, MII_ADVERTISE);
-> +
-> +	if (value & MDIO_MII_MMD_FD)
-> +		adv_lp->duplex = DUPLEX_FULL;
-> +	if (value & MDIO_MII_MMD_HD)
-> +		adv_lp->duplex = DUPLEX_HALF;
-> +	adv_lp->pause = (u32)((value & MDIO_MII_MMD_PSE) >>
-> +			      MDIO_MII_MMD_PSE_SHIFT);
-> +
-> +	/* Link Partner Ability - 1000BASE-X only*/
-> +	if (pcs_mode == AN_CTRL_PCS_MD_C37_1000BASEX) {
-> +		value = xpcs_read(XPCS_MDIO_MII_MMD, MII_LPA);
-> +		if (value & MDIO_MII_MMD_FD)
-> +			adv_lp->lp_duplex = DUPLEX_FULL;
-> +		if (value & MDIO_MII_MMD_HD)
-> +			adv_lp->lp_duplex = DUPLEX_HALF;
-> +		adv_lp->lp_pause = (u32)((value & MDIO_MII_MMD_PSE) >>
-> +					 MDIO_MII_MMD_PSE_SHIFT);
-> +	}
-> +}
-> +
-> +static void dw_xpcs_get_linkstatus(struct net_device *ndev,
-> +				   u16 an_stat,
-> +				   struct stmmac_extra_stats *x)
-> +{
-> +	/* Check the SGMII AN link status */
-> +	if (an_stat & AN_STAT_SGMII_AN_LNKSTS) {
-> +		int speed_value;
-> +
-> +		x->pcs_link = 1;
-> +
-> +		speed_value = ((an_stat & AN_STAT_SGMII_AN_SPEED) >>
-> +				AN_STAT_SGMII_AN_SPEED_SHIFT);
-> +		if (speed_value == AN_STAT_SGMII_AN_1000MBPS)
-> +			x->pcs_speed = SPEED_1000;
-> +		else if (speed_value == AN_STAT_SGMII_AN_100MBPS)
-> +			x->pcs_speed = SPEED_100;
-> +		else
-> +			x->pcs_speed = SPEED_10;
-> +
-> +		if (an_stat & AN_STAT_SGMII_AN_FD)
-> +			x->pcs_duplex = 1;
-> +		else
-> +			x->pcs_duplex = 0;
-> +
-> +		netdev_info(ndev, "Link is Up - %d/%s\n", (int)x->pcs_speed,
-> +			    x->pcs_duplex ? "Full" : "Half");
-> +	} else {
-> +		x->pcs_link = 0;
-> +		netdev_info(ndev, "Link is Down\n");
-> +	}
-> +}
-> +
-> +static int dw_xpcs_irq_status(struct net_device *ndev,
-> +			      struct stmmac_extra_stats *x,
-> +			      int pcs_mode)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int ret = IRQ_NONE;
-> +	int xpcs_phy_addr;
-> +	int an_stat;
-> +
-> +	xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-> +
-> +	/* AN status */
-> +	an_stat = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_STAT);
-> +
-> +	if (an_stat & AN_STAT_SGMII_AN_CMPLT) {
-> +		x->irq_pcs_ane_n++;
-> +
-> +		if (pcs_mode == AN_CTRL_PCS_MD_C37_SGMII) {
-> +			dw_xpcs_get_linkstatus(ndev, an_stat, x);
-> +		} else {
-> +			/* For 1000BASE-X AN, DW xPCS does not have register
-> +			 * to read the link state of 1000BASE-X C37 AN and
-> +			 * since 1000BASE-X is always 1000Mbps and FD, we
-> +			 * just set the default link here.
-> +			 */
-> +			x->pcs_link = 1;
-> +			x->pcs_duplex = 1;
-> +			x->pcs_speed = SPEED_1000;
-> +		}
-> +
-> +		/* Clear C37 AN complete status by writing zero */
-> +		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_STAT, 0);
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +const struct stmmac_xpcs_ops xpcs_ops = {
-> +	.xpcs_init = dw_xpcs_init,
-> +	.xpcs_ctrl_ane = dw_xpcs_ctrl_ane,
-> +	.xpcs_get_adv_lp = dw_xpcs_get_adv_lp,
-> +	.xpcs_irq_status = dw_xpcs_irq_status,
-> +};
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxpcs.h b/drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
-> new file mode 100644
-> index 000000000000..bd52ce80bf4e
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2019, Intel Corporation.
-> + * DWC Ethernet Physical Coding Sublayer
-> + */
-> +#ifndef __DW_XPCS_H__
-> +#define __DW_XPCS_H__
-> +
-> +/* XPCS MII MMD Device Addresses */
-> +#define XPCS_MDIO_MII_MMD	MDIO_MMD_VEND2
-> +
-> +/* MII MMD registers offsets */
-> +#define MDIO_MII_MMD_DIGITAL_CTRL_1	0x8000	/* Digital Control 1 */
-> +#define MDIO_MII_MMD_AN_CTRL		0x8001	/* AN Control */
-> +#define MDIO_MII_MMD_AN_STAT		0x8002	/* AN Status */
-> +
-> +/* MII MMD SR AN Advertisement & Link Partner Ability are slightly
-> + * different from MII_ADVERTISEMENT & MII_LPA in below fields:
-> + */
-> +#define MDIO_MII_MMD_HD			BIT(6)	/* Half duplex */
-> +#define MDIO_MII_MMD_FD			BIT(5)	/* Full duplex */
-> +#define MDIO_MII_MMD_PSE_SHIFT		7	/* Pause Ability shift */
-> +#define MDIO_MII_MMD_PSE		GENMASK(8, 7)	/* Pause Ability */
-> +#define MDIO_MII_MMD_PSE_NO		0x0
-> +#define MDIO_MII_MMD_PSE_ASYM		0x1
-> +#define MDIO_MII_MMD_PSE_SYM		0x2
-> +#define MDIO_MII_MMD_PSE_BOTH		0x3
-> +
-> +/* Automatic Speed Mode Change for MAC side SGMII AN */
-> +#define MDIO_MII_MMD_DIGI_CTRL_1_MAC_AUTO_SW	BIT(9)
-> +
-> +/* MII MMD AN Control defines */
-> +#define MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT	3 /* TX Config shift */
-> +#define AN_CTRL_TX_CONF_PHY_SIDE_SGMII		0x1 /* PHY side SGMII mode */
-> +#define AN_CTRL_TX_CONF_MAC_SIDE_SGMII		0x0 /* MAC side SGMII mode */
-> +#define MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT	1  /* PCS Mode shift */
-> +#define MDIO_MII_MMD_AN_CTRL_PCS_MD	GENMASK(2, 1) /* PCS Mode */
-> +#define AN_CTRL_PCS_MD_C37_1000BASEX	0x0	/* C37 AN for 1000BASE-X */
-> +#define AN_CTRL_PCS_MD_C37_SGMII	0x2	/* C37 AN for SGMII */
-> +#define MDIO_MII_MMD_AN_CTRL_AN_INTR_EN	BIT(0)	/* AN Complete Intr Enable */
-> +
-> +/* MII MMD AN Status defines for SGMII AN Status */
-> +#define AN_STAT_SGMII_AN_CMPLT		BIT(0)	/* AN Complete Intr */
-> +#define AN_STAT_SGMII_AN_FD		BIT(1)	/* Full Duplex */
-> +#define AN_STAT_SGMII_AN_SPEED_SHIFT	2	/* AN Speed shift */
-> +#define AN_STAT_SGMII_AN_SPEED		GENMASK(3, 2)	/* AN Speed */
-> +#define AN_STAT_SGMII_AN_10MBPS		0x0	/* 10 Mbps */
-> +#define AN_STAT_SGMII_AN_100MBPS	0x1	/* 100 Mbps */
-> +#define AN_STAT_SGMII_AN_1000MBPS	0x2	/* 1000 Mbps */
-> +#define AN_STAT_SGMII_AN_LNKSTS		BIT(4)	/* Link Status */
-> +
-> +#endif /* __DW_XPCS_H__ */
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-> index 2acfbc70e3c8..431cf4261264 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-> @@ -398,6 +398,25 @@ struct stmmac_ops {
->  #define stmmac_set_mac_loopback(__priv, __args...) \
->  	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
->  
-> +/* Helpers for DW xPCS */
-> +struct stmmac_xpcs_ops {
-> +	void (*xpcs_init)(struct net_device *ndev, int pcs_mode);
-> +	void (*xpcs_ctrl_ane)(struct net_device *ndev, bool ane, bool loopback);
-> +	void (*xpcs_get_adv_lp)(struct net_device *ndev, struct rgmii_adv *adv,
-> +				int pcs_mode);
-> +	int (*xpcs_irq_status)(struct net_device *ndev,
-> +			       struct stmmac_extra_stats *x, int pcs_mode);
-> +};
-> +
-> +#define stmmac_xpcs_init(__priv, __args...) \
-> +	stmmac_do_void_callback(__priv, xpcs, xpcs_init, __args)
-> +#define stmmac_xpcs_ctrl_ane(__priv, __args...) \
-> +	stmmac_do_void_callback(__priv, xpcs, xpcs_ctrl_ane, __args)
-> +#define stmmac_xpcs_get_adv_lp(__priv, __args...) \
-> +	stmmac_do_void_callback(__priv, xpcs, xpcs_get_adv_lp, __args)
-> +#define stmmac_xpcs_irq_status(__priv, __args...) \
-> +	stmmac_do_callback(__priv, xpcs, xpcs_irq_status, __args)
-> +
->  /* PTP and HW Timer helpers */
->  struct stmmac_hwtimestamp {
->  	void (*config_hw_tstamping) (void __iomem *ioaddr, u32 data);
-> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> index 4335bd771ce5..b00e7951a66d 100644
-> --- a/include/linux/stmmac.h
-> +++ b/include/linux/stmmac.h
-> @@ -148,6 +148,7 @@ struct stmmac_txq_cfg {
->  struct plat_stmmacenet_data {
->  	int bus_id;
->  	int phy_addr;
-> +	int xpcs_phy_addr;
->  	int interface;
->  	struct stmmac_mdio_bus_data *mdio_bus_data;
->  	struct device_node *phy_node;
-> 
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
+v2: Fix an oversight when both FAIR_GROUP_SCHED and RT_GROUP_SCHED
+    selected which was found by the 0day kernel testing robot.
+
+ kernel/sched/core.c | 50 +++++++++++++++++++++++---------------------------
+ 1 file changed, 23 insertions(+), 27 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 874c427742a9..edebd5e97542 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5903,36 +5903,31 @@ int in_sched_functions(unsigned long addr)
+ void __init sched_init(void)
+ {
+ 	int i, j;
+-	unsigned long alloc_size = 0, ptr;
+-
+-	wait_bit_init();
+-
+-#ifdef CONFIG_FAIR_GROUP_SCHED
+-	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
++#if defined(CONFIG_FAIR_GROUP_SCHED) && defined(CONFIG_RT_GROUP_SCHED)
++	unsigned long alloc_size = 4 * nr_cpu_ids * sizeof(void **);
++	unsigned long ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
++#elif defined(CONFIG_FAIR_GROUP_SCHED) || defined(CONFIG_RT_GROUP_SCHED)
++	unsigned long alloc_size = 2 * nr_cpu_ids * sizeof(void **);
++	unsigned long ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
+ #endif
+-#ifdef CONFIG_RT_GROUP_SCHED
+-	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
+-#endif
+-	if (alloc_size) {
+-		ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
++	wait_bit_init();
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+-		root_task_group.se = (struct sched_entity **)ptr;
+-		ptr += nr_cpu_ids * sizeof(void **);
++	root_task_group.se = (struct sched_entity **)ptr;
++	ptr += nr_cpu_ids * sizeof(void **);
+ 
+-		root_task_group.cfs_rq = (struct cfs_rq **)ptr;
+-		ptr += nr_cpu_ids * sizeof(void **);
++	root_task_group.cfs_rq = (struct cfs_rq **)ptr;
++	ptr += nr_cpu_ids * sizeof(void **);
+ 
+-#endif /* CONFIG_FAIR_GROUP_SCHED */
++#endif
+ #ifdef CONFIG_RT_GROUP_SCHED
+-		root_task_group.rt_se = (struct sched_rt_entity **)ptr;
+-		ptr += nr_cpu_ids * sizeof(void **);
++	root_task_group.rt_se = (struct sched_rt_entity **)ptr;
++	ptr += nr_cpu_ids * sizeof(void **);
+ 
+-		root_task_group.rt_rq = (struct rt_rq **)ptr;
+-		ptr += nr_cpu_ids * sizeof(void **);
++	root_task_group.rt_rq = (struct rt_rq **)ptr;
++	ptr += nr_cpu_ids * sizeof(void **);
+ 
+-#endif /* CONFIG_RT_GROUP_SCHED */
+-	}
++#endif
+ #ifdef CONFIG_CPUMASK_OFFSTACK
+ 	for_each_possible_cpu(i) {
+ 		per_cpu(load_balance_mask, i) = (cpumask_var_t)kzalloc_node(
+@@ -5940,7 +5935,7 @@ void __init sched_init(void)
+ 		per_cpu(select_idle_mask, i) = (cpumask_var_t)kzalloc_node(
+ 			cpumask_size(), GFP_KERNEL, cpu_to_node(i));
+ 	}
+-#endif /* CONFIG_CPUMASK_OFFSTACK */
++#endif
+ 
+ 	init_rt_bandwidth(&def_rt_bandwidth, global_rt_period(), global_rt_runtime());
+ 	init_dl_bandwidth(&def_dl_bandwidth, global_rt_period(), global_rt_runtime());
+@@ -5950,9 +5945,9 @@ void __init sched_init(void)
+ #endif
+ 
+ #ifdef CONFIG_RT_GROUP_SCHED
+-	init_rt_bandwidth(&root_task_group.rt_bandwidth,
+-			global_rt_period(), global_rt_runtime());
+-#endif /* CONFIG_RT_GROUP_SCHED */
++	init_rt_bandwidth(&root_task_group.rt_bandwidth, global_rt_period(),
++			  global_rt_runtime());
++#endif
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+ 	task_group_cache = KMEM_CACHE(task_group, 0);
+@@ -5961,7 +5956,7 @@ void __init sched_init(void)
+ 	INIT_LIST_HEAD(&root_task_group.children);
+ 	INIT_LIST_HEAD(&root_task_group.siblings);
+ 	autogroup_init(&init_task);
+-#endif /* CONFIG_CGROUP_SCHED */
++#endif
+ 
+ 	for_each_possible_cpu(i) {
+ 		struct rq *rq;
+@@ -6031,6 +6026,7 @@ void __init sched_init(void)
+ 		rq->last_blocked_load_update_tick = jiffies;
+ 		atomic_set(&rq->nohz_flags, 0);
+ #endif
++
+ #endif /* CONFIG_SMP */
+ 		hrtick_rq_init(rq);
+ 		atomic_set(&rq->nr_iowait, 0);
 -- 
-Florian
+1.8.3.1
+
