@@ -2,82 +2,198 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6A7C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB282C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D43C208E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559669962;
-	bh=aYguEb5aG56wiHY6OzZHyRUFhv/lZp83hT9+l3dp638=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n+qVvhtT9RsdMBbWLpspZA1V8/syekxtR9wzJky88TJT73rQqlqbypTVKPUhxEfJJ
-	 ilk+HJYiF+yEvjpPDn3tpiNBz31IuMvmjE4cxTjNq0fPEH2CVUXeS5OIqb/COSoP69
-	 UNzT5dXo/2CQdeASRpfyb9vOsF4dYrCuTK2SQNTw=
+	by mail.kernel.org (Postfix) with ESMTP id 915B12070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfFDRjV (ORCPT
+        id S1726566AbfFDRkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfFDRjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:39:21 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C8A208E3
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 17:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559669961;
-        bh=aYguEb5aG56wiHY6OzZHyRUFhv/lZp83hT9+l3dp638=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZHE4Dw92A2LpBnMgIII9AZNaZa0i8z36M5lXAuE5NjwKWoKY499Fye+2L7IRYvfao
-         1ryehXVFellQIyP3ZK99HSFuDxyNoinIoPFE0Zrp9re15I7MndIRkJsSP/53BSB8Fd
-         i848f1zEzfPvjysD/yvjOLFsBboYheKUuCFc3aVs=
-Received: by mail-wr1-f45.google.com with SMTP id d18so16734806wrs.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:39:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAVmeHO9QnLrXA1y1G1mSLhQC6aK891FxF+hDf/YMxFupG70gEsu
-        iOH91AyVTURMOh8IULmdDDwzjky1MXczcuJ18TnpBw==
-X-Google-Smtp-Source: APXvYqyg01tQSt5O2lN3mZLnwAel5frzOX/OUAFM4IOFuds5sxzUjj3rfd8O0VqT4+oCtFsLsiL6CXnRgwGmhtxIqiU=
-X-Received: by 2002:adf:fe90:: with SMTP id l16mr555546wrr.221.1559669959488;
- Tue, 04 Jun 2019 10:39:19 -0700 (PDT)
+        Tue, 4 Jun 2019 13:40:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40990 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbfFDRkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:40:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 72B2CAE05;
+        Tue,  4 Jun 2019 17:40:10 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mbrugger@suse.de, sboyd@kernel.org, eric@anholt.net,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] cpufreq: add driver for Raspbery Pi
+Date:   Tue,  4 Jun 2019 19:32:25 +0200
+Message-Id: <20190604173223.4229-5-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1905281055240.1859@nanos.tec.linutronix.de> <20190604164117.22154-1-alexander.sverdlin@nokia.com>
-In-Reply-To: <20190604164117.22154-1-alexander.sverdlin@nokia.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 4 Jun 2019 10:39:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrW6aE--Fo3qnK2zCAis5C-NraZtie4RBw59DVmzg5K_oA@mail.gmail.com>
-Message-ID: <CALCETrW6aE--Fo3qnK2zCAis5C-NraZtie4RBw59DVmzg5K_oA@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/vdso: implement clock_gettime(CLOCK_MONOTONIC_RAW, ...)
-To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Vas Dias <jason.vas.dias@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:42 AM Sverdlin, Alexander (Nokia - DE/Ulm)
-<alexander.sverdlin@nokia.com> wrote:
->
-> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
->
-> Add CLOCK_MONOTONIC_RAW to the existing clock_gettime() vDSO
-> implementation. This is based on the ideas of Jason Vas Dias and comments
-> of Thomas Gleixner.
->
+Raspberry Pi's firmware offers and interface though which update it's
+performance requirements. It allows us to request for specific runtime
+frequencies, which the firmware might or might not respect, depending on
+the firmware configuration and thermals.
 
-Can you benchmark this against pulling the mult and shift into the
-per-clock base?
+As the maximum and minimum frequencies are configurable in the firmware
+there is no way to know in advance their values. So the Raspberry Pi
+cpufreq driver queries them, builds an opp frequency table to then
+launch cpufreq-dt.
 
---Andy
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+
+Changes since RFC:
+  - Alphabetically ordered relevant stuff
+  - Updated Kconfig to select firmware interface
+  - Correctly unref clk_dev after use
+  - Remove all opps on failure
+  - Remove use of dev_pm_opp_set_sharing_cpus()
+
+ drivers/cpufreq/Kconfig.arm           |  8 +++
+ drivers/cpufreq/Makefile              |  1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c | 84 +++++++++++++++++++++++++++
+ 3 files changed, 93 insertions(+)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index f8129edc145e..556d432cc826 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
+ 	  The driver implements the cpufreq interface for this HW engine.
+ 	  Say Y if you want to support CPUFreq HW.
+ 
++config ARM_RASPBERRYPI_CPUFREQ
++	tristate "Raspberry Pi cpufreq support"
++	select RASPBERRYPI_FIRMWARE
++	help
++	  This adds the CPUFreq driver for Raspberry Pi
++
++	  If in doubt, say N.
++
+ config ARM_S3C_CPUFREQ
+ 	bool
+ 	help
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 689b26c6f949..121c1acb66c0 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+ obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
++obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
+diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
+new file mode 100644
+index 000000000000..2b3a195a9d37
+--- /dev/null
++++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+@@ -0,0 +1,84 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Raspberry Pi cpufreq driver
++ *
++ * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++ */
++
++#include <linux/clk.h>
++#include <linux/cpu.h>
++#include <linux/cpufreq.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++
++static const struct of_device_id machines[] __initconst = {
++	{ .compatible = "raspberrypi,3-model-b-plus" },
++	{ .compatible = "raspberrypi,3-model-b" },
++	{ .compatible = "raspberrypi,2-model-b" },
++	{ /* sentinel */ }
++};
++
++static int __init raspberrypi_cpufreq_driver_init(void)
++{
++	struct platform_device *pdev;
++	struct device *cpu_dev;
++	unsigned long min, max;
++	unsigned long rate;
++	struct clk *clk;
++	int ret;
++
++	if (!of_match_node(machines, of_root))
++		return -ENODEV;
++
++	cpu_dev = get_cpu_device(0);
++	if (!cpu_dev) {
++		pr_err("Cannot get CPU for cpufreq driver\n");
++		return -ENODEV;
++	}
++
++	clk = clk_get(cpu_dev, 0);
++	if (IS_ERR(clk)) {
++		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
++		return PTR_ERR(clk);
++	}
++
++	/*
++	 * The max and min frequencies are configurable in the Raspberry Pi
++	 * firmware, so we query them at runtime
++	 */
++	min = clk_round_rate(clk, 0);
++	max = clk_round_rate(clk, ULONG_MAX);
++	clk_put(clk);
++
++	for (rate = min; rate < max; rate += 100000000) {
++		ret = dev_pm_opp_add(cpu_dev, rate, 0);
++		if (ret)
++			goto remove_opp;
++	}
++
++	ret = dev_pm_opp_add(cpu_dev, max, 0);
++	if (ret)
++		goto remove_opp;
++
++	pdev = platform_device_register_data(NULL, "cpufreq-dt", -1, NULL, 0);
++	ret = PTR_ERR_OR_ZERO(pdev);
++	if (ret) {
++		dev_err(cpu_dev, "Failed to create platform device, %d\n", ret);
++		goto remove_opp;
++	}
++
++	return 0;
++
++remove_opp:
++	dev_pm_opp_remove_all_dynamic(cpu_dev);
++
++	return ret;
++}
++
++late_initcall(raspberrypi_cpufreq_driver_init);
++
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
++MODULE_DESCRIPTION("Raspberry Pi cpufreq driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.21.0
+
