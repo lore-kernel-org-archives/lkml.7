@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB301C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FF2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A72D24BA4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CD724BA4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfFDGm4 (ORCPT
+        id S1726816AbfFDGnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:42:56 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:32490 "EHLO
+        Tue, 4 Jun 2019 02:43:43 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:50335 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726410AbfFDGm4 (ORCPT
+        with ESMTP id S1726410AbfFDGnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:42:56 -0400
-X-UUID: b1e17f24206b40989f4201573ba7bd9c-20190604
-X-UUID: b1e17f24206b40989f4201573ba7bd9c-20190604
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Tue, 4 Jun 2019 02:43:43 -0400
+X-UUID: 2e603b6cad4e44d19cccac9ff12737bb-20190604
+X-UUID: 2e603b6cad4e44d19cccac9ff12737bb-20190604
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 333179411; Tue, 04 Jun 2019 14:42:39 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 4 Jun
- 2019 14:42:38 +0800
+        with ESMTP id 546401711; Tue, 04 Jun 2019 14:43:35 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 4 Jun
+ 2019 14:43:34 +0800
 Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
  (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Jun 2019 14:42:37 +0800
-Message-ID: <1559630557.8487.59.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 07/10] usb: roles: Add fwnode_usb_role_switch_get()
- function
+ Transport; Tue, 4 Jun 2019 14:43:33 +0800
+Message-ID: <1559630613.8487.60.camel@mhfsdcap03>
+Subject: Re: [PATCH v6 05/10] usb: roles: Introduce stubs for the exiting
+ functions in role.h.
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Rob Herring <robh+dt@kernel.org>,
@@ -52,12 +52,13 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Biju Das <biju.das@bp.renesas.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>
-Date:   Tue, 4 Jun 2019 14:42:37 +0800
-In-Reply-To: <20190603131901.GB10397@kroah.com>
+        Yu Chen <chenyu56@huawei.com>,
+        John Stultz <john.stultz@linaro.org>
+Date:   Tue, 4 Jun 2019 14:43:33 +0800
+In-Reply-To: <20190603131929.GC10397@kroah.com>
 References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
-         <20190603131901.GB10397@kroah.com>
+         <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
+         <20190603131929.GC10397@kroah.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
@@ -69,25 +70,22 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 2019-06-03 at 15:19 +0200, Greg Kroah-Hartman wrote:
-> On Wed, May 29, 2019 at 03:43:45PM +0800, Chunfeng Yun wrote:
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> On Wed, May 29, 2019 at 03:43:43PM +0800, Chunfeng Yun wrote:
+> > From: Yu Chen <chenyu56@huawei.com>
 > > 
-> > The fwnode_usb_role_switch_get() function is exactly the
-> > same as usb_role_switch_get(), except that it takes struct
-> > fwnode_handle as parameter instead of struct device.
+> > This patch adds stubs for the exiting functions while
+> > CONFIG_USB_ROLE_SWITCH does not enabled.
 > > 
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > ---
-> > v6:
-> >   new patch
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
 > 
-> If you are forwarding on a patch from someone else, like this, you need
-> to put your signed-off-by line on it as well.
-> 
-> Please fix that up, and add the tested-by one, when you resend this
-> series.
-Got it, thanks
-
+> Same here, you need to sign off on it too.
+Ok, thanks
 > 
 > thanks,
 > 
