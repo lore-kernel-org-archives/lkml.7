@@ -2,76 +2,84 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7C8C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BAEC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB2C249F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C527A249F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfFDHfy convert rfc822-to-8bit (ORCPT
+        id S1726930AbfFDHhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:35:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46106 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbfFDHea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:34:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 451FB135BB;
-        Tue,  4 Jun 2019 07:34:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F2EE317D94;
-        Tue,  4 Jun 2019 07:34:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAMuHMdX57DKCMpLXdtZPE-w0esUNVv9-SwYjmT5=m+u9ryAiHQ@mail.gmail.com>
-References: <CAMuHMdX57DKCMpLXdtZPE-w0esUNVv9-SwYjmT5=m+u9ryAiHQ@mail.gmail.com> <20190528142424.19626-1-geert@linux-m68k.org> <20190528142424.19626-3-geert@linux-m68k.org> <15499.1559298884@warthog.procyon.org.uk>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     dhowells@redhat.com, Igor Konopko <igor.j.konopko@intel.com>,
-        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Matias Bjorling <mb@lightnvm.io>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-block@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
+        Tue, 4 Jun 2019 03:37:02 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:59271 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfFDHhC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 03:37:02 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D5E191BF212;
+        Tue,  4 Jun 2019 07:36:51 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 09:36:51 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     codekipper@gmail.com
+Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
+Subject: Re: [PATCH v4 2/9] ASoC: sun4i-i2s: Add offset to RX channel select
+Message-ID: <20190604073651.gst57ki7ohzxcrqz@flea>
+References: <20190603174735.21002-1-codekipper@gmail.com>
+ <20190603174735.21002-3-codekipper@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9305.1559633653.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 04 Jun 2019 08:34:13 +0100
-Message-ID: <9306.1559633653@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 04 Jun 2019 07:34:30 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="azthyenqniabzk6h"
+Content-Disposition: inline
+In-Reply-To: <20190603174735.21002-3-codekipper@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> I'm not such a big fan of BUG(), so I'd go for ret = -EAFNOSUPPORT, but given
-> rxrpc is already full of BUG() calls, I guess it is an acceptable solution.
+--azthyenqniabzk6h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Okay.  Are you okay with this going through net-next?
+On Mon, Jun 03, 2019 at 07:47:28PM +0200, codekipper@gmail.com wrote:
+> From: Marcus Cooper <codekipper@gmail.com>
+>
+> Whilst testing the capture functionality of the i2s on the newer
+> SoCs it was noticed that the recording was somewhat distorted.
+> This was due to the offset not being set correctly on the receiver
+> side.
+>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 
-David
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--azthyenqniabzk6h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYfkwAKCRDj7w1vZxhR
+xZFqAP9C7z4TKS6sO/uThXEHeSEOFsVxLA+hFezA6ZHPPwE+owD/YRL3Nd9adWWD
+EG4ONA4mwLOBAc5utHFMpqL3ASmaTAA=
+=3Iua
+-----END PGP SIGNATURE-----
+
+--azthyenqniabzk6h--
