@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5515DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D1CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF6520866
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB5A206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690639;
-	bh=rQCNb2gspZ+etgf2d1QDpIaNxFm51oQVO5wNrRBMW8w=;
+	s=default; t=1559690645;
+	bh=JbAu3TdWLDVbaFQsNEeghoscA2U6ZuPh00/lRMKb6+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YY/dNSAL+DiLcQLYdgYkIBil73NQ/qDnO+8F85yfnLZl9ui6YMq75c/MfIK/z0Zx6
-	 1ejWUig3gn/qI9/5aGCmHLK11ClKz4q+O+ZZWZ0pil2LYTcKNaiAnnFR/cAV4SfsX/
-	 u7sUeZAvomaUFV4N9glxmJDYDr64l+L732eHwX4A=
+	b=SYAFEEaKTSfNURxngTSt9A2ZMil6z+mBiExOgwZcvBSMm9pD+xKrSSAihmsmRgjB7
+	 Kxshk4rG4eLPiv7vQW1x7E5oTxSc5THzUJmy2BRiBUhuqi+DtAa9XFzQM0ZD+VS6Yx
+	 SV5En9XIrwice71owznSlrPiH2Uu4/Vz9PyPhDvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfFDXX6 (ORCPT
+        id S1727461AbfFDXYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfFDXXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:52 -0400
+        id S1727427AbfFDXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:24:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2243820883;
-        Tue,  4 Jun 2019 23:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9087320866;
+        Tue,  4 Jun 2019 23:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690631;
-        bh=rQCNb2gspZ+etgf2d1QDpIaNxFm51oQVO5wNrRBMW8w=;
+        s=default; t=1559690640;
+        bh=JbAu3TdWLDVbaFQsNEeghoscA2U6ZuPh00/lRMKb6+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHOwyNIZBFvqL0/KMQP1/mRT2nrsvwe+EAshVRQQxcQxiss5gXJ9jJJp20Vy6IQSe
-         InYwbrhy28F51w9W2bY4KOByn+v3eeeRsPCEcU7mRk9JO3ovebW1ZIDpdj8Qg1lqMm
-         6ri7y9TfhOUdJNQO2t7l+oMyrUgG247jpXUKSI2A=
+        b=oqUP7Z0BLee73lp5gypjNACCEFAMvHPvtdHGxZzZjhFpg8SZzt3yZHJbkOJssnRH3
+         w9aUsB+h/DY9DX3edHtt0SvtpKC68k4qSjJ7VKydsx0Vfw4YkEvbjUIc1VxyQaaVQg
+         et/gYzoeJdlU8zzDV+wabzl11piuSY+evIrcgD9Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randall Huang <huangrandall@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 10/36] f2fs: fix to avoid accessing xattr across the boundary
-Date:   Tue,  4 Jun 2019 19:23:05 -0400
-Message-Id: <20190604232333.7185-10-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/36] scsi: lpfc: add check for loss of ndlp when sending RRQ
+Date:   Tue,  4 Jun 2019 19:23:10 -0400
+Message-Id: <20190604232333.7185-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
 References: <20190604232333.7185-1-sashal@kernel.org>
@@ -60,154 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randall Huang <huangrandall@google.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 2777e654371dd4207a3a7f4fb5fa39550053a080 ]
+[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
 
-When we traverse xattr entries via __find_xattr(),
-if the raw filesystem content is faked or any hardware failure occurs,
-out-of-bound error can be detected by KASAN.
-Fix the issue by introducing boundary check.
+There was a missing qualification of a valid ndlp structure when calling to
+send an RRQ for an abort.  Add the check.
 
-[   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
-[   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
-[   38.402935] c7   1827 Call trace:
-[   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
-[   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
-[   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
-[   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
-[   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
-[   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
-[   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
-[   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
-[   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
-[   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
-[   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
-[   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
-[   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
-[   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
-[   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
-[   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
-[   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
-[   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
-[   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
-[   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
-[   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
-[   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
-
-Signed-off-by: Randall Huang <huangrandall@google.com>
-[Jaegeuk Kim: Fix wrong ending boundary]
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/xattr.c | 36 +++++++++++++++++++++++++++---------
- fs/f2fs/xattr.h |  2 ++
- 2 files changed, 29 insertions(+), 9 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index 409a637f7a92..88e30f7cf9e1 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -205,12 +205,17 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
- 	return handler;
- }
- 
--static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
--					size_t len, const char *name)
-+static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
-+				void *last_base_addr, int index,
-+				size_t len, const char *name)
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 0d214e6b8e9a..f3c6801c0b31 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7094,7 +7094,10 @@ int
+ lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
  {
- 	struct f2fs_xattr_entry *entry;
- 
- 	list_for_each_xattr(entry, base_addr) {
-+		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-+			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr)
-+			return NULL;
+ 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
+-							rrq->nlp_DID);
++						       rrq->nlp_DID);
++	if (!ndlp)
++		return 1;
 +
- 		if (entry->e_name_index != index)
- 			continue;
- 		if (entry->e_name_len != len)
-@@ -300,20 +305,22 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 				const char *name, struct f2fs_xattr_entry **xe,
- 				void **base_addr, int *base_size)
- {
--	void *cur_addr, *txattr_addr, *last_addr = NULL;
-+	void *cur_addr, *txattr_addr, *last_txattr_addr;
-+	void *last_addr = NULL;
- 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
--	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
- 	unsigned int inline_size = inline_xattr_size(inode);
- 	int err = 0;
- 
--	if (!size && !inline_size)
-+	if (!xnid && !inline_size)
- 		return -ENODATA;
- 
--	*base_size = inline_size + size + XATTR_PADDING_SIZE;
-+	*base_size = XATTR_SIZE(xnid, inode) + XATTR_PADDING_SIZE;
- 	txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
- 	if (!txattr_addr)
- 		return -ENOMEM;
- 
-+	last_txattr_addr = (void *)txattr_addr + XATTR_SIZE(xnid, inode);
-+
- 	/* read from inline xattr */
- 	if (inline_size) {
- 		err = read_inline_xattr(inode, ipage, txattr_addr);
-@@ -340,7 +347,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 	else
- 		cur_addr = txattr_addr;
- 
--	*xe = __find_xattr(cur_addr, index, len, name);
-+	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
-+	if (!*xe) {
-+		err = -EFAULT;
-+		goto out;
-+	}
- check:
- 	if (IS_XATTR_LAST_ENTRY(*xe)) {
- 		err = -ENODATA;
-@@ -584,7 +595,8 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 			struct page *ipage, int flags)
- {
- 	struct f2fs_xattr_entry *here, *last;
--	void *base_addr;
-+	void *base_addr, *last_base_addr;
-+	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
- 	int found, newsize;
- 	size_t len;
- 	__u32 new_hsize;
-@@ -608,8 +620,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 	if (error)
- 		return error;
- 
-+	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
-+
- 	/* find entry with wanted name. */
--	here = __find_xattr(base_addr, index, len, name);
-+	here = __find_xattr(base_addr, last_base_addr, index, len, name);
-+	if (!here) {
-+		error = -EFAULT;
-+		goto exit;
-+	}
- 
- 	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
- 
-diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
-index dbcd1d16e669..2a4ecaf338ea 100644
---- a/fs/f2fs/xattr.h
-+++ b/fs/f2fs/xattr.h
-@@ -74,6 +74,8 @@ struct f2fs_xattr_entry {
- 				entry = XATTR_NEXT_ENTRY(entry))
- #define VALID_XATTR_BLOCK_SIZE	(PAGE_SIZE - sizeof(struct node_footer))
- #define XATTR_PADDING_SIZE	(sizeof(__u32))
-+#define XATTR_SIZE(x,i)		(((x) ? VALID_XATTR_BLOCK_SIZE : 0) +	\
-+						(inline_xattr_size(i)))
- #define MIN_OFFSET(i)		XATTR_ALIGN(inline_xattr_size(i) +	\
- 						VALID_XATTR_BLOCK_SIZE)
- 
+ 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
+ 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
+ 					 rrq->nlp_DID, rrq);
 -- 
 2.20.1
 
