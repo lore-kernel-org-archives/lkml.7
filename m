@@ -2,88 +2,66 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E093CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A9C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9ECE24A31
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9183324A02
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559650188;
+	bh=aW5xWIlY9u6kIytF67/XU943TuWwFqg6v4drQua6ZoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E00K346lSjSWpCUyudQ4lyNYoA0S1+390JTFLavG2GfVaRWVQi0ufRLlmZ7bn505Q
+	 zp6JByrLAiQa/Y0ybFMOQdjjS/LTNsCCeSTUwOM9Rosglq3MbUYrBoRPgFY6XNNbWg
+	 f+TJnJy9Ps0a1IgCvOjCgxLGEEhjpVqJ4wfNqZlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfFDMIk (ORCPT
+        id S1727522AbfFDMJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:08:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:41574 "EHLO foss.arm.com"
+        Tue, 4 Jun 2019 08:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfFDMIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:08:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8922880D;
-        Tue,  4 Jun 2019 05:08:39 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A4FF3F690;
-        Tue,  4 Jun 2019 05:08:36 -0700 (PDT)
-Subject: Re: [PATCH v6 02/19] kernel: Define gettimeofday vdso common code
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-3-vincenzo.frascino@arm.com>
- <CAK8P3a3Sr+MNbGQiMYt3RrE6SaYFPO-rXNoNvtOC7=qKE1kuYQ@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <d0ffed27-01eb-c382-a381-975edd021a30@arm.com>
-Date:   Tue, 4 Jun 2019 13:08:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726847AbfFDMJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:09:47 -0400
+Received: from localhost (unknown [117.99.94.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D571323CA2;
+        Tue,  4 Jun 2019 12:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559650186;
+        bh=aW5xWIlY9u6kIytF67/XU943TuWwFqg6v4drQua6ZoU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jpyjucptM/P1GGfu71jWsXkFxxOOfF9T4LIZ9A6SvEAk9HexpCTTz55slvxV2PxKB
+         U37CCYsWVIgpS9O84SBVwx2EaFatDOGFnlyJwcqKcNsM2kYnhlbWIPhFSto6ELi6ZR
+         rx3NMS9+MUHQDPzmPxSacdTpDpX0wSAqpblx4O2I=
+Date:   Tue, 4 Jun 2019 17:36:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [V3 1/2] dmaengine: fsl-qdma: fixed the source/destination
+ descriptor format
+Message-ID: <20190604120638.GU15118@vkoul-mobl>
+References: <20190522032103.13713-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3Sr+MNbGQiMYt3RrE6SaYFPO-rXNoNvtOC7=qKE1kuYQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522032103.13713-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/05/2019 09:19, Arnd Bergmann wrote:
-> On Thu, May 30, 2019 at 4:15 PM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
-> 
->> +
->> +static __always_inline notrace void vdso_write_end(struct vdso_data *vd)
->> +{
-> 
-> Rather than marking every single function in here as "notrace",I think it
-> would be more robust to remove the '-pg' flag in the CFLAGS used for
-> compiling the vdso files.
-> 
+On 22-05-19, 03:21, Peng Ma wrote:
+> CMD of Source/Destination descriptor format should be lower of
+> struct fsl_qdma_engine number data address.
 
-All the architectures that I added to this patchset are already compiled with
-$(CC_FLAGS_FTRACE), hence I think I just forgot to remove the "notrace" around
-the code. Will fix in v7.
-
->        Arnd
-> 
+Applied, thanks
 
 -- 
-Regards,
-Vincenzo
+~Vinod
