@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD32C04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA3B2414D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A74C2462A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NjRhrHy8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UkDJE04L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfFDAc3 (ORCPT
+        id S1726649AbfFDAcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:32:29 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:41387 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfFDAc1 (ORCPT
+        Mon, 3 Jun 2019 20:32:32 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:51966 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFDAca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:32:27 -0400
-Received: by mail-vs1-f73.google.com with SMTP id 1so4404254vsu.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 17:32:27 -0700 (PDT)
+        Mon, 3 Jun 2019 20:32:30 -0400
+Received: by mail-pl1-f201.google.com with SMTP id d2so12795231pla.18
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 17:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=oMHoMPQmhEqS1OrwCj/awDAcMj4261wJxPL5IX32+TA=;
-        b=NjRhrHy8fU5O2aDJA2tERBWPr37OiPoexIAhjVocKMGANjhAMsOAgCoXQOrJgyz9KD
-         SOJsDJ6enVuIkQYTwQb+07KGs6es1p6flkGOa0IulpUQdLz0z5sJWApcRlVWDeH+JbQo
-         62+FnG5MAwVp2nzuk3402x/g6AjJvpyjyrkjq95IXDu480AoKlwcVrmj+5kmK9V9zocB
-         vjlEOA3w5ZNHPZaid0uCdAIPrlvhYd1OUS7CyLnLVcUHTIfM2uDu7yO/4xVryJxA0p5I
-         iH7bkl57RdIQvc8lkn8FOzZCjycSlvVn9uVABMhseQ8nOaNWWjm+rNtPGObyYOgWSy5u
-         raVg==
+        bh=dLVbLGeLPRKDQpbmXUkLBOtDFn4QZcgYqnH/YbjiLco=;
+        b=UkDJE04LAalSJ1AcG0xBGYHsFGFGAasxF/2AhaPMqSxawwHqg6lWSqfuKMysM9hWvq
+         f76878BTnhsOAS3Y2nA15KZHXVsqVhH6WkhmdHXi3jLAOhsP+MLFbZsadLTccsJYKS3k
+         2gx1OoSeerEH0iqyW4iCEOMCwfIJZdoeOPi0wWx9Pv87ZpWpRFR9qeQ0HLCm3k79kkyE
+         CYjGah5TsVMe/zL+RkklNetP/za6n7OqL9p95O58WqO6wGMhp+BkDQwb25KX8NLwBXgc
+         tfTKQ4Cfr1BV6HvsYLgxvbKhzHVaQnaAcWZDxvLrxxmmjDwSjdH0HBdF0htXLsU1kCOw
+         Lotg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=oMHoMPQmhEqS1OrwCj/awDAcMj4261wJxPL5IX32+TA=;
-        b=PvzFFzqPZ/ZsxCu890lsdY8/qbRLNZx7tq1Jw5his0S2z3KZ7NS9UH6gbsrmFWLdgG
-         HJ5Q7+5ZRRTOHqoAQ/aISodYcSKIdHafDfKKUXIReD425Q3HLO8IbaIkFZBneYFfGLLg
-         yzUqPP0awbw1FpVjxfx/wHYutc00I87s86VotHj3QDn9ARQ1lLD1bYx//2GH6pNr2tGu
-         Rc6ci9YqVfejPb0hF1LTu+KukG7/0Ax054egy+dLpe4weX9su/hPvFioy+PF793bq3uj
-         EQxi5EQH/WwoWpn5vORpVjsZeDUImxWkSGkMsoDiwgiNGZlMQY5u6DWV6dmYb/owG7dh
-         zUqw==
-X-Gm-Message-State: APjAAAVwkgmDyf2DTGN0fTx5ViNi1/LrF9XfAzKjG0y1J+Cr9j686Alc
-        REheyLeeReDhz2XYMMHXk7VwAs5aLce/M08=
-X-Google-Smtp-Source: APXvYqwKLG5UNIjNvW32LmVnGB/cQYr9t1NRghUfOPU8Q9WsGHWlu2R+D87+73k0P0biFV9BITmWhROBtb9AyGk=
-X-Received: by 2002:a1f:551:: with SMTP id 78mr10292646vkf.45.1559608346588;
- Mon, 03 Jun 2019 17:32:26 -0700 (PDT)
-Date:   Mon,  3 Jun 2019 17:32:14 -0700
+        bh=dLVbLGeLPRKDQpbmXUkLBOtDFn4QZcgYqnH/YbjiLco=;
+        b=K1UpJjK1ehdNX/5BBY18fzMI4/rsMkan5hLLAZGQKcOqPH0iUB0VXDunmUuU7iu76M
+         CGX0giDha5Gnvk5nyaoTPyT9k4qZJT0zGSHzL8/WDmBcTn5jBA4Jv5JvM4ZMRqzy6ROZ
+         nZdqUsrDQsLBFl3/oAJPOr9RWZP7C0JtUBFRY8HCArph05uRWQw3XARfXus04R+Vw6p0
+         Ak5OxL5qwcTWpG7z8D5OWnEnIz6F7ptHKfqv4PK9PbFb+wCc/KHWUezhhizSE94jzw1r
+         YEtXULLKzV9Ugjk/zX4uPJrWNowznl26QXDHSF+R5fDjYyTvbSRPM647kRSQtQZfK0Tq
+         0vwQ==
+X-Gm-Message-State: APjAAAWu12Z+4eQbZEWLsLL+SKD0KBKTAxNzvtA3sg6Wp5sQbkVkovUj
+        /yyHWBs6XbAkmsT0/KOqytY8kZ8rp0rAWpk=
+X-Google-Smtp-Source: APXvYqz3WQNWZHJUQ4FANXEHAgnqXgVw712ylZTQb3kYsI/1JNnZB+Z55brVvgn2dDQp7jlUvy2SAGYiGuB0tqU=
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr31916043pgl.103.1559608349714;
+ Mon, 03 Jun 2019 17:32:29 -0700 (PDT)
+Date:   Mon,  3 Jun 2019 17:32:15 -0700
 In-Reply-To: <20190604003218.241354-1-saravanak@google.com>
-Message-Id: <20190604003218.241354-2-saravanak@google.com>
+Message-Id: <20190604003218.241354-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190604003218.241354-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-Subject: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Subject: [RESEND PATCH v1 2/5] driver core: Add device links support for
+ pending links to suppliers
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -75,92 +76,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a pointer from device tree node to the device created from it.
-This allows us to find the device corresponding to a device tree node
-without having to loop through all the platform devices.
+When consumer devices are added, they might not have a supplier device
+to link to despite needing mandatory resources/functionality from one
+or more suppliers. Add a waiting_for_suppliers list to track such
+consumers and add helper functions to manage the list.
 
-However, fallback to looping through the platform devices to handle
-any devices that might set their own of_node.
+Marking/unmarking a consumer device as waiting for suppliers is
+generally expected to be done by the entity that's creating the
+device.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 20 +++++++++++++++++++-
- include/linux/of.h    |  3 +++
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/base/core.c    | 67 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  5 ++++
+ 2 files changed, 72 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 04ad312fd85b..1115a8d80a33 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
- 	return dev->of_node == data;
- }
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fd7511e04e62..9ab6782dda1c 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ #endif
  
-+static DEFINE_SPINLOCK(of_dev_lock);
+ /* Device links support. */
++static LIST_HEAD(wait_for_suppliers);
++static DEFINE_MUTEX(wfs_lock);
+ 
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -401,6 +403,53 @@ struct device_link *device_link_add(struct device *consumer,
+ }
+ EXPORT_SYMBOL_GPL(device_link_add);
+ 
++/**
++ * device_link_wait_for_supplier - Mark device as waiting for supplier
++ * @consumer: Consumer device
++ *
++ * Marks the consumer device as waiting for suppliers to become available. The
++ * consumer device will never be probed until it's unmarked as waiting for
++ * suppliers. The caller is responsible for adding the link to the supplier
++ * once the supplier device is present.
++ *
++ * This function is NOT meant to be called from the probe function of the
++ * consumer but rather from code that creates the consumer device.
++ */
++void device_link_wait_for_supplier(struct device *consumer)
++{
++	mutex_lock(&wfs_lock);
++	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
++	mutex_unlock(&wfs_lock);
++}
 +
- /**
-  * of_find_device_by_node - Find the platform_device associated with a node
-  * @np: Pointer to device tree node
-@@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
++/**
++ * device_link_check_waiting_consumers - Try to unmark waiting consumers
++ * @add_suppliers: Callback function to add suppliers to waiting consumer
++ *
++ * Loops through all consumers waiting on suppliers and tries to add all their
++ * supplier links. If that succeeds, the consumer device is unmarked as waiting
++ * for suppliers. Otherwise, they are left marked as waiting on suppliers,
++ *
++ * The add_suppliers callback is expected to return 0 if it has found and added
++ * all the supplier links for the consumer device. It should return an error if
++ * it isn't able to do so.
++ *
++ * The caller of device_link_wait_for_supplier() is expected to call this once
++ * it's aware of potential suppliers becoming available.
++ */
++void device_link_check_waiting_consumers(
++		int (*add_suppliers)(struct device *consumer))
++{
++	struct device *dev, *tmp;
++
++	mutex_lock(&wfs_lock);
++	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
++				 links.needs_suppliers)
++		if (!add_suppliers(dev))
++			list_del_init(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
+ static void device_link_free(struct device_link *link)
  {
- 	struct device *dev;
+ 	while (refcount_dec_not_one(&link->rpm_active))
+@@ -535,6 +584,19 @@ int device_links_check_suppliers(struct device *dev)
+ 	struct device_link *link;
+ 	int ret = 0;
  
--	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
 +	/*
-+	 * Spinlock needed to make sure np->dev doesn't get freed between NULL
-+	 * check inside and kref count increment inside get_device(). This is
-+	 * achieved by grabbing the spinlock before setting np->dev = NULL in
-+	 * of_platform_device_destroy().
++	 * If a device is waiting for one or more suppliers (in
++	 * wait_for_suppliers list), it is not ready to probe yet. So just
++	 * return -EPROBE_DEFER without having to check the links with existing
++	 * suppliers.
 +	 */
-+	spin_lock(&of_dev_lock);
-+	dev = get_device(np->dev);
-+	spin_unlock(&of_dev_lock);
-+	if (!dev)
-+		dev = bus_find_device(&platform_bus_type, NULL, np,
-+				      of_dev_node_match);
- 	return dev ? to_platform_device(dev) : NULL;
- }
- EXPORT_SYMBOL(of_find_device_by_node);
-@@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
- 		platform_device_put(dev);
- 		goto err_clear_flag;
- 	}
-+	np->dev = &dev->dev;
- 
- 	return dev;
- 
-@@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
- 	if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
- 		device_for_each_child(dev, NULL, of_platform_device_destroy);
- 
-+	/* Spinlock is needed for of_find_device_by_node() to work */
-+	spin_lock(&of_dev_lock);
-+	dev->of_node->dev = NULL;
-+	spin_unlock(&of_dev_lock);
- 	of_node_clear_flag(dev->of_node, OF_POPULATED);
- 	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 0cf857012f11..f2b4912cbca1 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -48,6 +48,8 @@ struct property {
- struct of_irq_controller;
- #endif
- 
-+struct device;
++	mutex_lock(&wfs_lock);
++	if (!list_empty(&dev->links.needs_suppliers)) {
++		mutex_unlock(&wfs_lock);
++		return -EPROBE_DEFER;
++	}
++	mutex_unlock(&wfs_lock);
 +
- struct device_node {
- 	const char *name;
- 	phandle phandle;
-@@ -68,6 +70,7 @@ struct device_node {
- 	unsigned int unique_id;
- 	struct of_irq_controller *irq_trans;
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+@@ -812,6 +874,10 @@ static void device_links_purge(struct device *dev)
+ {
+ 	struct device_link *link, *ln;
+ 
++	mutex_lock(&wfs_lock);
++	list_del(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++
+ 	/*
+ 	 * Delete all of the remaining links from this device to any other
+ 	 * devices (either consumers or suppliers).
+@@ -1673,6 +1739,7 @@ void device_initialize(struct device *dev)
  #endif
-+	struct device *dev;		/* Device created from this node */
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
++	INIT_LIST_HEAD(&dev->links.needs_suppliers);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e85264fb6616..4e71e5386aae 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -887,11 +887,13 @@ enum dl_dev_state {
+  * struct dev_links_info - Device data related to device links.
+  * @suppliers: List of links to supplier devices.
+  * @consumers: List of links to consumer devices.
++ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+  * @status: Driver status information.
+  */
+ struct dev_links_info {
+ 	struct list_head suppliers;
+ 	struct list_head consumers;
++	struct list_head needs_suppliers;
+ 	enum dl_dev_state status;
  };
  
- #define MAX_PHANDLE_ARGS 16
+@@ -1395,6 +1397,9 @@ struct device_link *device_link_add(struct device *consumer,
+ 				    struct device *supplier, u32 flags);
+ void device_link_del(struct device_link *link);
+ void device_link_remove(void *consumer, struct device *supplier);
++void device_link_wait_for_supplier(struct device *consumer);
++void device_link_check_waiting_consumers(
++		int (*add_suppliers)(struct device *consumer));
+ 
+ #ifndef dev_fmt
+ #define dev_fmt(fmt) fmt
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
