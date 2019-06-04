@@ -2,81 +2,120 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C967CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF39C04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A785225B85
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74AA25BAC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="FsY5axEO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zf3zWqti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfFDAFg (ORCPT
+        id S1726490AbfFDAHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:05:36 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:42236 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfFDAFg (ORCPT
+        Mon, 3 Jun 2019 20:07:16 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34533 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbfFDAHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:05:36 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 885D327E27;
-        Mon,  3 Jun 2019 20:05:33 -0400 (EDT)
-Date:   Tue, 4 Jun 2019 10:05:44 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Michael Schmitz <schmitzmic@gmail.com>
-cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH 5/7] scsi: mac_scsi: Fix pseudo DMA implementation, take
- 2
-In-Reply-To: <247ed79a-75c7-41fd-0932-0b7701ee5d4e@gmail.com>
-Message-ID: <alpine.LNX.2.21.1906040954330.40@nippy.intranet>
-References: <cover.1559438652.git.fthain@telegraphics.com.au> <c56deeb735545c7942607a93f017bb536f581ae5.1559438652.git.fthain@telegraphics.com.au> <CAMuHMdWxRtJU2aRQQjXzR2mvpfpDezCVu42Eo1eXDsQaPb+j6Q@mail.gmail.com> <alpine.LNX.2.21.1906030903510.20@nippy.intranet>
- <CAMuHMdUFxQnmJmkr2qm4waTfFA5yfCHAFngyD37cFH6gbbD-Pg@mail.gmail.com> <alpine.LNX.2.21.1906031702220.37@nippy.intranet> <247ed79a-75c7-41fd-0932-0b7701ee5d4e@gmail.com>
+        Mon, 3 Jun 2019 20:07:15 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 577242226D;
+        Mon,  3 Jun 2019 20:07:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 03 Jun 2019 20:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=EN4T2pbClCMyoiYhMs2a/McIgLH
+        XpYnfzzLo8H03ZDU=; b=FsY5axEOzebsP3UUQlR6D2B+6dzE/Bw3N8eXYS0JEa2
+        MvxyCxMNudMU5DsV6pqHeMacej8+1sLLsOnPwL0R2Wrexdh72TfS6P7hZtAzEtfM
+        jpIO2pOuoAagYOamYfsD8/McGhbDuLKFw0jnF9ZH0zh3E2oCGcDUfo1XWNT7H8Gr
+        t5pC0TEB/1uYYAmQKe8LIXVFFSVKPKGfr5Zsl8UxyIRSyckcUNmtEy8srMqj78sX
+        OIopNde3Cszszxqpx1D+AruO4lZ++O883jEuai7wv8uWiScm9Z6XJbvbDorn1B95
+        iAk+JH5IuPE2mzY0QFzDLeS7mnG70MwTVkit497/2CQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EN4T2p
+        bClCMyoiYhMs2a/McIgLHXpYnfzzLo8H03ZDU=; b=Zf3zWqtiUfLVdN4aqeqUOl
+        Om6hXruGxzy6hwhMcXNDgjgmv11zu34J7NO1ozdQ/7+fSNFUTqHbB20ACZJxuCMN
+        9f1meig9O0Q506V31mBX8bKcuLlarNV+sxzvnFQaG129R0awEJMw+mG8VBZqK4pv
+        LH7LsAHt+7QCJywj/1BI8Frg0GTs8UsEpInbQ7p7VqXacYZNZC20DBRJ8QENqcry
+        RhlUWMgr44ZHKjUo/m7j1FnCxU8NO3HGFzTXKmIl/R/NcqRMuubNR4ygr8ZoE4QX
+        x8pUdGwqxgwrdzbvOmGhqxlFrzyW3zGqts//dQ6xkAXgRNFVi+nP1lSdWNJqvH3w
+        ==
+X-ME-Sender: <xms:Mbb1XOHjdFB9m2D3HOK1DR9CGrcc33WaPS8nrCBm1RYyzIY7rgnwgw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudefkedgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvddurdeggedrvdeffedrvdeggeenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Mbb1XLmHA4z56axMCyDnaPbHYhun95pOlzX4HUyC4dCmY1hZa8InFw>
+    <xmx:Mbb1XOa9lCNqpJ8XybNZf5-5Lx5Kdj8GEGkltnr073ip02CB0FkymA>
+    <xmx:Mbb1XFsgrap7H5cUlWvSpOGvZfLOTnuyrf1-K-56yFQsRnHSwqKBRg>
+    <xmx:Mrb1XHBIW5oE_Fa8juiYI2lwONwHo7v5VWlcdrUA69SetBDnBIbz8w>
+Received: from localhost (ppp121-44-233-244.bras2.syd2.internode.on.net [121.44.233.244])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AAAF680059;
+        Mon,  3 Jun 2019 20:07:12 -0400 (EDT)
+Date:   Tue, 4 Jun 2019 10:06:30 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/9] docs: Convert VFS doc to RST
+Message-ID: <20190604000630.GD13575@eros.localdomain>
+References: <20190515002913.12586-1-tobin@kernel.org>
+ <20190529163052.6ce91581@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529163052.6ce91581@lwn.net>
+X-Mailer: Mutt 1.12.0 (2019-05-25)
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019, Michael Schmitz wrote:
+On Wed, May 29, 2019 at 04:30:52PM -0600, Jonathan Corbet wrote:
+> On Wed, 15 May 2019 10:29:04 +1000
+> "Tobin C. Harding" <tobin@kernel.org> wrote:
+> 
+> > Here is an updated version of the VFS doc conversion.  This series in no
+> > way represents a final point for the VFS documentation rather it is a
+> > small step towards getting VFS docs updated.  This series does not
+> > update the content of vfs.txt, only does formatting.
+> 
+> I've finally gotten to this, sorry for taking so long.  Applying it to
+> docs-next turned out to be a bit of a chore; there have been intervening
+> changes to vfs.txt that we didn't want to lose.  But I did it.
+> 
+> Unfortunately, there's still a remaining issue.  You did a lot of list
+> conversions like this:
+> 
+> > -  struct file_system_type *fs_type: describes the filesystem, partly initialized
+> > +``struct file_system_type *fs_type``: describes the filesystem, partly initialized
+> >  	by the specific filesystem code
+> 
+> but that does not render the way you would like, trust me.  You really
+> want to use the list format, something like:
+> 
+>     ``struct file_system_type *fs_type``
+> 	 describes the filesystem, partly initialized by the specific
+> 	 filesystem code
 
-> Hi Finn,
-> 
-> On 3/06/19 7:40 PM, Finn Thain wrote:
-> > 
-> > > There are several other drivers that contain pieces of assembler code.
-> > > 
-> > Does any driver contain assembler code for multiple architectures? I was
-> > trying to avoid that -- though admittedly I don't yet have actual code for
-> > the PDMA implementation for mac_scsi for Nubus PowerMacs.
-> > 
-> I've seen that once, for one of the ESP drivers that were supported on both
-> m68k and ppc (APUS, PPC upgrade to Amiga computers). But that driver was
-> removed long ago (after 2.6?).
-> 
-> In that case, the assembly file did reside in drivers/scsi/. That still
-> appears to be current practice (see drivers/scsi/arm/acornscsi-io.S).
-> 
+I was doubting you at first, this renders **way** better :)
 
-The presence of that file would be an argument for adding 
-drivers/scsi/m68k/. This seems to be begging the question.
 
-Since there's no clear policy, I'll combine the two files and avoid the 
-question for now.
-
--- 
-
-> Cheers,
-> 
-> ??? Michael
-> 
-> 
-> 
+	Tobin
