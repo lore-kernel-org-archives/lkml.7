@@ -2,149 +2,144 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA97C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F422EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD1B23CBA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C988323CBA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAeCHlIe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cx9qF2Xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfFDQaI (ORCPT
+        id S1727793AbfFDQdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:30:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53343 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfFDQaI (ORCPT
+        Tue, 4 Jun 2019 12:33:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45286 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727463AbfFDQdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:30:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d17so732226wmb.3;
-        Tue, 04 Jun 2019 09:30:06 -0700 (PDT)
+        Tue, 4 Jun 2019 12:33:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id e3so17825356ioc.12;
+        Tue, 04 Jun 2019 09:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=54TIXqXvsDNltB2y1UR+6mRVKP/XVI4s+wemNTylSEI=;
-        b=eAeCHlIeQmyEBytc8R7znUKKSXeP6uAgH6bsKtTUo6/LR/LaWzFOo4o+kjmL2TTsXF
-         WRIL7PlmUuz7oi+O48P8do6MJFKG2YSiWOhQwL8XDZIWYw1r5KK0jFOgJBzPSyBaSGCY
-         KplZ5nTEUEj2PiuFR0LqmnSb0dlGOsCbj1NPi6M2eHfALDABG1RX8VfpA3QGV/mBu8MX
-         5+57ngT6OULxfwDsJMHN42siVFlvyOyck7HvANM/0W2SaRylp3lTwLIyuooEFHkI+l8D
-         HZ4duZAvjpjhT5gDtrj8K8i5FMUXeIF44tLP2SaLsX3EWxTXMJqlj4Ztw/fqzWsBVFEl
-         CYpw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NFDCs9ixPwmop20pIDVV+hNZcExzVIIYIAvpTPqNIqM=;
+        b=cx9qF2XoM0ItvPLKYrfQK/oiAqbik/wsSMBvAMrHL8fu8Fx/K523FWLP62Taq5dCW+
+         GeVE1uM0MXw54dG4FfQpsBSSfIqJt+BeDwEtP+TaTJsYOGWnVZaxK6WHMMZEiIQCr7c1
+         29YRdE5YPlokMDEIYL8ZBSnQ9QFPiJckpS2Wm8iIFdCBR0HfTI2T0TOimv6v4CP1imSF
+         sOro/P3hwPspStkLZljA33Ma0X+9ae5JeNqKCeX5SHWY6K1oJDWZaC3n5E0+gY6UeDRI
+         PFhuNkiD8tQcLaUt1Hocggi8IY4A2cYLgXOSolXgPJu2RHVtQPEIXlj/1p468yO7GvqA
+         grtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=54TIXqXvsDNltB2y1UR+6mRVKP/XVI4s+wemNTylSEI=;
-        b=PSbT5qW6NCCXbtSXu2zCWL9meFTt0gRxEWbD0G3A1K8helEV17csi4adkcWA0ykbcU
-         OMAa6wy+0XgtH38hFWQLc2q3vjb91I2w938QNOQ+yydQvObyo/KVixHuglRjyYDTCnIZ
-         nfHf6XzUj6fCyA0YdzEj8hjtbSrfJlAqQhUrT+BaphWAxbH5cxuXbbgm4p8qcRclaVqt
-         3kG7DNfnHCwzGsBgEtxfUd7OsrKBDk32UnPpj1AchzWQmu3dbYhVMLFVORe8JyCpmp5C
-         c4Ynmp2C7yejaDZtfkJSk1gBF/Nka1EEdOzufKA5PW9ObsRXkBZCrvePzrferVi13Nqr
-         A+Vw==
-X-Gm-Message-State: APjAAAV5OvqNj26xENGKcIJra4z2Lzj5GWZ1V9pkUxuMXHiwUbpiaT7W
-        /15QEwXLurm1uJMoosAIP9A=
-X-Google-Smtp-Source: APXvYqwiwhiDPZmf0yBeaqw/xNa68/cr0Q9ihEI2dgTEsPXakPgC/zw8DdYNnQIwnbK1H7dNDgAE9g==
-X-Received: by 2002:a05:600c:218d:: with SMTP id e13mr18972396wme.101.1559665805401;
-        Tue, 04 Jun 2019 09:30:05 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id y12sm15108176wrh.40.2019.06.04.09.30.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 09:30:04 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 00/13] Allwinner A64/H6 IR support
-Date:   Tue,  4 Jun 2019 18:29:46 +0200
-Message-Id: <20190604162959.29199-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NFDCs9ixPwmop20pIDVV+hNZcExzVIIYIAvpTPqNIqM=;
+        b=RjSBrSLlWd71CTKBLx1tRwJ2fZPW9aCCvTqr7pGXc0UTy/VP72CPSfww569TTD5TKg
+         UJUULe+2cDWBb5tZNvlQAxZwg4eK4UhDhZbc5liiZUTTTThzOfOcYB5cVA/9p87xAhTe
+         0aFebzWmVwp0XmESznMQEEcZICnGCfHTcnSbCVpMBI2SyCGLQbzSWoaS5Ou/etXCTaNB
+         OEULfdJPkiBwttK05xzcnASUs+XqEI8A0sNJgWWoeR62S1m8bNVXqOxUA8VZkJFYudJo
+         C0E+jSIQ8Ve3nfWEwZQaDirCBMEfMGdm2sTGbF2mTLEmKj/6M2nl2vfwIBISFRNkRjeT
+         i18g==
+X-Gm-Message-State: APjAAAVWjSZ2YqbDrD+kfrFlb/4g9vGh6xVrrR8kyUXnSzb6s9g4ULMj
+        8ndliXqGjYm9lFIfO9pIl+z8GcvZ3Pb9u3CCOrA=
+X-Google-Smtp-Source: APXvYqwJ2HUxS4FKK1XU93wJyd+x/7qURmSpYcNyYnkbHrNeudxQf8vE6jo+0sLFKE/Co6I3WhWb6ZA1CNw3cpjacA4=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr14703305ioi.42.1559666019686;
+ Tue, 04 Jun 2019 09:33:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-3-nitesh@redhat.com>
+In-Reply-To: <20190603170306.49099-3-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 4 Jun 2019 09:33:28 -0700
+Message-ID: <CAKgT0UeRkG0FyESjjQQWeOs3x2O=BUzFYZAdDkjjLyXRiJMnCQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v10 2/2] virtio-balloon: page_hinting: reporting to
+ the host
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+> Enables the kernel to negotiate VIRTIO_BALLOON_F_HINTING feature with the
+> host. If it is available and page_hinting_flag is set to true, page_hinting
+> is enabled and its callbacks are configured along with the max_pages count
+> which indicates the maximum number of pages that can be isolated and hinted
+> at a time. Currently, only free pages of order >= (MAX_ORDER - 2) are
+> reported. To prevent any false OOM max_pages count is set to 16.
+>
+> By default page_hinting feature is enabled and gets loaded as soon
+> as the virtio-balloon driver is loaded. However, it could be disabled
+> by writing the page_hinting_flag which is a virtio-balloon parameter.
+>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/virtio/virtio_balloon.c     | 112 +++++++++++++++++++++++++++-
+>  include/uapi/linux/virtio_balloon.h |  14 ++++
+>  2 files changed, 125 insertions(+), 1 deletion(-)
 
-A64 IR support series[1] pointed out that an A31 bindings should be
-introduced.
+<snip>
 
-This series introduce the A31 compatible bindings, then switch it on
-the already existing board.
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> index a1966cd7b677..25e4f817c660 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -29,6 +29,7 @@
+>  #include <linux/virtio_types.h>
+>  #include <linux/virtio_ids.h>
+>  #include <linux/virtio_config.h>
+> +#include <linux/page_hinting.h>
 
-Finally introduce A64 and H6 support.
+So this include breaks the build and from what I can tell it isn't
+really needed. I deleted it in order to be able to build without
+warnings about the file not being included in UAPI.
 
-I have reenable the other H6 boards IR support as Ondrej solve the issue.
-
-Regards,
-Clément
-
-[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
-[2] https://lkml.org/lkml/2019/5/27/321
-[3] https://patchwork.kernel.org/patch/10975563/
-
-Changes since v3:
- - Reenable IR for other H6 boards
- - Add RXSTA bits definition
- - Add Sean Young's "Acked-by" tags
-
-Changes since v2:
- - Disable IR for other H6 boards
- - Split DTS patch for H3/H5
- - Introduce IR quirks
-
-Changes since v1:
- - Document reset lines as required since A31
- - Explain the memory mapping difference in commit log
- - Fix misspelling "Allwiner" to "Allwinner"
-Clément Péron (11):
-  dt-bindings: media: sunxi-ir: Add A31 compatible
-  media: rc: Introduce sunxi_ir_quirks
-  media: rc: sunxi: Add A31 compatible
-  media: rc: sunxi: Add RXSTA bits definition
-  ARM: dts: sunxi: Prefer A31 bindings for IR
-  ARM: dts: sunxi: Prefer A31 bindings for IR
-  dt-bindings: media: sunxi-ir: Add A64 compatible
-  dt-bindings: media: sunxi-ir: Add H6 compatible
-  arm64: dts: allwinner: h6: Add IR receiver node
-  arm64: dts: allwinner: h6: Enable IR on H6 boards
-  arm64: defconfig: Enable IR SUNXI option
-
-Igors Makejevs (1):
-  arm64: dts: allwinner: a64: Add IR node
-
-Jernej Skrabec (1):
-  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
-
- .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
- arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
- .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 +
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 +
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++
- arch/arm64/configs/defconfig                  |  1 +
- drivers/media/rc/sunxi-cir.c                  | 88 ++++++++++++++-----
- 13 files changed, 135 insertions(+), 26 deletions(-)
-
--- 
-2.20.1
-
+>  /* The feature bitmap for virtio balloon */
+>  #define VIRTIO_BALLOON_F_MUST_TELL_HOST        0 /* Tell before reclaiming pages */
+> @@ -36,6 +37,7 @@
+>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM        2 /* Deflate balloon on OOM */
+>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT        3 /* VQ to report free pages */
+>  #define VIRTIO_BALLOON_F_PAGE_POISON   4 /* Guest is using page poisoning */
+> +#define VIRTIO_BALLOON_F_HINTING       5 /* Page hinting virtqueue */
+>
+>  /* Size of a PFN in the balloon interface. */
+>  #define VIRTIO_BALLOON_PFN_SHIFT 12
+> @@ -108,4 +110,16 @@ struct virtio_balloon_stat {
+>         __virtio64 val;
+>  } __attribute__((packed));
+>
+> +#ifdef CONFIG_PAGE_HINTING
+> +/*
+> + * struct hinting_data- holds the information associated with hinting.
+> + * @phys_add:  physical address associated with a page or the array holding
+> + *             the array of isolated pages.
+> + * @size:      total size associated with the phys_addr.
+> + */
+> +struct hinting_data {
+> +       __virtio64 phys_addr;
+> +       __virtio32 size;
+> +};
+> +#endif
+>  #endif /* _LINUX_VIRTIO_BALLOON_H */
+> --
+> 2.21.0
+>
