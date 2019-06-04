@@ -2,109 +2,106 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CBCC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E724E24C43
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D56624C49
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ha1kdGk8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wiKlCJWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfFDIyI (ORCPT
+        id S1727015AbfFDIzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:54:08 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:1828 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfFDIyH (ORCPT
+        Tue, 4 Jun 2019 04:55:46 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52684 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726708AbfFDIzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:54:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf631a10000>; Tue, 04 Jun 2019 01:53:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 01:54:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 01:54:06 -0700
-Received: from [10.19.120.158] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 08:54:04 +0000
-Subject: Re: [PATCH v11 0/2] usb: xhci: Add Clear_TT_Buffer
-To:     Greg KH <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>
-References: <1559559224-9845-1-git-send-email-jilin@nvidia.com>
- <20190603122303.GA16267@kroah.com>
-CC:     <mathias.nyman@intel.com>, <kai.heng.feng@canonical.com>,
-        <drinkcat@chromium.org>, <Thinh.Nguyen@synopsys.com>,
-        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Jim Lin <jilin@nvidia.com>
-Message-ID: <e7ccbc27-2ff4-b1b9-aa1b-c77da5e122ca@nvidia.com>
-Date:   Tue, 4 Jun 2019 16:53:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 4 Jun 2019 04:55:45 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x548tKLL021280;
+        Tue, 4 Jun 2019 10:55:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=aeRZHet8+3ng2HzHWI6D57uf7dMIn0WG1kjDInB0Y8s=;
+ b=wiKlCJWMv8lNPSmBz84bvLgrRRzwH7Tdnn57y/e+lH3rwW6YNBFk715p8vQlrG0EeHAj
+ P9hJBWBssMTTmBjE7FS8g58EUH4icp+Z5fzOZD3IU4CMNjqInVPxOxp8tWA9P/IpoLyT
+ 1yxYYI211XVh1IvWTEAhfAOv2ofLBPYfw+S0h03B/93sDS0ecOW0KAWl9hu9pnddQ/1Y
+ fUcuMqIe7LitRBXZ836EwKcWGUnoVesQm0SPZPn9rJRV+SJVWiHu75dcERTR6Vfh/v3z
+ g6NshufKOarSyR0AszxMPlGgJNcZeChWbEZUQK4xXxQIXmQYtsAzRnwaDcueef4o9Cn5 yA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sundryngq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 04 Jun 2019 10:55:28 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34DFA163;
+        Tue,  4 Jun 2019 08:55:24 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 066B92507;
+        Tue,  4 Jun 2019 08:55:24 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019
+ 10:55:23 +0200
+Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019 10:55:23
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>
+Subject: [PATCH 00/10] STM32 usart power improvements
+Date:   Tue, 4 Jun 2019 10:55:09 +0200
+Message-ID: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190603122303.GA16267@kroah.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559638434; bh=mLYTPQ/PfK0tfvP0/dpg+Xz6JZOJSrJlWomfCeFvWF0=;
-        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
-        b=Ha1kdGk8vETSu44OZuYpp04n6UVlNEIZa2AkRiukbCzOe6wCs/l2MCJnx/tG8eW/0
-         T6rHuCxPRov8L9y1pH9vGiKTuXeKMUlDbGIC6GZOPnPXVPrnNwK6ieY3D2TNW7NuLx
-         omS65L97W8yDVe06AGeGrPO40aNmLMEcj4IwU/pGGXX5+yCUNoS+OctYiaspZ61Qa0
-         Us/eClklU2+ZX1YD8yzE0/BxYV5eMstMXNmHsp1dAz/ygfxVVBR6EjzrpKFLnGFkAA
-         os/ImDtfVuE77QuhfTdZCmQQD4xmnPN0LyZoFCYJmgB38ZdaKnQE1ItAxEXZBvTdYJ
-         Jlm5elF24Mv6g==
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.31]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series delivers power improvements for stm32-usart driver.
 
+Bich Hemon (4):
+  dt-bindings: serial: add optional pinctrl states
+  serial: stm32: select pinctrl state in each suspend/resume function
+  ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
+  ARM: dts: stm32: Update UART4 pin states on stm32mp157a-dk1
 
-On 2019=E5=B9=B406=E6=9C=8803=E6=97=A5 20:23, Greg KH wrote:
-> On Mon, Jun 03, 2019 at 06:53:42PM +0800, Jim Lin wrote:
->> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
->> processing for full-/low-speed endpoints connected via a TT, the host
->> software must use the Clear_TT_Buffer request to the TT to ensure
->> that the buffer is not in the busy state".
->>
->> In our case, a full-speed speaker (ConferenceCam) is behind a high-
->> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
->> request we may continue to get STALL with the folllowing requests,
->> like Set_Interface.
->>
->> Solution is to invoke usb_hub_clear_tt_buffer() to send
->> Clear_TT_Buffer request to the hub of the device for the following
->> Set_Interface requests to the device to get ACK successfully.
->>
->> The Clear_TT_Buffer request sent to the hub includes the address of
->> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
->> uses udev->devnum to set the address wValue. This won't work for
->> devices connected to xHC.
->>
->> For other host controllers udev->devnum is the same as the address of
->> the usb device, chosen and set by usb core. With xHC the controller
->> hardware assigns the address, and won't be the same as devnum.
->>
->> Here we have two patches.
->> One is to add devaddr in struct usb_device for
->> usb_hub_clear_tt_buffer() to use.
->> Another is to invoke usb_hub_clear_tt_buffer() for halt processing.
-> Why did you resend patch series 11?
-Didn't get response in 2 or 3 days.
-Will be more patient next time.
+Erwan Le Ray (6):
+  dt-bindings: serial: stm32: add wakeup option
+  serial: stm32: add pm_runtime support
+  serial: stm32: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+  serial: stm32: add support for no_console_suspend
+  ARM: dts: stm32: update uart4 pin configurations for low power
+  ARM: dts: stm32: add wakeup capability on each usart/uart on
+    stm32mp157c
 
-May I get patch v11 1/2 acked or reviewed by Alan?
+ .../devicetree/bindings/serial/st,stm32-usart.txt  | 19 ++++-
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          | 17 +++++
+ arch/arm/boot/dts/stm32mp157a-dk1.dts              |  5 +-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts              |  5 +-
+ arch/arm/boot/dts/stm32mp157c.dtsi                 | 40 ++++++++--
+ drivers/tty/serial/stm32-usart.c                   | 88 ++++++++++++++++++++--
+ drivers/tty/serial/stm32-usart.h                   |  1 +
+ 7 files changed, 155 insertions(+), 20 deletions(-)
 
-Thanks,
-Jim
+-- 
+1.9.1
+
