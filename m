@@ -2,157 +2,116 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B44C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBDFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBEC24A2D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D13424A51
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVPZmX4z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFTBxFiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfFDLAr (ORCPT
+        id S1727582AbfFDLBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:00:47 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34311 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfFDLAq (ORCPT
+        Tue, 4 Jun 2019 07:01:23 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:39647 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbfFDLBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:00:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so2009671wmd.1;
-        Tue, 04 Jun 2019 04:00:45 -0700 (PDT)
+        Tue, 4 Jun 2019 07:01:22 -0400
+Received: by mail-vs1-f66.google.com with SMTP id n2so4821746vso.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ry9qT3LbyuH/6y/zhnSI5kikIqB3kIMvxasnYGNS1uY=;
-        b=pVPZmX4zNXZH5nPx9fxT/V81+drhOVhnBjF3iscpO3dNth3UoGAB2zpqv7msmG0OZ9
-         wBvKCdbUZEiZJnImPy1L14F7ZMm/+Ilo64yqoWyFXroUyt/b0tvQjFUU6ylvojdTKayw
-         ev1V12pH8ciH+Tcuym8v35LFZ/I1AtYJ6W47srMsadUMuh7mmvkiDU7DCB2rryMPtZj4
-         hI7FZwJ80iixQeLi5671LcKawio/VFS3JqSuSEs+CuzsJF4c1cufb1CM0K9Qd8gP9baz
-         QL2yIgVB53yhhVDhPouKyM2+BnUQvCMPQdUzne5O3e1J6Cy8AqD4cgDMZCiV475Yfbt3
-         fVrw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WDbPSKeCZ8oAwUO/gbQAYonHxio/dp9v0ZS3lSUVGiI=;
+        b=UFTBxFiFaQAgtc8pGRfpgJK9845bc1+wNN3Ljkixb6j9f/C6DpMOv6EeY1wjgMedGS
+         1z4TxRJ2Uf/dl5OTSZcqew7Xw4uMG1N6xKcAYtI9vvSz5VV6ha9bJ6dwVDgORMX6bCrS
+         GKKBfElTwlYNDrFuxzHjOXxJO6rYrJrbGaQXjfeLJeUS265m2BZDLz+0UiFBDv5iTzMl
+         boiJTv5mPyyDY4mFXGSlJHkj/5xIHajEhH5HZ4Z/W1oa4DXBWGMvGkt3T+D217UFzvrQ
+         0Dz/jFifyp/r98ljW5sCi7WcYFQeRupstHnMuRZ2fA1sCe331hW4CUxOKRdtxd2LJkZq
+         SACQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ry9qT3LbyuH/6y/zhnSI5kikIqB3kIMvxasnYGNS1uY=;
-        b=eLy6JXOMyq8Vp5ztkOAXArQAasdvsWYzYS7rQB2PHZTB8GONmVNCZF80O9mJf/IZ0a
-         FCmLlaKmg3XvpxHDNmr5euMdCCZA4fm551TD2255bKlgQTosVrEsFsfItztmRSRRm8n/
-         aGSNL331qleoS5F4MjhGxdzGkhL8vPNxRvKO6bbPZ4pozFWGDK8qjRNX/Ocafk6x2xo7
-         UKFS5Ei9p5sntgLIHdJ9LPGcpKo255fzHX8H0P5LYTW3w5rzcjYt1e5d6UrIV9BGPmWr
-         k/E5VqwsG1KBWZUO8SgR7sp+f/8Y3tEstIC+muQcLLtGlp3MhM8ejvodyGym07zCAghp
-         rF7A==
-X-Gm-Message-State: APjAAAX6JLSvdCDwHN/plhZjnXsv85YtEEw8RJeestS7aomc7sr6+Mfw
-        P5JzCyGgHfc0XF4ESD6MNhZ6UjMw
-X-Google-Smtp-Source: APXvYqymhanTOzaenE89rQ1PoRX/A0KxqmSKgazT/TpbMJSre8olIJO+7BRhkHu2o/azVvRpDaqMvw==
-X-Received: by 2002:a1c:3c8a:: with SMTP id j132mr5557438wma.172.1559646044399;
-        Tue, 04 Jun 2019 04:00:44 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id z14sm14106358wrh.86.2019.06.04.04.00.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 04:00:43 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:00:42 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/16] PM / devfreq: tegra: Don't set EMC clock rate
- to maximum on probe
-Message-ID: <20190604110042.GE16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-6-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WDbPSKeCZ8oAwUO/gbQAYonHxio/dp9v0ZS3lSUVGiI=;
+        b=LDg8HiICD7TkLEXMofzwcSMA1OcO89EJycpiT7sulYfCmE2qsrybpnaRyl0xueo0le
+         Qm0S6vDKwiUIU4oMnLZsBQv3AC9qLZVZcnPTEYMaT8fMeXP36Yde+kNrkCofGf6sYaLH
+         qU8qxtpC11ii6o9KIWw5Oo3NpVXecIJzsQvZxNieNpI4nQjltRSxyOGNVydjz/7RyL5l
+         HE64xSSmmWAFOKVfoyscRXqjKTrV0N+vrYWKU5X6Yj+cN9CQiYz/ilevQIK/oaO5/iK3
+         S1pKe/80K1+NASzeJ4k5DHvgz5uR45uf4W6xFlOcbDxfoD3Vz1a2JpTxwXGyXxZ/gI5m
+         H+/A==
+X-Gm-Message-State: APjAAAVp52TN3acPqufyVzaGb0z8lhPCZ+EUmZzWsohp8DZpt+/3zRej
+        P2R6BYDSuPLikHIPbsb2cVMOHiN1sOjgpOjuDq5YBw==
+X-Google-Smtp-Source: APXvYqw2LlI1r2QNjEMglKQhTLxp/mFVzp3+GFK0ixuGGyE3T4oSZc8iLerthe1V9Q76vq1872HT3A+BHOIBTgWhL9g=
+X-Received: by 2002:a67:e3d5:: with SMTP id k21mr765014vsm.172.1559646080843;
+ Tue, 04 Jun 2019 04:01:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nHwqXXcoX0o6fKCv"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-6-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190603112453.20097-1-ttayar@habana.ai>
+In-Reply-To: <20190603112453.20097-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Tue, 4 Jun 2019 14:00:54 +0300
+Message-ID: <CAFCwf12Ry+tan4Wov-xJqO0aWbapNsB+xcnHs2f-3LuN7fVRKg@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Fix virtual address access via debugfs for
+ 2MB pages
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---nHwqXXcoX0o6fKCv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 02, 2019 at 02:38:04AM +0300, Dmitry Osipenko wrote:
-> There is no real benefit from doing so, hence let's drop that rate setting
-> for consistency.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Mon, Jun 3, 2019 at 2:25 PM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> The debugfs interface for accessing DRAM virtual addresses currently
+> uses the 12 LSBs of a virtual address as an offset.
+> However, it should use the 20 LSBs in case the device MMU page size is
+> 2MB instead of 4KB.
+> This patch fixes the offset calculation to be based on the page size.
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 > ---
->  drivers/devfreq/tegra-devfreq.c | 2 --
->  1 file changed, 2 deletions(-)
-
-Do you have any numbers to tell how long it would take for the EMC rate
-to get incremented? My understanding is that ACTMON basically reacts to
-system load, so I could imagine that not setting to the maximum
-frequency after this is loaded might make the system slow in the short
-term. Only after ACTMON has collected enough data to determine that it
-needs to clock the EMC higher would system speed resume normal.
-
-I guess technically this patch doesn't change anything if the system
-already boots at the highest EMC frequency anyway, which I think it does
-on many (although not all) devices.
-
-Anyway, you said you've tested this and are satisfied with the
-performance, so it can't be that bad:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
->=20
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devf=
-req.c
-> index c7428c5eee23..24ec65556c39 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -653,8 +653,6 @@ static int tegra_devfreq_probe(struct platform_device=
- *pdev)
->  		return PTR_ERR(tegra->emc_clock);
->  	}
-> =20
-> -	clk_set_rate(tegra->emc_clock, ULONG_MAX);
-> -
->  	tegra->rate_change_nb.notifier_call =3D tegra_actmon_rate_notify_cb;
->  	err =3D clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
->  	if (err) {
-> --=20
-> 2.21.0
->=20
-
---nHwqXXcoX0o6fKCv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2T1oACgkQ3SOs138+
-s6FJlw//S3HMd6zjiAiIh7sOMGPBFiOdIAVCsSgPmNITPRNUOkFt7n3cwIF39HRA
-LEuKQhYt8l/N1kYwjbRT0bATl35PcVUITRGPcJh9Tg1SMJuO+hJ2jTRHQKpVJSQC
-8qeGgOmhScOTSgqbFDR+a75q9HbQzSZXVY3WSnjXOMfzHQim4AqUg7EJp/X3Qma+
-o7fUuJmHBQHmgc8LHoOATonOt6Qo6RF7xvJt0UEFzOpwzl8JwWKYw+XsqgdzXQKJ
-u97CcKcgIhVOyQKdWMX7nOwHaLvZvLRjoshz6TgjnRjxo/KWklooLWVya3A/FfRd
-uf5RG14aTC0rOqpyc92xvrTGcjjVEHYjR+xaAUYYFHTdXKE8iG2sX5G0uQttQwTi
-kO2QRDqTmzhvHCjB1QFoa1WsKahUAuuL3Sz1QbujROBKhvLe3nSDAie19wS8vzOd
-02D93BBMeTMaYZBJeX6+4cHStKUXChqmsGUuVEijo0ShDtm7Bu1yardeQjAGg0Fr
-iVnltSo3nt/g72+ptJJz3zqOAU2OBRjEZPfakMXBFrAs8B8P7Ks/Gqw5uDGHlYBf
-ydpVF78FHW7Ok2+KkqbtVwe06XM6/IY/m3MxfF7oEbIdMswtyBS9q6dHNrL+qSjy
-6YaRiHpDrDkKHkvCaJ2MTuHy4oPJE3aEaHt9r89mfU57qJdHSYA=
-=MC5w
------END PGP SIGNATURE-----
-
---nHwqXXcoX0o6fKCv--
+>  drivers/misc/habanalabs/debugfs.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
+> index 0ce5621c1324..ba418aaa404c 100644
+> --- a/drivers/misc/habanalabs/debugfs.c
+> +++ b/drivers/misc/habanalabs/debugfs.c
+> @@ -500,6 +500,7 @@ static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
+>  {
+>         struct hl_ctx *ctx = hdev->user_ctx;
+>         u64 hop_addr, hop_pte_addr, hop_pte;
+> +       u64 offset_mask = HOP4_MASK | OFFSET_MASK;
+>         int rc = 0;
+>
+>         if (!ctx) {
+> @@ -542,12 +543,14 @@ static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
+>                         goto not_mapped;
+>                 hop_pte_addr = get_hop4_pte_addr(ctx, hop_addr, virt_addr);
+>                 hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
+> +
+> +               offset_mask = OFFSET_MASK;
+>         }
+>
+>         if (!(hop_pte & PAGE_PRESENT_MASK))
+>                 goto not_mapped;
+>
+> -       *phys_addr = (hop_pte & PTE_PHYS_ADDR_MASK) | (virt_addr & OFFSET_MASK);
+> +       *phys_addr = (hop_pte & ~offset_mask) | (virt_addr & offset_mask);
+>
+>         goto out;
+>
+> --
+> 2.17.1
+>
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+applied to -fixes
