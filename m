@@ -2,116 +2,78 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1577CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A697720693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44592070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="goBiunHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfFDRi5 (ORCPT
+        id S1726719AbfFDRjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:38:57 -0400
-Received: from foss.arm.com ([217.140.101.70]:48806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfFDRi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:38:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E9BE80D;
-        Tue,  4 Jun 2019 10:38:56 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84D033F5AF;
-        Tue,  4 Jun 2019 10:38:54 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 18:38:48 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     James Morse <james.morse@arm.com>
-Cc:     thor.thayer@linux.intel.com, bp@alien8.de, mchehab@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] EDAC/altera: Warm Reset option for Stratix10 peripheral
- DBE
-Message-ID: <20190604173848.GA28613@e107155-lin>
-References: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
- <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
+        Tue, 4 Jun 2019 13:39:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40588 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFDRjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:39:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FYzF5TUzK4CIyrNZDcehrGX3pjE6OWI8xK3W3Q1xIGQ=; b=goBiunHY6wYTm1oY59dUPWrE2
+        bGDyhw4Bq2XyeUQexMKGZ+2tY3lYPJhdUUNJa3HI4AeIs7vU1Q4q9G00f5CLPylms+XR0W176eKTd
+        yl8/SXaGn8OVpfRVlSp/vut3yoSuNSKK2XZ1fz1gHGrdQEyDBA8MgCZRbEdDmrlYrTnLabKvicqWZ
+        tB3RAB594+C6KY3TGHEAW5JssSE8/PbQ+3HdSw4NZVmzSoi+x8pw2e6sFyOKPbCBEmsm/GDk7dyPn
+        giVUyOLdypQfY0EJA88dhu1vRt2gGR+xV6iO7WOT83syV0lqC9F4MLQwErqU1ZMoAGc5vD/8uazkQ
+        mKTxqRRnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYDOh-0005eB-S8; Tue, 04 Jun 2019 17:38:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AE60C20114D93; Tue,  4 Jun 2019 19:38:53 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 19:38:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190604173853.GG3419@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
+ <20190604092008.GJ3402@hirez.programming.kicks-ass.net>
+ <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 06:23:15PM +0100, James Morse wrote:
-> Hi Thor,
->
-> (CC: +Mark, Lorenzo and Sudeep for PSCI.
-> How should SYSTEM_RESET2 be used for a vendor-specific reset?
->
+On Tue, Jun 04, 2019 at 01:30:00PM -0400, Waiman Long wrote:
+> > That's somewhat inconsistent wrt the type. I'll make it unsigned long,
+> > as that is what makes most sense, given there's a pointer inside.
+> 
+> Thank for spotting that, I will fix it.
 
-Initially it was indented to be used by passing command line argument
-"reboot=w" or "reboot=warm" as specified in kernel document[1]
+I fixed a whole bunch of them; please find the modified patches here:
 
-However it was enhanced and enabled specifically for panic by
-Commit b287a25a7148 ("panic/reboot: allow specifying reboot_mode for panic only")
-
-IIUC you can now pass "reboot=panic_warm" to just set reboot_mode to
-WARM when there's a panic. SYSTEM_RESET2 gets called whenever reboot_mode
-is set to WARM/SOFT
-
-> The original patch is:
-> lore.kernel.org/r/1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com
-> )
->
-> On 03/06/2019 21:37, thor.thayer@linux.intel.com wrote:
-> > From: Thor Thayer <thor.thayer@linux.intel.com>
-> >
-> > The Stratix10 peripheral FIFO memories can recover from double
-> > bit errors with a warm reset instead of a cold reset.
-> > Add the option of a warm reset for peripheral (USB, Ethernet)
-> > memories.
-> >
-> > CPU memories such as SDRAM and OCRAM require a cold reset for
-> > DBEs.
-> > Filter on whether the error is a SDRAM/OCRAM or a peripheral
-> > FIFO memory to determine which reset to use when the warm
-> > reset option is configured.
->
-> ... so you want to make different SMC calls on each CPU after panic()?
->
->
-> > diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-> > index 8816f74a22b4..179601f14b48 100644
-> > --- a/drivers/edac/altera_edac.c
-> > +++ b/drivers/edac/altera_edac.c
-> > @@ -2036,6 +2036,19 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
-> >  /* panic routine issues reboot on non-zero panic_timeout */
-> >  extern int panic_timeout;
-> >
-> > +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
-> > +/* EL3 SMC call to setup CPUs for warm reset */
-> > +void panic_smp_self_stop(void)
-> > +{
-> > +	struct arm_smccc_res result;
-> > +
-> > +	__cpu_disable();
-> > +	cpu_relax();
-> > +	arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, S10_WARM_RESET_WFI_FLAG,
-> > +		      S10_WARM_RESET_WFI_FLAG, 0, 0, 0, 0, 0, &result);
-
-Please use SYSTEM_RESET2 or let us know why it can't be used to understand
-the requirement better. There are options to use vendor extentions with
-the SYSTEM_RESET2 PSCI command if you really have to. However the mainline
-supports only architectural warm reset.
-
---
-Regards,
-Sudeep
-
-[1] Documentation/admin-guide/kernel-parameters.txt
+  https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=locking/core
