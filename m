@@ -3,134 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04043C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F11C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88692075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECB02075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFDVuF (ORCPT
+        id S1726555AbfFDVwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:50:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:41447 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfFDVuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:50:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 14:50:04 -0700
-X-ExtLoop1: 1
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 14:50:03 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH] EDAC/altera: Warm Reset option for Stratix10 peripheral
- DBE
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        James Morse <james.morse@arm.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>
-References: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
- <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
- <20190604173848.GA28613@e107155-lin>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <45390f41-9b8c-de83-a092-befa3d1f7f0f@linux.intel.com>
-Date:   Tue, 4 Jun 2019 16:52:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190604173848.GA28613@e107155-lin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 4 Jun 2019 17:52:11 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53006 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfFDVwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:52:11 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD7B815010A56;
+        Tue,  4 Jun 2019 14:52:10 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 14:52:10 -0700 (PDT)
+Message-Id: <20190604.145210.1322361852490983999.davem@davemloft.net>
+To:     xuechaojing@huawei.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        jesse.brandeburg@intel.com, luoshaokai@huawei.com,
+        cloud.wangxiaoyun@huawei.com, chiqijun@huawei.com,
+        wulike1@huawei.com
+Subject: Re: [PATCH net-next v4] hinic: add LRO support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190604011608.26485-1-xuechaojing@huawei.com>
+References: <20190604011608.26485-1-xuechaojing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Jun 2019 14:52:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+From: Xue Chaojing <xuechaojing@huawei.com>
+Date: Tue, 4 Jun 2019 01:16:08 +0000
 
-On 6/4/19 12:38 PM, Sudeep Holla wrote:
-> On Tue, Jun 04, 2019 at 06:23:15PM +0100, James Morse wrote:
->> Hi Thor,
->>
->> (CC: +Mark, Lorenzo and Sudeep for PSCI.
->> How should SYSTEM_RESET2 be used for a vendor-specific reset?
->>
+> This patch adds LRO support for the HiNIC driver.
 > 
-> Initially it was indented to be used by passing command line argument
-> "reboot=w" or "reboot=warm" as specified in kernel document[1]
-> 
-> However it was enhanced and enabled specifically for panic by
-> Commit b287a25a7148 ("panic/reboot: allow specifying reboot_mode for panic only")
-> 
-> IIUC you can now pass "reboot=panic_warm" to just set reboot_mode to
-> WARM when there's a panic. SYSTEM_RESET2 gets called whenever reboot_mode
-> is set to WARM/SOFT
-> 
-Thanks. I missed that SYSTEM_RESET2 had been implemented.
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
 
->> The original patch is:
->> lore.kernel.org/r/1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com
->> )
->>
->> On 03/06/2019 21:37, thor.thayer@linux.intel.com wrote:
->>> From: Thor Thayer <thor.thayer@linux.intel.com>
->>>
->>> The Stratix10 peripheral FIFO memories can recover from double
->>> bit errors with a warm reset instead of a cold reset.
->>> Add the option of a warm reset for peripheral (USB, Ethernet)
->>> memories.
->>>
->>> CPU memories such as SDRAM and OCRAM require a cold reset for
->>> DBEs.
->>> Filter on whether the error is a SDRAM/OCRAM or a peripheral
->>> FIFO memory to determine which reset to use when the warm
->>> reset option is configured.
->>
->> ... so you want to make different SMC calls on each CPU after panic()?
->>
->>
->>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->>> index 8816f74a22b4..179601f14b48 100644
->>> --- a/drivers/edac/altera_edac.c
->>> +++ b/drivers/edac/altera_edac.c
->>> @@ -2036,6 +2036,19 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
->>>   /* panic routine issues reboot on non-zero panic_timeout */
->>>   extern int panic_timeout;
->>>
->>> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
->>> +/* EL3 SMC call to setup CPUs for warm reset */
->>> +void panic_smp_self_stop(void)
->>> +{
->>> +	struct arm_smccc_res result;
->>> +
->>> +	__cpu_disable();
->>> +	cpu_relax();
->>> +	arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, S10_WARM_RESET_WFI_FLAG,
->>> +		      S10_WARM_RESET_WFI_FLAG, 0, 0, 0, 0, 0, &result);
-> 
-> Please use SYSTEM_RESET2 or let us know why it can't be used to understand
-> the requirement better. There are options to use vendor extentions with
-> the SYSTEM_RESET2 PSCI command if you really have to. However the mainline
-> supports only architectural warm reset.
-> 
-I need to decide between warm reset and cold reset based on the 
-peripheral type but maybe that decision can be done by firmware as James 
-pointed out.
-
-Thanks for the links and the comments!
-
-Thor
-> --
-> Regards,
-> Sudeep
-> 
-> [1] Documentation/admin-guide/kernel-parameters.txt
-> 
-
+Applied.
