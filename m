@@ -2,85 +2,103 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F180EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97FCC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D95245BC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A45245BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRytlmPG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/j965oT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfFDLrG (ORCPT
+        id S1727649AbfFDLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:47:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36108 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbfFDLrG (ORCPT
+        Tue, 4 Jun 2019 07:47:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45791 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfFDLrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:47:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9wuTa603w+SqStPamvP3MUdukRk8xI2CxDP7Kut8vY0=; b=jRytlmPG1KD1jUNei/lIj+aVy
-        0iVLl7FLtEYXL4AFb8/rF1RnkD5pn0ucGDVaH1a2rvvEzfiS8UkBLX4wDMEet88gjZ2xOp7YX8z87
-        iJjkRgx4Y3hnHpZMW7OFgDSX+ckdsN/0YVE+HvPXWoJE6ekz1m+1dmNqnyGwrEdCAb4QB8+EdLreW
-        bL/kO0RkQuj+vdtyqDo2LlhhP26U4qxRV4TsKd1tILh/hAG6f/jOuZJnyBqRoCW0TmfPSE4W5csJB
-        OTF1dkNtU8SjWKv/hC4NBYvj4NeMZpDg0dRW/3JXxpLDTF/9CwOm9ZpyF3LHYr/5+SyIoz7E84ztX
-        269eLr9gQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hY7uB-0004ZW-24; Tue, 04 Jun 2019 11:47:03 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 754BD20114D6C; Tue,  4 Jun 2019 13:47:01 +0200 (CEST)
-Date:   Tue, 4 Jun 2019 13:47:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] x86/fpu: Simplify kernel_fpu_begin
-Message-ID: <20190604114701.GM3402@hirez.programming.kicks-ass.net>
-References: <20190604071524.12835-1-hch@lst.de>
- <20190604071524.12835-3-hch@lst.de>
+        Tue, 4 Jun 2019 07:47:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x7so7260021plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dqp69e2uVFEsGCK8JhiQUI0eIhdoGk5h13T4mTC3vdY=;
+        b=l/j965oTYVXJlxTYWvckE8VTMI089RUFBuoqrrqtaXuZS/XGL2imWUR4Yj62ofLJ5B
+         DgxG1n0xNvR+Z1Q2WKLjXP4Ic6bW7ST7vC/dzKmyj0IUR6vTT0z9AontN1QI8ObMfrqT
+         YfQOny7N2gMtvrAIhPa+UYF2M069gzxKv7PwiRWZjJ1iI6LDinGjOYSS+sjqs5grnF0B
+         e9aJoVfdsnL4PaWC5CyQ3SVTmBWLITUXFdUA/VEb4rquThulv4tr3tFv4LY7s8DA7Ygg
+         QJSsuhRnspRaLycykpAiwScHW5uSOeCZARUrOt7CO58SxO5d7ZxzOztZ8o9JgluM7fHh
+         Jptw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dqp69e2uVFEsGCK8JhiQUI0eIhdoGk5h13T4mTC3vdY=;
+        b=YgD7pnU/KxeL54kZnMDhhsaB9ildDBz810j7XT/WIuBw46IJKH2Ov0emUixczyG3KB
+         qB5HTXXp3s0Xu9HOyZpHc9CLWPSKvhQiHLOhqiZ1Y8Y5Whlg7JKVPgmdexrjNE6AaHEl
+         bUpKY6Zdwgud19FMltHzcQpwnP4dbFo0MRiR6asChzonyARHnjKJWNx1l8BIwLtZqzOH
+         oWNspmSqmtYsiXWZHpSMKbqtyibADS8NEO1CHEXNQHtPYgtyVBPj4qYP8HeeNjtsw+CH
+         Gx3Gz3fRtvw1PV3SMdiW6oz3UqXKqNdCExugKcQfL/e8ms60is8spC4/Owq48MUZeTdO
+         VX2g==
+X-Gm-Message-State: APjAAAVsc55WOmoH9jX/Xvyvc2z4Vg6UEacWf3xJFqi7TMX637sJ7aDB
+        DqWpJJuElCiCQMkWBv914Cj7SydiRWE1dmrXlWJA8g==
+X-Google-Smtp-Source: APXvYqxxKCotfIzPUp2KWeKyy9ei43iIKcJ+7sjPmxGSimbHW7NgNBX2aQnmBFtOckHX4w3Dtt0BdqhA9Y8aOzwYWxs=
+X-Received: by 2002:a17:902:1566:: with SMTP id b35mr36931113plh.147.1559648827583;
+ Tue, 04 Jun 2019 04:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604071524.12835-3-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190601074959.14036-1-hch@lst.de> <20190601074959.14036-2-hch@lst.de>
+ <431c7395-2327-2f7c-cc8f-b01412b74e10@oracle.com> <20190604072706.GF15680@lst.de>
+In-Reply-To: <20190604072706.GF15680@lst.de>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 4 Jun 2019 13:46:56 +0200
+Message-ID: <CAAeHK+xtFwY+S0VY-yyb+i_+GnSjYHfgYHB9Ss=r9xxZZvsKFw@mail.gmail.com>
+Subject: Re: [PATCH 01/16] uaccess: add untagged_addr definition for other arches
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:15:23AM +0200, Christoph Hellwig wrote:
-> +void kernel_fpu_begin(void)
->  {
-> +	preempt_disable();
->  
->  	WARN_ON_FPU(!irq_fpu_usable());
-> +	WARN_ON_FPU(this_cpu_read(in_kernel_fpu));
->  
-> +	this_cpu_write(in_kernel_fpu, true);
->  
-> +	if (current->mm && !test_thread_flag(TIF_NEED_FPU_LOAD)) {
+On Tue, Jun 4, 2019 at 9:27 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, Jun 03, 2019 at 09:16:08AM -0600, Khalid Aziz wrote:
+> > Could you reword above sentence? We are already starting off with
+> > untagged_addr() not being no-op for arm64 and sparc64. It will expand
+> > further potentially. So something more along the lines of "Define it as
+> > noop for architectures that do not support memory tagging". The first
+> > paragraph in the log can also be rewritten to be not specific to arm64.
+>
+> Well, as of this patch this actually is a no-op for everyone.
+>
+> Linus, what do you think of applying this patch (maybe with a slightly
+> fixed up commit log) to 5.2-rc so that we remove a cross dependency
+> between the series?
 
-Did that want to be: !(current->flags & PF_KTHREAD), instead?
-
-Because I'm thinking that kernel_fpu_begin() on a kthread that has
-use_mm() employed shouldn't be doing this..
-
-> +		set_thread_flag(TIF_NEED_FPU_LOAD);
-> +		/*
-> +		 * Ignore return value -- we don't care if reg state
-> +		 * is clobbered.
-> +		 */
-> +		copy_fpregs_to_fpstate(&current->thread.fpu);
->  	}
->  	__cpu_invalidate_fpregs_state();
->  }
+(I have adjusted the patch description and have just sent it out
+separately from the series).
