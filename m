@@ -2,197 +2,146 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BE9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5E3C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C932245BC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F18245BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxfJmMNa"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ynNgfZ2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfFDLqc (ORCPT
+        id S1727610AbfFDLqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:46:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44886 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbfFDLqc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:46:32 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p67so2887462ljp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:46:30 -0700 (PDT)
+        Tue, 4 Jun 2019 07:46:46 -0400
+Received: from mail-eopbgr710081.outbound.protection.outlook.com ([40.107.71.81]:34813
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727433AbfFDLqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:46:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tAJHzdtoUHBGcl/ayUBAfIA8bNQX6pMqdoZW2RgjLw8=;
-        b=MxfJmMNaRkzihyUPNF6atM911sUNuCUizSvuv0oNDUFV9WWwPX5jZbwllidOdbgwqn
-         hOHRyselYkHjWCb/JyFMvF7EqwgpFXr8lIgi7xJfZHfoe9YWACUt8sGeE0puDLvSMKlE
-         WHFUVnSDjfz0ftC5hCi/mA61LuFFITvuBoe2Zc4BZx/w1zGQ4+bgjyVhdYTnHjYnEY6o
-         Ef0w1M+5NW7rWY/ziXa2+JlNNUhOMnozExj0lTimQGQPkMV7qKREFbl1+P0LUO8JwiVl
-         WuOWgEOGza80fOa0AATy0POyWYX/pbm9CPz1gBqjz6r9bKAZYMBUte/5EKE3SM3cResT
-         riBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tAJHzdtoUHBGcl/ayUBAfIA8bNQX6pMqdoZW2RgjLw8=;
-        b=tsJMckalhP+voRB8703+UWPJWBJMTLGxSSV4+qRQAuQ1yapgF7GL0UUOtYyXNq74g3
-         iE+Wt9PntgEWL0vtLyDk2HknbxPCbH70icVWIjkzYF/ymfSOLd84eFoQQfv6gZTgFW84
-         Z4fbIkiKcrXTP5Y+gIGNmVprQ2DvlQB137jw3WSATVQkE8IHbOQQydhbBntNxqNpqqUx
-         /ilja7z2Lj5duNJIOOEZpsbU/JQfw1bOFRc9G11Aq3pHk6hMk/mMLLE7/YTfEYp+JI0z
-         VnI6N7MdCLAETL81WdvuKlwRcR9/m+WQasV20osWl/1hJ11Ob6eb+YtmueqHe+bYr0Dx
-         VXZQ==
-X-Gm-Message-State: APjAAAVg1W2dGWwx1jWIjtwTlvXw+0Uuq7xrWBxzIR2l5k+lFZHWg/Ga
-        pfrsKXIIROVp1UkJ7Eny7bTizac58ZACsv/pRKg=
-X-Google-Smtp-Source: APXvYqxETLRosCoZ7Yw7GzrbRjReXddCRP3sa4I467L9SGwoKgWaLtcI36oqbAY+jJUssD7dP9zolGJjPLweS4I39JM=
-X-Received: by 2002:a2e:5b1b:: with SMTP id p27mr7121973ljb.97.1559648789873;
- Tue, 04 Jun 2019 04:46:29 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DqUjcMcbMs7i/otuz38agqtYdmvPCMOB96DAhTDcH7M=;
+ b=ynNgfZ2/NknECAm/daCNfCH29Z1DxAsuwfFuBhdlp1+VB3OacXYoJ26WcvWqRM+bPN33FbGpNWdzgF+TDJydRUFhqWePfwJaUUL01/yI/w9fdPPebdgskMYB8omtC5fOo2fAlv4Hg0Z1OZL8yLLuUfO003hADVZfXaLXk34wF/U=
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
+ DM5PR12MB2454.namprd12.prod.outlook.com (52.132.141.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Tue, 4 Jun 2019 11:46:39 +0000
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::e1b1:5b6f:b2df:afa5]) by DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::e1b1:5b6f:b2df:afa5%7]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 11:46:39 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH] uaccess: add noop untagged_addr definition
+Thread-Topic: [PATCH] uaccess: add noop untagged_addr definition
+Thread-Index: AQHVGsrrPMdhu+tmg0GkOarNrJ33baaLYLQA
+Date:   Tue, 4 Jun 2019 11:46:39 +0000
+Message-ID: <d74b1621-70a2-94a0-e24b-dae32adc457d@amd.com>
+References: <8ab5cd1813b0890f8780018e9784838456ace49e.1559648669.git.andreyknvl@google.com>
+In-Reply-To: <8ab5cd1813b0890f8780018e9784838456ace49e.1559648669.git.andreyknvl@google.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM0PR02CA0063.eurprd02.prod.outlook.com
+ (2603:10a6:208:d2::40) To DM5PR12MB1546.namprd12.prod.outlook.com
+ (2603:10b6:4:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b5afe70f-bd4c-4ef0-b2cd-08d6e8e24e58
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB2454;
+x-ms-traffictypediagnostic: DM5PR12MB2454:
+x-microsoft-antispam-prvs: <DM5PR12MB24547D2498D24083A63E19D283150@DM5PR12MB2454.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(39860400002)(346002)(366004)(189003)(199004)(102836004)(5660300002)(2501003)(64126003)(8676002)(81156014)(6116002)(186003)(4326008)(76176011)(8936002)(6246003)(81166006)(71200400001)(71190400001)(110136005)(54906003)(31696002)(2201001)(2906002)(86362001)(316002)(58126008)(53936002)(256004)(478600001)(65806001)(46003)(72206003)(52116002)(6506007)(386003)(2616005)(11346002)(7406005)(36756003)(99286004)(66446008)(476003)(66946007)(6512007)(6436002)(66476007)(446003)(66556008)(64756008)(6486002)(25786009)(31686004)(305945005)(14454004)(68736007)(65826007)(65956001)(7416002)(7736002)(73956011)(229853002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2454;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BTUYgxf6LVWOUaiXhcDIXPqKTGV8JQlWKUiPF7BHdbvpw2EvuLfEKVhud6WGOw6XmPZVynz+zFRdlpYHRE+F115S+IxcRZYuBeIszGrpu7pC+Mi3Ag3+SBFn3MMIDq6u1vKLEWfXeseTdLxby6CeBXAVKtxYbNkKrIIB7V9aVaK8l8wAfEPyVezvSDCjDWmnwomXsU5xfFG5P8PaLwINRy3oGBUDJZpLI1NUyE2GNqzPywtHVYVZMAeYxK0vjd6mWOG5cJax0LwhWWa/LNNXowMjWOfP1+QGM5GIHhT34T11+CzGzg2QOSyJUHRWAbLMrgwWYBL6yToCAnpGvRtevQxUkyvCv3ibiDQogv5Xmh6DezwDp6vDKQStVUSjqpID+69S03umWcSxh5dt31HX3NwqHJJagQ6m5NyGv2bCVFc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <71D9DBF4A3B16B4F887771F2B480FC3F@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190603174735.21002-1-codekipper@gmail.com> <20190603174735.21002-4-codekipper@gmail.com>
- <CAGb2v65vfQEiXYN6rvdfP6rAvXRVTAnCzxEgpjsJAkDJ16Y+rg@mail.gmail.com>
-In-Reply-To: <CAGb2v65vfQEiXYN6rvdfP6rAvXRVTAnCzxEgpjsJAkDJ16Y+rg@mail.gmail.com>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Tue, 4 Jun 2019 13:46:17 +0200
-Message-ID: <CAEKpxBme2KTNrtb3GpB+UPF5LHbj=iqngu5jrYpFecCZ9d8Whw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v4 3/9] ASoC: sun4i-i2s: Add regmap field to
- sign extend sample
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5afe70f-bd4c-4ef0-b2cd-08d6e8e24e58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 11:46:39.8145
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ckoenig@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2454
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 at 09:53, Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Tue, Jun 4, 2019 at 1:47 AM <codekipper@gmail.com> wrote:
-> >
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > On the newer SoCs this is set by default to transfer a 0 after
-> > each sample in each slot. However the platform that this driver
-> > was developed on had the default setting where it padded the
-> > audio gain with zeros. This isn't a problem whilst we have only
-> > support for 16bit audio but with larger sample resolution rates
-> > in the pipeline then it should be fixed to also pad. Without this
-> > the audio gets distorted.
->
-> Curious, both the A10 and A20 manuals say the default value for this
-> field is 0, which means 0 padding.
->
-> sun4i_i2s_reg_defaults[] also has that field set to 0.
->
-> You're saying you are seeing the field set to 1?
-
-On the newer SoCs (H3 onwards) this setting defaults to 3 which is
-"Transfer 0 after each sample in each slot" which resulted in distortion.
-Setting SEXT to 0 "Zeros or audio gain padding at LSB" alligns the
-setup with that of the earlier block and fixed the issue we were hearing.
-It's really noticeable with HDMI audio.
-BR,
-CK
->
-> ChenYu
->
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > ---
-> >  sound/soc/sunxi/sun4i-i2s.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index fd7c37596f21..e2961d8f6e8c 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -134,6 +134,7 @@
-> >   * @field_fmt_bclk: regmap field to set clk polarity.
-> >   * @field_fmt_lrclk: regmap field to set frame polarity.
-> >   * @field_fmt_mode: regmap field to set the operational mode.
-> > + * @field_fmt_sext: regmap field to set the sign extension.
-> >   * @field_txchanmap: location of the tx channel mapping register.
-> >   * @field_rxchanmap: location of the rx channel mapping register.
-> >   * @field_txchansel: location of the tx channel select bit fields.
-> > @@ -159,6 +160,7 @@ struct sun4i_i2s_quirks {
-> >         struct reg_field                field_fmt_bclk;
-> >         struct reg_field                field_fmt_lrclk;
-> >         struct reg_field                field_fmt_mode;
-> > +       struct reg_field                field_fmt_sext;
-> >         struct reg_field                field_txchanmap;
-> >         struct reg_field                field_rxchanmap;
-> >         struct reg_field                field_txchansel;
-> > @@ -183,6 +185,7 @@ struct sun4i_i2s {
-> >         struct regmap_field     *field_fmt_bclk;
-> >         struct regmap_field     *field_fmt_lrclk;
-> >         struct regmap_field     *field_fmt_mode;
-> > +       struct regmap_field     *field_fmt_sext;
-> >         struct regmap_field     *field_txchanmap;
-> >         struct regmap_field     *field_rxchanmap;
-> >         struct regmap_field     *field_txchansel;
-> > @@ -342,6 +345,9 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
-> >                                    SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-> >                                    SUN8I_I2S_FMT0_LRCK_PERIOD(32));
-> >
-> > +       /* Set sign extension to pad out LSB with 0 */
-> > +       regmap_field_write(i2s->field_fmt_sext, 0);
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -887,6 +893,7 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
-> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >         .has_slave_select_bit   = true,
-> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
-> >         .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >         .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >         .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -904,6 +911,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
-> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >         .has_slave_select_bit   = true,
-> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
-> >         .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >         .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >         .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -944,6 +952,7 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
-> >         .field_fmt_bclk         = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 19, 19),
-> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_CTRL_REG, 4, 5),
-> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 4, 5),
-> >         .field_txchanmap        = REG_FIELD(SUN8I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >         .field_rxchanmap        = REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >         .field_txchansel        = REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -1006,6 +1015,12 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
-> >         if (IS_ERR(i2s->field_fmt_mode))
-> >                 return PTR_ERR(i2s->field_fmt_mode);
-> >
-> > +       i2s->field_fmt_sext =
-> > +                       devm_regmap_field_alloc(dev, i2s->regmap,
-> > +                                               i2s->variant->field_fmt_sext);
-> > +       if (IS_ERR(i2s->field_fmt_sext))
-> > +               return PTR_ERR(i2s->field_fmt_sext);
-> > +
-> >         i2s->field_txchanmap =
-> >                         devm_regmap_field_alloc(dev, i2s->regmap,
-> >                                                 i2s->variant->field_txchanmap);
-> > --
-> > 2.21.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190603174735.21002-4-codekipper%40gmail.com.
-> > For more options, visit https://groups.google.com/d/optout.
+QW0gMDQuMDYuMTkgdW0gMTM6NDQgc2NocmllYiBBbmRyZXkgS29ub3ZhbG92Og0KPiBBcmNoaXRl
+Y3R1cmVzIHRoYXQgc3VwcG9ydCBtZW1vcnkgdGFnZ2luZyBoYXZlIGEgbmVlZCB0byBwZXJmb3Jt
+IHVudGFnZ2luZw0KPiAoc3RyaXBwaW5nIHRoZSB0YWcpIGluIHZhcmlvdXMgcGFydHMgb2YgdGhl
+IGtlcm5lbC4gVGhpcyBwYXRjaCBhZGRzIGFuDQo+IHVudGFnZ2VkX2FkZHIoKSBtYWNybywgd2hp
+Y2ggaXMgZGVmaW5lZCBhcyBub29wIGZvciBhcmNoaXRlY3R1cmVzIHRoYXQgZG8NCj4gbm90IHN1
+cHBvcnQgbWVtb3J5IHRhZ2dpbmcuIFRoZSBvbmNvbWluZyBwYXRjaCBzZXJpZXMgd2lsbCBkZWZp
+bmUgaXQgYXQNCj4gbGVhc3QgZm9yIHNwYXJjNjQgYW5kIGFybTY0Lg0KPg0KPiBBY2tlZC1ieTog
+Q2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gUmV2aWV3ZWQtYnk6
+IEtoYWxpZCBBeml6IDxraGFsaWQuYXppekBvcmFjbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBB
+bmRyZXkgS29ub3ZhbG92IDxhbmRyZXlrbnZsQGdvb2dsZS5jb20+DQo+IC0tLQ0KPiAgIGluY2x1
+ZGUvbGludXgvbW0uaCB8IDQgKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykNCj4NCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbW0uaCBiL2luY2x1ZGUvbGludXgv
+bW0uaA0KPiBpbmRleCAwZTg4MzRhYzMyYjcuLjk0OWQ0M2U5YzBiNiAxMDA2NDQNCj4gLS0tIGEv
+aW5jbHVkZS9saW51eC9tbS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbW0uaA0KPiBAQCAtOTks
+NiArOTksMTAgQEAgZXh0ZXJuIGludCBtbWFwX3JuZF9jb21wYXRfYml0cyBfX3JlYWRfbW9zdGx5
+Ow0KPiAgICNpbmNsdWRlIDxhc20vcGd0YWJsZS5oPg0KPiAgICNpbmNsdWRlIDxhc20vcHJvY2Vz
+c29yLmg+DQo+ICAgDQo+ICsjaWZuZGVmIHVudGFnZ2VkX2FkZHINCj4gKyNkZWZpbmUgdW50YWdn
+ZWRfYWRkcihhZGRyKSAoYWRkcikNCj4gKyNlbmRpZg0KPiArDQoNCk1heWJlIGFkZCBhIGNvbW1l
+bnQgd2hhdCB0YWdnaW5nIGFjdHVhbGx5IGlzPyBDYXVzZSB0aGF0IGlzIG5vdCByZWFsbHkgDQpv
+YnZpb3VzIGZyb20gdGhlIGNvbnRleHQuDQoNCkNocmlzdGlhbi4NCg0KPiAgICNpZm5kZWYgX19w
+YV9zeW1ib2wNCj4gICAjZGVmaW5lIF9fcGFfc3ltYm9sKHgpICBfX3BhKFJFTE9DX0hJREUoKHVu
+c2lnbmVkIGxvbmcpKHgpLCAwKSkNCj4gICAjZW5kaWYNCg0K
