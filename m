@@ -2,144 +2,95 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F0C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4431DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5114024A6F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE1F24A6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="baN6M5vH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfFDOqP (ORCPT
+        id S1727866AbfFDOrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:46:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14528 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFDOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:46:15 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 07:46:14 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 07:46:13 -0700
-Date:   Tue, 4 Jun 2019 07:46:13 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
-        jmattson@google.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, yu-cheng.yu@intel.com
-Subject: Re: [PATCH v5 1/8] KVM: VMX: Define CET VMCS fields and control bits
-Message-ID: <20190604144613.GA12246@linux.intel.com>
-References: <20190522070101.7636-1-weijiang.yang@intel.com>
- <20190522070101.7636-2-weijiang.yang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522070101.7636-2-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 4 Jun 2019 10:47:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43888 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfFDOrS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:47:18 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r18so7134261wrm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=yt/EFsCTs+eDRjlI5s+86AEQql4J6OURFSWUEUgIwAY=;
+        b=baN6M5vHHdMEdDHA0nFhNKLj1v4lrLz/nftyieuU/YsutbB14+ZqYNEpKCERpyYdyY
+         KfEROAB6KrYiQaz93M0J8PVgz13m3NGtdNqWJ1xTE5o2foyUiaCSXV1JL/NRcBmGMvii
+         Igmta3mK59BorfpKlfs37UGYDEGK5rp0n81uMXCIiOgan1fD60rzo4kR5YisoxmAWia6
+         vzGYjx+CQtuzF1TmS9ujEEMpgUpHBYYjhhhq1ssiw9JXBe4+LuEAHms+mXr6Dm/R/pVW
+         vXIpo/MBppn4+0+HVYXy4hCWQl4om89a3HrTgOGakjpMG6DfKaviPoF+h4o3KgzIkCQc
+         FgLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yt/EFsCTs+eDRjlI5s+86AEQql4J6OURFSWUEUgIwAY=;
+        b=AiFpxkb6eHRFm+bbZIc4e0SeQBoFSvFQb5cSBGTqam1MVH7N6SADXPHPKUUmrN9Pm8
+         Q4hWZZ5RDXUmxcZUCLpp6/tCOH59vilKfQECmc9mGJDnFJARj7T9Ww6nq9NjC0uE1OCe
+         +iZpld/SvMeGxII1AiQSnSY66RMNWi0GwWR/zK6+sIAmlGAHoLU5gy8yZ8rRxt2HfuIi
+         3p2ZmmqEi+BvnEGDiSW6avwTrAKuMMNn19h4gPtpO+GDRkstVD38Ya26WS0nX1mLivdQ
+         nio6U8mR9hL/aYdrXvEGZPWpYcACQ7cY8IZP5uIAK+yliVZ0ry5eMk/BQanlXeJl67Dr
+         5mbw==
+X-Gm-Message-State: APjAAAXfVEMGJPL6gbGo+Bo3L95XRtArDY62y3sx++xShcZtu3bAKqy4
+        Yi7Jj/fxQRW1uX7LNp/WABrtqA==
+X-Google-Smtp-Source: APXvYqyK0vyzpLP2eyzKVrPgI3zNMenfqmRUVBELbtN9DV8WNr9ZkE1mQYmA68w6uUDtIpRGyxFb0w==
+X-Received: by 2002:adf:8bc5:: with SMTP id w5mr6899078wra.132.1559659636696;
+        Tue, 04 Jun 2019 07:47:16 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v184sm3649639wme.10.2019.06.04.07.47.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 07:47:15 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     jic23@kernel.org, khilman@baylibre.com
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3]  Add support of New Amlogic temperature sensor for G12A SoCs
+Date:   Tue,  4 Jun 2019 16:47:11 +0200
+Message-Id: <20190604144714.2009-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 03:00:54PM +0800, Yang Weijiang wrote:
-> CET(Control-flow Enforcement Technology) is an upcoming Intel® processor
-> family feature that blocks return/jump-oriented programming (ROP) attacks.
-> It provides the following capabilities to defend
-> against ROP/JOP style control-flow subversion attacks:
-> 
-> - Shadow Stack (SHSTK):
->   A second stack for the program that is used exclusively for
->   control transfer operations.
-> 
-> - Indirect Branch Tracking (IBT):
->   Free branch protection to defend against jump/call oriented
->   programming.
+This patchs series add support of New Amlogic temperature sensor.
+This driver is based on IIO frameworks.
+formulas and calibration values come from amlogic.
 
-What is "free" referring to here?  The software enabling certainly isn't
-free, and I doubt the hardware/ucode cost is completely free.
- 
-> Several new CET MSRs are defined in kernel to support CET:
-> MSR_IA32_{U,S}_CET - MSRs to control the CET settings for user
-> mode and suervisor mode respectively.
-> 
-> MSR_IA32_PL{0,1,2,3}_SSP - MSRs to store shadow stack pointers for
-> CPL-0,1,2,3 levels.
-> 
-> MSR_IA32_INT_SSP_TAB - MSR to store base address of shadow stack
-> pointer table.
+Dependencies :
+- patch 2: temperature sensor clock are needed [1]
 
-For consistency (within the changelog), these should be list style, e.g.:
+[1] https://lkml.kernel.org/r/20190412100221.26740-1-glaroque@baylibre.com
 
+Guillaume La Roque (3):
+  Documentation: dt-bindings: add the Amlogic Meson Temperature Sensor
+  arm64: dts: meson: g12a: add temperature sensor node
+  iio: temperature: add a driver for the temperature sensor found in
+    Amlogic Meson G12 SoCs
 
-  - MSR_IA32_{U,S}_CET: Control CET settings for user mode and suervisor
-                        mode respectively.
+ .../iio/temperature/amlogic,meson-tsensor.txt |  31 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  22 +
+ drivers/iio/temperature/Kconfig               |  11 +
+ drivers/iio/temperature/Makefile              |   1 +
+ drivers/iio/temperature/meson_tsensor.c       | 416 ++++++++++++++++++
+ 5 files changed, 481 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+ create mode 100644 drivers/iio/temperature/meson_tsensor.c
 
-  - MSR_IA32_PL{0,1,2,3}_SSP: Store shadow stack pointers for CPL levels.
+-- 
+2.17.1
 
-  - MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack pointer
-                          table.
-
-> Two XSAVES state components are introduced for CET:
-> IA32_XSS:[bit 11] - bit for save/restor user mode CET states
-> IA32_XSS:[bit 12] - bit for save/restor supervisor mode CET states.
-
-Likewise, use a consistent list format.
-
-> 6 VMCS fields are introduced for CET, {HOST,GUEST}_S_CET is to store
-> CET settings in supervisor mode. {HOST,GUEST}_SSP is to store shadow
-> stack pointers in supervisor mode. {HOST,GUEST}_INTR_SSP_TABLE is to
-> store base address of shadow stack pointer table.
-
-It'd probably be easier to use a list format for the fields, e.g.:
-
-6 VMCS fields are introduced for CET:
-
-  - {HOST,GUEST}_S_CET: stores CET settings for supervisor mode.
-
-  - {HOST,GUEST}_SSP: stores shadow stack pointers for supervisor mode.
-
-  - {HOST,GUEST}_INTR_SSP_TABLE: stores the based address of the shadow
-                                 stack pointer table.
-
-> If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host's CET MSRs are restored
-> from below VMCS fields at VM-Exit:
-> - HOST_S_CET
-> - HOST_SSP
-> - HOST_INTR_SSP_TABLE
-
-Personal preference, I like indenting lists like this with a space or two
-so that the list is clearly delineated.
-
-> If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest's CET MSRs are loaded
-> from below VMCS fields at VM-Entry:
-> - GUEST_S_CET
-> - GUEST_SSP
-> - GUEST_INTR_SSP_TABLE
-> 
-> Apart from VMCS auto-load fields, KVM calls kvm_load_guest_fpu() and
-> kvm_put_guest_fpu() to save/restore the guest CET MSR states at
-> VM exit/entry. XSAVES/XRSTORS are executed underneath these functions
-> if they are supported. The CET xsave area is consolidated with other
-> XSAVE components in thread_struct.fpu field.
-> 
-> When context switch happens during task switch/interrupt/exception etc.,
-> Kernel also relies on above functions to switch CET states properly.
-
-These paragraphs about the FPU and KVM behavior don't belong in this
-patch.
- 
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-
-Co-developed-by needs to be accompanied by a SOB.  And your SOB should
-be last since you sent the patch.  This comment applies to all patches.
-
-See "12) When to use Acked-by:, Cc:, and Co-developed-by:" in
-Documentation/process/submitting-patches.rst for details (I recommend
-looking at a v5.2-rc* version, a docs update was merged for v5.2).
