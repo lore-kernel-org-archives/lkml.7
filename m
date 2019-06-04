@@ -2,99 +2,95 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C8FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C347C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361E324C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB592084A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfFDHlT (ORCPT
+        id S1726806AbfFDHnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:41:19 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:45419 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfFDHlS (ORCPT
+        Tue, 4 Jun 2019 03:43:05 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51141 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfFDHnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:41:18 -0400
-Received: by mail-lj1-f176.google.com with SMTP id m23so412355lje.12;
-        Tue, 04 Jun 2019 00:41:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAHr1x2OGrSpVVmyEF6SL+BemidY5crrkYYK4WkhFYw=;
-        b=oCBie5I3iCCTadEzaA41MpPoyxl7PNo/ljtORXFf1+LnK6gzh2MOkiPLlFFCIkYhmS
-         N/h7PccGPfVr9b00EB3cAHIMmF5SPIGlU0yXPo9Rc/pNO4IEhUptbe7IVfzcZakU9pBb
-         r4i9bpi8jSbwSOy21fWlgwksa4N77d7TUD4yx3rSN26V5nVlVzr33pm3np4+HWIemKWB
-         7/heXvEa3kgljnCyP6K7R1qWNNVImH7yxy+jMbP7An2HvduKRihgRGf4DnWd4c6SKeWP
-         bLdnQWMyjWVciwJPibU3z/qPM6UNRtA9BPicxOsZ8C6FyvfToYop2rxrOztQ6ctnRzRB
-         zYVg==
-X-Gm-Message-State: APjAAAXlnIXcP0gWQB5Zoz1PpkoKzYFmOZgsQMvoOgQApaCGnheKKXOH
-        xO9oCIWm7uCi9JeusoglHhb/c8Q4pkavjklKsvI=
-X-Google-Smtp-Source: APXvYqzLztAMA/8xqZvEThx/dBoNLHWeEXrEpWdQwYRs3xI2FxEn7V2swIn8FrGUNYkkKJxgDcCVDKMKQoQ+1GalhoQ=
-X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr3443413ljr.145.1559634076658;
- Tue, 04 Jun 2019 00:41:16 -0700 (PDT)
+        Tue, 4 Jun 2019 03:43:05 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5D1EF20007;
+        Tue,  4 Jun 2019 07:43:02 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 09:43:01 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     codekipper@gmail.com
+Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
+Subject: Re: [PATCH v4 3/9] ASoC: sun4i-i2s: Add regmap field to sign extend
+ sample
+Message-ID: <20190604074301.p27e5towgehmraoy@flea>
+References: <20190603174735.21002-1-codekipper@gmail.com>
+ <20190603174735.21002-4-codekipper@gmail.com>
 MIME-Version: 1.0
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <20190531082112.GH2623@hirez.programming.kicks-ass.net> <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
- <20190603201324.GN28207@linux.ibm.com>
-In-Reply-To: <20190603201324.GN28207@linux.ibm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Jun 2019 09:41:04 +0200
-Message-ID: <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4iu232naw3x4dexg"
+Content-Disposition: inline
+In-Reply-To: <20190603174735.21002-4-codekipper@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
 
-On Mon, Jun 3, 2019 at 10:14 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> On Mon, Jun 03, 2019 at 06:08:35PM +0000, Vineet Gupta wrote:
-> > On 5/31/19 1:21 AM, Peter Zijlstra wrote:
-> > >> I'm not sure how to interpret "natural alignment" for the case of double
-> > >> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
-> > >> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
-> > > Natural alignment: !((uintptr_t)ptr % sizeof(*ptr))
-> > >
-> > > For any u64 type, that would give 8 byte alignment. the problem
-> > > otherwise being that your data spans two lines/pages etc..
-> >
-> > Sure, but as Paul said, if the software doesn't expect them to be atomic by
-> > default, they could span 2 hardware lines to keep the implementation simpler/sane.
+--4iu232naw3x4dexg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jun 03, 2019 at 07:47:29PM +0200, codekipper@gmail.com wrote:
+> From: Marcus Cooper <codekipper@gmail.com>
 >
-> I could imagine 8-byte types being only four-byte aligned on 32-bit systems,
-> but it would be quite a surprise on 64-bit systems.
+> On the newer SoCs this is set by default to transfer a 0 after
 
-Or two-byte aligned?
+Which SoCs?
 
-M68k started with a 16-bit data bus, and alignment rules were retained
-when gaining a wider data bus.
+> each sample in each slot. However the platform that this driver
 
-BTW, do any platforms have issues with atomicity of 4-byte types on
-16-bit data buses? I believe some embedded ARM or PowerPC do have
-such buses.
+Which platform?
 
-Gr{oetje,eeting}s,
+> was developed on had the default setting where it padded the audio
+> gain with zeros. This isn't a problem whilst we have only support
+> for 16bit audio but with larger sample resolution rates in the
+> pipeline then it should be fixed to also pad. Without this the audio
+> gets distorted.
+>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 
-                        Geert
+Once the commit log fixed,
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Maxime
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4iu232naw3x4dexg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYhBQAKCRDj7w1vZxhR
+xcVmAQDSGaycvO/U1wpX1Ai6mvSxxamMb37KG7EScFKOC3oa5gEAzJ68Gg6XPP/O
+EBu14S2afGHTqLHHKTGeLzVHp5ZKHwU=
+=1Yj6
+-----END PGP SIGNATURE-----
+
+--4iu232naw3x4dexg--
