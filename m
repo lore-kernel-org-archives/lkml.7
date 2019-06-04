@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC22C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B45C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6948024753
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F2324758
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559657956;
-	bh=NKbjzBA4u4Y3ZuZvLsm6fgoIPl9oU7Ix9m+3czSnxfg=;
+	s=default; t=1559657959;
+	bh=yyNWFCwd0ZWJAGJJ7sjVIPAZy9xfdBFbXhU4YDgb8Zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmQfMB5DgByR/8GHmuRIeQIMbtSLjrzqHa9PS+5QV4j2a40Ejb2PX66EaDBR/92H2
-	 hFIAgA7EcMshC2IjEzrAC8vx2dVcE4hZh2QHxExH4WagJXYYtBH1/uQoC5FTo9sAob
-	 m4b/bjfJvokX5/+hcJyw8B19d8Pke6OIx7K1wzko=
+	b=y9UTVkRigd427+RNGV18Paoxwh688VU5YlFGktB6wOzjVZvotEAcVs1sYwYpHz9zz
+	 2d5ymq/0iaTr1nYC358q748VfYcnbGWfStzQzxHDav4nIyJg/1NcInulSopki6cJRi
+	 KKUXP6r0+gscWJtwGD3YgrSF6zUEAW7tB5R3gq/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfFDOTH (ORCPT
+        id S1728007AbfFDOTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:19:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52512 "EHLO
+        Tue, 4 Jun 2019 10:19:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52532 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfFDOSD (ORCPT
+        with ESMTP id S1727611AbfFDOSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 10:18:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,31 +34,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mN9SlMwFezZ1ZPB+c4+XXB+0uQsuZLbIqjOavdIdlqw=; b=QpCiAFfqH9xfvJHkdueb+lqM+O
-        QuJI6/GoxfZFHIF+U6YrRnFcJ0audVi2ntWjxj0QSqDFvIdaqC+PVtPlGdbJtOr/dyO74+0TsyC9j
-        kKuH+wV7Q3euRKGxUk+SC6pvVZvVi+3ScveTGuUEhX7VISIwNQZTmuih2CBmdx4WegnPB+DpSNsmk
-        Fuc/dkxbfjh9HZ6yKlMiUWhUOdDQAGVYkEcDKgDwhZR0RWVNavbNeH4lcqIX3BvNJEVPE7F06piej
-        FztI/3sXqJRJQlUJ62kHGeKFehUT5P4tpx134x+wR1/AwRSOnX46DkawaK4P0UkCKdnORcXE729eB
-        MWg6CfAg==;
+        bh=RLKg26AY56vhgjviUN+0RLoRrM3fQBLJXacmkSsY8Z0=; b=YARe5T9HujcsGHMKTj3AIyD3UH
+        g36H0LyssqkqAc6BpBI4py58Q3kUCWi6ajB36NPn3qGnH4JDMWTE2n8BXLihYwfdTYCihVPyXvRpi
+        tGfxchcCA9EehvY8I9Fw/E0YeZuasuUtefkXN6RXytaj+y3ldT8b6KHH6SedS/ZePEoWjKdH4vzqB
+        PoOHdmqmwogBLpsm32VMVbmGd03fpGGrTI//+rPfvK4ptL9On+URMT9CQq8yTwSAso4kWEY0J0pr5
+        eHsdfyKhQ2TxaRrJ8dBRHFv2ZNfHGLjJokybiFYe5MnUfOWmBlTeSwO+il/3eZD5fMQnYSvz59or9
+        9Nbguk1Q==;
 Received: from [179.182.172.34] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYAGH-0001Rt-Tg; Tue, 04 Jun 2019 14:18:01 +0000
+        id 1hYAGH-0001Rj-Uc; Tue, 04 Jun 2019 14:18:01 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hYAGE-0002lV-Ri; Tue, 04 Jun 2019 11:17:58 -0300
+        id 1hYAGE-0002kr-JV; Tue, 04 Jun 2019 11:17:58 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        James Morris <jamorris@linux.microsoft.com>
-Subject: [PATCH v2 14/22] docs: security: trusted-encrypted.rst: fix code-block tag
-Date:   Tue,  4 Jun 2019 11:17:48 -0300
-Message-Id: <3f540bedea5771489750cbcba540e9b27b21225b.1559656538.git.mchehab+samsung@kernel.org>
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keith Busch <keith.busch@intel.com>
+Subject: [PATCH v2 04/22] docs: mm: numaperf.rst: get rid of a build warning
+Date:   Tue,  4 Jun 2019 11:17:38 -0300
+Message-Id: <146fb30513b9422859e83185cb3b7db64b4282a2.1559656538.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559656538.git.mchehab+samsung@kernel.org>
 References: <cover.1559656538.git.mchehab+samsung@kernel.org>
@@ -69,41 +68,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code-block tag is at the wrong place, causing those
-warnings:
+When building it, it gets this warning:
 
-    Documentation/security/keys/trusted-encrypted.rst:112: WARNING: Literal block expected; none found.
-    Documentation/security/keys/trusted-encrypted.rst:121: WARNING: Unexpected indentation.
-    Documentation/security/keys/trusted-encrypted.rst:122: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/security/keys/trusted-encrypted.rst:123: WARNING: Block quote ends without a blank line; unexpected unindent.
+	Documentation/admin-guide/mm/numaperf.rst:168: WARNING: Footnote [1] is not referenced.
+
+The problem is that this is not really a reference, as it is not
+mentioned within the documentation.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- Documentation/security/keys/trusted-encrypted.rst | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/mm/numaperf.rst | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
-index 7b35fcb58933..50ac8bcd6970 100644
---- a/Documentation/security/keys/trusted-encrypted.rst
-+++ b/Documentation/security/keys/trusted-encrypted.rst
-@@ -107,12 +107,14 @@ Where::
- 
- Examples of trusted and encrypted key usage:
- 
--Create and save a trusted key named "kmk" of length 32 bytes::
-+Create and save a trusted key named "kmk" of length 32 bytes.
- 
- Note: When using a TPM 2.0 with a persistent key with handle 0x81000001,
- append 'keyhandle=0x81000001' to statements between quotes, such as
- "new 32 keyhandle=0x81000001".
- 
-+::
+diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
+index c067ed145158..a80c3c37226e 100644
+--- a/Documentation/admin-guide/mm/numaperf.rst
++++ b/Documentation/admin-guide/mm/numaperf.rst
+@@ -165,5 +165,6 @@ write-through caching.
+ ========
+ See Also
+ ========
+-.. [1] https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
+-       Section 5.2.27
 +
-     $ keyctl add trusted kmk "new 32" @u
-     440502848
- 
++[1] https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
++- Section 5.2.27
 -- 
 2.21.0
 
