@@ -2,178 +2,132 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539B4C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D963DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227A1257B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IX/8FEV9"
+	by mail.kernel.org (Postfix) with ESMTP id B737925A4B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfFDAsC (ORCPT
+        id S1726410AbfFDAxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:48:02 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:22769 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfFDAsB (ORCPT
+        Mon, 3 Jun 2019 20:53:32 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:23797 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfFDAxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:48:01 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190604004758epoutp037ef8a5ae9c3f2f8da7474054997906a5~k2GANFz8d1828918289epoutp03o
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 00:47:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190604004758epoutp037ef8a5ae9c3f2f8da7474054997906a5~k2GANFz8d1828918289epoutp03o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559609278;
-        bh=UVoVZsEOgg1NnZlddSvqw+nOBKf/TPyZq+/XKx68wrM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=IX/8FEV9jOt8paA8NiUO+re9+Ws/0wC/qp40poNh83a6NdYlLY4yGDvKQAgsv29F+
-         4jhlFFAY/5A+yyIJ1f2kd+Li2EKb0gUtp9QpYM17DL1IkvdNoZKCvmqsJu79/BqdAm
-         o/sM8fNyCEU7LU3MnuUp6T4ikfW7vcOsi2Wp+yos=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.154]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190604004755epcas1p415ce6d1486bdb02719fa2b61ea7f27ba~k2F_Id_1w0371903719epcas1p42;
-        Tue,  4 Jun 2019 00:47:55 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.B7.04139.9BFB5FC5; Tue,  4 Jun 2019 09:47:53 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190604004752epcas1p250835a92cd7f9c97ecbb7d160a8ad02f~k2F7aLrlA1566915669epcas1p2h;
-        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190604004752epsmtrp2126b0c96c6730aeeac34076d3ec447ea~k2F7ZXgHE1748017480epsmtrp2i;
-        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
-X-AuditID: b6c32a35-98bff7000000102b-eb-5cf5bfb98560
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        66.5F.03692.8BFB5FC5; Tue,  4 Jun 2019 09:47:52 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190604004752epsmtip27e6014869c6d24518822cd757b00ba96~k2F7Lw_4d1715317153epsmtip2_;
-        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
-Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and
- Tegra20/30 support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
-Date:   Tue, 4 Jun 2019 09:49:58 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Mon, 3 Jun 2019 20:53:32 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x540qiIv045850;
+        Tue, 4 Jun 2019 08:52:44 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 6E1518B48C5379D5623A;
+        Tue,  4 Jun 2019 08:52:44 +0800 (CST)
+In-Reply-To: <20190603130235.GW4797@dell>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-2-git-send-email-masonccyang@mxic.com.tw> <20190603130235.GW4797@dell>
+To:     "Lee Jones" <lee.jones@linaro.org>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        mark.rutland@arm.com, miquel.raynal@bootlin.com,
+        robh+dt@kernel.org, sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v13 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
 MIME-Version: 1.0
-In-Reply-To: <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDHfd1lu6jVtVxjP2hdjQkkQBcorgfGK6ZGQzAkaExN3dC1JfRK
-        t3hrQPAC64kHFdGIBsUoSsC0DdAIRMIHDUJIFIKKVwwiHoCKROO2i5Fvv5n5v/nPvPdITFlD
-        qMgcm4t32jgLTUzFH7TEJsT7AqN6jbs/gr399Q1iizzXcPbxwUE52+UvJ9hhdytij414CLa3
-        4CbBjvkrcPbEnU5iRbjO23cd6XyePrnOXThE6E7UVSPdcO2cjLAtucvMPGfknWrelm035thM
-        afT6TMNqgzZVw8Qzi9lFtNrGWfk0es2GjPi1ORZxIFq9g7PkiakMThDoxOXLnPY8F6822wVX
-        Gs07jBbHYkeCwFmFPJspIdtuXcJoNElaUbgt1zxY2o87GqhdX140EfmoWFGMwkmgUqBk7DsR
-        ZCXlReDPNxSjqSJ/Q+A+U4VLwXcEvd6L6N+JT94iuVRoRPCnvHEi+IzgfmmnPKiKoDbDwLW7
-        WJAjqY0w9L4JC4ow6rAMjjz9LQsWCCoOAh+ehcxnUvOg++ebkIWCWg5j/vFQI5xaAOcfPg41
-        ihKbjvhqJzSzoL3sLR7kcCoNOk8Wh/IYFQM9b6/IJJ4LhfWXMGnsQjm8uzhH4jVQ9mtgYp0I
-        GGirk0usguGhRkLivXCrvZUIDg3UUQR1gY4wqZAMgRtnRQNSNIiFGn+ilJ4HvvHLEzPMgKHR
-        42FBCVAKOHpYKUnmQ9erPpnEs6HyyDHiFKI9k7bxTNrAM2kDz3+zqwivRtG8Q7CaeIFxMJNf
-        uxaFPmuc1otKn2xoRhSJ6OmKXTGjemUYt0PYbW1GQGJ0pILrHdErFUZu9x7eaTc48yy80Iy0
-        4mWfxlRR2Xbx69tcBkablJyczKYwqVqGoWMUhmnP9UrKxLn4XJ538M5/52RkuCofVUZ3v2yv
-        u9cxRVnBflvX2cRv3//IeeWjaZ26+sO+1tSehlec+fghzdfN5EEUM7xw/GfJ2jaL+t3ryMqe
-        swcSGF989MpzP8oSzXp1SRvaviK2KCugc1wocFszlxrLGNXdTa1fBtSr0ke3VpmU9WT6zoLB
-        pKyKKbbBzI+qVflkSx+NC2aOicOcAvcXlfS/OsIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvO6O/V9jDHYc0rNY/fExo0XLrEUs
-        Fmeb3rBbXN41h83ic+8RRovOL7PYLG43rmCz+LlrHotF39pLbA6cHjvuLmH02DnrLrtHb/M7
-        No++LasYPT5vkgtgjeKySUnNySxLLdK3S+DKeDPlIUvBHoGKD/f2sTUwdvF2MXJySAiYSLzd
-        0cLexcjFISSwm1FiztTZTBAJSYlpF48ydzFyANnCEocPF0PUvGWU2PpjLSNIjbBAhMT8C5fA
-        6kUEAiVOP9jKCFLELNDBJPFk/U+wIiGBJUwSu58rgdhsAloS+1/cYAOx+QUUJa7+eAxWwytg
-        J/Fz1292EJtFQEVi2sGzzCC2KNCC2bsaWCBqBCVOznwCZnMK2Epc6u8C62UWUJf4M+8SM4Qt
-        LnHryXwmCFteonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOallusVJ+YW
-        l+al6yXn525iBMeYluYOxstL4g8xCnAwKvHwVoh/jRFiTSwrrsw9xCjBwawkwpt4+0uMEG9K
-        YmVValF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYxpl3Mnbmo5oWh8
-        4bsvS92JafzrfK86/kladvud3KZX/GXie2fPY37M8rb4eL6ZsrjuZRkb3uR4/UveX5zqds+d
-        wsV3fq3KPtN1U19PK+oWspoz7QbDKxuRwKTLL1+YibaZvLnBW+VodiMzt0DDQTAyMoDx5c2T
-        D7tYlq4/7BLvyCq9cnYLE78SS3FGoqEWc1FxIgD99jm2rQIAAA==
-X-CMS-MailID: 20190604004752epcas1p250835a92cd7f9c97ecbb7d160a8ad02f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727
-References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
-        <20190501233815.32643-1-digetx@gmail.com>
-        <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
-        <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
-        <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
+X-KeepSent: 6FE801F4:46B471FF-4825840F:0003D358;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF6FE801F4.46B471FF-ON4825840F.0003D358-4825840F.0004D419@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 4 Jun 2019 08:52:44 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/04 AM 08:52:44,
+        Serialize complete at 2019/06/04 AM 08:52:44
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x540qiIv045850
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
-> 03.05.2019 3:52, Dmitry Osipenko пишет:
->> 03.05.2019 3:31, Chanwoo Choi пишет:
->>> Hi Dmitry,
->>>
->>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
->>>> Changelog:
->>>>
->>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
->>>>
->>>>     - changed the driver removal order to match the probe exactly
->>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
->>>>
->>>>     Chanwoo, please also note that the clk patch that should fix
->>>>     compilation problem that was reported the kbuild-test-robot is already
->>>>     applied and available in the recent linux-next.
->>>
->>> I knew that Stephen picked up your path about clock.
->>
->> Hi Chanwoo,
->>
->> Okay, good. Thank you very much for reviewing this series! I assume it's
->> too late now for v5.2, but it should be good to go for v5.3.
->>
+
+Hi Jones,
+
+> > +static int rpc_mfd_probe(struct platform_device *pdev)
 > 
-> Hello Chanwoo,
+> Remove the "mfd" from the nomenclature.
+
+okay, will fix.
+
 > 
-> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
-> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
-> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
-> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
-> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
-> we'll be able to work out that with Thierry and Jon if necessary.
+> > +   struct device_node *flash;
+> > +   const struct mfd_cell *cell;
+> > +   struct resource *res;
+> > +   struct rpc_mfd *rpc;
+> > +   void __iomem *base;
+> > +
+> > +   flash = of_get_next_child(pdev->dev.of_node, NULL);
+> > +   if (!flash) {
+> > +      dev_warn(&pdev->dev, "no flash node found\n");
+> > +      return -ENODEV;
+> > +   }
+> > +
+> > +   if (of_device_is_compatible(flash, "jedec,spi-nor")) {
+> > +      cell = &rpc_spi_ctlr;
+> > +   } else if (of_device_is_compatible(flash, "cfi-flash")) {
+> > +      cell = &rpc_hf_ctlr;
+> > +   } else {
+> > +      dev_warn(&pdev->dev, "unknown flash type\n");
+> > +      return -ENODEV;
+> > +   }
 > 
+> Are there going to be more children coming?
+
+No, just spi-nor or cfi-flash.
+
+The operation mode is decided at booting time by HW pin configuration.
+Can't change spi-nor or cfi-flash mode at run-time.
+
+> 
+> If not, I'd argue that this is not an MFD.
 > 
 
-Hi Dmitry,
-I think that it is enough for applying to mainline branch.
-The devfreq.git is maintained by Myungjoo. He will be merged or
-reviewed if there are th remained review point.
+umm, agreed.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
 
-Hi Myungjoo,
-I reviewed the Dmitry's patches from v1 to v4 patches.
-And then I tested them on my testing branch[1] for catching
-the build warning and error. In result, it is clean.
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
 
-Please review or apply these patches for v5.3.
+============================================================================
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
