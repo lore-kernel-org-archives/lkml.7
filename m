@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98599C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E892C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685DE2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E635D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8uaauFK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBb19qUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfFDU6P (ORCPT
+        id S1726568AbfFDVAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:58:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36783 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfFDU6P (ORCPT
+        Tue, 4 Jun 2019 17:00:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44689 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDVAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:58:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so3651768pgb.3;
-        Tue, 04 Jun 2019 13:58:14 -0700 (PDT)
+        Tue, 4 Jun 2019 17:00:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so4599803pfe.11;
+        Tue, 04 Jun 2019 14:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jU6FCdbmVH25cMl/Qsrg2wb7Hc352jmBOfOPp6LTdmI=;
-        b=E8uaauFKmiHlCMOswFL03QRgZYM2sXYQsHTtMiX9Wfx6Rwz2Mr4GLkrW3ngpezfNts
-         vq8BDh4fkYHoTyh9i0IcYmqvHmAfRuMYB3p0M9tga9dWXbQQgEeS+v9i77Nl6a9YaCOr
-         hFUExwlLyySszQIN4gaYrotPp0DdHmtY8SE1l0K6N2XCB7SqicxRhthsw1wwgtBSEkTI
-         H81SzIPcAzmNxery7iGq9VVDEhCghFsZhXmIH3JP9LiV4cEEulnAUchF13hpbPtDAd6u
-         WFOMtDlSYFz3QAP5aGP8a0oNIUgr8Nfxzw2mtqL3zdeMacUScOck7Ar6Jy91mnTxcnGU
-         IwYw==
+        bh=pUm0A2fiHDD5iuDzT1paXS/sbVY5jmeSfZnM1voD+pE=;
+        b=bBb19qUlZ4wCwYJyGvkMlJZk5uWtE5f0xVnPHMMgaILkUKWuYi0WQuGpSZ01NDDyi0
+         WyfC8e3PSA7PutMOcQkfvOd4Ju45+w6A6F97PUBYJaBU++vdjtKKDpGmUJNNoMYfKlLE
+         3yL9VAI/vW8BWpVGf42cRe37zIu0WW0VbZUfW9nRLKG1IR8FAR121IbRT1TTcCPW3H+B
+         wWia9HRNxUXFuLZnjsQGC5C2inRaUgCVswlS9a6s9CdptTruJSBL0I2QWd2s32tjmjac
+         q02PYj2bpTLZITaoNDrmc/DzeMWRBbghxu2tzjx/29UjmzhvtXx+CoGrHhGCPeRv/Dv6
+         yrkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jU6FCdbmVH25cMl/Qsrg2wb7Hc352jmBOfOPp6LTdmI=;
-        b=buyJA+QHCg90IhF4XigrHir0YBUiiBPLN5VPfdEHNR4+QMw+ZRA0xayTuuOHBKojwi
-         VZ6yKENd46BRHw51dqBuImMAhZyGFEJK92FaT5vhc/8s51+7hPc4k9WQjiEG4cnZpj0p
-         nJ8wgxA+JIFArSzG59X+6LtbmfhLnv2GmoPxf1HY3ZP/7oXVTfCG7X/YeErn3B2xpqKe
-         290n2eUYUrazMclS/UC3451/tEbPxtsdrAXzAYW8lXmSQ+Naz4WHnbvUh+b/1vIqfNhS
-         HcLa6w2xLtoDV0jiwtViYnWXcXPoNDWMqaiVhJuJ6jgjg12koUJXhuvPV5KRkWY19Gri
-         Nh3A==
-X-Gm-Message-State: APjAAAVVdjS8yrrLJ4yhutdpbq+2ZTNdR0tMkIujAz1ju+agqXwgAoL2
-        Nzasu7ykPb46spwSFfOXuYS5ToLJ
-X-Google-Smtp-Source: APXvYqwnLTC0pcBq0l3nuM3ilLst6xsUAtObSzzO/XGbx51JYoODK9jAMcO2zRxZrjgVkpLuaYCvgg==
-X-Received: by 2002:aa7:8e46:: with SMTP id d6mr40716895pfr.91.1559681894225;
-        Tue, 04 Jun 2019 13:58:14 -0700 (PDT)
+        bh=pUm0A2fiHDD5iuDzT1paXS/sbVY5jmeSfZnM1voD+pE=;
+        b=iOcmh2cNXcljkpC7utqICYHjaP9Y3NMwK3SFSaZTnimKGTxaxCoeBqz8E2aSvs6btC
+         iK8ERpE4O7UOIZKtOieTiontTTrlOJb369n9VD8/wN8f8q4Th+A21HsNmfOSV5gouySR
+         8vakP+hNZaTrid83FyhXlWkSe2v4POpAklGk/sulDHJoETBIFAYcBLiWn38VEXVBnjU5
+         j82xf+3aUMifmxH6Y0D1mPrzOswx+6ExFrdRr2QQqbIAFUvN30WTnZH17XC6tlomosWL
+         ofsInOHPMZVXBlsW2rOwoA2BYyByrEL0eso7TqIEOnXupjfbw3mxs68sR2PnRVICQnZ5
+         TZYQ==
+X-Gm-Message-State: APjAAAWrUX5yMJAH0RdML3tAaNR/ofgHdb+HTV9CnbdH4EWzMFzABez3
+        6Me2KEa+216HAIQhgqHzBSga5czI
+X-Google-Smtp-Source: APXvYqxQ/Hcqa+12EnpAK4GsuwxyHv31ipziKZP6NNP9siDbIFDgRygQRpYG27lB/deQYvZCtRPuiA==
+X-Received: by 2002:a65:5003:: with SMTP id f3mr678683pgo.336.1559682006712;
+        Tue, 04 Jun 2019 14:00:06 -0700 (PDT)
 Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id z4sm18628064pfa.142.2019.06.04.13.58.12
+        by smtp.gmail.com with ESMTPSA id i22sm18735149pfa.127.2019.06.04.14.00.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:58:13 -0700 (PDT)
-Subject: Re: [PATCH v3 net-next 04/17] net: dsa: sja1105: Move
- sja1105_change_tpid into sja1105_vlan_filtering
+        Tue, 04 Jun 2019 14:00:06 -0700 (PDT)
+Subject: Re: [PATCH v3 net-next 10/17] net: dsa: sja1105: Build a minimal
+ understanding of meta frames
 To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
         andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
         john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604170756.14338-5-olteanv@gmail.com>
+ <20190604170756.14338-11-olteanv@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
-Message-ID: <31e5c5ab-7188-2ebb-d090-3e31f737adf5@gmail.com>
-Date:   Tue, 4 Jun 2019 13:58:12 -0700
+Message-ID: <12eaf60b-83e9-dd93-dd93-56a19158d307@gmail.com>
+Date:   Tue, 4 Jun 2019 14:00:04 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604170756.14338-5-olteanv@gmail.com>
+In-Reply-To: <20190604170756.14338-11-olteanv@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,13 +84,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
-> This is a cosmetic patch, pre-cursor to making another change to the
-> General Parameters Table (incl_srcpt) which does not logically pertain
-> to the sja1105_change_tpid function name, but not putting it there would
-> otherwise create a need of resetting the switch twice.
+> Meta frames are sent on the CPU port by the switch if RX timestamping is
+> enabled. They contain a partial timestamp of the previous frame.
 > 
-> So simply move the existing code into the .port_vlan_filtering callback,
-> where the incl_srcpt change will be added as well.
+> They are Ethernet frames with the Ethernet header constructed out of:
+> 
+> - SJA1105_META_DMAC
+> - SJA1105_META_SMAC
+> - ETH_P_SJA1105_META
+> 
+> The Ethernet payload will be decoded in a follow-up patch.
 > 
 > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
