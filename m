@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D70DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC92EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53DA823D1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C778229F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AblFESWR"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Wyo7UKxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfFDKPw (ORCPT
+        id S1727463AbfFDKPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:15:52 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:39514 "EHLO
+        Tue, 4 Jun 2019 06:15:55 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:39611 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfFDKPu (ORCPT
+        with ESMTP id S1727110AbfFDKPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:15:50 -0400
+        Tue, 4 Jun 2019 06:15:53 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC77032511;
-        Tue, 4 Jun 2019 19:14:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC77032511
+        by conuserg-08.nifty.com with ESMTP id x54AEC7C032511;
+        Tue, 4 Jun 2019 19:14:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7C032511
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643255;
-        bh=pUquGiN6xNeDHSibS2E6fCO5H4gfpfVcs2A9RbnL/14=;
+        s=dec2015msa; t=1559643260;
+        bh=SRMHg0IpoERvkCvtt+MdEA3HXdaBY06TLuJd2kcOM8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AblFESWR5OlGEncv08R8Lc2lsYWxIVUQcbeaUgKG0cPSzPHOn0qLs/Ti1OaBxUsqu
-         VdmsFA5lxplHPlDHqHnCSWqMPGmItXfMZfK17mHav7GDD0pUwOt0sTRC/I4gAmFYdP
-         dDtT+DbuklcVZff3lNDn8os+44DqasROkKb/XGxtdy0LLiGqJLGPEgmBzOoGnq9tkF
-         Md4Aqfd92wCJ+zvQzTPiEY3Yk0Au9tRE5z/aqLw8/NkbZ0RtTYbzdvc5Ks95hvl08q
-         zTXIYtrtS+6+M5A/pB97Zgnpxd6uO1wEGOyUWut5M5kCjIIdiUKvUBMhiD4ItfkUP9
-         K50zQWy9tn69A==
+        b=Wyo7UKxFMBHIhbSEfEStq4ZJX/1enP0S4yg0HdvkfmfVToQqkqnScLLeq53gQE5za
+         UzQ5PMfKvCiSG09nGjslEwlWkSMIEFXXLSJ2XVkaA/KCeKlXdcaUQb0LX9sINk9K9d
+         nTNG/1tzmggZl/DLljcTWuwokwCiMNjuRD5Ow1PmQ+8l6g9bBNJqwMCV7MbNN5Huvu
+         igtNKOEs1W8tLtM4nwv0rkmmTU35RV9/5OAreKgH9JdSYbIvSrAEFr/dyc8gprIuj5
+         0z2z1QXGHwKoD06HrTVnjzB1Qt46PdB3HOnk5hIOyCh/cF/MM6PDeKY98tSRB79LBe
+         KyEO295SLSW5Q==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -46,12 +46,11 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         Jani Nikula <jani.nikula@intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 01/15] kbuild: remove headers_{install,check}_all
-Date:   Tue,  4 Jun 2019 19:13:55 +0900
-Message-Id: <20190604101409.2078-2-yamada.masahiro@socionext.com>
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/15] kbuild: remove build_unifdef target in scripts/Makefile
+Date:   Tue,  4 Jun 2019 19:14:00 +0900
+Message-Id: <20190604101409.2078-7-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
@@ -60,136 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-headers_install_all does not make much sense any more because different
-architectures export different set of uapi/linux/ headers. As you see
-in include/uapi/linux/Kbuild, the installation of a.out.h, kvm.h, and
-kvm_para.h is arch-dependent. So, headers_install_all repeats the
-installation/removal of them.
+Since commit 2aedcd098a94 ("kbuild: suppress annoying "... is up to date."
+message"), if_changed and friends nicely suppress "... is up to date"
 
-If somebody really thinks it is useful to do headers_install for all
-architectures, it would be possible by small shell-scripting, but the
-top Makefile do not have to provide entry targets just for that purpose.
+We do not need per-Makefile tricks.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Documentation/kbuild/headers_install.txt |  7 ------
- Documentation/kbuild/makefiles.txt       |  6 +----
- Makefile                                 | 15 ++----------
- scripts/headers.sh                       | 29 ------------------------
- 4 files changed, 3 insertions(+), 54 deletions(-)
- delete mode 100755 scripts/headers.sh
+ Makefile         | 2 +-
+ scripts/Makefile | 5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/kbuild/headers_install.txt b/Documentation/kbuild/headers_install.txt
-index f0153adb95e2..f07e34eab70b 100644
---- a/Documentation/kbuild/headers_install.txt
-+++ b/Documentation/kbuild/headers_install.txt
-@@ -39,12 +39,5 @@ INSTALL_HDR_PATH indicates where to install the headers. It defaults to
- An 'include' directory is automatically created inside INSTALL_HDR_PATH and
- headers are installed in 'INSTALL_HDR_PATH/include'.
- 
--The command "make headers_install_all" exports headers for all architectures
--simultaneously.  (This is mostly of interest to distribution maintainers,
--who create an architecture-independent tarball from the resulting include
--directory.)  You also can use HDR_ARCH_LIST to specify list of architectures.
--Remember to provide the appropriate linux/asm directory via "mv" or "ln -s"
--before building a C library with headers exported this way.
--
- The kernel header export infrastructure is maintained by David Woodhouse
- <dwmw2@infradead.org>.
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index d65ad5746f94..bac301a73a86 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -897,11 +897,7 @@ When kbuild executes, the following steps are followed (roughly):
- --- 6.2 Add prerequisites to archheaders:
- 
- 	The archheaders: rule is used to generate header files that
--	may be installed into user space by "make header_install" or
--	"make headers_install_all".  In order to support
--	"make headers_install_all", this target has to be able to run
--	on an unconfigured tree, or a tree configured for another
--	architecture.
-+	may be installed into user space by "make header_install".
- 
- 	It is run before "make archprepare" when run on the
- 	architecture itself.
 diff --git a/Makefile b/Makefile
-index 004d67a4405f..7745bdd84861 100644
+index ce5a9551860d..e998c40c94b4 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1181,34 +1181,23 @@ headerdep:
- #Default location for installed headers
- export INSTALL_HDR_PATH = $(objtree)/usr
- 
--# If we do an all arch process set dst to include/arch-$(SRCARCH)
--hdr-dst = $(if $(KBUILD_HEADERS), dst=include/arch-$(SRCARCH), dst=include)
--
- PHONY += archheaders archscripts
+@@ -1182,7 +1182,7 @@ PHONY += archheaders archscripts
  
  PHONY += __headers
  __headers: $(version_h) scripts_basic uapi-asm-generic archheaders archscripts
- 	$(Q)$(MAKE) $(build)=scripts build_unifdef
+-	$(Q)$(MAKE) $(build)=scripts build_unifdef
++	$(Q)$(MAKE) $(build)=scripts scripts/unifdef
  
--PHONY += headers_install_all
--headers_install_all:
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/headers.sh install
--
  PHONY += headers_install
  headers_install: __headers
- 	$(if $(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/Kbuild),, \
- 	  $(error Headers not exportable for the $(SRCARCH) architecture))
- 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include
--	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi $(hdr-dst)
--
--PHONY += headers_check_all
--headers_check_all: headers_install_all
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/headers.sh check
-+	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 9d442ee050bd..16bcb8087899 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -31,11 +31,6 @@ always		:= $(hostprogs-y) $(hostprogs-m)
+ # The following hostprogs-y programs are only build on demand
+ hostprogs-y += unifdef
  
- PHONY += headers_check
- headers_check: headers_install
- 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include HDRCHECK=1
--	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi $(hdr-dst) HDRCHECK=1
-+	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include HDRCHECK=1
- 
- ifdef CONFIG_HEADERS_CHECK
- all: headers_check
-diff --git a/scripts/headers.sh b/scripts/headers.sh
-deleted file mode 100755
-index e0f883eb39a2..000000000000
---- a/scripts/headers.sh
-+++ /dev/null
-@@ -1,29 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--# Run headers_$1 command for all suitable architectures
+-# These targets are used internally to avoid "is up to date" messages
+-PHONY += build_unifdef
+-build_unifdef: $(obj)/unifdef
+-	@:
 -
--# Stop on error
--set -e
--
--do_command()
--{
--	if [ -f ${srctree}/arch/$2/include/asm/Kbuild ]; then
--		make ARCH=$2 KBUILD_HEADERS=$1 headers_$1
--	else
--		printf "Ignoring arch: %s\n" ${arch}
--	fi
--}
--
--archs=${HDR_ARCH_LIST:-$(ls ${srctree}/arch)}
--
--for arch in ${archs}; do
--	case ${arch} in
--	um)        # no userspace export
--		;;
--	*)
--		if [ -d ${srctree}/arch/${arch} ]; then
--			do_command $1 ${arch}
--		fi
--		;;
--	esac
--done
+ subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
+ subdir-$(CONFIG_MODVERSIONS) += genksyms
+ subdir-$(CONFIG_SECURITY_SELINUX) += selinux
 -- 
 2.17.1
 
