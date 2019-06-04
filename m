@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF7EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061B7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4388B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F6D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ol3mAbyc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8SAKmcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfFDRJX (ORCPT
+        id S1728391AbfFDRJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:09:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50233 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbfFDRIK (ORCPT
+        Tue, 4 Jun 2019 13:09:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45363 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbfFDRII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:08:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f204so870172wme.0;
-        Tue, 04 Jun 2019 10:08:09 -0700 (PDT)
+        Tue, 4 Jun 2019 13:08:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so1917754wre.12;
+        Tue, 04 Jun 2019 10:08:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I6Idixnme1vEn/kW5zpL9KgwW4R7ZFqlP4o7qPM8vRU=;
-        b=ol3mAbycYkcJ6f8HyzNsrszRVScmJEStMKGCx1Dy5YZfDG8Sox1LtoMWHO7myGZIA1
-         lKSKJIoWpPFngpMklRMsbUAYgANDL+cI0umPnJrFCBQ9zR9DEQOr229eGdMTk/F9Yp0b
-         2gl/WIBP0QlibqZWf/z0Ws6gSfKcFQIhubydBGpBvFpilvKA6uD5I2rGSlUO6ucxHdL+
-         lpssy0m5rp+7yg47NU6JBWnLub+ykXcuUY4pY/vOMMzwVkeWvRLw3fSAOoRPHMn/y4YZ
-         GAuPIy9/SwKFnAq8seGMAZZ8qKNvViUH5fkkpWkATxUWJV/QnpHWvsh9XHln/PZwvI3C
-         z7uA==
+        bh=EwNKLdhvHIZWuc2AMTf/Nh+UlcpRZAbzNWQ1cMFMEHc=;
+        b=D8SAKmcMepeCU71WMObGfrZhdbyauHSxKeduE7juWpihIWzSd6OA85eGA9K/DQ/Pd0
+         Npe8PVsQyuLR5d8mCbQkXJdLo7aT24ZIZfk0NoUOOQeRehO2YHTlq6HULDqV2fLilghq
+         BrYIiJW2UDpUr+V8B5vNPqNr0FJzsHMOAq1UqnHfTZKHWHYQGw1P7ZIx9o7q+mZZtv2v
+         /ADQhaCn74/YJ2cseCFUN0WXXszb7tmUEhVGCNIBBHDBYA/2vXrLGtjh5JVXBwpDxaMF
+         7KE1LGBM7xIkOVT24rk6GXP5ZaUJSSgp9cP8FbzgEZSrf090Zld1+2JFS+H3MzsdzBgG
+         yDEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=I6Idixnme1vEn/kW5zpL9KgwW4R7ZFqlP4o7qPM8vRU=;
-        b=SIik90Hk+pDO1fMV/0xBkjwNvOcXicmawtqr6aSUJRqn916V8dOU8RnchlAYrdsjRe
-         UdCX3q2IOUN2Ex43Y21fYco+TMTQxjrNmRj9PyKZrx1M0qaMhU8aPR9Ij/8ii6lBbJCY
-         c+v/jYNXUa3/W9LnK1p0cFMxG1cQLxjqSIRaos9JmiMeYSkdapt6/O5MBja+hHh2BQw5
-         8UyMuzSNwfk3RHk3+/TA0uBWvi5JqPl7UsEz3bkku9TMDcOGi3YBCT2hr9WSZCWhQBVD
-         Gs+bV5EOSoeGJfc0murwP88DztMAGIdS47CF0ReFM0fxYhP2dncziMMG1ooKkY9gR1nc
-         MwQw==
-X-Gm-Message-State: APjAAAXTv2/dYi6v6AkGC1UjTKJS3jiHAyR+P00uPRAj1tbpHW79LBux
-        Ci3boDAG1IwQ1Qi1WZiC1HZ2elEnTBU=
-X-Google-Smtp-Source: APXvYqzDLu5LgeNOWIrUnChpWET0Nr/leyAcjlptnG5yb9BSCZw8tSk75PkHT45uKhd0xdwyUg76Mg==
-X-Received: by 2002:a1c:cc19:: with SMTP id h25mr6777930wmb.167.1559668088741;
-        Tue, 04 Jun 2019 10:08:08 -0700 (PDT)
+        bh=EwNKLdhvHIZWuc2AMTf/Nh+UlcpRZAbzNWQ1cMFMEHc=;
+        b=Gwe6+dtGvCvjtm7kFNAByddPDxbKUvTj2P3FvM9hHu3X7tLG14CagrDDEsw4JAWJEQ
+         u+yWVWX1toVHDHn6rVLY7NSoP6jxMRuUPAwAaHuS9A9wHGFajdA3dWvFT4ZiCsPu1jVV
+         4ndUF2gl+DwEEa0x/RwYDp2lBZu6zvufZLSg8jD0ZSMAQFCskh7Da8WuQf4oxp+Mcib/
+         R/H+M2UniBqLKuaYzx1ilk+w7ZPNF4Q4278Oy15okE5aPx4kiq0mMrpP9fg1ZBzexsZQ
+         zIctKuZXstFYHUgbiIngqj6RyLZZ9sb9DhtwhmwAYF6mOSECpe+4rQChca83vPy8oF83
+         U+ig==
+X-Gm-Message-State: APjAAAWikVEFdpi6TFrQEcCCMD3PZ0wYe1OgWAthcIqCefBXGYQgNeDt
+        c56NYXZORCuNzdZaCtuJJpQ=
+X-Google-Smtp-Source: APXvYqxQSPgeN5YppLz1uZK+S/fEyGTT26eYimJpLpaVw9f3fC98pvFz0tlfMXa0nKTBJ7UpBHzNaQ==
+X-Received: by 2002:a5d:5186:: with SMTP id k6mr4630818wrv.30.1559668086642;
+        Tue, 04 Jun 2019 10:08:06 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.27.188])
-        by smtp.gmail.com with ESMTPSA id f2sm19692218wme.12.2019.06.04.10.08.07
+        by smtp.gmail.com with ESMTPSA id f2sm19692218wme.12.2019.06.04.10.08.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:08:08 -0700 (PDT)
+        Tue, 04 Jun 2019 10:08:06 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net, richardcochran@gmail.com,
         john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3 net-next 05/17] net: dsa: sja1105: Reverse TPID and TPID2
-Date:   Tue,  4 Jun 2019 20:07:44 +0300
-Message-Id: <20190604170756.14338-6-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 03/17] net: dsa: tag_8021q: Create helper function for removing VLAN header
+Date:   Tue,  4 Jun 2019 20:07:42 +0300
+Message-Id: <20190604170756.14338-4-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604170756.14338-1-olteanv@gmail.com>
 References: <20190604170756.14338-1-olteanv@gmail.com>
@@ -73,44 +73,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From reading the P/Q/R/S user manual, it appears that TPID is used by
-the switch for detecting S-tags and TPID2 for C-tags.  Their meaning is
-not clear from the E/T manual.
+This removes the existing implementation from tag_sja1105, which was
+partially incorrect (it was not changing the MAC header offset, thereby
+leaving it to point 4 bytes earlier than it should have).
+
+This overwrites the VLAN tag by moving the Ethernet source and
+destination MACs 4 bytes to the right. Then skb->data (assumed to be
+pointing immediately after the EtherType) is temporarily pushed to the
+beginning of the new Ethernet header, the new Ethernet header offset and
+length are recorded, then skb->data is moved back to where it was.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
 Changes in v3:
 
+None.
+
+Changes in v2:
+
 Patch is new.
 
- drivers/net/dsa/sja1105/sja1105_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/dsa/8021q.h |  7 +++++++
+ net/dsa/tag_8021q.c       | 15 +++++++++++++++
+ net/dsa/tag_sja1105.c     |  3 +--
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 909497aa4b6f..0f34e713c408 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1421,8 +1421,8 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
+diff --git a/include/linux/dsa/8021q.h b/include/linux/dsa/8021q.h
+index 3911e0586478..463378812f18 100644
+--- a/include/linux/dsa/8021q.h
++++ b/include/linux/dsa/8021q.h
+@@ -31,6 +31,8 @@ int dsa_8021q_rx_switch_id(u16 vid);
  
- 	if (enabled) {
- 		/* Enable VLAN filtering. */
--		tpid  = ETH_P_8021Q;
--		tpid2 = ETH_P_8021AD;
-+		tpid  = ETH_P_8021AD;
-+		tpid2 = ETH_P_8021Q;
- 	} else {
- 		/* Disable VLAN filtering. */
- 		tpid  = ETH_P_SJA1105;
-@@ -1431,7 +1431,9 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
+ int dsa_8021q_rx_source_port(u16 vid);
  
- 	table = &priv->static_config.tables[BLK_IDX_GENERAL_PARAMS];
- 	general_params = table->entries;
-+	/* EtherType used to identify outer tagged (S-tag) VLAN traffic */
- 	general_params->tpid = tpid;
-+	/* EtherType used to identify inner tagged (C-tag) VLAN traffic */
- 	general_params->tpid2 = tpid2;
++struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb);
++
+ #else
  
- 	rc = sja1105_static_config_reload(priv);
+ int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
+@@ -71,6 +73,11 @@ int dsa_8021q_rx_source_port(u16 vid)
+ 	return 0;
+ }
+ 
++struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
++{
++	return NULL;
++}
++
+ #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
+ 
+ #endif /* _NET_DSA_8021Q_H */
+diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
+index 65a35e976d7b..0ce680ef8e83 100644
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -261,6 +261,21 @@ struct sk_buff *dsa_8021q_rcv(struct sk_buff *skb, struct net_device *netdev,
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_rcv);
+ 
++struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
++{
++	u8 *from = skb_mac_header(skb);
++	u8 *dest = from + VLAN_HLEN;
++
++	memmove(dest, from, ETH_HLEN - VLAN_HLEN);
++	skb_push(skb, ETH_HLEN);
++	skb_reset_mac_header(skb);
++	skb_reset_mac_len(skb);
++	skb_pull(skb, ETH_HLEN);
++
++	return skb;
++}
++EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
++
+ static const struct dsa_device_ops dsa_8021q_netdev_ops = {
+ 	.name		= "8021q",
+ 	.proto		= DSA_TAG_PROTO_8021Q,
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index d43737e6c3fb..535d8a1aabe1 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -106,8 +106,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 	 * it there, see dsa_switch_rcv: skb_push(skb, ETH_HLEN).
+ 	 */
+ 	if (is_tagged)
+-		memmove(skb->data - ETH_HLEN, skb->data - ETH_HLEN - VLAN_HLEN,
+-			ETH_HLEN - VLAN_HLEN);
++		skb = dsa_8021q_remove_header(skb);
+ 
+ 	return skb;
+ }
 -- 
 2.17.1
 
