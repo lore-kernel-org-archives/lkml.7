@@ -2,105 +2,138 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0F6C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD1420717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CEC20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bo/YprrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfFDQ3h (ORCPT
+        id S1727820AbfFDQaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:29:37 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.164]:33494 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727385AbfFDQ3h (ORCPT
+        Tue, 4 Jun 2019 12:30:09 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33853 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfFDQaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:29:37 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 2A8AE1233F
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 11:29:36 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YCJch0ufKdnCeYCJcheZN2; Tue, 04 Jun 2019 11:29:36 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=39294 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYCJb-001PBz-5g; Tue, 04 Jun 2019 11:29:35 -0500
-Date:   Tue, 4 Jun 2019 11:29:28 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] afs: security: Use struct_size() in kzalloc()
-Message-ID: <20190604162928.GA12389@embeddedor>
+        Tue, 4 Jun 2019 12:30:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so2655856wmd.1;
+        Tue, 04 Jun 2019 09:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+ItpZv98uGNXVHvsKA+wMDHUe83WSTbZUJdpb4oIfkI=;
+        b=bo/YprrUKpC6Rpn6p9wmA2Zo//yrk66+wgvE05Q3EMN6NO4KgNta/Stz+nJy7hfou6
+         s+T2+EHU4pICuut13QgBFR6KDRy0fSfap6aQKrnkhsFuGx6LtoesevGE1P3oD/Iljigg
+         u+It7fJRJ7CVlLdWVJCk9tNRtPe4ugbFSx8kIPYaDTXo6UZ4jRZeexkUJUYSCqrXhWHn
+         qzGRcUZEBxLGwEEEbXt5CKLOQaR8yCw+hJhUxHRsvmkUX8qJ72HOOH8tb4u5x8DLHt0j
+         rtjNUX1NNqOO0AfJtBVUO1QPX3AF+YHJhh+o+qIDhmYjj851E/tTV0RD3xHPh6hU0NI0
+         cHJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+ItpZv98uGNXVHvsKA+wMDHUe83WSTbZUJdpb4oIfkI=;
+        b=FcFMZBG17/IAEccizPm0A/RBGanUG9wHJp+an2l7+g0MuJL3dCc0Sx2XniAVBJCUNV
+         lJxbl8u3PNoK9Nug6N++zcLSWFGfo4VepdjKNwGC/RnCJj6l4NUZpFsRY+hZJUy/mriQ
+         CLkxm9E7WxSkJDDBO25v/7zbHorpnUhc+25rzTl6t6ogADIYm4MSKUmdPuw3VckUZQda
+         W5to28KakHr03Ey2fQq9ZD8pwLC1nM73j7HRNNIsSiZPTrtsVrVuUuVYBJbJWCNxn7BM
+         oqc7WcL4cvNWI9mOtN2yDfWtRy/TwHpr7+hyykOb2ZNGCcqrQ2Tj6Yvwb4jevcPE9qyV
+         R23g==
+X-Gm-Message-State: APjAAAXdyMef7+y5KU0+mQCWtVWSm/QtqD3cJP0ERV7oMe7K//xcy9C/
+        B9aRhxiL8TVjOFzKFLqL2g0=
+X-Google-Smtp-Source: APXvYqyuxr/eS6LF9BsE1JCeLrvKAvLnu/CvPjkOoH4LergYJP1rASUPPT4CJf5ubSK8EpGRgf1Xmw==
+X-Received: by 2002:a1c:44d7:: with SMTP id r206mr19492073wma.164.1559665806209;
+        Tue, 04 Jun 2019 09:30:06 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id y12sm15108176wrh.40.2019.06.04.09.30.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 09:30:05 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Sean Young <sean@mess.org>
+Subject: [PATCH v4 01/13] dt-bindings: media: sunxi-ir: Add A31 compatible
+Date:   Tue,  4 Jun 2019 18:29:47 +0200
+Message-Id: <20190604162959.29199-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604162959.29199-1-peron.clem@gmail.com>
+References: <20190604162959.29199-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYCJb-001PBz-5g
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:39294
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+Allwinner A31 has introduced a new memory mapping and a
+reset line.
 
-struct foo {
-   int stuff;
-   struct boo entry[];
-};
+The difference in memory mapping are :
 
-instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+- In the configure register there is a new sample bit
+  and Allwinner has introduced the active threshold feature.
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
+- In the status register a new STAT bit is present.
 
-instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+Note: CGPO and DRQ_EN bits are removed on A31 but present on A13
+and on new SoCs like A64/H6.
+This is actually not an issue as these bits are togglable and new
+SoCs have a dedicated bindings.
 
-This code was detected with the help of Coccinelle.
+Introduce this bindings to make a difference since this generation.
+And declare the reset line required since A31.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Acked-by: Sean Young <sean@mess.org>
 ---
- fs/afs/security.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/sunxi-ir.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index 71e71c07568f..82753f3c097f 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -191,8 +191,7 @@ void afs_cache_permit(struct afs_vnode *vnode, struct key *key,
- 	 * yet.
- 	 */
- 	size++;
--	new = kzalloc(sizeof(struct afs_permits) +
--		      sizeof(struct afs_permit) * size, GFP_NOFS);
-+	new = kzalloc(struct_size(new, permits, size), GFP_NOFS);
- 	if (!new)
- 		goto out_put;
+diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+index 278098987edb..2e59a32a7e33 100644
+--- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
++++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+@@ -1,16 +1,21 @@
+ Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
+ 
+ Required properties:
+-- compatible	    : "allwinner,sun4i-a10-ir" or "allwinner,sun5i-a13-ir"
++- compatible	    :
++	"allwinner,sun4i-a10-ir"
++	"allwinner,sun5i-a13-ir"
++	"allwinner,sun6i-a31-ir"
+ - clocks	    : list of clock specifiers, corresponding to
+ 		      entries in clock-names property;
+ - clock-names	    : should contain "apb" and "ir" entries;
+ - interrupts	    : should contain IR IRQ number;
+ - reg		    : should contain IO map address for IR.
+ 
++Required properties since A31:
++- resets	    : phandle + reset specifier pair
++
+ Optional properties:
+ - linux,rc-map-name: see rc.txt file in the same directory.
+-- resets : phandle + reset specifier pair
+ - clock-frequency  : IR Receiver clock frequency, in Hertz. Defaults to 8 MHz
+ 		     if missing.
  
 -- 
-2.21.0
+2.20.1
 
