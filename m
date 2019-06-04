@@ -2,152 +2,105 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F678C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3664D206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559688209;
-	bh=McnH01l012LgpITPnazCqRJYDfp8SFNlTpLeOyd0rDk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vgyDyNgaY7lEvqChEw9FhmQCtswinMvCCucHKyJL5J4SI7dRVrqUF3/juDaBmC/QV
-	 DgEa5g7FvsMYQ0/JE2U54NTKpf7p2Z2BsCpHyRtLfX9lRTyPHbYmgMb3GVMwAQpoNi
-	 B3mLoWqu/VLAgjsWoIUR4M+UidBHJ0YREcT5siCw=
+	by mail.kernel.org (Postfix) with ESMTP id 083C0206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfFDWn2 (ORCPT
+        id S1726608AbfFDWoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFDWn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:43:28 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F10206B8;
-        Tue,  4 Jun 2019 22:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559688207;
-        bh=McnH01l012LgpITPnazCqRJYDfp8SFNlTpLeOyd0rDk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iMpvIC1KpLUBc26GINzifM0DVnm8whlDtaLjgjFzkGsUuxLi4URKQ7Kz86LO1axJb
-         ROYDLOE5iJKCfO3e/mDuVFq36lJWgmDFCC1r7h0nwP2pLpHpITo/a8kmnu+8Xlf8E5
-         EsXgRa+o7Hse3+A4mDjXy7HiDjwS37jUW3oVHF+8=
-Date:   Tue, 4 Jun 2019 15:43:26 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Maninder Singh <maninder1.s@samsung.com>
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to
- functions
-Message-Id: <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
-In-Reply-To: <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
-References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
-        <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
-        <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 4 Jun 2019 18:44:22 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.185]:46160 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfFDWoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 18:44:21 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 3FF55ED2C
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 17:44:21 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YIAHhnbmE90onYIAHhpSGf; Tue, 04 Jun 2019 17:44:21 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=44374 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYIAG-000OFr-Ca; Tue, 04 Jun 2019 17:44:20 -0500
+Date:   Tue, 4 Jun 2019 17:44:18 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Shaohua Li <shli@kernel.org>
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] md: raid10: Use struct_size() in kmalloc()
+Message-ID: <20190604224418.GA23187@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYIAG-000OFr-Ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:44374
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 14:32:03 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-> currently params structure is passed in all functions, which increases
-> stack usage in all the function and lead to stack overflow on target like
-> ARM with kernel stack size of 8 KB so better to pass pointer.
-> 
-> Checked for ARM:
-> 
->                                 Original               Patched
-> Call FLow Size:                  1264                   1040
-> ....
-> (HUF_sort)                      -> 296
-> (HUF_buildCTable_wksp)          -> 144
-> (HUF_compress4X_repeat)         -> 88
-> (ZSTD_compressBlock_internal)   -> 200
-> (ZSTD_compressContinue_internal)-> 136                  -> 88
-> (ZSTD_compressCCtx)             -> 192                  -> 64
-> (zstd_compress)                 -> 144                  -> 96
-> (crypto_compress)               -> 32
-> (zcomp_compress)                -> 32
-> ....
-> 
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
-> 
+struct foo {
+   int stuff;
+   struct boo entry[];
+};
 
-You missed btrfs.  This needs review, please - particularly the
-kernel-wide static ZSTD_parameters in zstd_get_btrfs_parameters().
+instance = kmalloc(size, GFP_KERNEL);
 
-The base patch is here:
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
 
-http://lkml.kernel.org/r/1559552526-4317-2-git-send-email-maninder1.s@samsung.com  
+instance = kmalloc(struct_size(instance, entry, count), GFP_KERNEL);
 
---- a/fs/btrfs/zstd.c~zstd-pass-pointer-rathen-than-structure-to-functions-fix
-+++ a/fs/btrfs/zstd.c
-@@ -27,15 +27,17 @@
- /* 307s to avoid pathologically clashing with transaction commit */
- #define ZSTD_BTRFS_RECLAIM_JIFFIES (307 * HZ)
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/md/raid10.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index aea11476fee6..3caafd433163 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4780,8 +4780,7 @@ static int handle_reshape_read_error(struct mddev *mddev,
+ 	int idx = 0;
+ 	struct page **pages;
  
--static ZSTD_parameters zstd_get_btrfs_parameters(unsigned int level,
-+static ZSTD_parameters *zstd_get_btrfs_parameters(unsigned int level,
- 						 size_t src_len)
- {
--	ZSTD_parameters params = ZSTD_getParams(level, src_len, 0);
-+	static ZSTD_parameters params;
-+
-+	params = ZSTD_getParams(level, src_len, 0);
- 
- 	if (params.cParams.windowLog > ZSTD_BTRFS_MAX_WINDOWLOG)
- 		params.cParams.windowLog = ZSTD_BTRFS_MAX_WINDOWLOG;
- 	WARN_ON(src_len > ZSTD_BTRFS_MAX_INPUT);
--	return params;
-+	return &params;
- }
- 
- struct workspace {
-@@ -155,11 +157,12 @@ static void zstd_calc_ws_mem_sizes(void)
- 	unsigned int level;
- 
- 	for (level = 1; level <= ZSTD_BTRFS_MAX_LEVEL; level++) {
--		ZSTD_parameters params =
--			zstd_get_btrfs_parameters(level, ZSTD_BTRFS_MAX_INPUT);
--		size_t level_size =
--			max_t(size_t,
--			      ZSTD_CStreamWorkspaceBound(params.cParams),
-+		ZSTD_parameters *params;
-+		size_t level_size;
-+
-+		params = zstd_get_btrfs_parameters(level, ZSTD_BTRFS_MAX_INPUT);
-+		level_size = max_t(size_t,
-+			      ZSTD_CStreamWorkspaceBound(params->cParams),
- 			      ZSTD_DStreamWorkspaceBound(ZSTD_BTRFS_MAX_INPUT));
- 
- 		max_size = max_t(size_t, max_size, level_size);
-@@ -385,8 +388,9 @@ static int zstd_compress_pages(struct li
- 	unsigned long len = *total_out;
- 	const unsigned long nr_dest_pages = *out_pages;
- 	unsigned long max_out = nr_dest_pages * PAGE_SIZE;
--	ZSTD_parameters params = zstd_get_btrfs_parameters(workspace->req_level,
--							   len);
-+	ZSTD_parameters *params;
-+
-+	params = zstd_get_btrfs_parameters(workspace->req_level, len);
- 
- 	*out_pages = 0;
- 	*total_out = 0;
-_
+-	r10b = kmalloc(sizeof(*r10b) +
+-	       sizeof(struct r10dev) * conf->copies, GFP_NOIO);
++	r10b = kmalloc(struct_size(r10b, devs, conf->copies), GFP_NOIO);
+ 	if (!r10b) {
+ 		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+ 		return -ENOMEM;
+-- 
+2.21.0
 
