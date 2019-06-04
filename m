@@ -2,66 +2,59 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B995FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE0BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0C02075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041F620859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfFDRTd (ORCPT
+        id S1726555AbfFDRUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:19:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36210 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFDRTd (ORCPT
+        Tue, 4 Jun 2019 13:20:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40198 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFDRUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:19:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v22so895825wml.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:19:31 -0700 (PDT)
+        Tue, 4 Jun 2019 13:20:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p11so11840925wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:20:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/1gqrY2ImTpTIUPPPU1PDfWa7bCSQk/2OUjIHFRsVkk=;
-        b=KmRBqRE/20HwCMe/PxVrk7SRwy8uhDE/JkOJWkvo8l5XZgmxS4D9Bv/mKZxFGd3qN8
-         wZ5Rffue77VAHG8Vxk9VEH0uNrn8DYLNF8ArlNNBV/BaKJOJGX9iLIVqRMZMwU7dhkFl
-         WVQOnkvj6n5TgKCl0mJz9D2MX4ogojSoCbYOa9pAwgWgP0eumzqP7LsWtk2AGhPxW8Yp
-         Rer1uwCiXUrJ5kCiMVf/kS182W4EpKt6eTkpfnrVdKzBEIsqvYqyyOaY9x6yeZZr5rtM
-         vuEHJl0NaBSPYkOztVB081Ox4TF5taw+7xSRFE4hsliDNJ5HpRrtRPZnKz8QUbWnLlj/
-         3U8Q==
-X-Gm-Message-State: APjAAAV/02xjO5QrH4RE/+zx5TQmfXVgKJH9R3kbrNSJt+pMO9D4KRQy
-        5Qm3pDdf1/G9HC0lNwDxIVpU0Q==
-X-Google-Smtp-Source: APXvYqzCTmSwqWr7Reg0Gs56V3SrKXWAOK1pOsi8iZhuHvPXpdeLwgLPTMRSYHM34prx2EZwe/cbcA==
-X-Received: by 2002:a1c:c583:: with SMTP id v125mr4957627wmf.158.1559668771167;
-        Tue, 04 Jun 2019 10:19:31 -0700 (PDT)
+        bh=MIeQ1hRc5hTWO/6y4ou8VBIQoDTI2KJ3dAfbqfPHsRY=;
+        b=DcECO8y/TkYos/z0n5lha6cjNnZkDc9LnoLECNMsWg4opmgnveO+/VfBYoDG3qNvms
+         Pg61iyfvDCe2iWGhRv9wwiqcdd+FkHJyD2XTeNi2YMd7dq6L46DABiPuXpCMZyzyjiVX
+         E2/2BY35mSY4ZyvAqreU+sZdW2aUdKXKEI0ALB6IrellDUhEmaGwadrkSEfEbEmZQodA
+         FbeX9+XIUPPG8NOEQpV+XXmzi/n6K971w8yH+gBvQrw9g3K9OkLKFJWhcobpoULo+L9n
+         Xf3GSKZSZE2sHoXiBvRUD0bnc4hynDqPXauTrfzCRUwPEYHlIx4wMsrwp+Jpu30mRNw5
+         lJdA==
+X-Gm-Message-State: APjAAAUe67rDlDFDcbTP4+2EegASc1JGVtfr8PvC30cNXvQQD2TyaKyx
+        xGDwv864Ja3WLcdko2X7QzPN5qey2jHxiA==
+X-Google-Smtp-Source: APXvYqyCLCR9Tut/3XbRV2YRnUp9dQfHLcpQpwQKSuwwLKbot5ERpIMPqcoGXXa6IR6L1BCFAthjmg==
+X-Received: by 2002:adf:ea87:: with SMTP id s7mr19107229wrm.24.1559668835069;
+        Tue, 04 Jun 2019 10:20:35 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id f10sm31540077wrg.24.2019.06.04.10.19.29
+        by smtp.gmail.com with ESMTPSA id e13sm21770174wra.16.2019.06.04.10.20.34
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:19:30 -0700 (PDT)
-Subject: Re: [PATCH v1 0/9] KVM selftests for s390x
-To:     Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190523164309.13345-1-thuth@redhat.com>
+        Tue, 04 Jun 2019 10:20:34 -0700 (PDT)
+Subject: Re: [PATCH] KVM: irqchip: Use struct_size() in kzalloc()
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190531192453.GA13536@embeddedor>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f2daf197-bb5d-15d7-8219-d17cd40c85c9@redhat.com>
-Date:   Tue, 4 Jun 2019 19:19:28 +0200
+Message-ID: <0bc61102-47c6-5df3-aa2d-1f7ec91214c1@redhat.com>
+Date:   Tue, 4 Jun 2019 19:20:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
+In-Reply-To: <20190531192453.GA13536@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,66 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/05/19 18:43, Thomas Huth wrote:
-> This patch series enables the KVM selftests for s390x. As a first
-> test, the sync_regs from x86 has been adapted to s390x, and after
-> a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
-> is now enabled here, too.
+On 31/05/19 21:24, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> Please note that the ucall() interface is not used yet - since
-> s390x neither has PIO nor MMIO, this needs some more work first
-> before it becomes usable (we likely should use a DIAG hypercall
-> here, which is what the sync_reg test is currently using, too...
-> I started working on that topic, but did not finish that work
-> yet, so I decided to not include it yet).
+> struct foo {
+>    int stuff;
+>    struct boo entry[];
+> };
+> 
+> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+> 
+> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  virt/kvm/irqchip.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+> index 79e59e4fa3dc..f8be6a3d1aa6 100644
+> --- a/virt/kvm/irqchip.c
+> +++ b/virt/kvm/irqchip.c
+> @@ -196,9 +196,7 @@ int kvm_set_irq_routing(struct kvm *kvm,
+>  
+>  	nr_rt_entries += 1;
+>  
+> -	new = kzalloc(sizeof(*new) + (nr_rt_entries * sizeof(struct hlist_head)),
+> -		      GFP_KERNEL_ACCOUNT);
+> -
+> +	new = kzalloc(struct_size(new, map, nr_rt_entries), GFP_KERNEL_ACCOUNT);
+>  	if (!new)
+>  		return -ENOMEM;
+>  
+> 
 
-Christian, please include this in your tree (rebasing on top of kvm/next
-as soon as I push it).  Note that Thomas is away for about a month.
+Queued, thanks.
 
 Paolo
-
-> RFC -> v1:
->  - Rebase, needed to add the first patch for vcpu_nested_state_get/set
->  - Added patch to introduce VM_MODE_DEFAULT macro
->  - Improved/cleaned up the code in processor.c
->  - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
->  - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
-> 
-> Andrew Jones (1):
->   kvm: selftests: aarch64: fix default vm mode
-> 
-> Thomas Huth (8):
->   KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
->     guard
->   KVM: selftests: Guard struct kvm_vcpu_events with
->     __KVM_HAVE_VCPU_EVENTS
->   KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
->   KVM: selftests: Align memory region addresses to 1M on s390x
->   KVM: selftests: Add processor code for s390x
->   KVM: selftests: Add the sync_regs test for s390x
->   KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
->   KVM: selftests: Move kvm_create_max_vcpus test to generic code
-> 
->  MAINTAINERS                                   |   2 +
->  arch/mips/kvm/mips.c                          |   3 +
->  arch/powerpc/kvm/powerpc.c                    |   3 +
->  arch/s390/kvm/kvm-s390.c                      |   1 +
->  arch/x86/kvm/x86.c                            |   3 +
->  tools/testing/selftests/kvm/Makefile          |   7 +-
->  .../testing/selftests/kvm/include/kvm_util.h  |  10 +
->  .../selftests/kvm/include/s390x/processor.h   |  22 ++
->  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
->  .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
->  .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
->  .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
->  .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
->  virt/kvm/arm/arm.c                            |   3 +
->  virt/kvm/kvm_main.c                           |   2 -
->  16 files changed, 514 insertions(+), 11 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
->  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
->  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
->  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
-> 
-
