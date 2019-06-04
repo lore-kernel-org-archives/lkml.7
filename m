@@ -2,99 +2,338 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAFCC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3711C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA758218D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A47218D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="r7Fxsqcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfFDP2t (ORCPT
+        id S1728142AbfFDPaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:28:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57090 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727843AbfFDP2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:28:48 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 36685F51F310A0F796DC;
-        Tue,  4 Jun 2019 23:28:34 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
- 23:28:26 +0800
-Subject: Re: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit
- the min/max write value
-To:     Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>
-CC:     <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <ebiederm@xmission.com>,
-        <pbonzini@redhat.com>, <viro@zeniv.linux.org.uk>,
-        <adobriyan@gmail.com>, <mingfangsen@huawei.com>,
-        <wangxiaogang3@huawei.com>, "Zhoukang (A)" <zhoukang7@huawei.com>,
-        <netdev@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
- <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
- <d5138655-41a8-0177-ae0d-c4674112bf56@huawei.com>
- <201905150945.C9D1F811F@keescook>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <dd40ae3b-8e0a-2d55-d402-6f261a6c0e09@huawei.com>
-Date:   Tue, 4 Jun 2019 23:27:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 4 Jun 2019 11:30:10 -0400
+Received: from vps.xff.cz ([195.181.215.36]:35896 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbfFDPaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:30:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559662207; bh=EBUXl+s33S8AB6wBM8DyjX689Iw/fnBpj5K0PxMl3hc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r7FxsqcmSzyz9yU7eAEI5SIdsYykwQUb1wI++VZIMq9b9y3IiuL0qtydszvB90QUN
+         HHFiWbEGlTBBfwp/o7a0zOuFjEwrl1rP7xdzhAFSIn46cRehidkqSp6S/fhX42RZLr
+         sjE66aU8cpblErIEMIT+8YH7WR0EcdnA1uwnhLTs=
+Date:   Tue, 4 Jun 2019 17:30:06 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6:
+ Add IR receiver node
+Message-ID: <20190604153006.g53kzhnx3hzpg5qh@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+ <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+ <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+ <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
+ <20190604123355.m47ufmhtzuzfvmp7@core.my.home>
+ <20190604144757.xvggmj6asyf44vuc@core.my.home>
+ <CAJiuCcf6gHP_G73w8Gf6QYOfvh9Frc9uQk7qpxbpsLY33PxL3w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <201905150945.C9D1F811F@keescook>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcf6gHP_G73w8Gf6QYOfvh9Frc9uQk7qpxbpsLY33PxL3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, May 15, 2019 at 10:53:55PM +0800, Zhiqiang Liu wrote:
-> 
-> (Please include akpm on CC for next versions of this, as he's likely
-> the person to take this patch.)
-Thanks for your advice. And sorry to reply you so late.
+Hi Clément,
 
->>>> In proc_dointvec_jiffies func, the write value is only checked
->>>> whether it is larger than INT_MAX. If the write value is less
->>>> than zero, it can also be successfully writen in the data.
+On Tue, Jun 04, 2019 at 05:04:07PM +0200, Clément Péron wrote:
+> Hi Ondrej,
 > 
-> This appears to be "be design", but I see many "unsigned int" users
-> that might be tricked into giant values... (for example, see
-> net/netfilter/nf_conntrack_standalone.c)
+> On Tue, 4 Jun 2019 at 16:47, Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > Hi Clément,
+> >
+> > On Tue, Jun 04, 2019 at 02:33:55PM +0200, verejna wrote:
+> > > Hi Clément,
+> > >
+> > > On Mon, Jun 03, 2019 at 09:58:23PM +0200, Clément Péron wrote:
+> > > > Hi Ondrej,
+> > > >
+> > > > On Fri, 31 May 2019 at 14:46, Ondřej Jirman <megous@megous.com> wrote:
+> > > > >
+> > > > > Hello Clément,
+> > > > >
+> > > > > On Fri, May 31, 2019 at 12:25:32AM +0200, Clément Péron wrote:
+> > > > > > Hi Ondrej,
+> > > > > >
+> > > > > > On Thu, 30 May 2019 at 16:55, Ondřej Jirman <megous@megous.com> wrote:
+> > > > > > >
+> > > > > > > Hello Clément,
+> > > > > > >
+> > > > > > > On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
+> > > > > > > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > > > > > > >
+> > > > > > > > Add support for it.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > > > > > > ---
+> > > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+> > > > > > > >  1 file changed, 19 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > @@ -647,6 +647,25 @@
+> > > > > > > >                               pins = "PL0", "PL1";
+> > > > > > > >                               function = "s_i2c";
+> > > > > > > >                       };
+> > > > > > > > +
+> > > > > > > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > > > > > > +                             pins = "PL9";
+> > > > > > > > +                             function = "s_cir_rx";
+> > > > > > > > +                     };
+> > > > > > > > +             };
+> > > > > > > > +
+> > > > > > > > +             r_ir: ir@7040000 {
+> > > > > > > > +                             compatible = "allwinner,sun50i-h6-ir",
+> > > > > > > > +                                          "allwinner,sun6i-a31-ir";
+> > > > > > > > +                             reg = <0x07040000 0x400>;
+> > > > > > > > +                             interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > > +                             clocks = <&r_ccu CLK_R_APB1_IR>,
+> > > > > > > > +                                      <&r_ccu CLK_IR>;
+> > > > > > > > +                             clock-names = "apb", "ir";
+> > > > > > > > +                             resets = <&r_ccu RST_R_APB1_IR>;
+> > > > > > > > +                             pinctrl-names = "default";
+> > > > > > > > +                             pinctrl-0 = <&r_ir_rx_pin>;
+> > > > > > > > +                             status = "disabled";
+> > > > > > > >               };
+> > > > > > >
+> > > > > > > Please make a comment here, that this is known broken on some boards and may
+> > > > > > > result IRQ flood if enabled. Otherwise noone will know.
+> > > > > >
+> > > > > > I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+> > > > > > suggested it.
+> > > > > > https://github.com/clementperon/linux/tree/h6_ir_v4
+> > > > > >
+> > > > > > But maybe we could also use the bit 5 of the IRQ status.
+> > > > >
+> > > > > Thanks, that's nice, but that will not make the HW work. That will just disable
+> > > > > it. The comment is still necessary.
+> > > > I have pushed a new version on my github.
+> > > > https://github.com/clementperon/linux/commits/h6_ir_v4
+> > > >
+> > > > I will submit it, if you are ok with it.
+> > >
+> > > the changes make it worse. Console is flooded with "Temporarily disable IRQ"
+> > > and other symptoms are the same as I described before. Interrupts are not
+> > > disabled in a any reasonable time. (I've waited for more > 5mins already.)
+> > >
+> > > You probably need to disable interrupts right away, not wait for 100k failures.
+> >
+> > Hmm, this is what the registers look like post-probe:
+> >
+> > R_CIR:
+> > 0x07040000 : 00000030
+> > 0x07040004 : 00000030
+> > 0x07040008 : 00000030
+> > 0x0704000c : 00000030
+> > 0x07040010 : 00000030
+> > 0x07040014 : 00000030
+> > 0x07040018 : 00000030
+> > 0x0704001c : 00000030
+> > 0x07040020 : 00000030
+> > 0x07040024 : 00000030
+> > 0x07040028 : 00000030
+> > 0x0704002c : 00000030
+> > 0x07040030 : 00000030
+> > 0x07040034 : 00000030
+> > 0x07040038 : 00000030
+> > 0x0704003c : 00000030
+> > 0x07040040 : 00000030
+> > 0x07040044 : 00000030
+> > 0x07040048 : 00000030
+> > 0x0704004c : 00000030
+> > 0x07040050 : 00000030
+> > 0x07040054 : 00000030
+> > 0x07040058 : 00000030
+> > 0x0704005c : 00000030
+> > 0x07040060 : 00000030
+> > 0x07040064 : 00000030
+> > 0x07040068 : 00000030
+> > 0x0704006c : 00000030
+> > 0x07040070 : 00000030
+> > 0x07040074 : 00000030
+> > 0x07040078 : 00000030
+> > 0x0704007c : 00000030
+> > 0x07040080 : 00000030
+> > 0x07040084 : 00000030
+> > 0x07040088 : 00000030
+> > 0x0704008c : 00000030
+> > 0x07040090 : 00000030
+> > 0x07040094 : 00000030
+> > 0x07040098 : 00000030
+> > 0x0704009c : 00000030
+> > 0x070400a0 : 00000030
+> > 0x070400a4 : 00000030
+> > 0x070400a8 : 00000030
+> > 0x070400ac : 00000030
+> > 0x070400b0 : 00000030
+> > 0x070400b4 : 00000030
+> > 0x070400b8 : 00000030
+> > 0x070400bc : 00000030
+> > 0x070400c0 : 00000030
+> > 0x070400c4 : 00000030
+> > 0x070400c8 : 00000030
+> > 0x070400cc : 00000030
+> > 0x070400d0 : 00000030
+> > 0x070400d4 : 00000030
+> > 0x070400d8 : 00000030
+> > 0x070400dc : 00000030
+> > 0x070400e0 : 00000030
+> > 0x070400e4 : 00000030
+> > 0x070400e8 : 00000030
+> > 0x070400ec : 00000030
+> > 0x070400f0 : 00000030
+> > 0x070400f4 : 00000030
+> > 0x070400f8 : 00000030
+> > 0x070400fc : 00000030
+> >
+> > Clearly not right. It's just the R_CIR module, other modules have normal values.
+> >
+> > I've checked:
+> > 0x070101c0 : 81000002
+> > (IR clock config register)
+> > 0x070101cc : 00010000
+> > (IR reset/bus clk gate reg)
+> >
+> > static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
+> > static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
+> >                                   r_mod0_default_parents, 0x1c0,
+> >                                   0, 5,         /* M */
+> >                                   8, 2,         /* P */
+> >                                   24, 1,        /* mux */
+> >                                   BIT(31),      /* gate */
+> >                                   0);
+> >
+> > static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> >
+> >         [RST_R_APB1_IR]         =  { 0x1cc, BIT(16) },
+> >
+> > So parent clock seems to be OK. But gate clock is not enabled, so the bus
+> > is not working.
+> >
+> > And look at this!!:
+> >
+> > static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> > static SUNXI_CCU_GATE(r_apb1_w1_clk,    "r-apb1-w1",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> >
+> > So, it's wrong w1 gate config!
+> >
+> > You can drop your changes, because I've probbably found the root cause.
 > 
-> Should proc_dointvec_jiffies() just be fixed to disallow negative values
-> entirely? Looking at the implementation, it seems to be very intentional
-> about accepting negative values.
-> 
-> However, when I looked through a handful of proc_dointvec_jiffies()
-> users, it looks like they're all expecting a positive value. Many in the
-> networking subsystem are, in fact, writing to unsigned long variables,
-> as I mentioned.
-> 
-I totally agree with you. And I also cannot find an scenario that expects
-negative values. Consideing the "negative" scenario may be exist, I add the
-proc_dointvec_jiffies_minmax like proc_dointvec_minmax.
+> Nice to see that you have found the issue, but I don't understand why
+> It's working on my board on not on yours.
 
-> Are there real-world cases of wanting to set a negative jiffie value
-> via proc_dointvec_jiffies()?
-Until now, I do not find such cases.
+Maybe you use modules? I have a builtin driver.
 
->>>>
->>>> Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
->>>> min/max write value, which is similar to the proc_dointvec_minmax func.
->>>>
+That may change initialization order. It would disable unused gates first, and
+when you load the module later from userpsace then it would enable the gate.
+
+If builtin, then it would enable IR gate first, and then disable the unused
+gates (W1 in this case), later on when entering userspace.
+
+Anyway, I can confirm that now, when I turn on the light in the room, I get
+around 10 interrupts with empty FIFO and than it stops.
+
+It doesn't cause the flood anymore.
+
+regards,
+	o.
+
+> Regards,
+> Clément
 > 
-> If proc_dointvec_jiffies() can't just be fixed, where will the new
-> function get used? It seems all the "unsigned int" users could benefit.
+> >
+> > regards,
+> >         o.
+> >
+> > > thank you and regards,
+> > >       o.
+> > >
+> > > > Thanks,
+> > > > Clément
+> > > >
+> > > > >
+> > > > > thank you,
+> > > > >         o.
+> > > > >
+> > > > > > Regards, Clement
+> > > > > >
+> > > > > > >
+> > > > > > > thanks,
+> > > > > > >         o.
+> > > > > > >
+> > > > > > > >               r_i2c: i2c@7081400 {
+> > > > > > > > --
+> > > > > > > > 2.20.1
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > _______________________________________________
+> > > > > > > > linux-arm-kernel mailing list
+> > > > > > > > linux-arm-kernel@lists.infradead.org
+> > > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > > > >
+> > > > > > --
+> > > > > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > > > > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > > > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.gmail.com.
+> > > > > > For more options, visit https://groups.google.com/d/optout.
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-I tend to add the proc_dointvec_jiffies_minmax func to provide more choices and
-not change the previous use of proc_dointvec_jiffies func.
-
-Thanks for your reply again.
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
