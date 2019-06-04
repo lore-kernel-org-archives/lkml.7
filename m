@@ -2,104 +2,96 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB17C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E019CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D402070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C356A20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFDUgY (ORCPT
+        id S1726711AbfFDUgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:36:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34042 "EHLO mx1.redhat.com"
+        Tue, 4 Jun 2019 16:36:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44647 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfFDUgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:36:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36F60C1EB1EC;
-        Tue,  4 Jun 2019 20:36:19 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE9F519C69;
-        Tue,  4 Jun 2019 20:36:17 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 14:36:17 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/IOV: Fix VF cfg_size
-Message-ID: <20190604143617.0a226555@x1.home>
-In-Reply-To: <155966918965.10361.16228304474160813310.stgit@gimli.home>
-References: <155966918965.10361.16228304474160813310.stgit@gimli.home>
-Organization: Red Hat
+        id S1726033AbfFDUgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:36:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 13:36:50 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 13:36:49 -0700
+Date:   Tue, 4 Jun 2019 13:36:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
+ for Intel SGX
+Message-ID: <20190604203649.GC7775@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-9-sean.j.christopherson@intel.com>
+ <CALCETrXf3ujAn6uOwWMU8SRZOvBRb8ALvo_LQvwxc899mrakwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 04 Jun 2019 20:36:24 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXf3ujAn6uOwWMU8SRZOvBRb8ALvo_LQvwxc899mrakwQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Jun 2019 11:26:42 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Tue, Jun 04, 2019 at 01:29:10PM -0700, Andy Lutomirski wrote:
+> On Fri, May 31, 2019 at 4:32 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long addr,
+> > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> > index 47f58cfb6a19..0562775424a0 100644
+> > --- a/include/linux/lsm_hooks.h
+> > +++ b/include/linux/lsm_hooks.h
+> > @@ -1446,6 +1446,14 @@
+> >   * @bpf_prog_free_security:
+> >   *     Clean up the security information stored inside bpf prog.
+> >   *
+> > + * Security hooks for Intel SGX enclaves.
+> > + *
+> > + * @enclave_load:
+> > + *     On success, returns 0 and optionally adjusts @allowed_prot
+> > + *     @vma: the source memory region of the enclave page being loaded.
+> > + *     @prot: the initial protection of the enclave page.
+> 
+> What do you mean "initial"?  The page is always mapped PROT_NONE when
+> this is called, right?  I feel like I must be missing something here.
 
-> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> other VFs") attempts to cache the config space size of VF0 to re-use
-> for all other VFs, but the cache is setup before the call to
-> pci_setup_device(), where we use set_pcie_port_type() to setup the
-> pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
-> pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
-> has a bypass through pci_cfg_space_size(), so its size is reported
-> correctly, but all subsequent VFs incorrectly report 256 bytes of
-> config space.
-> 
-> Resolve by delaying pci_read_vf_config_common() until after
-> pci_setup_device().
-> 
-> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
-> Cc: KarimAllah Ahmed <karahmed@amazon.de>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/pci/iov.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 3aa115ed3a65..34b1f78f4d31 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  	virtfn->is_virtfn = 1;
->  	virtfn->physfn = pci_dev_get(dev);
->  
-> -	if (id == 0)
-> -		pci_read_vf_config_common(virtfn);
-> -
->  	rc = pci_setup_device(virtfn);
->  	if (rc)
->  		goto failed1;
->  
-> +	if (id == 0)
-> +		pci_read_vf_config_common(virtfn);
-> +
->  	virtfn->dev.parent = dev->dev.parent;
->  	virtfn->multifunction = 0;
->  
-> 
-
-Would it actually make more sense to revert 975bb8b4dc93 and just
-assume any is_virtfn device has PCI_CFG_SPACE_EXP_SIZE for cfg_size?
-Per the SR-IOV spec, VFs are required to implement a PCIe capability,
-which should imply 4K of config space.  The reachability of that
-extended config space seems unnecessary to test if we assume that it
-has the same characteristics as the PF, which must be reachable if
-we're able to enable SR-IOV.  Thoughts?  Thanks,
-
-Alex
+Initial protection in the EPCM.  Yet another reason to ignore SECINFO.
