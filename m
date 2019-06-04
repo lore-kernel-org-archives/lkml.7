@@ -2,176 +2,97 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9213DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE1B2461E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676592461E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pA4q1aPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfFDIN5 (ORCPT
+        id S1726956AbfFDIOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:13:57 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41658 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfFDIN4 (ORCPT
+        Tue, 4 Jun 2019 04:14:49 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39374 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfFDIOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:13:56 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s57so5580411qte.8;
-        Tue, 04 Jun 2019 01:13:55 -0700 (PDT)
+        Tue, 4 Jun 2019 04:14:48 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j2so12212249pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jV8VCHbj6Lro7TEgyHmuW7nfZ6KFGO5pn05b2o6Dgbc=;
+        b=pA4q1aPO8wMBceIMuXHnOPs76k27i1v3HVZe3OwTff0Uk2bwwhPFnu0KC3WuR8DbH/
+         9w//GwDJeRxrS0rTh0SXzdvWeGVZ1VhgS2slFROTSH00X4uM9SQN0HX366tQlowjAHVC
+         A0/bdTjSJnoKpFyEiixiNEVytwUWAO5WtmcOr9iUdqUMzKxZZQ42fSyB43Xp8mpZSa6C
+         nbV9mcCGlv33QQrUS6I+IgCne11HKrnL+QzlMsefZlb++xKAZPYQvXfuAT71o6UbZiaA
+         uE6c0QB8KkiK/pL4WV6phIA1mdodo8jgXn3ay2M5KnKla72LPKtnAXWsI5zVjRH3syqk
+         645g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OlXBKw7HgP4DZult/XowRKn8oIkzj5I8Bd8HMNjnVco=;
-        b=WM6UY//u3gKrc0uo6AsfF8nChVGhf0xjC7EpAbk4VMYXb4/+tNYkyOb+YzQp5QDF+F
-         eATXSb0zT4e1tS4eHVzdmlE5htmqXImNh17u+QbK07ea8zHYXMfc93UVZD9mzC5lkgFf
-         jW2YyBnearx5ncMLRsP6hmF4VtuyxzyJJTuHiEYTY4rjTctXn9T4FojidVlcmEbO+Czk
-         KK2JY7zq6/hFcHFAk4At6DYq5ooPpxWGllOO6r4CyuS+0gAIIovda48sgtxPPWjB5B7W
-         VhJcL99+Maezi626WOXoV0bAmEn2WArGh7xclwN9Rr5nyhNpkMi+fYWMGLUiFkvwvqk9
-         ebOA==
-X-Gm-Message-State: APjAAAUHRFZifjj64hotD1DGUzR/OQaMQ02RxR15vu9da26nwDX0TW9L
-        AZyCatY999QurzjVJu5CvU59YVNFTrjc+vSH80c=
-X-Google-Smtp-Source: APXvYqz5kir33J5AjmzplbKAfH30cVdEZ3sEoQzuyfFO20zuGZF8LYiKII1TI8KuvJglH3idinfKAhZ4lWT5LqRWGgc=
-X-Received: by 2002:ac8:3ff5:: with SMTP id v50mr24492574qtk.142.1559636034539;
- Tue, 04 Jun 2019 01:13:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org> <20190531233306.GB25597@minitux>
- <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org> <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
- <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
-In-Reply-To: <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 4 Jun 2019 10:13:37 +0200
-Message-ID: <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Alex Elder <elder@linaro.org>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dan Williams <dcbw@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, abhishek.esse@gmail.com,
-        Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jV8VCHbj6Lro7TEgyHmuW7nfZ6KFGO5pn05b2o6Dgbc=;
+        b=F1tu8F34SMlot/Hkx0Y4CtpjUj/PNHU6jssOg1PXdrbpQtVOgwyHy0riApr5dPMuF0
+         fC9MtnWDZQFTtUuSO8xtxaABrShsWKHUS10Ac7FHvDcWQU28xbVTDKuA0OuiPhscFOOf
+         oytwuhtgABU6MXMJgMEbye565KR26O+NuGPO4MiYoVJ7y2tbX1R7ouD4Vybz3qYZ3Jym
+         t+irUOFmPlCrYnqadKUwNZxNBxp7vLaGi9nKyConpJIFHarzuWVe80R/je/7c/8dxz5z
+         N3FM2oPnI6aT4vrhO04TSOAnCNyojol9+xcG3stQGZrZbpZt+jimi6Cpi26Lq5VGWLAp
+         uC7g==
+X-Gm-Message-State: APjAAAWBNGEEwJlxqkEX3hNRX57IjB2K1B16QmktnmfopHkGTjDkoShB
+        FmYRBB2PK3e4iefFeLjA63UHtQ==
+X-Google-Smtp-Source: APXvYqyBT1jr5sCtI1Qrr8XvCjo0MKf4W3aMfwPavowCyU4VjHK9RS0I0j58WrwdIf8NNGx3+0mwsw==
+X-Received: by 2002:a62:e303:: with SMTP id g3mr35873984pfh.220.1559636088227;
+        Tue, 04 Jun 2019 01:14:48 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id j4sm14818804pgc.56.2019.06.04.01.14.43
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 04 Jun 2019 01:14:47 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
+Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 0/9] Add SD host controller support for SC9860 platform
+Date:   Tue,  4 Jun 2019 16:14:20 +0800
+Message-Id: <cover.1559635435.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:32 PM Alex Elder <elder@linaro.org> wrote:
-> On 6/3/19 5:04 AM, Arnd Bergmann wrote:
-> > On Sat, Jun 1, 2019 at 1:59 AM Subash Abhinov Kasiviswanathan
-> >
-> > - What I'm worried about most here is the flow control handling on the
-> >   transmit side. The IPA driver now uses the modern BQL method to
-> >   control how much data gets submitted to the hardware at any time.
-> >   The rmnet driver also uses flow control using the
-> >   rmnet_map_command() function, that blocks tx on the higher
-> >   level device when the remote side asks us to.
-> >   I fear that doing flow control for a single physical device on two
-> >   separate netdev instances is counterproductive and confuses
-> >   both sides.
->
-> I understand what you're saying here, and instinctively I think
-> you're right.
->
-> But BQL manages the *local* interface's ability to get rid of
-> packets, whereas the QMAP flow control is initiated by the other
-> end of the connection (the modem in this case).
->
-> With multiplexing, it's possible that one of several logical
-> devices on the modem side has exhausted a resource and must
-> ask the source of the data on the host side to suspend the
-> flow.  Meanwhile the other logical devices sharing the physical
-> link might be fine, and should not be delayed by the first one.
->
-> It is the multiplexing itself that confuses the BQL algorithm.
-> The abstraction obscures the *real* rates at which individual
-> logical connections are able to transmit data.
+This patch set adds optional clock support, HS400 enhanced strobe mode support,
+PHY DLL configuration and other optimization to make the SD host controller
+can work well on the Spreadtrum SC9860 platform.
 
-I would assume that the real rate constantly changes, at least
-for wireless interfaces that are also shared with other users
-on the same network. BQL is meant to deal with that, at least
-when using a modern queuing algorithm.
+Changes from v1:
+ - Add acked-tags from Adrian.
+ - Fix one mistake by changing MMC_TIMING_MMC_HS to MMC_TIMING_SD_HS in patch 8.
 
-> Even if the multiple logical interfaces implemented BQL, they
-> would not get the feedback they need directly from the IPA
-> driver, because transmitting over the physical interface might
-> succeed even if the logical interface on the modem side can't
-> handle more data.  So I think the flow control commands may be
-> necessary, given multiplexing.
+Baolin Wang (9):
+  mmc: sdhci-sprd: Check the enable clock's return value correctly
+  dt-bindings: mmc: sprd: Add another optional clock documentation
+  mmc: sdhci-sprd: Add optional gate clock support
+  mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
+  mmc: sdhci-sprd: Add HS400 enhanced strobe mode
+  mmc: sdhci-sprd: Enable PHY DLL to make clock stable
+  dt-bindings: mmc: sprd: Add PHY DLL delay documentation
+  mmc: sdhci-sprd: Add PHY DLL delay configuration
+  arm64: dts: sprd: Add Spreadtrum SD host controller support
 
-Can you describe what kind of multiplexing is actually going on?
-I'm still unclear about what we actually use multiple logical
-interfaces for here, and how they relate to one another.
+ .../devicetree/bindings/mmc/sdhci-sprd.txt         |   19 +++
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |   35 ++++
+ drivers/mmc/host/sdhci-sprd.c                      |  171 +++++++++++++++++++-
+ 3 files changed, 217 insertions(+), 8 deletions(-)
 
-> The rmnet driver could use BQL, and could return NETDEV_TX_BUSY
-> for a logical interface when its TX flow has been stopped by a
-> QMAP command.  That way the feedback for BQL on the logical
-> interfaces would be provided in the right place.
->
-> I have no good intuition about the interaction between
-> two layered BQL managed queues though.
+-- 
+1.7.9.5
 
-Returning NETDEV_TX_BUSY is usually a bad idea as that
-leads to unnecessary frame drop.
-
-I do think that using BQL and the QMAP flow command on
-the /same/ device would be best, as that throttles the connection
-when either of the two algorithms wants us to slow down.
-
-The question is mainly which of the two devices that should be.
-Doing it in the ipa driver is probably easier to implement here,
-but ideally I think we'd only have a single queue visible to the
-network stack, if we can come up with a way to do that.
-
-> > - I was a little confused by the location of the rmnet driver in
-> >   drivers/net/ethernet/... More conventionally, I think as a protocol
-> >   handler it should go into net/qmap/, with the ipa driver going
-> >   into drivers/net/qmap/ipa/, similar to what we have fo ethernet,
-> >   wireless, ppp, appletalk, etc.
-> >
-> > - The rx_handler uses gro_cells, which as I understand is meant
-> >   for generic tunnelling setups and takes another loop through
-> >   NAPI to aggregate data from multiple queues, but in case of
-> >   IPA's single-queue receive calling gro directly would be simpler
-> >   and more efficient.
->
-> I have been planning to investigate some of the generic GRO
-> stuff for IPA but was going to wait on that until the basic
-> code was upstream.
-
-That's ok, that part can easily be changed after the fact, as it
-does not impact the user interface or the general design.
-
-> >   From the overall design and the rmnet Kconfig description, it
-> >   appears as though the intention as that rmnet could be a
-> >   generic wrapper on top of any device, but from the
-> >   implementation it seems that IPA is not actually usable that
-> >   way and would always go through IPA.
->
-> As far as I know *nothing* upstream currently uses rmnet; the
-> IPA driver will be the first, but as Bjorn said others seem to
-> be on the way.  I'm not sure what you mean by "IPA is not
-> usable that way."  Currently the IPA driver assumes a fixed
-> configuration, and that configuration assumes the use of QMAP,
-> and therefore assumes the rmnet driver is layered above it.
-> That doesn't preclude rmnet from using a different back end.
-
-Yes, that's what I meant above: IPA can only be used through
-rmnet (I wrote "through IPA", sorry for the typo), but cannot be
-used by itself.
-
-       Arnd
