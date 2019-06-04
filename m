@@ -3,202 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A1BC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C3A2084A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559656344;
-	bh=Hyz6eND3R6Bcu0QiRWXZL/ZSyXeYxxrku/dLyneQLXg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YD9wBlXjIJfPY2t+o/OCRLL7PcRs0nOI8HnW9ROa29m4AcamJF+Ym5heeNcpzCFXt
-	 L51H3R2b9IRX6dHufKOIttAUIYmPobjj62qFtCcHuV/QJIUEMBR4HdbJ476YCr/+sF
-	 ktvmcfKUC2DcGREyj7ZEUUx4IeQd4kfuCMxU4xbo=
+	by mail.kernel.org (Postfix) with ESMTP id D3F392258C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FW/ZVCa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfFDNwW (ORCPT
+        id S1727601AbfFDNxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:52:22 -0400
-Received: from casper.infradead.org ([85.118.1.10]:58336 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFDNwW (ORCPT
+        Tue, 4 Jun 2019 09:53:22 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32989 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFDNxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:52:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xkJ5K7Ry3R0EMrSoSiHpEbxAEhSIrvb7VZ7JEOL85Ok=; b=gQgFCO+3VWDKckP/yDem/hmd8W
-        f+84aEoA9L9dJ6ru/secQk5HrwhgCLqw4K/PuvIHQcJfmaQQJAXSlPL7fWh6EScsSx3gPRR7XRH5J
-        Zu1NCXREruA0Roft/Rk/O1My0YmI+rVTNUHF2sY6Xe+uu/rMI0AyhCddvO4B5LMPkdLXFU3qsAR9K
-        Q16GECVfENkx8u9BuUCDie6+rm8yXQZMxxxH6WxzyNC8XuyLA9xlaV7Th5mcKN/3S+fS16HSlLK3S
-        eqq77bsIrSL9hQXSc2Z7y43O3bLNxjNvCGFXcQMryqdpEvMyXNgaYTTDJVWpTyIt2NU8IOK1cTUAI
-        epFRUExw==;
-Received: from [179.182.172.34] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hY9rO-0006JT-P3; Tue, 04 Jun 2019 13:52:19 +0000
-Date:   Tue, 4 Jun 2019 10:52:14 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Tue, 4 Jun 2019 09:53:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so16529193lfe.0;
+        Tue, 04 Jun 2019 06:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g0c5U8ZJGzowzVjpPuh+TTxQXYZLeAWd3eLnBu8wlp0=;
+        b=FW/ZVCa4F/VreNcXD+vRknNNUfwKryBDe2hohStLr9swLZo/c+UzNthU6e2v4e75fY
+         78wSKmqd5+0yv4vjDNKSgSNWuzLc4R0BF3ACSDSAnLwsTeHoqtOpPDSMe7iUBfB6OBAI
+         oA27Ht93aSOs+3mk78FYQpsDYtDUQng9HSmPr2CQ+1H8iIVr+wBk+URc08YMs0RQse7G
+         8cEUnRb/uARJNoMsv58mmRWp8n0Q7qKrbyuqzPF4qnV0gGyrjB62e017UQHTSRsg1JGq
+         h88AR17Sv/GjBLSHo47tSjFJRHhPvhEvZwKGZjKn4iBIRaMDh0PqttZ6IdwEhlOgXOwI
+         SH/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g0c5U8ZJGzowzVjpPuh+TTxQXYZLeAWd3eLnBu8wlp0=;
+        b=hsiTOPNNZI9llgApvxB7+y7v7AmWEBTVpesIozzNAE3NFBmCZsETf+OMOL9twu8ZsD
+         lpv6/0R+ZqoRb3i+apjj5yvsv3HKCXL3LwQTrHfeBM+kvLFi/n+vODutapgpL+BEktdE
+         i6qqNBJXPjOJ5rGzJZT50R2kwlL7qkmwGPx/L8ugT6wsfcRI3JA+rlnWgEsTo1IgibAx
+         PYb0Sul87qey3qF25jua5+2jb0ZpEjj8zwdHNyNts7SlQoGTJYzP7J3uayAe4lBcojEV
+         wX/gU1Xl/QIR1ad5oqMhcS9LCbkZO0QInxH3DEsKHvyNNeUmiCouybDh0dgCM5SwBSSQ
+         G0dw==
+X-Gm-Message-State: APjAAAWCrfYKHsZD1LWyCPUH/QRxTuOBwCs5SLDM1qj48rZDlj0Qs4ut
+        LfiqVX6zqwMUwNZZw6h8PBBYsK/O
+X-Google-Smtp-Source: APXvYqy/ffUKUetGBGQNSy2Yeu9gMiDil61iuTwt1LZIAxMToBU2WneJeLI3inPFotDil9jfBdAcrw==
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr14518234lfg.88.1559656399186;
+        Tue, 04 Jun 2019 06:53:19 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id b25sm3732074lff.42.2019.06.04.06.53.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 06:53:18 -0700 (PDT)
+Subject: Re: [PATCH v4 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for the
+ driver
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc:it_IT: fix file references
-Message-ID: <20190604105214.36147c02@coco.lan>
-In-Reply-To: <20190530201455.12412-1-federico.vaga@vaga.pv.it>
-References: <20190530201455.12412-1-federico.vaga@vaga.pv.it>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-15-digetx@gmail.com> <20190604112026.GN16519@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ed2c502f-8f49-d89b-32c6-4b5415e1fa47@gmail.com>
+Date:   Tue, 4 Jun 2019 16:53:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190604112026.GN16519@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 30 May 2019 22:14:54 +0200
-Federico Vaga <federico.vaga@vaga.pv.it> escreveu:
+04.06.2019 14:20, Thierry Reding пишет:
+> On Thu, May 02, 2019 at 02:38:13AM +0300, Dmitry Osipenko wrote:
+>> The driver's compilation doesn't have any specific dependencies, hence
+>> the COMPILE_TEST option can be supported in Kconfig.
+>>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index 56db9dc05edb..a6bba6e1e7d9 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
+>>  
+>>  config ARM_TEGRA_DEVFREQ
+>>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+>> -	depends on ARCH_TEGRA
+>> +	depends on ARCH_TEGRA || COMPILE_TEST
+>>  	select PM_OPP
+>>  	help
+>>  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+> 
+> You need to be careful with these. You're using I/O register accessors,
+> which are not supported on the UM architecture, for example.
+> 
+> This may end up getting flagged during build testing.
 
-> Fix italian translation file references based on
-> `scripts/documentation-file-ref-check` output.
->=20
-> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-> ---
->  .../it_IT/admin-guide/kernel-parameters.rst          | 12 ++++++++++++
->  .../translations/it_IT/process/adding-syscalls.rst   |  2 +-
->  .../translations/it_IT/process/coding-style.rst      |  2 +-
->  Documentation/translations/it_IT/process/howto.rst   |  2 +-
->  .../translations/it_IT/process/magic-number.rst      |  2 +-
->  .../it_IT/process/stable-kernel-rules.rst            |  4 ++--
->  6 files changed, 18 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/translations/it_IT/admin-guide/kernel-p=
-arameters.rst
->=20
-> diff --git a/Documentation/translations/it_IT/admin-guide/kernel-paramete=
-rs.rst b/Documentation/translations/it_IT/admin-guide/kernel-parameters.rst
-> new file mode 100644
-> index 000000000000..0e36d82a92be
-> --- /dev/null
-> +++ b/Documentation/translations/it_IT/admin-guide/kernel-parameters.rst
-> @@ -0,0 +1,12 @@
-> +.. include:: ../disclaimer-ita.rst
-> +
-> +:Original: :ref:`Documentation/admin-guide/kernel-parameters.rst <kernel=
-parameters>`
-> +
-> +.. _it_kernelparameters:
-> +
-> +I parametri da linea di comando del kernel
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +.. warning::
-> +
-> +    TODO ancora da tradurre
-> diff --git a/Documentation/translations/it_IT/process/adding-syscalls.rst=
- b/Documentation/translations/it_IT/process/adding-syscalls.rst
-> index e0a64b0688a7..c3a3439595a6 100644
-> --- a/Documentation/translations/it_IT/process/adding-syscalls.rst
-> +++ b/Documentation/translations/it_IT/process/adding-syscalls.rst
-> @@ -39,7 +39,7 @@ vostra interfaccia.
->         un qualche modo opaca.
-> =20
->   - Se dovete esporre solo delle informazioni sul sistema, un nuovo nodo =
-in
-> -   sysfs (vedere ``Documentation/translations/it_IT/filesystems/sysfs.tx=
-t``) o
-> +   sysfs (vedere ``Documentation/filesystems/sysfs.txt``) o
->     in procfs potrebbe essere sufficiente.  Tuttavia, l'accesso a questi
->     meccanismi richiede che il filesystem sia montato, il che potrebbe non
->     essere sempre vero (per esempio, in ambienti come namespace/sandbox/c=
-hroot).
-> diff --git a/Documentation/translations/it_IT/process/coding-style.rst b/=
-Documentation/translations/it_IT/process/coding-style.rst
-> index 5ef534c95e69..a6559d25a23d 100644
-> --- a/Documentation/translations/it_IT/process/coding-style.rst
-> +++ b/Documentation/translations/it_IT/process/coding-style.rst
-> @@ -696,7 +696,7 @@ nella stringa di titolo::
->  	...
-> =20
->  Per la documentazione completa sui file di configurazione, consultate
-> -il documento Documentation/translations/it_IT/kbuild/kconfig-language.txt
-> +il documento Documentation/kbuild/kconfig-language.txt
-> =20
-> =20
->  11) Strutture dati
-> diff --git a/Documentation/translations/it_IT/process/howto.rst b/Documen=
-tation/translations/it_IT/process/howto.rst
-> index 9903ac7c566b..44e6077730e8 100644
-> --- a/Documentation/translations/it_IT/process/howto.rst
-> +++ b/Documentation/translations/it_IT/process/howto.rst
-> @@ -131,7 +131,7 @@ Di seguito una lista di file che sono presenti nei so=
-rgente del kernel e che
->  	"Linux kernel patch submission format"
->  		http://linux.yyz.us/patch-format.html
-> =20
-> -  :ref:`Documentation/process/translations/it_IT/stable-api-nonsense.rst=
- <it_stable_api_nonsense>`
-> +  :ref:`Documentation/translations/it_IT/process/stable-api-nonsense.rst=
- <it_stable_api_nonsense>`
-> =20
->      Questo file descrive la motivazioni sottostanti la conscia decisione=
- di
->      non avere un API stabile all'interno del kernel, incluso cose come:
-> diff --git a/Documentation/translations/it_IT/process/magic-number.rst b/=
-Documentation/translations/it_IT/process/magic-number.rst
-> index 5281d53e57ee..ed1121d0ba84 100644
-> --- a/Documentation/translations/it_IT/process/magic-number.rst
-> +++ b/Documentation/translations/it_IT/process/magic-number.rst
-> @@ -1,6 +1,6 @@
->  .. include:: ../disclaimer-ita.rst
-> =20
-> -:Original: :ref:`Documentation/process/magic-numbers.rst <magicnumbers>`
-> +:Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
->  :Translator: Federico Vaga <federico.vaga@vaga.pv.it>
-> =20
->  .. _it_magicnumbers:
-> diff --git a/Documentation/translations/it_IT/process/stable-kernel-rules=
-.rst b/Documentation/translations/it_IT/process/stable-kernel-rules.rst
-> index 48e88e5ad2c5..4f206cee31a7 100644
-> --- a/Documentation/translations/it_IT/process/stable-kernel-rules.rst
-> +++ b/Documentation/translations/it_IT/process/stable-kernel-rules.rst
-> @@ -33,7 +33,7 @@ Regole sul tipo di patch che vengono o non vengono acce=
-ttate nei sorgenti
->   - Non deve includere alcuna correzione "banale" (correzioni grammatical=
-i,
->     pulizia dagli spazi bianchi, eccetera).
->   - Deve rispettare le regole scritte in
-> -   :ref:`Documentation/translation/it_IT/process/submitting-patches.rst =
-<it_submittingpatches>`
-> +   :ref:`Documentation/translations/it_IT/process/submitting-patches.rst=
- <it_submittingpatches>`
->   - Questa patch o una equivalente deve esistere gi=C3=A0 nei sorgenti pr=
-incipali di
->     Linux
-> =20
-> @@ -43,7 +43,7 @@ Procedura per sottomettere patch per i sorgenti -stable
-> =20
->   - Se la patch contiene modifiche a dei file nelle cartelle net/ o drive=
-rs/net,
->     allora seguite le linee guida descritte in
-> -   :ref:`Documentation/translation/it_IT/networking/netdev-FAQ.rst <it_n=
-etdev-FAQ>`;
-> +   :ref:`Documentation/translations/it_IT/networking/netdev-FAQ.rst <it_=
-netdev-FAQ>`;
->     ma solo dopo aver verificato al seguente indirizzo che la patch non s=
-ia
->     gi=C3=A0 in coda:
->     https://patchwork.ozlabs.org/bundle/davem/stable/?series=3D&submitter=
-=3D&state=3D*&q=3D&archive=3D
-
-
-
-Thanks,
-Mauro
+We have similar cases in other drivers and it doesn't cause any known
+problems because (I think) build-bots are aware of this detail. Hence
+there is no real need to be overreactive here and in this particular
+case it's better to react to real problems once they show up (we already
+did that by fixing build breakage caused by a CLK API problem found by
+bot in v3). Does it sound like a good argument to you? ACK?
