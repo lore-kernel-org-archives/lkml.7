@@ -4,113 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B29C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B862496E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400D124965
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfFDIVc (ORCPT
+        id S1727036AbfFDIV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:21:32 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:54567 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfFDIVc (ORCPT
+        Tue, 4 Jun 2019 04:21:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46645 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfFDIV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:21:32 -0400
-X-Originating-IP: 90.88.144.139
-Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 21F3820010;
-        Tue,  4 Jun 2019 08:21:26 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 10:21:26 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     codekipper@gmail.com
-Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
-Subject: Re: [PATCH v4 9/9] ASoC: sun4i-i2s: Adjust regmap settings
-Message-ID: <20190604082126.7jgk2cn2u253nmr2@flea>
-References: <20190603174735.21002-1-codekipper@gmail.com>
- <20190603174735.21002-10-codekipper@gmail.com>
+        Tue, 4 Jun 2019 04:21:56 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hY4hW-0000Zg-O1; Tue, 04 Jun 2019 08:21:46 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] bpf: remove redundant assignment to err
+Date:   Tue,  4 Jun 2019 09:21:46 +0100
+Message-Id: <20190604082146.2049-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="id3655fnez2gqvnw"
-Content-Disposition: inline
-In-Reply-To: <20190603174735.21002-10-codekipper@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---id3655fnez2gqvnw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The variable err is assigned with the value -EINVAL that is never
+read and it is re-assigned a new value later on.  The assignment is
+redundant and can be removed.
 
-On Mon, Jun 03, 2019 at 07:47:35PM +0200, codekipper@gmail.com wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
->
-> Bypass the regmap cache when flushing the i2s FIFOs and modify the tables
-> to reflect this.
->
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> ---
->  sound/soc/sunxi/sun4i-i2s.c | 29 +++++++++--------------------
->  1 file changed, 9 insertions(+), 20 deletions(-)
->
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index 351b8021173b..92828a84902d 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -595,9 +595,11 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
->  static void sun4i_i2s_start_capture(struct sun4i_i2s *i2s)
->  {
->  	/* Flush RX FIFO */
-> +	regcache_cache_bypass(i2s->regmap, true);
->  	regmap_update_bits(i2s->regmap, SUN4I_I2S_FIFO_CTRL_REG,
->  			   SUN4I_I2S_FIFO_CTRL_FLUSH_RX,
->  			   SUN4I_I2S_FIFO_CTRL_FLUSH_RX);
-> +	regcache_cache_bypass(i2s->regmap, false);
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Your commit log should say why you need to do this in the first place.
+---
 
-> @@ -771,13 +775,7 @@ static const struct snd_soc_component_driver sun4i_i2s_component = {
->
->  static bool sun4i_i2s_rd_reg(struct device *dev, unsigned int reg)
->  {
-> -	switch (reg) {
-> -	case SUN4I_I2S_FIFO_TX_REG:
-> -		return false;
-> -
-> -	default:
-> -		return true;
-> -	}
-> +	return true;
+V2: reorder variables as recommended by Jakub Kicinski to keep in
+    the networking code style.
 
-That doesn't seem related?
+---
+ kernel/bpf/devmap.c | 2 +-
+ kernel/bpf/xskmap.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Maxime
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 5ae7cce5ef16..b58a33ca8a27 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -88,8 +88,8 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
+ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+ {
+ 	struct bpf_dtab *dtab;
+-	int err = -EINVAL;
+ 	u64 cost;
++	int err;
+ 
+ 	if (!capable(CAP_NET_ADMIN))
+ 		return ERR_PTR(-EPERM);
+diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
+index 22066c28ba61..413d75f4fc72 100644
+--- a/kernel/bpf/xskmap.c
++++ b/kernel/bpf/xskmap.c
+@@ -17,8 +17,8 @@ struct xsk_map {
+ 
+ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
+ {
+-	int cpu, err = -EINVAL;
+ 	struct xsk_map *m;
++	int cpu, err;
+ 	u64 cost;
+ 
+ 	if (!capable(CAP_NET_ADMIN))
+-- 
+2.20.1
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---id3655fnez2gqvnw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYqBgAKCRDj7w1vZxhR
-xaI9AP9kw/Dxrjf+ydEaoUMyGCeuWG+T3q9mRR+01bsMCLwC4gD/Vw5P/+LzUpDY
-JRMk0P27lfshoHsSOv0tmj90hGxF+QU=
-=QlRr
------END PGP SIGNATURE-----
-
---id3655fnez2gqvnw--
