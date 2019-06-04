@@ -2,122 +2,171 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89261C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90CCC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6912E2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04512075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHVOjJU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFDVnN convert rfc822-to-8bit (ORCPT
+        id S1726510AbfFDVr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:43:13 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52309 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFDVnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:43:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 14:43:11 -0700
-X-ExtLoop1: 1
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2019 14:43:10 -0700
-Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 4 Jun 2019 14:43:10 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX151.amr.corp.intel.com ([169.254.7.185]) with mapi id 14.03.0415.000;
- Tue, 4 Jun 2019 14:43:10 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        "Paul Moore" <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
- for Intel SGX
-Thread-Topic: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
- for Intel SGX
-Thread-Index: AQHVGAkjeU1nLGbLQ0COV0gRY1rFBqaMbZsAgAACI4D//5wC8A==
-Date:   Tue, 4 Jun 2019 21:43:09 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654EDB7D@ORSMSX116.amr.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-9-sean.j.christopherson@intel.com>
- <CALCETrXf3ujAn6uOwWMU8SRZOvBRb8ALvo_LQvwxc899mrakwQ@mail.gmail.com>
- <20190604203649.GC7775@linux.intel.com>
-In-Reply-To: <20190604203649.GC7775@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjk3ZmNiZGEtZTJkNi00ZTMzLWI3MzYtYzNlOTBlZTg5NzlmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9oejQ4MHBleU1KeXlYQXU3S3JFeHhwK1d2WUJGRTJibitsMmRcL2YzQ3N4U0tOY29KSms0SEVSZWtiSmZxUE1PIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 4 Jun 2019 17:47:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45504 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFDVr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:47:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f20so2553709edt.12;
+        Tue, 04 Jun 2019 14:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YAOiP57A01Sn4VN1p2tU0pXmqdLPIiJ4XRB9cBH/L60=;
+        b=LHVOjJU+PrWUKjw2La9VE1vPKl5KearF9vd1gx+fMOah0NIYnTCpk/hLPywmGuD7Qx
+         ubKVoOSXllgIIOtqhu2gVJ3x9B0/bsgZ7dOqAY3y5Ayi0qhLPf1tZQD8IUflfR/bo3b1
+         F4TaQlhPSFK4tf44OdTct45QOW1HbhpVKmRS1UPgsRmJ8ykiC6IB1kc0IjzAbHbpYgcW
+         XocfR253q6JmXmpbPH+wSLE5nYqYTiHdUq2ypGGmgfgczCsKHTbAbfTkEuh649zZZ9c/
+         Obhuc+H39gsisfGYj1xrWFrX2Lyh1bRdUjq62tExuKhoIe4zwnBrI2RwiYnmhdgPNIGz
+         bDHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YAOiP57A01Sn4VN1p2tU0pXmqdLPIiJ4XRB9cBH/L60=;
+        b=NULAeei9khK+CQ3Lbp52QiJxztnZ32IYSoc9ib4IX8i+bXt/GqhGAVNI4e7vXa4ROt
+         GNdBAobfPaup7tehAmkGoxj+ynS0BiBZAu+WSjSMMqXdr5bqBEzzjbClRve8/dipkCmq
+         4F7GQEQdT9Ax46SO700SO16EkHvg8RjmXeWUXUD+2MjKNJnNK6Tp5wWolrA1uTTbfv26
+         of59Ci4AloPtYmzdE6SlsD3UpUxNyRvE11gnEXvsrPGhaKc8su+dIXkM746uQmnYD8ut
+         qCgPUK49EE1RS3/3Qw5s5ackjlcxbR04CIIOXz7Rf+KKsPwzjflN8QRu/fc8FHU0ZXFu
+         iM6w==
+X-Gm-Message-State: APjAAAWGzrG5VDuqRAXENkhGdKKRed7MLRRMbHmRa/aJkFFppQYATV5j
+        RA3U28PmZqe87V8R2ZjTm5lncabqzC0=
+X-Google-Smtp-Source: APXvYqwDVoxJj2tIOxzLuK3nYNHPwTJ67OHC1d3ag5SDYh0bPqzR5f57ZgPalm+F2A4DDOJ5mfMHNQ==
+X-Received: by 2002:a50:bb24:: with SMTP id y33mr38369134ede.116.1559684875305;
+        Tue, 04 Jun 2019 14:47:55 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id n5sm2897404edt.65.2019.06.04.14.47.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 14:47:54 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 21:47:53 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v3 08/11] mm/memory_hotplug: Drop MHP_MEMBLOCK_API
+Message-ID: <20190604214753.utbdrjtjavgi7yhf@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-9-david@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527111152.16324-9-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Christopherson, Sean J
-> Sent: Tuesday, June 04, 2019 1:37 PM
-> 
-> On Tue, Jun 04, 2019 at 01:29:10PM -0700, Andy Lutomirski wrote:
-> > On Fri, May 31, 2019 at 4:32 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > >  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long
-> > > addr, diff --git a/include/linux/lsm_hooks.h
-> > > b/include/linux/lsm_hooks.h index 47f58cfb6a19..0562775424a0 100644
-> > > --- a/include/linux/lsm_hooks.h
-> > > +++ b/include/linux/lsm_hooks.h
-> > > @@ -1446,6 +1446,14 @@
-> > >   * @bpf_prog_free_security:
-> > >   *     Clean up the security information stored inside bpf prog.
-> > >   *
-> > > + * Security hooks for Intel SGX enclaves.
-> > > + *
-> > > + * @enclave_load:
-> > > + *     On success, returns 0 and optionally adjusts @allowed_prot
-> > > + *     @vma: the source memory region of the enclave page being
-> loaded.
-> > > + *     @prot: the initial protection of the enclave page.
-> >
-> > What do you mean "initial"?  The page is always mapped PROT_NONE when
-> > this is called, right?  I feel like I must be missing something here.
-> 
-> Initial protection in the EPCM.  Yet another reason to ignore SECINFO.
+On Mon, May 27, 2019 at 01:11:49PM +0200, David Hildenbrand wrote:
+>No longer needed, the callers of arch_add_memory() can handle this
+>manually.
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: David Hildenbrand <david@redhat.com>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Oscar Salvador <osalvador@suse.com>
+>Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>Cc: Qian Cai <cai@lca.pw>
+>Cc: Arun KS <arunks@codeaurora.org>
+>Cc: Mathieu Malaterre <malat@debian.org>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I know you guys are talking in the background that all pages are mmap()'ed PROT_NONE. But that's an unnecessary limitation. And @prot here should be @target_vma->vm_flags&(VM_READ|VM_WRITE|VM_EXEC). 
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+
+>---
+> include/linux/memory_hotplug.h | 8 --------
+> mm/memory_hotplug.c            | 9 +++------
+> 2 files changed, 3 insertions(+), 14 deletions(-)
+>
+>diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>index 2d4de313926d..2f1f87e13baa 100644
+>--- a/include/linux/memory_hotplug.h
+>+++ b/include/linux/memory_hotplug.h
+>@@ -128,14 +128,6 @@ extern void arch_remove_memory(int nid, u64 start, u64 size,
+> extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
+> 			   unsigned long nr_pages, struct vmem_altmap *altmap);
+> 
+>-/*
+>- * Do we want sysfs memblock files created. This will allow userspace to online
+>- * and offline memory explicitly. Lack of this bit means that the caller has to
+>- * call move_pfn_range_to_zone to finish the initialization.
+>- */
+>-
+>-#define MHP_MEMBLOCK_API               (1<<0)
+>-
+> /* reasonably generic interface to expand the physical pages */
+> extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> 		       struct mhp_restrictions *restrictions);
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index b1fde90bbf19..9a92549ef23b 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -251,7 +251,7 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
+> #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
+> 
+> static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
+>-		struct vmem_altmap *altmap, bool want_memblock)
+>+				   struct vmem_altmap *altmap)
+> {
+> 	int ret;
+> 
+>@@ -294,8 +294,7 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
+> 	}
+> 
+> 	for (i = start_sec; i <= end_sec; i++) {
+>-		err = __add_section(nid, section_nr_to_pfn(i), altmap,
+>-				restrictions->flags & MHP_MEMBLOCK_API);
+>+		err = __add_section(nid, section_nr_to_pfn(i), altmap);
+> 
+> 		/*
+> 		 * EEXIST is finally dealt with by ioresource collision
+>@@ -1067,9 +1066,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+>  */
+> int __ref add_memory_resource(int nid, struct resource *res)
+> {
+>-	struct mhp_restrictions restrictions = {
+>-		.flags = MHP_MEMBLOCK_API,
+>-	};
+>+	struct mhp_restrictions restrictions = {};
+> 	u64 start, size;
+> 	bool new_node = false;
+> 	int ret;
+>-- 
+>2.20.1
+
+-- 
+Wei Yang
+Help you, Help me
