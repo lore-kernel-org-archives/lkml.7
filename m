@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89B0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCED2085A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9815A2085A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690591;
-	bh=L7/co2suk1XWcswoizUGcXctEkqEhTYO+XgyUP8D1i8=;
+	s=default; t=1559690593;
+	bh=FohrENoaCq01zdcKab6dNJUVnveTwmm7geo9AeQqun0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UBErEE90zOkrb+EddI0ey5/PoiGCuB1yd0dGQxfkyMoQ8HFLXkILxNjwqHRWNUAIw
-	 RRxIt1QfCG71eiAVbFXbG0TGE7CGf0EdQAfCT489ANzHkdNN5SN6O1LivyXdVre25r
-	 YEV1ust1x7mWqhi+96qJ9TjAvbhVaIAgvhRI9/yI=
+	b=uAJS/hsug+ELjHlisy1UZnkPP0YiD/7m22eAqUlOhHvXdwW35L8NMWnuzKvHyYFZS
+	 zrFzN8sfH9nqCE7rUTgVIo8z7ZcC+oQ2QmNfcv053KEUz0gWDLo5v7rq0KVRyh9P9W
+	 Q+2WOfEakjz9SUC0Fa0eJfyLxaYvRVPS/aDk0now=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfFDXXK (ORCPT
+        id S1727250AbfFDXXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbfFDXXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:07 -0400
+        id S1727168AbfFDXXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FB820859;
-        Tue,  4 Jun 2019 23:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C4A420859;
+        Tue,  4 Jun 2019 23:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690586;
-        bh=L7/co2suk1XWcswoizUGcXctEkqEhTYO+XgyUP8D1i8=;
+        s=default; t=1559690591;
+        bh=FohrENoaCq01zdcKab6dNJUVnveTwmm7geo9AeQqun0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RK7QctSZ+g/UgV3sNRKLQntRvxuwGaUZcVDSMn+wIM3i/cUN0Spd8J+0uu39FQ+tl
-         E4qCfXoiU7RdKBftF8P1bOeP1Y8qi9o1C5ix8kMERf9kym/I23O1atW5mVlhJ05I94
-         IbZrJ5v0mIXJvGsgbmXi5uuC9djcv12UW2VI27T8=
+        b=RIjD3D3vqz9OHatI2bSHdKm07oJuBbf4ul8788HCXV+8YI6ROxXAOfWjh4tQDlZfX
+         YFxcJKAvUf5MW/el6ivoLfKwUrd4uDaoR5yv/fS4nvm7JVTRc8tLBRplM2bC6lWqo3
+         96S+lCS6zrSCe8WjX2nR5/5oPchg18Z+gTCC2RfQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 35/60] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
-Date:   Tue,  4 Jun 2019 19:21:45 -0400
-Message-Id: <20190604232212.6753-35-sashal@kernel.org>
+Cc:     Flora Cui <flora.cui@amd.com>, Feifei Xu <Feifei.Xu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 38/60] drm/amdgpu: keep stolen memory on picasso
+Date:   Tue,  4 Jun 2019 19:21:48 -0400
+Message-Id: <20190604232212.6753-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -60,58 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+From: Flora Cui <flora.cui@amd.com>
 
-[ Upstream commit d6423bd03031c020121da26c41a26bd5cc6d0da3 ]
+[ Upstream commit 379109351f4f6f2405cf54e7a296055f589c3ad1 ]
 
-There are several Beckhoff Automation industrial PC boards which use
-pmc_plt_clk* clocks for ethernet controllers. This adds affected boards
-to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
-not turned off.
+otherwise screen corrupts during modprobe.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Flora Cui <flora.cui@amd.com>
+Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index a311f48ce7c9..b1d804376237 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -413,6 +413,30 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB3163",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6263",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6363",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index 2fe8397241ea..1611bef19a2c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -715,6 +715,7 @@ static bool gmc_v9_0_keep_stolen_memory(struct amdgpu_device *adev)
+ 	case CHIP_VEGA10:
+ 		return true;
+ 	case CHIP_RAVEN:
++		return (adev->pdev->device == 0x15d8);
+ 	case CHIP_VEGA12:
+ 	case CHIP_VEGA20:
+ 	default:
 -- 
 2.20.1
 
