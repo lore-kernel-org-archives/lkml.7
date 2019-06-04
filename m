@@ -3,105 +3,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD70CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00C6C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794CF20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559651226;
-	bh=iaMFRIk0Y0W/DnigZZek04DJjtoqETqrBE8Yb9t2yls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TSg/ssfQs9fb5REGjG3ROsJRxbdvQYF8kgvBiaKyoh5f5bP/JWS52cccwjTntC5Ef
-	 jVBkFVggscu/zAU0WM1kF/RadJpJEFSvVZr6txAo6Jkb21oyfWKoujz+VLPa6ItLNE
-	 S6Itqbop8z2Ciu/yoy1lUl/BwSN/pNA1pxShXzr0=
+	by mail.kernel.org (Postfix) with ESMTP id 93C9620665
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dcNC7Umt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfFDM1F (ORCPT
+        id S1727823AbfFDM1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfFDM1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:27:05 -0400
-Received: from localhost (unknown [117.99.94.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250F420665;
-        Tue,  4 Jun 2019 12:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559651224;
-        bh=iaMFRIk0Y0W/DnigZZek04DJjtoqETqrBE8Yb9t2yls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O9748DDEH8P8t3FQitaeEc2OO+rCZXtahQC0U5bCHPWevGAQWCTFjH5frdl6hyWsv
-         aw+dOC7KcxPplabgvltFxlX6ku2NvJjo6flv4/x1gPM4wB4JhnSzSIave4FmcLqrmi
-         0RNkc7stgEXdCq1GCLR+2atcJgVlG7Ewr963Ofy4=
-Date:   Tue, 4 Jun 2019 17:53:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Hook, Gary" <Gary.Hook@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: dmatest: timeout value of -1 should specify
- infinite wait
-Message-ID: <20190604122356.GY15118@vkoul-mobl>
-References: <155933183362.4916.15727271006977576552.stgit@sosrh3.amd.com>
+        Tue, 4 Jun 2019 08:27:18 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46627 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727522AbfFDM1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:27:17 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z19so13380233qtz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wnsJg5IBUcpd0uvGih9L7zWjhXAHb1EJO0yOEExZSzo=;
+        b=dcNC7UmtypwgYv25SVviVAOUG7URTCQh95rjKD+gc1HkGG0jrMjWKvaHqgOqnkLXCe
+         CmoljchytuIVIDVbprMz3tL0S5wF3BfmVPwpXMEcKwEKuopvqQDwmPbpLySBrTe+5P0P
+         +zjXSkVABYGjw15OrEI3UNK6X3hEEYJ5lmU4VodgY1OGgetHeu4xf6gu/Drrr5PoUFZD
+         NGszqORq933qFqUy4wxVOf9PkDJzNBd6Vt6SxvMrx9KcQhBJruI+UAnsanyndNgyFsW8
+         SfJHC+U7tiqZ4PP8CoYnZCXFGYoMymsmvspjQbzELX76TfLMwbqeFyJLFyTuqJIB4Dhp
+         ZF+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wnsJg5IBUcpd0uvGih9L7zWjhXAHb1EJO0yOEExZSzo=;
+        b=h8lnQ9NQu6mZHYI+SjjH6EHpeOviBEayoxlvk/QWvRPrcVFVIO5mWyGWEXUjoUiDgl
+         Ek45sxB7NUjEQFb0XQmWDr0NRIQFH40RkHxodSnHAO69ugMZfAyTIgEPEKVDpNiNP7gl
+         atyGLUNnzzpFiZAG6MHRbwsQYwKFzO+p6Wtb6BO8gB05RRy63Fffb6RYgR7FV6+VjtS2
+         26vwaujUmbe+Jbxi4hLXnn1VcD7qTjUgypD6oJSpuL87MG7p8YHrH4/lTwXm4A248A5C
+         ZQCaUBebVuDzm45HdfgHBA9Gvttpwja2Tft2rsCew4Byu1zZq/okxE6OLbf9Qs68JfKi
+         BcYQ==
+X-Gm-Message-State: APjAAAVEDf1zuYBQftn3q9JPKFS5fA+MCN17AvQVPV5ftljDCMSDLquV
+        ZwymYwN/gKXBIKSlw9Tl4Nhm/g==
+X-Google-Smtp-Source: APXvYqyQKZsajkt/gWb5hfUpWdj5TzMt6KfoFh/bz/W6aTLwqi1dm4Rk21CH5MrcGrt3uoh1Lu64hg==
+X-Received: by 2002:aed:3a87:: with SMTP id o7mr27583430qte.310.1559651236150;
+        Tue, 04 Jun 2019 05:27:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c18sm4454633qkm.78.2019.06.04.05.27.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 05:27:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hY8X4-000416-LN; Tue, 04 Jun 2019 09:27:14 -0300
+Date:   Tue, 4 Jun 2019 09:27:14 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 12/16] IB, arm64: untag user pointers in
+ ib_uverbs_(re)reg_mr()
+Message-ID: <20190604122714.GA15385@ziepe.ca>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <c829f93b19ad6af1b13be8935ce29baa8e58518f.1559580831.git.andreyknvl@google.com>
+ <20190603174619.GC11474@ziepe.ca>
+ <CAAeHK+xy-dx4dLDLLj9dRzRNSVG9H5nDPPnjpYF38qKZNNCh_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155933183362.4916.15727271006977576552.stgit@sosrh3.amd.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAAeHK+xy-dx4dLDLLj9dRzRNSVG9H5nDPPnjpYF38qKZNNCh_g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-05-19, 19:43, Hook, Gary wrote:
-> The dmatest module parameter 'timeout' is documented as accepting a
-> -1 to mean "infinite timeout". Change the parameter to to signed
-> integer, and check the value to call the appropriate wait_event()
-> function.
+On Tue, Jun 04, 2019 at 02:18:19PM +0200, Andrey Konovalov wrote:
+> On Mon, Jun 3, 2019 at 7:46 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Mon, Jun 03, 2019 at 06:55:14PM +0200, Andrey Konovalov wrote:
+> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > > pass tagged user pointers (with the top byte set to something else other
+> > > than 0x00) as syscall arguments.
+> > >
+> > > ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
+> > > e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
+> > >
+> > > Untag user pointers in these functions.
+> > >
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > >  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
+> > > index 5a3a1780ceea..f88ee733e617 100644
+> > > +++ b/drivers/infiniband/core/uverbs_cmd.c
+> > > @@ -709,6 +709,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
+> > >       if (ret)
+> > >               return ret;
+> > >
+> > > +     cmd.start = untagged_addr(cmd.start);
+> > > +
+> > >       if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
+> > >               return -EINVAL;
+> >
+> > I feel like we shouldn't thave to do this here, surely the cmd.start
+> > should flow unmodified to get_user_pages, and gup should untag it?
+> >
+> > ie, this sort of direction for the IB code (this would be a giant
+> > patch, so I didn't have time to write it all, but I think it is much
+> > saner):
 > 
-> Signed-off-by: Gary R Hook <gary.hook@amd.com>
-> ---
->  drivers/dma/dmatest.c |   11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> Hi Jason,
 > 
-> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-> index b96814a7dceb..28a237686578 100644
-> --- a/drivers/dma/dmatest.c
-> +++ b/drivers/dma/dmatest.c
-> @@ -63,7 +63,7 @@ MODULE_PARM_DESC(pq_sources,
->  		"Number of p+q source buffers (default: 3)");
->  
->  static int timeout = 3000;
-> -module_param(timeout, uint, S_IRUGO | S_IWUSR);
-> +module_param(timeout, int, S_IRUGO | S_IWUSR);
->  MODULE_PARM_DESC(timeout, "Transfer Timeout in msec (default: 3000), "
->  		 "Pass -1 for infinite timeout");
->  
-> @@ -795,8 +795,13 @@ static int dmatest_func(void *data)
->  		}
->  		dma_async_issue_pending(chan);
->  
-> -		wait_event_freezable_timeout(thread->done_wait, done->done,
-> -					     msecs_to_jiffies(params->timeout));
-> +		/* A timeout value of -1 means infinite wait */
-> +		if (timeout == -1)
-> +			wait_event_freezable(thread->done_wait, done->done);
+> ib_uverbs_reg_mr() passes cmd.start to mlx4_get_umem_mr(), which calls
+> find_vma(), which only accepts untagged addresses. Could you explain
+> how your patch helps?
 
-well i am not too happy that we have a infinite wait and no way to
-cancel, maybe remove this case?
+That mlx4 is just a 'weird duck', it is not the normal flow, and I
+don't think the core code should be making special consideration for
+it.
 
-> +		else
-> +			wait_event_freezable_timeout(thread->done_wait,
-> +					done->done,
-> +					msecs_to_jiffies(params->timeout));
->  
->  		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
->  
-> 
-
--- 
-~Vinod
+Jason
