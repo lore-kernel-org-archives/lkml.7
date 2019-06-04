@@ -2,118 +2,115 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B57AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4747AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2632F24BF6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559648005;
-	bh=OPostoc411XPjd+tuveu7IOuZcwBbBmnSumbimGn8ao=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bvHTy5b3ddDlyowymmESmcXfjN0LXOzN8T+IA0j84731kF02dR+l7lZjeA1K2Y5u1
-	 RlX4WsJtBl3z+5YjTgFJyRuyy2WN0swBHyebx1dhykOZ+mScngbXWIU4R3maGuseES
-	 V0kyawt8FnEGElup3A3I9cDb+QhfZAv/aKOhPUt8=
+	by mail.kernel.org (Postfix) with ESMTP id 1587D24BF6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cX5NyM5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfFDLdY (ORCPT
+        id S1727484AbfFDLdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:33:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42018 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfFDLdY (ORCPT
+        Tue, 4 Jun 2019 07:33:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42570 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfFDLdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 07:33:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i2so18183499otr.9
+Received: by mail-pg1-f193.google.com with SMTP id e6so8934592pgd.9
         for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EUprF+8/pHWVdRSsm+gYg6Nl/I7GuQYxpR2PKTuS704=;
+        b=cX5NyM5ycgQOuk4IAmaDphsDa6H1d8CV7lcsQ4WAlb3RMe7FRqEdFwUIy/zUw8PT8H
+         Haqw45ol2rk0FawObSUduoqdJamkzKEihgKpPg8h/L/kNvLP5+HNu60rp64HSLBJfQpF
+         3HigbEfhYLItfyDMYlI5C8j8tpV6TYxxSik3E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+q7Ysbwd1XPsPRSOkDxQCRyvRpcAYnJVG/Rfva4DCjI=;
-        b=F+jhV6PLqfi/AFKUClfvWTLzJode4OQ6tuVmOG6uh6ii7d9250Hh8WiLNTMzIxa81G
-         ZG86k/4kvruBPvLWYPETeDx7q/qPHl+gw10JlHrKsFSdeDR6n/5xeenOo+g5gAZqmRRp
-         Qq24/dNsLLKqMoO/rdVRtnXQcEzg4Lu7PCVn9hATamhPzSYjySDha//komFCqpU7OpqK
-         aF2dU9FL0/pr6aS4eMGxSS2ikHpsdUoIDB4pp2Mi+UfNiGiWuNf0OgtbdFvMP9jfn9DT
-         biyOc88D5OBVosZ73WFs9GquHdUMIPwQPGbAam7axe5j6FLX+Svq7Z0dSd88xWXH2VNM
-         PyZg==
-X-Gm-Message-State: APjAAAVAdi3Z87/HT8x/vhFmjujSO0DEd6i1JfvLopmR7yjj6W9DWZT6
-        pfnUiI6BLiSvcyWzDiGK4aTkbiu3KnXtEb1zm86cotI2
-X-Google-Smtp-Source: APXvYqzYaNVQWto5qtisz9QJ5uFinjKQsB8wdidiADdboSs1zOrFp5nbt928QKm0+hkhF2XBtd17sM1yZ87lKiujU9s=
-X-Received: by 2002:a9d:3285:: with SMTP id u5mr5151759otb.266.1559648003203;
- Tue, 04 Jun 2019 04:33:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EUprF+8/pHWVdRSsm+gYg6Nl/I7GuQYxpR2PKTuS704=;
+        b=NGk3A2BL5SVoGjBwf9kR49hu1PvBU3GwoBYm9b1y/+nZE/Svh+7UTn5bq2fjZF3DNa
+         oUdP6wpdUGbI9BeGo9BN3M4mJ1w62QgOBZLV2iW1Kkfkp8UXDc+9LJCciuCZ9iddtf1c
+         eSnn5AL/xf6IuOxHiU2UvqMdrdC8MZZLBZ+7Bi8BAzRXYS4cDdt5ZjXtshdskQQN2st5
+         bUcQ/6w0WfM96pnHKsLLqIdvzBwoXCM8/Si6ggVnt2nsqECUOHEe6hUm+Czsu85oKh/b
+         OjUiQkxshgzHDjKqoX6kYeJN83trN4SBK4aK6bgvX/CO7iltnDHbTPGzSDUlAXVKNZrN
+         1mHg==
+X-Gm-Message-State: APjAAAUYj9HO8wT0cKIJYNCcTjALLhStLopZb/hhTAIcjqL2j62Bmf3w
+        AeFd2AM++mw8i5dZB8fhs6KOOw==
+X-Google-Smtp-Source: APXvYqxvTH3i5lfqNDE1vh1a5Z/iOkSgOFTEfkO87DUgwW2C+aCSxKKDsoC0hUv5/Gdl7rHPksKKEw==
+X-Received: by 2002:a62:ea04:: with SMTP id t4mr36483301pfh.47.1559648003307;
+        Tue, 04 Jun 2019 04:33:23 -0700 (PDT)
+Received: from [10.176.68.125] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id u4sm17314721pfu.26.2019.06.04.04.33.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 04:33:22 -0700 (PDT)
+Subject: Re: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc:
+ sdhci: queue work after sdhci_defer_done())
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Brian Masney <masneyb@onstation.org>
+Cc:     Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>, ulf.hansson@linaro.org,
+        faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+References: <20190524111053.12228-1-masneyb@onstation.org>
+ <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+ <20190524154958.GB16322@basecamp> <20190526122136.GA26456@basecamp>
+ <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
+ <20190526195819.GA29665@basecamp> <20190527093711.GA853@basecamp>
+ <ead7f268-b730-3541-31f7-4499556efec0@intel.com>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <af4d6703-8506-dad7-c2ed-13fa8b2e390d@broadcom.com>
+Date:   Tue, 4 Jun 2019 13:33:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-47-git-send-email-suzuki.poulose@arm.com> <20190603191041.GD6487@kroah.com>
- <97a6b41f-7b30-54fc-a633-e59895467902@arm.com> <0ed1eb1e-df7f-d531-19ee-8b29ee37ae6d@arm.com>
-In-Reply-To: <0ed1eb1e-df7f-d531-19ee-8b29ee37ae6d@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 4 Jun 2019 13:33:12 +0200
-Message-ID: <CAJZ5v0hOqnBW3Tjo+iBq1BNzXPaebquOQ=Z1Mpvnj+0fSh6WFw@mail.gmail.com>
-Subject: Re: [RFC PATCH 46/57] driver: Add variants of driver_find_device()
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ead7f268-b730-3541-31f7-4499556efec0@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 12:55 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
->
->
-> On 04/06/2019 09:45, Suzuki K Poulose wrote:
-> >
-> >
-> > On 03/06/2019 20:10, Greg KH wrote:
-> >> On Mon, Jun 03, 2019 at 04:50:12PM +0100, Suzuki K Poulose wrote:
-> >>> Add a wrappers to lookup a device by name for a given driver, by various
-> >>> generic properties of a device. This can avoid the proliferation of custom
-> >>> match functions throughout the drivers.
-> >>>
-> >>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> >>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >>> ---
-> >>>    include/linux/device.h | 44 ++++++++++++++++++++++++++++++++++++++++++++
-> >>>    1 file changed, 44 insertions(+)
-> >>
-> >> You should put the "here are the new functions that everyone can use"
-> >> much earlier in the patch series, otherwise it's hard to dig out.
-> >
-> > Sure, I will add it in the respective commits.
-> >
-> >>
-> >> And if you send just those as an individual series, and they look good,
-> >> I can queue them up now so that everyone else can take the individual
-> >> patches through their respective trees.
-> >
-> > I see. I think I may be able to do that.
->
-> The API change patch (i.e, "drivers: Unify the match prototype for
-> bus_find_device with class_find_device" ) is tricky and prevents us from doing
-> this. So, that patch has to come via your tree as it must be a one shot change.
-> And that would make the individual subsystem patches conflict with your tree.
-> Also, it would break the builds until the individual subsystem trees are merged
-> with your tree with the new API.
->
-> So I am not quite sure what the best approach here would be.
+On 5/27/2019 2:08 PM, Adrian Hunter wrote:
+> On 27/05/19 12:37 PM, Brian Masney wrote:
+>> On Sun, May 26, 2019 at 03:58:19PM -0400, Brian Masney wrote:
+>>> I attached a patch that shows how I was able to determine what had
+>>> already claimed the host.
+>> On Mon, May 27, 2019 at 10:48:24AM +0300, Adrian Hunter wrote:
+>>> This is because SDHCI is using the IRQ thread to process the SDIO card
+>>> interrupt (sdio_run_irqs()).  When the card driver tries to use the card, it
+>>> causes interrupts which deadlocks since c07a48c26519 ("mmc: sdhci: Remove
+>>> finish_tasklet") has moved the tasklet processing to the IRQ thread.
+>>>
+>>> I would expect to be able to use the IRQ thread to complete requests, and it
+>>> is desirable to do so because it is lower latency.
+>>>
+>>> Probably, SDHCI should use sdio_signal_irq() which queues a work item, and
+>>> is what other drivers are doing.
+>>>
+>>> I will investigate some more and send a patch.
+> 
+> Please try the patch below:
 
-It looks like you need to consolidate the prototypes of
-bus_find_device() and class_find_device() in the first place, so all
-of the changes this depends one need to go into one series and through
-the Greg's tree.
+Finally got time to update my kernel to 5.2-rc2. This patch indeed 
+resolves the issue.
 
-Then, you need the new helpers to be defined on top of that and I
-would introduce them in another patch series once the first step above
-has been completed.
-
-Finally, some code in multiple places needs to be changed to use the
-new helpers and that can be done in many smaller steps with individual
-changes going in through the respective subsystem trees of theirs.
+Thanks,
+Arend
