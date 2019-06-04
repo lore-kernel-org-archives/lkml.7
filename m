@@ -2,130 +2,142 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F16C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52379207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559683624;
-	bh=oQ1JVM7OTEDQtkaAi9QY0NyPFMx/9MMFSQQMnQkpRPo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K7SkKiMlSt14ijA7mNhERHozaJ6DUnHVU26xWbD50UWCK8lln8Ndzdjj8mshUhz5W
-	 ZocHFEqCDllQ0booj0l0wrLjfnkrO/p9oy8oMv4zSXC5reE7FBHujeqePN8nbwe16P
-	 az3sItfLbAs88hZ7rDP72DwnalpRBxdS2S5SLgIc=
+	by mail.kernel.org (Postfix) with ESMTP id 999D3207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFDV1D (ORCPT
+        id S1726638AbfFDV3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:27:03 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45528 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDV1D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:27:03 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so10504598lfm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fjr6VsCXE/x8E/UigyoFfXOlatfjUvy0HOG/EWEq9/E=;
-        b=AqnHNsD1VskjlimA3YwkF5JNU3DvSRUk55MoR6ni75AS44QkMcJCvxHI3dSdlI6y5J
-         mKW0Es7RWq6sAXJ9MeVUOaPQSf8pexTFCehFbQMkkbeBhb+EWYhswZLPdoe2U/wgnvPd
-         T/eBCFdkAAdh/w7SO0Y9hNdRXoDDz3+5dAwXw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fjr6VsCXE/x8E/UigyoFfXOlatfjUvy0HOG/EWEq9/E=;
-        b=sFK5NbsDtwWIG/OHI2aDkp14PoT/cZttTfsz7x+youDTtd0NZte3jjaWUwMB3iwcQz
-         OKjBXHxdLHKSL5T4XGmrXb2UjgbORgi0Q/6ozt79hULLI0jgA1aKBzIoISjS4cNNOFU3
-         3XHgmCZKKcVYSKWQRIng2EAeGiib4x6nJ+AMwMgUAham/3mK8J9Ri4wKAhPir60gNagv
-         cFdS8ETWzaEa7ZFQkZwhzPUhq8t3+TTcRkoTZinDHCkSWV32Z2ZwgaJBB+Faon3qPnQ7
-         MzEdrMKhf1iJ4bzBRabm9KNqBjGcxNwuH7+eKACs0EICV/jHVUdZgxF2Wky+otIabCV8
-         3U6g==
-X-Gm-Message-State: APjAAAVtmo+owZjNDdK5J5OK+JON4wDX56LkAERwNnPDjMS2kyIMojq+
-        P7LZ1AXtDUVDj0uhVYMmibt4usuAuVA=
-X-Google-Smtp-Source: APXvYqxMH/s+lAXumbjHAq26NPiRIsjskKnJKL4a7W7SDshWWh/ihN31HnEb0uaWvnDfzEQ2LQBCuA==
-X-Received: by 2002:a19:2948:: with SMTP id p69mr17512979lfp.160.1559683620631;
-        Tue, 04 Jun 2019 14:27:00 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id m25sm2914933lfp.97.2019.06.04.14.26.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 14:26:59 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id j29so3627662lfk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:26:59 -0700 (PDT)
-X-Received: by 2002:a19:ae01:: with SMTP id f1mr17362076lfc.29.1559683618741;
- Tue, 04 Jun 2019 14:26:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
-In-Reply-To: <20190604134117.GA29963@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 4 Jun 2019 14:26:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
-Message-ID: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-aio@kvack.org, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        stable <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Laight <David.Laight@aculab.com>
+        Tue, 4 Jun 2019 17:29:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59564 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfFDV3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:29:33 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC5872F8BEA;
+        Tue,  4 Jun 2019 21:29:32 +0000 (UTC)
+Received: from ovpn-112-67.rdu2.redhat.com (ovpn-112-67.rdu2.redhat.com [10.10.112.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5271C5C207;
+        Tue,  4 Jun 2019 21:29:27 +0000 (UTC)
+Message-ID: <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Dan Williams <dcbw@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Elder <elder@linaro.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, abhishek.esse@gmail.com,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+Date:   Tue, 04 Jun 2019 16:29:26 -0500
+In-Reply-To: <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
+References: <20190531035348.7194-1-elder@linaro.org>
+         <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+         <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+         <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+         <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+         <20190531233306.GB25597@minitux>
+         <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+         <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+         <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
+         <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
+         <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
+         <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 04 Jun 2019 21:29:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 6:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> This is the minimal fix for stable, I'll send cleanups later.
+On Tue, 2019-06-04 at 22:04 +0200, Arnd Bergmann wrote:
+> On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
+> > On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
+> > > Can you describe what kind of multiplexing is actually going on?
+> > > I'm still unclear about what we actually use multiple logical
+> > > interfaces for here, and how they relate to one another.
+> > 
+> > Each logical interface represents a different "connection" (PDP/EPS
+> > context) to the provider network with a distinct IP address and
+> > QoS.
+> > VLANs may be a suitable analogy but here they are L3+QoS.
+> > 
+> > In realistic example the main interface (say rmnet0) would be used
+> > for
+> > web browsing and have best-effort QoS. A second interface (say
+> > rmnet1)
+> > would be used for VOIP and have certain QoS guarantees from both
+> > the
+> > modem and the network itself.
+> > 
+> > QMAP can also aggregate frames for a given channel
+> > (connection/EPS/PDP
+> > context/rmnet interface/etc) to better support LTE speeds.
+> 
+> Thanks, that's a very helpful explanation!
+> 
+> Is it correct to say then that the concept of having those separate
+> connections would be required for any proper LTE modem
+> implementation,
+> but the QMAP protocol (and based on that, the rmnet implementation)
+> is Qualcomm specific and shared only among several generations of
+> modems from that one vendor?
 
-Ugh. I htink this is correct, but I wish we had a better and more
-intuitive interface.
+Exactly correct.  This is what Johannes is discussing in his "cellular
+modem APIs - take 2" thread about how this should all be organized at
+the driver level and I think we should figure that out before we commit
+to IPA-with-a-useless-netdev that requires rmnets to be created on top.
+That may end up being the solution but let's have that discussion.
 
-In particular, since restore_user_sigmask() basically wants to check
-for "signal_pending()" anyway (to decide if the mask should be
-restored by signal handling or by that function), I really get the
-feeling that a lot of these patterns like
+> > You mentioned the need to have a common user space interface
+> for configuration, and if the above is true, I agree that we should
+> try
+> to achieve that, either by ensuring rmnet is generic enough to
+> cover other vendors (and non-QMAP clients), or by creating a
+> new user level interface that IPA/rmnet can be adapted to.
 
-> -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -       if (signal_pending(current) && !ret)
-> +
-> +       interrupted = signal_pending(current);
-> +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> +       if (interrupted && !ret)
->                 ret = -ERESTARTNOHAND;
+I would not suggest making rmnet generic; it's pretty QMAP specific
+(but QMAP is spoken by many many modems both SoC, USB stick, and PCIe
+minicard).
 
-are wrong to begin with, and we really should aim for an interface
-which says "tell me whether you completed the system call, and I'll
-give you an error return if not".
+Instead, I think what Johannes is discussing is a better approach. A
+kernel WWAN framework with consistent user API that
+rmnet/IPA/qmi_wwan/MBIM/QMI/serial/Sierra can all implement.
 
-How about we make restore_user_sigmask() take two return codes: the
-'ret' we already have, and the return we would get if there is a
-signal pending and w're currently returning zero.
+That wouldn't affect the core packet processing of IPA/rmnet but
+instead:
 
-IOW, I think the above could become
+1) when/how an rmnet device actually gets created on top of the IPA (or
+qmi_wwan) device
 
-        ret = restore_user_sigmask(ksig.sigmask, &sigsaved, ret, -ERESTARTHAND);
+AND (one of these two)
 
-instead if we just made the right interface decision.
+a) whether IPA creates a netdev on probe
 
-Hmm?
+OR
 
-             Linus
+b) whether there is some "WWAN device" kernel object which userspace
+interacts with create rmnet channels on top of IPA
+
+Dan
+
