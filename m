@@ -2,87 +2,101 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DDBC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB95BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6832439E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969E0243F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfFDOW1 (ORCPT
+        id S1727615AbfFDOXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:22:27 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:49216 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727378AbfFDOW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:22:27 -0400
-Received: (qmail 3308 invoked by uid 2102); 4 Jun 2019 10:22:26 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 4 Jun 2019 10:22:26 -0400
-Date:   Tue, 4 Jun 2019 10:22:26 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jim Lin <jilin@nvidia.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
-        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
-        <Thinh.Nguyen@synopsys.com>, <nsaenzjulienne@suse.de>,
-        <jflat@chromium.org>, <malat@debian.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 0/2] usb: xhci: Add Clear_TT_Buffer
-In-Reply-To: <e7ccbc27-2ff4-b1b9-aa1b-c77da5e122ca@nvidia.com>
-Message-ID: <Pine.LNX.4.44L0.1906041021130.1731-100000@iolanthe.rowland.org>
+        Tue, 4 Jun 2019 10:23:44 -0400
+Received: from foss.arm.com ([217.140.101.70]:45136 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727137AbfFDOXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:23:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E423341;
+        Tue,  4 Jun 2019 07:23:43 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDBD23F690;
+        Tue,  4 Jun 2019 07:23:40 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 15:23:38 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Qian Cai <cai@lca.pw>, rppt@linux.ibm.com
+Cc:     akpm@linux-foundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, linux-mm@kvack.org, vdavydov.dev@gmail.com,
+        hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+Message-ID: <20190604142338.GC24467@lakrids.cambridge.arm.com>
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559656836-24940-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019, Jim Lin wrote:
-
-> On 2019年06月03日 20:23, Greg KH wrote:
-> > On Mon, Jun 03, 2019 at 06:53:42PM +0800, Jim Lin wrote:
-> >> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-> >> processing for full-/low-speed endpoints connected via a TT, the host
-> >> software must use the Clear_TT_Buffer request to the TT to ensure
-> >> that the buffer is not in the busy state".
-> >>
-> >> In our case, a full-speed speaker (ConferenceCam) is behind a high-
-> >> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-> >> request we may continue to get STALL with the folllowing requests,
-> >> like Set_Interface.
-> >>
-> >> Solution is to invoke usb_hub_clear_tt_buffer() to send
-> >> Clear_TT_Buffer request to the hub of the device for the following
-> >> Set_Interface requests to the device to get ACK successfully.
-> >>
-> >> The Clear_TT_Buffer request sent to the hub includes the address of
-> >> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
-> >> uses udev->devnum to set the address wValue. This won't work for
-> >> devices connected to xHC.
-> >>
-> >> For other host controllers udev->devnum is the same as the address of
-> >> the usb device, chosen and set by usb core. With xHC the controller
-> >> hardware assigns the address, and won't be the same as devnum.
-> >>
-> >> Here we have two patches.
-> >> One is to add devaddr in struct usb_device for
-> >> usb_hub_clear_tt_buffer() to use.
-> >> Another is to invoke usb_hub_clear_tt_buffer() for halt processing.
-> > Why did you resend patch series 11?
-> Didn't get response in 2 or 3 days.
-> Will be more patient next time.
+On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
+> The commit "arm64: switch to generic version of pte allocation"
+> introduced endless failures during boot like,
 > 
-> May I get patch v11 1/2 acked or reviewed by Alan?
+> kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
+> -2 parent: cgroup)
+> 
+> It turns out __GFP_ACCOUNT is passed to kernel page table allocations
+> and then later memcg finds out those don't belong to any cgroup.
 
-Did I not do this already?  Oh well, in any case:
+Mike, I understood from [1] that this wasn't expected to be a problem,
+as the accounting should bypass kernel threads.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Was that assumption wrong, or is something different happening here?
 
-Alan Stern
+> 
+> backtrace:
+>   kobject_add_internal
+>   kobject_init_and_add
+>   sysfs_slab_add+0x1a8
+>   __kmem_cache_create
+>   create_cache
+>   memcg_create_kmem_cache
+>   memcg_kmem_cache_create_func
+>   process_one_work
+>   worker_thread
+>   kthread
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/arm64/mm/pgd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> index 769516cb6677..53c48f5c8765 100644
+> --- a/arch/arm64/mm/pgd.c
+> +++ b/arch/arm64/mm/pgd.c
+> @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+>  	if (PGD_SIZE == PAGE_SIZE)
+>  		return (pgd_t *)__get_free_page(gfp);
+>  	else
+> -		return kmem_cache_alloc(pgd_cache, gfp);
+> +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
 
+This is used to allocate PGDs for both user and kernel pagetables (e.g.
+for the efi runtime services), so while this may fix the regression, I'm
+not sure it's the right fix.
+
+Do we need a separate pgd_alloc_kernel()?
+
+Thanks,
+Mark.
+
+[1] https://lkml.kernel.org/r/20190505061956.GE15755@rapoport-lnx
