@@ -2,347 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70515C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C61C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F61D216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4F723A1C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J+lYbqkD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ok7kdjYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfFDKRT (ORCPT
+        id S1727422AbfFDKRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:17:19 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:41888 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbfFDKRS (ORCPT
+        Tue, 4 Jun 2019 06:17:47 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42650 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfFDKRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:17:18 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC7B032511;
-        Tue, 4 Jun 2019 19:14:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7B032511
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643259;
-        bh=Oka5YpAg+k5l88SL/bB7/ELT3B4mHTq93jBuR0XeVDU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+lYbqkDyx5TCbBD+Dn9u83I3HtBZWpgzIStSV9W5m8Vm7NsIAtCgZTTnviNOz2/k
-         OIa3qQLjn3LJ7SFdO7cx4WcnlaqSOAOAOumyzJ/LJRtUiJsfCSRsZYwrzkeOJHFloh
-         5StGJrqnxtUoL1ZJgKMKnW+FVSO1PQZGYbOztFRAmSmiiFVQv6vKdRLA4xCR4r48yn
-         wXht5Fpzui7RHx47kKqdrv4g+1N3wRkcfOsMq3aPvHHshb53vEmzlWyFS9ffiyfLYg
-         ENAWvph9pzP8vXv0G83Xee/xAieRnQjeb2MJfRFGjniA0vGhfY5j4gVUCvNpi8ZGY8
-         i977mhymYRHng==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        linux-parisc@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Mackerras <paulus@samba.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 05/15] kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
-Date:   Tue,  4 Jun 2019 19:13:59 +0900
-Message-Id: <20190604101409.2078-6-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
-References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+        Tue, 4 Jun 2019 06:17:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54AHT8A048287;
+        Tue, 4 Jun 2019 05:17:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559643449;
+        bh=P7u/0x1ABNz4IJDSe4vcOUhEhDTUB7ePRAMjbKE0Eww=;
+        h=From:To:CC:Subject:Date;
+        b=Ok7kdjYQ0Gfe6RfSkA3iOuxKo7k3WaFEDlfDgmYs3KTba/qaOFGyvVGgNI66/jA1O
+         oG3AHr03unXKCn9SkdmlSIhw+UNTr0WRPEQp63Zqd7TrEV9oZn3VLgGEVzqc5lYwDO
+         i1JXf3m7Un7+JkDqSrdTcQfg3zTk4wdpJpeQK79U=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54AHTnf064832
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jun 2019 05:17:29 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
+ 2019 05:17:27 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 4 Jun 2019 05:17:27 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54AHOnc015021;
+        Tue, 4 Jun 2019 05:17:25 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <lokeshvutla@ti.com>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>
+CC:     <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] irqchip: ti-sci-inta: Fix kernel crash if irq_create_fwspec_mapping fail
+Date:   Tue, 4 Jun 2019 13:17:51 +0300
+Message-ID: <20190604101751.8265-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5318321d367c ("samples: disable CONFIG_SAMPLES for UML") used
-a big hammer to fix the build errors under the samples/ directory,
-while only some samples actually include uapi headers from usr/include.
+irq_create_fwspec_mapping() can fail, returning 0 as parent_virq. In this
+case vint_desc is going to be NULL in ti_sci_inta_alloc_irq() which will
+cause NULL pointer dereference.
 
-Introduce CONFIG_HEADERS_INSTALL since 'depends on HEADERS_INSTALL' is
-clearer than 'depends on !UML'. If this option is enabled, uapi headers
-are installed before starting directory descending.
+Also note that irq_create_fwspec_mapping() returns 'unsigned int' so the
+check '<=' was wrong.
 
-I added 'depends on HEADERS_INSTALL' to per-sample CONFIG options.
-This allows UML to compile some samples.
+Use -EINVAL if irq_create_fwspec_mapping() returned with 0.
 
-$ make ARCH=um allmodconfig samples/
-  [ snip ]
-  CC [M]  samples/configfs/configfs_sample.o
-  CC [M]  samples/kfifo/bytestream-example.o
-  CC [M]  samples/kfifo/dma-example.o
-  CC [M]  samples/kfifo/inttype-example.o
-  CC [M]  samples/kfifo/record-example.o
-  CC [M]  samples/kobject/kobject-example.o
-  CC [M]  samples/kobject/kset-example.o
-  CC [M]  samples/trace_events/trace-events-sample.o
-  CC [M]  samples/trace_printk/trace-printk.o
-  AR      samples/vfio-mdev/built-in.a
-  AR      samples/built-in.a
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
+ drivers/irqchip/irq-ti-sci-inta.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- Makefile                              |  8 ++++----
- arch/arc/configs/tb10x_defconfig      |  1 +
- arch/nds32/configs/defconfig          |  1 +
- arch/parisc/configs/a500_defconfig    |  1 +
- arch/parisc/configs/b180_defconfig    |  1 +
- arch/parisc/configs/c3000_defconfig   |  1 +
- arch/parisc/configs/default_defconfig |  1 +
- arch/powerpc/configs/ppc6xx_defconfig |  1 +
- arch/s390/configs/debug_defconfig     |  1 +
- lib/Kconfig.debug                     | 19 ++++++++++++++-----
- samples/Kconfig                       | 14 +++++++++++---
- samples/Makefile                      |  4 ++--
- 12 files changed, 39 insertions(+), 14 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 8348939765d3..ce5a9551860d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1053,9 +1053,6 @@ vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index 011b60a49e3f..ef4d625d2d80 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -159,9 +159,9 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+ 	parent_fwspec.param[1] = vint_desc->vint_id;
  
- targets := vmlinux
+ 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
+-	if (parent_virq <= 0) {
++	if (parent_virq == 0) {
+ 		kfree(vint_desc);
+-		return ERR_PTR(parent_virq);
++		return ERR_PTR(-EINVAL);
+ 	}
+ 	vint_desc->parent_virq = parent_virq;
  
--# Some samples need headers_install.
--samples: headers_install
--
- # The actual objects are generated when descending,
- # make sure no implicit rule kicks in
- $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
-@@ -1199,6 +1196,10 @@ headers_check: headers_install
- 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include HDRCHECK=1
- 	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include HDRCHECK=1
- 
-+ifdef CONFIG_HEADERS_INSTALL
-+prepare: headers_install
-+endif
-+
- ifdef CONFIG_HEADERS_CHECK
- all: headers_check
- endif
-@@ -1745,7 +1746,6 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
- PHONY += /
- /: ./
- 
--samples/: headers_install
- %/: prepare FORCE
- 	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
- 
-diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
-index 5b5119d2b5d5..dc739bd093e3 100644
---- a/arch/arc/configs/tb10x_defconfig
-+++ b/arch/arc/configs/tb10x_defconfig
-@@ -94,6 +94,7 @@ CONFIG_CONFIGFS_FS=y
- CONFIG_DEBUG_INFO=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/arch/nds32/configs/defconfig b/arch/nds32/configs/defconfig
-index 65ce9259081b..40313a635075 100644
---- a/arch/nds32/configs/defconfig
-+++ b/arch/nds32/configs/defconfig
-@@ -92,6 +92,7 @@ CONFIG_DEBUG_INFO=y
- CONFIG_DEBUG_INFO_DWARF4=y
- CONFIG_GDB_SCRIPTS=y
- CONFIG_READABLE_ASM=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/arch/parisc/configs/a500_defconfig b/arch/parisc/configs/a500_defconfig
-index 5acb93dcaabf..390c0bc09179 100644
---- a/arch/parisc/configs/a500_defconfig
-+++ b/arch/parisc/configs/a500_defconfig
-@@ -167,6 +167,7 @@ CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- # CONFIG_DEBUG_BUGVERBOSE is not set
-diff --git a/arch/parisc/configs/b180_defconfig b/arch/parisc/configs/b180_defconfig
-index 83ffd161aec5..bdf1fe2b217f 100644
---- a/arch/parisc/configs/b180_defconfig
-+++ b/arch/parisc/configs/b180_defconfig
-@@ -91,6 +91,7 @@ CONFIG_NLS_ASCII=m
- CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/parisc/configs/c3000_defconfig b/arch/parisc/configs/c3000_defconfig
-index 8d41a73bd71b..ed4d49575b38 100644
---- a/arch/parisc/configs/c3000_defconfig
-+++ b/arch/parisc/configs/c3000_defconfig
-@@ -140,6 +140,7 @@ CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_MUTEXES=y
-diff --git a/arch/parisc/configs/default_defconfig b/arch/parisc/configs/default_defconfig
-index 52c9050a7c5c..fcfd9eaadf9b 100644
---- a/arch/parisc/configs/default_defconfig
-+++ b/arch/parisc/configs/default_defconfig
-@@ -184,6 +184,7 @@ CONFIG_NLS_KOI8_R=m
- CONFIG_NLS_KOI8_U=m
- CONFIG_NLS_UTF8=y
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
-index 7c6baf6df139..463aa3e53084 100644
---- a/arch/powerpc/configs/ppc6xx_defconfig
-+++ b/arch/powerpc/configs/ppc6xx_defconfig
-@@ -1124,6 +1124,7 @@ CONFIG_NLS_KOI8_R=m
- CONFIG_NLS_KOI8_U=m
- CONFIG_DEBUG_INFO=y
- CONFIG_UNUSED_SYMBOLS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index b0920b35f87b..994e03fad424 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -586,6 +586,7 @@ CONFIG_GDB_SCRIPTS=y
- CONFIG_FRAME_WARN=1024
- CONFIG_READABLE_ASM=y
- CONFIG_UNUSED_SYMBOLS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 7cdcb962358c..6a6ea4219d1e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -305,14 +305,23 @@ config DEBUG_FS
- 
- 	  If unsure, say N.
- 
-+config HEADERS_INSTALL
-+	bool "Install uapi headers to usr/include"
-+	depends on !UML
-+	help
-+	  This option will install uapi headers (headers exported to user-space)
-+	  into the usr/include directory for use during the kernel build.
-+	  This is unneeded for building the kernel itself, but needed for some
-+	  user-space program samples. It is also needed by some features such
-+	  as uapi header sanity checks.
-+
- config HEADERS_CHECK
- 	bool "Run sanity checks on uapi headers when building 'all'"
--	depends on !UML
-+	depends on HEADERS_INSTALL
- 	help
--	  This option will extract the user-visible kernel headers when
--	  building the 'all' target, and will run basic sanity checks on them to
--	  ensure that exported files do not attempt to include files which
--	  were not exported, etc.
-+	  This option will run basic sanity checks on uapi headers when
-+	  building the 'all' target, for example, ensure that they do not
-+	  attempt to include files which were not exported, etc.
- 
- 	  If you're making modifications to header files which are
- 	  relevant for userspace, say 'Y', and check the headers
-diff --git a/samples/Kconfig b/samples/Kconfig
-index d63cc8a3e0df..71b5e833dd9e 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- menuconfig SAMPLES
- 	bool "Sample kernel code"
--	depends on !UML
- 	help
- 	  You can build and test sample kernel code here.
- 
-@@ -95,16 +94,24 @@ config SAMPLE_CONFIGFS
- 
- config SAMPLE_CONNECTOR
- 	tristate "Build connector sample -- loadable modules only"
--	depends on CONNECTOR && m
-+	depends on CONNECTOR && HEADERS_INSTALL && m
- 	help
- 	  When enabled, this builds both a sample kernel module for
- 	  the connector interface and a user space tool to communicate
- 	  with it.
- 	  See also Documentation/connector/connector.txt
- 
-+config SAMPLE_HIDRAW
-+	bool "hidraw sample"
-+	depends on HEADERS_INSTALL
-+
-+config SAMPLE_PIDFD
-+	bool "pidfd sample"
-+	depends on HEADERS_INSTALL
-+
- config SAMPLE_SECCOMP
- 	bool "Build seccomp sample code"
--	depends on SECCOMP_FILTER
-+	depends on SECCOMP_FILTER && HEADERS_INSTALL
- 	help
- 	  Build samples of seccomp filters using various methods of
- 	  BPF filter construction.
-@@ -156,6 +163,7 @@ config SAMPLE_ANDROID_BINDERFS
- 
- config SAMPLE_VFS
- 	bool "Build example programs that use new VFS system calls"
-+	depends on HEADERS_INSTALL
- 	help
- 	  Build example userspace programs that use new VFS system calls such
- 	  as mount API and statx().  Note that this is restricted to the x86
-diff --git a/samples/Makefile b/samples/Makefile
-index debf8925f06f..7d6e4ca28d69 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -4,14 +4,14 @@
- obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
- obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
- obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
--subdir-y				+= hidraw
-+subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
- obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
- obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
- obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
- obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
- obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
- obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
--subdir-y				+= pidfd
-+subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
- obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
- obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
- subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
 -- 
-2.17.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
