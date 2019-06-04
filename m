@@ -3,117 +3,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86964C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD153C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FAC4248D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559647610;
-	bh=LYFF90I25JY7V0ZhSu4XFP/RPOk2v/6uwiYk7ki5MAA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DAuLKH4/nn+1kc8de8HLHAd5tfen/hnkh2JCO0Bgo4isy9gTO9iLIPMu1EACk6zeP
-	 LVF/0UP0cqTsK2E6iVR/WZbvuDjtA7XgLNxMHHXMG6naQIBPJjHsR3KooJcpndfM4I
-	 GfoYNchV2TSVQtOdIZudivfpad2wsA4QWQvgGIQ0=
+	by mail.kernel.org (Postfix) with ESMTP id 7995724BDC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:30:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mPDSv7WS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfFDL0t (ORCPT
+        id S1727296AbfFDLaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:26:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34847 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfFDL0t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:26:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n14so19177101otk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:26:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c+bLIXaZ17N12ujpsyYbaNmHRjzt3Mh0NBkU6cPWx/k=;
-        b=ao5Gdw/MCly4LSDpj0v2ThPqkp5IF3jUEbM4zKLBSxOFKabeeEtcSAMnRNhIUdAhdT
-         d3gPhmwfldEMUrqkJXcJ3TbfjukjbEzKiHjQ16ECKXY5A+o2hFJ+vBo/dq9nOJM8BnII
-         FhJhdH8ugJVfwSTY2lPNCLsU8MI0H0zw1F9rMSU/Hdu7VW9cl1RJz/2bQRYTeVA5Egbz
-         cUSGbN1GVkJUnJ+eL/12e27Ur5uJv5LTDXHKGj+FaZ54M92hpto9vrdQ3qNzgQL0+xDG
-         n6HIDsVjBj9gx0FrGDk6qTrHTuQGP9CuMIl+iZit+CtYkHlBlP6hVdbie8ZEoD88edtF
-         i5qg==
-X-Gm-Message-State: APjAAAUh2jPRJLZuQWEiUPd2I12OVQ4um/U9uTwEPSs7JsEyXD0Pdt1+
-        IFgyirOsLzUEnCzRbMqxYqM9vGF8cnAwWqdfv3U=
-X-Google-Smtp-Source: APXvYqwbCd7Da1EmQl1d1NP4qH8OhiH1lq3bzfOZttdZb6aQhIcEINmifkjA6pyDjBayUkh/1zPKudcAeJetLOGoxeM=
-X-Received: by 2002:a9d:3285:: with SMTP id u5mr5132565otb.266.1559647608261;
- Tue, 04 Jun 2019 04:26:48 -0700 (PDT)
+        Tue, 4 Jun 2019 07:30:08 -0400
+Received: from mout.web.de ([212.227.15.14]:44311 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbfFDLaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:30:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1559647786;
+        bh=NnHgDDxEaUqkSvPWPX+0oQ/+pSBWZGwitzJheluK2Mw=;
+        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
+        b=mPDSv7WSZFG8dhLHsSyw5pOwaTEFX5bb+TIZqiSlb93aa5e4GTSotYzYIh2oVKQY0
+         AB75V8//fOmU/r9+gFs9Lx2u0kKrAJ1Annv+uMEAvAev0meV+O9b3Y/8qys7Ta4rxw
+         W+LcIpvp//hijcAPN6GDXX8a/+V5Ewyuug7PkV18=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.4] ([78.49.105.210]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MRl2f-1hAAfj0ha5-00SzDt; Tue, 04
+ Jun 2019 13:28:42 +0200
+Subject: Re: Coccinelle: semantic patch for missing of_node_put
+Cc:     linux-doc@vger.kernel.org, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Gilles.Muller@lip6.fr,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Julia Lawall <julia.lawall@lip6.fr>
+References: <201906041350002807147@zte.com.cn>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9169c754-17ef-f820-8335-2015e3c37782@web.de>
+Date:   Tue, 4 Jun 2019 13:28:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com> <1559577023-558-28-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1559577023-558-28-git-send-email-suzuki.poulose@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 4 Jun 2019 13:26:37 +0200
-Message-ID: <CAJZ5v0ghb969phwKDJd_hJV6mBm0_B8R9Lrk8RG3Tu9ieO69OQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 27/57] drivers: Unify the match prototype for
- bus_find_device with class_find_device
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        David Kershner <david.kershner@unisys.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <201906041350002807147@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AiQPmN/SaFFLT7vE/A+qNDQ75f3MT8Xf8s0QSGsW51uUcsctr5P
+ SFtxL3BMfLgv0QA9zqRFBxJ7/ijqKItmloPfrNL3Aj8jFbMoG7ViNS9KcWuXILwyqA1Rxmo
+ dQnG1nAhRyxLekLiP7wN9HgVuzWmShDiTg/ELctb2T6IJ6hb/r8SP1TS8Af1SvaCEp+Fv+t
+ ZkuFBieoP6YTbX9TazkXw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JNG5G7F1lIY=:nWNYDV9VqBWdcg43nH/OOC
+ 5qfOVYDPL4wUjs1Q9/OWEm9wCvoJFQHFjnEv20vFd6X9Gt82l3zSCW51SazqlS4xrZU7rCBEm
+ WEECGC26PWF3XhqrizgVhv/EM2lWUmXzHNNKyJG2vCnWA2BLyZ1UTCeS+1kq+n9a2q09XmAwv
+ 6SoZ6YTnZlR4vU0sH5ab81h4lSRZKIIa0QqS3pQCOT6z+v3LW4IpN+3/6ZaZFA75XVgu1ZtCk
+ MRkB350kQ4H9AxpGqaR2K7vXHJkGqO8L/3Od74GV4tZvzqWX7rKrvl6rnE968ITghI6ZuiEA8
+ ea4bmWajVMTAXcYzo3D1qjSCe0hqDlmImRdkBBRK9kAmF8py8TyH+/uLN8mKwg1Zgot9qCrqf
+ Lg/mAZjfUmff2+35NL1YIbTTe+0X4T5cbcbgfGsXXr7Czi0DVY1YXZcE4k4C7yJB7uan5b1qt
+ hulbKK2MKMmhuZjF0vmqz+hAq6/s5uKRF8myqWxBTPQ1UukspQsYnTAju4WQFKeSXVxgKbdwY
+ 8zqkYJdQqqvZFGeL6nE+J7EUGRvlm+N/rgx3bz6RDUl3VhugPgqM4iB2JSiaFBui5ml3rJ87I
+ CS5ZtByqlnoVY3VNxlflxxIV0YpdqQ+cQYJt47AqyY8iGPjEKsbrPP+SL5J2GwuGkN2XrhBon
+ 0KuhO9p86EDpZMitGJm/umSGGnkAniONXQGEPAW4N1FNw2XJkVwM+Bvg6DRh3sZenjvs0WIyf
+ oeCYXamF8+/TOD4ESQNqrBiUjFwjuFTrB3DHBdLL7GWbn6+7iBPG/g6sOO+SEyGlzIb2rLTOB
+ wYpQZ4JvX3cinFzbOAflWnIwrPfoKv+5/jMI/lctwsFhicF4sCqvZ4zXuuq7Vro0DGfQKQkvX
+ I5VsNZjdQEowYkKEs1AzQA+HsuYDlOAX2VJ8RYmUWiEKhR2w73c+zZXQ0Lsr3LXBY3l1q59As
+ MLpQfGke7po5sNW7HlHCywxGt8B0aNgptelys/159rjwswm2LVIc0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 5:51 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> let add_function f c =3D
+>     if not (List.mem f !relevant_functions)
+>     then
+>       begin
+>         let s =3D String.concat " "
+>           (
+>             (List.map String.lowercase_ascii
+> 	     (List.filter
+> 	       (function x ->
+> 	         Str.string_match
+> 	         (Str.regexp "[a-zA-Z_\\(\\)][-a-zA-Z0-9_\\(\\)]*$")
+> 	       x 0) (Str.split (Str.regexp "[ .;\t\n]+") c)))) in
+
+I would interpret one of these function calls in the way
+that text splitting is performed here also for space characters
+after a concatenation was performed.
+
+
+>              Printf.printf "comments: %s\n" s;
+>              if contains s relevant_str
+>              then
+>                Printf.printf "Found relevant function: %s\n" f;
+>                relevant_functions :=3D f :: !relevant_functions;
+>       end
 >
-> We have iterators for devices by bus and class, with a supplied
-> "match" function to do the comparison. However, both of the helper
-> function have slightly different prototype for the "match" argument.
+> @r@
+> identifier fn;
+> comments c;
+> type T =3D struct device_node *;
+> @@
 >
->  int (*) (struct device *dev, void *data)  // bus_find_device
->   vs
->  int (*) (struct device *dev, const void *data) // class_find_device
+> T@c fn(...) {
+> ...
+> }
 >
-> Unify the prototype by promoting the match function to use that of
-> the class_find_device(). This will allow us to share the generic
-> match helpers with class_find_device() users.
+> @script:ocaml@
+> f << r.fn;
+> c << r.c;
+> @@
+>
+> let (cb,cm,ca) =3D List.hd c in
+> let c =3D String.concat " " cb in
+> add_function f c
 
-The patch looks good to me, but the changelog might be a bit better.
+Can an other data processing variant be more reasonable?
 
-It seems to be all about the bus_find_device() and class_find_device()
-prototype consolidation, so that the same pair of data and match()
-arguments can be passed to both of them, which then will allow some
-optimizations to be made, so what about the following:
-
-"There is an arbitrary difference between the prototypes of
-bus_find_device() and class_find_device() preventing their callers
-from passing the same pair of data and match() arguments to both of
-them, which is the const qualifier used in the prototype of
-class_find_device().  If that qualifier is also used in the
-bus_find_device() prototype, it will be possible to pass the same
-match() callback function to both bus_find_device() and
-class_find_device(), which will allow some optimizations to be made in
-order to avoid code duplication going forward.
-
-For this reason, change the prototype of bus_find_device() to match
-the prototype of class_find_device() and adjust its callers to use the
-const qualifier in accordance with the new prototype of it.".
-
-Also, it looks like there is no need to make all of the following
-changes in the series along with this one in one go and making them
-separately would be *much* better from the patch review perspective.
+Regards,
+Markus
