@@ -3,104 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DFCC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59108C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FBE20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D3C207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfFDQ65 (ORCPT
+        id S1727992AbfFDQ7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:58:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfFDQ65 (ORCPT
+        Tue, 4 Jun 2019 12:59:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42082 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfFDQ7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:58:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 39DB028533D
-Message-ID: <beaf3554bb85974eb118d7722ca55f1823b1850c.camel@collabora.com>
-Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
- device to talk with the EC
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
-        dtor@chromium.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
-        Guido Kiener <guido@kiener-muenchen.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>
-Date:   Tue, 04 Jun 2019 13:58:38 -0300
-In-Reply-To: <20190604155228.GB9981@kroah.com>
-References: <20190604152019.16100-1-enric.balletbo@collabora.com>
-         <20190604152019.16100-4-enric.balletbo@collabora.com>
-         <20190604155228.GB9981@kroah.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Tue, 4 Jun 2019 12:59:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o12so9495597wrj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:59:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EKCYTdYUbqcJu9i3EJZirzTD5O2uxQ2U+uZgMVDaR6A=;
+        b=iJZaxQIKV0uzd1SAJQGTCFomNloAbDTJHfPBA9/DVmiVFje/3Zx0efDxdipRo18pTP
+         qQfFhLbdElu0pmdBQ85HefhzcCRKQWYg+p06TrWjGrBWa8IQOCjtabtcLdVed6GIrhmS
+         l2q02CLWPbT1jAFgUt9tH72lbM2iZfFRnLcAblFGn05+Eyw8Z+A+8LbghajgxcaX1Ijy
+         tyqDA+OQrB8OZ4XE8r4M19/62km4lZ6Dp18d3/MBtesDMufwybaKNbtRfXvMWLHiH+2s
+         WZkUWj+8QFBHqfjfzI5iTC0eHKQoPEgoK4X+TAAn0UohcfnR1CYbaodhraTAUw10MJVi
+         8xSA==
+X-Gm-Message-State: APjAAAXdYvHCFPuT8iv53sHIBGY5UaKn35Cl/iNVQ2JpMnuQUv9DaqqD
+        NTEz7u6rlaD91GSUj9zeaOjVuQ==
+X-Google-Smtp-Source: APXvYqz7dlJsNZq75A+mF0pRAPY9uCleP7A20f0COgWbpMWntYayFz1ZRRAPvbfM3AZGnDdUgbVtxw==
+X-Received: by 2002:a5d:404a:: with SMTP id w10mr3205526wrp.177.1559667568398;
+        Tue, 04 Jun 2019 09:59:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
+        by smtp.gmail.com with ESMTPSA id c14sm17740912wrt.45.2019.06.04.09.59.27
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 09:59:27 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
+ <1558418814-6822-3-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <501ef28f-7463-7f49-c219-1c3fdd8cc476@redhat.com>
+Date:   Tue, 4 Jun 2019 18:59:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1558418814-6822-3-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Greg,
-
-> > +	dev_info(&pdev->dev, "Created misc device /dev/%s\n",
-> > +		 data->misc.name);
+On 21/05/19 08:06, Wanpeng Li wrote:
 > 
-> No need to be noisy, if all goes well, your code should be quiet.
-> 
+> The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
+> CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
+> kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
+> guest visibility.
 
-I sometimes wonder about this being noise or not, so I will slightly
-hijack this thread for this discussion.
+This needs some adjustment so that the default is backwards-compatible:
 
-From a kernel developer point-of-view, or even from a platform
-developer or user with a debugging hat point-of-view, having
-a "device created" or "device registered" message is often very useful.
-
-In fact, I wish people would do this more often, so I don't have to
-deal with dynamic debug, or hack my way:
-
-diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-index 4589631798c9..473549b26bb2 100644
---- a/drivers/media/i2c/ov5647.c
-+++ b/drivers/media/i2c/ov5647.c
-@@ -603,7 +603,7 @@ static int ov5647_probe(struct i2c_client *client,
-        if (ret < 0)
-                goto error;
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index e3ae96b52a16..f9b021e16ebc 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -378,11 +378,11 @@ struct kvm_sync_regs {
+ 	struct kvm_vcpu_events events;
+ };
  
--       dev_dbg(dev, "OmniVision OV5647 camera driver probed\n");
-+       dev_info(dev, "OmniVision OV5647 camera driver probed\n");
-        return 0;
- error:
-        media_entity_cleanup(&sd->entity);
+-#define KVM_X86_QUIRK_LINT0_REENABLED	(1 << 0)
+-#define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
+-#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
+-#define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
+-#define KVM_X86_QUIRK_MISC_ENABLE_MWAIT (1 << 4)
++#define KVM_X86_QUIRK_LINT0_REENABLED	   (1 << 0)
++#define KVM_X86_QUIRK_CD_NW_CLEARED	   (1 << 1)
++#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	   (1 << 2)
++#define KVM_X86_QUIRK_OUT_7E_INC_RIP	   (1 << 3)
++#define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
+ 
+ #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index f54d266fd3b5..bfa1341ce6f1 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -137,10 +137,10 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 		(best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
+ 		best->eax &= ~(1 << KVM_FEATURE_PV_UNHALT);
+ 
+-	if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT)) {
++	if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT)) {
+ 		best = kvm_find_cpuid_entry(vcpu, 0x1, 0);
+ 		if (best) {
+-			if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT)
++			if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_NO_MWAIT)
+ 				best->ecx |= F(MWAIT);
+ 			else
+ 				best->ecx &= ~F(MWAIT);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 528935733fe0..0c1498da46c7 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2548,17 +2548,15 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		}
+ 		break;
+ 	case MSR_IA32_MISC_ENABLE:
+-		if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT) &&
+-			((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
+-			if ((vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT) &&
+-				!(data & MSR_IA32_MISC_ENABLE_MWAIT)) {
+-				if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
+-					return 1;
+-			}
++		if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT) &&
++		    ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_NO_MWAIT)) {
++			if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
++				return 1;
+ 			vcpu->arch.ia32_misc_enable_msr = data;
+ 			kvm_update_cpuid(vcpu);
++		} else {
++			vcpu->arch.ia32_misc_enable_msr = data;
+ 		}
+-		vcpu->arch.ia32_misc_enable_msr = data;
+ 		break;
+ 	case MSR_IA32_SMBASE:
+ 		if (!msr_info->host_initiated)
 
-In some subsystems, it's even a behavior I'm more or less relying on:
+Please double check, in the meanwhile I've queued the patch.
 
-$ git grep v4l2_info.*registered drivers/media/ | wc -l
-26
-
-And on the downsides, I can't find much. It's just one little line,
-that is not even noticed unless you have logging turned on.
-
-Thanks,
-Ezequiel
-
+Paolo
