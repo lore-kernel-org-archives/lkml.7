@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD67CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70515C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F317216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F61D216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="B7YyTeOI"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J+lYbqkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfFDKQ6 (ORCPT
+        id S1727501AbfFDKRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:16:58 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:41277 "EHLO
+        Tue, 4 Jun 2019 06:17:19 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:41888 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbfFDKQ5 (ORCPT
+        with ESMTP id S1727061AbfFDKRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:16:57 -0400
+        Tue, 4 Jun 2019 06:17:18 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC7L032511;
-        Tue, 4 Jun 2019 19:14:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7L032511
+        by conuserg-08.nifty.com with ESMTP id x54AEC7B032511;
+        Tue, 4 Jun 2019 19:14:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7B032511
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643268;
-        bh=89f4NG7T3lIJUXbh+crgcBM9ot/TW/l/GBiNZdH3IcE=;
+        s=dec2015msa; t=1559643259;
+        bh=Oka5YpAg+k5l88SL/bB7/ELT3B4mHTq93jBuR0XeVDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7YyTeOIkyiLbhjHLtqXLb1VWv2GjQYy5cTgkr8C8U/cyucPCS5tXvbLRRzUzJ6TE
-         ziZe0sTaCI7+AxfD4MJh54gQr0L1AJ9WvpLuV36i+x53I9JXcPBPn6xdvR2dHK9sML
-         qN05UgT7qHP1pTja6UhXNVyhMW7EtydbRoefYU98Pxmufa5LHg6DmGwKMpHVw/LZeo
-         NqkT9Opk4Tm0y8mmDzNavtG4fIOGm8Jcj2d55/G7CYHnGI/2KymFZgUTQCOWVome3q
-         +O5FFmRsXenLxnlozqVJcD5GQPFx2xNzow+Ov8ya3wThpyW5MD5etP34fHH+iOnJbP
-         iI8KUO3jj3lDg==
+        b=J+lYbqkDyx5TCbBD+Dn9u83I3HtBZWpgzIStSV9W5m8Vm7NsIAtCgZTTnviNOz2/k
+         OIa3qQLjn3LJ7SFdO7cx4WcnlaqSOAOAOumyzJ/LJRtUiJsfCSRsZYwrzkeOJHFloh
+         5StGJrqnxtUoL1ZJgKMKnW+FVSO1PQZGYbOztFRAmSmiiFVQv6vKdRLA4xCR4r48yn
+         wXht5Fpzui7RHx47kKqdrv4g+1N3wRkcfOsMq3aPvHHshb53vEmzlWyFS9ffiyfLYg
+         ENAWvph9pzP8vXv0G83Xee/xAieRnQjeb2MJfRFGjniA0vGhfY5j4gVUCvNpi8ZGY8
+         i977mhymYRHng==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -46,18 +46,23 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         Jani Nikula <jani.nikula@intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        linux-parisc@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
         Michal Marek <michal.lkml@markovi.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Palmer Dabbelt <palmer@sifive.com>, bpf@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH 15/15] kbuild: compile test UAPI headers to ensure they are self-contained
-Date:   Tue,  4 Jun 2019 19:14:09 +0900
-Message-Id: <20190604101409.2078-16-yamada.masahiro@socionext.com>
+        Paul Mackerras <paulus@samba.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 05/15] kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
+Date:   Tue,  4 Jun 2019 19:13:59 +0900
+Message-Id: <20190604101409.2078-6-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
@@ -66,279 +71,278 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multiple people have suggested compile-testing UAPI headers to ensure
-they can be really included from user-space. "make headers_check" is
-obviously not enough to catch bugs, and we often leak references to
-kernel-space definition to user-space.
+Commit 5318321d367c ("samples: disable CONFIG_SAMPLES for UML") used
+a big hammer to fix the build errors under the samples/ directory,
+while only some samples actually include uapi headers from usr/include.
 
-The most recent patch I know is David Howells' work:
+Introduce CONFIG_HEADERS_INSTALL since 'depends on HEADERS_INSTALL' is
+clearer than 'depends on !UML'. If this option is enabled, uapi headers
+are installed before starting directory descending.
 
-  https://patchwork.kernel.org/patch/10590203/
+I added 'depends on HEADERS_INSTALL' to per-sample CONFIG options.
+This allows UML to compile some samples.
 
-While I agree that we should do this, we must consider how it can be
-integrated cleanly. That is why it has not been supported in the
-mainline yet.
-
-The idea that has been in my mind is to compile every UAPI header
-so that it can be included without relying on any include order.
-
-Please note usr/include/ is built with a completely different set of
-compiler flags. The header search path is set to $(objtree)/usr/include
-since UAPI headers should not include unexported headers.
-
-We use -std=gnu89 for the kernel space since the kernel code highly
-depends on GNU extensions. On the other hand, UAPI headers should be
-written in somewhat strict C, so they are compiled with -std=c89. This
-will catch C++ style comments, the keyword 'inline', etc. ('__inline__'
-should be used instead).
-
-There is additional compiler requirement for building under usr/include.
-because many of UAPI headers include <stdlib.h>, <sys/ioctl.h>,
-<sys/time.h>, etc. directly or indirectly.
-
-You can use kernel.org prebuilt toolchains for building the kernel
-(https://mirrors.edge.kernel.org/pub/tools/crosstool/index.html)
-but they do not provide <stdlib.h> etc.
-
-If you want to compile test UAPI headers, you need to use full-featured
-compilers, which are usually provided by distributions.
-
-I added scripts/cc-system-headers.sh to check if necessary system
-headers are available, which CONFIG_UAPI_HEADER_TEST depends on.
-
-For now, a lot of headers need to be excluded because they cannot
-be compiled standalone, but this is a good start point.
+$ make ARCH=um allmodconfig samples/
+  [ snip ]
+  CC [M]  samples/configfs/configfs_sample.o
+  CC [M]  samples/kfifo/bytestream-example.o
+  CC [M]  samples/kfifo/dma-example.o
+  CC [M]  samples/kfifo/inttype-example.o
+  CC [M]  samples/kfifo/record-example.o
+  CC [M]  samples/kobject/kobject-example.o
+  CC [M]  samples/kobject/kset-example.o
+  CC [M]  samples/trace_events/trace-events-sample.o
+  CC [M]  samples/trace_printk/trace-printk.o
+  AR      samples/vfio-mdev/built-in.a
+  AR      samples/built-in.a
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile                     |   2 +-
- init/Kconfig                 |  11 +++
- scripts/cc-system-headers.sh |   8 +++
- usr/.gitignore               |   1 -
- usr/Makefile                 |   2 +
- usr/include/.gitignore       |   3 +
- usr/include/Makefile         | 132 +++++++++++++++++++++++++++++++++++
- 7 files changed, 157 insertions(+), 2 deletions(-)
- create mode 100755 scripts/cc-system-headers.sh
- create mode 100644 usr/include/.gitignore
- create mode 100644 usr/include/Makefile
+ Makefile                              |  8 ++++----
+ arch/arc/configs/tb10x_defconfig      |  1 +
+ arch/nds32/configs/defconfig          |  1 +
+ arch/parisc/configs/a500_defconfig    |  1 +
+ arch/parisc/configs/b180_defconfig    |  1 +
+ arch/parisc/configs/c3000_defconfig   |  1 +
+ arch/parisc/configs/default_defconfig |  1 +
+ arch/powerpc/configs/ppc6xx_defconfig |  1 +
+ arch/s390/configs/debug_defconfig     |  1 +
+ lib/Kconfig.debug                     | 19 ++++++++++++++-----
+ samples/Kconfig                       | 14 +++++++++++---
+ samples/Makefile                      |  4 ++--
+ 12 files changed, 39 insertions(+), 14 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 48bac02fb72d..0d54b073c415 100644
+index 8348939765d3..ce5a9551860d 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1363,7 +1363,7 @@ CLEAN_DIRS  += $(MODVERDIR) include/ksym
- CLEAN_FILES += modules.builtin.modinfo
+@@ -1053,9 +1053,6 @@ vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
  
- # Directories & files removed with 'make mrproper'
--MRPROPER_DIRS  += include/config usr/include include/generated          \
-+MRPROPER_DIRS  += include/config include/generated          \
- 		  arch/$(SRCARCH)/include/generated .tmp_objdiff
- MRPROPER_FILES += .config .config.old .version \
- 		  Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS \
-diff --git a/init/Kconfig b/init/Kconfig
-index 02d8897b91fb..9a26f0e7e3fb 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -105,6 +105,17 @@ config HEADER_TEST
- 	  If you are a developer or tester and want to ensure the requested
- 	  headers are self-contained, say Y here. Otherwise, choose N.
+ targets := vmlinux
  
-+config UAPI_HEADER_TEST
-+	bool "Compile test UAPI headers"
-+	depends on HEADER_TEST && HEADERS_INSTALL
-+	depends on $(success,$(srctree)/scripts/cc-system-headers.sh $(CC))
+-# Some samples need headers_install.
+-samples: headers_install
+-
+ # The actual objects are generated when descending,
+ # make sure no implicit rule kicks in
+ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
+@@ -1199,6 +1196,10 @@ headers_check: headers_install
+ 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include HDRCHECK=1
+ 	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include HDRCHECK=1
+ 
++ifdef CONFIG_HEADERS_INSTALL
++prepare: headers_install
++endif
++
+ ifdef CONFIG_HEADERS_CHECK
+ all: headers_check
+ endif
+@@ -1745,7 +1746,6 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
+ PHONY += /
+ /: ./
+ 
+-samples/: headers_install
+ %/: prepare FORCE
+ 	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
+ 
+diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
+index 5b5119d2b5d5..dc739bd093e3 100644
+--- a/arch/arc/configs/tb10x_defconfig
++++ b/arch/arc/configs/tb10x_defconfig
+@@ -94,6 +94,7 @@ CONFIG_CONFIGFS_FS=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_STRIP_ASM_SYMS=y
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/arch/nds32/configs/defconfig b/arch/nds32/configs/defconfig
+index 65ce9259081b..40313a635075 100644
+--- a/arch/nds32/configs/defconfig
++++ b/arch/nds32/configs/defconfig
+@@ -92,6 +92,7 @@ CONFIG_DEBUG_INFO=y
+ CONFIG_DEBUG_INFO_DWARF4=y
+ CONFIG_GDB_SCRIPTS=y
+ CONFIG_READABLE_ASM=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/arch/parisc/configs/a500_defconfig b/arch/parisc/configs/a500_defconfig
+index 5acb93dcaabf..390c0bc09179 100644
+--- a/arch/parisc/configs/a500_defconfig
++++ b/arch/parisc/configs/a500_defconfig
+@@ -167,6 +167,7 @@ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ # CONFIG_DEBUG_BUGVERBOSE is not set
+diff --git a/arch/parisc/configs/b180_defconfig b/arch/parisc/configs/b180_defconfig
+index 83ffd161aec5..bdf1fe2b217f 100644
+--- a/arch/parisc/configs/b180_defconfig
++++ b/arch/parisc/configs/b180_defconfig
+@@ -91,6 +91,7 @@ CONFIG_NLS_ASCII=m
+ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/parisc/configs/c3000_defconfig b/arch/parisc/configs/c3000_defconfig
+index 8d41a73bd71b..ed4d49575b38 100644
+--- a/arch/parisc/configs/c3000_defconfig
++++ b/arch/parisc/configs/c3000_defconfig
+@@ -140,6 +140,7 @@ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_MUTEXES=y
+diff --git a/arch/parisc/configs/default_defconfig b/arch/parisc/configs/default_defconfig
+index 52c9050a7c5c..fcfd9eaadf9b 100644
+--- a/arch/parisc/configs/default_defconfig
++++ b/arch/parisc/configs/default_defconfig
+@@ -184,6 +184,7 @@ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_NLS_UTF8=y
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
+index 7c6baf6df139..463aa3e53084 100644
+--- a/arch/powerpc/configs/ppc6xx_defconfig
++++ b/arch/powerpc/configs/ppc6xx_defconfig
+@@ -1124,6 +1124,7 @@ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_DEBUG_INFO=y
+ CONFIG_UNUSED_SYMBOLS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+index b0920b35f87b..994e03fad424 100644
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@ -586,6 +586,7 @@ CONFIG_GDB_SCRIPTS=y
+ CONFIG_FRAME_WARN=1024
+ CONFIG_READABLE_ASM=y
+ CONFIG_UNUSED_SYMBOLS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 7cdcb962358c..6a6ea4219d1e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -305,14 +305,23 @@ config DEBUG_FS
+ 
+ 	  If unsure, say N.
+ 
++config HEADERS_INSTALL
++	bool "Install uapi headers to usr/include"
++	depends on !UML
 +	help
-+	  Compile test headers exported to user-space to ensure they are
-+	  self-contained, i.e. compilable as standalone units.
++	  This option will install uapi headers (headers exported to user-space)
++	  into the usr/include directory for use during the kernel build.
++	  This is unneeded for building the kernel itself, but needed for some
++	  user-space program samples. It is also needed by some features such
++	  as uapi header sanity checks.
 +
-+	  If you are a developer or tester and want to ensure the UAPI
-+	  headers are self-contained, say Y here. Otherwise, choose N.
-+
- config LOCALVERSION
- 	string "Local version - append to kernel release"
+ config HEADERS_CHECK
+ 	bool "Run sanity checks on uapi headers when building 'all'"
+-	depends on !UML
++	depends on HEADERS_INSTALL
  	help
-diff --git a/scripts/cc-system-headers.sh b/scripts/cc-system-headers.sh
-new file mode 100755
-index 000000000000..1b3db369828c
---- /dev/null
-+++ b/scripts/cc-system-headers.sh
-@@ -0,0 +1,8 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-only
+-	  This option will extract the user-visible kernel headers when
+-	  building the 'all' target, and will run basic sanity checks on them to
+-	  ensure that exported files do not attempt to include files which
+-	  were not exported, etc.
++	  This option will run basic sanity checks on uapi headers when
++	  building the 'all' target, for example, ensure that they do not
++	  attempt to include files which were not exported, etc.
+ 
+ 	  If you're making modifications to header files which are
+ 	  relevant for userspace, say 'Y', and check the headers
+diff --git a/samples/Kconfig b/samples/Kconfig
+index d63cc8a3e0df..71b5e833dd9e 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig SAMPLES
+ 	bool "Sample kernel code"
+-	depends on !UML
+ 	help
+ 	  You can build and test sample kernel code here.
+ 
+@@ -95,16 +94,24 @@ config SAMPLE_CONFIGFS
+ 
+ config SAMPLE_CONNECTOR
+ 	tristate "Build connector sample -- loadable modules only"
+-	depends on CONNECTOR && m
++	depends on CONNECTOR && HEADERS_INSTALL && m
+ 	help
+ 	  When enabled, this builds both a sample kernel module for
+ 	  the connector interface and a user space tool to communicate
+ 	  with it.
+ 	  See also Documentation/connector/connector.txt
+ 
++config SAMPLE_HIDRAW
++	bool "hidraw sample"
++	depends on HEADERS_INSTALL
 +
-+cat << "END" | $@ -E -x c - -o /dev/null >/dev/null 2>&1
-+#include <stdlib.h>
-+#include <sys/ioctl.h>
-+#include <sys/time.h>
-+END
-diff --git a/usr/.gitignore b/usr/.gitignore
-index 8e48117a3f3d..be5eae1df7eb 100644
---- a/usr/.gitignore
-+++ b/usr/.gitignore
-@@ -7,4 +7,3 @@ initramfs_data.cpio.gz
- initramfs_data.cpio.bz2
- initramfs_data.cpio.lzma
- initramfs_list
--include
-diff --git a/usr/Makefile b/usr/Makefile
-index 4a70ae43c9cb..6a89eb019275 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -56,3 +56,5 @@ $(deps_initramfs): klibcdirs
- $(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) klibcdirs
- 	$(Q)$(initramfs) -l $(ramfs-input) > $(obj)/$(datafile_d_y)
- 	$(call if_changed,initfs)
++config SAMPLE_PIDFD
++	bool "pidfd sample"
++	depends on HEADERS_INSTALL
 +
-+subdir-$(CONFIG_UAPI_HEADER_TEST) += include
-diff --git a/usr/include/.gitignore b/usr/include/.gitignore
-new file mode 100644
-index 000000000000..a0991ff4402b
---- /dev/null
-+++ b/usr/include/.gitignore
-@@ -0,0 +1,3 @@
-+*
-+!.gitignore
-+!Makefile
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-new file mode 100644
-index 000000000000..8cba20ba4edb
---- /dev/null
-+++ b/usr/include/Makefile
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+# Unlike the kernel space, uapi headers are written in more strict C.
-+#  - Forbid C++ style comments
-+#  - Use '__inline', '__asm__' instead of 'inline', 'asm'
-+#
-+# -std=c90 (equivalent to -ansi) catches the violation of those.
-+# We cannot go as far as adding -Wpedantic since it emits too many warnings.
-+#
-+# REVISIT: re-consider the proper set of compiler flags for uapi compile-test.
-+
-+UAPI_CFLAGS := -std=c90 -Wall -Werror=implicit-function-declaration
-+
-+override c_flags = $(UAPI_CFLAGS) -Wp,-MD,$(depfile) -I$(objtree)/usr/include
-+
-+# We want to compile as many headers as possible. We collect all headers
-+# by using the wildcard, then filter-out some later.
-+all-uapi-headers = $(shell cd $(obj) && find * -name '*.h')
-+
-+# asm-generic/*.h is used by asm/*.h, and should not be included directly
-+no-header-test += asm-generic/%.h
-+
-+# The following are excluded for now just because they fail to build.
-+# The cause of errors are mostly missing include directives.
-+# Check one by one, and send a patch to each subsystem.
-+#
-+# Do not add a new header to the list without legitimate reason.
-+# Please consider to fix the header first.
-+no-header-test += asm/ipcbuf.h
-+no-header-test += asm/msgbuf.h
-+no-header-test += asm/sembuf.h
-+no-header-test += asm/shmbuf.h
-+no-header-test += asm/signal.h
-+no-header-test += asm/ucontext.h
-+no-header-test += drm/vmwgfx_drm.h
-+no-header-test += linux/am437x-vpfe.h
-+no-header-test += linux/android/binderfs.h
-+no-header-test += linux/android/binder.h
-+no-header-test += linux/coda.h
-+no-header-test += linux/coda_psdev.h
-+no-header-test += linux/dvb/audio.h
-+no-header-test += linux/dvb/osd.h
-+no-header-test += linux/elfcore.h
-+no-header-test += linux/errqueue.h
-+no-header-test += linux/fsmap.h
-+no-header-test += linux/hdlc/ioctl.h
-+no-header-test += linux/jffs2.h
-+no-header-test += linux/kexec.h
-+no-header-test += linux/matroxfb.h
-+no-header-test += linux/netfilter_bridge/ebtables.h
-+no-header-test += linux/netfilter_ipv4/ipt_LOG.h
-+no-header-test += linux/netfilter_ipv6/ip6t_LOG.h
-+no-header-test += linux/nfc.h
-+no-header-test += linux/nilfs2_ondisk.h
-+no-header-test += linux/omap3isp.h
-+no-header-test += linux/omapfb.h
-+no-header-test += linux/patchkey.h
-+no-header-test += linux/phonet.h
-+no-header-test += linux/reiserfs_xattr.h
-+no-header-test += linux/scc.h
-+no-header-test += linux/sctp.h
-+no-header-test += linux/signal.h
-+no-header-test += linux/sysctl.h
-+no-header-test += linux/usb/audio.h
-+no-header-test += linux/ivtv.h
-+no-header-test += linux/v4l2-mediabus.h
-+no-header-test += linux/v4l2-subdev.h
-+no-header-test += linux/videodev2.h
-+no-header-test += linux/vm_sockets.h
-+no-header-test += misc/ocxl.h
-+no-header-test += scsi/scsi_bsg_fc.h
-+no-header-test += scsi/scsi_netlink_fc.h
-+no-header-test += scsi/scsi_netlink.h
-+no-header-test += sound/asequencer.h
-+no-header-test += sound/asound.h
-+no-header-test += sound/asoc.h
-+no-header-test += sound/compress_offload.h
-+no-header-test += sound/emu10k1.h
-+no-header-test += sound/sfnt_info.h
-+no-header-test += sound/sof/eq.h
-+no-header-test += sound/sof/fw.h
-+no-header-test += sound/sof/header.h
-+no-header-test += sound/sof/manifest.h
-+no-header-test += sound/sof/trace.h
-+no-header-test += xen/evtchn.h
-+no-header-test += xen/gntdev.h
-+no-header-test += xen/privcmd.h
-+
-+# more headers are broken in some architectures
-+
-+ifeq ($(SRCARCH),arc)
-+no-header-test += linux/bpf_perf_event.h
-+endif
-+
-+ifeq ($(SRCARCH),ia64)
-+no-header-test += asm/setup.h
-+no-header-test += asm/sigcontext.h
-+no-header-test += asm/perfmon.h
-+no-header-test += asm/perfmon_default_smpl.h
-+no-header-test += linux/if_bonding.h
-+endif
-+
-+ifeq ($(SRCARCH),mips)
-+no-header-test += asm/stat.h
-+endif
-+
-+ifeq ($(SRCARCH),powerpc)
-+no-header-test += asm/stat.h
-+no-header-test += linux/bpf_perf_event.h
-+endif
-+
-+ifeq ($(SRCARCH),riscv)
-+no-header-test += linux/bpf_perf_event.h
-+endif
-+
-+ifeq ($(SRCARCH),s390)
-+no-header-test += asm/runtime_instr.h
-+no-header-test += asm/zcrypt.h
-+endif
-+
-+ifeq ($(SRCARCH),sparc)
-+no-header-test += asm/stat.h
-+no-header-test += asm/uctx.h
-+no-header-test += asm/fbio.h
-+no-header-test += asm/openpromio.h
-+endif
-+
-+# Use '=' instead of ':=' to avoid $(shell ...) evaluation when cleaning
-+header-test-y = $(filter-out $(no-header-test), $(all-uapi-headers))
-+
-+# Use '=' instead of ':=' to avoid $(shell ...) evaluation when building
-+clean-dirs = $(shell cd $(obj) 2>/dev/null && find * -maxdepth 0 -type d)
+ config SAMPLE_SECCOMP
+ 	bool "Build seccomp sample code"
+-	depends on SECCOMP_FILTER
++	depends on SECCOMP_FILTER && HEADERS_INSTALL
+ 	help
+ 	  Build samples of seccomp filters using various methods of
+ 	  BPF filter construction.
+@@ -156,6 +163,7 @@ config SAMPLE_ANDROID_BINDERFS
+ 
+ config SAMPLE_VFS
+ 	bool "Build example programs that use new VFS system calls"
++	depends on HEADERS_INSTALL
+ 	help
+ 	  Build example userspace programs that use new VFS system calls such
+ 	  as mount API and statx().  Note that this is restricted to the x86
+diff --git a/samples/Makefile b/samples/Makefile
+index debf8925f06f..7d6e4ca28d69 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -4,14 +4,14 @@
+ obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
+ obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
+ obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
+-subdir-y				+= hidraw
++subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
+ obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
+ obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
+ obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
+ obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
+ obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
+ obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
+-subdir-y				+= pidfd
++subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
+ obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
+ obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
+ subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
 -- 
 2.17.1
 
