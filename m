@@ -2,112 +2,217 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E017C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4FBC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8EA2461C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189382461E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hx8KkJt1"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="eJsTBbOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfFDIMf (ORCPT
+        id S1726840AbfFDINo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:12:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40170 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfFDIMf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:12:35 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so12208442pfn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XhGxcyl15j2CR0DCz3fMTnLwvj65vTyLrIZ4yDtoYXw=;
-        b=hx8KkJt1ABUwHCaJKCcTtgFpDjMGOlolcsa3WknXTuMbOs5AiGX+7L3VsNPquRYtRi
-         qvRIL/wRURhc4nlSp2rzKU3kuNBdtw6Ie4HVgoGs85Yx6534SCcy1F45GW6gfX1iim0u
-         CiXpCN6d/vXzZYbo81l4NFH3BaSkfPzvfh01iJQ5OnQiJV4uzvkxU2LZzYl88dgckCtP
-         WoJ2sIehmhHGDTSrSlYjAlp2J3CFSkeN2kWLGu/nUuqQhN/IoNZngnM6csuWmqvMETZk
-         D2uThdtG9dBCqIFyDk7feFvG7DZ/SSWzEWxUUzc3ZiLdRoa7U9ITrnH2Kq8Q+voi7Ir9
-         etPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XhGxcyl15j2CR0DCz3fMTnLwvj65vTyLrIZ4yDtoYXw=;
-        b=YkpRhpTy0Zr3Vq/4x/jPhUpafhCwM5HM5bt1Tr9jmOvhZCM0jd5+0b8VeYojQ9nMXO
-         veRVrEBQ5pIzCWmJsL8w4SqDbOVwNOw5axQ88O6Zlum+zHm++d7G2jpd7pu8LVrIHQpE
-         9+5PrKUzzJjP+pLj+jEM2oRQei6RUkoTKggMd+0wo3Pdd5vcEtwpnjiBi1ggMmNR6Jcb
-         JP2R2hzTLMvbvPaQbQFn8n8Fto1V9RhQ701jW7iFgWBwuFSHrcp9r6j/UGtybqK5AbJT
-         iJBIzE1qe6++zmAeJT5LFVf4MQU5IqKD35/+Y3xnVM+t/C8Q+EHTOwmQbCkPHQtq3PNx
-         KGXw==
-X-Gm-Message-State: APjAAAV6+XSzOI7YN4WFmXfmJFN0h3V3NE5n4WoypmtV7f6myw/lhLIc
-        21pPN1Vb9CoYwssj+5EEygo=
-X-Google-Smtp-Source: APXvYqyXqdFotkOUoxeg9MqXtEN/n8FdFxqk8dN3qY3Cp9nhMGifYgXuaC7BiWL3FsFaqilvVW9HCg==
-X-Received: by 2002:a63:db4e:: with SMTP id x14mr34782545pgi.119.1559635954667;
-        Tue, 04 Jun 2019 01:12:34 -0700 (PDT)
-Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id k22sm6580204pfk.178.2019.06.04.01.12.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 01:12:34 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     larry.finger@lwfinger.net, gregkh@linuxfoundation.org,
-        straube.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, flbue@gmx.de, puranjay12@gmail.com
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: core: Replace function rtw_free_network_nolock
-Date:   Tue,  4 Jun 2019 13:42:22 +0530
-Message-Id: <20190604081222.12658-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 4 Jun 2019 04:13:44 -0400
+Received: from mail-eopbgr740059.outbound.protection.outlook.com ([40.107.74.59]:62048
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726637AbfFDINn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 04:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1FG6zloKqxGnK9Sf5W6AQAEFuisLyxvP7AEIBxtQfM=;
+ b=eJsTBbOaO5Cv1S1TpJ8FDHif+JO7GCEqps1G1kkj+A2JcY/wvq7960CrCCvtK+Hp3SZZ1cWeFjbtttitd74pf71EJtH8Ffs9nLbkorV9WF6b5s0oyG/orn8OYFWaQPDFRFjXiMSWvF2apmPNvAIpTD3hc6rSR7koJdqz6MWos1w=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.31.141) by
+ BN7PR08MB4164.namprd08.prod.outlook.com (52.133.220.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Tue, 4 Jun 2019 08:13:38 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::8d6c:f350:4859:e532]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::8d6c:f350:4859:e532%4]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 08:13:38 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Thread-Topic: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Thread-Index: AQHVGqX7mZWyymp0D0+pRLZPzmjhVqaLH8ww
+Date:   Tue, 4 Jun 2019 08:13:38 +0000
+Message-ID: <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20190604072001.9288-3-bjorn.andersson@linaro.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [195.89.176.137]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ae37eab-556d-4259-ca02-08d6e8c48c83
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB4164;
+x-ms-traffictypediagnostic: BN7PR08MB4164:|BN7PR08MB4164:
+x-microsoft-antispam-prvs: <BN7PR08MB4164F5C147BE78F2515C7267DB150@BN7PR08MB4164.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(366004)(346002)(396003)(189003)(199004)(186003)(74316002)(9686003)(486006)(26005)(446003)(76176011)(52536014)(55016002)(476003)(66446008)(73956011)(229853002)(7696005)(316002)(66066001)(6506007)(102836004)(25786009)(110136005)(54906003)(4326008)(99286004)(66946007)(76116006)(6436002)(3846002)(478600001)(53936002)(66476007)(64756008)(14444005)(33656002)(11346002)(6246003)(68736007)(66556008)(8676002)(71190400001)(71200400001)(2906002)(81166006)(86362001)(81156014)(305945005)(7736002)(5660300002)(6116002)(5024004)(8936002)(256004)(14454004)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4164;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cXZuNu4cK0kkbe6cdlEKLGOU5WftKvUrZ7lzRwcQSW4zYvos/kKKux6MOhcyDmF+CUw2molHCuEKXPLA5H55Kden09dvQU4wm7ALW6ZFFRKxBYMaESibhec5KdM+ZfJLv5edcY+c/NVemrRAlWkVNINTXlNoNKnSHDttV1D1gSKRJFzhUg6w1bdnYzTMYOGYY51HbIZhC1s0iWrLVaHUfHhsAV01cNRVJOMingHSvulDILYiEUybCGaqlyjPnDkpUbhGyniCo4FVy3NXwi102EOEuXkDw0jL3wBBwjL/eIoRWZ/U/2QEy+Y7xSen6TSK7Dcnc01ljlsK8YrcGWw/ZwpZ5KQ74R/sGzcvDOn+D9EQFODKvXNJbmi3oOdC1I0TnHG96z7n9hqlk+iKfAZKHkqqUzxC5L7cqA/Vwj5/TDQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae37eab-556d-4259-ca02-08d6e8c48c83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 08:13:38.6206
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: beanhuo@micron.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove function rtw_free_network_nolock, as all it does is call
-_rtw_free_network_nolock, and rename _rtw_free_network_nolock to
-rtw_free_network_nolock.
+Hi, Bjorn
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_mlme.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+>Acquire the device-reset GPIO and toggle this to reset the UFS device duri=
+ng
+>initialization and host reset.
+>
+>+/**
+>+ ufshcd_device_reset() - toggle the (optional) device reset line
+>+ * @hba: per-adapter instance
+>+ *
+>+ * Toggles the (optional) reset line to reset the attached device.
+>+ */
+>+static void ufshcd_device_reset(struct ufs_hba *hba) {
+>+	/*
+>+	 * The USB device shall detect reset pulses of 1us, sleep for 10us to
+>+	 * be on the safe side.
+>+	 */
+>+	gpiod_set_value_cansleep(hba->device_reset, 1);
+>+	usleep_range(10, 15);
+>+
+>+	gpiod_set_value_cansleep(hba->device_reset, 0);
+>+	usleep_range(10, 15);
+>+}
+>+
+> /**
+>  * ufshcd_host_reset_and_restore - reset and restore host controller
+>  * @hba: per-adapter instance
+>@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba
+>*hba)
+> 	int retries =3D MAX_HOST_RESET_RETRIES;
+>
+> 	do {
+>+		/* Reset the attached device */
+>+		ufshcd_device_reset(hba);
+>+
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-index 0abb2df32645..454c5795903d 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-@@ -159,7 +159,7 @@ static void _rtw_free_network(struct mlme_priv *pmlmepriv, struct wlan_network *
- 	spin_unlock_bh(&free_queue->lock);
- }
- 
--void _rtw_free_network_nolock(struct	mlme_priv *pmlmepriv, struct wlan_network *pnetwork)
-+void rtw_free_network_nolock(struct	mlme_priv *pmlmepriv, struct wlan_network *pnetwork)
- {
- 	struct __queue *free_queue = &pmlmepriv->free_bss_pool;
- 
-@@ -276,12 +276,6 @@ static struct wlan_network *rtw_alloc_network(struct mlme_priv *pmlmepriv)
- 	return _rtw_alloc_network(pmlmepriv);
- }
- 
--static void rtw_free_network_nolock(struct mlme_priv *pmlmepriv,
--				    struct wlan_network *pnetwork)
--{
--	_rtw_free_network_nolock(pmlmepriv, pnetwork);
--}
--
- int rtw_is_same_ibss(struct adapter *adapter, struct wlan_network *pnetwork)
- {
- 	int ret = true;
--- 
-2.19.1
+what's problem you met, and you should reset UFS device here? could you giv=
+e more info?
+
+It is true that we don't reset UFS device in case of device fatal error. Ac=
+cording to UFS host spec,
+Host should be device reset except that in addition to resetting UIC. But a=
+s so far,
+We didn't experience any problems result from this missing reset.
+
+We have three UFS device reset ways.  Comparing to this hardware reset,=20
+I prefer to use DME_ENDPOINTRESET.req software reset.
+
+
+> 		err =3D ufshcd_host_reset_and_restore(hba);
+> 	} while (err && --retries);
+>
+>@@ -7355,6 +7378,18 @@ static void ufshcd_variant_hba_exit(struct ufs_hba
+>*hba)
+> 	ufshcd_vops_exit(hba);
+> }
+>
+>+static int ufshcd_init_device_reset(struct ufs_hba *hba) {
+>+	hba->device_reset =3D devm_gpiod_get_optional(hba->dev, "device-
+>reset",
+>+						    GPIOD_OUT_HIGH);
+>+	if (IS_ERR(hba->device_reset)) {
+>+		dev_err(hba->dev, "failed to acquire reset gpio: %ld\n",
+>+			PTR_ERR(hba->device_reset));
+>+	}
+>+
+>+	return PTR_ERR_OR_ZERO(hba->device_reset);
+>+}
+>+
+> static int ufshcd_hba_init(struct ufs_hba *hba)  {
+> 	int err;
+>@@ -7394,9 +7429,15 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
+> 	if (err)
+> 		goto out_disable_vreg;
+>
+>+	err =3D ufshcd_init_device_reset(hba);
+>+	if (err)
+>+		goto out_disable_variant;
+>+
+> 	hba->is_powered =3D true;
+> 	goto out;
+>
+>+out_disable_variant:
+>+	ufshcd_vops_setup_regulators(hba, false);
+> out_disable_vreg:
+> 	ufshcd_setup_vreg(hba, false);
+> out_disable_clks:
+>@@ -8290,6 +8331,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem
+>*mmio_base, unsigned int irq)
+> 		goto exit_gating;
+> 	}
+>
+>+	/* Reset the attached device */
+>+	ufshcd_device_reset(hba);
+>+
+> 	/* Host controller enable */
+> 	err =3D ufshcd_hba_enable(hba);
+> 	if (err) {
+>diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h index
+>ecfa898b9ccc..d8be67742168 100644
+>--- a/drivers/scsi/ufs/ufshcd.h
+>+++ b/drivers/scsi/ufs/ufshcd.h
+>@@ -72,6 +72,8 @@
+> #define UFSHCD "ufshcd"
+> #define UFSHCD_DRIVER_VERSION "0.2"
+>
+>+struct gpio_desc;
+>+
+> struct ufs_hba;
+>
+> enum dev_cmd_type {
+>@@ -706,6 +708,8 @@ struct ufs_hba {
+>
+> 	struct device		bsg_dev;
+> 	struct request_queue	*bsg_queue;
+>+
+>+	struct gpio_desc *device_reset;
+> };
+>
+> /* Returns true if clocks can be gated. Otherwise false */
+>--
+>2.18.0
 
