@@ -2,148 +2,159 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD10C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C58C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391F623CCA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:25:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D25pQvBB"
+	by mail.kernel.org (Postfix) with ESMTP id CF2B223E3B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfFDIZI (ORCPT
+        id S1726883AbfFDI1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:25:08 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57214 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfFDIZH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:25:07 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x548OkBN019202;
-        Tue, 4 Jun 2019 03:24:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559636686;
-        bh=DiwIg104ZzyKgBvZwBFwYzUsFbehKHIF90gx3ALGLTY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=D25pQvBBkM9DAi1+FdnReiOtmHHDb1cndQDh3j7vN6ScYV53SJ8sYwV7ZC+ISsjAY
-         2P/DArzWKbfcSFyn8Rs/kUf1rieTBXuWfADP/pdniznyZbhiIrWdoXg1zeU3HJFLCH
-         qc5IbCMuyPbreNERH8xh29vGohiW/VAxIFhAowo4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x548Okmi063873
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 03:24:46 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 03:24:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 03:24:45 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x548Od3P118317;
-        Tue, 4 Jun 2019 03:24:40 -0500
-Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        Rahul Kumar <kurahul@cadence.com>
-References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
- <1554882504-9010-6-git-send-email-pawell@cadence.com>
- <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
- <BYAPR07MB47099815FA4691B6106F80FEDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <f912a979-1e0c-8013-7f82-09102cb39a19@ti.com>
-Date:   Tue, 4 Jun 2019 13:54:39 +0530
+        Tue, 4 Jun 2019 04:27:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:37506 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbfFDI1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 04:27:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03126A78;
+        Tue,  4 Jun 2019 01:27:51 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC7673F246;
+        Tue,  4 Jun 2019 01:27:49 -0700 (PDT)
+Subject: Re: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt
+ match helper
+To:     tomas.winkler@intel.com, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org, arnd@arndb.de
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-37-git-send-email-suzuki.poulose@arm.com>
+ <5B8DA87D05A7694D9FA63FD143655C1B9DC23236@hasmsx108.ger.corp.intel.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <3a8bf057-1c43-fc44-e314-51f831a2a242@arm.com>
+Date:   Tue, 4 Jun 2019 09:27:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <BYAPR07MB47099815FA4691B6106F80FEDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B9DC23236@hasmsx108.ger.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/19 1:47 PM, Pawel Laszczak wrote:
->>
->> On 10/04/19 1:18 PM, Pawel Laszczak wrote:
->>> +static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
->>> +					     struct cdns3_endpoint *priv_ep)
->>> +{
->>> +	int dma_index;
->>> +	u32 doorbell;
->>> +
->>> +	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
->>
->>> +	dma_index = (readl(&priv_dev->regs->ep_traddr) -
->>> +		    priv_ep->trb_pool_dma) / TRB_SIZE;
->>
->> This gets upgraded to 64-bit by 64-bit division whenever dma_addr_t is
->> 64-bit. That should be avoided. Following diff should fix it.
->> But please review the logic itself. You are subtracting a 64 bit entity
->>from a 32-bit entity. What is guaranteeing that priv_ep->trb_pool_dma is
->> 32-bit?
->>
->> There is one more instance of same issue in cdns3_request_handled().
->>
->> Thanks,
->> Sekhar
->>
->> [1]
->> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->> index bfd5dbf40c7e..e73b618501fb 100644
->> --- a/drivers/usb/cdns3/gadget.c
->> +++ b/drivers/usb/cdns3/gadget.c
->> @@ -749,8 +749,8 @@ static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
->> 	u32 doorbell;
->>
->> 	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
->> -	dma_index = (readl(&priv_dev->regs->ep_traddr) -
->> -		    priv_ep->trb_pool_dma) / TRB_SIZE;
->> +	dma_index = readl(&priv_dev->regs->ep_traddr) - priv_ep->trb_pool_dma;
->> +	dma_index /= TRB_SIZE;
+Hi Tomas,
+
+On 03/06/2019 19:00, Winkler, Tomas wrote:
 > 
-> Hi Sekhar,
 > 
-> In the next latest version I added setting dma and coherent mask to 32-bits as suggested by Roger. 
-> Controller can do only 32-bit access.
-
-I think this should work for now except if in some future version of
-controller the limitation of 32-bit access is fixed. I guess that might
-mean different logic for DMA handling anyway.
-
-> DMA address space should be allocated from first 32 bits of address space. Most significant 32-bit 
-> of priv_ep->trb_pool_dma should be zeroed, so I do not assume any issue in this place.
+>> -----Original Message-----
+>> From: Suzuki K Poulose [mailto:suzuki.poulose@arm.com]
+>> Sent: Monday, June 03, 2019 18:50
+>> To: linux-kernel@vger.kernel.org
+>> Cc: gregkh@linuxfoundation.org; rafael@kernel.org; suzuki.poulose@arm.com;
+>> Winkler, Tomas <tomas.winkler@intel.com>; Arnd Bergmann
+>> <arnd@arndb.de>
+>> Subject: [RFC PATCH 36/57] drivers: mei: Use class_find_device_by_devt match
+>> helper
+>>
+>> Switch to the generic helper class_find_device_by_devt.
 > 
-> Have you seen any issue with this on your platform ?
+> Looks okay, but  you could add me at least to cover later mail, there is very little context.
 
-build fails with
+You were on the Cc list. I am not sure if the cover-letter was kind of blocked
+due to the large Cc set. Please find it below. I can see that you are copied
+on the cover letter in my inbox. The subject of is :
 
-ERROR: "__aeabi_uldivmod" [drivers/usb/cdns3/cdns3.ko] undefined!
+"[RFC PATCH 00/57] drivers: Consolidate device lookup helpers"
 
-on 32-bit platforms with ARM LPAE enabled. So please roll in the fix I
-suggested.
+--- cover ---
 
-Thanks,
-Sekhar
+We have helper routines to lookup devices matching a criteria defined
+by a "match" helper for bus/class/driver. Often the search is based on a
+generic property of a device, such as of_node, fwnode, device type or
+device name. In the absense of a common set of match functions, we have
+drivers writing their own match functions, spilled all over the driver
+subsystems. This series is an attempt to consolidate the and cleanup
+the device match functions by providing generic match helpers by device
+properties listed above. In this attempt, we unify the prototype for
+the match functions for {bus/driver}_find_device() with that of the
+class_find_device() and thus further reducing the duplicate functions.
+The series also adds wrapper functions to lookup the devices by generic
+attributes, so that people don't miss the generic match functions and
+continue to write their own.
+
+Also, there are a couple of instances where the drivers use "platform_bus_type"
+directly reusing the "match" function of the bus. This is cleaned by providing
+a new helper "platform_find_device_by_driver()" to abstract the details away
+from the callers.
+
+Applies on 5.2-rc3
+
+Cc: Alan Tull <atull@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+...
+Cc: Stefan Schmidt <stefan@datenfreihafen.org>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thor Thayer <thor.thayer@linux.intel.com>
+*Cc: Tomas Winkler <tomas.winkler@intel.com>*
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+...
+
+----
+
+Cheers
+Suzuki
+
+> 
+> 
+> Thanks
+> Tomas
+> 
+> 
+>>
+>> Cc: Tomas Winkler <tomas.winkler@intel.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/misc/mei/main.c | 9 +--------
+>>   1 file changed, 1 insertion(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c index
+>> ad02097..243b481 100644
+>> --- a/drivers/misc/mei/main.c
+>> +++ b/drivers/misc/mei/main.c
+>> @@ -858,13 +858,6 @@ static ssize_t dev_state_show(struct device *device,  }
+>> static DEVICE_ATTR_RO(dev_state);
+>>
+>> -static int match_devt(struct device *dev, const void *data) -{
+>> -	const dev_t *devt = data;
+>> -
+>> -	return dev->devt == *devt;
+>> -}
+>> -
+>>   /**
+>>    * dev_set_devstate: set to new device state and notify sysfs file.
+>>    *
+>> @@ -880,7 +873,7 @@ void mei_set_devstate(struct mei_device *dev, enum
+>> mei_dev_state state)
+>>
+>>   	dev->dev_state = state;
+>>
+>> -	clsdev = class_find_device(mei_class, NULL, &dev->cdev.dev,
+>> match_devt);
+>> +	clsdev = class_find_device_by_devt(mei_class, NULL, dev->cdev.dev);
+>>   	if (clsdev) {
+>>   		sysfs_notify(&clsdev->kobj, NULL, "dev_state");
+>>   		put_device(clsdev);
+>> --
+>> 2.7.4
+> 
