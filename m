@@ -2,101 +2,79 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14515C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7AA208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N61bh+x1"
+	by mail.kernel.org (Postfix) with ESMTP id 52D85208E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfFDR3P (ORCPT
+        id S1726691AbfFDR3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:29:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37109 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFDR3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:29:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 20so10758303pgr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFo+Cml7JxiPey2gwmiRmH8tPb+Deo/oS3silL2yxZc=;
-        b=N61bh+x1YFfCBev/Zwkc8He+QGNTb342PZxDgzqdfz9pMS/l9YVL+XY0gFYs3oRDyZ
-         A6bL52tlZEUDZy84tZ7bum0Q7pjZD5prpeifOqyrLG+IZfhEYwlHCQiGEH6BU3ENg7OG
-         VLk+qBj3oUYR83EEE3kuQjE3DYOoxVOAUM6H4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFo+Cml7JxiPey2gwmiRmH8tPb+Deo/oS3silL2yxZc=;
-        b=UTv61itWaeyFbYJfIMtLNWAoB3RTCs/pcddaSrw4cvbqm4Jm6Lz9KHuXuKbGxF4Kyw
-         2Y3Q8kbElYAv+BOf/h8Y5m6tWzelaNTyr9y2IyF0xrI6pOahcyykywW5PlUSqIc8LeT5
-         KTQ1nMBl5CVXQcZT31am9BePf6iG9/Lx4xmRNryfs+AECu2EHx3e7zw0OMZugxLbenG0
-         h1gEYbsw9K8PiCJbBsA76VQuC2fXZ/p0A5QKCV6yfPe1TT9Y/QtLVhBkBxATJb9Ti7l6
-         Xo2t8Z/pmA7xaXPo0MjIwrQY796rwkcRrEDRG+4I7hQv6OspYU7i5vLyZCglUlyQcwRL
-         ILZQ==
-X-Gm-Message-State: APjAAAVCbmmnNYNasCyU2C3WbHida76CR/fVBHkdxnccTZDsrrBDvBaR
-        v0qF/oP4CpSt34SodMWo6KT6Ag==
-X-Google-Smtp-Source: APXvYqxa24wA9trv1+kh6Te7TMdbEl07eQtif4EI2omG8tMZ2UdPcthS6IFtPY7g6ruYWoJUIQ7Aeg==
-X-Received: by 2002:a17:90a:8584:: with SMTP id m4mr38051966pjn.125.1559669353526;
-        Tue, 04 Jun 2019 10:29:13 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id k3sm16185351pju.27.2019.06.04.10.29.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:29:12 -0700 (PDT)
-From:   Brian Norris <briannorris@chromium.org>
-To:     Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] mwifiex: drop 'set_consistent_dma_mask' log message
-Date:   Tue,  4 Jun 2019 10:29:10 -0700
-Message-Id: <20190604172910.107199-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
+        Tue, 4 Jun 2019 13:29:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52576 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726312AbfFDR3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:29:16 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3DE4F314807A;
+        Tue,  4 Jun 2019 17:29:16 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 19A3117C59;
+        Tue,  4 Jun 2019 17:29:15 +0000 (UTC)
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
+ <20190604091416.GI3402@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <6f7371cf-c5ea-282a-c8ce-a95d8f339cd1@redhat.com>
+Date:   Tue, 4 Jun 2019 13:29:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190604091416.GI3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 04 Jun 2019 17:29:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This message is pointless.
+On 6/4/19 5:14 AM, Peter Zijlstra wrote:
+> On Mon, May 20, 2019 at 04:59:14PM -0400, Waiman Long wrote:
+>> On a 2-socket 40-core 80-thread Skylake system, the page_fault1 test of
+>> the will-it-scale benchmark was run with various number of threads. The
+>> number of operations done before reader optimistic spinning patches,
+>> this patch and after this patch were:
+>>
+>>   Threads  Before rspin  Before patch  After patch    %change
+>>   -------  ------------  ------------  -----------    -------
+>>     20        5541068      5345484       5455667    -3.5%/ +2.1%
+>>     40       10185150      7292313       9219276   -28.5%/+26.4%
+>>     60        8196733      6460517       7181209   -21.2%/+11.2%
+>>     80        9508864      6739559       8107025   -29.1%/+20.3%
+> 'rspin' is patch 12 in this series, right?
 
-While we're at it, include the error code in the error message, which is
-not pointless.
+Yes, I should have spell out the patch name.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/pcie.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3fe81b2a929a..82f58bf0fc43 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -2924,10 +2924,9 @@ static int mwifiex_init_pcie(struct mwifiex_adapter *adapter)
- 
- 	pci_set_master(pdev);
- 
--	pr_notice("try set_consistent_dma_mask(32)\n");
- 	ret = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
- 	if (ret) {
--		pr_err("set_dma_mask(32) failed\n");
-+		pr_err("set_dma_mask(32) failed: %d\n", ret);
- 		goto err_set_dma_mask;
- 	}
- 
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+-Longman
 
