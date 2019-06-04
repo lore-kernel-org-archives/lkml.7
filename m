@@ -2,181 +2,137 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269ACC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6B3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82F424A5F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="aWootuo8"
+	by mail.kernel.org (Postfix) with ESMTP id BCD3524A67
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfFDJnX (ORCPT
+        id S1727124AbfFDJoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:43:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33385 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfFDJnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:43:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so1863399wmh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:43:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9zsBjqfFxDnK299EPt8HWTK+gFJutyEx94Q+WKO51eU=;
-        b=aWootuo87lkA0fLMe02iMsBMN+6Wqgil2jMBTKo9HBgNee7yNm2q1+xrxYOhB7fc0E
-         QdFIfeYWDIv9ZKgHFFdxdTncjeBcuwSUOHUtyAgqaMGrAlrXvyMEVCAY2HUDOhqjIw5h
-         SxkBKH5LldMT+QhWcPWGEv4EwYGtj4BWNJCbDaZlb6RNLzX6iZFgojxKoo5aiJcLyhDo
-         6qvz+hd1La+h9MLVdRDT8JF3qIjoSFa7v3LAG7jMi9ucZxPObzoqY4RbV/STLhEMcs6E
-         AnB58Pyjt/Abe7IIgi7BiHELdpM0KM9WzSTWjHzDUItug42iiZjNUYgW2Tz/1bkV1q/u
-         HVTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9zsBjqfFxDnK299EPt8HWTK+gFJutyEx94Q+WKO51eU=;
-        b=VovyNRa2pd9/CmD09ejUsGmSiDEYxb4UzvCxg8KK7ipw1PC5ojolNScNVPX9w9ornK
-         Idsn6RbnXEoYzAW2amvG7HU2Kdf338XAYgJG5bdVqDFm9QtK/vyYTEmSlfs100kVUyiS
-         BAaTnThbvVUPFeYNYNjm8TvG2u/Cv6eHsVvfLnwhQ2mrW211wjbgOeU4G4PP2UxoGd/M
-         DP0XhcQ03UnGcIBrKgGWSMBWXaMlak3bFy1n6SShklYBxEe/AsnUH3Ao5dX2aWLHzpJI
-         MuASSMU5mcWLWx4kfW3So9tgTnXUyqUiajlXAeLywiC7Sn6jF/1pCRWIGSbqMbr4vv2Y
-         xYSQ==
-X-Gm-Message-State: APjAAAVjT3pUlsfkEHm1PtnUfKypTEfoHUahwisQDcRUbfp7WVAOYFjv
-        lKoTMYOIVfoZf3Mb4QYYUwMWpQ==
-X-Google-Smtp-Source: APXvYqwgwSue4d4xXG1eqyr2WgURWLA8qP2rB2INz9FuaOZWfmKlm2odEX/0SxywA21Yhne9QzL+xA==
-X-Received: by 2002:a7b:c842:: with SMTP id c2mr17669213wml.28.1559641400055;
-        Tue, 04 Jun 2019 02:43:20 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id y132sm27296890wmd.35.2019.06.04.02.43.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 02:43:19 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 11:43:18 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jannh@google.com,
-        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
-        arnd@arndb.de, Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] fork: add clone3
-Message-ID: <20190604094317.4wfelmbw4lgxzide@brauner.io>
-References: <20190603144331.16760-1-christian@brauner.io>
- <4020.1559640492@warthog.procyon.org.uk>
+        Tue, 4 Jun 2019 05:44:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:39034 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfFDJoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 05:44:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98CB980D;
+        Tue,  4 Jun 2019 02:44:38 -0700 (PDT)
+Received: from e107533-lin.cambridge.arm.com (unknown [10.37.9.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A1203F246;
+        Tue,  4 Jun 2019 02:44:35 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 10:44:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 0/6] mailbox: arm_mhu: add support to use in doorbell mode
+Message-ID: <20190604093827.GA31069@e107533-lin.cambridge.arm.com>
+References: <20190531143320.8895-1-sudeep.holla@arm.com>
+ <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
+ <20190531165326.GA18115@e107155-lin>
+ <20190603193946.GC2456@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4020.1559640492@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190603193946.GC2456@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 10:28:12AM +0100, David Howells wrote:
-> Christian Brauner <christian@brauner.io> wrote:
-> 
-> > +#include <linux/compiler_types.h>
-> 
-> I suspect you don't want to include that directly.
-> 
-> Also, to avoid bloating linux/sched/task.h yet further, maybe put this in
-> linux/sched/clone.h?
+On Mon, Jun 03, 2019 at 08:39:46PM +0100, Mark Brown wrote:
+> On Fri, May 31, 2019 at 05:53:26PM +0100, Sudeep Holla wrote:
+> > On Fri, May 31, 2019 at 11:21:08AM -0500, Jassi Brar wrote:
+> > > On Fri, May 31, 2019 at 9:33 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> > > > This is my another attempt to extend mailbox framework to support
+> > > > doorbell mode mailbox hardware. It also adds doorbell support to ARM
+> > > > MHU driver.
+>
+> > > Nothing has really changed since the last time we discussed many months ago.
+> > > MHU remains same, and so are my points.
+>
+> > Yes, I understand your concern.
+>
+> > But as mentioned in the cover letter I did try the suggestions and have
+> > detailed reasoning why that's still an issue. In short I ended up
+> > re-inventing mailbox framework with all the queuing and similar APIs
+> > for this. Worse, we can't even add an extra node for that in DT to
+> > describe that. It can't be simple shim as we need to allow multiple
+> > users to access one physical channel at a time. We have use case
+> > where we can this for CPU DVFS fast switching in scheduler context.
+>
+> Forgive me if I'm missing something here (this is partly based on
+> conversations from months ago so I may be misremembering things) but is
+> the issue here specifically the doorbell mode or is it the need to have
+> partly software defined mailboxes implemented using this hardware?
 
-Yeah, not the worst idea.
-Though I'd leave the flags where they are and just add struct
-kernel_clone_args in there. But I assume that's what you meant anyway.
+I can say it's partially both.
 
-> 
-> > -extern long _do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *, unsigned long);
-> > +extern long _do_fork(struct kernel_clone_args *kargs);
-> >  extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
-> 
-> Maybe these could move into linux/sched/clone.h too.
+1. The hardware is designed keeping in mind multiple transport protocols:
+   doorbell mode, single word and multiple work(only in newer versions)
+   Using that hardware capability provides access to multiple channels
+   to the software.
 
-Meh, that could be a separate cleanup patch after clone3() has been
-merged.
+2. I can also view this as software defined mailboxes if we go by
+   definition that each channel should have associated dedicated interrupt
+   as Jassi mentions.
 
-> 
-> > +#define CLONE_MAX ~0U
-> 
-> Can you add a comment summarising the meaning?
+The main idea is that each bit in these 32-bit registers can be written
+atomically without the need of read-modify-write enabling software to
+implement multiple channels in lock-less way.
 
-Yes, can do.
+> My understanding is that the hardware is more a component that's intended
+> to allow potentially multiple more complex mailboxes to be tied to a
+> single hardware block than a complete mailbox in and of itself.
 
-> 
-> > +	u64 clone_flags = args->flags;
-> > +	int __user *child_tidptr = args->child_tid;
-> > +	unsigned long tls = args->tls;
-> > +	unsigned long stack_start = args->stack;
-> > +	unsigned long stack_size = args->stack_size;
-> 
-> Some of these are only used once, so it's probably not worth sticking them in
-> local variables.
+Correct.
 
-[1]:
-Ok, will double check.
-This was just to minimize copy-paste erros for variables which were used
-multiple times.
+> It feels like the issues with sharing access to the hardware and with the
+> API for talking to doorbell hardware are getting tied together and
+> confusing things.  But like I say I might be missing something here.
 
-> 
-> > -		if (clone_flags &
-> > -		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
-> > -			return ERR_PTR(-EINVAL);
-> 
-> Did this error check get lost?  I can see part of it further on, but the check
-> on CLONE_PARENT_SETTID is absent.
+As I tried to simply in my cover letter, I will try to explain in simpler
+terms.
 
-No, it's only relevant for legacy clone() since it uses the
-parent_tidptr argument to return the pidfd. clone3() has a dedicated
-return argument for that in clone_args.
-The check for legacy clone() is now done in legacy clone() directly.
-copy_process() should only do generic checks for all version of
-clone(),fork(),vfork(), etc.
+ 1. This version of hardware has 3 blocks(one for secure and 2 non-secure)
+    Each block has 3 sets of 32-bit registers(SET, CLEAR and STATUS)
+    SET and CLEAR are write only and STATUS is read-only.
 
-> 
-> > +	int __user *parent_tidptr = args->parent_tid;
-> 
-> There's only one usage remaining after this patch, so a local var doesn't gain
-> a lot.
+    Each block has a dedicated interrupt line.
 
-Yes, that leads back to [1].
+2. The hardware was designed to cater 2 transport protocols. A single
+   word transfer(non-zero) or each bit in doorbell mode.
 
-> 
-> >  pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
-> >  {
-> > -	return _do_fork(flags|CLONE_VM|CLONE_UNTRACED, (unsigned long)fn,
-> > -		(unsigned long)arg, NULL, NULL, 0);
-> > +	struct kernel_clone_args args = {
-> > +		.flags = ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
-> > +		.exit_signal = (flags & CSIGNAL),
-> 
-> Kernel threads can have exit signals?
+3. The next version extends with each block having larger than 32-bit
+   window(up to 124 words) allowing it to used it for multiple
+   word as transport protocol. Mainly for some IoT usecase.
 
-Yes,
+So what I am trying to convey here is MHU controller hardware can be
+used choosing one of the  different transport protocols available and
+that's platform choice based on the use-case.
 
-kernel/kthread.c:       pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
-kernel/umh.c:   pid = kernel_thread(call_usermodehelper_exec_async, sub_info, SIGCHLD);
+The driver in the kernel should identify the same from the firmware/DT
+and configure it appropriately.
 
-And even if they couldn't have. This is just to make sure that if they
-ever would we'd be prepared.
+It may get inefficient and sometime impossible to address all use-case
+if we stick to one transport protocol in the driver and try to build
+an abstraction on top to use in different transport mode.
 
-> 
-> > +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> > +				     struct clone_args __user *uargs,
-> > +				     size_t size)
-> 
-> I would make this "noinline".  If it gets inlined, local variable "args" may
-> still be on the stack when _do_fork() gets called.
+Hope this clarify things little bit more.
 
-Hm, can do.
-
-Thanks!
-Christian
+--
+Regards,
+Sudeep
