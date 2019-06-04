@@ -2,102 +2,132 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0359DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06DFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D743220717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F435208E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:10:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUjBWTaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfFDSHh (ORCPT
+        id S1726537AbfFDSKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 14:07:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32818 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDSHg (ORCPT
+        Tue, 4 Jun 2019 14:10:16 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36737 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDSKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 14:07:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 14so14912145qtf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 11:07:36 -0700 (PDT)
+        Tue, 4 Jun 2019 14:10:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so13792524wrs.3;
+        Tue, 04 Jun 2019 11:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lLFJn8hfJB0bfYBQ2rEhUXIcdzRXExeNARfQE/rlETg=;
+        b=vUjBWTaBQcbMO0GWKgSI7xMK2QKr+0vX8zwG8ghZF85C1ae5KmMhS2KIgThcOqJ/rJ
+         TRzn+Njtqf/0JHaJzVdZt9V7KWSyWOqkiA8DTFHnfvw3BdAJ+5thsRwTgcBjaI83+gSy
+         1hqQpkUvlZY9LLtaUdp0L0TbBtBClqlkMuM23UiANzcvbBI1FcreHSUVrHBV7XpeZXy/
+         c/3hlvOFu3ruXyFBa/cYv0/K+X+brPVFx7HdrNG+e9RHJoe6JQGdrUhPb3s3UbmnQtj7
+         xAP75dTJ9fanBvBRUykQrrsmL713koEcbQjGcZlZrzMHPpJoeARIzNYJz0zD+hhPd2qG
+         cCsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=73fBt14f3pUCJec+S60pIUDJLnv+MtJaME4OItITl6A=;
-        b=jp8RT/FMpSMJK0nSUNPqKCJH5bnxjxUGfH32dHhvGajGHICHEWvCL8gEV2jFwTXL6k
-         bUCIvcg8G3QPvSWdJnLuDL9WmHeCfbdPd96Q9Ld0NdtlU+pg7t0DTdNzb8LBKDipZNwN
-         DfnEEROJAaoyK0ESzAymfSOsPSg4s6FMgZTxucvFTekfwydRByg33gFIsU7y9hVVErRc
-         ddBjMihHaAFzGNWtmoFkFBdnFA5Rpvu9MQhi4bY+53pjr5hFt7StGBeQP0OYtiYGhyMr
-         HdDXJnBflcBHmiuTW2ToheVmRxHIVxjRl4CaVlmybNwNZvc+JwDHI10Xd2YRUqMReoC5
-         xjiw==
-X-Gm-Message-State: APjAAAXEmYqby9jqTp2P8AIdL2TmKVdqdapyX43/JPIrdR23Ap+cIgpD
-        sWbzdozJ1bFQ6rx42b5BY3fWXA==
-X-Google-Smtp-Source: APXvYqyxgf1WmSBazer4xd3OsrXTZLsp3jGSP0eU0YMEKNXF2LEaE0JS9J1WAW9vN/UrYUOkS2RmQw==
-X-Received: by 2002:ac8:2b10:: with SMTP id 16mr11593422qtu.351.1559671655999;
-        Tue, 04 Jun 2019 11:07:35 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id q29sm342103qkq.77.2019.06.04.11.07.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 11:07:35 -0700 (PDT)
-Message-ID: <47b602c0a07ad5e945ab4bc706b2bf3154ea3196.camel@redhat.com>
-Subject: Re: [PATCH] drm/nouveau/bios: downgrade absence of tmds table to
- info from an error
-From:   Lyude Paul <lyude@redhat.com>
-To:     Rhys Kidd <rhyskidd@gmail.com>, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Tue, 04 Jun 2019 14:07:33 -0400
-In-Reply-To: <20190602120727.4001-1-rhyskidd@gmail.com>
-References: <20190602120727.4001-1-rhyskidd@gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lLFJn8hfJB0bfYBQ2rEhUXIcdzRXExeNARfQE/rlETg=;
+        b=YpAzXpiSCnZZZgDLLm5GwaMTx66Obdj9eczSHMi/u9GtquusEeWSVGYgAAODnS6PUk
+         IG4+uDwbO1gvv8nLobomnQbvolJ/sRoGT8gtzcLKXOtK5N+EBx2m17kEonD9b3fG2+Jh
+         QeY7WhYUzL8N72bnKUdUZr25y1qxnUTb9ZJ3UICk4+CHnZiZc0rXLrIi/OPV2QFsCmVa
+         WdA+5RbmA+RzVusV8DjE8D+rRXWewOqvfS9Yey8ZeoGxzX1JgARTi6FknB/ozo2844i+
+         VN1qN1D0/BwE9pECw6F5NLKlJDur+O4MVEc6iEQwsSVI/OiXrta3Fvq+2lHLGS+fgSiK
+         pQbA==
+X-Gm-Message-State: APjAAAUltmqSAyvTtaujeOiK43AKTZJ8IBctsIjM+I47AFBOCCiiV8oZ
+        FKQstiwMSFFSLylWqqaQecqKGKZQcluz0pabexs=
+X-Google-Smtp-Source: APXvYqxrnaWRBKNjOZJP0zWlO2DmEFkaazI6Z+tkInzQvHcCwD+PxOjOGa8Jm+4UyZqJvTfz1hmYWCIZQQV23Cv8CnY=
+X-Received: by 2002:a5d:4992:: with SMTP id r18mr7697528wrq.107.1559671814077;
+ Tue, 04 Jun 2019 11:10:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-3-bjorn.andersson@linaro.org> <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
+In-Reply-To: <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 4 Jun 2019 11:10:01 -0700
+Message-ID: <CANcMJZB+bg9LWzo=EaL-QnWiL49=MzyBJy8qsBiSMu8HZeWRxw@mail.gmail.com>
+Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+On Tue, Jun 4, 2019 at 1:14 AM Bean Huo (beanhuo) <beanhuo@micron.com> wrote:
+>
+> Hi, Bjorn
+>
+> >Acquire the device-reset GPIO and toggle this to reset the UFS device during
+> >initialization and host reset.
+> >
+> >+/**
+> >+ ufshcd_device_reset() - toggle the (optional) device reset line
+> >+ * @hba: per-adapter instance
+> >+ *
+> >+ * Toggles the (optional) reset line to reset the attached device.
+> >+ */
+> >+static void ufshcd_device_reset(struct ufs_hba *hba) {
+> >+      /*
+> >+       * The USB device shall detect reset pulses of 1us, sleep for 10us to
+> >+       * be on the safe side.
+> >+       */
+> >+      gpiod_set_value_cansleep(hba->device_reset, 1);
+> >+      usleep_range(10, 15);
+> >+
+> >+      gpiod_set_value_cansleep(hba->device_reset, 0);
+> >+      usleep_range(10, 15);
+> >+}
+> >+
+> > /**
+> >  * ufshcd_host_reset_and_restore - reset and restore host controller
+> >  * @hba: per-adapter instance
+> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba
+> >*hba)
+> >       int retries = MAX_HOST_RESET_RETRIES;
+> >
+> >       do {
+> >+              /* Reset the attached device */
+> >+              ufshcd_device_reset(hba);
+> >+
+>
+> what's problem you met, and you should reset UFS device here? could you give more info?
 
-On Sun, 2019-06-02 at 22:07 +1000, Rhys Kidd wrote:
-> Absence of a TMDS Info Table is common on Optimus setups where the NVIDIA
-> gpu is not connected directly to any outputs.
-> 
-> Reporting an error in this scenario is too harsh. Accordingly, change the
-> error message to an info message.
-> 
-> By default the error message also causes a boot flicker for these sytems.
-> 
-> Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_bios.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c
-> b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> index 66bf2aff4a3e..bdfadc63204a 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_bios.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> @@ -935,7 +935,7 @@ static int parse_bit_tmds_tbl_entry(struct drm_device
-> *dev, struct nvbios *bios,
->  
->  	tmdstableptr = ROM16(bios->data[bitentry->offset]);
->  	if (!tmdstableptr) {
-> -		NV_ERROR(drm, "Pointer to TMDS table invalid\n");
-> +		NV_INFO(drm, "Pointer to TMDS table not found\n");
->  		return -EINVAL;
->  	}
->  
--- 
-Cheers,
-	Lyude Paul
+On the pixel3, devices with micron UFS chips won't boot upstream
+kernels without this patch, which is a rewrite of an earlier patch:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/p3&id=99f3dd8519a848b752679584451c45f42c326a17
 
+Which was pulled from the downstream tree from here:
+  https://android.googlesource.com/kernel/msm.git/+/9c8077087e818017%5E%21/
+
+CCing Subhash as he may have additional context.
+
+thanks
+-john
