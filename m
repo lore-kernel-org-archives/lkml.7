@@ -2,116 +2,125 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBDFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D13424A51
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD76A24708
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFTBxFiF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDUPLamK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfFDLBX (ORCPT
+        id S1727579AbfFDLCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:01:23 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39647 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfFDLBW (ORCPT
+        Tue, 4 Jun 2019 07:02:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37602 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfFDLCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:01:22 -0400
-Received: by mail-vs1-f66.google.com with SMTP id n2so4821746vso.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:01:21 -0700 (PDT)
+        Tue, 4 Jun 2019 07:02:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h1so15343748wro.4;
+        Tue, 04 Jun 2019 04:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WDbPSKeCZ8oAwUO/gbQAYonHxio/dp9v0ZS3lSUVGiI=;
-        b=UFTBxFiFaQAgtc8pGRfpgJK9845bc1+wNN3Ljkixb6j9f/C6DpMOv6EeY1wjgMedGS
-         1z4TxRJ2Uf/dl5OTSZcqew7Xw4uMG1N6xKcAYtI9vvSz5VV6ha9bJ6dwVDgORMX6bCrS
-         GKKBfElTwlYNDrFuxzHjOXxJO6rYrJrbGaQXjfeLJeUS265m2BZDLz+0UiFBDv5iTzMl
-         boiJTv5mPyyDY4mFXGSlJHkj/5xIHajEhH5HZ4Z/W1oa4DXBWGMvGkt3T+D217UFzvrQ
-         0Dz/jFifyp/r98ljW5sCi7WcYFQeRupstHnMuRZ2fA1sCe331hW4CUxOKRdtxd2LJkZq
-         SACQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X+Qt9syBo+khoR1+eqd8VXHCxwK9HB5deywwnkENYtA=;
+        b=RDUPLamKnVS6AAxmJ7c5Ce8yXMuSbWHNeS7A/J/HaJn+NKmXjWvatB0z2NNbgEEfEL
+         iStMsQsmi8lSgiXZPuPwG2KP6MMBOdOoH3+f/nqtke96BKARRBUsinsoLwoqC2t9eYyS
+         0GrCGZ7cNxRvkLszpJRiK3O8NKvQ4DNEtVKjXN/HEjTUS3IO6M1e5/768H1DLs4hprsz
+         a3hfftUvAV/kyjH5fv3ORfvZdYiUUVh3fP6AGHKmF0STEXNQM0KWozPyWot2k/2C8WDm
+         SOjKlnIEIz6Eat/8z8PULUEJmv533ldLC/Bavz2T0/Oe8efr0i4S/EZe7DPHOUPdbBSR
+         /6eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WDbPSKeCZ8oAwUO/gbQAYonHxio/dp9v0ZS3lSUVGiI=;
-        b=LDg8HiICD7TkLEXMofzwcSMA1OcO89EJycpiT7sulYfCmE2qsrybpnaRyl0xueo0le
-         Qm0S6vDKwiUIU4oMnLZsBQv3AC9qLZVZcnPTEYMaT8fMeXP36Yde+kNrkCofGf6sYaLH
-         qU8qxtpC11ii6o9KIWw5Oo3NpVXecIJzsQvZxNieNpI4nQjltRSxyOGNVydjz/7RyL5l
-         HE64xSSmmWAFOKVfoyscRXqjKTrV0N+vrYWKU5X6Yj+cN9CQiYz/ilevQIK/oaO5/iK3
-         S1pKe/80K1+NASzeJ4k5DHvgz5uR45uf4W6xFlOcbDxfoD3Vz1a2JpTxwXGyXxZ/gI5m
-         H+/A==
-X-Gm-Message-State: APjAAAVp52TN3acPqufyVzaGb0z8lhPCZ+EUmZzWsohp8DZpt+/3zRej
-        P2R6BYDSuPLikHIPbsb2cVMOHiN1sOjgpOjuDq5YBw==
-X-Google-Smtp-Source: APXvYqw2LlI1r2QNjEMglKQhTLxp/mFVzp3+GFK0ixuGGyE3T4oSZc8iLerthe1V9Q76vq1872HT3A+BHOIBTgWhL9g=
-X-Received: by 2002:a67:e3d5:: with SMTP id k21mr765014vsm.172.1559646080843;
- Tue, 04 Jun 2019 04:01:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X+Qt9syBo+khoR1+eqd8VXHCxwK9HB5deywwnkENYtA=;
+        b=oGnBjgqyu8LEcpKKHvKG+nBdRIlHl0R1D/eOZL4ClnN/tt3Vi5V/72UnRZdd5V3+nt
+         jhPR2Ds+pKmGAAl04f3o4OyMWA54/CI5F/uCCHIbOkK65ALwzYN5ILdGjxLkOEn+1cSm
+         A2exhgugx0qXgeemKXVe00fiCWiJ+MMXeL6fIC7IDU1/YsR55q8hsRsRxxOzQefK8vbQ
+         4n85CtViDitqZL4gp7gadQGw/v1QOT0QgU4OED54l7c4AZEP8DQ1vznAb5VKXYHTufch
+         z3qxgpf87ZzM/tqRYOgkRx3nFIqyzgBMne3Gob2Fb/AhCO/BHxvY6a6zFN+gTg50FoD2
+         ipYg==
+X-Gm-Message-State: APjAAAVTH4l1su+wPhm/F+j6eeFjQ4v6VxJrSlsHFkO7na+K9K+URDLa
+        Ehrm3KCo0IHpTs3TcC7UyN4=
+X-Google-Smtp-Source: APXvYqycs+QpsRNlIeGDUvtW4H/vuKIr/oYYPw3HHggaOAeZd5FYnnb5xquiqvSpjH2QZQMuLD2YuA==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr6340569wrv.164.1559646148748;
+        Tue, 04 Jun 2019 04:02:28 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id p11sm12221216wrs.5.2019.06.04.04.02.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 04:02:27 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:02:27 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/16] PM / devfreq: tegra: Drop primary interrupt
+ handler
+Message-ID: <20190604110227.GF16519@ulmo>
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-7-digetx@gmail.com>
 MIME-Version: 1.0
-References: <20190603112453.20097-1-ttayar@habana.ai>
-In-Reply-To: <20190603112453.20097-1-ttayar@habana.ai>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 4 Jun 2019 14:00:54 +0300
-Message-ID: <CAFCwf12Ry+tan4Wov-xJqO0aWbapNsB+xcnHs2f-3LuN7fVRKg@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: Fix virtual address access via debugfs for
- 2MB pages
-To:     Tomer Tayar <ttayar@habana.ai>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qftxBdZWiueWNAVY"
+Content-Disposition: inline
+In-Reply-To: <20190501233815.32643-7-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 2:25 PM Tomer Tayar <ttayar@habana.ai> wrote:
->
-> The debugfs interface for accessing DRAM virtual addresses currently
-> uses the 12 LSBs of a virtual address as an offset.
-> However, it should use the 20 LSBs in case the device MMU page size is
-> 2MB instead of 4KB.
-> This patch fixes the offset calculation to be based on the page size.
->
-> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+
+--qftxBdZWiueWNAVY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, May 02, 2019 at 02:38:05AM +0300, Dmitry Osipenko wrote:
+> There is no real need in the primary interrupt handler, hence move
+> everything to the secondary (threaded) handler. In a result locking
+> is consistent now and there are no potential races with the interrupt
+> handler because it is protected with the devfreq's mutex.
+>=20
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/misc/habanalabs/debugfs.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
-> index 0ce5621c1324..ba418aaa404c 100644
-> --- a/drivers/misc/habanalabs/debugfs.c
-> +++ b/drivers/misc/habanalabs/debugfs.c
-> @@ -500,6 +500,7 @@ static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
->  {
->         struct hl_ctx *ctx = hdev->user_ctx;
->         u64 hop_addr, hop_pte_addr, hop_pte;
-> +       u64 offset_mask = HOP4_MASK | OFFSET_MASK;
->         int rc = 0;
->
->         if (!ctx) {
-> @@ -542,12 +543,14 @@ static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
->                         goto not_mapped;
->                 hop_pte_addr = get_hop4_pte_addr(ctx, hop_addr, virt_addr);
->                 hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-> +
-> +               offset_mask = OFFSET_MASK;
->         }
->
->         if (!(hop_pte & PAGE_PRESENT_MASK))
->                 goto not_mapped;
->
-> -       *phys_addr = (hop_pte & PTE_PHYS_ADDR_MASK) | (virt_addr & OFFSET_MASK);
-> +       *phys_addr = (hop_pte & ~offset_mask) | (virt_addr & offset_mask);
->
->         goto out;
->
-> --
-> 2.17.1
->
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-applied to -fixes
+>  drivers/devfreq/tegra-devfreq.c | 55 +++++++++++----------------------
+>  1 file changed, 18 insertions(+), 37 deletions(-)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--qftxBdZWiueWNAVY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2T8IACgkQ3SOs138+
+s6HFSw/+PSPTGfTFdmBQev7SxVPURWATpky1fpNGU7AlQZU5IOYQj5VqUBTGklgu
+PU0Z1Ym3UYX4iIoyxdUpaD0rjl73+HV5Zwng41FN/sDNSxQC8jbMJvoCD+fLmh2F
+i/pEySvqoqY/hlkIWuJGHTxnNOEeOYqJVdVQ4sM3xonRaJuK+XEcIN/k31wj48fI
+kZoVtkvGB2pDSV5HQw0FhT4u1vmmW1BsM1S9hHm5sx+yTD3GVS02KuxyERqItjir
+IyYLDh7cxxaVjADMs79g6e/hWpQYIbqChhnT40kKLLJbnDePYONOHnJLUVP3RZ8O
+ST7ItVYficG2gW5MO6rHyj7vG7oLatFg/QWbvhUFOmEAXOTmtKfz61WiuzIKVmrP
+v5ZJ3sauUpiKbQX++Nk5RUMofjJx6mQkob9/AeUddERjOqiCqPx9ybc3BKaO0ocO
+hGYLDCtG9vRpDZRcOycCaYcjMcVfss5e/wBRcGmcPqvnLEzj6M2dfWgFLJGiHexn
+09basoJWtNU9a8hPhMd77ucS4+dUgH63JHsbizFNuB76va6lZjia7lfGx5GRw5O6
+8QeiBr1WHqPYIXRdm3czTltXS8u8C/0bATgd9P8+TLTmfTC4V3AHcuwgVvCWrNUA
+NgbRx7HUHpSh3Fy4KyyhadzlALW8hwQGZcaaN5K81v48WKdyrBQ=
+=FeZ3
+-----END PGP SIGNATURE-----
+
+--qftxBdZWiueWNAVY--
