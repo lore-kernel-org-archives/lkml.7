@@ -2,83 +2,105 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FCFC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D989020693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD1420717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfFDQ0L (ORCPT
+        id S1727573AbfFDQ3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:26:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20667 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfFDQ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:26:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:26:10 -0700
-X-ExtLoop1: 1
-Received: from tvuori-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.93.210])
-  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2019 09:25:56 -0700
-Date:   Tue, 4 Jun 2019 19:25:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH 7/9] x86/sgx: Enforce noexec filesystem restriction
- for enclaves
-Message-ID: <20190604162555.GC3811@linux.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-8-sean.j.christopherson@intel.com>
+        Tue, 4 Jun 2019 12:29:37 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.164]:33494 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727385AbfFDQ3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:29:37 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 2A8AE1233F
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 11:29:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YCJch0ufKdnCeYCJcheZN2; Tue, 04 Jun 2019 11:29:36 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=39294 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYCJb-001PBz-5g; Tue, 04 Jun 2019 11:29:35 -0500
+Date:   Tue, 4 Jun 2019 11:29:28 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] afs: security: Use struct_size() in kzalloc()
+Message-ID: <20190604162928.GA12389@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531233159.30992-8-sean.j.christopherson@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYCJb-001PBz-5g
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:39294
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:31:57PM -0700, Sean Christopherson wrote:
-> Do not allow an enclave page to be mapped with PROT_EXEC if the source
-> page is backed by a file on a noexec file system.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Why don't you just check in sgx_encl_add_page() that whether the path
-comes from noexec and deny if SECINFO contains X?
+struct foo {
+   int stuff;
+   struct boo entry[];
+};
 
-/Jarkko
+instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/afs/security.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/afs/security.c b/fs/afs/security.c
+index 71e71c07568f..82753f3c097f 100644
+--- a/fs/afs/security.c
++++ b/fs/afs/security.c
+@@ -191,8 +191,7 @@ void afs_cache_permit(struct afs_vnode *vnode, struct key *key,
+ 	 * yet.
+ 	 */
+ 	size++;
+-	new = kzalloc(sizeof(struct afs_permits) +
+-		      sizeof(struct afs_permit) * size, GFP_NOFS);
++	new = kzalloc(struct_size(new, permits, size), GFP_NOFS);
+ 	if (!new)
+ 		goto out_put;
+ 
+-- 
+2.21.0
+
