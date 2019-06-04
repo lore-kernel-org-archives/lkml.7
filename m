@@ -2,256 +2,241 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A774C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50BE24A47
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1kZXPTp"
+	by mail.kernel.org (Postfix) with ESMTP id DD3DA2488E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfFDOGj (ORCPT
+        id S1727515AbfFDOIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:06:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37404 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfFDOGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:06:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h1so15991472wro.4;
-        Tue, 04 Jun 2019 07:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5oG45nme3hdHX6i7eJJDdyXJn08RFQNe1Cw4gDr1kzo=;
-        b=l1kZXPTpG/h5SL2ppPG1oxH/50AMWod0fyK7H1k5L6XYNlLzOlWWk09nKzE7mZg1c3
-         0J47cOFkoaMVgS9KUREZp7nNVX0q2pOLkpWCNDUYlKEgxiNkh7Auci7Mn/w9kmWYPl3A
-         rWM+YqmOSnbvzwi4mzEhCFWWguAw9mN5Y+3eDhksTpluKc4tG62Wu3r3k+de78ak2mIX
-         ydKGBA0VDlIiH0SieVcggYd0IJDMH0tgSDeHaWj7MrUZrfi9v0Cuxe1Rq5YKS/dTJ4UL
-         l39suM+FMUxkEh9Yj8xEDTMXtwCWm7fGbMJ3tepMN3dL+nvtTWyyWoXpFOAV/EeQ+diu
-         04qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5oG45nme3hdHX6i7eJJDdyXJn08RFQNe1Cw4gDr1kzo=;
-        b=DyIWwEB/sv+t/laL3zXf1uZNiZLMPhgS75NVPvUgcxUzaTOcHz6fXOgqEFnAp7MOsx
-         VekEr3PUTjvPsgRvy6uzv7gb+AcZ8jvVqZf9hWi/S6J1Fg0f3d9of945pXyrZIKOgK98
-         d3SHTwFkgUf8PbJhtUebc0RKLBdfgWeLTwUT/TEHLaXpA2Sz2dzUv28AT+K/xGPlfIdi
-         Lsuh0oUQ+y4yYw+SsgSCJkRF24klEB+j46cI7Sqz32WDOlWWfw/dv2OJUWT+4P7v2ACC
-         I7LFajloR2uA+kG1VsTSh9plVLo4wzmnlRSfvpx9xVlgZmpwEqrza4Wtb7LlaCTCKVLz
-         yCig==
-X-Gm-Message-State: APjAAAXcGqxgZZM5WZ1MPOcTYimnYI4f2Jfb0skkZOW1GLeqiNL2uGgP
-        P9CCyR56pallef9xl8o+9SI=
-X-Google-Smtp-Source: APXvYqxhlCDI9+yb0eU9m/WoaaTM1EvdPdEoRaHkuWKwIv+ipPtNIqJMjpS48mhMWBPaZsqkR8UeMg==
-X-Received: by 2002:adf:fd09:: with SMTP id e9mr7283191wrr.292.1559657196193;
-        Tue, 04 Jun 2019 07:06:36 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id k185sm2288618wma.3.2019.06.04.07.06.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 07:06:35 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 16:06:33 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/16] PM / devfreq: tegra: Properly disable interrupts
-Message-ID: <20190604140633.GA397@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-8-digetx@gmail.com>
- <20190604110744.GG16519@ulmo>
- <c2f2a8c8-1f30-34aa-9b95-a7a44e0ec96f@gmail.com>
+        Tue, 4 Jun 2019 10:08:25 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48058 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfFDOIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:08:24 -0400
+Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hYA6v-0001Xj-6y; Tue, 04 Jun 2019 16:08:21 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     xieqinick@gmail.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, nick@khadas.com
+Subject: Re: [PATCH] arm64: dts: rockchip: Add support for Khadas Edge/Edge-V/Captain boards
+Date:   Tue, 04 Jun 2019 16:08:20 +0200
+Message-ID: <2074921.iWOsiWxYGh@phil>
+In-Reply-To: <1559035267-1884-1-git-send-email-xieqinick@gmail.com>
+References: <1559035267-1884-1-git-send-email-xieqinick@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
-Content-Disposition: inline
-In-Reply-To: <c2f2a8c8-1f30-34aa-9b95-a7a44e0ec96f@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nick,
 
---YZ5djTAD1cGYuMQK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+devicetrees look mostly good, with a bit of "bookkeeping" issues and
+some small nits below.
 
-On Tue, Jun 04, 2019 at 04:40:18PM +0300, Dmitry Osipenko wrote:
-> 04.06.2019 14:07, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, May 02, 2019 at 02:38:06AM +0300, Dmitry Osipenko wrote:
-> >> There is no guarantee that interrupt handling isn't running in parallel
-> >> with tegra_actmon_disable_interrupts(), hence it is necessary to prote=
-ct
-> >> DEV_CTRL register accesses and clear IRQ status with ACTMON's IRQ being
-> >> disabled in the Interrupt Controller in order to ensure that device
-> >> interrupt is indeed being disabled.
-> >>
-> >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >>  drivers/devfreq/tegra-devfreq.c | 21 +++++++++++++++------
-> >>  1 file changed, 15 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-d=
-evfreq.c
-> >> index b65313fe3c2e..ce1eb97a2090 100644
-> >> --- a/drivers/devfreq/tegra-devfreq.c
-> >> +++ b/drivers/devfreq/tegra-devfreq.c
-> >> @@ -171,6 +171,8 @@ struct tegra_devfreq {
-> >>  	struct notifier_block	rate_change_nb;
-> >> =20
-> >>  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs=
-)];
-> >> +
-> >> +	int irq;
-> >=20
-> > Interrupts are typically unsigned int.
-> >=20
-> >>  };
-> >> =20
-> >>  struct tegra_actmon_emc_ratio {
-> >> @@ -417,6 +419,8 @@ static void tegra_actmon_disable_interrupts(struct=
- tegra_devfreq *tegra)
-> >>  	u32 val;
-> >>  	unsigned int i;
-> >> =20
-> >> +	disable_irq(tegra->irq);
-> >> +
-> >>  	for (i =3D 0; i < ARRAY_SIZE(tegra->devices); i++) {
-> >>  		dev =3D &tegra->devices[i];
-> >> =20
-> >> @@ -427,9 +431,14 @@ static void tegra_actmon_disable_interrupts(struc=
-t tegra_devfreq *tegra)
-> >>  		val &=3D ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
-> >> =20
-> >>  		device_writel(dev, val, ACTMON_DEV_CTRL);
-> >> +
-> >> +		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
-> >> +			      ACTMON_DEV_INTR_STATUS);
-> >>  	}
-> >> =20
-> >>  	actmon_write_barrier(tegra);
-> >> +
-> >> +	enable_irq(tegra->irq);
-> >=20
-> > Why do we enable interrupts after this? Is there any use in having the
-> > top-level interrupt enabled if nothing's going to generate an interrupt
-> > anyway?
->=20
-> There is no real point in having the interrupt enabled other than to
-> keep the enable count balanced.
->=20
-> IIUC, we will need to disable IRQ at the driver's probe time (after
-> requesting the IRQ) if we want to avoid that (not really necessary)
-> balancing. This is probably something that could be improved in a
-> follow-up patches, if desired.
->=20
-> >>  }
-> >> =20
-> >>  static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
-> >> @@ -604,7 +613,6 @@ static int tegra_devfreq_probe(struct platform_dev=
-ice *pdev)
-> >>  	struct resource *res;
-> >>  	unsigned int i;
-> >>  	unsigned long rate;
-> >> -	int irq;
-> >>  	int err;
-> >> =20
-> >>  	tegra =3D devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-> >> @@ -673,15 +681,16 @@ static int tegra_devfreq_probe(struct platform_d=
-evice *pdev)
-> >>  		dev_pm_opp_add(&pdev->dev, rate, 0);
-> >>  	}
-> >> =20
-> >> -	irq =3D platform_get_irq(pdev, 0);
-> >> -	if (irq < 0) {
-> >> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
-> >> -		return irq;
-> >> +	tegra->irq =3D platform_get_irq(pdev, 0);
-> >> +	if (tegra->irq < 0) {
-> >> +		err =3D tegra->irq;
-> >> +		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
-> >> +		return err;
-> >>  	}
-> >=20
-> > This is very oddly written. tegra->irq should really be an unsigned int
-> > since that's the standard type for interrupt numbers. But since you need
-> > to be able to detect errors from platform_get_irq() it now becomes
-> > natural to write this as:
-> >=20
-> > 	err =3D platform_get_irq(pdev, 0);
-> > 	if (err < 0) {
-> > 		dev_err(...);
-> > 		return err;
-> > 	}
-> >=20
-> > 	tegra->irq =3D err;
-> >=20
-> > Two birds with one stone. I suppose this could be done in a follow-up
-> > patch since it isn't practically wrong in your version, so either way:
-> >=20
-> > Acked-by: Thierry Reding <treding@nvidia.com>
-> >=20
->=20
-> Thank you for the ACK! Although, I disagree with yours suggestion, to me
-> that makes code a bit less straightforward and it's not really
-> worthwhile to bloat the code just because technically IRQ's are unsigned
-> numbers (we don't care about that). It also makes me a bit uncomfortable
-> to see "err" assigned to a variable, I don't think it's a good practice.
+Am Dienstag, 28. Mai 2019, 11:21:07 CEST schrieb xieqinick@gmail.com:
+> From: Nick <nick@khadas.com>
 
-Actually you should care that IRQs are unsigned. Implicit casting from
-a potentially negative value can hide bugs. That is, once you've passed
-that negative value into the IRQ API you loose the context that it could
-be an error code. Hence I think it makes sense to always store values in
-the native type, and only store them if they are actually valid.
+Can you provide a full name (first-+surename) for patch from and Signed-off
+lines please?
 
-In the above you have an error value in tegra->irq. In this particular
-case it's pretty harmless because you don't do anything with it, but if
-the circumstances were slightly different that could lead to problems
-down the road.
 
-On the other hand what I was proposing makes it pretty clear from the
-context that err contains a valid interrupt number when it is assigned
-to tegra->irq. There's plenty of similar constructs in the kernel if you
-want to grep for it.
+> Add devicetree support for Khadas Edge/Edge-V/Captain boards.
+> Khadas Edge is an expandable Rockchip RK3399 board with goldfinger.
+> Khadas Captain is the carrier board for Khadas Edge.
+> Khadas Edge-V is a Khadas VIM form factor Rockchip RK3399 board.
+> 
+> Signed-off-by: Nick <nick@khadas.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile              |   3 +
+>  .../boot/dts/rockchip/rk3399-khadas-captain.dts    |  27 +
+>  .../boot/dts/rockchip/rk3399-khadas-edge-v.dts     |  28 +
 
-Also, it's not bloating the code at all. It's the exact same number of
-lines of code as your variant.
+when adding boards, please also make sure to add entries to
+	Documentation/devicetree/bindings/arm/rockchip.yaml
 
-Thierry
+Take a look at the "FriendlyElec NanoPi4 series boards" for an
+example on how to add a family of boards like your Edge/Captain.
 
---YZ5djTAD1cGYuMQK
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts
+> new file mode 100644
+> index 0000000..85eb51c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
+> + * (https://www.khadas.com)
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-khadas-edge.dtsi"
+> +
+> +/ {
+> +	model = "Khadas Captain";
+> +	compatible = "khadas,captain", "rockchip,rk3399";
+> +};
+> +
+> +&gmac {
+> +	status = "okay";
+> +};
+> +
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +	ep-gpios = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
+> +	num-lanes = <4>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts
+> new file mode 100644
+> index 0000000..396b7f4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
+> + * (https://www.khadas.com)
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-khadas-edge.dtsi"
+> +
+> +/ {
+> +	model = "Khadas Edge-V";
+> +	compatible = "khadas,edge-v", "rockchip,rk3399";
+> +};
+> +
+> +&gmac {
+> +	status = "okay";
+> +};
+> +
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +	ep-gpios = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
+> +	num-lanes = <4>;
+> +	status = "okay";
+> +};
+> +
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2euUACgkQ3SOs138+
-s6E1xg//VEaIimnLjOPKS/SXwj53WZwYcCBxBw0rcz0hfLxvc2koOTQclwrAqcgw
-f2kMpXl/rpn95DMuWxu70KLEgHvS/My3LfgoodO89313avryMAu+1qET0GbXmu9P
-tiryS6CYPVMloA0NGrYWS1Lv44aQeAS1unn4tl3onioU+gnDJpSRRFQmManC4J0s
-ySISWYpVJrWPASFSOWWOyfEk9QbJpn+teL0jQZbmYYGgIxLLGWUsE4ORV8VY6jAj
-ayu/q+NyjWhMFXlvHWVfZ9BdnVTJhuJoxXDgc3OVrvSM2PKTYz/aqp+E2JDSVOwA
-0lr8vdqPkpiTGlTtkYC0//+gHvoIz9jNQGfsmaUwyrUgKvqnP/MqQVAiKK5wJC8R
-+Mentjj58fYwHmGCBBHXajPuBIPokx1O0obvOS9GLexxbOEDo15w5oG5bey6/eK2
-WaFmo0UzeGXSB524cxHSyS+CbROwqAHE5INqjtvGRFXANRLiPWWTjh54p/Lz2mnk
-KupTm6oKm7kJbnKx0hdnXmoHwmlWa5agXpEQAAMckF7fYfoW/Qvlz7xqamEEl12M
-AvyYPGBElEwUFe0QzX3tNPXsZMMN+q6dtw8iQXKcCyaqLVgfPaKw0igyTIGQBGWX
-/wFdvaYipW9Bk/BZTdM+IQU8gsLduxMsAfxecamzHTxO3sm9uAQ=
-=TosC
------END PGP SIGNATURE-----
+Both Captain and Edge-V seem to be identical from a component point
+of view, so should likely share the same dts, or is there some major
+difference coming later?
 
---YZ5djTAD1cGYuMQK--
+For the time being you can represent the individual boards like:
+
+	model = "Khadas Edge-V/Captain";
+	compatible = "khadas,edge-v", "khadas,edge-captain", "rockchip,rk3399";
+
+Also to show that it's Edge+Captain baseboard, maybe you want to
+change the name like shown above (see rk3399-puma-haikou for a similar
+setup).
+
+
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts
+> new file mode 100644
+> index 0000000..f0d5bae
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
+> + * (https://www.khadas.com)
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-khadas-edge.dtsi"
+> +
+> +/ {
+> +	model = "Khadas Edge";
+> +	compatible = "khadas,edge", "rockchip,rk3399";
+> +};
+> +
+> +&gmac {
+> +	status = "disabled";
+
+the Edge-V/Captain boards do enable the gmac, so you shouldn't need
+a special disable here. Just keep it disabled in the edge.dtsi
+[aka it comes in the disabled state from rk3399.dtsi already].
+
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+> new file mode 100644
+> index 0000000..872b535
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+> @@ -0,0 +1,795 @@
+
+[...]
+
+> +&gmac {
+> +	assigned-clocks = <&cru SCLK_RMII_SRC>;
+> +	assigned-clock-parents = <&clkin_gmac>;
+> +	clock_in_out = "input";
+> +	phy-supply = <&vcc_lan>;
+> +	phy-mode = "rgmii";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmii_pins>;
+> +	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 50000>;
+> +	tx_delay = <0x28>;
+> +	rx_delay = <0x11>;
+> +	status = "disabled";
+
+status is disabled coming from rk3399.dtsi, so there is no need
+to "re-disable" it here.
+
+> +};
+> +
+
+[...]
+
+> +&sdio0 {
+> +	/* WiFi & BT combo module Ampak AP6356S */
+> +	bus-width = <4>;
+> +	cap-sdio-irq;
+> +	cap-sd-highspeed;
+> +	keep-power-in-suspend;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	num-slots = <1>;
+
+num-slots is not needed anymore
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+> +	sd-uhs-sdr104;
+> +
+> +	/* Power supply */
+
+drop that comment and blank line please. Properties called
+*-supply already tell you that they are power supplies :-) .
+
+
+Heiko
+
+
