@@ -2,95 +2,103 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39DDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C4C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97192070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:33:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZ16VgBp"
+	by mail.kernel.org (Postfix) with ESMTP id B56F22070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfFDUdw (ORCPT
+        id S1726613AbfFDUer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:33:52 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39638 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDUdw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:33:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so11021812pgc.6;
-        Tue, 04 Jun 2019 13:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hXC/2/MzxNes+DPxbYu8rbPijB+wJo91rnKEeiN64qk=;
-        b=jZ16VgBpozscYLlEYideku+hB2+dcvvqT6XGssHSIMyc59YrL5efsBqsG9o/QEkvhX
-         mtqzboXa6Z3zBHMrXPZqyemXpN2lvS7+OKt0gXtDZ/c3VlwH4x0CrvjNrdoPPmX9RZqS
-         cIH/JTbRmemcxAfKkBAkcr0aC2a2JJQBNuTWi50YT5CrPb49N7ywI5nmxNYXCSw8f1CU
-         2jy1EPsM+EiFqGeB/WPnBAbxpfjb7N7jjNfnOQ+WhitHU3kH+S1sycBqD4kggB4GM4rO
-         jE/xU32dSVzvJhZHxeP6N+8H1YbP04ADvoagpyeZNf0NqZMO61GgG1iL6c0JDTcDwf/+
-         JRdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hXC/2/MzxNes+DPxbYu8rbPijB+wJo91rnKEeiN64qk=;
-        b=QOdBmPItKLZPRqquw1MCiJAvSqfE6Z/rGIo7a1VKlMM+AJqeMjzGGkmmPOoX8M8T6r
-         6rhSSwzrOPp8fq5705ea1lMzWnz/yiVKRacGB67bLlHeVot7RTjNLWDk25W1shFJcERF
-         JIzRKHqWRIR/0JVQC60aXDLwmlm0N+WoQ5FWkkmYjrGp7WmWNJZ3nxxalxEq/Wds39bK
-         CyicFg1twNPriUWEGCBMjIhHEE2fbJITsSlZ/70oc8vHl/RSOKQD9E47nNgO6k+gVPlH
-         rwW4o3JLuWe75V8FTvkXXQAyTYv4n8pP7/Q+rkdi743dAXvLgKhWsRLa1mId/67sFs9u
-         ze0g==
-X-Gm-Message-State: APjAAAUV1ACKbAg21n/6weGaq5mnAjoNw20wBkQzeGdFk4/0NzoWYe8M
-        7MidmUlLMPB79/sxzrWgkjoZwhh1
-X-Google-Smtp-Source: APXvYqxaRIpajJebtbtLZuYPKStcI0FB7V8SRd7LI07Zm7jwcSGFPcTThJ8EMI7zM1D+TPoryWNngw==
-X-Received: by 2002:a17:90a:9f90:: with SMTP id o16mr40136106pjp.72.1559680431122;
-        Tue, 04 Jun 2019 13:33:51 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id m6sm20717993pgr.18.2019.06.04.13.33.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:33:50 -0700 (PDT)
-Subject: Re: [PATCH v3 net-next 05/17] net: dsa: sja1105: Reverse TPID and
- TPID2
-To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
-        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604170756.14338-6-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <d063b199-f807-330b-90ff-46240221bf30@gmail.com>
-Date:   Tue, 4 Jun 2019 13:33:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 16:34:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52259 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfFDUeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:34:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 13:34:45 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga008.jf.intel.com with ESMTP; 04 Jun 2019 13:34:45 -0700
+Date:   Tue, 4 Jun 2019 13:34:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 7/9] x86/sgx: Enforce noexec filesystem restriction
+ for enclaves
+Message-ID: <20190604203445.GB7775@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-8-sean.j.christopherson@intel.com>
+ <20190604162555.GC3811@linux.intel.com>
+ <CALCETrUqcQNbRvBe2UqQih8RHnuwn3KaC=xJU1cRsaEVsCQUgw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604170756.14338-6-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUqcQNbRvBe2UqQih8RHnuwn3KaC=xJU1cRsaEVsCQUgw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
-> From reading the P/Q/R/S user manual, it appears that TPID is used by
-> the switch for detecting S-tags and TPID2 for C-tags.  Their meaning is
-> not clear from the E/T manual.
+On Tue, Jun 04, 2019 at 01:25:10PM -0700, Andy Lutomirski wrote:
+> On Tue, Jun 4, 2019 at 9:26 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Fri, May 31, 2019 at 04:31:57PM -0700, Sean Christopherson wrote:
+> > > Do not allow an enclave page to be mapped with PROT_EXEC if the source
+> > > page is backed by a file on a noexec file system.
+> > >
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >
+> > Why don't you just check in sgx_encl_add_page() that whether the path
+> > comes from noexec and deny if SECINFO contains X?
+> >
 > 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> SECINFO seems almost entirely useless for this kind of thing because
+> of SGX2.  I'm thinking that SECINFO should be completely ignored for
+> anything other than its required architectural purpose.
 
+Agreed.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I've already (somewhat unknowingly) reworked the SELinux patch such that
+it ignores @prot (the SECINFO protections) and only looks at @allowed_prot
+(the declared protections).  If the kernel ignores SECINFO protections
+entirely then the LSM hook can simply be:
+
+  int selinux_enclave_load(struct vm_area_struct *vma, unsigned long prot)
+
+I.e. LSMs can be blissfully unaware that @prot isn't technically what's
+going into the PTEs *now*.
