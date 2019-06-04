@@ -2,196 +2,124 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FE2C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0300CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4845424DB7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559631422;
-	bh=egpEFjl5s4KAGbLxA//hv9+aorP+pWcy5ZJz6sdqvSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HwIAkegEgO2mp7QrzRhN2CIraVH7YVT0ifd40NsuKLfW1ZRmGV/ayZUHJwmZCdi2t
-	 x7mWuKI+eIFpwEcZA9Nuv0hmqx6HUCEKB0xrfYhVPI1Y5uA8b5tRKwzQ4zYtdBVV/V
-	 Z/VFUxXkj7iuayyaMUuLt+uIbUkZhc7cz7JmnpWI=
+	by mail.kernel.org (Postfix) with ESMTP id D54F324DB4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfFDG5B (ORCPT
+        id S1726835AbfFDG6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:57:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48394 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726547AbfFDG5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:57:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7767FAD69;
-        Tue,  4 Jun 2019 06:56:58 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 08:56:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [RFCv2 1/6] mm: introduce MADV_COLD
-Message-ID: <20190604065657.GC4669@dhcp22.suse.cz>
-References: <20190531064313.193437-2-minchan@kernel.org>
- <20190531084752.GI6896@dhcp22.suse.cz>
- <20190531133904.GC195463@google.com>
- <20190531140332.GT6896@dhcp22.suse.cz>
- <20190531143407.GB216592@google.com>
- <20190603071607.GB4531@dhcp22.suse.cz>
- <20190603172717.GA30363@cmpxchg.org>
- <20190603203230.GB22799@dhcp22.suse.cz>
- <20190603215059.GA16824@cmpxchg.org>
- <20190603230205.GA43390@google.com>
+        Tue, 4 Jun 2019 02:58:50 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:26585 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726547AbfFDG6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:58:49 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 3 Jun 2019 23:58:46 -0700
+Received: from ubuntu.eng.vmware.com (unknown [10.33.74.142])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 59ABA4132E;
+        Mon,  3 Jun 2019 23:58:48 -0700 (PDT)
+From:   Ronak Doshi <doshir@vmware.com>
+To:     <netdev@vger.kernel.org>
+CC:     Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] vmxnet3: turn off lro when rxcsum is disabled
+Date:   Mon, 3 Jun 2019 23:58:38 -0700
+Message-ID: <20190604065838.22243-1-doshir@vmware.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603230205.GA43390@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: doshir@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04-06-19 08:02:05, Minchan Kim wrote:
-> Hi Johannes,
-> 
-> On Mon, Jun 03, 2019 at 05:50:59PM -0400, Johannes Weiner wrote:
-> > On Mon, Jun 03, 2019 at 10:32:30PM +0200, Michal Hocko wrote:
-> > > On Mon 03-06-19 13:27:17, Johannes Weiner wrote:
-> > > > On Mon, Jun 03, 2019 at 09:16:07AM +0200, Michal Hocko wrote:
-> > > > > On Fri 31-05-19 23:34:07, Minchan Kim wrote:
-> > > > > > On Fri, May 31, 2019 at 04:03:32PM +0200, Michal Hocko wrote:
-> > > > > > > On Fri 31-05-19 22:39:04, Minchan Kim wrote:
-> > > > > > > > On Fri, May 31, 2019 at 10:47:52AM +0200, Michal Hocko wrote:
-> > > > > > > > > On Fri 31-05-19 15:43:08, Minchan Kim wrote:
-> > > > > > > > > > When a process expects no accesses to a certain memory range, it could
-> > > > > > > > > > give a hint to kernel that the pages can be reclaimed when memory pressure
-> > > > > > > > > > happens but data should be preserved for future use.  This could reduce
-> > > > > > > > > > workingset eviction so it ends up increasing performance.
-> > > > > > > > > > 
-> > > > > > > > > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > > > > > > > > > MADV_COLD can be used by a process to mark a memory range as not expected
-> > > > > > > > > > to be used in the near future. The hint can help kernel in deciding which
-> > > > > > > > > > pages to evict early during memory pressure.
-> > > > > > > > > > 
-> > > > > > > > > > Internally, it works via deactivating pages from active list to inactive's
-> > > > > > > > > > head if the page is private because inactive list could be full of
-> > > > > > > > > > used-once pages which are first candidate for the reclaiming and that's a
-> > > > > > > > > > reason why MADV_FREE move pages to head of inactive LRU list. Therefore,
-> > > > > > > > > > if the memory pressure happens, they will be reclaimed earlier than other
-> > > > > > > > > > active pages unless there is no access until the time.
-> > > > > > > > > 
-> > > > > > > > > [I am intentionally not looking at the implementation because below
-> > > > > > > > > points should be clear from the changelog - sorry about nagging ;)]
-> > > > > > > > > 
-> > > > > > > > > What kind of pages can be deactivated? Anonymous/File backed.
-> > > > > > > > > Private/shared? If shared, are there any restrictions?
-> > > > > > > > 
-> > > > > > > > Both file and private pages could be deactived from each active LRU
-> > > > > > > > to each inactive LRU if the page has one map_count. In other words,
-> > > > > > > > 
-> > > > > > > >     if (page_mapcount(page) <= 1)
-> > > > > > > >         deactivate_page(page);
-> > > > > > > 
-> > > > > > > Why do we restrict to pages that are single mapped?
-> > > > > > 
-> > > > > > Because page table in one of process shared the page would have access bit
-> > > > > > so finally we couldn't reclaim the page. The more process it is shared,
-> > > > > > the more fail to reclaim.
-> > > > > 
-> > > > > So what? In other words why should it be restricted solely based on the
-> > > > > map count. I can see a reason to restrict based on the access
-> > > > > permissions because we do not want to simplify all sorts of side channel
-> > > > > attacks but memory reclaim is capable of reclaiming shared pages and so
-> > > > > far I haven't heard any sound argument why madvise should skip those.
-> > > > > Again if there are any reasons, then document them in the changelog.
-> > > > 
-> > > > I think it makes sense. It could be explained, but it also follows
-> > > > established madvise semantics, and I'm not sure it's necessarily
-> > > > Minchan's job to re-iterate those.
-> > > > 
-> > > > Sharing isn't exactly transparent to userspace. The kernel does COW,
-> > > > ksm etc. When you madvise, you can really only speak for your own
-> > > > reference to that memory - "*I* am not using this."
-> > > > 
-> > > > This is in line with other madvise calls: MADV_DONTNEED clears the
-> > > > local page table entries and drops the corresponding references, so
-> > > > shared pages won't get freed. MADV_FREE clears the pte dirty bit and
-> > > > also has explicit mapcount checks before clearing PG_dirty, so again
-> > > > shared pages don't get freed.
-> > > 
-> > > Right, being consistent with other madvise syscalls is certainly a way
-> > > to go. And I am not pushing one way or another, I just want this to be
-> > > documented with a reasoning behind. Consistency is certainly an argument
-> > > to use.
-> > > 
-> > > On the other hand these non-destructive madvise operations are quite
-> > > different and the shared policy might differ as a result as well. We are
-> > > aging objects rather than destroying them after all. Being able to age
-> > > a pagecache with a sufficient privileges sounds like a useful usecase to
-> > > me. In other words you are able to cause the same effect indirectly
-> > > without the madvise operation so it kinda makes sense to allow it in a
-> > > more sophisticated way.
-> > 
-> > Right, I don't think it's about permission - as you say, you can do
-> > this indirectly. Page reclaim is all about relative page order, so if
-> > we thwarted you from demoting some pages, you could instead promote
-> > other pages to cause a similar end result.
-> > 
-> > I think it's about intent. You're advising the kernel that *you're*
-> > not using this memory and would like to have it cleared out based on
-> > that knowledge. You could do the same by simply allocating the new
-> > pages and have the kernel sort it out. However, if the kernel sorts it
-> > out, it *will* look at other users of the page, and it might decide
-> > that other pages are actually colder when considering all users.
-> > 
-> > When you ignore shared state, on the other hand, the pages you advise
-> > out could refault right after. And then, not only did you not free up
-> > the memory, but you also caused IO that may interfere with bringing in
-> > the new data for which you tried to create room in the first place.
-> > 
-> > So I don't think it ever makes sense to override it.
-> > 
-> > But it might be better to drop the explicit mapcount check and instead
-> > make the local pte young and call shrink_page_list() without the
->                      ^
->                      old?
-> 
-> > TTU_IGNORE_ACCESS, ignore_references flags - leave it to reclaim code
-> > to handle references and shared pages exactly the same way it would if
-> > those pages came fresh off the LRU tail, excluding only the reference
-> > from the mapping that we're madvising.
-> 
-> You are confused from the name change. Here, MADV_COLD is deactivating
-> , not pageing out. Therefore, shrink_page_list doesn't matter.
-> And madvise_cold_pte_range already makes the local pte *old*(I guess
-> your saying was typo).
-> I guess that's exactly what Michal wanted: just removing page_mapcount
-> check and defers to decision on normal page reclaim policy:
-> If I didn't miss your intention, it seems you and Michal are on same page.
-> (Please correct me if you want to say something other)
+Currently, when rx csum is disabled, vmxnet3 driver does not turn
+off lro, which can cause performance issues if user does not turn off
+lro explicitly. This patch adds fix_features support which is used to
+turn off LRO whenever RXCSUM is disabled.
 
-Indeed.
+Signed-off-by: Ronak Doshi <doshir@vmware.com>
+Acked-by: Rishi Mehta <rmehta@vmware.com>
+---
+ drivers/net/vmxnet3/vmxnet3_drv.c     |  1 +
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 10 ++++++++++
+ drivers/net/vmxnet3/vmxnet3_int.h     |  7 +++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-> I could drop the page_mapcount check at next revision.
-
-Yes please.
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 1b2a18ea855c..3f48f05dd2a6 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -3247,6 +3247,7 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 		.ndo_start_xmit = vmxnet3_xmit_frame,
+ 		.ndo_set_mac_address = vmxnet3_set_mac_addr,
+ 		.ndo_change_mtu = vmxnet3_change_mtu,
++		.ndo_fix_features = vmxnet3_fix_features,
+ 		.ndo_set_features = vmxnet3_set_features,
+ 		.ndo_get_stats64 = vmxnet3_get_stats64,
+ 		.ndo_tx_timeout = vmxnet3_tx_timeout,
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 559db051a500..0a38c76688ab 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -257,6 +257,16 @@ vmxnet3_get_strings(struct net_device *netdev, u32 stringset, u8 *buf)
+ 	}
+ }
+ 
++netdev_features_t vmxnet3_fix_features(struct net_device *netdev,
++				       netdev_features_t features)
++{
++	/* If Rx checksum is disabled, then LRO should also be disabled */
++	if (!(features & NETIF_F_RXCSUM))
++		features &= ~NETIF_F_LRO;
++
++	return features;
++}
++
+ int vmxnet3_set_features(struct net_device *netdev, netdev_features_t features)
+ {
+ 	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
+diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
+index a2c554f8a61b..1cc1cd4aaa59 100644
+--- a/drivers/net/vmxnet3/vmxnet3_int.h
++++ b/drivers/net/vmxnet3/vmxnet3_int.h
+@@ -69,12 +69,12 @@
+ /*
+  * Version numbers
+  */
+-#define VMXNET3_DRIVER_VERSION_STRING   "1.4.16.0-k"
++#define VMXNET3_DRIVER_VERSION_STRING   "1.4.17.0-k"
+ 
+ /* Each byte of this 32-bit integer encodes a version number in
+  * VMXNET3_DRIVER_VERSION_STRING.
+  */
+-#define VMXNET3_DRIVER_VERSION_NUM      0x01041000
++#define VMXNET3_DRIVER_VERSION_NUM      0x01041100
+ 
+ #if defined(CONFIG_PCI_MSI)
+ 	/* RSS only makes sense if MSI-X is supported. */
+@@ -454,6 +454,9 @@ vmxnet3_tq_destroy_all(struct vmxnet3_adapter *adapter);
+ void
+ vmxnet3_rq_destroy_all(struct vmxnet3_adapter *adapter);
+ 
++netdev_features_t
++vmxnet3_fix_features(struct net_device *netdev, netdev_features_t features);
++
+ int
+ vmxnet3_set_features(struct net_device *netdev, netdev_features_t features);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.11.0
+
