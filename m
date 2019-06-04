@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926B1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1512FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CAE206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDECA20859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690601;
-	bh=R+U34QDjnbvzga4XGmLNL/k+3w/+2gAKs+xr5z/CtIg=;
+	s=default; t=1559690612;
+	bh=tcFeKTFL4do6VJHEWx2rhqnrGDN0pPB/z6+w4Ik1wxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxEuAl7+o2JhLqCWujcWbaR/ch6c7W6EWVYNtfXJC+XcOhOhbtDq4GMRXbVE6zq8+
-	 cemWqANJ99Zqfv7PbS0wSsximzV1YNCAZk0C4niBwSbGoQv2v8q/4gonuXtD4UYuQX
-	 7/S6fZlT9jDWzGDxvdqNjTdd+DsE7m+mzXW8kGrM=
+	b=1/YFy9rXyePJZ2PoLQUQx9bgEmWv3Sd3a9MZMbiLrWoM6GmTOZiKitio+9nDl0Z9A
+	 nW0rTQSgYplf6/MYQdOuVYo6WCkm+oxUdR5QcxbLiGU1QJs5Ws7TTUWrUU3wBL4jDY
+	 HnHCc2Ufc4W8d58FE6NCT69m4IrxHAOHD1nwSkPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfFDXXU (ORCPT
+        id S1727320AbfFDXXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbfFDXXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:14 -0400
+        id S1727204AbfFDXXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA3BD20859;
-        Tue,  4 Jun 2019 23:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CFB120863;
+        Tue,  4 Jun 2019 23:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690593;
-        bh=R+U34QDjnbvzga4XGmLNL/k+3w/+2gAKs+xr5z/CtIg=;
+        s=default; t=1559690588;
+        bh=tcFeKTFL4do6VJHEWx2rhqnrGDN0pPB/z6+w4Ik1wxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/Iq6y8Kv2ye1dhrZ1hv3i7RfyTP+jmxVRr22M1aDU+8pMEGsaoX7+M+EJ1XSdaiz
-         EbDE7aiMTdoH55d2kv4Udz+5r7CwRUaj7je7S0iO7kWo+a7ewtfEV/BFopWcmv5lBz
-         qwGqW0h3En8OQTmyFGotz46DWUu36KJkvVCJz29c=
+        b=UhdJN/SaNpc/R0ethCkkir3jggRLg3aGm2ROJnPggE7h15CC+AaWoumrp8Zt+3EJa
+         LHysd5xwcXIsvn8vlhxT8m/jhWMhDMhzpn8wA8plpydBtyDHuqTLs2OVx6sdNtX+aW
+         bOQnu09Ur9PTGqVZB2VEDTm2qM5Ekkz6e/Toim7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 40/60] selftests: fib_rule_tests: fix local IPv4 address typo
-Date:   Tue,  4 Jun 2019 19:21:50 -0400
-Message-Id: <20190604232212.6753-40-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 37/60] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
+Date:   Tue,  4 Jun 2019 19:21:47 -0400
+Message-Id: <20190604232212.6753-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -61,35 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fc82d93e57e3d41f79eff19031588b262fc3d0b6 ]
+[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
 
-The IPv4 testing address are all in 192.51.100.0 subnet. It doesn't make
-sense to set a 198.51.100.1 local address. Should be a typo.
+Currently an int is being shifted and the result is being cast to a u64
+which leads to undefined behaviour if the shift is more than 31 bits. Fix
+this by casting the integer value 1 to u64 before the shift operation.
 
-Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Bad shift operation")
+Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/fib_rule_tests.sh | 2 +-
+ drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
-index 4b7e107865bf..1ba069967fa2 100755
---- a/tools/testing/selftests/net/fib_rule_tests.sh
-+++ b/tools/testing/selftests/net/fib_rule_tests.sh
-@@ -55,7 +55,7 @@ setup()
- 
- 	$IP link add dummy0 type dummy
- 	$IP link set dev dummy0 up
--	$IP address add 198.51.100.1/24 dev dummy0
-+	$IP address add 192.51.100.1/24 dev dummy0
- 	$IP -6 address add 2001:db8:1::1/64 dev dummy0
- 
- 	set +e
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+index 039328d9ef13..30e6d78e82f0 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+@@ -830,7 +830,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
+ 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
+ 			(u64)err_entry->data.err_warn_bitmap_lo;
+ 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
+-			if (err_warn_bit_map & (u64) (1 << i)) {
++			if (err_warn_bit_map & ((u64)1 << i)) {
+ 				err_warn = i;
+ 				break;
+ 			}
 -- 
 2.20.1
 
