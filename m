@@ -2,126 +2,135 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434E8C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984E2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC77216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559651543;
-	bh=mQdOZZdjwnnzpAJPKdYd3WuB5icZFW/aX0zjXI6udbw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K0AF/KlROuaqSXu+kiwU/0L1vKuP61wAoN2gOD8bQNWTgfALUpeFbMBn8Uf1ZpA2u
-	 TIJUzzoePWZDUPw6ETECRY5ibqY/asF9MAO5BKCs0ygVW3SWQzVqvcyezAvKilufzM
-	 +FU9veVj1k8bX+P6xiiY71kCOWw5chy1Y0r1xVPY=
+	by mail.kernel.org (Postfix) with ESMTP id 7C3642231F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfFDMcW (ORCPT
+        id S1727755AbfFDMdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 08:33:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38278 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfFDMcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:32:22 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727403AbfFDMdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:33:18 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4309724B7E;
-        Tue,  4 Jun 2019 12:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559651541;
-        bh=mQdOZZdjwnnzpAJPKdYd3WuB5icZFW/aX0zjXI6udbw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NNm+b4jCy+R9bfD2mCX97LmKHmX1zgYOBq7iHxDQsFY1uRnqcaj42F+SBy3Uj4OCi
-         FLIC1jGHNYtbmrDZ4ej2I6X+mGB8gjPhJSJ6EGoP1r9Jv9EDBZTq9Bbxr8Bv55jFK1
-         bnX+XhS0rJbOGNODFNVAnhJa9CcSRHG/hTBpia4w=
-Received: by mail-wm1-f53.google.com with SMTP id s3so7351867wms.2;
-        Tue, 04 Jun 2019 05:32:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAWICTRPiaiQs7OoO9GndXkdma3yLSFbi3+494nbPBSeM50iZmpd
-        NyonBOaLi/Jy6otdR7fyGARY2J7k7HIDiER2eWI=
-X-Google-Smtp-Source: APXvYqwDGMccRrpd+YBBy+1wLHwiIMpY3OciWZVO+o2nfKjKJL7Y5KP49u36RWkg2izaLegeuo/FbxKfVCmR68qPoEg=
-X-Received: by 2002:a05:600c:20c3:: with SMTP id y3mr2007579wmm.3.1559651539850;
- Tue, 04 Jun 2019 05:32:19 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id A7E3B8E3C6;
+        Tue,  4 Jun 2019 12:33:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D87DB648D6;
+        Tue,  4 Jun 2019 12:33:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
+References: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com> <20190529142504.GC32147@quack2.suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     dhowells@redhat.com, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
 MIME-Version: 1.0
-References: <1559646306-18860-1-git-send-email-guoren@kernel.org>
- <1559646306-18860-4-git-send-email-guoren@kernel.org> <7943816e-1cf0-dbc9-157d-71a83c5016c6@arm.com>
-In-Reply-To: <7943816e-1cf0-dbc9-157d-71a83c5016c6@arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 4 Jun 2019 20:32:08 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRo5kSjv68X29kNYMhnvd7ByTiiBSR8KwpcoMKUpkN8zQ@mail.gmail.com>
-Message-ID: <CAJF2gTRo5kSjv68X29kNYMhnvd7ByTiiBSR8KwpcoMKUpkN8zQ@mail.gmail.com>
-Subject: Re: [PATCH V4 3/4] irqchip/irq-csky-mpintc: Support auto irq deliver
- to all cpus
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     mark.rutland@arm.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, jason@lakedaemon.net,
-        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <16166.1559651581.1@warthog.procyon.org.uk>
+Date:   Tue, 04 Jun 2019 13:33:01 +0100
+Message-ID: <16167.1559651581@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 04 Jun 2019 12:33:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Marc,
+Amir Goldstein <amir73il@gmail.com> wrote:
 
-On Tue, Jun 4, 2019 at 7:54 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> Well I am sure that ring buffer for fanotify events would be useful, so
+> seeing that David is proposing a generic notification mechanism, I wanted
+> to know how that mechanism could best share infrastructure with fsnotify.
 >
-> On 04/06/2019 12:05, guoren@kernel.org wrote:
-> > From: Guo Ren <ren_guo@c-sky.com>
-> >
-> > The csky,mpintc could deliver a external irq to one cpu or all cpus, but
-> > it couldn't deliver a external irq to a group of cpus with cpu_mask. So
-> > we only use auto deliver mode when affinity mask_val is equal to
-> > cpu_present_mask.
-> >
-> > There is no limitation for only two cpus in SMP system.
-> >
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > ---
-> >  drivers/irqchip/irq-csky-mpintc.c | 15 +++++++++++++--
-> >  1 file changed, 13 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-> > index a451a07..2740dd5 100644
-> > --- a/drivers/irqchip/irq-csky-mpintc.c
-> > +++ b/drivers/irqchip/irq-csky-mpintc.c
-> > @@ -143,8 +143,19 @@ static int csky_irq_set_affinity(struct irq_data *d,
-> >       if (cpu >= nr_cpu_ids)
-> >               return -EINVAL;
-> >
-> > -     /* Enable interrupt destination */
-> > -     cpu |= BIT(31);
-> > +     /*
-> > +      * The csky,mpintc could support auto irq deliver, but it only
-> > +      * could deliver external irq to one cpu or all cpus. So it
-> > +      * doesn't support deliver external irq to a group of cpus
-> > +      * with cpu_mask.
-> > +      * SO we only use auto deliver mode when affinity mask_val is
-> > +      * equal to cpu_present_mask.
-> > +      *
-> > +      */
-> > +     if (cpumask_equal(mask_val, cpu_present_mask))
-> > +             cpu = 0;
-> > +     else
-> > +             cpu |= BIT(31);
-> >
-> >       writel_relaxed(cpu, INTCG_base + INTCG_CIDSTR + offset);
-> >
-> >
+> But apart from that I foresee the questions from users about why the
+> mount notification API and filesystem events API do not have better
+> integration.
 >
-> Isn't that the same patch as [1]? In which case, I've queued it as a fix
-> already.
-Yes, they are the same. It's duplicate.
+> The way I see it, the notification queue can serve several classes
+> of notifications and fsnotify could be one of those classes
+> (at least FAN_CLASS_NOTIF fits nicely to the model).
 
-I think you've queued this one:
-https://lore.kernel.org/lkml/1558425245-20995-1-git-send-email-guoren@kernel.org/
+It could be done; the main thing that concerns me is that the buffer is of
+limited capacity.
 
-That's OK.
+However, I could take this:
 
-Best Regards
- Guo Ren
+	struct fanotify_event_metadata {
+		__u32 event_len;
+		__u8 vers;
+		__u8 reserved;
+		__u16 metadata_len;
+		__aligned_u64 mask;
+		__s32 fd;
+		__s32 pid;
+	};
+
+and map it to:
+
+	struct fanotify_notification {
+		struct watch_notification watch; /* WATCH_TYPE_FANOTIFY */
+		__aligned_u64	mask;
+		__u16		metadata_len;
+		__u8		vers;
+		__u8		reserved;
+		__u32		reserved2;
+		__s32		fd;
+		__s32		pid;
+	};
+
+and some of the watch::info bit could be used:
+
+	n->watch.info & WATCH_INFO_OVERRUN	watch queue overran
+	n->watch.info & WATCH_INFO_LENGTH	event_len
+	n->watch.info & WATCH_INFO_RECURSIVE	FAN_EVENT_ON_CHILD
+	n->watch.info & WATCH_INFO_FLAG_0	FAN_*_PERM
+	n->watch.info & WATCH_INFO_FLAG_1	FAN_Q_OVERFLOW
+	n->watch.info & WATCH_INFO_FLAG_2	FAN_ON_DIR
+	n->subtype				ffs(n->mask)
+
+Ideally, I'd dispense with metadata_len, vers, reserved* and set the version
+when setting the watch.
+
+	fanotify_watch(int watchfd, unsigned int flags, u64 *mask,
+		       int dirfd, const char *pathname, unsigned int at_flags);
+
+We might also want to extend the watch_filter to allow you to, say, filter on
+the first __u64 after the watch member so that you could filter on specific
+events:
+
+	struct watch_notification_type_filter {
+		__u32	type;
+		__u32	info_filter;
+		__u32	info_mask;
+		__u32	subtype_filter[8];
+		__u64	payload_mask[1];
+		__u64	payload_set[1];
+	};
+
+So, in this case, it would require:
+
+	n->mask & wf->payload_mask[0] == wf->payload_set[0]
+
+to be true to record the message.
+
+David
