@@ -2,199 +2,322 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC206C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06110C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CE024B0A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsfjvGkn"
+	by mail.kernel.org (Postfix) with ESMTP id DE2AF24B41
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfFDNkY (ORCPT
+        id S1727513AbfFDNlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:40:24 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46226 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfFDNkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:40:24 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l26so16467408lfh.13;
-        Tue, 04 Jun 2019 06:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qU5YrqsZb5+ghV71fBKL1+4mGyCSiQxy01gmQROp5S4=;
-        b=UsfjvGknGsgbUyNRksFRLwfWPVbBNie/s5ElpFO0VCbewBJ+Ylem/ZuZWcXSSZxrTl
-         989v6WNey3FVSR0tzbgr09mLaw49+rd2iY1MZ0U9Ix4kQw3W8CNQKNNZfpfBG0bm9+n3
-         BTyD34gIA1KyriH44odoS3x9tj9Avsl7NKz9+NorJ4z7J5x3wXO/mq2LHYDSvGO1vUYC
-         5N+VkNQsvemSC6Sj35LbCu3rOke/BNUR6hg9YhyoYFcU/dD/EINYEH+VFuOcmbAaMieU
-         EQk1UbpeDZNOllIBznKrR1syOLOvK+xlYbwHMHzLXAFAA0DZsEoaQ2cRj5bNT8lNGN4E
-         xQOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qU5YrqsZb5+ghV71fBKL1+4mGyCSiQxy01gmQROp5S4=;
-        b=Mxh1giv4K8BLvLKeGgvsATvGn3ud02T9fCEbTya0fH2ukASR9Qt17g1B+1g727cXw1
-         1NOy00hWGBwyQl5TZkQ2hwOv8OoD8EAwlr+Nv0WgsIuk1z77uCXHmDFCTwPbPC7ooQzN
-         WEwxUKsMcMr8LsyxsQKlZJLgeV7lAYOrcHsM+GqBkJUi9OzgCmtSdPWnKzVmeSMTnhpu
-         C4RxRvYDZY/+TtDWHl32DB3fUiWLU45aA6eOpi8rt2++G4Cv1eavMd127C0tX0VbTa5h
-         4IkGCvqbSo/2zjv8CQ1FUUEN1w9uMwe3g9U4nGQyHgGF9rDYGOIWW/v60YrQrScaqhoX
-         ggWg==
-X-Gm-Message-State: APjAAAWzVYzORiMNhw/KiR4WjSVWckMjNTK8eTMTXGhgf9dbgGGJK6UE
-        xaEESBDBsawVIkgLfF9D7NoiekZz
-X-Google-Smtp-Source: APXvYqzQ+9TolLx3t2xkoSlz5UAL2UFsqD4bMDyYrJKFDLmHD1lsElwXmjimXXjsnIsyvrGzHd29NA==
-X-Received: by 2002:ac2:47fa:: with SMTP id b26mr3555411lfp.82.1559655620679;
-        Tue, 04 Jun 2019 06:40:20 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id i195sm2924873lfi.87.2019.06.04.06.40.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 06:40:19 -0700 (PDT)
-Subject: Re: [PATCH v4 07/16] PM / devfreq: tegra: Properly disable interrupts
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-8-digetx@gmail.com> <20190604110744.GG16519@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c2f2a8c8-1f30-34aa-9b95-a7a44e0ec96f@gmail.com>
-Date:   Tue, 4 Jun 2019 16:40:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 09:41:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51338 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbfFDNlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:41:52 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E2E7330ADC7A;
+        Tue,  4 Jun 2019 13:41:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 582FB6199A;
+        Tue,  4 Jun 2019 13:41:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue,  4 Jun 2019 15:41:25 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 15:41:17 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
+        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        omar.kilani@gmail.com, tglx@linutronix.de, stable@vger.kernel.org,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH] signal: remove the wrong signal_pending() check in
+ restore_user_sigmask()
+Message-ID: <20190604134117.GA29963@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604110744.GG16519@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529161157.GA27659@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 04 Jun 2019 13:41:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.06.2019 14:07, Thierry Reding пишет:
-> On Thu, May 02, 2019 at 02:38:06AM +0300, Dmitry Osipenko wrote:
->> There is no guarantee that interrupt handling isn't running in parallel
->> with tegra_actmon_disable_interrupts(), hence it is necessary to protect
->> DEV_CTRL register accesses and clear IRQ status with ACTMON's IRQ being
->> disabled in the Interrupt Controller in order to ensure that device
->> interrupt is indeed being disabled.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra-devfreq.c | 21 +++++++++++++++------
->>  1 file changed, 15 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
->> index b65313fe3c2e..ce1eb97a2090 100644
->> --- a/drivers/devfreq/tegra-devfreq.c
->> +++ b/drivers/devfreq/tegra-devfreq.c
->> @@ -171,6 +171,8 @@ struct tegra_devfreq {
->>  	struct notifier_block	rate_change_nb;
->>  
->>  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
->> +
->> +	int irq;
-> 
-> Interrupts are typically unsigned int.
-> 
->>  };
->>  
->>  struct tegra_actmon_emc_ratio {
->> @@ -417,6 +419,8 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->>  	u32 val;
->>  	unsigned int i;
->>  
->> +	disable_irq(tegra->irq);
->> +
->>  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
->>  		dev = &tegra->devices[i];
->>  
->> @@ -427,9 +431,14 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->>  		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->>  
->>  		device_writel(dev, val, ACTMON_DEV_CTRL);
->> +
->> +		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
->> +			      ACTMON_DEV_INTR_STATUS);
->>  	}
->>  
->>  	actmon_write_barrier(tegra);
->> +
->> +	enable_irq(tegra->irq);
-> 
-> Why do we enable interrupts after this? Is there any use in having the
-> top-level interrupt enabled if nothing's going to generate an interrupt
-> anyway?
+This is the minimal fix for stable, I'll send cleanups later.
 
-There is no real point in having the interrupt enabled other than to
-keep the enable count balanced.
+The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
+restore_user_sigmask()") introduced the visible change which breaks
+user-space: a signal temporary unblocked by set_user_sigmask() can
+be delivered even if the caller returns success or timeout.
 
-IIUC, we will need to disable IRQ at the driver's probe time (after
-requesting the IRQ) if we want to avoid that (not really necessary)
-balancing. This is probably something that could be improved in a
-follow-up patches, if desired.
+Change restore_user_sigmask() to accept the additional "interrupted"
+argument which should be used instead of signal_pending() check, and
+update the callers.
 
->>  }
->>  
->>  static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->> @@ -604,7 +613,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	struct resource *res;
->>  	unsigned int i;
->>  	unsigned long rate;
->> -	int irq;
->>  	int err;
->>  
->>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->> @@ -673,15 +681,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  		dev_pm_opp_add(&pdev->dev, rate, 0);
->>  	}
->>  
->> -	irq = platform_get_irq(pdev, 0);
->> -	if (irq < 0) {
->> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
->> -		return irq;
->> +	tegra->irq = platform_get_irq(pdev, 0);
->> +	if (tegra->irq < 0) {
->> +		err = tegra->irq;
->> +		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
->> +		return err;
->>  	}
-> 
-> This is very oddly written. tegra->irq should really be an unsigned int
-> since that's the standard type for interrupt numbers. But since you need
-> to be able to detect errors from platform_get_irq() it now becomes
-> natural to write this as:
-> 
-> 	err = platform_get_irq(pdev, 0);
-> 	if (err < 0) {
-> 		dev_err(...);
-> 		return err;
-> 	}
-> 
-> 	tegra->irq = err;
-> 
-> Two birds with one stone. I suppose this could be done in a follow-up
-> patch since it isn't practically wrong in your version, so either way:
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> 
+Reported-by: Eric Wong <e@80x24.org>
+Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+cc: stable@vger.kernel.org (v5.0+)
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ fs/aio.c               | 28 ++++++++++++++++++++--------
+ fs/eventpoll.c         |  4 ++--
+ fs/io_uring.c          |  7 ++++---
+ fs/select.c            | 18 ++++++------------
+ include/linux/signal.h |  2 +-
+ kernel/signal.c        |  5 +++--
+ 6 files changed, 36 insertions(+), 28 deletions(-)
 
-Thank you for the ACK! Although, I disagree with yours suggestion, to me
-that makes code a bit less straightforward and it's not really
-worthwhile to bloat the code just because technically IRQ's are unsigned
-numbers (we don't care about that). It also makes me a bit uncomfortable
-to see "err" assigned to a variable, I don't think it's a good practice.
+diff --git a/fs/aio.c b/fs/aio.c
+index 3490d1f..c1e581d 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -2095,6 +2095,7 @@ SYSCALL_DEFINE6(io_pgetevents,
+ 	struct __aio_sigset	ksig = { NULL, };
+ 	sigset_t		ksigmask, sigsaved;
+ 	struct timespec64	ts;
++	bool interrupted;
+ 	int ret;
+ 
+ 	if (timeout && unlikely(get_timespec64(&ts, timeout)))
+@@ -2108,8 +2109,10 @@ SYSCALL_DEFINE6(io_pgetevents,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+-	if (signal_pending(current) && !ret)
++
++	interrupted = signal_pending(current);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
++	if (interrupted && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+ 	return ret;
+@@ -2128,6 +2131,7 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
+ 	struct __aio_sigset	ksig = { NULL, };
+ 	sigset_t		ksigmask, sigsaved;
+ 	struct timespec64	ts;
++	bool interrupted;
+ 	int ret;
+ 
+ 	if (timeout && unlikely(get_old_timespec32(&ts, timeout)))
+@@ -2142,8 +2146,10 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+-	if (signal_pending(current) && !ret)
++
++	interrupted = signal_pending(current);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
++	if (interrupted && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+ 	return ret;
+@@ -2193,6 +2199,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 	struct __compat_aio_sigset ksig = { NULL, };
+ 	sigset_t ksigmask, sigsaved;
+ 	struct timespec64 t;
++	bool interrupted;
+ 	int ret;
+ 
+ 	if (timeout && get_old_timespec32(&t, timeout))
+@@ -2206,8 +2213,10 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+-	if (signal_pending(current) && !ret)
++
++	interrupted = signal_pending(current);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
++	if (interrupted && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+ 	return ret;
+@@ -2226,6 +2235,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 	struct __compat_aio_sigset ksig = { NULL, };
+ 	sigset_t ksigmask, sigsaved;
+ 	struct timespec64 t;
++	bool interrupted;
+ 	int ret;
+ 
+ 	if (timeout && get_timespec64(&t, timeout))
+@@ -2239,8 +2249,10 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+-	if (signal_pending(current) && !ret)
++
++	interrupted = signal_pending(current);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
++	if (interrupted && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+ 	return ret;
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index c6f5131..4c74c76 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -2325,7 +2325,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+ 
+ 	error = do_epoll_wait(epfd, events, maxevents, timeout);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, error == -EINTR);
+ 
+ 	return error;
+ }
+@@ -2350,7 +2350,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+ 
+ 	err = do_epoll_wait(epfd, events, maxevents, timeout);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, err == -EINTR);
+ 
+ 	return err;
+ }
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0fbb486..1147c5d 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2201,11 +2201,12 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	}
+ 
+ 	ret = wait_event_interruptible(ctx->wait, io_cqring_events(ring) >= min_events);
+-	if (ret == -ERESTARTSYS)
+-		ret = -EINTR;
+ 
+ 	if (sig)
+-		restore_user_sigmask(sig, &sigsaved);
++		restore_user_sigmask(sig, &sigsaved, ret == -ERESTARTSYS);
++
++	if (ret == -ERESTARTSYS)
++		ret = -EINTR;
+ 
+ 	return READ_ONCE(ring->r.head) == READ_ONCE(ring->r.tail) ? ret : 0;
+ }
+diff --git a/fs/select.c b/fs/select.c
+index 6cbc9ff..a4d8f6e 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -758,10 +758,9 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
+ 		return ret;
+ 
+ 	ret = core_sys_select(n, inp, outp, exp, to);
++	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
+ 	return ret;
+ }
+ 
+@@ -1106,8 +1105,7 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
++	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+ 		ret = -ERESTARTNOHAND;
+@@ -1142,8 +1140,7 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
++	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+ 		ret = -ERESTARTNOHAND;
+@@ -1350,10 +1347,9 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
+ 		return ret;
+ 
+ 	ret = compat_core_sys_select(n, inp, outp, exp, to);
++	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
+ 	return ret;
+ }
+ 
+@@ -1425,8 +1421,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
++	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+ 		ret = -ERESTARTNOHAND;
+@@ -1461,8 +1456,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
+-
++	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+ 		ret = -ERESTARTNOHAND;
+diff --git a/include/linux/signal.h b/include/linux/signal.h
+index 9702016..78c2bb3 100644
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -276,7 +276,7 @@ extern int sigprocmask(int, sigset_t *, sigset_t *);
+ extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
+ 	sigset_t *oldset, size_t sigsetsize);
+ extern void restore_user_sigmask(const void __user *usigmask,
+-				 sigset_t *sigsaved);
++				 sigset_t *sigsaved, bool interrupted);
+ extern void set_current_blocked(sigset_t *);
+ extern void __set_current_blocked(const sigset_t *);
+ extern int show_unhandled_signals;
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 328a01e..aa6a6f1 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2912,7 +2912,8 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
+  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+  * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
+  */
+-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
++void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved,
++				bool interrupted)
+ {
+ 
+ 	if (!usigmask)
+@@ -2922,7 +2923,7 @@ void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+ 	 * Restoring sigmask here can lead to delivering signals that the above
+ 	 * syscalls are intended to block because of the sigmask passed in.
+ 	 */
+-	if (signal_pending(current)) {
++	if (interrupted) {
+ 		current->saved_sigmask = *sigsaved;
+ 		set_restore_sigmask();
+ 		return;
+-- 
+2.5.0
+
+
