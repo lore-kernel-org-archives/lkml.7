@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8884EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58676206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4B9206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691195;
-	bh=2VShnnzsVoYMc4XZkwnYUCfaeAm3shYu+Ux85v3avB0=;
+	s=default; t=1559691203;
+	bh=YtglIMwK7INQuWj4c2V37XI7x+t8ztLWvGFCnEyoZ6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFXIyDR/jJ76x4merYpiYOcscZ0gTZZhjGUEPP2XjG/vMqQ1SryBTfD4dJDDzml4n
-	 GY/T0G7/M30OasPDJJ7TzbNxzVRsHY8+cg2I9ikJIYt0aNjahKczWMv6HzdyYcNnZO
-	 +ZQhF28n56fFsCBrU2A8NK0Zwqku9hGjjBvJG0FU=
+	b=JrjEtIAFdEQA+uezqyRse3/s+w7ONcCrA16ArUbFo6w60dsIvvDQITz7NQxhNbinv
+	 PAGvY8jGoyAYc2+7FsmLGX7EcICdDPEPTa0qemguoWZvvjjTWJ9/0AQJDyeFRQH0q0
+	 y3i84kODgi38V1jsDIxcl0vs2zlvBJ6L5B1JfH/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfFDXdO (ORCPT
+        id S1726660AbfFDXWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfFDXW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:29 -0400
+        id S1726635AbfFDXWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123A0206C1;
-        Tue,  4 Jun 2019 23:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C6E20859;
+        Tue,  4 Jun 2019 23:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690548;
-        bh=2VShnnzsVoYMc4XZkwnYUCfaeAm3shYu+Ux85v3avB0=;
+        s=default; t=1559690541;
+        bh=YtglIMwK7INQuWj4c2V37XI7x+t8ztLWvGFCnEyoZ6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mtg2SzEK4DzYUDO6+zqkfnRuZvb2nNId7Zzggy6C2PPcuLyVexts9fnLNrbkAFtsm
-         d/Al0T0CkxeLNaANYp7cM/yDDga2rM496aLzlDwSWtwcvTq1shqOj2oMAzOqyyOA7r
-         A3GnEWWEVVdzFBZL1AdcSUXg+2emMQ44Bj01EO8E=
+        b=iaHXO8ADX5y16Ntpm+bg8LZk7rFB8H2f5DhgEsAB7J1tQYbiD+oZamhlF19o992T9
+         JDIbTtRxUOMe2xBnUZzCCMFrZFnnJWtB9KkE9AwFz0+NpanLuGtm0aAki8HVJEyv8g
+         YGakRl7mDKuxWb8akoSI/D8DgMOhQ/FU8OeUN5ks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 08/60] configfs: fix possible use-after-free in configfs_register_group
-Date:   Tue,  4 Jun 2019 19:21:18 -0400
-Message-Id: <20190604232212.6753-8-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+9437020c82413d00222d@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 03/60] ALSA: seq: Fix race of get-subscription call vs port-delete ioctls
+Date:   Tue,  4 Jun 2019 19:21:13 -0400
+Message-Id: <20190604232212.6753-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -58,135 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
+[ Upstream commit 2eabc5ec8ab4d4748a82050dfcb994119b983750 ]
 
-In configfs_register_group(), if create_default_group() failed, we
-forget to unlink the group. It will left a invalid item in the parent list,
-which may trigger the use-after-free issue seen below:
+The snd_seq_ioctl_get_subscription() retrieves the port subscriber
+information as a pointer, while the object isn't protected, hence it
+may be deleted before the actual reference.  This race was spotted by
+syzkaller and may lead to a UAF.
 
-BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
+The fix is simply copying the data in the lookup function that
+performs in the rwsem to protect against the deletion.
 
-CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- link_obj+0xb0/0x190 fs/configfs/dir.c:759
- link_group+0x1c/0x130 fs/configfs/dir.c:784
- configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
- configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
- ? 0xffffffffc1be0000
- iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
- slab_free_hook mm/slub.c:1429 [inline]
- slab_free_freelist_hook mm/slub.c:1456 [inline]
- slab_free mm/slub.c:3003 [inline]
- kfree+0xe1/0x270 mm/slub.c:3955
- configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ef61ae00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 32 bytes inside of
- 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-The buggy address belongs to the page:
-page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reported-by: syzbot+9437020c82413d00222d@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ sound/core/seq/seq_clientmgr.c | 10 ++--------
+ sound/core/seq/seq_ports.c     | 13 ++++++++-----
+ sound/core/seq/seq_ports.h     |  5 +++--
+ 3 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 39843fa7e11b..920d350df37b 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index b3280e81bfd1..8599f2937ac1 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1900,20 +1900,14 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
+ 	int result;
+ 	struct snd_seq_client *sender = NULL;
+ 	struct snd_seq_client_port *sport = NULL;
+-	struct snd_seq_subscribers *p;
  
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	ret = create_default_group(parent_group, group);
--	if (!ret) {
--		spin_lock(&configfs_dirent_lock);
--		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
--		spin_unlock(&configfs_dirent_lock);
--	}
-+	if (ret)
-+		goto err_out;
-+
-+	spin_lock(&configfs_dirent_lock);
-+	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-+	spin_unlock(&configfs_dirent_lock);
-+	inode_unlock(d_inode(parent));
-+	return 0;
-+err_out:
- 	inode_unlock(d_inode(parent));
-+	mutex_lock(&subsys->su_mutex);
-+	unlink_group(group);
-+	mutex_unlock(&subsys->su_mutex);
- 	return ret;
+ 	result = -EINVAL;
+ 	if ((sender = snd_seq_client_use_ptr(subs->sender.client)) == NULL)
+ 		goto __end;
+ 	if ((sport = snd_seq_port_use_ptr(sender, subs->sender.port)) == NULL)
+ 		goto __end;
+-	p = snd_seq_port_get_subscription(&sport->c_src, &subs->dest);
+-	if (p) {
+-		result = 0;
+-		*subs = p->info;
+-	} else
+-		result = -ENOENT;
+-
++	result = snd_seq_port_get_subscription(&sport->c_src, &subs->dest,
++					       subs);
+       __end:
+       	if (sport)
+ 		snd_seq_port_unlock(sport);
+diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
+index 24d90abfc64d..a31e16cc012e 100644
+--- a/sound/core/seq/seq_ports.c
++++ b/sound/core/seq/seq_ports.c
+@@ -635,20 +635,23 @@ int snd_seq_port_disconnect(struct snd_seq_client *connector,
+ 
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr)
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs)
+ {
+-	struct snd_seq_subscribers *s, *found = NULL;
++	struct snd_seq_subscribers *s;
++	int err = -ENOENT;
+ 
+ 	down_read(&src_grp->list_mutex);
+ 	list_for_each_entry(s, &src_grp->list_head, src_list) {
+ 		if (addr_match(dest_addr, &s->info.dest)) {
+-			found = s;
++			*subs = s->info;
++			err = 0;
+ 			break;
+ 		}
+ 	}
+ 	up_read(&src_grp->list_mutex);
+-	return found;
++	return err;
  }
- EXPORT_SYMBOL(configfs_register_group);
+ 
+ /*
+diff --git a/sound/core/seq/seq_ports.h b/sound/core/seq/seq_ports.h
+index 26bd71f36c41..06003b36652e 100644
+--- a/sound/core/seq/seq_ports.h
++++ b/sound/core/seq/seq_ports.h
+@@ -135,7 +135,8 @@ int snd_seq_port_subscribe(struct snd_seq_client_port *port,
+ 			   struct snd_seq_port_subscribe *info);
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr);
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs);
+ 
+ #endif
 -- 
 2.20.1
 
