@@ -2,142 +2,239 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F16C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F78CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999D3207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48628207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="WZ9Fg9dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFDV3d (ORCPT
+        id S1726695AbfFDV3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:29:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59564 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfFDV3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:29:33 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC5872F8BEA;
-        Tue,  4 Jun 2019 21:29:32 +0000 (UTC)
-Received: from ovpn-112-67.rdu2.redhat.com (ovpn-112-67.rdu2.redhat.com [10.10.112.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5271C5C207;
-        Tue,  4 Jun 2019 21:29:27 +0000 (UTC)
-Message-ID: <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Dan Williams <dcbw@redhat.com>
+        Tue, 4 Jun 2019 17:29:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33630 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfFDV3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:29:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so349192wmh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JZJYTNyCIjCtE1t89164f4VdEMlbutgxwjEunlEpUIs=;
+        b=WZ9Fg9ddza4LB6asPBDF7sIrW37u5T5YUWWbvHtVVmMwyWIDe8KCQCJoLw4YFIRNvR
+         PBDGPZ3P2cHPq6pwX/Dssuy8C+eM/vg9nT6qAQeAiZ0gXshdzz+2nYzur5jVPDMZAbKT
+         dT66uq6ltvKrEviKKbhQBrERGzP8jJWUGZMLaGxWcWXxmoWSy/xGP8vA4oo0yTFWGXhK
+         HjksfSXEcnmpLhrf/hle3rBr7DxBHcFJT78iI8p61BBgSX2SsMBdx9+39JdBrI8451qL
+         u2HvXTEOdcLVa5Pq5zvrZWVCMuR6mpvm0983zyu6+oQfxTvbm4yb09moe03txqhc5aHQ
+         VJZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JZJYTNyCIjCtE1t89164f4VdEMlbutgxwjEunlEpUIs=;
+        b=Vg8syvlA0pLxrOcR2NiegM+n/lB62kr7kCZAMayLkVuKMB36ruON4wvFmfa1uNb5sT
+         X/tiyX3KchHYaPOI0oi/AX64byy7/vjJMAQarW/fHiuW5Fco7EYpIjoc9kbsKoIr0B3G
+         ULIVBfxYmyEkshhugFctfbaHbllI0rRlRU2T/inXaPKJgfhTAw85/2wQxVDt3pH8AUHo
+         BCFnZeg8csIvNePdaeC+7F4xc9FrRaIxiN7wE+diS4r77zjjPj7nma68eveU9TgBQ5AD
+         XfqPSX7cArVSTAfYtrNfIoNMyHjd6YdWkezRMgCLn1MZ64CTr5Dve1Pk5aQI93ldCLpW
+         T3xA==
+X-Gm-Message-State: APjAAAXj4Cge4qp1MGGoIFqTres7VhAU/UOpwktN3ZmqGjK3QYpGPJ36
+        Fis4JlyzdVl6dYt7WXyXdxxILQ==
+X-Google-Smtp-Source: APXvYqzVsE3k85yIa2SJX8wP8sQoi4ubyYz/yHbAoIOdCtMJMaJLOOGxq2nRFaSspruhOGlWd0ZP6A==
+X-Received: by 2002:a1c:ef0c:: with SMTP id n12mr8157160wmh.132.1559683773365;
+        Tue, 04 Jun 2019 14:29:33 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id x11sm14812487wmg.23.2019.06.04.14.29.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 14:29:32 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 23:29:31 +0200
+From:   Christian Brauner <christian@brauner.io>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Elder <elder@linaro.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, abhishek.esse@gmail.com,
-        Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Date:   Tue, 04 Jun 2019 16:29:26 -0500
-In-Reply-To: <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
-         <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
-         <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
-         <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
-         <20190531233306.GB25597@minitux>
-         <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
-         <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
-         <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
-         <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
-         <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
-         <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Message-ID: <20190604212930.jaaztvkent32b7d3@brauner.io>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
+ <CAK8P3a0OfBpx6y4m5uWX-DUg16NoFby5ik-3xCcD+yMrw0tbEw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 04 Jun 2019 21:29:33 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0OfBpx6y4m5uWX-DUg16NoFby5ik-3xCcD+yMrw0tbEw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-04 at 22:04 +0200, Arnd Bergmann wrote:
-> On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
-> > On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
-> > > Can you describe what kind of multiplexing is actually going on?
-> > > I'm still unclear about what we actually use multiple logical
-> > > interfaces for here, and how they relate to one another.
-> > 
-> > Each logical interface represents a different "connection" (PDP/EPS
-> > context) to the provider network with a distinct IP address and
-> > QoS.
-> > VLANs may be a suitable analogy but here they are L3+QoS.
-> > 
-> > In realistic example the main interface (say rmnet0) would be used
-> > for
-> > web browsing and have best-effort QoS. A second interface (say
-> > rmnet1)
-> > would be used for VOIP and have certain QoS guarantees from both
-> > the
-> > modem and the network itself.
-> > 
-> > QMAP can also aggregate frames for a given channel
-> > (connection/EPS/PDP
-> > context/rmnet interface/etc) to better support LTE speeds.
+On Tue, Jun 04, 2019 at 08:40:01PM +0200, Arnd Bergmann wrote:
+> On Tue, Jun 4, 2019 at 6:09 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > Wire up the clone3() call on all arches that don't require hand-rolled
+> > assembly.
+> >
+> > Some of the arches look like they need special assembly massaging and it is
+> > probably smarter if the appropriate arch maintainers would do the actual
+> > wiring. Arches that are wired-up are:
+> > - x86{_32,64}
+> > - arm{64}
+> > - xtensa
 > 
-> Thanks, that's a very helpful explanation!
+> The ones you did look good to me. I would hope that we can do all other
+> architectures the same way, even if they have special assembly wrappers
+> for the old clone(). The most interesting cases appear to be ia64, alpha,
+> m68k and sparc, so it would be good if their maintainers could take a
+> look.
+
+Yes, agreed. They can sort this out even after this lands.
+
 > 
-> Is it correct to say then that the concept of having those separate
-> connections would be required for any proper LTE modem
-> implementation,
-> but the QMAP protocol (and based on that, the rmnet implementation)
-> is Qualcomm specific and shared only among several generations of
-> modems from that one vendor?
+> What do you use for testing? Would it be possible to override the
+> internal clone() function in glibc with an LD_PRELOAD library
+> to quickly test one of the other architectures for regressions?
 
-Exactly correct.  This is what Johannes is discussing in his "cellular
-modem APIs - take 2" thread about how this should all be organized at
-the driver level and I think we should figure that out before we commit
-to IPA-with-a-useless-netdev that requires rmnets to be created on top.
-That may end up being the solution but let's have that discussion.
+I have a test program that is rather horrendously ugly and I compiled
+kernels for x86 and the arms and tested in qemu. The program basically
+looks like [1].
 
-> > You mentioned the need to have a common user space interface
-> for configuration, and if the above is true, I agree that we should
-> try
-> to achieve that, either by ensuring rmnet is generic enough to
-> cover other vendors (and non-QMAP clients), or by creating a
-> new user level interface that IPA/rmnet can be adapted to.
+Christian
 
-I would not suggest making rmnet generic; it's pretty QMAP specific
-(but QMAP is spoken by many many modems both SoC, USB stick, and PCIe
-minicard).
+[1]:
+#define _GNU_SOURCE
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <linux/sched.h>
+#include <linux/types.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mount.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/sysmacros.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-Instead, I think what Johannes is discussing is a better approach. A
-kernel WWAN framework with consistent user API that
-rmnet/IPA/qmi_wwan/MBIM/QMI/serial/Sierra can all implement.
+static pid_t raw_clone(struct clone_args *args)
+{
+	return syscall(__NR_clone3, args, sizeof(struct clone_args));
+}
 
-That wouldn't affect the core packet processing of IPA/rmnet but
-instead:
+static pid_t raw_clone_legacy(int *pidfd, unsigned int flags)
+{
+	return syscall(__NR_clone, flags, 0, pidfd, 0, 0);
+}
 
-1) when/how an rmnet device actually gets created on top of the IPA (or
-qmi_wwan) device
+static int wait_for_pid(pid_t pid)
+{
+	int status, ret;
 
-AND (one of these two)
+again:
+	ret = waitpid(pid, &status, 0);
+	if (ret == -1) {
+		if (errno == EINTR)
+			goto again;
 
-a) whether IPA creates a netdev on probe
+		return -1;
+	}
 
-OR
+	if (ret != pid)
+		goto again;
 
-b) whether there is some "WWAN device" kernel object which userspace
-interacts with create rmnet channels on top of IPA
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		return -1;
 
-Dan
+	return 0;
+}
 
+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+#define u64_to_ptr(n) ((uintptr_t)((__u64)(n)))
+
+int main(int argc, char *argv[])
+{
+	int pidfd = -1;
+	pid_t parent_tid = -1, pid = -1;
+	struct clone_args args = {0};
+	args.parent_tid = ptr_to_u64(&parent_tid);
+	args.pidfd = ptr_to_u64(&pidfd);
+	args.flags = CLONE_PIDFD | CLONE_PARENT_SETTID;
+	args.exit_signal = SIGCHLD;
+
+	pid = raw_clone(&args);
+	if (pid < 0) {
+		fprintf(stderr, "%s - Failed to create new process\n",
+			strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0) {
+		printf("I am the child with pid %d\n", getpid());
+		exit(EXIT_SUCCESS);
+	}
+
+	printf("raw_clone: I am the parent. My child's pid is   %d\n", pid);
+	printf("raw_clone: I am the parent. My child's pidfd is %d\n",
+	       *(int *)args.pidfd);
+	printf("raw_clone: I am the parent. My child's paren_tid value is %d\n",
+	       *(pid_t *)args.parent_tid);
+
+	if (wait_for_pid(pid))
+		exit(EXIT_FAILURE);
+
+	if (pid != *(pid_t *)args.parent_tid)
+		exit(EXIT_FAILURE);
+
+	close(pidfd);
+
+	printf("\n\n");
+	pidfd = -1;
+	pid = raw_clone_legacy(&pidfd, CLONE_PIDFD | SIGCHLD);
+	if (pid < 0) {
+		fprintf(stderr, "%s - Failed to create new process\n",
+			strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0) {
+		printf("I am the child with pid %d\n", getpid());
+		exit(EXIT_SUCCESS);
+	}
+
+	printf("raw_clone_legacy: I am the parent. My child's pid is   %d\n",
+	       pid);
+	printf("raw_clone_legacy: I am the parent. My child's pidfd is %d\n",
+	       pidfd);
+
+	if (wait_for_pid(pid))
+		exit(EXIT_FAILURE);
+
+	if (pid != *(pid_t *)args.parent_tid)
+		exit(EXIT_FAILURE);
+
+	return 0;
+}
