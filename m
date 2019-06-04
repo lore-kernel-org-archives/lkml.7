@@ -2,151 +2,361 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20AAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A3AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F08B24A39
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:45:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sSBx0AvD"
+	by mail.kernel.org (Postfix) with ESMTP id 16A3024B6E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 03:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559620568;
+	bh=qghGLJp5Ao6AtlaIt6xWoYpxfl32pKL5mNHWMM3hhQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vypL1I7iiqXm+JclhdvjNDIycGK30OIw747h4eV/u6zjo6yVA/2gZjDKkctknj8U+
+	 hY1m2FXKVLDc7aTNqbfRoPtojHjxq+ZMCkAQw1R2e+QJiZ49CzPpxKMo0RLDXpmOcZ
+	 6BcYDzBQwp3z/n32LwPr7ZXrG2tBJAFptckj6Iqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFDDpR (ORCPT
+        id S1726502AbfFDD4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 23:45:17 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:61764 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfFDDpQ (ORCPT
+        Mon, 3 Jun 2019 23:56:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33250 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfFDD4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 23:45:16 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x543j1JO005406;
-        Tue, 4 Jun 2019 12:45:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x543j1JO005406
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559619902;
-        bh=R4DTbEc9ajd/+gLs4R0E3A2qZCd8mpp6nT3mLt/MWL4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sSBx0AvDkKyPdfmLobt1FwXeI8jVeiK59RkpnvzCgW1NxC772shGT0Sxc6PAO3Ks8
-         PDpJD75pBEKoT6FtjYqkPmeN7nHHdv/MoXFZ+KkARrl7JX7aMkTjv66C+gvwBFrf1k
-         B8WFehagQofx/8TM/rEZq5ZQsCBBOmcPxP90UVmxzfiuyDbP2A1GnZ1/QcxY8pzP35
-         peOxnzSOfUkm2Oyv22A6p/BEmKU4ophBttj/ymoil1dI3SwP/qqDWA9vS74RKRv/jT
-         /r3Ba2dTESj1A1/ZKgvGfqHlnmrjZUEmgp2ARlAXb79sSmfu3ocxF13RuVLBIBPzcu
-         YPiPeujYRKBIg==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id a95so7261755uaa.13;
-        Mon, 03 Jun 2019 20:45:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAUDLD4J7SDn84VESpww0jFOtVdyaxzxZkz3jlvcuRBawx9H1ufg
-        Wa6JAZalYrKRQzhmYB2rT60+g0H5PRFCXvJxdsU=
-X-Google-Smtp-Source: APXvYqzVUiWM/RaTvJFgDXA6xyHBfBmK48S0H0UYyNEUSUfOWS5M4whPygR0UYBlA4pDOL7pjG5Ty1EEttHRqBCTSd8=
-X-Received: by 2002:a9f:24a3:: with SMTP id 32mr13276265uar.109.1559619900888;
- Mon, 03 Jun 2019 20:45:00 -0700 (PDT)
+        Mon, 3 Jun 2019 23:56:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so2031839pfq.0;
+        Mon, 03 Jun 2019 20:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I0891g/UIJ3D/usui4eXZlqiDzsJsQmtk1L4I5UEHyg=;
+        b=SfeQ+je0nhOtpr5G0aiWIc6hFSwXurVVCzFb3iye0AIOMXOXafzvbvEbId0KvLt2ra
+         p5kItznyKamZIJOknAZqYuZZC1OaUgabv/wl9U3gASdaPzls9H8HyJNdne6xTjqYY9HS
+         IzPw5PLLFGxLq93+XDH9SvcuzpKng7FO/bXe6oY57Gf53BGUgNwZY06SJPgOgeIf5kwS
+         Tr4hMowgKfQNX2gdco1FEZXV/JgCetyEG97lG0uUtq99Xvl81QqNrhQ9NU0sN5RMRNi7
+         wCXlSlmoHFdhwd6PzPdnO+ylslldjps4kYyPFyX4nwn/mXfmvn11TwOS4xnF6TTSMnah
+         iw/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I0891g/UIJ3D/usui4eXZlqiDzsJsQmtk1L4I5UEHyg=;
+        b=okZ37W0ETxlAAvqBIhNmLYiwXiZEwKmYp0urAQMBzgBEVRINp5zBm/tEWpQ7UBXk0d
+         KSQY/Jyh5+2bbi3u1fAeoPTmPmfVhyHYoXTF2aQzUla79GGmAuIhdHjOBGI2zHdYEfRR
+         cAhds2irvn/MrDpFuRez5/nZa9RZOZ4H/SmsnsFzYgnivwoa/bRgUKOkNsnFmtRPQYfV
+         VomJ25d8fa5e8beYquHuKs7OpqKoGLiJAM3LDKOAl7D2YCunfQufzlptmARadkFh1jGV
+         85Hb1HZQbLNPT1RoCw67fKgoS/e9VOdxcjFzEh+2eyGHQNsLORUrY82Y1QLLCCl9zodu
+         DxQw==
+X-Gm-Message-State: APjAAAW9/8xu5iMUxaG3kp526UfjGzTEkkbbur4cNeIEUBUdvDiaB/iR
+        3oCgw9B92gZKrqhR0TG2mAM=
+X-Google-Smtp-Source: APXvYqz6XjTttydiE9L9gCK9EiRYZNaF1Tnq9i1D3XIXbK69H5Vqr45dLh4zr7R44YLXJQG/tSzolg==
+X-Received: by 2002:a63:4c54:: with SMTP id m20mr32962270pgl.316.1559620565476;
+        Mon, 03 Jun 2019 20:56:05 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id v9sm15271169pfm.34.2019.06.03.20.55.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 20:56:04 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 12:55:57 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com
+Subject: Re: [PATCH v1 4/4] mm: introduce MADV_PAGEOUT
+Message-ID: <20190604035557.GB43390@google.com>
+References: <20190603053655.127730-1-minchan@kernel.org>
+ <20190603053655.127730-5-minchan@kernel.org>
+ <20190603203911.GA14953@cmpxchg.org>
 MIME-Version: 1.0
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
- <3dcacca3f71c46cc98fa64b13a405b59@AcuMS.aculab.com> <CAK7LNATt=P5rHrnK_8PTmjMb+tdtPg2qBgopRUDBFw_fkP2SsQ@mail.gmail.com>
- <1ca8a995328f449fa58f732ebe70e378@AcuMS.aculab.com>
-In-Reply-To: <1ca8a995328f449fa58f732ebe70e378@AcuMS.aculab.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 4 Jun 2019 12:44:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASwTS+rfZuFFcR7cz2HaOZWMjxhZUToV=74g09J72=osg@mail.gmail.com>
-Message-ID: <CAK7LNASwTS+rfZuFFcR7cz2HaOZWMjxhZUToV=74g09J72=osg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use more portable 'command -v' for cc-cross-prefix
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603203911.GA14953@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 9:43 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Masahiro Yamada
-> > Sent: 03 June 2019 12:45
-> > On Mon, Jun 3, 2019 at 8:16 PM David Laight <David.Laight@aculab.com> wrote:
-> > >
-> > > From: Masahiro Yamada
-> > > > Sent: 03 June 2019 11:49
-> > > >
-> > > > To print the pathname that will be used by shell in the current
-> > > > environment, 'command -v' is a standardized way. [1]
-> > > >
-> > > > 'which' is also often used in scripting, but it is not portable.
-> > >
-> > > All uses of 'which' should be expunged.
-> > > It is a bourne shell script that is trying to emulate a csh builtin.
-> > > It is doomed to fail in corner cases.
-> > > ISTR it has serious problems with shell functions and aliases.
-> >
-> > OK, I do not have time to check it treewide.
-> > I expect somebody will contribute to it.
-> >
-> >
-> >
-> > BTW, I see yet another way to get the command path.
-> >
-> > 'type -path' is bash-specific.
->
-> 'type' itself should be supported by all shells, but the output
-> format (esp for errors) probably varies.
->
-> > Maybe, we should do this too:
-> >
-> > diff --git a/scripts/mkuboot.sh b/scripts/mkuboot.sh
-> > index 4b1fe09e9042..77829ee4268e 100755
-> > --- a/scripts/mkuboot.sh
-> > +++ b/scripts/mkuboot.sh
-> > @@ -1,14 +1,14 @@
-> > -#!/bin/bash
-> > +#!/bin/sh
->
-> /bin/sh might be 'dash' - which is just plain broken in so many ways.
-> Try (IIRC) ${foo%${foo#bar}}
-> It might even be the original SYSV /bin/sh which doesn't support $((expr))
-> or ${foo#bar} - but that may break too much, but $SHELL might fix it.
+On Mon, Jun 03, 2019 at 04:39:11PM -0400, Johannes Weiner wrote:
+> On Mon, Jun 03, 2019 at 02:36:55PM +0900, Minchan Kim wrote:
+> > When a process expects no accesses to a certain memory range
+> > for a long time, it could hint kernel that the pages can be
+> > reclaimed instantly but data should be preserved for future use.
+> > This could reduce workingset eviction so it ends up increasing
+> > performance.
+> > 
+> > This patch introduces the new MADV_PAGEOUT hint to madvise(2)
+> > syscall. MADV_PAGEOUT can be used by a process to mark a memory
+> > range as not expected to be used for a long time so that kernel
+> > reclaims *any LRU* pages instantly. The hint can help kernel in deciding
+> > which pages to evict proactively.
+> > 
+> > All of error rule is same with MADV_DONTNEED.
+> > 
+> > Note:
+> >     This hint works with only private pages(IOW, page_mapcount(page) < 2)
+> >     because shared page could have more chance to be accessed from other
+> >     processes sharing the page so that it could cause major fault soon,
+> >     which is inefficient.
+> > 
+> > * RFC v2
+> >  * make reclaim_pages simple via factoring out isolate logic - hannes
+> > 
+> > * RFCv1
+> >  * rename from MADV_COLD to MADV_PAGEOUT - hannes
+> >  * bail out if process is being killed - Hillf
+> >  * fix reclaim_pages bugs - Hillf
+> > 
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > ---
+> >  include/linux/swap.h                   |   1 +
+> >  include/uapi/asm-generic/mman-common.h |   1 +
+> >  mm/madvise.c                           | 126 +++++++++++++++++++++++++
+> >  mm/vmscan.c                            |  34 +++++++
+> >  4 files changed, 162 insertions(+)
+> > 
+> > diff --git a/include/linux/swap.h b/include/linux/swap.h
+> > index 0ce997edb8bb..063c0c1e112b 100644
+> > --- a/include/linux/swap.h
+> > +++ b/include/linux/swap.h
+> > @@ -365,6 +365,7 @@ extern int vm_swappiness;
+> >  extern int remove_mapping(struct address_space *mapping, struct page *page);
+> >  extern unsigned long vm_total_pages;
+> >  
+> > +extern unsigned long reclaim_pages(struct list_head *page_list);
+> >  #ifdef CONFIG_NUMA
+> >  extern int node_reclaim_mode;
+> >  extern int sysctl_min_unmapped_ratio;
+> > diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> > index 1190f4e7f7b9..92e347a89ddc 100644
+> > --- a/include/uapi/asm-generic/mman-common.h
+> > +++ b/include/uapi/asm-generic/mman-common.h
+> > @@ -44,6 +44,7 @@
+> >  #define MADV_WILLNEED	3		/* will need these pages */
+> >  #define MADV_DONTNEED	4		/* don't need these pages */
+> >  #define MADV_COLD	5		/* deactivatie these pages */
+> > +#define MADV_PAGEOUT	6		/* reclaim these pages */
+> >  
+> >  /* common parameters: try to keep these consistent across architectures */
+> >  #define MADV_FREE	8		/* free pages only if memory pressure */
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index ab158766858a..b010249cb8b6 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -41,6 +41,7 @@ static int madvise_need_mmap_write(int behavior)
+> >  	case MADV_WILLNEED:
+> >  	case MADV_DONTNEED:
+> >  	case MADV_COLD:
+> > +	case MADV_PAGEOUT:
+> >  	case MADV_FREE:
+> >  		return 0;
+> >  	default:
+> > @@ -415,6 +416,128 @@ static long madvise_cold(struct vm_area_struct *vma,
+> >  	return 0;
+> >  }
+> >  
+> > +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> > +				unsigned long end, struct mm_walk *walk)
+> > +{
+> > +	pte_t *orig_pte, *pte, ptent;
+> > +	spinlock_t *ptl;
+> > +	LIST_HEAD(page_list);
+> > +	struct page *page;
+> > +	int isolated = 0;
+> > +	struct vm_area_struct *vma = walk->vma;
+> > +	unsigned long next;
+> > +
+> > +	if (fatal_signal_pending(current))
+> > +		return -EINTR;
+> > +
+> > +	next = pmd_addr_end(addr, end);
+> > +	if (pmd_trans_huge(*pmd)) {
+> > +		ptl = pmd_trans_huge_lock(pmd, vma);
+> > +		if (!ptl)
+> > +			return 0;
+> > +
+> > +		if (is_huge_zero_pmd(*pmd))
+> > +			goto huge_unlock;
+> > +
+> > +		page = pmd_page(*pmd);
+> > +		if (page_mapcount(page) > 1)
+> > +			goto huge_unlock;
+> > +
+> > +		if (next - addr != HPAGE_PMD_SIZE) {
+> > +			int err;
+> > +
+> > +			get_page(page);
+> > +			spin_unlock(ptl);
+> > +			lock_page(page);
+> > +			err = split_huge_page(page);
+> > +			unlock_page(page);
+> > +			put_page(page);
+> > +			if (!err)
+> > +				goto regular_page;
+> > +			return 0;
+> > +		}
+> > +
+> > +		if (isolate_lru_page(page))
+> > +			goto huge_unlock;
+> > +
+> > +		list_add(&page->lru, &page_list);
+> > +huge_unlock:
+> > +		spin_unlock(ptl);
+> > +		reclaim_pages(&page_list);
+> > +		return 0;
+> > +	}
+> > +
+> > +	if (pmd_trans_unstable(pmd))
+> > +		return 0;
+> > +regular_page:
+> > +	orig_pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> > +	for (pte = orig_pte; addr < end; pte++, addr += PAGE_SIZE) {
+> > +		ptent = *pte;
+> > +		if (!pte_present(ptent))
+> > +			continue;
+> > +
+> > +		page = vm_normal_page(vma, addr, ptent);
+> > +		if (!page)
+> > +			continue;
+> > +
+> > +		if (page_mapcount(page) > 1)
+> > +			continue;
+> > +
+> > +		if (isolate_lru_page(page))
+> > +			continue;
+> > +
+> > +		isolated++;
+> > +		list_add(&page->lru, &page_list);
+> > +		if (isolated >= SWAP_CLUSTER_MAX) {
+> > +			pte_unmap_unlock(orig_pte, ptl);
+> > +			reclaim_pages(&page_list);
+> > +			isolated = 0;
+> > +			pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> > +			orig_pte = pte;
+> > +		}
+> > +	}
+> > +
+> > +	pte_unmap_unlock(orig_pte, ptl);
+> > +	reclaim_pages(&page_list);
+> > +	cond_resched();
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void madvise_pageout_page_range(struct mmu_gather *tlb,
+> > +			     struct vm_area_struct *vma,
+> > +			     unsigned long addr, unsigned long end)
+> > +{
+> > +	struct mm_walk warm_walk = {
+> > +		.pmd_entry = madvise_pageout_pte_range,
+> > +		.mm = vma->vm_mm,
+> > +	};
+> > +
+> > +	tlb_start_vma(tlb, vma);
+> > +	walk_page_range(addr, end, &warm_walk);
+> > +	tlb_end_vma(tlb, vma);
+> > +}
+> > +
+> > +
+> > +static long madvise_pageout(struct vm_area_struct *vma,
+> > +			struct vm_area_struct **prev,
+> > +			unsigned long start_addr, unsigned long end_addr)
+> > +{
+> > +	struct mm_struct *mm = vma->vm_mm;
+> > +	struct mmu_gather tlb;
+> > +
+> > +	*prev = vma;
+> > +	if (!can_madv_lru_vma(vma))
+> > +		return -EINVAL;
+> > +
+> > +	lru_add_drain();
+> > +	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> > +	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
+> > +	tlb_finish_mmu(&tlb, start_addr, end_addr);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+> >  				unsigned long end, struct mm_walk *walk)
+> >  
+> > @@ -805,6 +928,8 @@ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+> >  		return madvise_willneed(vma, prev, start, end);
+> >  	case MADV_COLD:
+> >  		return madvise_cold(vma, prev, start, end);
+> > +	case MADV_PAGEOUT:
+> > +		return madvise_pageout(vma, prev, start, end);
+> >  	case MADV_FREE:
+> >  	case MADV_DONTNEED:
+> >  		return madvise_dontneed_free(vma, prev, start, end, behavior);
+> > @@ -827,6 +952,7 @@ madvise_behavior_valid(int behavior)
+> >  	case MADV_DONTNEED:
+> >  	case MADV_FREE:
+> >  	case MADV_COLD:
+> > +	case MADV_PAGEOUT:
+> >  #ifdef CONFIG_KSM
+> >  	case MADV_MERGEABLE:
+> >  	case MADV_UNMERGEABLE:
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index 56df55e8afcd..2c2cf442db58 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -2136,6 +2136,40 @@ static void shrink_active_list(unsigned long nr_to_scan,
+> >  			nr_deactivate, nr_rotated, sc->priority, file);
+> >  }
+> >  
+> > +unsigned long reclaim_pages(struct list_head *page_list)
+> > +{
+> > +	unsigned long nr_reclaimed = 0;
+> > +	LIST_HEAD(node_page_list);
+> > +	struct reclaim_stat dummy_stat;
+> > +	struct scan_control sc = {
+> > +		.gfp_mask = GFP_KERNEL,
+> > +		.priority = DEF_PRIORITY,
+> > +		.may_writepage = 1,
+> > +		.may_unmap = 1,
+> > +		.may_swap = 1,
+> > +	};
+> > +
+> > +	while (!list_empty(page_list)) {
+> > +		struct page *page;
+> > +
+> > +		page = lru_to_page(page_list);
+> > +		list_move(&page->lru, &node_page_list);
+> > +		nr_reclaimed += shrink_page_list(&node_page_list,
+> > +						page_pgdat(page),
+> > +						&sc, TTU_IGNORE_ACCESS,
+> > +						&dummy_stat, true);
+> > +		if (!list_empty(&node_page_list)) {
+> > +			struct page *page = lru_to_page(&node_page_list);
+> > +
+> > +			list_del(&page->lru);
+> > +			putback_lru_page(page);
+> > +
+> > +		}
+> > +	}
+> 
+> Awesome, this is way more readable now. Thanks for the cleanup!
+> 
+> Regarding the loop, for the vast majority of instances, pages on
+> page_list will actually be from the same node. It would make sense to
+> do batching here and collect pages until last_pgdat != pgdat. That
+> should reduce the number of tlb flushes and memcg uncharge flushes in
+> shrink_page_list().
 
-
-We cannot use any tool
-if you start to argue like
-"Hey, I know ancient implementation that did not work as expected".
-
-Nobody can cover all corner-cases.
-That's why we have standard.
-
-I think the reliable source is the
-Open Group Specification.
-
-The behavior of /bin/sh is defined here:
-http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_01
-
-${parameter%[word]} and ${parameter#[word]} are defined,
-so we can use them in /bin/sh scripts.
-
-
-> dash probably has the rather obscure bug in stripping '\n' from $(...)
-> output that I found and fixed in NetBSD's ash may years ago.
-> Try: foo="$(jot -b "" 130)"
-> All 130 '\n' should be deleted.
-> Mostly it fails to delete all the '\n', but it can remove extra ones!
->
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Sure, Thanks!
