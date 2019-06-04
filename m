@@ -6,175 +6,251 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E71C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3743BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A593524CCE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3DE24537
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfFDK0H convert rfc822-to-8bit (ORCPT
+        id S1727226AbfFDK2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:26:07 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:6957 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfFDK0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:26:06 -0400
-Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id E6173E301BE5D144F403;
-        Tue,  4 Jun 2019 18:26:02 +0800 (CST)
-Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.236]) by
- DGGEML404-HUB.china.huawei.com ([fe80::b177:a243:7a69:5ab8%31]) with mapi id
- 14.03.0439.000; Tue, 4 Jun 2019 18:25:54 +0800
-From:   sunqiuyang <sunqiuyang@huawei.com>
-To:     "Yuchao (T)" <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>
-Subject: RE: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
-Thread-Topic: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
-Thread-Index: AQHVEdFe1H4hbuAg10SRna9O0QiaOKaDWYUAgACig4CABauIgIAAnKAAgAEWT70=
-Date:   Tue, 4 Jun 2019 10:25:54 +0000
-Message-ID: <157FC541501A9C4C862B2F16FFE316DC1900FE39@dggeml512-mbx.china.huawei.com>
-References: <20190524015555.12622-1-sunqiuyang@huawei.com>
- <20190530160626.GA28719@jaegeuk-macbookpro.roam.corp.google.com>
- <786721cc-90eb-cf2c-eed8-3be0ef9dff8c@huawei.com>
- <20190603162319.GA34729@jaegeuk-macbookpro.roam.corp.google.com>,<ba9aaee7-6bc4-b8d4-4670-54f11fc0cea0@huawei.com>
-In-Reply-To: <ba9aaee7-6bc4-b8d4-4670-54f11fc0cea0@huawei.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.249.127]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 4 Jun 2019 06:28:42 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39888 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbfFDK2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:28:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6D1F80D;
+        Tue,  4 Jun 2019 03:28:40 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E94E83F246;
+        Tue,  4 Jun 2019 03:28:39 -0700 (PDT)
+Subject: Re: [RFC v2] irqchip/gic-its: fix command queue pointer comparison
+ bug
+To:     Heyi Guo <guoheyi@huawei.com>, linux-kernel@vger.kernel.org
+Cc:     wanghaibin.wang@huawei.com, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+References: <1557747726-28283-1-git-send-email-guoheyi@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <0723e23c-fd0e-366b-73ec-12cc59767a4e@arm.com>
+Date:   Tue, 4 Jun 2019 11:28:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <1557747726-28283-1-git-send-email-guoheyi@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have tried to add power failure after committing the new SB (resized) and before writing the new CP. This will cause FS inconsistency:
+Hi Heyi,
 
-[FSCK] free segment_count matched with CP [Fail] 
+On 13/05/2019 12:42, Heyi Guo wrote:
+> When we run several VMs with PCI passthrough and GICv4 enabled, not
+> pinning vCPUs, we will occasionally see below warnings in dmesg:
+> 
+> ITS queue timeout (65440 65504 480)
+> ITS cmd its_build_vmovp_cmd failed
+> 
+> The reason for the above issue is that in BUILD_SINGLE_CMD_FUNC:
+> 1. Post the write command.
+> 2. Release the lock.
+> 3. Start to read GITS_CREADR to get the reader pointer.
+> 4. Compare the reader pointer to the target pointer.
+> 5. If reader pointer does not reach the target, sleep 1us and continue
+> to try.
+> 
+> If we have several processors running the above concurrently, other
+> CPUs will post write commands while the 1st CPU is waiting the
+> completion. So we may have below issue:
+> 
+> phase 1:
+> ---rd_idx-----from_idx-----to_idx--0---------
+> 
+> wait 1us:
+> 
+> phase 2:
+> --------------from_idx-----to_idx--0-rd_idx--
+> 
+> That is the rd_idx may fly ahead of to_idx, and if in case to_idx is
+> near the wrap point, rd_idx will wrap around. So the below condition
+> will not be met even after 1s:
+> 
+> if (from_idx < to_idx && rd_idx >= to_idx)
+> 
+> There is another theoretical issue. For a slow and busy ITS, the
+> initial rd_idx may fall behind from_idx a lot, just as below:
+> 
+> ---rd_idx---0--from_idx-----to_idx-----------
+> 
+> This will cause the wait function exit too early.
+> 
+> Actually, it does not make much sense to use from_idx to judge if
+> to_idx is wrapped, but we need a initial rd_idx when lock is still
+> acquired, and it can be used to judge whether to_idx is wrapped and
+> the current rd_idx is wrapped.
 
-which can be fixed by the fsck tool, resulting in a resized FS.
+That's an interesting observation. Indeed, from_idx is pretty irrelevant
+here, and all we want to observe is the read pointer reaching the end of
+the command set.
 
-________________________________________
-From: Yuchao (T)
-Sent: Tuesday, June 04, 2019 9:43
-To: Jaegeuk Kim
-Cc: sunqiuyang; linux-kernel@vger.kernel.org; linux-fsdevel@vger.kernel.org; linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+> 
+> We switch to a method of calculating the delta of two adjacent reads
+> and accumulating it to get the sum, so that we can get the real rd_idx
+> from the wrapped value even when the queue is almost full.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 7577755..f05acd4 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -745,32 +745,40 @@ static void its_flush_cmd(struct its_node *its, struct its_cmd_block *cmd)
+>  }
+>  
+>  static int its_wait_for_range_completion(struct its_node *its,
+> -					 struct its_cmd_block *from,
+> +					 u64	origin_rd_idx,
+>  					 struct its_cmd_block *to)
+>  {
+> -	u64 rd_idx, from_idx, to_idx;
+> +	u64 rd_idx, prev_idx, to_idx, sum;
+> +	s64 delta;
+>  	u32 count = 1000000;	/* 1s! */
+>  
+> -	from_idx = its_cmd_ptr_to_offset(its, from);
+>  	to_idx = its_cmd_ptr_to_offset(its, to);
+> +	if (to_idx < origin_rd_idx)
+> +		to_idx += ITS_CMD_QUEUE_SZ;
+> +
+> +	prev_idx = origin_rd_idx;
 
-On 2019/6/4 0:23, Jaegeuk Kim wrote:
-> On 05/31, Chao Yu wrote:
->> On 2019/5/31 0:06, Jaegeuk Kim wrote:
->>> On 05/24, sunqiuyang wrote:
->>>> From: Qiuyang Sun <sunqiuyang@huawei.com>
->>>>
->>>> This ioctl shrinks a given length (aligned to sections) from end of the
->>>> main area. Any cursegs and valid blocks will be moved out before
->>>> invalidating the range.
->>>>
->>>> This feature can be used for adjusting partition sizes online.
->>>> --
->>>> Changlog v1 ==> v2:
->>>>
->>>> Sahitya Tummala:
->>>>  - Add this ioctl for f2fs_compat_ioctl() as well.
->>>>  - Fix debugfs status to reflect the online resize changes.
->>>>  - Fix potential race between online resize path and allocate new data
->>>>    block path or gc path.
->>>>
->>>> Others:
->>>>  - Rename some identifiers.
->>>>  - Add some error handling branches.
->>>>  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
->>>> --
->>>> Changelog v2 ==> v3:
->>>> Implement this interface as ext4's, and change the parameter from shrunk
->>>> bytes to new block count of F2FS.
->>>> --
->>>> Changelog v3 ==> v4:
->>>>  - During resizing, force to empty sit_journal and forbid adding new
->>>>    entries to it, in order to avoid invalid segno in journal after resize.
->>>>  - Reduce sbi->user_block_count before resize starts.
->>>>  - Commit the updated superblock first, and then update in-memory metadata
->>>>    only when the former succeeds.
->>>>  - Target block count must align to sections.
->>>> --
->>>> Changelog v4 ==> v5:
->>>> Write checkpoint before and after committing the new superblock, w/o
->>>> CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
->>>> resize fails after the new superblock is committed.
->>>> --
->>>> Changelog v5 ==> v6:
->>>>  - In free_segment_range(), reduce granularity of gc_mutex.
->>>>  - Add protection on curseg migration.
->>>>
->>>> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
->>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->>>> ---
->>>>  fs/f2fs/checkpoint.c |   5 +-
->>>>  fs/f2fs/debug.c      |   7 +++
->>>>  fs/f2fs/f2fs.h       |   7 +++
->>>>  fs/f2fs/file.c       |  28 +++++++++++
->>>>  fs/f2fs/gc.c         | 134 ++++++++++++++++++++++++++++++++++++++++++++++++++-
->>>>  fs/f2fs/segment.c    |  54 +++++++++++++++++----
->>>>  fs/f2fs/segment.h    |   1 +
->>>>  fs/f2fs/super.c      |   4 ++
->>>>  8 files changed, 228 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>>> index ed70b68..4706d0a 100644
->>>> --- a/fs/f2fs/checkpoint.c
->>>> +++ b/fs/f2fs/checkpoint.c
->>>> @@ -1313,8 +1313,11 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>>    else
->>>>            __clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
->>>>
->>>> -  if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
->>>> +  if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
->>>> +          is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
->>>>            __set_ckpt_flags(ckpt, CP_FSCK_FLAG);
->>>> +  else
->>>> +          __clear_ckpt_flags(ckpt, CP_FSCK_FLAG);
->>>
->>> We don't need to clear this flag.
->>
->> During resizefs, we may face inconsistent status of filesystem's on-disk data,
->> so I propose to use below flow, so once some thing breaks resizefs, fsck can
->> detect the corruption by the CP_FSCK_FLAG directly.
->>
->> - resizefs()
->>  - set SBI_IS_RESIZEFS
->>  - do_checkpoint()
->>   - if (is_resizing)
->>    - set CP_FSCK_FLAG
->>
->>  - clear SBI_IS_RESIZEFS
->>  - do_checkpoint()
->>   - if (!is_resizing && not_need_fsck)
->>    - clear CP_FSCK_FLAG
->>
->> It's safe to clear CP_FSCK_FLAG if there is no resizing and corruption, as once
->> the inconsistency was detected we will keep SBI_NEED_FSCK in memory anyway, then
->> checkpoint can set CP_FSCK_FLAG again.
->
-> This tries to resize the image and I mostly worried whether fsck is able to fix
+I guess you could just rename origin_rd_idx to prev_idx and drop the
+extra declaration (the pr_err doesn't matter much).
 
-So, Qiuyang, could you try break resizefs at some key points with power-cut, to
-check whether fsck can repair all corruption cases? and what is the result
-(resized fs or origianl fs)?
+> +	sum = origin_rd_idx;
+>  
+>  	while (1) {
+>  		rd_idx = readl_relaxed(its->base + GITS_CREADR);
+>  
+> -		/* Direct case */
+> -		if (from_idx < to_idx && rd_idx >= to_idx)
+> -			break;
+> +		/* Wrap around for CREADR */
+> +		if (rd_idx >= prev_idx)
+> +			delta = rd_idx - prev_idx;
+> +		else
+> +			delta = rd_idx + ITS_CMD_QUEUE_SZ - prev_idx;
+>  
+> -		/* Wrapped case */
+> -		if (from_idx >= to_idx && rd_idx >= to_idx && rd_idx < from_idx)
+> +		sum += delta;
 
-> the corrupted metadata area. Moreover, I'm in doubt we really need to do this in
-> parallel with FS operations.
+So "sum" isn't quite saying what it represent. My understanding is that
+it is the linearized version of the read pointer, right? Just like
+you've linearized to_idx at the beginning of the function.
 
-What do you mean? We have wrapped main resizefs operaion with
-{freeze,thaw}_bdev, so there should be no parallel FS operations.
+> +		if (sum >= to_idx)
+>  			break;
+>  
+>  		count--;
+>  		if (!count) {
+>  			pr_err_ratelimited("ITS queue timeout (%llu %llu %llu)\n",
+> -					   from_idx, to_idx, rd_idx);
+> +					   origin_rd_idx, to_idx, sum);
+>  			return -1;
+>  		}
+> +		prev_idx = rd_idx;
+>  		cpu_relax();
+>  		udelay(1);
+>  	}
+> @@ -787,6 +795,7 @@ void name(struct its_node *its,						\
+>  	struct its_cmd_block *cmd, *sync_cmd, *next_cmd;		\
+>  	synctype *sync_obj;						\
+>  	unsigned long flags;						\
+> +	u64 rd_idx;							\
+>  									\
+>  	raw_spin_lock_irqsave(&its->lock, flags);			\
+>  									\
+> @@ -808,10 +817,11 @@ void name(struct its_node *its,						\
+>  	}								\
+>  									\
+>  post:									\
+> +	rd_idx = readl_relaxed(its->base + GITS_CREADR);		\
+>  	next_cmd = its_post_commands(its);				\
+>  	raw_spin_unlock_irqrestore(&its->lock, flags);			\
+>  									\
+> -	if (its_wait_for_range_completion(its, cmd, next_cmd))		\
+> +	if (its_wait_for_range_completion(its, rd_idx, next_cmd))	\
+>  		pr_err_ratelimited("ITS cmd %ps failed\n", builder);	\
+>  }
+>  
+> 
+
+If you agree with my comments above, I'm happy to take this patch and
+tidy it up myself.
+
+Now, I think there is still an annoying bug that can creep up if the
+queue wraps *twice* while you're sleeping (which could perfectly happen
+in a guest running on a busy host). Which means we need to account for
+wrapping generations...
 
 Thanks,
 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
