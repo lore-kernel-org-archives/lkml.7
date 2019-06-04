@@ -2,341 +2,444 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45965C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB93C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F342B20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUwBhqcw"
+	by mail.kernel.org (Postfix) with ESMTP id F096320843
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559663554;
+	bh=QfvCKDJp8Es7MYRcaMIXsgUghIeWtwKUC27RbPRUb4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gq4YnWoWSP8/ISrRrMZrAl/AOnVsmA7w7nAIpEzPHRivoRZc1zupQNnm+/3w/Cu74
+	 y2jDfq2TH14L2j4ZYhAQJBTNoqp1CfnO6vq0PTPsxCFDnNjTAw6G9YfCiZwLj39FPP
+	 KebyvvIcNGV/pZLyCYhbpqEXAq8njWb53k7WaSXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfFDPtR (ORCPT
+        id S1728178AbfFDPwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:49:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41843 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfFDPtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:49:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id s21so9546215lji.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=nHNUhyyhYgUDTnhIgl8sUKgANmsUTVdE1Nd/zOsazY0=;
-        b=DUwBhqcw0BolsLiqlOoJTLn4eb7CUMHRkHVO4QY/D6+Y8sXaau96RQ3PEdHXHmAdJs
-         OOCz4gvbMt61zmKeTBIZkfU/Cfw1Gt3PSkshWgqLuLW8GgaSRs8JiXJfPJKeDYDZAfvT
-         B7piEbWvRTOQzC7EiJHUgZlVJm9sorc8YXXIFNJrQLU81e+F7rXjoSJMyb1OXFdkFl75
-         dW41DoxjfMNAkDtEbGqlKKTR9X/yFWOR0T23OA3F3+/RR5qhoR4xNMrkKcUUz2dTMQ95
-         VjQvVIPKswqlGYUULKWLcZ0B+UrG/PWh0zlsn2rvD9DzMQp2MohfT0CktCqOQofhbiyL
-         WiNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=nHNUhyyhYgUDTnhIgl8sUKgANmsUTVdE1Nd/zOsazY0=;
-        b=HDCzWmYM5zdL0HKAI0/K4CcxS8e3x1M1ZTbMjBWnWNltCqZ2iW6TPGcvNHvOAF+/xq
-         H3kgDrGkvPvE/0F0nW+Ru9Iv0fo5Tsj1kTrCrg9NbdF8L7fBERFfEmnGEv0h3yNIrcjJ
-         kSbNpIC9ZWXlGEMLsSZMtan2jyIDytUau5Z6LyBYnalWGHWtf77au2b4IGcAKBa+EI9H
-         QJtqE7u4EYfdLsAa1D5fxYfu6OCepM6jOgItthC4RBrS6E60pyH6Sw2eyhpDZN+k8v4z
-         HFtVG75HVjZWq3ZLIDcjItguIsoNT/N6/57S46hmaZfnp41UizmmYV8/rxyf86BbVnjR
-         G+WQ==
-X-Gm-Message-State: APjAAAVVdhg6c7sc33cWgrPsXz0xGcG1qf8C75gsDHd29oloAar1lIM+
-        ZvkLiKpEpp9MULL6bJG0/Fqz425G1GvPbUhMlKjPjQ==
-X-Google-Smtp-Source: APXvYqz/6DBwAEgL3eDu2dDyrmiEnM6gDjdIKBpLH8c0rcyaudJRj7/VbD+M7XCpKnhgKm1J4WWZeD5Xr0b6gT6xpC4=
-X-Received: by 2002:a2e:90d1:: with SMTP id o17mr17599943ljg.187.1559663354159;
- Tue, 04 Jun 2019 08:49:14 -0700 (PDT)
+        Tue, 4 Jun 2019 11:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728030AbfFDPwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:52:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF4D42053B;
+        Tue,  4 Jun 2019 15:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559663551;
+        bh=QfvCKDJp8Es7MYRcaMIXsgUghIeWtwKUC27RbPRUb4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ul36q5bDJsxC6Yivv3gZtQVCJTzUKvrhMlsokJxZQJsPWcuTc6FqYHCUOtgFGgREt
+         J0CZ+jpVtCDhM1MXss7PahI6QMhFqhSRIVdAKn/v/ygFvrX/a3zK/DPJhB99jJYo48
+         oSnA7ZyD1ydo05Adflo7my89W5k75zPpijD3Kbgc=
+Date:   Tue, 4 Jun 2019 17:52:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
+        Guido Kiener <guido@kiener-muenchen.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>
+Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
+ device to talk with the EC
+Message-ID: <20190604155228.GB9981@kroah.com>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-4-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 4 Jun 2019 21:19:03 +0530
-Message-ID: <CA+G9fYt9kmOez73UUwT_iWKN8j+j7eD=GQX1-qrUnnYGqPuNpw@mail.gmail.com>
-Subject: bpf: test_btf : kernel Oops: 207 : PC is at memcpy+0xc0/0x330
-To:     Netdev <netdev@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>, alan.maguire@oracle.com,
-        alexei.starovoitov@gmail.com
-Cc:     lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604152019.16100-4-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-while running kernel selftest bpf: test_btf the following kernel oops
-detected on beaglebone x15 board.
-Linux version 5.2.0-rc3-next-20190604
+On Tue, Jun 04, 2019 at 05:20:12PM +0200, Enric Balletbo i Serra wrote:
+> That's a driver to talk with the ChromeOS Embedded Controller via a
+> miscellaneous character device, it creates an entry in /dev for every
+> instance and implements basic file operations for communicating with the
+> Embedded Controller with an userspace application. The API is moved to
+> the uapi folder, which is supposed to contain the user space API of the
+> kernel.
+> 
+> Note that this will replace current character device interface
+> implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
+> to move all the functionality that extends the bounds of what MFD was
+> designed to platform/chrome subsystem.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  Documentation/ioctl/ioctl-number.txt          |   2 +-
+>  drivers/mfd/cros_ec_dev.c                     |   2 +-
+>  drivers/platform/chrome/Kconfig               |  11 +
+>  drivers/platform/chrome/Makefile              |   1 +
+>  drivers/platform/chrome/cros_ec_chardev.c     | 279 ++++++++++++++++++
+>  .../uapi/linux/cros_ec_chardev.h              |  18 +-
+>  6 files changed, 302 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+>  rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (70%)
+> 
+> diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
+> index c9558146ac58..8bd7907ee36d 100644
+> --- a/Documentation/ioctl/ioctl-number.txt
+> +++ b/Documentation/ioctl/ioctl-number.txt
+> @@ -340,7 +340,7 @@ Code  Seq#(hex)	Include File		Comments
+>  0xDD	00-3F	ZFCP device driver	see drivers/s390/scsi/
+>  					<mailto:aherrman@de.ibm.com>
+>  0xE5	00-3F	linux/fuse.h
+> -0xEC	00-01	drivers/platform/chrome/cros_ec_dev.h	ChromeOS EC driver
+> +0xEC	00-01	include/uapi/linux/cros_ec_chardev.h	ChromeOS EC driver
+>  0xF3	00-3F	drivers/usb/misc/sisusbvga/sisusb.h	sisfb (in development)
+>  					<mailto:thomas@winischhofer.net>
+>  0xF4	00-1F	video/mbxfb.h		mbxfb
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 607383b67cf1..11b791c28f84 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+>  
+> -#include "cros_ec_dev.h"
+> +#include <uapi/linux/cros_ec_chardev.h>
+>  
+>  #define DRV_NAME "cros-ec-dev"
+>  
+> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> index 9417b982ad92..3a9ad001838a 100644
+> --- a/drivers/platform/chrome/Kconfig
+> +++ b/drivers/platform/chrome/Kconfig
+> @@ -147,6 +147,17 @@ config CROS_KBD_LED_BACKLIGHT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called cros_kbd_led_backlight.
+>  
+> +config CROS_EC_CHARDEV
+> +	tristate "ChromeOS EC miscdevice"
+> +	depends on MFD_CROS_EC_CHARDEV
+> +	default MFD_CROS_EC_CHARDEV
+> +	help
+> +	  This driver adds file operations support to talk with the
+> +	  ChromeOS EC from userspace via a character device.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called cros_ec_chardev.
+> +
+>  config CROS_EC_LIGHTBAR
+>  	tristate "Chromebook Pixel's lightbar support"
+>  	depends on MFD_CROS_EC_CHARDEV
+> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> index ebb57e21923b..d47a7e1097ee 100644
+> --- a/drivers/platform/chrome/Makefile
+> +++ b/drivers/platform/chrome/Makefile
+> @@ -16,6 +16,7 @@ cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
+>  obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+>  obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+> +obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+>  obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+>  obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+>  obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+> new file mode 100644
+> index 000000000000..1a0a27080026
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_chardev.c
+> @@ -0,0 +1,279 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Miscellaneous character driver for ChromeOS Embedded Controller
+> + *
+> + * Copyright 2019 Google LLC
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/device.h>
+> +#include <linux/fs.h>
+> +#include <linux/list.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/mfd/cros_ec_commands.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include <uapi/linux/cros_ec_chardev.h>
+> +
+> +#define DRV_NAME	"cros-ec-chardev"
+> +
+> +static LIST_HEAD(chardev_devices);
+> +static DEFINE_SPINLOCK(chardev_lock);
+> +
+> +struct chardev_data {
+> +	struct list_head list;
+> +	struct cros_ec_dev *ec_dev;
+> +	struct miscdevice misc;
+> +};
+> +
+> +static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
+> +{
+> +	static const char * const current_image_name[] = {
+> +		"unknown", "read-only", "read-write", "invalid",
+> +	};
+> +	struct ec_response_get_version *resp;
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
+> +	msg->insize = sizeof(*resp);
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> +	if (ret < 0) {
+> +		snprintf(str, maxlen,
+> +			 "Unknown EC version, returned error: %d\n",
+> +			 msg->result);
+> +		goto exit;
+> +	}
+> +
+> +	resp = (struct ec_response_get_version *)msg->data;
+> +	if (resp->current_image >= ARRAY_SIZE(current_image_name))
+> +		resp->current_image = 3; /* invalid */
+> +
+> +	snprintf(str, maxlen, "%s\n%s\n%s\n",
+> +		 resp->version_string_ro,
+> +		 resp->version_string_rw,
+> +		 current_image_name[resp->current_image]);
+> +
+> +	ret = 0;
+> +exit:
+> +	kfree(msg);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Device file ops
+> + */
+> +static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
+> +{
+> +	struct miscdevice *mdev = filp->private_data;
+> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
+> +
+> +	filp->private_data = ec_dev;
+> +	nonseekable_open(inode, filp);
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+> +				     size_t length, loff_t *offset)
+> +{
+> +	char msg[sizeof(struct ec_response_get_version) +
+> +		 sizeof(CROS_EC_DEV_VERSION)];
+> +	struct cros_ec_dev *ec = filp->private_data;
+> +	size_t count;
+> +	int ret;
+> +
+> +	if (*offset != 0)
+> +		return 0;
+> +
+> +	ret = ec_get_version(ec, msg, sizeof(msg));
+> +	if (ret)
+> +		return ret;
+> +
+> +	count = min(length, strlen(msg));
+> +
+> +	if (copy_to_user(buffer, msg, count))
+> +		return -EFAULT;
+> +
+> +	*offset = count;
+> +	return count;
+> +}
+> +
+> +/*
+> + * Ioctls
+> + */
+> +static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
+> +{
+> +	struct cros_ec_command *s_cmd;
+> +	struct cros_ec_command u_cmd;
+> +	long ret;
+> +
+> +	if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
+> +		return -EFAULT;
+> +
+> +	if (u_cmd.outsize > EC_MAX_MSG_BYTES ||
+> +	    u_cmd.insize > EC_MAX_MSG_BYTES)
+> +		return -EINVAL;
+> +
+> +	s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
+> +			GFP_KERNEL);
+> +	if (!s_cmd)
+> +		return -ENOMEM;
+> +
+> +	if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
+> +		ret = -EFAULT;
+> +		goto exit;
+> +	}
+> +
+> +	if (u_cmd.outsize != s_cmd->outsize ||
+> +	    u_cmd.insize != s_cmd->insize) {
+> +		ret = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	s_cmd->command += ec->cmd_offset;
+> +	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
+> +	/* Only copy data to userland if data was received. */
+> +	if (ret < 0)
+> +		goto exit;
+> +
+> +	if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
+> +		ret = -EFAULT;
+> +exit:
+> +	kfree(s_cmd);
+> +	return ret;
+> +}
+> +
+> +static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
+> +					   void __user *arg)
+> +{
+> +	struct cros_ec_device *ec_dev = ec->ec_dev;
+> +	struct cros_ec_readmem s_mem = { };
+> +	long num;
+> +
+> +	/* Not every platform supports direct reads */
+> +	if (!ec_dev->cmd_readmem)
+> +		return -ENOTTY;
+> +
+> +	if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
+> +		return -EFAULT;
+> +
+> +	num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
+> +				  s_mem.buffer);
+> +	if (num <= 0)
+> +		return num;
+> +
+> +	if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
+> +		return -EFAULT;
+> +
+> +	return num;
+> +}
+> +
+> +static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+> +				   unsigned long arg)
+> +{
+> +	struct cros_ec_dev *ec = filp->private_data;
+> +
+> +	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
+> +		return -ENOTTY;
+> +
+> +	switch (cmd) {
+> +	case CROS_EC_DEV_IOCXCMD:
+> +		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
+> +	case CROS_EC_DEV_IOCRDMEM:
+> +		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
+> +	}
+> +
+> +	return -ENOTTY;
+> +}
+> +
+> +static const struct file_operations chardev_fops = {
+> +	.open		= cros_ec_chardev_open,
+> +	.read		= cros_ec_chardev_read,
+> +	.unlocked_ioctl	= cros_ec_chardev_ioctl,
+> +#ifdef CONFIG_COMPAT
+> +	.compat_ioctl	= cros_ec_chardev_ioctl,
+> +#endif
+> +};
+> +
+> +static int cros_ec_chardev_probe(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
+> +	struct cros_ec_platform *ec_platform = dev_get_platdata(ec_dev->dev);
+> +	struct chardev_data *data;
+> +	int ret;
+> +
+> +	/* Create a char device: we want to create it anew */
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->ec_dev = ec_dev;
+> +	data->misc.minor = MISC_DYNAMIC_MINOR;
+> +	data->misc.fops = &chardev_fops;
+> +	data->misc.name = ec_platform->ec_name;
+> +	data->misc.parent = pdev->dev.parent;
+> +
+> +	ret = misc_register(&data->misc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spin_lock(&chardev_lock);
+> +	list_add(&data->list, &chardev_devices);
+> +	spin_unlock(&chardev_lock);
+> +
+> +	dev_info(&pdev->dev, "Created misc device /dev/%s\n",
+> +		 data->misc.name);
 
-Full test log link can be found below [1]
+No need to be noisy, if all goes well, your code should be quiet.
 
-bpf: test_btf_ #
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_ec_chardev_remove(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
+> +	struct chardev_data *data;
+> +
+> +	list_for_each_entry(data, &chardev_devices, list)
+> +		if (data->ec_dev == ec_dev)
+> +			break;
+> +
+> +	if (data->ec_dev != ec_dev) {
+> +		dev_err(&pdev->dev,
+> +			"remove called but miscdevice %s not found\n",
+> +			data->misc.name);
+> +		return -ENODEV;
+> +	}
 
-# BTF GET_INFO test[3] (Large bpf_btf_info) OK
-GET_INFO: test[3]_(Large #
-# BTF GET_INFO test[4] (BTF ID) OK
-GET_INFO: test[4]_(BTF #
-[  341.144885] 8<--- cut here ---
-[  341.148164] Unable to handle kernel NULL pointer dereference at
-virtual address 00000000
-[  341.156443] pgd = b0902156
-[  341.159294] [00000000] *pgd=9655e003, *pmd=ff918003
-[  341.164229] Internal error: Oops: 207 [#1] SMP ARM
-[  341.169052] Modules linked in: tun sha1_generic sha1_arm_neon
-sha1_arm algif_hash af_alg snd_soc_simple_card
-snd_soc_simple_card_utils snd_soc_core ac97_bus snd_pcm_dmaengine
-snd_pcm snd_timer snd soundcore fuse
-[  341.187962] CPU: 0 PID: 6773 Comm: test_sockmap Not tainted
-5.2.0-rc3-next-20190604 #1
-[  341.195923] Hardware name: Generic DRA74X (Flattened Device Tree)
-[  341.202058] PC is at memcpy+0xc0/0x330
-[  341.205836] LR is at bpf_msg_push_data+0x70c/0x728
-[  341.210654] pc : [<c12da820>]    lr : [<c10ea4a4>]    psr: 800b0013
-[  341.216957] sp : e99ad6cc  ip : 00000002  fp : e99ad83c
-[  341.222212] r10: d1bdc000  r9 : 00000001  r8 : 00000000
-[  341.227467] r7 : cd1de000  r6 : 00000000  r5 : d1bdc000  r4 : 00000000
-[  341.234032] r3 : 00000000  r2 : 80000000  r1 : 00000000  r0 : cd1de000
-[  341.240597] Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-[  341.247771] Control: 30c5387d  Table: 91b19880  DAC: fffffffd
-[  341.253553] Process test_sockmap (pid: 6773, stack limit = 0x3ad4028c)
-[  341.260118] Stack: (0xe99ad6cc to 0xe99ae000)
-[  341.264502] d6c0:                            cd1de000 00000000
-c10ea4a4 00000000 00000000
-[  341.272725] d6e0: 00000000 00000000 00000000 00000000 00000000
-00000000 ea2759a0 00000001
-[  341.280948] d700: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.289171] d720: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.297394] d740: 00000000 00000000 00000000 00000000 00000000
-00000000 e99ad78c d03f0580
-[  341.305615] d760: 00000004 d03f0000 00000007 000003a9 00000000
-00000000 00000000 00000000
-[  341.313836] d780: 00000000 00000000 00000000 00000000 d03f0000
-c0581f6c 00000060 c1e09fd0
-[  341.322060] d7a0: e99ad85c e99ad7b0 c04c1d1c 00000000 c06c3638
-c1dc19b8 e99ad7ec d03f0540
-[  341.330283] d7c0: 00000002 d03f0000 00000007 000003a9 00000001
-d03f0560 d03f0000 e3444ce4
-[  341.338506] d7e0: 00000060 c1e09fd0 e99ad8a4 e99ad7f8 cbc66e00
-e99ad8a8 c1419868 c059b69c
-[  341.346730] d800: 00000000 00000000 e99ad824 e99ad818 c04e3b7c
-f006b240 e99ad8b8 c1419868
-[  341.354954] d820: c10e9d98 00000000 00000000 c0581ddc e99ad894
-e99ad840 c0581f6c c10e9da4
-[  341.363175] d840: 00000000 00000000 00000000 00000000 00000000
-00000000 f5388145 290412b8
-[  341.371399] d860: c2432908 00000000 f08d7937 c1e08488 f006b028
-00000011 c11cd828 f006b000
-[  341.379620] d880: e99ad9e4 c1fc9e37 e99ad934 e99ad898 c0584910
-c0581e48 00000000 00000000
-[  341.387841] d8a0: 00000005 00000004 00000003 00000002 00000001
-00000000 cbc66ee8 00000000
-[  341.396063] d8c0: d1bdc000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.404286] d8e0: 00000000 00000000 d1bdc000 00000000 cbc66ee0
-00000000 00000007 00000006
-[  341.412509] d900: 00000010 c1fc9e37 e99ad8b8 00000000 cf380840
-c10fdef4 c11cd828 9fdbe7c7
-[  341.420732] d920: d1bdc000 d1bdc000 e99ad984 e99ad938 c10fdf18
-c05848d0 00000000 00000000
-[  341.428954] d940: c10fde14 c0459978 e99ad97c e99ad958 c056165c
-e7bdd400 000001ff d1bdc000
-[  341.437178] d960: e7bdd400 00000011 cf380840 00000000 e99ad9e4
-c1fc9e37 e99ad9cc e99ad988
-[  341.445407] d980: c11cd828 c10fde20 c11cda3c 00000000 00000000
-e99ad9a0 00000000 00000000
-[  341.453631] d9a0: 00000001 e7bdd400 cf380840 eb6d1030 c1e08488
-00000000 00000003 c1fc9e37
-[  341.461855] d9c0: e99adcac e99ad9d0 c11cdb60 c11cd518 00000000
-00000000 c11cd90c e8577024
-[  341.470078] d9e0: 00000020 00000001 00000000 00000000 00000001
-00000001 00000000 00000001
-[  341.478300] da00: 00000000 00000000 00000000 00000000 eb6d1030
-00000000 00000001 00000000
-[  341.486522] da20: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.494742] da40: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.502965] da60: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.511184] da80: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[  341.519406] daa0: 00000000 00000000 00000000 00000000 00000000
-00000087 00000001 d03f0500
-[  341.527628] dac0: d03f0000 c1e47f04 00000000 c1e09fd0 e99adb8c
-e99adae0 c04c1d1c c04c10d0
-[  341.535850] dae0: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000078
-[  341.544074] db00: d03f04f0 00000087 00000000 00000000 c2432908
-c2638640 00000087 d03f0500
-[  341.552296] db20: c1e08488 c2418b30 406293ec 295bca2f 00000000
-00000000 00000000 00000000
-[  341.560517] db40: 00000000 00000000 d03f04f0 00000078 e99adb84
-e99adb60 c040e488 00000087
-[  341.568741] db60: 00000001 d03f0500 d03f0000 c1e47f04 00000000
-c1e09fd0 e99adc34 e99adb88
-[  341.576961] db80: c04c1d1c c04c10d0 ffffe000 c1fcaf30 c069cddc
-c1e47f04 e99adbbc e99adba8
-[  341.585182] dba0: c04c19e0 c04c1864 d03f04f0 00000087 00000000
-00000000 c2432908 c2638640
-[  341.593405] dbc0: 00000087 d03f0500 c1e08488 c2418b30 406293ec
-295bca2f e99adc24 e99adbe8
-[  341.601628] dbe0: c04fe13c c05615d4 00000001 00000000 c069cddc
-e99adc54 e99adc2c e99adc08
-[  341.609851] dc00: c040e488 c040ce94 c1e08488 00000000 ffffe000
-c1fcaf30 c069cddc c1e47f04
-[  341.618073] dc20: e99adc64 e99adc30 d03f0000 c04fe13c ffffe000
-c1fcaf30 c069cddc c1e47f04
-[  341.626294] dc40: e99adc64 e99adc50 c04c19e0 c04c1864 c1dc1000
-c04fe13c e99adc8c e99adc68
-[  341.634517] dc60: c056165c c04c18d8 c1e47e40 400b0013 00000001
-e99adce0 c069cddc 9fdbe7c7
-[  341.642738] dc80: e99adccc cf380840 c11cd90c e776d400 eb6d1030
-00000010 00000001 c1938660
-[  341.650959] dca0: e99adcf4 e99adcb0 c119c98c c11cd918 00000000
-e3444a98 e99add14 e99adcd0
-[  341.659180] dcc0: c069ce08 c069cd10 5cf61726 c119c908 c10933a0
-00000000 00000000 c06b7624
-[  341.667403] dce0: 00000001 c1938660 e99add14 e99adcf8 c1093390
-c119c914 00000000 e3444a98
-[  341.675624] dd00: e7cd5110 c1e08488 e99add2c e99add18 c10933d8
-c1093368 00000000 0000026d
-[  341.683846] dd20: e99add64 e99add30 c06b7694 c10933ac e99add38
-00000000 00000000 00000000
-[  341.692067] dd40: c1e08488 9fdbe7c7 e7bdc800 e99adda0 d3b2fcc0
-00000018 e99add9c e99add68
-[  341.700289] dd60: c06b8a04 c06b7630 e99ade60 00000000 00000000
-c1e08488 d3b2fcc0 c06b7624
-[  341.708510] dd80: e68598c0 00000000 00000001 e99adf20 e99addfc
-e99adda0 c06b9214 c06b897c
-[  341.716731] dda0: 00000001 00000001 00000000 e68598c0 00000000
-00000000 00000000 00000000
-[  341.724953] ddc0: 00000000 00000000 00000000 9fdbe7c7 00000000
-c06b9240 e99adea0 00000001
-[  341.733176] dde0: 00000000 00000010 00000000 00000001 e99ade14
-e99ade00 c06b9270 c06b91a4
-[  341.741398] de00: 00000000 c06b7624 e99ade34 e99ade18 c06b761c
-c06b924c 00000000 e99adea0
-[  341.749621] de20: 00000001 d3b2fcc0 e99ade9c e99ade38 c06b7ff0
-c06b75dc 00000000 c067a2dc
-[  341.757842] de40: 00000001 c1e08488 00000000 c06b75d0 00000000
-e9949a00 00000010 00000000
-[  341.766065] de60: 00000011 00000000 e99adf1c 9fdbe7c7 00020000
-c1e08488 e99adf18 00000010
-[  341.774285] de80: 00000000 e9949a00 e99adf20 e68598c0 e99adef4
-e99adea0 c06b8238 c06b7edc
-[  341.782507] dea0: 00000001 00000001 00000000 e68598c0 00000010
-00000000 e99adf20 00000000
-[  341.790729] dec0: 00000000 00000000 d03f0000 9fdbe7c7 c1e08488
-c1e08488 e9949a00 fffff000
-[  341.798952] dee0: 00000fff 00000001 e99adf5c e99adef8 c067ac74
-c06b8198 00000001 00000000
-[  341.807174] df00: e776d420 00000000 00000000 00000000 e68598c0
-e9949a00 00000010 00000000
-[  341.815397] df20: 00000000 00000000 c1e08488 9fdbe7c7 00000001
-c1e08488 00000001 00000000
-[  341.823618] df40: 00000000 c04011c4 0000001e 00000001 e99adfa4
-e99adf60 c067c2a4 c067aaa4
-[  341.831841] df60: fffff000 00000fff e99adfac e99adf78 c1dc1000
-9fdbe7c7 e99adfac bef7ca44
-[  341.840063] df80: 00000001 00000200 000000bb c04011c4 e99ac000
-000000bb 00000000 e99adfa8
-[  341.848285] dfa0: c0401000 c067c1b8 bef7ca44 00000001 0000001a
-0000001e 00000000 00000001
-[  341.856508] dfc0: bef7ca44 00000001 00000200 000000bb 00000001
-0000001e 0000001a 00000010
-[  341.864729] dfe0: 00045034 bef7c884 000137c0 b6e76d7c 200b0010
-0000001a 00000000 00000000
-[  341.872948] Backtrace:
-[  341.875425] [<c10e9d98>] (bpf_msg_push_data) from [<c0581f6c>]
-(___bpf_prog_run+0x130/0x1bbc)
-[  341.883999]  r10:c0581ddc r9:00000000 r8:00000000 r7:c10e9d98
-r6:c1419868 r5:e99ad8b8
-[  341.891869]  r4:f006b240
-[  341.894426] [<c0581e3c>] (___bpf_prog_run) from [<c0584910>]
-(__bpf_prog_run32+0x4c/0x68)
-[  341.902649]  r10:c1fc9e37 r9:e99ad9e4 r8:f006b000 r7:c11cd828
-r6:00000011 r5:f006b028
-[  341.910520]  r4:c1e08488
-[  341.913079] [<c05848c4>] (__bpf_prog_run32) from [<c10fdf18>]
-(sk_psock_msg_verdict+0x104/0x354)
-[  341.921909]  r4:d1bdc000
-[  341.924470] [<c10fde14>] (sk_psock_msg_verdict) from [<c11cd828>]
-(tcp_bpf_send_verdict+0x31c/0x400)
-[  341.933654]  r10:c1fc9e37 r9:e99ad9e4 r8:00000000 r7:cf380840
-r6:00000011 r5:e7bdd400
-[  341.941524]  r4:d1bdc000
-[  341.944083] [<c11cd50c>] (tcp_bpf_send_verdict) from [<c11cdb60>]
-(tcp_bpf_sendpage+0x254/0x3c4)
-[  341.952914]  r10:c1fc9e37 r9:00000003 r8:00000000 r7:c1e08488
-r6:eb6d1030 r5:cf380840
-[  341.960784]  r4:e7bdd400
-[  341.963343] [<c11cd90c>] (tcp_bpf_sendpage) from [<c119c98c>]
-(inet_sendpage+0x84/0x294)
-[  341.971480]  r10:c1938660 r9:00000001 r8:00000010 r7:eb6d1030
-r6:e776d400 r5:c11cd90c
-[  341.979350]  r4:cf380840
-[  341.981906] [<c119c908>] (inet_sendpage) from [<c1093390>]
-(kernel_sendpage+0x34/0x44)
-[  341.989868]  r10:c1938660 r9:00000001 r8:c06b7624 r7:00000000
-r6:00000000 r5:c10933a0
-[  341.997738]  r4:c119c908
-[  342.000290] [<c109335c>] (kernel_sendpage) from [<c10933d8>]
-(sock_sendpage+0x38/0x40)
-[  342.008248]  r4:c1e08488
-[  342.010805] [<c10933a0>] (sock_sendpage) from [<c06b7694>]
-(pipe_to_sendpage+0x70/0xa4)
-[  342.018856] [<c06b7624>] (pipe_to_sendpage) from [<c06b8a04>]
-(__splice_from_pipe+0x94/0x1cc)
-[  342.027424]  r7:00000018 r6:d3b2fcc0 r5:e99adda0 r4:e7bdc800
-[  342.033122] [<c06b8970>] (__splice_from_pipe) from [<c06b9214>]
-(splice_from_pipe+0x7c/0xa8)
-[  342.041605]  r10:e99adf20 r9:00000001 r8:00000000 r7:e68598c0
-r6:c06b7624 r5:d3b2fcc0
-[  342.049475]  r4:c1e08488
-[  342.052032] [<c06b9198>] (splice_from_pipe) from [<c06b9270>]
-(generic_splice_sendpage+0x30/0x38)
-[  342.060953]  r10:00000001 r9:00000000 r8:00000010 r7:00000000
-r6:00000001 r5:e99adea0
-[  342.068822]  r4:c06b9240
-[  342.071377] [<c06b9240>] (generic_splice_sendpage) from
-[<c06b761c>] (direct_splice_actor+0x4c/0x54)
-[  342.080562] [<c06b75d0>] (direct_splice_actor) from [<c06b7ff0>]
-(splice_direct_to_actor+0x120/0x2bc)
-[  342.089827]  r4:d3b2fcc0
-[  342.092383] [<c06b7ed0>] (splice_direct_to_actor) from [<c06b8238>]
-(do_splice_direct+0xac/0xe4)
-[  342.101218]  r10:e68598c0 r9:e99adf20 r8:e9949a00 r7:00000000
-r6:00000010 r5:e99adf18
-[  342.109088]  r4:c1e08488
-[  342.111645] [<c06b818c>] (do_splice_direct) from [<c067ac74>]
-(do_sendfile+0x1dc/0x420)
-[  342.119693]  r8:00000001 r7:00000fff r6:fffff000 r5:e9949a00 r4:c1e08488
-[  342.126436] [<c067aa98>] (do_sendfile) from [<c067c2a4>]
-(sys_sendfile+0xf8/0x11c)
-[  342.134048]  r10:00000001 r9:0000001e r8:c04011c4 r7:00000000
-r6:00000000 r5:00000001
-[  342.141917]  r4:c1e08488
-[  342.144475] [<c067c1ac>] (sys_sendfile) from [<c0401000>]
-(ret_fast_syscall+0x0/0x28)
-[  342.152346] Exception stack(0xe99adfa8 to 0xe99adff0)
-[  342.157428] dfa0:                   bef7ca44 00000001 0000001a
-0000001e 00000000 00000001
-[  342.165650] dfc0: bef7ca44 00000001 00000200 000000bb 00000001
-0000001e 0000001a 00000010
-[  342.173870] dfe0: 00045034 bef7c884 000137c0 b6e76d7c
-[  342.178951]  r10:000000bb r9:e99ac000 r8:c04011c4 r7:000000bb
-r6:00000200 r5:00000001
-[  342.186822]  r4:bef7ca44
-[  342.189377] Code: e4808004 e480e004 e8bd01e0 e1b02f82 (14d13001)
-[  342.195755] ---[ end trace d2353d98cf59813b ]---
+Why do you have this separate list of devices?  You don't seem to need
+it, you only iterate over it, why is it needed?
 
+> +	spin_lock(&chardev_lock);
+> +	list_del(&data->list);
+> +	spin_unlock(&chardev_lock);
+> +	misc_deregister(&data->misc);
+> +
+> +	return 0;
+> +}
 
-[1] https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190604/testrun/760426/log
+You also iterate over the list without the lock, so why even have the
+lock?  Are you sure the list, and the lock, is even needed?
+
+thanks,
+
+greg k-h
