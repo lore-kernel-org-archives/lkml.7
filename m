@@ -2,100 +2,123 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C516CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BA5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CF624B70
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8BC24B70
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLTU0iqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfFDLPm (ORCPT
+        id S1727714AbfFDLPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:15:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64072 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfFDLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:15:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 04:15:40 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 04:15:33 -0700
-Date:   Tue, 4 Jun 2019 14:15:33 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH 0/9] security: x86/sgx: SGX vs. LSM
-Message-ID: <20190604111533.GA15393@linux.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+        Tue, 4 Jun 2019 07:15:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36181 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfFDLPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:15:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so12337666wrs.3;
+        Tue, 04 Jun 2019 04:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=21jzshqWNqSbM0BX274WNFCpCR6MybR0WXpj9Ydnmuc=;
+        b=QLTU0iqIXTKYR3p3pIlaqQSowFqrI44j5zZUe1nuUegljYX0lk2fuEaUrwA7KgxAii
+         RSzsSsFrTsQ57X+9c6T7CNjeFw/ZP8jG95ry7a/8TSXqFZbt33cMXp6HZkzfEAbYi84Q
+         MnIKlxgBeYRCkOsyNcSbjy5o9p1W8ilPTOa/K5lFMqgBOmG2jO+aemATnXKCfJXPZ10D
+         9tIk28prDW8rhQp2UnnqY2yJBqFVMWDcE5IyREZItJPwMmfKvGKKj4DhNKkFhO5CMe8m
+         EXqOMOvCiDTQQkeQ/EGsT+/AOywUkAUbOjJZ3TZTzO1BK7dMSjYpcwtyM7tOi2VY4yH0
+         j5aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=21jzshqWNqSbM0BX274WNFCpCR6MybR0WXpj9Ydnmuc=;
+        b=XpqxlEBg9ZOvCU0Z2pzhHnggCiK6Ne+NEQcIRJQyPL+oyWBQ17FttrYo96dAJ8BS0y
+         7f1JxdLy9+8SOTYzbFNDVJc1F0SL2kYjFbVpADTbH5+bNM+z8nMBsyI+6kq7DuenuXKu
+         GbaLHKm9TWrtgS7DrA4n+BSpUXmcOk9kp25eAZtVnxdSchCvD+sWMVTWi4krt9XaTkgm
+         yHQYoi7RyPUaVF+C8tlp6Ymv/WmiG4Tjz68YUcWK1LMS4UMlmdJwBlUbVasGrJThMnPg
+         tBCl0TLxQx8ReDI1BVDgW1E1hAZxLLwEOPMptDOrX6k0tIA4lFNyWt7FUGtTAwkVahBz
+         zuTQ==
+X-Gm-Message-State: APjAAAWOuMhqItCdSHswMPP8kwpCxUzspC4DadGmRNgKZix8w5DbimfU
+        +M6Hx1AejEWz1JbvKOs0oBtJyWSB
+X-Google-Smtp-Source: APXvYqxMv5qyaol0KKPRkCuyZ/+L08VqNNfhJrqgHPLK2TbBWXxKeal+Itx75wDtuyX8iIbXSD9iBA==
+X-Received: by 2002:adf:eb42:: with SMTP id u2mr19214347wrn.80.1559646951759;
+        Tue, 04 Jun 2019 04:15:51 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id s9sm7577558wmc.11.2019.06.04.04.15.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 04:15:50 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:15:50 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 11/16] PM / devfreq: tegra: Move governor registration
+ to driver's probe
+Message-ID: <20190604111550.GK16519@ulmo>
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-12-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="huBJOJF9BsF479P6"
 Content-Disposition: inline
-In-Reply-To: <20190531233159.30992-1-sean.j.christopherson@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190501233815.32643-12-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 04:31:50PM -0700, Sean Christopherson wrote:
-> This series is the result of a rather absurd amount of discussion over
-> how to get SGX to play nice with LSM policies, without having to resort
-> to evil shenanigans or put undue burden on userspace.  The discussion
-> definitely wandered into completely insane territory at times, but I
-> think/hope we ended up with something reasonable.
 
-By definition this is a broken series because it does not apply to
-mainline. Even RFC series should at least apply. Would be better idea to
-discuss design ideas and use snippets instead. Now you have to take
-original v20 and apply to these patches to evaluate anything.
+--huBJOJF9BsF479P6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The basic gist of the approach is to require userspace to declare what
-> protections are maximally allowed for any given page, e.g. add a flags
-> field for loading enclave pages that takes ALLOW_{READ,WRITE,EXEC}.  LSMs
-> can then adjust the allowed protections, e.g. clear ALLOW_EXEC to prevent
-> ever mapping the page with PROT_EXEC.  SGX enforces the allowed perms
-> via a new mprotect() vm_ops hook, e.g. like regular mprotect() uses
-> MAY_{READ,WRITE,EXEC}.
+On Thu, May 02, 2019 at 02:38:10AM +0300, Dmitry Osipenko wrote:
+> There is no need to register the ACTMON's governor separately from
+> the driver, hence let's move the registration into the driver's probe
+> function for consistency and to make code cleaner a tad.
+>=20
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 43 +++++++++------------------------
+>  1 file changed, 12 insertions(+), 31 deletions(-)
 
-mprotect() does not use MAY_{READ,WRITE,EXEC} constants. It uses
-VM_MAY{READ,WRITE,EXEC,SHARED} constants.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-What are ALLOW_{READ,WRITE,EXEC} and how they are used? What does the
-hook do and why it is in vm_ops and not in file_operations? Are they
-arguments to the ioctl or internal variables that are set based on
-SECINFO?
+--huBJOJF9BsF479P6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-/Jarkko
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2UuUACgkQ3SOs138+
+s6Fa/xAAs8/9N6QKLabrkCEp1ToGj+FPPRziPGrEF4FIVRI0CrWTozbqCUuSW8Eb
+rEp2+kYShvkK/pJcWnxUNnfXYthbe3YJgpqdZsaZlmCUZ8BueuKi7z5hY9GHouM4
+zX/X3nXzxib7mMP8+Rtv3jXyJs58bqW/uxT4Jo8udtWwhWj4VOL922XOHXKTxjKa
+qZFO4vcdr4eRhvKCx+Up4eK2k8gcZW275NL60VPGhrF5Xkwv1oqVBc/GNrSnbQap
+54EUU3VECtFfWJ8Z/TNZjgDaI0C70sDeZIjZBTQ9CucQZjnIqPFk3UMAL004X/QF
+wp24N1LZzDPq+ymcFlZGqc1Lnzz3peebcu+ddL/uQIYuetddt+QVDzmwyyiCvnXG
+bRlk0ibhdUEBW7/iogajwF62VJHNjk3qWGf9u7GCkVTUDaR/eaiFuHyj2dgFTUQ8
+QWGSZ9G0FxZzNQX04yTd1+sWHeF6y6LNFW3/++iN2w0nI7T9/c3wYaheLrr//dC6
+5+Zw9LaiU7P0v96xwgA3XgCyZwh2eze6V01yOJte+USSeR0DwLvGJNzq5MDI5fUh
+a3MzkrWtDVbfExgWNWIidARnlPgvwSIoExNeJ6r40uWDNEunAj3vuiA2tushly3H
+kXY/xyTe1tR2KNana6MfL9O6/FcVZi5AflGjyHToD3T5Ok2hx2E=
+=xHPf
+-----END PGP SIGNATURE-----
+
+--huBJOJF9BsF479P6--
