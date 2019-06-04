@@ -2,126 +2,124 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A10C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27052C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AE823CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F117320717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AeJgD3He"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqj8P8lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbfFDQ4z (ORCPT
+        id S1727879AbfFDQ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:56:55 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54727 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfFDQ4y (ORCPT
+        Tue, 4 Jun 2019 12:58:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46842 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfFDQ6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:56:54 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x54GuV6L015738;
-        Wed, 5 Jun 2019 01:56:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x54GuV6L015738
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559667392;
-        bh=AWQM1259hlpLE+Q6HQ1rPP/ecAKabyKp++FNUsm3vM8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AeJgD3Hehs6eDX/f6fMXAcW1K2o9fLZmoDVPaiO+j4eVnCFnUsNx8YxcyyB1OQlC8
-         S6feXBXsR4KQZGW8dTt53RoyT/7zpRU8dVqHDKn2K2Auh7+hkrF1ORVWGGrJjYK9Jo
-         RpDqCL7/brBaSJ3qT6VFepJPTHuudNiIQHTGlo98E7TjUHqGIaD9bJclNFhEDJASnd
-         1Hkn7h2eCidaHSoUszMR6NahV/5DvYxaOoTrmyl+NgnC6aL3K2ra3F7dN+iNDEcTK0
-         dSWeI2eMQz8izXEThaAkssaSoeBlTrK6OSBBJ9KKBAcPN5ubx1Y8CCPUYgNUh9EsL7
-         Ct4s5nOHG+Wsw==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id u124so3375877vsu.2;
-        Tue, 04 Jun 2019 09:56:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzJmZDPORYQVrVLFHFSPSV842TxlGMI+PSYsExm6cQwq1LsgjS
-        RyvnjwunhKSof09gZwTC3RHHXkljni2VaE/5zss=
-X-Google-Smtp-Source: APXvYqziG67UCmWZotaA3vRTF/UlR6i3eFISA8tVsgriIAz81VPvXjMWqG/0DTyBqd2pWmiKytVJybjGXfSP6OSC1f4=
-X-Received: by 2002:a67:b109:: with SMTP id w9mr5796256vsl.155.1559667390772;
- Tue, 04 Jun 2019 09:56:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
- <863c29c5f0214c008fbcbb2aac517a5c@AcuMS.aculab.com> <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
- <810dd6ae018b4a31b70d26fb6b29e48d@AcuMS.aculab.com> <CAK7LNAR_A1d5keiCRthNioW3nqkNadJkaCyMR3a5S8WS0jhgNQ@mail.gmail.com>
- <96b710063de5464ea347bfa1e03308b5@AcuMS.aculab.com>
-In-Reply-To: <96b710063de5464ea347bfa1e03308b5@AcuMS.aculab.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 5 Jun 2019 01:55:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARfX_Vk+iW_B3XTOmoEx-43WENNtEk4vNCv-PWk9R2r3A@mail.gmail.com>
-Message-ID: <CAK7LNARfX_Vk+iW_B3XTOmoEx-43WENNtEk4vNCv-PWk9R2r3A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use more portable 'command -v' for cc-cross-prefix
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Jun 2019 12:58:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so11355538wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=nf3jJrNk6C76DJ8y1UTRXRubP+zTDL/JpeAicSCnsJM=;
+        b=kqj8P8lxcUc0L8j5tOPPGZ4yyb6M3wmSSOxouSv0loFpvmYHZzWhuVjN2R8JtNK3J6
+         jL/vgM1d2yIWkuOyvL8G8D1rzqKASY0EQZOuTRCuQX5ZTda1jH4wqHL7ifC7Wf9r9Gm8
+         QLrLFFkDAXx2ymTAn9h5lFpY95u7vQMZBvBwmvo8MOkRNAN44sihGto76GpHK5fdQSyB
+         ctKzuQ66jaoP+z4Vx4fzDYUPtMN6A7A+cDQgXSuaNIp6FvxZZKOUGvu56BiLrZo36Q09
+         5tYIgdqHNhZCaZitnRU1D/JdWtz1PL0eCmXI/JOgF1dcYXcbd6sjNCRh14ozlcZ9vOAY
+         NaAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nf3jJrNk6C76DJ8y1UTRXRubP+zTDL/JpeAicSCnsJM=;
+        b=uOvIrCcwydrkAW1SGsKhL38rIrlCzinNP20fja6FbjvoK2Vwu1B8d0x+/+eIA9M28Q
+         BgVLBDbonIOpBIA08ncYwqPAlS6V/34zZi8JjG18yk1WRILJfTLaIo03E3du8P8vUT1h
+         pSIfd32qUxK0sU6/KlTOjmswM/5kkwxBwxzoc8Esg5jFRsarmIO9Rqa/kx3sDr2UmGrt
+         4hO+gur2++j9cfxbhaVSUDZyt7mqRUrLtWtYweKe+HlBgGBbIh/wB1U0ucxMEwI+uOV2
+         ubhZc8Cud2LpgTA2l45IEOX6HG2JIIszV/X74ytYdd0XzuSJYck4FTJNn/N+k8Hr0lau
+         c3UQ==
+X-Gm-Message-State: APjAAAWY8kHi6cg3nHaSJvtklZ+/aaC0TTvm9ttVjP0iT1WYcXUy+Wc6
+        1kzPCfWto5WqWgfmh5RjX/BLcQ==
+X-Google-Smtp-Source: APXvYqxZD1Us/ThhsKGk1nm85wHyP2HqX/Fn7dakkR4+Pd7zhA4BqXTk6Tkmc8vjuYmZTcfBiptgjA==
+X-Received: by 2002:adf:e2cb:: with SMTP id d11mr11255906wrj.66.1559667494840;
+        Tue, 04 Jun 2019 09:58:14 -0700 (PDT)
+Received: from clegane.local (20.119.129.77.rev.sfr.net. [77.129.119.20])
+        by smtp.gmail.com with ESMTPSA id t13sm25524979wra.81.2019.06.04.09.58.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 09:58:14 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     heiko@sntech.de
+Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
+        support),
+        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support)
+Subject: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones conflict in rk3399.dtsi
+Date:   Tue,  4 Jun 2019 18:57:57 +0200
+Message-Id: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 6:01 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Masahiro Yamada
-> > Sent: 04 June 2019 04:31
-> ...
-> > > > > You could use:
-> > > > >         $(shell sh -c "command -v $(c)gcc")
-> > > > > or maybe:
-> > > > >         $(shell command$${x:+} -v $(c)gcc)
-> > > >
-> > > >
-> > > > How about this?
-> > > >
-> > > >           $(shell : ~; command -v $(c)gcc)
-> > >
-> > > Overcomplicated ....
-> > >
-> > > I've not looked at the list of 'special characters' in make,
-> > > but I suspect any variable expansion is enough.
-> > > Since ${x:+} always expands to the empty string (whether or
-> > > not 'x' is defined) it can't have any unfortunate side effects.
-> >
-> >
-> > Probably, my eyes are used to Makefile.
-> > ":" is a no-op command, and it is used everywhere in kernel Makefiles
-> > in the form of "@:'
-> >
-> > It depends on people which solution seems simpler.
-> > So, this argument tends to end up with bikesheding.
->
-> I am fully aware of ':', it is a shell builtin that always return success.
-> Usually used when you want the side-effects of substitutions without
-> executing anything (eg : ${foo:=bar} ), to change the result of a
-> sequence of shell commands or as a dummy (eg while :; do :; done; )
-> Very annoyingly bash parses !: as something other than 'not true'.
->
-> $(shell command$${x:+} -v $(c)gcc) will be marginally faster
-> because it is less parsing.
->
+Currently the common thermal zones definitions for the rk3399 assumes
+multiple thermal zones are supported by the governors. This is not the
+case and each thermal zone has its own governor instance acting
+individually without collaboration with other governors.
 
-I will use this:
+As the cooling device for the CPU and the GPU thermal zones is the
+same, each governors take different decisions for the same cooling
+device leading to conflicting instructions and an erratic behavior.
 
-$(shell command -v $(c)gcc 2>/dev/null)
+As the cooling-maps is about to become an optional property, let's
+remove the cpu cooling device map from the GPU thermal zone.
 
-Make does not handle redirection by itself.
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-'2>/dev/null' is easy to understand,
-and might be useful as extra safety.
-
-
-
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 196ac9b78076..e1357e0f60f7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -821,15 +821,6 @@
+ 					type = "critical";
+ 				};
+ 			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&gpu_alert0>;
+-					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+ 		};
+ 	};
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
