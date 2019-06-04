@@ -2,119 +2,130 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8743C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C858EC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD63B24708
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A223524708
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbzFG4Sn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pBWhAx1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfFDH3k (ORCPT
+        id S1726821AbfFDHbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:29:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37884 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfFDH3k (ORCPT
+        Tue, 4 Jun 2019 03:31:15 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:35823 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfFDHbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:29:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a23so12156904pff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:29:40 -0700 (PDT)
+        Tue, 4 Jun 2019 03:31:15 -0400
+Received: by mail-ua1-f66.google.com with SMTP id r7so7448554ual.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nrKtzgwsFX1PUmXu/7B43BStSve4zFN2R+Q+Z9Etw+w=;
-        b=pbzFG4SnJoI7oaSquK9yetWqxxzHGXWMyGlWA7JSEn4z4q5sl8ca4oOXK4DZLmhAea
-         kD/sVKZFs+ASGtjDjkycPRCYrHCeK+J8SHdSmnTDrkRcD1gGohJE/yWFxSsTpwUcxeSN
-         fAPyJAn+v+f6pkGrjHIn9Xb2opkLrJUVO8yTe9vZT8rf3HeID6Zb3/1hk4KacMZ4Ay9J
-         HdbEfbr+0woI5BlLc3MYnHtYgz/beI/al2XdXPw2D2nscRGoRWzyHo5ZLzTxHN+MC9Am
-         +EWIbZ6iQ9Y1HZuYQSuc3yv86GW8siZfNuRNxPIlyoaBajBnVLCfPYnnIHcYw+AhBpPk
-         x7XA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=liKHPncWOckMU0VpUC12b4lHB8RDKVamTsMkqWq9QS8=;
+        b=pBWhAx1YgC0xfBUniJ64GQxUiO+aAT1hfrtvJ3NHp7giCrOXogoNhXvDhHaneh0wvt
+         3LNcd2E9BBt5jRT4Hh8q2/pxIP4n/6QfNng62w1L9Na2TniGZKWcRbo45voYqcLguccz
+         qTv55JDhWIHfY4Jjl/P53uPtQVNQvtfOIfjbbEuWh3fQngdSz5k1sa4NaQ9+DC8012Ot
+         DDHkh4Lew+iPe8KLIZymjj1fOf3tinN0ERo6InehQK22Mppo7htd85X5kdeew7KW6n3W
+         jRvG/NNzn4+76SVcU9CeRQDGRV4PFWOKQwiyV4dMGkr4o0CY1yjM9KtiObPKEYD9IBt9
+         9jcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nrKtzgwsFX1PUmXu/7B43BStSve4zFN2R+Q+Z9Etw+w=;
-        b=J9cvU3zCclMXXr/X0dNYbbf5lBc6WhItCgdIBhrgPhl6rcUN11bRyh48yIKOdJFtjN
-         IYblhHTCZdsP24MLIJGbWo5CzdmOsx4We19a2ED55XK2KwtYjck9OA77pqlpJvqOQl7v
-         wQj61QESnXsy7aY9Ocx6bO/vEBMeOnXnw4e8ROVY3mVy/S6s8achMHNoMRGlRHHO1BsG
-         15lEOcd1pQ/FKulsvMo7TsRnMK7Ee40MFAF+MvgemtHx08zoEsqR6mjhn5r13VzJVIUz
-         XuNaal243CF76GxEmBSd8iGxl3yV6WN+wt7W7OIIxxJ4T6IkeWM/+JR8Bl3jscbUg29L
-         HQ2w==
-X-Gm-Message-State: APjAAAWzhuyggu7T4FNC+SQ1t33Au908Pv+4ga4MAYQSsJ1CJiz7egWA
-        stl17U/7vDwMNWLIoOwhZTiW11ID
-X-Google-Smtp-Source: APXvYqwV0ORhfQ4UxlV9Ses3tVJ8a//PDsmTJdRs30qBLI6S8XvaeOaaTzk5pn1PmhozZrZNa2vTAA==
-X-Received: by 2002:aa7:910e:: with SMTP id 14mr36434739pfh.153.1559633379878;
-        Tue, 04 Jun 2019 00:29:39 -0700 (PDT)
-Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id e124sm23053953pfa.135.2019.06.04.00.29.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 00:29:39 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, larry.finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, straube.linux@gmail.com,
-        himadri18.07@gmail.com, yangx92@hotmail.com,
-        colin.king@canonical.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH v2] staging: rtl8712: Replace function r8712_free_network_queue
-Date:   Tue,  4 Jun 2019 12:59:24 +0530
-Message-Id: <20190604072924.10866-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=liKHPncWOckMU0VpUC12b4lHB8RDKVamTsMkqWq9QS8=;
+        b=ChWRELztBfiaWe8MRRnTOv0vOuEUdPxlWIA+FYNHgb6Tqy8VcoFRxycdwECWmu/GzO
+         eY59VkWvxJLpJxOadibbCWGwIPsmI+mCgkFvAQ6F4cu0YDo+sHp0FRrSELOY1CW85Z4R
+         JRilAOi+twaZWTn9KQpxp5NfE2WZSfrxjrbnyRPZmg8GonFSoCLyuhdmEnkt/csHrmaX
+         ELDw6+yrbRlMVTvvAYGbQfIuClpLwAMvfFiHvwvaTi8SIQWuNFLlmYJkcI5iCk3k/RM1
+         sdy4p2qyPS+qP/6IlwC5BWZQn3+bXOMUdT+F3hYdjwNR5K3okLgV/NH29QPGdL0FrZzW
+         Ofnw==
+X-Gm-Message-State: APjAAAVyulx4T72Lh5DETcRNqttPdjlodyscp9B2/8Sx1Pq9Vm48/Y4R
+        rImgcxEubOhwbZQvhwBGj+cMja+cyjQJ0AqT+TvXVQ==
+X-Google-Smtp-Source: APXvYqwRSbtZYdCjB8whq7+U5NeLJqf4f+zeXI8CzJ2cgm83LN/kdT2cdEZ7iFkIM1drZeG9nKJsq5islj1NytCSefw=
+X-Received: by 2002:ab0:5608:: with SMTP id y8mr15100647uaa.129.1559633474312;
+ Tue, 04 Jun 2019 00:31:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190429204040.18725-1-dianders@chromium.org> <CAPDyKFp0fQ+3CS-DadE9rO-9Npzve-nztY9hRaMdX7Pw9sUZMw@mail.gmail.com>
+ <CAD=FV=XMph_CE3pFZGP+5d0K2FgbPbheF1oX72TfZn_dpf8SQA@mail.gmail.com> <CAD=FV=U7_ek_z7UfaDn9My8UfZfpNom04OJHowoH-sNsGZQnxA@mail.gmail.com>
+In-Reply-To: <CAD=FV=U7_ek_z7UfaDn9My8UfZfpNom04OJHowoH-sNsGZQnxA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 4 Jun 2019 09:30:37 +0200
+Message-ID: <CAPDyKFoo7yyhZq8G3PzHSNnF5nWPL7Dy5a-abL-kQTP2jEt9KQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: dw_mmc: Disable SDIO interrupts while suspended
+ to fix suspend/resume
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Emil Renner Berthing <emil.renner.berthing@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove function r8712_free_network_queue, as it does nothing but call
-_free_network queue; rename _free_network_queue to
-r8712_free_network_queue to enable continued functionality; change the
-type of r8712_free_network_queue (formerly _free_network_queue) from
-static to non-static to match the type of the old
-r8712_free_network_queue.
+On Mon, 3 Jun 2019 at 20:41, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Ulf,
+>
+> On Tue, May 28, 2019 at 3:49 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > > 1) As kind of stated above, did you consider a solution where the core
+> > > simply disables the SDIO IRQ in case it isn't enabled for system
+> > > wakeup? In this way all host drivers would benefit.
+> >
+> > I can give it a shot if you can give me a bunch of specific advice,
+> > but I only have access to a few devices doing anything with SDIO and
+> > they are all using Marvell or Broadcom on dw_mmc.
+> >
+> > In general I have no idea how SDIO wakeup (plumbed through the SD
+> > controller) would work.  As per below the only way I've seen it done
+> > is totally out-of-band.  ...and actually, I'm not sure I've actually
+> > ever seen even the out of band stuff truly work on a system myself.
+> > It's always been one of those "we should support wake on WiFi" but
+> > never made it all the way to implementation.  In any case, if there
+> > are examples of people plumbing wakeup through the SD controller I'd
+> > need to figure out how to not break them.  Just doing a solution for
+> > dw_mmc means I don't have to worry about this since dw_mmc definitely
+> > doesn't support SDIO wakeup.
+> >
+> > Maybe one way to get a more generic solution is if you had an idea for
+> > a patch that would work for many host controllers then you could post
+> > it and I could test to confirm that it's happy on dw_mmc?  ...similar
+> > to when you switched dw_mmc away from the old kthread-based SDIO
+> > stuff?
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
-Changes in v2:
-- Amend commit message for accuracy.
+Let me have a look and see if I can post something for you to test.
 
- drivers/staging/rtl8712/rtl871x_mlme.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> Unless you have time to help dig into all the possibilities here to
+> help understand how this should behave across all the different host
+> controllers / wakeup setups, maybe we could just land ${SUBJECT} patch
+> for now and when there is more clarity we can revisit?
 
-diff --git a/drivers/staging/rtl8712/rtl871x_mlme.c b/drivers/staging/rtl8712/rtl871x_mlme.c
-index 57d8e7dceef7..f6ba3e865a30 100644
---- a/drivers/staging/rtl8712/rtl871x_mlme.c
-+++ b/drivers/staging/rtl8712/rtl871x_mlme.c
-@@ -151,7 +151,7 @@ static struct wlan_network *_r8712_find_network(struct  __queue *scanned_queue,
- 	return pnetwork;
- }
- 
--static void _free_network_queue(struct _adapter *padapter)
-+void r8712_free_network_queue(struct _adapter *padapter)
- {
- 	unsigned long irqL;
- 	struct list_head *phead, *plist;
-@@ -215,11 +215,6 @@ static struct	wlan_network *alloc_network(struct mlme_priv *pmlmepriv)
- 	return _r8712_alloc_network(pmlmepriv);
- }
- 
--void r8712_free_network_queue(struct _adapter *dev)
--{
--	_free_network_queue(dev);
--}
--
- /*
-  * return the wlan_network with the matching addr
-  * Shall be called under atomic context...
--- 
-2.19.1
+That's an option. I only fear that the revisit part never happens
+(because of me personally being occupied with other things).
 
+If I not able to come up with something within a week, then I will
+queue up this as fix.
+
+Kind regards
+Uffe
