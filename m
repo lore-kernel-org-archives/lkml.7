@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF9AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7DBC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE5220866
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A285120B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690581;
-	bh=UJSfZQyM0mKU3h4AXbdeOkP5roVDYNSWhjBQZXUeuNo=;
+	s=default; t=1559690585;
+	bh=HDRdfgP05uaIQJ7AN8KmkOsHDsKUlkog/VZEJt0CkRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O+TwFsMfbBsSneSTqqH8gdkadyhtFAjX+cfNU3ifMNsmFGvNWzdNB0PRp26kSSpvX
-	 1yCRXZjcTBYk4BGTwrv2/i/OziI+AvAPbplOIMUSoQvW+I7IYjS73kqvygfqlNUHX6
-	 ST/xASTfDT5Tzh0GROS+2kZmRTB/N+BNdBcNMfJk=
+	b=D2/RkeNsSA396rSvflVHJkVGXqXbt66xp949PpF2WC5W2VOGjXvCPysoly391XPkN
+	 i3fY8/601FWEMG+OjTd4epAv/XLyPrFrXrCTgQvDJxaDaT96Znt9hBkyaiIf8QYGjn
+	 UvTJsUUh8CRWovseGpM8TmTkvAckehXKNgJtVqc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfFDXXA (ORCPT
+        id S1727166AbfFDXXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbfFDXW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:57 -0400
+        id S1727143AbfFDXXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 176B9206C1;
-        Tue,  4 Jun 2019 23:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0EF20859;
+        Tue,  4 Jun 2019 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690577;
-        bh=UJSfZQyM0mKU3h4AXbdeOkP5roVDYNSWhjBQZXUeuNo=;
+        s=default; t=1559690582;
+        bh=HDRdfgP05uaIQJ7AN8KmkOsHDsKUlkog/VZEJt0CkRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4I8yIrNk+bj/99etosDpKCSCLk5HXLPALhKobk46TfBiCUXIEfJwEnvXKkHGup9x
-         oQmelra/XGjWXVmlZ8Z+Iac28We0DNvGUramPUIzdFVN2OZ8HFnTjNSDJIeAV2kcBI
-         llL4Nb8JtjI51eFeRvxmcJa4IfBCP1C6vWKrZ/7c=
+        b=N0t/J+gad4XeJI+ABmlBnqz45OFYEUcSCVl1VdsDvSoWigQJwUkGGRyX3U9HcmqZK
+         ZtUGp4ttNwOeIOdILRNM+kUg6V8u4gXE3a4Pn5vQzRq9d060BhwYWNqklKAIDJBoqc
+         HNbfRB6VAHITabeLOTGtYGo0wvym7XmoysMH7/e8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 27/60] selftests/bpf: fix bpf_get_current_task
-Date:   Tue,  4 Jun 2019 19:21:37 -0400
-Message-Id: <20190604232212.6753-27-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Kenneth Heitke <kenneth.heitke@intel.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 32/60] nvme: release namespace SRCU protection before performing controller ioctls
+Date:   Tue,  4 Jun 2019 19:21:42 -0400
+Message-Id: <20190604232212.6753-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -62,33 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 7ed4b4e60bb1dd3df7a45dfbde3a96efce9df7eb ]
+[ Upstream commit 5fb4aac756acacf260b9ebd88747251effa3a2f2 ]
 
-Fix bpf_get_current_task() declaration.
+Holding the SRCU critical section protecting the namespace list can
+cause deadlocks when using the per-namespace admin passthrough ioctl to
+delete as namespace.  Release it earlier when performing per-controller
+ioctls to avoid that.
 
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: Kenneth Heitke <kenneth.heitke@intel.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/bpf_helpers.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
-index c81fc350f7ad..a43a52cdd3f0 100644
---- a/tools/testing/selftests/bpf/bpf_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_helpers.h
-@@ -246,7 +246,7 @@ static int (*bpf_skb_change_type)(void *ctx, __u32 type) =
- 	(void *) BPF_FUNC_skb_change_type;
- static unsigned int (*bpf_get_hash_recalc)(void *ctx) =
- 	(void *) BPF_FUNC_get_hash_recalc;
--static unsigned long long (*bpf_get_current_task)(void *ctx) =
-+static unsigned long long (*bpf_get_current_task)(void) =
- 	(void *) BPF_FUNC_get_current_task;
- static int (*bpf_skb_change_tail)(void *ctx, __u32 len, __u64 flags) =
- 	(void *) BPF_FUNC_skb_change_tail;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 8b77e6a05f4b..23c90382a515 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1395,14 +1395,31 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 	if (unlikely(!ns))
+ 		return -EWOULDBLOCK;
+ 
++	/*
++	 * Handle ioctls that apply to the controller instead of the namespace
++	 * seperately and drop the ns SRCU reference early.  This avoids a
++	 * deadlock when deleting namespaces using the passthrough interface.
++	 */
++	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
++		struct nvme_ctrl *ctrl = ns->ctrl;
++
++		nvme_get_ctrl(ns->ctrl);
++		nvme_put_ns_from_disk(head, srcu_idx);
++
++		if (cmd == NVME_IOCTL_ADMIN_CMD)
++			ret = nvme_user_cmd(ctrl, NULL, argp);
++		else
++			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
++
++		nvme_put_ctrl(ctrl);
++		return ret;
++	}
++
+ 	switch (cmd) {
+ 	case NVME_IOCTL_ID:
+ 		force_successful_syscall_return();
+ 		ret = ns->head->ns_id;
+ 		break;
+-	case NVME_IOCTL_ADMIN_CMD:
+-		ret = nvme_user_cmd(ns->ctrl, NULL, argp);
+-		break;
+ 	case NVME_IOCTL_IO_CMD:
+ 		ret = nvme_user_cmd(ns->ctrl, ns, argp);
+ 		break;
+@@ -1412,8 +1429,6 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 	default:
+ 		if (ns->ndev)
+ 			ret = nvme_nvm_ioctl(ns, cmd, arg);
+-		else if (is_sed_ioctl(cmd))
+-			ret = sed_ioctl(ns->ctrl->opal_dev, cmd, argp);
+ 		else
+ 			ret = -ENOTTY;
+ 	}
 -- 
 2.20.1
 
