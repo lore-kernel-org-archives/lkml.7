@@ -2,97 +2,138 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20450C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A90C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCC8212F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728D3212F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QFezxepB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghWNYbIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfFDOlV (ORCPT
+        id S1727681AbfFDOl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:41:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53799 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfFDOlU (ORCPT
+        Tue, 4 Jun 2019 10:41:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40785 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727182AbfFDOl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:41:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d17so329042wmb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:41:19 -0700 (PDT)
+        Tue, 4 Jun 2019 10:41:58 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so4733772ljh.7;
+        Tue, 04 Jun 2019 07:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=JYu/Sf6DYA1LvVsAE9hAP2/zUxBfGo6g6Cc3589jfpA=;
-        b=QFezxepBvrgiXhmKm1McpNMYyYT4mjgtLdF0nIx340LiL8knK4tBoXTMiANhRLdvUz
-         WT1jjJjAx7LRstuYIGqb5S2luxmEgQuy8ZCzLwt4Nv5SPg9u09Z6R4GTFbIjngteY7DQ
-         bZfU38bR0MYhdpoYlf8QngSBFdr5U4n2PClMG0cNR/0FiS7WZNUKJBA6oobE2kj39HJ2
-         X+7KY+xPSi36O9Jc4LSb+sJGTx3q25GGVKVevxhS8ZanmDbnT5mPMWZMB7ood8v6nsGs
-         SQqWV22m1Y89u8IMFn4hhhBfibFC4h8/rZWieu1EHOO0eXT2T2GtD/blPXf2PYWYE4h9
-         mfKA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N8b0nbgILUFGl4UhABnT90OSTFViNxt/Voe8ebDAUhw=;
+        b=ghWNYbIhPC6NlWyE+BZpNLhuHwETwE7B0fWdhCiAG4IA4jsTtN61T517kBBgAtOLNG
+         z2jlVHxg2ZfIshZkWLpMfffA2xszE3IxepJXAjK9koyhen3nqCcLnHlRCDwGeZsiMIMA
+         PBdvovgf0UX1ZfP7I4dJcmTaXlf6TSEIQ0j5lSSAnTjk8BKCA0MYl6uzsT+B1m3V0NyT
+         RQEknCuvA0eAwG80q1OVcQ5HXrOVO3MliWV4rVUaJaki7j1XVdFbyIK5L7qKnQ4/ARps
+         rJ7PslclJDPTRvlaBFRkvZ4HHAXTK0uGlji+k5qrgEII4qOHVrP39z6v4X34yP7shTyD
+         meKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=JYu/Sf6DYA1LvVsAE9hAP2/zUxBfGo6g6Cc3589jfpA=;
-        b=KPfOi570pmF0PIR13ebP3KGYQA5mDASwUNCslz6Upur8z5p8pzQ7cZk4MbnEhss5t5
-         /icUIY4JRR6RikOk7O03B1dal4yXs3KhlOyYsmc/d//zZTjju4v/KobhLYRckLAje3vh
-         R908OFHAUcE/szSE4kUsg3fSusTNnyDDb+4oPyiA7kXvOtsxWefiq8gh+RZWO56qhSHI
-         GwZmyhgKrIKv5hUGTxHGbUyH4uiO0g55le/5Ea7Ww1sLit2nHN4FjSnjc8VNSKsd3j4k
-         +Qv2d4oKGTgRTV2tQH4ldjfOj8y2apaM3YqFtsvFYJ1XW2YsXUWH6jDzgKI7zzos37ir
-         j2aQ==
-X-Gm-Message-State: APjAAAUtNz4jM27lFI8TAh6j9pFOh8LwsK2VxmVNYNUuuQutWTVuhLJT
-        iExPZBu2Uuuvkhpexq9O7Bt44Q==
-X-Google-Smtp-Source: APXvYqyc1QeM0/4vvWBgZDrhojj2xAQnDeiCexy1d/QXuq48dTOxl1LvD7DQ5J2L9IH0Govxwc79Lw==
-X-Received: by 2002:a1c:188:: with SMTP id 130mr18108451wmb.18.1559659279143;
-        Tue, 04 Jun 2019 07:41:19 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q14sm15217623wrw.60.2019.06.04.07.41.18
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N8b0nbgILUFGl4UhABnT90OSTFViNxt/Voe8ebDAUhw=;
+        b=j02gs/p7/kJArAkfgfjscPBldvQODmufDpKmlLQRHkKM/Bqq5V5/ukZ9aVVn6yQO8M
+         ukZGdQHAyQ8oELZJTgDo27hr3sPWM8M7xlD3ftelmur/XB37bY1lVpjPXlkqEUMwI6mF
+         sv4ERVRjxA0aEHGS5gAdQytVKwvIO4yBQIU4iD3In1HNb5/a2KHsIVIdOb39+5NIPoQP
+         +vtWiw+AWexoM9P8AGHwCdUZqs/ou4hWksbLxdPMZMl2kAVO+cktOfzrSeJ5G4gWxwOH
+         DdZ+Z1WnujcHvoaus2yYFk7kFzQa5/N8S+nxUsMjqWVPipSaHUCLmSFKQgJ0to9ORcZy
+         d6/w==
+X-Gm-Message-State: APjAAAU2LdrKoMYhEh2bkcRenH7htSwp5HcbhlJ+3Net+qbrMgaJsAHh
+        can5aeS9twQY8MyRisAyFKGstxKq
+X-Google-Smtp-Source: APXvYqy5vx2cwnCGez25xql+Ko8Oo9C3uT3MAcpdxH78GRK8I9rCzO2unYJGvdz7BOGi+xvrS34pHA==
+X-Received: by 2002:a2e:9a96:: with SMTP id p22mr86177lji.57.1559659315586;
+        Tue, 04 Jun 2019 07:41:55 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id h10sm3223813lfj.10.2019.06.04.07.41.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:41:18 -0700 (PDT)
-From:   Loys Ollivier <lollivier@baylibre.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Paul Walmsley <paul@pwsan.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 5/5] riscv: dts: add initial board data for the SiFive HiFive Unleashed
-In-Reply-To: <20190602080500.31700-6-paul.walmsley@sifive.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-6-paul.walmsley@sifive.com>
-Date:   Tue, 04 Jun 2019 16:41:17 +0200
-Message-ID: <86pnnth0qa.fsf@baylibre.com>
+        Tue, 04 Jun 2019 07:41:54 -0700 (PDT)
+Subject: Re: [PATCH v4 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for the
+ driver
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-15-digetx@gmail.com> <20190604112026.GN16519@ulmo>
+ <ed2c502f-8f49-d89b-32c6-4b5415e1fa47@gmail.com> <20190604141031.GB397@ulmo>
+ <20190604141824.GC397@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <02a6651f-17f3-2e79-7780-57657596ba23@gmail.com>
+Date:   Tue, 4 Jun 2019 17:41:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190604141824.GC397@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 02 Jun 2019 at 01:05, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+04.06.2019 17:18, Thierry Reding пишет:
+> On Tue, Jun 04, 2019 at 04:10:31PM +0200, Thierry Reding wrote:
+>> On Tue, Jun 04, 2019 at 04:53:17PM +0300, Dmitry Osipenko wrote:
+>>> 04.06.2019 14:20, Thierry Reding пишет:
+>>>> On Thu, May 02, 2019 at 02:38:13AM +0300, Dmitry Osipenko wrote:
+>>>>> The driver's compilation doesn't have any specific dependencies, hence
+>>>>> the COMPILE_TEST option can be supported in Kconfig.
+>>>>>
+>>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>>>>  drivers/devfreq/Kconfig | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>>>>> index 56db9dc05edb..a6bba6e1e7d9 100644
+>>>>> --- a/drivers/devfreq/Kconfig
+>>>>> +++ b/drivers/devfreq/Kconfig
+>>>>> @@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
+>>>>>  
+>>>>>  config ARM_TEGRA_DEVFREQ
+>>>>>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+>>>>> -	depends on ARCH_TEGRA
+>>>>> +	depends on ARCH_TEGRA || COMPILE_TEST
+>>>>>  	select PM_OPP
+>>>>>  	help
+>>>>>  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+>>>>
+>>>> You need to be careful with these. You're using I/O register accessors,
+>>>> which are not supported on the UM architecture, for example.
+>>>>
+>>>> This may end up getting flagged during build testing.
+>>>
+>>> We have similar cases in other drivers and it doesn't cause any known
+>>> problems because (I think) build-bots are aware of this detail. Hence
+>>
+>> I don't understand how the build-bots would be aware of this detail.
+>> Unless you explicitly state what the dependencies are, how would the
+>> build-bots know? Perhaps there's some logic built-in somewhere that I
+>> don't know about?
+> 
+> So looks like COMPILE_TEST has a !UML dependency, so this might just
+> work.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> 
 
-> Add initial board data for the SiFive HiFive Unleashed A00.
->
-> Currently the data populated in this DT file describes the board
-> DRAM configuration and the external clock sources that supply the
-> PRCI.
->
-> This third version incorporates changes based on more comments from
-> Rob Herring <robh+dt@kernel.org>.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Tested-by: Loys Ollivier <lollivier@baylibre.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+Thank you very much for the clarification! Certainly that would caused
+problems already since there are such cases all over the kernel,
+including Tegra drivers.
