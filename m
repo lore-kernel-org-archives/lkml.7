@@ -2,112 +2,170 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAC1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DE8C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E5624020
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OG89WYXT"
+	by mail.kernel.org (Postfix) with ESMTP id B3F98242D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfFDKtp (ORCPT
+        id S1727390AbfFDKuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:49:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53518 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbfFDKto (ORCPT
+        Tue, 4 Jun 2019 06:50:22 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36490 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbfFDKuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:49:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d17so6609069wmb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vViK9iDBq0w7sSxA4M0XBnW0Fmujup3yxcFIA5uIpT8=;
-        b=OG89WYXTcHrbkkEkToBjQKNuSkXw/t8xOy/BkSMU3xc9KaBQYczgbGjv25yIoDTps5
-         lCpf5uaq5nTUGNZ8PcpvrjcFU6WzGDSwpS4jXWCCvdoCRQFKUG9jIA4sRZyb5vz3qY2T
-         9lT0yTFWNzhcPqRDNp0psJ2F71DXuhvP8YCPss0MKRhIZEsl2xy5DKi8MEZhKn+7o8gA
-         vvmXJQi2dme9aZV7HgGJlrzfmuY+pDDjkH76aTY9tqUqTJYsh99c9R9YiQNK63wXg8i7
-         6+ji2m6nQI50pqSQ58KU3Crju0zAu5S78uu8JgVE8wQCCmDqrKNLEkXWKRPP1u0RrH1O
-         aLkg==
+        Tue, 4 Jun 2019 06:50:21 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a8so31336428edx.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:50:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vViK9iDBq0w7sSxA4M0XBnW0Fmujup3yxcFIA5uIpT8=;
-        b=EoXw3YiMYmORfPDZZRImR7x6arUOQk+B/A90uI4yg7cL9kDpXbQk2/sa99gNJ7+4Ek
-         6F+1/efQOVBkZJIQi8Q91mJjgCX+sGp0NIuzmH/8Uw26PR32e2NvbW0jCDxZ86Jo3Tp6
-         wp+W9VGrffNcaTT0JjkSjOuYH/UtdFf3n3sowCn/X9VyojG+ymBrsGB74PWPWB64pi2d
-         juxkjbYwLg+aCsIWBxgCmi2Ur0Rs+XeSJtZy/cn6tQi3FGvVTaZ+h8MWbOzejuO2LVvn
-         x4fuJ1nLN/cpqUxbyrjPg8cLYL0Hy5cdZdYp2FqLMmAUAOc2bJtMksfgzFKgji+SZ1x0
-         bTVg==
-X-Gm-Message-State: APjAAAWCFSFbvQ2/XWuPW85er0nwqS56M0oQHXSsSIpgDYs5UWHdHSau
-        /yQFslGDZmfcaVj0diPP8o1BnA==
-X-Google-Smtp-Source: APXvYqy0w2T8R3fUWh6dUOaQLjmFlN3Lf+wNQ+2da0sBml+vM01wMS4XK1ysNqktEP9sAxCQos1hkA==
-X-Received: by 2002:a7b:ca4c:: with SMTP id m12mr16736629wml.37.1559645381967;
-        Tue, 04 Jun 2019 03:49:41 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id k2sm29193302wrg.41.2019.06.04.03.49.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 03:49:41 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 12:49:40 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] fork: add clone3
-Message-ID: <20190604104939.e7qhojiarfb2m3rh@brauner.io>
-References: <20190603144331.16760-1-christian@brauner.io>
- <CAK8P3a0qBaQGu2h3yG45kvf=cgiQfkeiFw60WvD47H4BoEJiyQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GswYLqGRaCoWRXKqTcbui7vFFzTTGq9HoYdg6GrY5ng=;
+        b=X4I3AZPQ1OWfPywRfvsWgs2yI9fS4HKezGPAWUW14N42lom89oyXsn4wax3q0TT3F/
+         Iqj4srDDf3o1rM2Riqtaz8LL97UHzbzkwoUqhA95Q1WR6PDwxvmnOlkN1VoYL81BKMcr
+         5ETxR7oBt5a85AJhhGQ11ww/TqedhseE6lhXwnp3TYgre4aBPvJDOdXxGpNSotcVa14i
+         0t5JkE03B3G86Bl4jTLKDuOcaCxUFwcsd0hpBTbUg6gkNdSTDsARdYkr7F5ywt36lsDb
+         u1y15+dsY1bS1MvgebP1rCQYKwh7wgOz8DOnyK5XXdcreARQoj29v9h2Vzb7jZi7wl45
+         i9QA==
+X-Gm-Message-State: APjAAAUHFsM6zNGPYH4jmv5Im2gwgymvG8Tpx9ZSzUQjimuldJJzhssy
+        o75jsCxnlK16mpbUwgOsqqT5P9pVp5Q=
+X-Google-Smtp-Source: APXvYqzoDFOet7Lo34yPYlfRGZnQ9ln8w6++jxu3zepHc1RCYOdCNSGhOVydoTfAqDRUOqQD2Zdv0g==
+X-Received: by 2002:a05:6402:1701:: with SMTP id y1mr33319483edu.22.1559645419648;
+        Tue, 04 Jun 2019 03:50:19 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id y6sm3089886eju.4.2019.06.04.03.50.18
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 03:50:19 -0700 (PDT)
+Subject: Re: hid-related 5.2-rc1 boot hang
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+ <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
+ <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
+ <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
+ <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+ <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+ <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
+ <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
+ <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
+ <e431dafc-0fb4-4be3-ac29-dcf125929090@redhat.com>
+ <CAO-hwJ+5UYJMnuCS0UL4g45Xc181LraAzc-CMuYB2rcqKGe_Sw@mail.gmail.com>
+ <CAO-hwJK0j8SottiqCdDseBW_vR=GjKO4YrFCtjzYeUh-eKPOpA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ea7b2dee-15a6-9b52-fbff-558c36cd72df@redhat.com>
+Date:   Tue, 4 Jun 2019 12:50:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0qBaQGu2h3yG45kvf=cgiQfkeiFw60WvD47H4BoEJiyQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAO-hwJK0j8SottiqCdDseBW_vR=GjKO4YrFCtjzYeUh-eKPOpA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 12:36:24PM +0200, Arnd Bergmann wrote:
-> On Mon, Jun 3, 2019 at 4:44 PM Christian Brauner <christian@brauner.io> wrote:
-> 
-> > +
-> > +#ifdef __ARCH_WANT_SYS_CLONE
-> > +asmlinkage long sys_clone3(struct clone_args __user *uargs, size_t size);
-> > +#endif
-> 
-> I would leave it outside of __ARCH_WANT_SYS_CLONE, as far
-> as I can tell the only reason for that #ifdef is so architectures that
-> have their own sys_clone implementation can opt out of the generic
-> one, but we don't want that for new syscalls.
-> 
-> In fact, I'd prefer to drop the symbol entirely and have a different
-> symbol with the opposite meaning such as
-> __ARCH_NONSTANDARD_SYS_CLONE that only gets
-> selected by sparc, ia64 and m68k. That should be a separate
-> patch though, and I'm not asking you to do it, unless you
-> want to clean up a little more.
+Hi,
 
-I am totally up for this but I would prefer if we land clone3() in the
-5.3 merge window and then for 5.3 rc{2,3} do the cleanups that David and
-you suggested.
-This leaves this patchset lean and easy to review.
+On 04-06-19 12:08, Benjamin Tissoires wrote:
+> On Tue, Jun 4, 2019 at 9:51 AM Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+>>
+>> On Mon, Jun 3, 2019 at 4:17 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Hi,
+>>>
+>>> On 03-06-19 15:55, Benjamin Tissoires wrote:
+>>>> On Mon, Jun 3, 2019 at 11:51 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>>
+>>>>> Hi Again,
+>>>>>
+>>>>> On 03-06-19 11:11, Hans de Goede wrote:
+>>>>> <snip>
+>>>>>
+>>>>>>> not sure about the rest of logitech issues yet) next week.
+>>>>>>
+>>>>>> The main problem seems to be the request_module patches. Although I also
+>>>>
+>>>> Can't we use request_module_nowait() instead, and set a reasonable
+>>>> timeout that we detect only once to check if userspace is compatible:
+>>>>
+>>>> In pseudo-code:
+>>>> if (!request_module_checked) {
+>>>>     request_module_nowait(name);
+>>>>     use_request_module = wait_event_timeout(wq,
+>>>>           first_module_loaded, 10 seconds in jiffies);
+>>>>     request_module_checked = true;
+>>>> } else if (use_request_module) {
+>>>>     request_module(name);
+>>>> }
+>>>
+>>> Well looking at the just attached dmesg , the modprobe
+>>> when triggered by udev from userspace succeeds in about
+>>> 0.5 seconds, so it seems that the modprobe hangs happens
+>>> when called from within the kernel rather then from within
+>>> userspace.
+>>>
+>>> What I do not know if is the hang is inside userspace, or
+>>> maybe it happens when modprobe calls back into the kernel,
+>>> if the hang happens when modprobe calls back into the kernel,
+>>> then other modprobes (done from udev) likely will hang too
+>>> since I think only 1 modprobe can happen at a time.
+>>>
+>>> I really wish we knew what distinguished working systems
+>>> from non working systems :|
+>>>
+>>> I cannot find a common denominator; other then the systems
+>>> are not running Fedora. So far we've reports from both Ubuntu 16.04
+>>> and Tumbleweed, so software version wise these 2 are wide apart.
+>>
+>> I am trying to reproduce the lock locally, and installed an opensuse
+>> Tumbleweed in a VM. When forwarding a Unifying receiver to the VM, I
+>> do not see the lock with either my vanilla compiled kernel and the rpm
+>> found in http://download.opensuse.org/repositories/Kernel:/HEAD/standard/x86_64/
+>>
+>> Next step is install Tumbleweed on bare metal, but I do not see how
+>> this could introduce a difference (maybe USB2 vs 3).
+> 
+> Making progress here.
+> 
+> The difference between Ubuntu/Tumbleweed and Fedora: usbhid is shipped
+> as a module while in Fedora usbhid is included in the kernel.
+> 
+> If I rmmod hid_* and usbhid, then modprobe usbhid, the command hangs
+> for 3 minutes.
+> If usbhid is already loaded, inserting a receiver is immediate
+> regarding the loading of the external modules.
+> 
+> So my assumption is that when the device gets detected at boot, usbhid
+> gets loaded by the kernel event, which in turns attempts to call
+> __request_module, but the modprobe can't be fulfilled because it's
+> already waiting for the initial usbhid modprobe to finish.
+> 
+> Still don't know how to solve that, but I thought I should share.
 
-Christian
+Hmm, we may be hitting the scenario described in the big comment
+around line 3500 of kernel/module.c.
+
+But I'm not sure that is what is happening here.
+
+Maybe you can put a WARN_ON(1) in request_module and look at the
+backtrace ?  That may help to figure out what is going on; or
+alternatively it might help to find some way to detect this and
+if it happens skip the request_module...
+
+Regards,
+
+Hans
