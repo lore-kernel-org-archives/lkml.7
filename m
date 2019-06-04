@@ -2,171 +2,135 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90CCC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04043C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04512075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHVOjJU+"
+	by mail.kernel.org (Postfix) with ESMTP id C88692075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfFDVr6 (ORCPT
+        id S1726593AbfFDVuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:47:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45504 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFDVr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:47:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f20so2553709edt.12;
-        Tue, 04 Jun 2019 14:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YAOiP57A01Sn4VN1p2tU0pXmqdLPIiJ4XRB9cBH/L60=;
-        b=LHVOjJU+PrWUKjw2La9VE1vPKl5KearF9vd1gx+fMOah0NIYnTCpk/hLPywmGuD7Qx
-         ubKVoOSXllgIIOtqhu2gVJ3x9B0/bsgZ7dOqAY3y5Ayi0qhLPf1tZQD8IUflfR/bo3b1
-         F4TaQlhPSFK4tf44OdTct45QOW1HbhpVKmRS1UPgsRmJ8ykiC6IB1kc0IjzAbHbpYgcW
-         XocfR253q6JmXmpbPH+wSLE5nYqYTiHdUq2ypGGmgfgczCsKHTbAbfTkEuh649zZZ9c/
-         Obhuc+H39gsisfGYj1xrWFrX2Lyh1bRdUjq62tExuKhoIe4zwnBrI2RwiYnmhdgPNIGz
-         bDHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YAOiP57A01Sn4VN1p2tU0pXmqdLPIiJ4XRB9cBH/L60=;
-        b=NULAeei9khK+CQ3Lbp52QiJxztnZ32IYSoc9ib4IX8i+bXt/GqhGAVNI4e7vXa4ROt
-         GNdBAobfPaup7tehAmkGoxj+ynS0BiBZAu+WSjSMMqXdr5bqBEzzjbClRve8/dipkCmq
-         4F7GQEQdT9Ax46SO700SO16EkHvg8RjmXeWUXUD+2MjKNJnNK6Tp5wWolrA1uTTbfv26
-         of59Ci4AloPtYmzdE6SlsD3UpUxNyRvE11gnEXvsrPGhaKc8su+dIXkM746uQmnYD8ut
-         qCgPUK49EE1RS3/3Qw5s5ackjlcxbR04CIIOXz7Rf+KKsPwzjflN8QRu/fc8FHU0ZXFu
-         iM6w==
-X-Gm-Message-State: APjAAAWGzrG5VDuqRAXENkhGdKKRed7MLRRMbHmRa/aJkFFppQYATV5j
-        RA3U28PmZqe87V8R2ZjTm5lncabqzC0=
-X-Google-Smtp-Source: APXvYqwDVoxJj2tIOxzLuK3nYNHPwTJ67OHC1d3ag5SDYh0bPqzR5f57ZgPalm+F2A4DDOJ5mfMHNQ==
-X-Received: by 2002:a50:bb24:: with SMTP id y33mr38369134ede.116.1559684875305;
-        Tue, 04 Jun 2019 14:47:55 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id n5sm2897404edt.65.2019.06.04.14.47.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 14:47:54 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 21:47:53 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH v3 08/11] mm/memory_hotplug: Drop MHP_MEMBLOCK_API
-Message-ID: <20190604214753.utbdrjtjavgi7yhf@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-9-david@redhat.com>
+        Tue, 4 Jun 2019 17:50:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:41447 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726537AbfFDVuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:50:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 14:50:04 -0700
+X-ExtLoop1: 1
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 14:50:03 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH] EDAC/altera: Warm Reset option for Stratix10 peripheral
+ DBE
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        James Morse <james.morse@arm.com>
+Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>
+References: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
+ <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
+ <20190604173848.GA28613@e107155-lin>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <45390f41-9b8c-de83-a092-befa3d1f7f0f@linux.intel.com>
+Date:   Tue, 4 Jun 2019 16:52:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-9-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190604173848.GA28613@e107155-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 01:11:49PM +0200, David Hildenbrand wrote:
->No longer needed, the callers of arch_add_memory() can handle this
->manually.
->
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: David Hildenbrand <david@redhat.com>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Oscar Salvador <osalvador@suse.com>
->Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->Cc: Qian Cai <cai@lca.pw>
->Cc: Arun KS <arunks@codeaurora.org>
->Cc: Mathieu Malaterre <malat@debian.org>
->Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi Sudeep,
 
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+On 6/4/19 12:38 PM, Sudeep Holla wrote:
+> On Tue, Jun 04, 2019 at 06:23:15PM +0100, James Morse wrote:
+>> Hi Thor,
+>>
+>> (CC: +Mark, Lorenzo and Sudeep for PSCI.
+>> How should SYSTEM_RESET2 be used for a vendor-specific reset?
+>>
+> 
+> Initially it was indented to be used by passing command line argument
+> "reboot=w" or "reboot=warm" as specified in kernel document[1]
+> 
+> However it was enhanced and enabled specifically for panic by
+> Commit b287a25a7148 ("panic/reboot: allow specifying reboot_mode for panic only")
+> 
+> IIUC you can now pass "reboot=panic_warm" to just set reboot_mode to
+> WARM when there's a panic. SYSTEM_RESET2 gets called whenever reboot_mode
+> is set to WARM/SOFT
+> 
+Thanks. I missed that SYSTEM_RESET2 had been implemented.
 
->---
-> include/linux/memory_hotplug.h | 8 --------
-> mm/memory_hotplug.c            | 9 +++------
-> 2 files changed, 3 insertions(+), 14 deletions(-)
->
->diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->index 2d4de313926d..2f1f87e13baa 100644
->--- a/include/linux/memory_hotplug.h
->+++ b/include/linux/memory_hotplug.h
->@@ -128,14 +128,6 @@ extern void arch_remove_memory(int nid, u64 start, u64 size,
-> extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
-> 			   unsigned long nr_pages, struct vmem_altmap *altmap);
+>> The original patch is:
+>> lore.kernel.org/r/1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com
+>> )
+>>
+>> On 03/06/2019 21:37, thor.thayer@linux.intel.com wrote:
+>>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>>
+>>> The Stratix10 peripheral FIFO memories can recover from double
+>>> bit errors with a warm reset instead of a cold reset.
+>>> Add the option of a warm reset for peripheral (USB, Ethernet)
+>>> memories.
+>>>
+>>> CPU memories such as SDRAM and OCRAM require a cold reset for
+>>> DBEs.
+>>> Filter on whether the error is a SDRAM/OCRAM or a peripheral
+>>> FIFO memory to determine which reset to use when the warm
+>>> reset option is configured.
+>>
+>> ... so you want to make different SMC calls on each CPU after panic()?
+>>
+>>
+>>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>>> index 8816f74a22b4..179601f14b48 100644
+>>> --- a/drivers/edac/altera_edac.c
+>>> +++ b/drivers/edac/altera_edac.c
+>>> @@ -2036,6 +2036,19 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
+>>>   /* panic routine issues reboot on non-zero panic_timeout */
+>>>   extern int panic_timeout;
+>>>
+>>> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
+>>> +/* EL3 SMC call to setup CPUs for warm reset */
+>>> +void panic_smp_self_stop(void)
+>>> +{
+>>> +	struct arm_smccc_res result;
+>>> +
+>>> +	__cpu_disable();
+>>> +	cpu_relax();
+>>> +	arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, S10_WARM_RESET_WFI_FLAG,
+>>> +		      S10_WARM_RESET_WFI_FLAG, 0, 0, 0, 0, 0, &result);
 > 
->-/*
->- * Do we want sysfs memblock files created. This will allow userspace to online
->- * and offline memory explicitly. Lack of this bit means that the caller has to
->- * call move_pfn_range_to_zone to finish the initialization.
->- */
->-
->-#define MHP_MEMBLOCK_API               (1<<0)
->-
-> /* reasonably generic interface to expand the physical pages */
-> extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
-> 		       struct mhp_restrictions *restrictions);
->diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->index b1fde90bbf19..9a92549ef23b 100644
->--- a/mm/memory_hotplug.c
->+++ b/mm/memory_hotplug.c
->@@ -251,7 +251,7 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
-> #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
+> Please use SYSTEM_RESET2 or let us know why it can't be used to understand
+> the requirement better. There are options to use vendor extentions with
+> the SYSTEM_RESET2 PSCI command if you really have to. However the mainline
+> supports only architectural warm reset.
 > 
-> static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
->-		struct vmem_altmap *altmap, bool want_memblock)
->+				   struct vmem_altmap *altmap)
-> {
-> 	int ret;
-> 
->@@ -294,8 +294,7 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
-> 	}
-> 
-> 	for (i = start_sec; i <= end_sec; i++) {
->-		err = __add_section(nid, section_nr_to_pfn(i), altmap,
->-				restrictions->flags & MHP_MEMBLOCK_API);
->+		err = __add_section(nid, section_nr_to_pfn(i), altmap);
-> 
-> 		/*
-> 		 * EEXIST is finally dealt with by ioresource collision
->@@ -1067,9 +1066,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
->  */
-> int __ref add_memory_resource(int nid, struct resource *res)
-> {
->-	struct mhp_restrictions restrictions = {
->-		.flags = MHP_MEMBLOCK_API,
->-	};
->+	struct mhp_restrictions restrictions = {};
-> 	u64 start, size;
-> 	bool new_node = false;
-> 	int ret;
->-- 
->2.20.1
+I need to decide between warm reset and cold reset based on the 
+peripheral type but maybe that decision can be done by firmware as James 
+pointed out.
 
--- 
-Wei Yang
-Help you, Help me
+Thanks for the links and the comments!
+
+Thor
+> --
+> Regards,
+> Sudeep
+> 
+> [1] Documentation/admin-guide/kernel-parameters.txt
+> 
+
