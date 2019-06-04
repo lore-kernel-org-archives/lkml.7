@@ -2,112 +2,131 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FCC04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB17124DC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:40:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CL9pfdqd"
+	by mail.kernel.org (Postfix) with ESMTP id E4AD024ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfFDAkR (ORCPT
+        id S1726510AbfFDAoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:40:17 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:56104 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfFDAkR (ORCPT
+        Mon, 3 Jun 2019 20:44:02 -0400
+Received: from www62.your-server.de ([213.133.104.62]:56690 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfFDAoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:40:17 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x540eAQO013092
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 09:40:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x540eAQO013092
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559608811;
-        bh=wkUOXkAQWjCghhrEfa+xujqIJm2LCnnnL46/x2l8/hA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CL9pfdqd8hpJEyyDFVV1XWbcHHiLN3CeVW+bdooQOZg1pB3H2i3NuEA0O5vM1/oJx
-         YtpoBCohFa48uypYjVP9FljMVLriI/UIeXYQTrviDQNCKuEE0hNRAG4I66As9G2XSV
-         POakiSCF8+2lT0Tr1+5uzhCNwbmekX+sCGMK3EERVzAinFo8oDq04bXPuUDeGssoRG
-         EkG7tV5+k9FdldF1aUzfPeTW0Jkntlwjit18QLzr/1c4C3GDqMbdYPMPCmQ4eXBzx4
-         qdpJ6rhRmlC8Ps7sKihZljmk72YhWkBZBj8KjoQiAnfgoUXllNQ4Ff+qYi3AmrWBrY
-         3kPW9iYhguMng==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id l125so12396782vsl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 17:40:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAWiU894ZGzlzoyppICSVMa8oUsSsOYH7YAKM9+XmVh/iyNCcOrg
-        xKr1h20hCEczVtz1a9KHyunoB0W1cuIDnPojmVI=
-X-Google-Smtp-Source: APXvYqxeEyV+OfJJFSJ8jk4Q9esZ5B4cQMMUpgD9fpKCsAkW5SX/fyXI4m16lQU3Igtzntt2Mz0t/qtPX9l3BnslmRw=
-X-Received: by 2002:a67:1842:: with SMTP id 63mr3659752vsy.179.1559608810313;
- Mon, 03 Jun 2019 17:40:10 -0700 (PDT)
+        Mon, 3 Jun 2019 20:44:02 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hXxYV-0005OB-Ic; Tue, 04 Jun 2019 02:43:59 +0200
+Received: from [178.197.249.21] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hXxYV-000IJG-9e; Tue, 04 Jun 2019 02:43:59 +0200
+Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Matt Mullins <mmullins@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Andrew Hall <hall@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+References: <20190531223735.4998-1-mmullins@fb.com>
+ <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
+ <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net>
+ <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
+ <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
+ <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
+ <CAADnVQKfZj5hDhyP6A=2tWAGJ2u7Fyx5d_rOTZ-ZyH1xBXtB3w@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <71c96268-7779-6e34-3078-5532d9f8fa55@iogearbox.net>
+Date:   Tue, 4 Jun 2019 02:43:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190603063119.36544-1-abrodkin@synopsys.com> <C2D7FE5348E1B147BCA15975FBA2307501A2522AB4@us01wembx1.internal.synopsys.com>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2522AB4@us01wembx1.internal.synopsys.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 4 Jun 2019 09:39:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARNGdQ16+vDBg1M=FsLqSpL1ONd44V8JV+_6Amofn75rQ@mail.gmail.com>
-Message-ID: <CAK7LNARNGdQ16+vDBg1M=FsLqSpL1ONd44V8JV+_6Amofn75rQ@mail.gmail.com>
-Subject: Re: [PATCH] ARC: build: Try to guess CROSS_COMPILE with cc-cross-prefix
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAADnVQKfZj5hDhyP6A=2tWAGJ2u7Fyx5d_rOTZ-ZyH1xBXtB3w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 1:27 AM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
->
-> On 6/2/19 11:31 PM, Alexey Brodkin wrote:
-> > For a long time we used to hard-code CROSS_COMPILE prefix
-> > for ARC until it started to cause problems, so we decided to
-> > solely rely on CROSS_COMPILE externally set by a user:
-> > commit 40660f1fcee8 ("ARC: build: Don't set CROSS_COMPILE in arch's Makefile").
-> >
-> > While it works perfectly fine for build-systems where the prefix
-> > gets defined anyways for us human beings it's quite an annoying
-> > requirement especially given most of time the same one prefix
-> > "arc-linux-" is all what we need.
-> >
-> > It looks like finally we're getting the best of both worlds:
-> >  1. W/o cross-toolchain we still may install headers, build .dtb etc
-> >  2. W/ cross-toolchain get the kerne built with only ARCH=arc
-> >
-> > Inspired by [1] & [2].
-> >
-> > [1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-May/005788.html
-> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fc2b47b55f17
-> >
-> > A side note: even though "cc-cross-prefix" does its job it pollutes
-> > console with output of "which" for all the prefixes it didn't manage to find
-> > a matching cross-compiler for like that:
-> > | # ARCH=arc make defconfig
-> > | which: no arceb-linux-gcc in (~/.local/bin:~/bin:/usr/bin:/usr/sbin)
-> > | *** Default configuration is based on 'nsim_hs_defconfig'
-> >
-> > Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: Vineet Gupta <vgupta@synopsys.com>
->
-> Not a big deal but I'd propose we add "Suggested-by: vgupta" since that is where
-> it came from.
->
-> @Masahiro san I suppose you are OK with this, so perhaps an Ack etc would be nice
-> to have.
+On 06/04/2019 01:54 AM, Alexei Starovoitov wrote:
+> On Mon, Jun 3, 2019 at 4:48 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>> On 06/04/2019 01:27 AM, Alexei Starovoitov wrote:
+>>> On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
+>>>>
+>>>> If these are invariably non-nested, I can easily keep bpf_misc_sd when
+>>>> I resubmit.  There was no technical reason other than keeping the two
+>>>> codepaths as similar as possible.
+>>>>
+>>>> What resource gives you worry about doing this for the networking
+>>>> codepath?
+>>>
+>>> my preference would be to keep tracing and networking the same.
+>>> there is already minimal nesting in networking and probably we see
+>>> more when reuseport progs will start running from xdp and clsbpf
+>>>
+>>>>> Aside from that it's also really bad to miss events like this as exporting
+>>>>> through rb is critical. Why can't you have a per-CPU counter that selects a
+>>>>> sample data context based on nesting level in tracing? (I don't see a discussion
+>>>>> of this in your commit message.)
+>>>>
+>>>> This change would only drop messages if the same perf_event is
+>>>> attempted to be used recursively (i.e. the same CPU on the same
+>>>> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
+>>>> BPF_F_CURRENT_CPU in testing).
+>>>>
+>>>> I'll try to accomplish the same with a percpu nesting level and
+>>>> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
+>>>> same problem -- a local patch keeping track of the nesting level is how
+>>>> I got the above stack trace, too.
+>>>
+>>> I don't think counter approach works. The amount of nesting is unknown.
+>>> imo the approach taken in this patch is good.
+>>> I don't see any issue when event_outputs will be dropped for valid progs.
+>>> Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
+>>> But that's an error anyway.
+>>
+>> My main worry with this xchg() trick is that we'll miss to export crucial
+>> data with the EBUSY bailing out especially given nesting could increase in
+>> future as you state, so users might have a hard time debugging this kind of
+>> issue if they share the same perf event map among these programs, and no
+>> option to get to this data otherwise. Supporting nesting up to a certain
+>> level would still be better than a lost event which is also not reported
+>> through the usual way aka perf rb.
+> 
+> I simply don't see this 'miss to export data' in all but contrived conditions.
+> Say two progs share the same perf event array.
+> One prog calls event_output and while rb logic is working
+> another prog needs to start executing and use the same event array
 
-FWIW,
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Correct.
 
+> slot. Today it's only possible for tracing prog combined with networking,
+> but having two progs use the same event output array is pretty much
+> a user bug. Just like not passing BPF_F_CURRENT_CPU.
 
-
--- 
-Best Regards
-Masahiro Yamada
+I don't see the user bug part, why should that be a user bug? It's the same
+as if we would say that sharing a BPF hash map between networking programs
+attached to different hooks or networking and tracing would be a user bug
+which it is not. One concrete example would be cilium monitor where we
+currently expose skb trace and drop events a well as debug data through
+the same rb. This should be usable from any type that has perf_event_output
+helper enabled (e.g. XDP and tc/BPF) w/o requiring to walk yet another per
+cpu mmap rb from user space.
