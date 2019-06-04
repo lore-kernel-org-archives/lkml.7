@@ -2,216 +2,86 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83954C04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF8AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D4423C07
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WY2Dv1TZ"
+	by mail.kernel.org (Postfix) with ESMTP id 65E1C2609C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFDBaB (ORCPT
+        id S1726502AbfFDBd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 21:30:01 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:23066 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDBaA (ORCPT
+        Mon, 3 Jun 2019 21:33:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58632 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726033AbfFDBd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 21:30:00 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190604012945epoutp01368aa7e834a9d9fb04bec6d1c4571040~k2qfFpP4G1519615196epoutp019
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 01:29:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190604012945epoutp01368aa7e834a9d9fb04bec6d1c4571040~k2qfFpP4G1519615196epoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559611785;
-        bh=+D/nJ711q8xI2Qg5OY4D/1Bwae1+mpml8ufa46iKuH0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=WY2Dv1TZ9aLqSW+bTUPTZCjFLMAWoN0tffP3WM4AxIhTtIqOT6Cm7Q6Mp/5ANtt7x
-         KBqnmQBMS82Hr1+L0G23KEVbV4/w+mDi3WbIUsbrUHhj/FbRQA70RQuNNqpTIC9d72
-         nqGPdgORsYws9vaY8Z5J9QOF+c38EB9O64F4fgoU=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190604012941epcas1p1afe4518d6d508e36ce820f9b2b58b9a5~k2qb-czHJ0549305493epcas1p1E;
-        Tue,  4 Jun 2019 01:29:41 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D8.81.04142.189C5FC5; Tue,  4 Jun 2019 10:29:37 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190604012936epcas1p1cd77444b71c8af11bfd5c133032f2658~k2qXcGjl42511625116epcas1p1K;
-        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190604012936epsmtrp1c97223751318d720a8bcdc991f9ed0f0~k2qXbXuWd2985129851epsmtrp1U;
-        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
-X-AuditID: b6c32a36-cf9ff7000000102e-26-5cf5c981596a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A4.71.03692.089C5FC5; Tue,  4 Jun 2019 10:29:36 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190604012936epsmtip24b9e456115d0b7ff60eb1b52b9143769~k2qXSwF5O0107001070epsmtip2m;
-        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
-Subject: Re: [PATCH] extcon: gpio: Request reasonable interrupts
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <28b92b86-19ac-0bf3-57d8-c7ab4557a45b@samsung.com>
-Date:   Tue, 4 Jun 2019 10:31:42 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Mon, 3 Jun 2019 21:33:28 -0400
+X-UUID: 6d75eacfb1d0483e842d953bff80b1a9-20190604
+X-UUID: 6d75eacfb1d0483e842d953bff80b1a9-20190604
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1791249730; Tue, 04 Jun 2019 09:33:23 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 4 Jun 2019 09:33:22 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 4 Jun 2019 09:33:22 +0800
+Message-ID: <1559612002.2749.2.camel@mtksdaap41>
+Subject: Re: [PATCH v2 0/4] fix mediatek drm, dis, and disp-* unbind/bind
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 4 Jun 2019 09:33:22 +0800
+In-Reply-To: <20190529102555.251579-1-hsinyi@chromium.org>
+References: <20190529102555.251579-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190530183932.4132-1-linus.walleij@linaro.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdlhTX7fx5NcYgy3HRC2m/FnOZLF5/h9G
-        i8u75rBZ3G5cwebA4nHn2h42j74tqxg9Pm+SC2COyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneO
-        NzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAdqmpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFV
-        Si1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOOP+bv2CFbMWMKS/YGxiniHcxcnJICJhI
-        vL/WxtLFyMUhJLCDUWLKrpusEM4nRonW8y1QmW+MEt8/b2OGabnc0scEkdjLKPGh6TxUy3tG
-        ianXz7KBVAkLOEjMuv6ZHcQWEQiX2HfsAFg3s4CNxMvtnWA1bAJaEvtf3ACz+QUUJa7+eMzY
-        xcjBwStgJ7HslhGIySKgIjHrjChIhahAhMSXnZsYQWxeAUGJkzOfsIDYnAK2Eg+ubGCDmC4u
-        cevJfCYIW16ieetsZpDTJATOsEkcuXQF6gEXiUkXfrFC2MISr45vYYewpSRe9rdB2dUSK08e
-        YYNo7mCU2LL/AlSDscT+pZOZQI5jFtCUWL9LHyKsKLHz91xGiMV8Eu++9rCClEgI8Ep0tAlB
-        lChLXH5wlwnClpRY3N7JNoFRaRaSd2YheWEWkhdmISxbwMiyilEstaA4Nz212LDACDmuNzGC
-        06GW2Q7GRed8DjEKcDAq8fBWiH+NEWJNLCuuzD3EKMHBrCTCm3j7S4wQb0piZVVqUX58UWlO
-        avEhRlNgYE9klhJNzgem6rySeENTI2NjYwsTQzNTQ0Mlcd547psxQgLpiSWp2ampBalFMH1M
-        HJxSDYzCXlIuc6yCgift78wzC5er6tHqmyR62vjAAeNztaKX7B0yTnXEaVz9yX6gJMmv2Wjq
-        TpZHu6zMj5z/nrJSqE/x6duj11bpNhita6vZGaqz+TaX+rwVrYd3Trd2Ofty34uuf0rFgdUv
-        Hi49lsCR8pMp93iK0hXh5YKFd1T0lCu+Zk1Pmn+DbakSS3FGoqEWc1FxIgCSPzvJnQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsWy7bCSvG7Dya8xBvuOG1pM+bOcyWLz/D+M
-        Fpd3zWGzuN24gs2BxePOtT1sHn1bVjF6fN4kF8AcxWWTkpqTWZZapG+XwJVx/jd/wQrZihlT
-        XrA3ME4R72Lk5JAQMJG43NLH1MXIxSEksJtR4tH224wQCUmJaRePMncxcgDZwhKHDxeDhIUE
-        3jJKLJirC2ILCzhIzLr+mR3EFhEIl5i94D0ziM0sYCPxcnsnG8TMCYwSDb9+giXYBLQk9r+4
-        wQZi8wsoSlz98ZgRZD6vgJ3EsltGICaLgIrErDOiIBWiAhESs3c1sIDYvAKCEidnPgGzOQVs
-        JR5c2cAGsUpd4s+8S1BrxSVuPZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC
-        4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOCo0NLcwXh5SfwhRgEORiUe3grxrzFCrIllxZW5
-        hxglOJiVRHgTb3+JEeJNSaysSi3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyW
-        iYNTqoHR/HDspFcfU2Y0h35fuWHiH4+1rMvWbvmt5ztrRei5u5H+ZS1VcxnzHgV+u/V62dGw
-        mYe5RbV0IrZJZTb73Lr/tanrzJVtbDUR+TtepE1/LiV+8dy9TTOr7tZE2kVv+ncjeoL90YKL
-        Ivw/bj4KVZ8bezhe4cjeiXemzJM0VErpviFoc/U6a/8jVyWW4oxEQy3mouJEALTEsKaGAgAA
-X-CMS-MailID: 20190604012936epcas1p1cd77444b71c8af11bfd5c133032f2658
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256
-References: <CGME20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256@epcas5p4.samsung.com>
-        <20190530183932.4132-1-linus.walleij@linaro.org>
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi, Hsin-Yi:
 
-On 19. 5. 31. 오전 3:39, Linus Walleij wrote:
-> The only thing that makes sense is to request a falling edge interrupt
-> if the line is active low and a rising edge interrupt if the line is
-> active high, so just do that and get rid of the assignment from
-> platform data. The GPIO descriptor knows if the line is active high
-> or low.
+On Wed, 2019-05-29 at 18:25 +0800, Hsin-Yi Wang wrote:
+> There are some errors when unbinding and rebinding mediatek drm, dsi,
+> and disp-* drivers. This series is to fix those errors and warnings.
 > 
-> Also make irq a local variable in probe(), it's not used anywhere else.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/extcon/extcon-gpio.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-> index 13ba3a6e81d5..a0674f1f3849 100644
-> --- a/drivers/extcon/extcon-gpio.c
-> +++ b/drivers/extcon/extcon-gpio.c
-> @@ -30,26 +30,22 @@
->  /**
->   * struct gpio_extcon_data - A simple GPIO-controlled extcon device state container.
->   * @edev:		Extcon device.
-> - * @irq:		Interrupt line for the external connector.
->   * @work:		Work fired by the interrupt.
->   * @debounce_jiffies:	Number of jiffies to wait for the GPIO to stabilize, from the debounce
->   *			value.
->   * @gpiod:		GPIO descriptor for this external connector.
->   * @extcon_id:		The unique id of specific external connector.
->   * @debounce:		Debounce time for GPIO IRQ in ms.
-> - * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
->   * @check_on_resume:	Boolean describing whether to check the state of gpio
->   *			while resuming from sleep.
->   */
->  struct gpio_extcon_data {
->  	struct extcon_dev *edev;
-> -	int irq;
->  	struct delayed_work work;
->  	unsigned long debounce_jiffies;
->  	struct gpio_desc *gpiod;
->  	unsigned int extcon_id;
->  	unsigned long debounce;
-> -	unsigned long irq_flags;
->  	bool check_on_resume;
->  };
->  
-> @@ -77,6 +73,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->  {
->  	struct gpio_extcon_data *data;
->  	struct device *dev = &pdev->dev;
-> +	unsigned long irq_flags;
-> +	int irq;
->  	int ret;
->  
->  	data = devm_kzalloc(dev, sizeof(struct gpio_extcon_data), GFP_KERNEL);
-> @@ -96,9 +94,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->  	data->gpiod = devm_gpiod_get(dev, "extcon", GPIOD_IN);
->  	if (IS_ERR(data->gpiod))
->  		return PTR_ERR(data->gpiod);
-> -	data->irq = gpiod_to_irq(data->gpiod);
-> -	if (data->irq <= 0)
-> -		return data->irq;
-> +	irq = gpiod_to_irq(data->gpiod);
-> +	if (irq <= 0)
-> +		return irq;
-> +
-> +	/*
-> +	 * It is unlikely that this is an acknowledged interrupt that goes
-> +	 * away after handling, what we are looking for are falling edges
-> +	 * if the signal is active low, and rising edges if the signal is
-> +	 * active high.
-> +	 */
-> +	if (gpiod_is_active_low(data->gpiod))
-> +		irq_flags = IRQF_TRIGGER_FALLING;
+> Hsin-Yi Wang (4):
+>   drm: mediatek: fix unbind functions
+>   drm: mediatek: unbind components in mtk_drm_unbind()
+>   drm: mediatek: call drm_atomic_helper_shutdown() when unbinding driver
+>   drm: mediatek: clear num_pipes when unbind driver
 
-If gpiod_is_active_low(data->gpiod) is true, irq_flags might be
-IRQF_TRIGGER_LOW instead of IRQF_TRIGGER_FALLING. How can we sure
-that irq_flags is always IRQF_TRIGGER_FALLING?
+For this series with some title modification, applied to
+mediatek-drm-fixes-5.2 [1], thanks.
 
-> +	else
-> +		irq_flags = IRQF_TRIGGER_RISING;
->  
->  	/* Allocate the memory of extcon devie and register extcon device */
->  	data->edev = devm_extcon_dev_allocate(dev, &data->extcon_id);
-> @@ -117,8 +126,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->  	 * Request the interrupt of gpio to detect whether external connector
->  	 * is attached or detached.
->  	 */
-> -	ret = devm_request_any_context_irq(dev, data->irq,
-> -					gpio_irq_handler, data->irq_flags,
-> +	ret = devm_request_any_context_irq(dev, irq,
-> +					gpio_irq_handler, irq_flags,
->  					pdev->name, data);
->  	if (ret < 0)
->  		return ret;
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.2
+
+Regards,
+CK
+
+> 
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 8 +++-----
+>  drivers/gpu/drm/mediatek/mtk_dsi.c     | 2 ++
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 > 
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
