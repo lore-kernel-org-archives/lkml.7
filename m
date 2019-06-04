@@ -2,141 +2,144 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E60C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE3824871
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="CcUKl+X9"
+	by mail.kernel.org (Postfix) with ESMTP id D321324871
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfFDK3z (ORCPT
+        id S1727314AbfFDKcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:29:55 -0400
-Received: from mail-eopbgr740048.outbound.protection.outlook.com ([40.107.74.48]:10744
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfFDK3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7rMsbvt3Z6nAtt9MeDh8YO5Crm1oJm6GJGvzYdGEmz4=;
- b=CcUKl+X9ZUk85UPpKQd+Jimp/MSt5IQOIqfY9IpCenIDJvCFc/YPxClzzAs7Slmv3Jb1xLu+yrdeg7qrknC3CeZF1PVx4hiH6OijTmWFqChcP8CDQVSNnrDVUPtMX+w+TksjFzuDADd88P8OuGo0h6YG4FjGeqrwqHKLbM2SuyM=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6256.namprd05.prod.outlook.com (20.178.242.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Tue, 4 Jun 2019 10:29:46 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::c19e:e8f8:b151:9ad]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::c19e:e8f8:b151:9ad%6]) with mapi id 15.20.1965.011; Tue, 4 Jun 2019
- 10:29:46 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "cai@lca.pw" <cai@lca.pw>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Subject: Re: [RESEND PATCH v2] drm/vmwgfx: fix a warning due to missing
- dma_parms
-Thread-Topic: [RESEND PATCH v2] drm/vmwgfx: fix a warning due to missing
- dma_parms
-Thread-Index: AQHVGk0pdSF6X2nLpkaeYBYmp783i6aLTD8A
-Date:   Tue, 4 Jun 2019 10:29:45 +0000
-Message-ID: <081c38de98938c5d97da370a965a57d5852e527c.camel@vmware.com>
-References: <1559594655-30324-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1559594655-30324-1-git-send-email-cai@lca.pw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2909b0b5-98d7-4afa-ca7c-08d6e8d7909b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6256;
-x-ms-traffictypediagnostic: MN2PR05MB6256:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR05MB62563E5646CF50AE78A6E218A1150@MN2PR05MB6256.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0058ABBBC7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(366004)(376002)(346002)(189003)(199004)(36756003)(54906003)(25786009)(6512007)(110136005)(6436002)(186003)(53936002)(118296001)(76176011)(7736002)(305945005)(4326008)(66476007)(5660300002)(229853002)(66556008)(76116006)(73956011)(6486002)(478600001)(64756008)(6246003)(91956017)(66446008)(14454004)(5024004)(14444005)(256004)(66946007)(71200400001)(66066001)(2906002)(316002)(86362001)(2501003)(81166006)(81156014)(6506007)(8936002)(102836004)(486006)(26005)(3846002)(6116002)(68736007)(446003)(476003)(8676002)(11346002)(99286004)(71190400001)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6256;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CSrA07GHdrUerDASVHq0M9lcuId1Onv3rskWHmK3CF1PrpRKRoqBxj6j2+hWwP8S7MaC/4fmQHThqSNnly1IKFpogEYxBb7XaO5GglZtSn4A/Q7H2fs8teq1A36xzcwx9vY0Dx/V+rx3fB57kxTer+GNW070bgFG4AqPN4WVCSp7YhiIxhAcx2M5MD8F158RIxEsPKQS5KasMzvVaLd4uWk+X9NS2NGC4WDrM0r8e2iFWnKOjXS6uoAx5dCMl+i8sp/biFWmuAzdAl+DZMrkYro1UviMYwwrwAT9LLwbHAV/fzyxvnwo+ayqo4Q5QpbhW4H2j0uCF/TN8A+O+JmRx2rws+uPiwEbPbQ2U3o6U0DEZRkNslgZft3yy3TyMoKFf2nJX1goBuD6ZLGep2M/AulVq7Xxm0dAWwAviSnb62k=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <486C4FC79EAC944195958BE914B95201@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 4 Jun 2019 06:32:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36837 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbfFDKcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:32:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id j6so16114591iom.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:32:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1m6TKgfavLqedI80h4GeN37aD/ishsl+xGNUcBpfgL0=;
+        b=FnEREQRpcy30uUUp5EWq/I7QuoFnrvznrbmXX8W+pi79GfdbG0r+bfrpiS62wI1E42
+         LTwYp+3xRJF1k6/mQj0XGscVUOeVZnaG2YbGI9TBK0Jvj4bd+J7RLxq+Cvi5SuBdX6h6
+         LXGrQmrT7ZpH84AUhi7J/zVtvPjkA8groHafOx1OZTrB+6N6pIroVsEbPLZ4Ro5Q9NL4
+         CHLVTKF0JPZ+rzkwiSUSNzR23dnUlVZ+AjgkVYqvfvLYU7ORSJr+axRaceOw1p2tH6go
+         Bc90p9OLH6XvHLIvF5Iv7MQNAFK/zdsURbw9P9b+aS3wYpjTTyDNbXricMadgh8iQHmZ
+         ZD2g==
+X-Gm-Message-State: APjAAAXX1ZEgi7iYmgzATZphn1/jpU8gp4ZfAFRBUC7I0mMy6tTW5X0s
+        vjXCy5pwW5xqUZB7mylPOcbDPF+qAyR4iTFwGbHhZ4Xu+UHo
+X-Google-Smtp-Source: APXvYqz2/2fnshkYs6p86u1DujGRHTgNt/I+YtkkqZxQ6GXhexSSXm33EBXprTu9rgy7GjmXUxriRXm1tThlAuwpzgzyKIk/U8EK
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2909b0b5-98d7-4afa-ca7c-08d6e8d7909b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 10:29:45.9986
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: thellstrom@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6256
+X-Received: by 2002:a24:3cb:: with SMTP id e194mr19206965ite.132.1559644324957;
+ Tue, 04 Jun 2019 03:32:04 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 03:32:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f71859058a7cfdc8@google.com>
+Subject: KMSAN: uninit-value in mii_nway_restart
+From:   syzbot <syzbot+1f53a30781af65d2c955@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IFRob21hcyBIZWxsc3Ryb20gPHRoZWxsc3Ryb21Adm13YXJlLmNvbT4NCg0K
-SSdsbCBqdXN0IG5lZWQgdG8gZ2l2ZSB0aGlzIHNvbWUgbW9yZSB0ZXN0aW5nIGJlZm9yZSBxdWV1
-ZWluZyBpdCBvbg0Kdm13Z2Z4LWZpeGVzLg0KDQpUaGFua3MsDQpUaG9tYXMNCg0KDQpPbiBNb24s
-IDIwMTktMDYtMDMgYXQgMTY6NDQgLTA0MDAsIFFpYW4gQ2FpIHdyb3RlOg0KPiBCb290aW5nIHVw
-IHdpdGggRE1BX0FQSV9ERUJVR19TRz15IGdlbmVyYXRlcyBhIHdhcm5pbmcgZHVlIHRvIHRoZQ0K
-PiBkcml2ZXINCj4gZm9yZ290IHRvIHNldCBkbWFfcGFybXMgYXBwcm9wcmlhdGVseS4gU2V0IGl0
-IGp1c3QgYWZ0ZXINCj4gdm13X2RtYV9tYXNrcygpDQo+IGluIHZtd19kcml2ZXJfbG9hZCgpLg0K
-PiANCj4gRE1BLUFQSTogdm13Z2Z4IDAwMDA6MDA6MGYuMDogbWFwcGluZyBzZyBzZWdtZW50IGxv
-bmdlciB0aGFuIGRldmljZQ0KPiBjbGFpbXMgdG8gc3VwcG9ydCBbbGVuPTIwOTcxNTJdIFttYXg9
-NjU1MzZdDQo+IFdBUk5JTkc6IENQVTogMiBQSUQ6IDI2MSBhdCBrZXJuZWwvZG1hL2RlYnVnLmM6
-MTIzMg0KPiBkZWJ1Z19kbWFfbWFwX3NnKzB4MzYwLzB4NDgwDQo+IEhhcmR3YXJlIG5hbWU6IFZN
-d2FyZSwgSW5jLiBWTXdhcmUgVmlydHVhbCBQbGF0Zm9ybS80NDBCWCBEZXNrdG9wDQo+IFJlZmVy
-ZW5jZSBQbGF0Zm9ybSwgQklPUyA2LjAwIDA0LzEzLzIwMTgNCj4gUklQOiAwMDEwOmRlYnVnX2Rt
-YV9tYXBfc2crMHgzNjAvMHg0ODANCj4gQ2FsbCBUcmFjZToNCj4gIHZtd190dG1fbWFwX2RtYSsw
-eDNiMS8weDViMCBbdm13Z2Z4XQ0KPiAgdm13X2JvX21hcF9kbWErMHgyNS8weDMwIFt2bXdnZnhd
-DQo+ICB2bXdfb3RhYmxlc19zZXR1cCsweDJhOC8weDc1MCBbdm13Z2Z4XQ0KPiAgdm13X3JlcXVl
-c3RfZGV2aWNlX2xhdGUrMHg3OC8weGMwIFt2bXdnZnhdDQo+ICB2bXdfcmVxdWVzdF9kZXZpY2Ur
-MHhlZS8weDRlMCBbdm13Z2Z4XQ0KPiAgdm13X2RyaXZlcl9sb2FkLmNvbGQrMHg3NTcvMHhkODQg
-W3Ztd2dmeF0NCj4gIGRybV9kZXZfcmVnaXN0ZXIrMHgxZmYvMHgzNDAgW2RybV0NCj4gIGRybV9n
-ZXRfcGNpX2RldisweDExMC8weDI5MCBbZHJtXQ0KPiAgdm13X3Byb2JlKzB4MTUvMHgyMCBbdm13
-Z2Z4XQ0KPiAgbG9jYWxfcGNpX3Byb2JlKzB4N2EvMHhjMA0KPiAgcGNpX2RldmljZV9wcm9iZSsw
-eDFiOS8weDI5MA0KPiAgcmVhbGx5X3Byb2JlKzB4MWI1LzB4NjMwDQo+ICBkcml2ZXJfcHJvYmVf
-ZGV2aWNlKzB4YTMvMHgxYTANCj4gIGRldmljZV9kcml2ZXJfYXR0YWNoKzB4OTQvMHhhMA0KPiAg
-X19kcml2ZXJfYXR0YWNoKzB4ZGQvMHgxYzANCj4gIGJ1c19mb3JfZWFjaF9kZXYrMHhmZS8weDE1
-MA0KPiAgZHJpdmVyX2F0dGFjaCsweDJkLzB4NDANCj4gIGJ1c19hZGRfZHJpdmVyKzB4MjkwLzB4
-MzUwDQo+ICBkcml2ZXJfcmVnaXN0ZXIrMHhkYy8weDFkMA0KPiAgX19wY2lfcmVnaXN0ZXJfZHJp
-dmVyKzB4ZGEvMHhmMA0KPiAgdm13Z2Z4X2luaXQrMHgzNC8weDEwMDAgW3Ztd2dmeF0NCj4gIGRv
-X29uZV9pbml0Y2FsbCsweGU1LzB4NDBhDQo+ICBkb19pbml0X21vZHVsZSsweDEwZi8weDNhMA0K
-PiAgbG9hZF9tb2R1bGUrMHgxNmE1LzB4MWE0MA0KPiAgX19zZV9zeXNfZmluaXRfbW9kdWxlKzB4
-MTgzLzB4MWMwDQo+ICBfX3g2NF9zeXNfZmluaXRfbW9kdWxlKzB4NDMvMHg1MA0KPiAgZG9fc3lz
-Y2FsbF82NCsweGM4LzB4NjA2DQo+ICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0
-NC8weGE5DQo+IA0KPiBGaXhlczogZmIxZDk3MzhjYTA1ICgiZHJtL3Ztd2dmeDogQWRkIERSTSBk
-cml2ZXIgZm9yIFZNd2FyZSBWaXJ0dWFsDQo+IEdQVSIpDQo+IFN1Z2dlc3RlZC1ieTogVGhvbWFz
-IEhlbGxzdHJvbSA8dGhlbGxzdHJvbUB2bXdhcmUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBRaWFu
-IENhaSA8Y2FpQGxjYS5wdz4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dm
-eF9kcnYuYyB8IDIgKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gDQo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dmeF9kcnYuYw0KPiBiL2Ry
-aXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X2Rydi5jDQo+IGluZGV4IDRmZjExYTAwNzdlMS4u
-NWY2OTA0MjllYjg5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dm
-eF9kcnYuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dmeF9kcnYuYw0KPiBA
-QCAtNzQ3LDYgKzc0Nyw4IEBAIHN0YXRpYyBpbnQgdm13X2RyaXZlcl9sb2FkKHN0cnVjdCBkcm1f
-ZGV2aWNlDQo+ICpkZXYsIHVuc2lnbmVkIGxvbmcgY2hpcHNldCkNCj4gIAlpZiAodW5saWtlbHko
-cmV0ICE9IDApKQ0KPiAgCQlnb3RvIG91dF9lcnIwOw0KPiAgDQo+ICsJZG1hX3NldF9tYXhfc2Vn
-X3NpemUoZGV2LT5kZXYsIFUzMl9NQVgpOw0KPiArDQo+ICAJaWYgKGRldl9wcml2LT5jYXBhYmls
-aXRpZXMgJiBTVkdBX0NBUF9HTVIyKSB7DQo+ICAJCURSTV9JTkZPKCJNYXggR01SIGlkcyBpcyAl
-dVxuIiwNCj4gIAkJCSAodW5zaWduZWQpZGV2X3ByaXYtPm1heF9nbXJfaWRzKTsNCg==
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=1180360ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=1f53a30781af65d2c955
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a2b4f2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107f4e86a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1f53a30781af65d2c955@syzkaller.appspotmail.com
+
+ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
+write reg index 0x000d: -71
+ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
+write reg index 0x000e: -71
+ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
+write reg index 0x000d: -71
+ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
+write reg index 0x000e: -71
+ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to read  
+reg index 0x0000: -71
+==================================================================
+BUG: KMSAN: uninit-value in mii_nway_restart+0x141/0x260  
+drivers/net/mii.c:467
+CPU: 1 PID: 3353 Comm: kworker/1:2 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  mii_nway_restart+0x141/0x260 drivers/net/mii.c:467
+  ax88179_bind+0xee3/0x1a10 drivers/net/usb/ax88179_178a.c:1329
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----buf.i@ax88179_mdio_read
+Variable was created at:
+  __ax88179_read_cmd drivers/net/usb/ax88179_178a.c:199 [inline]
+  ax88179_read_cmd drivers/net/usb/ax88179_178a.c:311 [inline]
+  ax88179_mdio_read+0x7b/0x240 drivers/net/usb/ax88179_178a.c:369
+  mii_nway_restart+0xcf/0x260 drivers/net/mii.c:465
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
