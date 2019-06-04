@@ -2,96 +2,134 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD65BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B995FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B4A20859
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pnah5gSI"
+	by mail.kernel.org (Postfix) with ESMTP id 9C0C02075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfFDRTR (ORCPT
+        id S1726490AbfFDRTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:19:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41312 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFDRTR (ORCPT
+        Tue, 4 Jun 2019 13:19:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36210 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfFDRTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:19:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gWGjWzmCxsyuXIXCpCZydRWI4/aqXORiJ7KdqIf6h8A=; b=pnah5gSItygt61ykCf1GYTq/j
-        uUzMYF9hlIKA/l8FEHyURRElzRnkJ3zAL8SYH+lB2itn68gHmROydqhB3TsGGgNmXEPiCM3FRdZnK
-        Mo1CYz+qCywwBDt24sgh7vU9aTS1N1dUGOAWxUY52r7iRl+hthks2u3ExihCj3H+2JzCgY6vqEwi5
-        5jLS6HaSLouyyumMm8KqkeDgkMDf0gWWebCelraH/QANcLXMTq+1A4fXAfk52wSZHcgNJshvqccCb
-        HuYI8iiOsa/8HPh6pfjJo+pAmOjDksq46njBnXFh23fqWsySS66krfqiPRK9/MuBh/vJeMMcnrg4T
-        Ln7EAfnjA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYD5B-0007jT-Mr; Tue, 04 Jun 2019 17:18:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4A82B2008D9D7; Tue,  4 Jun 2019 19:18:44 +0200 (CEST)
-Date:   Tue, 4 Jun 2019 19:18:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v8 17/19] locking/rwsem: Merge owner into count on x86-64
-Message-ID: <20190604171844.GF3419@hirez.programming.kicks-ass.net>
-References: <20190520205918.22251-1-longman@redhat.com>
- <20190520205918.22251-18-longman@redhat.com>
- <20190604094537.GK3402@hirez.programming.kicks-ass.net>
- <d03f319a-790c-3084-2908-76f44d3f41f5@redhat.com>
- <20190604170218.GE3419@hirez.programming.kicks-ass.net>
- <28a6c7b5-c40e-1c89-03e2-688c1135f3b5@redhat.com>
+        Tue, 4 Jun 2019 13:19:33 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v22so895825wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:19:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/1gqrY2ImTpTIUPPPU1PDfWa7bCSQk/2OUjIHFRsVkk=;
+        b=KmRBqRE/20HwCMe/PxVrk7SRwy8uhDE/JkOJWkvo8l5XZgmxS4D9Bv/mKZxFGd3qN8
+         wZ5Rffue77VAHG8Vxk9VEH0uNrn8DYLNF8ArlNNBV/BaKJOJGX9iLIVqRMZMwU7dhkFl
+         WVQOnkvj6n5TgKCl0mJz9D2MX4ogojSoCbYOa9pAwgWgP0eumzqP7LsWtk2AGhPxW8Yp
+         Rer1uwCiXUrJ5kCiMVf/kS182W4EpKt6eTkpfnrVdKzBEIsqvYqyyOaY9x6yeZZr5rtM
+         vuEHJl0NaBSPYkOztVB081Ox4TF5taw+7xSRFE4hsliDNJ5HpRrtRPZnKz8QUbWnLlj/
+         3U8Q==
+X-Gm-Message-State: APjAAAV/02xjO5QrH4RE/+zx5TQmfXVgKJH9R3kbrNSJt+pMO9D4KRQy
+        5Qm3pDdf1/G9HC0lNwDxIVpU0Q==
+X-Google-Smtp-Source: APXvYqzCTmSwqWr7Reg0Gs56V3SrKXWAOK1pOsi8iZhuHvPXpdeLwgLPTMRSYHM34prx2EZwe/cbcA==
+X-Received: by 2002:a1c:c583:: with SMTP id v125mr4957627wmf.158.1559668771167;
+        Tue, 04 Jun 2019 10:19:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
+        by smtp.gmail.com with ESMTPSA id f10sm31540077wrg.24.2019.06.04.10.19.29
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 10:19:30 -0700 (PDT)
+Subject: Re: [PATCH v1 0/9] KVM selftests for s390x
+To:     Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20190523164309.13345-1-thuth@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f2daf197-bb5d-15d7-8219-d17cd40c85c9@redhat.com>
+Date:   Tue, 4 Jun 2019 19:19:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28a6c7b5-c40e-1c89-03e2-688c1135f3b5@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:06:11PM -0400, Waiman Long wrote:
-> On 6/4/19 1:02 PM, Peter Zijlstra wrote:
-> > On Tue, Jun 04, 2019 at 11:47:21AM -0400, Waiman Long wrote:
-> >> On 6/4/19 5:45 AM, Peter Zijlstra wrote:
-> >>> On Mon, May 20, 2019 at 04:59:16PM -0400, Waiman Long wrote:
-> >>>> With separate count and owner, there are timing windows where the two
-> >>>> values are inconsistent. That can cause problem when trying to figure
-> >>>> out the exact state of the rwsem. For instance, a RT task will stop
-> >>>> optimistic spinning if the lock is acquired by a writer but the owner
-> >>>> field isn't set yet. That can be solved by combining the count and
-> >>>> owner together in a single atomic value.
-> >>> I just realized we can use cmpxchg_double() here (where available of
-> >>> course).
-> >> Does the 2 doubles need to be 128-bit aligned to use cmpxchg_double()? I
-> >> don't think we can guarantee that unless we explicitly set this alignment.
-> > It does :/ and yes, we'd need to play games with __align(2*sizeof(long))
-> > and such.
+On 23/05/19 18:43, Thomas Huth wrote:
+> This patch series enables the KVM selftests for s390x. As a first
+> test, the sync_regs from x86 has been adapted to s390x, and after
+> a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
+> is now enabled here, too.
 > 
-> So do you want this as an option now as it will be x86 specific? Or we
-> can do that as a follow-up if we want to.
+> Please note that the ucall() interface is not used yet - since
+> s390x neither has PIO nor MMIO, this needs some more work first
+> before it becomes usable (we likely should use a DIAG hypercall
+> here, which is what the sync_reg test is currently using, too...
+> I started working on that topic, but did not finish that work
+> yet, so I decided to not include it yet).
 
-x86, s390 and arm64 have cmpxchg_double().
+Christian, please include this in your tree (rebasing on top of kvm/next
+as soon as I push it).  Note that Thomas is away for about a month.
 
-I was going to have a look (but like I wrote, I'm pretty useless today
-so i didn't actually get anywhere) at the exact race that's a problem
-here and see if there's not another solution too.
+Paolo
+
+> RFC -> v1:
+>  - Rebase, needed to add the first patch for vcpu_nested_state_get/set
+>  - Added patch to introduce VM_MODE_DEFAULT macro
+>  - Improved/cleaned up the code in processor.c
+>  - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
+>  - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
+> 
+> Andrew Jones (1):
+>   kvm: selftests: aarch64: fix default vm mode
+> 
+> Thomas Huth (8):
+>   KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
+>     guard
+>   KVM: selftests: Guard struct kvm_vcpu_events with
+>     __KVM_HAVE_VCPU_EVENTS
+>   KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
+>   KVM: selftests: Align memory region addresses to 1M on s390x
+>   KVM: selftests: Add processor code for s390x
+>   KVM: selftests: Add the sync_regs test for s390x
+>   KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
+>   KVM: selftests: Move kvm_create_max_vcpus test to generic code
+> 
+>  MAINTAINERS                                   |   2 +
+>  arch/mips/kvm/mips.c                          |   3 +
+>  arch/powerpc/kvm/powerpc.c                    |   3 +
+>  arch/s390/kvm/kvm-s390.c                      |   1 +
+>  arch/x86/kvm/x86.c                            |   3 +
+>  tools/testing/selftests/kvm/Makefile          |   7 +-
+>  .../testing/selftests/kvm/include/kvm_util.h  |  10 +
+>  .../selftests/kvm/include/s390x/processor.h   |  22 ++
+>  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
+>  .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
+>  tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
+>  .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
+>  .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
+>  virt/kvm/arm/arm.c                            |   3 +
+>  virt/kvm/kvm_main.c                           |   2 -
+>  16 files changed, 514 insertions(+), 11 deletions(-)
+>  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
+>  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
+>  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
+>  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> 
 
