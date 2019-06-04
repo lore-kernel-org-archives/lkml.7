@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13849C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18A0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2261206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA11206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690860;
-	bh=vpOYL1kJvMeH6rTdG6PguVAgxJItCf0XVxaRAPm9NZ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABFlqbxAD5eOPNbaIE9mNF8zlTsN/pjfbTYZNeNKNnknwb85L6gWnpX3/Dh+SSut8
-	 XjSC8ZsfdUT76A0YF3HPikdIMp6F1zosg/y8eILw4LphMl7ZUZVR4s7/oj/iV55u2c
-	 +7b41Z7gKhjWPwXG/3jXt6j6y9UtHR6IsQNlClm0=
+	s=default; t=1559690867;
+	bh=1sRlghix7UQiG26B04ER1OhVW0AEu0NTtoqLtYP9Xxs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=k5NkLTHJpmz/94p+5ol5rYnw4jUYi7eEJhSuFYygr5NNSBPErTlUoplQkEoceX2P0
+	 bL6+nGbfltZU8cAbkmJJXvmV411zxlrQKXkrTN7dxVd69Q6tuoXHIh6kRvTMpgHF7e
+	 VFHATPKOBjM061dg3u8xORIVE7c93Lur0c5dZU2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfFDX1j (ORCPT
+        id S1727869AbfFDXZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfFDXZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:12 -0400
+        id S1727254AbfFDXZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2CA206C1;
-        Tue,  4 Jun 2019 23:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91F0221479;
+        Tue,  4 Jun 2019 23:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690712;
-        bh=vpOYL1kJvMeH6rTdG6PguVAgxJItCf0XVxaRAPm9NZ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jc99HvnvEfT8MOLlkOWQZpMgiYZpDPpovRLPNioKgP+AiLwh7GN9zK0qOv+Z77RVO
-         YsaxJSseINb7huXfUiZZ9r3VltiOY1z8MfsPptdO6bZcKJerN6GXhXPHntbwE/LRvM
-         uGDAbCIBWpzYBF5VBIbJfSTzg4K+9r++eFCWD7M4=
+        s=default; t=1559690701;
+        bh=1sRlghix7UQiG26B04ER1OhVW0AEu0NTtoqLtYP9Xxs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fzdVXSAvOMHFs4wcecjN4hME1IHljK/xcUuu4wYLdVpTAxSyuzkhwZvVVS8znJKLq
+         FhqXAd1QqskQvyXftrnLCmBdYq+HeJNXbTOjU8oTJh0RTytUOQjcBI2rbL6dcBvPxf
+         VdsKIXEWeAhaOsEMjUhUrxPk3Vf/PrG999OnBA4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 05/17] ALSA: seq: Cover unsubscribe_port() in list_mutex
-Date:   Tue,  4 Jun 2019 19:24:46 -0400
-Message-Id: <20190604232459.7745-5-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/17] x86/uaccess, kcov: Disable stack protector
+Date:   Tue,  4 Jun 2019 19:24:42 -0400
+Message-Id: <20190604232459.7745-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
-References: <20190604232459.7745-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,39 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 7c32ae35fbf9cffb7aa3736f44dec10c944ca18e ]
+[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
 
-The call of unsubscribe_port() which manages the group count and
-module refcount from delete_and_unsubscribe_port() looks racy; it's
-not covered by the group list lock, and it's likely a cause of the
-reported unbalance at port deletion.  Let's move the call inside the
-group list_mutex to plug the hole.
+New tooling noticed this mishap:
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
+  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+
+All the other instrumentation (KASAN,UBSAN) also have stack protector
+disabled.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_ports.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
-index faf7ceffbeca..9cfe4fcee9a5 100644
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -550,10 +550,10 @@ static void delete_and_unsubscribe_port(struct snd_seq_client *client,
- 		list_del_init(list);
- 	grp->exclusive = 0;
- 	write_unlock_irq(&grp->list_lock);
--	up_write(&grp->list_mutex);
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 314e7d62f5f0..184fa9aa5802 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -28,6 +28,7 @@ KCOV_INSTRUMENT_extable.o := n
+ # Don't self-instrument.
+ KCOV_INSTRUMENT_kcov.o := n
+ KASAN_SANITIZE_kcov.o := n
++CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
  
- 	if (!empty)
- 		unsubscribe_port(client, port, grp, &subs->info, ack);
-+	up_write(&grp->list_mutex);
- }
- 
- /* connect two ports */
+ # cond_syscall is currently not LTO compatible
+ CFLAGS_sys_ni.o = $(DISABLE_LTO)
 -- 
 2.20.1
 
