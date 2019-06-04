@@ -2,81 +2,42 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D70C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B47C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3590724AEC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZY7495ce"
+	by mail.kernel.org (Postfix) with ESMTP id 062B124AE9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfFDO7i (ORCPT
+        id S1728058AbfFDO7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:59:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45389 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbfFDO7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:59:33 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so9669046lfm.12;
-        Tue, 04 Jun 2019 07:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SD6HfIZbi8wMOY2Id0Tt+HtWegnuLFYwrZ8yF6OM2aI=;
-        b=ZY7495ce7QAOj6O1FfzvGzPVnkXdy8rsY3pn/MS+XfQJpcE7wnglcTGhLnzlHfiE15
-         k9CPb7A0sDbK1Fbk4kMmvbt4qDzM45Y26F7+mREjAE5Q8OVfluD5UZZFHKaqyItSXyjI
-         ThLi7bnuA9qFh27T/xgOQNFQDXFZadlX5mFu6n8G4e7prKFtjS8rpDuudCZbUSAuh9gn
-         icffP8IfURSbqiDaSi74UkyezLzFBYA/ZGYYYbSfMrHjLgSU5fGmFj6Q5JpcZYN/HWfz
-         UXQDzoa5p1I+ed2If+BHl4qaijsUX7yQdpxxe4ZKqcvAEYnek8/Qtb0jIzkvHWrvHG6V
-         IXfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SD6HfIZbi8wMOY2Id0Tt+HtWegnuLFYwrZ8yF6OM2aI=;
-        b=FSGRWri5tvNwIUBhOE8PR/1KyGK8LOz4trfxPrvQui79XcQQVWS0Sp+rQFLTS5V+eT
-         uvcO9IiHdNQOi16VSgIna6fRZ1shYPF9SyYa7ahtYlODLPmNYQXm4/UpoMXm309OnC3q
-         LgRUrN9WUdqezNFOiZhYNYfL3VbzTVhi2vdLr1qIKKNm82ac7EdJ/3Z2xbH8Xhsn0gpW
-         nspiZwKEYZT4AsuKQaOIgDAKkLwTQKRtxwD7Iyui+GvSz1+GEmAolNW7Fd35mpNKZtqC
-         aeT48CRn1yEt6x3d1+8jJyGO0+5FVdYyVv7Eq5tlpwOQ5iKx8PUzk8HuDP01DX8W7vsZ
-         +O8g==
-X-Gm-Message-State: APjAAAUIuQclAtyW8PDDgExO3hFXpTQqqItydPVLnM40RutJ+1xJ1/ms
-        yZimkbqKTHQbCQe5xXOKOtAngWOC
-X-Google-Smtp-Source: APXvYqxTjpD5zkrGN5wvl2r3a1cp0QsmeoCORET5P87osoK6fOwXVB+/33u/wVHvQGYWt7OQxFcxqQ==
-X-Received: by 2002:a19:9e53:: with SMTP id h80mr16575642lfe.77.1559660370429;
-        Tue, 04 Jun 2019 07:59:30 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id m25sm2781939lfp.97.2019.06.04.07.59.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:59:28 -0700 (PDT)
-Subject: Re: [PATCH v4 07/16] PM / devfreq: tegra: Properly disable interrupts
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-8-digetx@gmail.com> <20190604110744.GG16519@ulmo>
- <c2f2a8c8-1f30-34aa-9b95-a7a44e0ec96f@gmail.com> <20190604140633.GA397@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f322485b-4118-7e9a-e2e5-6d3ae9bccd27@gmail.com>
-Date:   Tue, 4 Jun 2019 17:59:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 10:59:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34996 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727911AbfFDO7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:59:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A90A5AE79;
+        Tue,  4 Jun 2019 14:59:38 +0000 (UTC)
+Subject: Re: bcache: oops when writing to writeback_percent without a cache
+ device
+To:     =?UTF-8?Q?Bj=c3=b8rn_Forsman?= <bjorn.forsman@gmail.com>
+References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+From:   Coly Li <colyli@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Labs
+Message-ID: <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de>
+Date:   Tue, 4 Jun 2019 22:59:32 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604140633.GA397@ulmo>
+In-Reply-To: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,144 +46,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.06.2019 17:06, Thierry Reding пишет:
-> On Tue, Jun 04, 2019 at 04:40:18PM +0300, Dmitry Osipenko wrote:
->> 04.06.2019 14:07, Thierry Reding пишет:
->>> On Thu, May 02, 2019 at 02:38:06AM +0300, Dmitry Osipenko wrote:
->>>> There is no guarantee that interrupt handling isn't running in parallel
->>>> with tegra_actmon_disable_interrupts(), hence it is necessary to protect
->>>> DEV_CTRL register accesses and clear IRQ status with ACTMON's IRQ being
->>>> disabled in the Interrupt Controller in order to ensure that device
->>>> interrupt is indeed being disabled.
->>>>
->>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/devfreq/tegra-devfreq.c | 21 +++++++++++++++------
->>>>  1 file changed, 15 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
->>>> index b65313fe3c2e..ce1eb97a2090 100644
->>>> --- a/drivers/devfreq/tegra-devfreq.c
->>>> +++ b/drivers/devfreq/tegra-devfreq.c
->>>> @@ -171,6 +171,8 @@ struct tegra_devfreq {
->>>>  	struct notifier_block	rate_change_nb;
->>>>  
->>>>  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
->>>> +
->>>> +	int irq;
->>>
->>> Interrupts are typically unsigned int.
->>>
->>>>  };
->>>>  
->>>>  struct tegra_actmon_emc_ratio {
->>>> @@ -417,6 +419,8 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->>>>  	u32 val;
->>>>  	unsigned int i;
->>>>  
->>>> +	disable_irq(tegra->irq);
->>>> +
->>>>  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
->>>>  		dev = &tegra->devices[i];
->>>>  
->>>> @@ -427,9 +431,14 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->>>>  		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->>>>  
->>>>  		device_writel(dev, val, ACTMON_DEV_CTRL);
->>>> +
->>>> +		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
->>>> +			      ACTMON_DEV_INTR_STATUS);
->>>>  	}
->>>>  
->>>>  	actmon_write_barrier(tegra);
->>>> +
->>>> +	enable_irq(tegra->irq);
->>>
->>> Why do we enable interrupts after this? Is there any use in having the
->>> top-level interrupt enabled if nothing's going to generate an interrupt
->>> anyway?
->>
->> There is no real point in having the interrupt enabled other than to
->> keep the enable count balanced.
->>
->> IIUC, we will need to disable IRQ at the driver's probe time (after
->> requesting the IRQ) if we want to avoid that (not really necessary)
->> balancing. This is probably something that could be improved in a
->> follow-up patches, if desired.
->>
->>>>  }
->>>>  
->>>>  static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->>>> @@ -604,7 +613,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>>  	struct resource *res;
->>>>  	unsigned int i;
->>>>  	unsigned long rate;
->>>> -	int irq;
->>>>  	int err;
->>>>  
->>>>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->>>> @@ -673,15 +681,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>>  		dev_pm_opp_add(&pdev->dev, rate, 0);
->>>>  	}
->>>>  
->>>> -	irq = platform_get_irq(pdev, 0);
->>>> -	if (irq < 0) {
->>>> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
->>>> -		return irq;
->>>> +	tegra->irq = platform_get_irq(pdev, 0);
->>>> +	if (tegra->irq < 0) {
->>>> +		err = tegra->irq;
->>>> +		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
->>>> +		return err;
->>>>  	}
->>>
->>> This is very oddly written. tegra->irq should really be an unsigned int
->>> since that's the standard type for interrupt numbers. But since you need
->>> to be able to detect errors from platform_get_irq() it now becomes
->>> natural to write this as:
->>>
->>> 	err = platform_get_irq(pdev, 0);
->>> 	if (err < 0) {
->>> 		dev_err(...);
->>> 		return err;
->>> 	}
->>>
->>> 	tegra->irq = err;
->>>
->>> Two birds with one stone. I suppose this could be done in a follow-up
->>> patch since it isn't practically wrong in your version, so either way:
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>
->>
->> Thank you for the ACK! Although, I disagree with yours suggestion, to me
->> that makes code a bit less straightforward and it's not really
->> worthwhile to bloat the code just because technically IRQ's are unsigned
->> numbers (we don't care about that). It also makes me a bit uncomfortable
->> to see "err" assigned to a variable, I don't think it's a good practice.
+On 2019/6/4 7:00 下午, Bjørn Forsman wrote:
+> Hi all,
 > 
-> Actually you should care that IRQs are unsigned. Implicit casting from
-> a potentially negative value can hide bugs. That is, once you've passed
-> that negative value into the IRQ API you loose the context that it could
-> be an error code. Hence I think it makes sense to always store values in
-> the native type, and only store them if they are actually valid.
+> I get a kernel oops from bcache when writing to
+> /sys/block/bcache0/bcache/writeback_percent and there is no attached
+> cache device. See the oops itself below my signature.
 > 
-> In the above you have an error value in tegra->irq. In this particular
-> case it's pretty harmless because you don't do anything with it, but if
-> the circumstances were slightly different that could lead to problems
-> down the road.
+> This is on Linux 4.19.46. I looked in git and see many commits to
+> bcache lately, but none seem to address this particular issue.
 > 
-> On the other hand what I was proposing makes it pretty clear from the
-> context that err contains a valid interrupt number when it is assigned
-> to tegra->irq. There's plenty of similar constructs in the kernel if you
-> want to grep for it.
-> 
-> Also, it's not bloating the code at all. It's the exact same number of
-> lines of code as your variant.
+> Background: I'm writing to .../writeback_percent with
+> systemd-tmpfiles. I'd rather not replace it with a script that figures
+> out whether or not the kernel will oops if writing to the sysfs file
+> -- the kernel should not oops in the first place.
 
-I agree that it is better to maintain proper typing everywhere in
-general, I have been bitten so many times by typecasting bugs..
-Opentegra's Bool (unsigned) -> BOOL (signed) casting horror was the most
-recent one. Well, I guess indeed it won't hurt to apply your suggestion
-in a follow-up patch to keep things a bit more consistent.
+Hi Bjorn,
+
+Thank you for the reporting. I believe this is a case we missed in
+testings. When a bcache device is not attached, it does not make sense
+to update the writeback rate in period by the changing of writeback_percent.
+
+I will post a patch for your testing soon.
+
+Coly Li
+
+
+> 
+> Jun 04 12:35:42 kernel: BUG: unable to handle kernel NULL pointer
+> dereference at 0000000000000340
+> Jun 04 12:35:42 kernel: PGD 0 P4D 0
+> Jun 04 12:35:42 kernel: Oops: 0000 [#1] SMP PTI
+> Jun 04 12:35:42 kernel: CPU: 6 PID: 20266 Comm: kworker/6:220 Not
+> tainted 4.19.46 #1-NixOS
+> Jun 04 12:35:42 kernel: Hardware name: To Be Filled By O.E.M. To Be
+> Filled By O.E.M./X99 Extreme4/3.1, BIOS P3.60 04/06/2018
+> Jun 04 12:35:42 kernel: Workqueue: events update_writeback_rate [bcache]
+> Jun 04 12:35:42 kernel: RIP: 0010:update_writeback_rate+0x2f/0x2e0 [bcache]
+> Jun 04 12:35:42 kernel: Code: 41 57 41 56 41 55 41 54 55 53 48 8b af
+> 00 f4 ff ff f0 80 8f 20 f4 ff ff 10 f0 83 44 24 fc 00 48 8b 87 20 f4
+> ff ff a8 08 74 51 <48> 8b 85 40 03 00 00 a8 08 75 46 8b 47 e8 48 89 fb
+> 85 c0 74 09 80
+> Jun 04 12:35:42 kernel: RSP: 0018:ffffafbfccdbbe68 EFLAGS: 00010202
+> Jun 04 12:35:42 kernel: RAX: 0000000000000018 RBX: ffff97bf75f60c80
+> RCX: ffff97bf7f9a0ee0
+> Jun 04 12:35:42 kernel: RDX: ffff97bf7f9a0ee0 RSI: 0000000000000180
+> RDI: ffff97bf75f60c80
+> Jun 04 12:35:42 kernel: RBP: 0000000000000000 R08: 000073746e657665
+> R09: 8080808080808080
+> Jun 04 12:35:42 kernel: R10: ffffafbfc3207de8 R11: fefefefefefefeff
+> R12: ffff97bf7f9a4d00
+> Jun 04 12:35:42 kernel: R13: 0000000000000000 R14: ffff97bf75270180
+> R15: 0ffff97bf7f9a4d0
+> Jun 04 12:35:42 kernel: FS:  0000000000000000(0000)
+> GS:ffff97bf7f980000(0000) knlGS:0000000000000000
+> Jun 04 12:35:42 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jun 04 12:35:42 kernel: CR2: 0000000000000340 CR3: 0000000709a0a004
+> CR4: 00000000001606e0
+> Jun 04 12:35:42 kernel: Call Trace:
+> Jun 04 12:35:42 kernel:  process_one_work+0x1f4/0x3e0
+> Jun 04 12:35:42 kernel:  worker_thread+0x2d/0x3e0
+> Jun 04 12:35:42 kernel:  ? process_one_work+0x3e0/0x3e0
+> Jun 04 12:35:42 kernel:  kthread+0x113/0x130
+> Jun 04 12:35:42 kernel:  ? kthread_create_worker_on_cpu+0x70/0x70
+> Jun 04 12:35:42 kernel:  ret_from_fork+0x35/0x40
+> Jun 04 12:35:42 kernel: Modules linked in: tcp_diag inet_diag
+> iptable_mangle xt_CHECKSUM ipt_MASQUERADE ipt_REJECT nf_reject_ipv4
+> bridge stp llc nf_tables nfnetlink devlink af_packet msr nouveau
+> edac_core x86_pkg_temp_thermal nls_iso8859_1 video intel_powerclamp
+> ttm nls_cp437 drm_kms_helper vfat coretemp drm fat crct10dif_pclmul
+> agpgart iptable_nat nf_nat_ipv4 nf_nat xt_conntrack crc32_pclmul
+> snd_hda_codec_hdmi nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+> libcrc32c ip6t_rpfilter i2c_algo_bit ghash_clmulni_intel fb_sys_fops
+> syscopyarea ipt_rpfilter sysfillrect pcbc aesni_intel aes_x86_64
+> crypto_simd cryptd sysimgblt ip6table_raw iptable_raw
+> snd_hda_codec_realtek snd_hda_codec_generic snd_hda_intel xt_pkttype
+> glue_helper snd_hda_codec nf_log_ipv6 intel_cstate uas snd_hda_core
+> intel_uncore deflate e1000e snd_hwdep
+> Jun 04 12:35:42 kernel:  snd_pcm iTCO_wdt joydev snd_timer mousedev
+> mxm_wmi intel_wmi_thunderbolt nf_log_ipv4 evdev input_leds led_class
+> snd nf_log_common xt_LOG efi_pstore intel_rapl_perf soundcore mac_hid
+> pstore xt_tcpudp efivars ptp nvme mei_me mei pps_core i2c_i801
+> nvme_core i2c_core lpc_ich wmi button ip6table_filter pcc_cpufreq
+> ip6_tables iptable_filter atkbd libps2 serio loop cpufreq_powersave
+> tun kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt
+> autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto usb_storage
+> bcache hid_logitech_hidpp crc64 raid1 md_mod hid_logitech_dj
+> hid_generic usbhid hid sd_mod xhci_pci ahci xhci_hcd libahci libata
+> ehci_pci ehci_hcd usbcore scsi_mod crc32c_intel usb_common rtc_cmos
+> dm_mod
+> Jun 04 12:35:42 kernel: CR2: 0000000000000340
+> Jun 04 12:35:42 kernel: ---[ end trace 764634a58d34fb7c ]---
+> Jun 04 12:35:43 kernel: RIP: 0010:update_writeback_rate+0x2f/0x2e0 [bcache]
+> Jun 04 12:35:43 kernel: Code: 41 57 41 56 41 55 41 54 55 53 48 8b af
+> 00 f4 ff ff f0 80 8f 20 f4 ff ff 10 f0 83 44 24 fc 00 48 8b 87 20 f4
+> ff ff a8 08 74 51 <48> 8b 85 40 03 00 00 a8 08 75 46 8b 47 e8 48 89 fb
+> 85 c0 74 09 80
+> Jun 04 12:35:43 kernel: RSP: 0018:ffffafbfccdbbe68 EFLAGS: 00010202
+> Jun 04 12:35:43 kernel: RAX: 0000000000000018 RBX: ffff97bf75f60c80
+> RCX: ffff97bf7f9a0ee0
+> Jun 04 12:35:43 kernel: RDX: ffff97bf7f9a0ee0 RSI: 0000000000000180
+> RDI: ffff97bf75f60c80
+> Jun 04 12:35:43 kernel: RBP: 0000000000000000 R08: 000073746e657665
+> R09: 8080808080808080
+> Jun 04 12:35:43 kernel: R10: ffffafbfc3207de8 R11: fefefefefefefeff
+> R12: ffff97bf7f9a4d00
+> Jun 04 12:35:43 kernel: R13: 0000000000000000 R14: ffff97bf75270180
+> R15: 0ffff97bf7f9a4d0
+> Jun 04 12:35:43 kernel: FS:  0000000000000000(0000)
+> GS:ffff97bf7f980000(0000) knlGS:0000000000000000
+> Jun 04 12:35:43 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jun 04 12:35:43 kernel: CR2: 0000000000000340 CR3: 0000000709a0a004
+> CR4: 00000000001606e0
+> 
+
+
+-- 
+
+Coly Li
