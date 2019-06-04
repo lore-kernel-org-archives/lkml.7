@@ -2,100 +2,98 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE602C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C14208CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934D8208CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ta7hdhGD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRlw7T5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfFDUb5 (ORCPT
+        id S1726743AbfFDUcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:31:57 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10746 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfFDUbd (ORCPT
+        Tue, 4 Jun 2019 16:32:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41607 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfFDUcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:31:33 -0400
+        Tue, 4 Jun 2019 16:32:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 83so4191270pgg.8;
+        Tue, 04 Jun 2019 13:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559680292; x=1591216292;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=Qvgi9EebcCKTkJL3XH6n75abRSmA+1KjL0uPQ7HHAeo=;
-  b=Ta7hdhGDoJNbDuzf92aEfFIfqNN7443vpBk8sGQTF9UWGhbUKN9ieR59
-   gsOnxsL2GrXJiVmfPM2HkOzhTY9q92lesBR/VXMUAM+pHEjrLOA09O8jI
-   BKOzdV6ci24zWxs9CLvPCpUGLHq9Yr61HX8G6106erqcQDVO2MscpDLhF
-   o=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="399352827"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 Jun 2019 20:31:30 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 4FA1CA21DD;
-        Tue,  4 Jun 2019 20:31:29 +0000 (UTC)
-Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.96) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 4 Jun 2019 20:31:28 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 4 Jun 2019 20:31:28 +0000
-Received: from dev-dsk-alisaidi-i31e-4ac69482.us-east-1.amazon.com
- (10.200.136.151) by mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Tue, 4 Jun 2019 20:31:28 +0000
-Received: by dev-dsk-alisaidi-i31e-4ac69482.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 9A8BA47DE4; Tue,  4 Jun 2019 20:31:28 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-crypto@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Ron Rindjunsky <ronrindj@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 0/3] Add support for Graviton TRNG
-Date:   Tue, 4 Jun 2019 20:30:57 +0000
-Message-ID: <20190604203100.15050-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.15.3.AMZN
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zbEJVcqozWzcoFlbBXS+TBjzcZ1OHQOrJK+1Yv2WO0M=;
+        b=HRlw7T5HrC1sd0EEVOlmxMYcEUW9P5KTISto8J7IBxGP2yzW843P+jIUL6NelNXstQ
+         D8XvyAu7QYkVM2IoDDAyXp0sXS8xF/4nek3GpocF8G24lBfn+qkMCPRMzavEVNOXYxUS
+         caDzOhvPXLTgk6tZ5FH5SExn8kXr6oRHichMbXB+1pXtfQAeOzS6hzAFhuj9GxP+9+u7
+         1MxY+6w7didSa+HdOpJgnxJyixl31HmTrorgBWGTOJn7mqweLkxAtOiQGsSWN27LxrQ6
+         /nep/j/MTr041ex5XXhL5vuRtS5auX0MrPKYLZLgV9nKexEMj1k4O+JnxZY9SKOhOJ10
+         lmSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zbEJVcqozWzcoFlbBXS+TBjzcZ1OHQOrJK+1Yv2WO0M=;
+        b=Q9HToEZbMPE+z6IK7xHp3ROZL6kFAXebrllzx25/lcQe/grjEtEBCpRH/UUOzhT2Hl
+         8thYKZmENmspg9YgqkGygQ+D6gD59E75yWBgIRpuEi3tMz3FN1z0zsEls3YO/in3K/eh
+         l3eu3gRxYujvKsv4lHMdGdAFF+MZ4caPzTwGab8oGYouv9jQsJiVdceysOqW6geJDsnP
+         R4ai5S+y3S57jHXM4ELs/CE74jIt3HlNEivQHDUXE7Q2khcNx5xSdbR3tBetn5zY98ui
+         lT6ucpCyOaMCa01JCoW3Su4OixTJ6y9WawbuYuJEUqF6EbLPX4nI05KzAVE4fuUjtbJI
+         8gyA==
+X-Gm-Message-State: APjAAAXM3Nnb04i+hNJRdxImGrFoxPZEn+seBrSUC0DGeauxezLRwd5n
+        bvOvYTwAYZgstcM9yU6nUVhbD8Tz
+X-Google-Smtp-Source: APXvYqxbc/5j0N2mBryM3d+Q+6XQAi6sKwhl0NsA7+dyfcwjUGgCtsj58EypLAOnavta0iGS1MPgqA==
+X-Received: by 2002:a63:e616:: with SMTP id g22mr562455pgh.61.1559680321272;
+        Tue, 04 Jun 2019 13:32:01 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id c16sm1004134pfp.91.2019.06.04.13.31.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 13:32:00 -0700 (PDT)
+Subject: Re: [PATCH v3 net-next 01/17] net: dsa: Keep a pointer to the skb
+ clone for TX timestamping
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
+        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190604170756.14338-1-olteanv@gmail.com>
+ <20190604170756.14338-2-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <fed60662-e66d-5d5b-fec8-52e4373630b2@gmail.com>
+Date:   Tue, 4 Jun 2019 13:31:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190604170756.14338-2-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AWS Graviton based systems provide an Arm SMC call in the vendor defined
-hypervisor region to read random numbers from a HW TRNG and return them to the
-guest. 
 
-We've observed slower guest boot and especially reboot times due to lack of
-entropy and providing access to a TRNG is meant to address this. 
 
-Ali Saidi (3):
-  arm/arm64: Add smccc hypervisor service identifiers
-  arm64: export acpi_psci_use_hvc
-  hwrng: Add support for AWS Graviton TRNG
+On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
+> For drivers that use deferred_xmit for PTP frames (such as sja1105),
+> there is no need to perform matching between PTP frames and their egress
+> timestamps, since the sending process can be serialized.
+> 
+> In that case, it makes sense to have the pointer to the skb clone that
+> DSA made directly in the skb->cb. It will be used for pushing the egress
+> timestamp back in the application socket's error queue.
+> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
- MAINTAINERS                           |   6 ++
- arch/arm64/kernel/acpi.c              |   1 +
- drivers/char/hw_random/Kconfig        |  13 ++++
- drivers/char/hw_random/Makefile       |   1 +
- drivers/char/hw_random/graviton-rng.c | 123 ++++++++++++++++++++++++++++++++++
- include/linux/arm-smccc.h             |   2 +
- 6 files changed, 146 insertions(+)
- create mode 100644 drivers/char/hw_random/graviton-rng.c
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.15.3.AMZN
-
+Florian
