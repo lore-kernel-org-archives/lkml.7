@@ -2,127 +2,144 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A02C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA2223DD4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iSRYrtqf"
+	by mail.kernel.org (Postfix) with ESMTP id 5114024A6F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfFDOpS (ORCPT
+        id S1727865AbfFDOqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:45:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43819 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfFDOpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:45:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so825822pfg.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8kQJWWH20FmLV+D34/UlcFgcPuTQNqFlHhk2FqlLjKs=;
-        b=iSRYrtqfNi6ssM9SlZbA4fGmokaRJAsxkcVcpGY8CiLBP2/HVranJB8xgQTGQA6DaH
-         O6L0th9lpChMb0EBf5YxHaQLdDW9XRX1b1ADBlqSE27ssjDmRsQoTafplh4fksvVamKB
-         2qPTWaA1GZhjZY+VkCuquleMbIT3Af1MhAzHA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8kQJWWH20FmLV+D34/UlcFgcPuTQNqFlHhk2FqlLjKs=;
-        b=dVxXVt2q565ds8OReBrI8M+1nRU0ibG1W1JH42IpNe5Ho5mkRRlQhOZesnQBHkuOfR
-         f+gNQdcWxzd4yElT1n5KWQn/AQdEx5Mr9bQcBjaT2aY7BCXkEB5POt3+H0ltEqgFM1PT
-         F4sOhS4u9LHjogVtv0kGPskVkqeb24pwvpVagVCS1W57JCInT5Lo4XH9fuv3LYaXQhIZ
-         zpagExmgFRxvLWK0Rysu4dsXqc0beOtt5ueZgs643F4ambPd5Q6sPv43586FPRejTN9C
-         dKIyoQjpUoBSLiQtUe2ZbMTIfnXmAog2Awk+W/LbwSeTA9BwGKJ27Io2Ya17dXWVO5wD
-         7jQQ==
-X-Gm-Message-State: APjAAAWpM5uA3xebcpOk1+LzZySnf9RSIBuLZNy34GjdwZ2ZUV71pR23
-        0H5NvYU8qmxY2UYNuIIXgWqFwg==
-X-Google-Smtp-Source: APXvYqx9qVDV0aL129br1HvP76lImRIInL1ekOewwGewtN2/L6DHIclTxW/oSrWDb0LEZ2FL+WFJgQ==
-X-Received: by 2002:a62:6d47:: with SMTP id i68mr39283857pfc.189.1559659517462;
-        Tue, 04 Jun 2019 07:45:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k22sm7663683pfk.178.2019.06.04.07.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 07:45:16 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 07:45:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: onenand_base: Mark expected switch fall-through
-Message-ID: <201906040745.B6AE4C6@keescook>
-References: <20190604141737.GA1064@embeddedor>
+        Tue, 4 Jun 2019 10:46:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14528 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727732AbfFDOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:46:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 07:46:14 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 07:46:13 -0700
+Date:   Tue, 4 Jun 2019 07:46:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, yu-cheng.yu@intel.com
+Subject: Re: [PATCH v5 1/8] KVM: VMX: Define CET VMCS fields and control bits
+Message-ID: <20190604144613.GA12246@linux.intel.com>
+References: <20190522070101.7636-1-weijiang.yang@intel.com>
+ <20190522070101.7636-2-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190604141737.GA1064@embeddedor>
+In-Reply-To: <20190522070101.7636-2-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:17:37AM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-> where we are expecting to fall through.
+On Wed, May 22, 2019 at 03:00:54PM +0800, Yang Weijiang wrote:
+> CET(Control-flow Enforcement Technology) is an upcoming Intel� processor
+> family feature that blocks return/jump-oriented programming (ROP) attacks.
+> It provides the following capabilities to defend
+> against ROP/JOP style control-flow subversion attacks:
 > 
-> This patch fixes the following warning:
+> - Shadow Stack (SHSTK):
+>   A second stack for the program that is used exclusively for
+>   control transfer operations.
 > 
-> drivers/mtd/nand/onenand/onenand_base.c: In function ‘onenand_check_features’:
-> drivers/mtd/nand/onenand/onenand_base.c:3264:17: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    this->options |= ONENAND_HAS_NOP_1;
-> drivers/mtd/nand/onenand/onenand_base.c:3265:2: note: here
->   case ONENAND_DEVICE_DENSITY_4Gb:
->   ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Cc: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> - Indirect Branch Tracking (IBT):
+>   Free branch protection to defend against jump/call oriented
+>   programming.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  drivers/mtd/nand/onenand/onenand_base.c | 1 +
->  1 file changed, 1 insertion(+)
+What is "free" referring to here?  The software enabling certainly isn't
+free, and I doubt the hardware/ucode cost is completely free.
+ 
+> Several new CET MSRs are defined in kernel to support CET:
+> MSR_IA32_{U,S}_CET - MSRs to control the CET settings for user
+> mode and suervisor mode respectively.
 > 
-> diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
-> index ba46d0cf60a1..bdb5f4733d28 100644
-> --- a/drivers/mtd/nand/onenand/onenand_base.c
-> +++ b/drivers/mtd/nand/onenand/onenand_base.c
-> @@ -3262,6 +3262,7 @@ static void onenand_check_features(struct mtd_info *mtd)
->  	switch (density) {
->  	case ONENAND_DEVICE_DENSITY_8Gb:
->  		this->options |= ONENAND_HAS_NOP_1;
-> +		/* fall through */
->  	case ONENAND_DEVICE_DENSITY_4Gb:
->  		if (ONENAND_IS_DDP(this))
->  			this->options |= ONENAND_HAS_2PLANE;
-> -- 
-> 2.21.0
+> MSR_IA32_PL{0,1,2,3}_SSP - MSRs to store shadow stack pointers for
+> CPL-0,1,2,3 levels.
 > 
+> MSR_IA32_INT_SSP_TAB - MSR to store base address of shadow stack
+> pointer table.
 
--- 
-Kees Cook
+For consistency (within the changelog), these should be list style, e.g.:
+
+
+  - MSR_IA32_{U,S}_CET: Control CET settings for user mode and suervisor
+                        mode respectively.
+
+  - MSR_IA32_PL{0,1,2,3}_SSP: Store shadow stack pointers for CPL levels.
+
+  - MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack pointer
+                          table.
+
+> Two XSAVES state components are introduced for CET:
+> IA32_XSS:[bit 11] - bit for save/restor user mode CET states
+> IA32_XSS:[bit 12] - bit for save/restor supervisor mode CET states.
+
+Likewise, use a consistent list format.
+
+> 6 VMCS fields are introduced for CET, {HOST,GUEST}_S_CET is to store
+> CET settings in supervisor mode. {HOST,GUEST}_SSP is to store shadow
+> stack pointers in supervisor mode. {HOST,GUEST}_INTR_SSP_TABLE is to
+> store base address of shadow stack pointer table.
+
+It'd probably be easier to use a list format for the fields, e.g.:
+
+6 VMCS fields are introduced for CET:
+
+  - {HOST,GUEST}_S_CET: stores CET settings for supervisor mode.
+
+  - {HOST,GUEST}_SSP: stores shadow stack pointers for supervisor mode.
+
+  - {HOST,GUEST}_INTR_SSP_TABLE: stores the based address of the shadow
+                                 stack pointer table.
+
+> If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host's CET MSRs are restored
+> from below VMCS fields at VM-Exit:
+> - HOST_S_CET
+> - HOST_SSP
+> - HOST_INTR_SSP_TABLE
+
+Personal preference, I like indenting lists like this with a space or two
+so that the list is clearly delineated.
+
+> If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest's CET MSRs are loaded
+> from below VMCS fields at VM-Entry:
+> - GUEST_S_CET
+> - GUEST_SSP
+> - GUEST_INTR_SSP_TABLE
+> 
+> Apart from VMCS auto-load fields, KVM calls kvm_load_guest_fpu() and
+> kvm_put_guest_fpu() to save/restore the guest CET MSR states at
+> VM exit/entry. XSAVES/XRSTORS are executed underneath these functions
+> if they are supported. The CET xsave area is consolidated with other
+> XSAVE components in thread_struct.fpu field.
+> 
+> When context switch happens during task switch/interrupt/exception etc.,
+> Kernel also relies on above functions to switch CET states properly.
+
+These paragraphs about the FPU and KVM behavior don't belong in this
+patch.
+ 
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+
+Co-developed-by needs to be accompanied by a SOB.  And your SOB should
+be last since you sent the patch.  This comment applies to all patches.
+
+See "12) When to use Acked-by:, Cc:, and Co-developed-by:" in
+Documentation/process/submitting-patches.rst for details (I recommend
+looking at a v5.2-rc* version, a docs update was merged for v5.2).
