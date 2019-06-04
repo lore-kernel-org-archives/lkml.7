@@ -2,144 +2,133 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73898C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D321324871
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B27245C5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfFDKcG (ORCPT
+        id S1727328AbfFDKcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:32:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36837 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfFDKcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:32:05 -0400
-Received: by mail-io1-f69.google.com with SMTP id j6so16114591iom.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:32:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=1m6TKgfavLqedI80h4GeN37aD/ishsl+xGNUcBpfgL0=;
-        b=FnEREQRpcy30uUUp5EWq/I7QuoFnrvznrbmXX8W+pi79GfdbG0r+bfrpiS62wI1E42
-         LTwYp+3xRJF1k6/mQj0XGscVUOeVZnaG2YbGI9TBK0Jvj4bd+J7RLxq+Cvi5SuBdX6h6
-         LXGrQmrT7ZpH84AUhi7J/zVtvPjkA8groHafOx1OZTrB+6N6pIroVsEbPLZ4Ro5Q9NL4
-         CHLVTKF0JPZ+rzkwiSUSNzR23dnUlVZ+AjgkVYqvfvLYU7ORSJr+axRaceOw1p2tH6go
-         Bc90p9OLH6XvHLIvF5Iv7MQNAFK/zdsURbw9P9b+aS3wYpjTTyDNbXricMadgh8iQHmZ
-         ZD2g==
-X-Gm-Message-State: APjAAAXX1ZEgi7iYmgzATZphn1/jpU8gp4ZfAFRBUC7I0mMy6tTW5X0s
-        vjXCy5pwW5xqUZB7mylPOcbDPF+qAyR4iTFwGbHhZ4Xu+UHo
-X-Google-Smtp-Source: APXvYqz2/2fnshkYs6p86u1DujGRHTgNt/I+YtkkqZxQ6GXhexSSXm33EBXprTu9rgy7GjmXUxriRXm1tThlAuwpzgzyKIk/U8EK
+        Tue, 4 Jun 2019 06:32:47 -0400
+Received: from foss.arm.com ([217.140.101.70]:39946 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbfFDKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:32:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7184C80D;
+        Tue,  4 Jun 2019 03:32:46 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E84873F246;
+        Tue,  4 Jun 2019 03:32:44 -0700 (PDT)
+Subject: Re: [PATCH] irqchip: ti-sci-inta: Fix kernel crash if
+ irq_create_fwspec_mapping fail
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, lokeshvutla@ti.com,
+        tglx@linutronix.de, jason@lakedaemon.net
+Cc:     nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190604101751.8265-1-peter.ujfalusi@ti.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <b2e32aa1-3f85-cbd2-d0b4-4eb67c681513@arm.com>
+Date:   Tue, 4 Jun 2019 11:32:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a24:3cb:: with SMTP id e194mr19206965ite.132.1559644324957;
- Tue, 04 Jun 2019 03:32:04 -0700 (PDT)
-Date:   Tue, 04 Jun 2019 03:32:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f71859058a7cfdc8@google.com>
-Subject: KMSAN: uninit-value in mii_nway_restart
-From:   syzbot <syzbot+1f53a30781af65d2c955@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190604101751.8265-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 04/06/2019 11:17, Peter Ujfalusi wrote:
+> irq_create_fwspec_mapping() can fail, returning 0 as parent_virq. In this
+> case vint_desc is going to be NULL in ti_sci_inta_alloc_irq() which will
+> cause NULL pointer dereference.
+> 
+> Also note that irq_create_fwspec_mapping() returns 'unsigned int' so the
+> check '<=' was wrong.
+> 
+> Use -EINVAL if irq_create_fwspec_mapping() returned with 0.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/irqchip/irq-ti-sci-inta.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+> index 011b60a49e3f..ef4d625d2d80 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -159,9 +159,9 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+>  	parent_fwspec.param[1] = vint_desc->vint_id;
+>  
+>  	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
+> -	if (parent_virq <= 0) {
+> +	if (parent_virq == 0) {
+>  		kfree(vint_desc);
+> -		return ERR_PTR(parent_virq);
+> +		return ERR_PTR(-EINVAL);
+>  	}
+>  	vint_desc->parent_virq = parent_virq;
+>  
+> 
 
-syzbot found the following crash on:
+Nice one. I've queued it as part of the stuff I need to send to Thomas
+at the end of the week.
 
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=1180360ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link: https://syzkaller.appspot.com/bug?extid=1f53a30781af65d2c955
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a2b4f2a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107f4e86a00000
+Thanks,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1f53a30781af65d2c955@syzkaller.appspotmail.com
-
-ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
-write reg index 0x000d: -71
-ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
-write reg index 0x000e: -71
-ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
-write reg index 0x000d: -71
-ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to  
-write reg index 0x000e: -71
-ax88179_178a 1-1:0.186 (unnamed net_device) (uninitialized): Failed to read  
-reg index 0x0000: -71
-==================================================================
-BUG: KMSAN: uninit-value in mii_nway_restart+0x141/0x260  
-drivers/net/mii.c:467
-CPU: 1 PID: 3353 Comm: kworker/1:2 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  mii_nway_restart+0x141/0x260 drivers/net/mii.c:467
-  ax88179_bind+0xee3/0x1a10 drivers/net/usb/ax88179_178a.c:1329
-  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----buf.i@ax88179_mdio_read
-Variable was created at:
-  __ax88179_read_cmd drivers/net/usb/ax88179_178a.c:199 [inline]
-  ax88179_read_cmd drivers/net/usb/ax88179_178a.c:311 [inline]
-  ax88179_mdio_read+0x7b/0x240 drivers/net/usb/ax88179_178a.c:369
-  mii_nway_restart+0xcf/0x260 drivers/net/mii.c:465
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+	M.
+-- 
+Jazz is not dead. It just smells funny...
