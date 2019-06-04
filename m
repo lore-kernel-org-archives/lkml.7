@@ -2,123 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C82C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB1EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2D724A1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1Y75DbJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7B34D24A2D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfFDK5Q (ORCPT
+        id S1727401AbfFDK6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:57:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53314 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfFDK5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:57:16 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d17so6632538wmb.3;
-        Tue, 04 Jun 2019 03:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/TBGnrvBO8R4YOzP+ioN3jhKnsDYr+XSV9wyo9XT2cM=;
-        b=c1Y75DbJftmCFd1zZRhUFfJkVj+XCLI/AbLy0eVn3VlmhT3fhl3YPHwileG+OWqkff
-         GeGVum2127pNQaA9zWtDLIGm+XOHUgG8a1XDj1ynCk2/0cO41J0AkZxkn++++mwMzGD7
-         4b1cObVF5SenNCbirhNCSLGFGSsOwy0RybvU7i84iRLGquKO5PcGfP90bUwkHteTyKva
-         gGLGSvB3YW/24VQB+4pIrTiPywfEyM2tYs4FOaai6D+/YjyIkVsDSM7tJUkPYVFnpomz
-         vN7BN/0xVniXTdciQGw3lmcbuPsri1ImFtv057y7RiGN73C2zC08hIPbeBdIVMcbKfJH
-         +uXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/TBGnrvBO8R4YOzP+ioN3jhKnsDYr+XSV9wyo9XT2cM=;
-        b=i2aAqTS1D2xO/U5X6x/edfK040uO6hcHl/LE1eo1jAvPTLIDk4WUe9JUNSD0sGdmn3
-         yOfCPTcagwHmTc+zVd2Jop8vIneKgYjzRe4zDKizg/+UYyGdWirjw9ex8cJiMyOQQn0z
-         JP73euLXsz8iqGRu9a0NPDKv7kFESpPyUQUjiZYl+hQBUXfu+I1LsiAL0FBAaXHmvw23
-         HceKCuMKYoIdC75W1shl0bmKdPnLM/LGZxHEfvrllvnPUfCymxZkXuaB22DdrJ9WmAgj
-         LMHhJTBCqAD9tedb007HbCmVBp8vI5zqFIm34dISn703XdvR6aKQQm+07yU9CPTFMlzK
-         9GGw==
-X-Gm-Message-State: APjAAAWylr/brovwx1HpYHFSR24oaLe4xJqK8HAfxwQpvQADn3Qel8DV
-        FUB5iFZovGoGRNbyNjvedxE=
-X-Google-Smtp-Source: APXvYqx2pvgQkaBCqfnCKIE4+7ZZdoGxY+UXLpi416N3pze9wYqpcaOrMc3qX0gCG9A+5GXwviBEmQ==
-X-Received: by 2002:a1c:f21a:: with SMTP id s26mr5582881wmc.163.1559645834203;
-        Tue, 04 Jun 2019 03:57:14 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id n4sm10775630wmk.41.2019.06.04.03.57.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 03:57:13 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 12:57:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/16] PM / devfreq: tegra: Don't ignore clk errors
-Message-ID: <20190604105712.GD16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-5-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-5-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 4 Jun 2019 06:58:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62569 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbfFDK6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:58:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 03:58:32 -0700
+X-ExtLoop1: 1
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga008.jf.intel.com with ESMTP; 04 Jun 2019 03:58:29 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH net-next v6 0/5] net: stmmac: enable EHL SGMII
+Date:   Wed,  5 Jun 2019 02:58:51 +0800
+Message-Id: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch-set is to enable Ethernet controller
+(DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+The DW Ethernet PCS is the Physical Coding Sublayer that is between Ethernet
+MAC and PHY and uses MDIO Clause-45 as Communication.
 
---48TaNjbzBVislYPb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Selttests results:
+root@intel-corei7-64:~# ethtool -t eth0
+The test result is PASS
+The test extra info:
+ 1. MAC Loopback                 0
+ 2. PHY Loopback                 -95
+ 3. MMC Counters                 0
+ 4. EEE                          -95
+ 5. Hash Filter MC               0
+ 6. Perfect Filter UC            0
+ 7. MC Filter                    0
+ 8. UC Filter                    0
+ 9. Flow Control                 0
 
-On Thu, May 02, 2019 at 02:38:03AM +0300, Dmitry Osipenko wrote:
-> The clk_set_min_rate() could fail and in this case clk_set_rate() sets
-> rate to 0, which may drop EMC rate to minimum and make machine very
-> difficult to use.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
+Kweh Hock Leong (1):
+  net: stmmac: enable clause 45 mdio support
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Ong Boon Leong (3):
+  net: stmmac: introducing support for DWC xPCS logics
+  net: stmmac: add xpcs function hooks into main driver and ethtool
+  net: stmmac: add xPCS functions for device with DWMACv5.1
 
---48TaNjbzBVislYPb
-Content-Type: application/pgp-signature; name="signature.asc"
+Voon Weifeng (1):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
 
------BEGIN PGP SIGNATURE-----
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  34 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.c       | 208 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.h       |  51 +++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |  42 ++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  50 +++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 139 ++++++++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  40 +++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 111 +++++++++++
+ include/linux/phy.h                                |   2 +
+ include/linux/stmmac.h                             |   3 +
+ 14 files changed, 648 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2TogACgkQ3SOs138+
-s6HPQA/6AikYDFOqfBGBSOAYrjtU4L+1ThqX2wVgtvUgiyrO3yuj2hiGpLKHjlz1
-klMtRdjUTW7TrfAyhH7G/LCui5PrLcHq8VdavnhvKokoHJXRMsmurAITlOl7l9E0
-KPLObjGrUwBAUaU5Ktk4Ni/VK8FkBB8hkePiz1kJrZHBF0wPUGTq7c409CBoZ4Ug
-dzNtGfBzW728QIoMOfIJ2RQN95QFULCt0jpablIHMyXFP5Lc4XvFI51Cl1/eq146
-+9v6gJmUAXb1DMdAGHFclyLGR1eUCoxvfK2Ghb+FUTMJlLt6n/XhEFZAk3ulKTgF
-iD+J5tUqmv2XgEeGl+GGObOQbiVWAUuYQziJIAsbFsSXQBhNHdYV1TdBPK7hb4tn
-WNfm0s9XRo/6m60r8syUbaFOmSZWIF37XhLmw+ScnZJ0k3iHpo0FXuA338EWXkmU
-NBPHkh32iRrUeYub4tuKeSbEi5taG2ZNO4boE73pdzCfHq/h3Ndfqxj09t6y7A9t
-m/FMYsMZXDy7thSetWKAQ9tmYQnnU7PoCh5kE45QowkVQEl9pv/rh3rgl7VPCshq
-v7wkFd3wzcMyoer/G26m5tFnetPDOsrSampkZrdCoCWrCA420e62E39tm1BsL/Js
-Bmc9So5yijDScVtMA6ZQ/TTvpnwoiQjLgn+A0ATndNHDteYE4Cw=
-=w8OB
------END PGP SIGNATURE-----
+-- 
+Changelog v6:
+*Added missing selftests entry in dwmac510_xpcs_ops
+*Applied more reversed christmas tree
+Changelog v5:
+*Cosmetic touch up
+*Change axi_wr_osr_lmt and axi_rd_osr_lmt value to 1 since the register
+ has a default value of 1
+Changelog v4:
+*Rebased to latest net-next
+Changelog v3:
+*Applied reversed christmas tree
+Changelog v2:
+*Added support for the C37 AN for 1000BASE-X and SGMII (MAC side SGMII only)
+*removed and submitted the fix patch to net
+ "net: stmmac: dma channel control register need to be init first"
+*Squash the following 2 patches and move it to the end of the patch set:
+ "net: stmmac: add EHL SGMII 1Gbps platform data and PCI ID"
+ "net: stmmac: add xPCS platform data for EHL"
+1.9.1
 
---48TaNjbzBVislYPb--
