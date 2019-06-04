@@ -2,137 +2,144 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729B9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F5DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DE424B44
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559655739;
-	bh=bZNqVO8f2ylblrO+c28v5AyhWdCQSWSKn5ngf4Aj5NE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OyVDcjtlhwRtBopOvfLpprnbScnSFfDCwI+TtfT3xsx5TMwDYzOz8dGokBzs0/hOo
-	 6m3tdoQigpUeogAdplTyVN7jVEfhpLYwXJf5YLrfX8ysjZJVzSZ/ZdOnXYOs9qpYAk
-	 2DtqbgaaixIIG4AeUb+2Z1UCSowQRqSykdIX6knc=
+	by mail.kernel.org (Postfix) with ESMTP id 389212462B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b9g0hMic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfFDNmS (ORCPT
+        id S1727557AbfFDNmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfFDNmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:42:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A27424B0A;
-        Tue,  4 Jun 2019 13:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559655736;
-        bh=bZNqVO8f2ylblrO+c28v5AyhWdCQSWSKn5ngf4Aj5NE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=enrOrWMyuu5hZJrGcow0Dqzo9DGi2h086EaQngbQdQHsC81UHjNz5BLsqZuzI6hLP
-         QEFG1Y3IHq043mikzia76U0mRvrrmRHW9V3jvNBFAdihVK/YAEZIm3LwgCSbOwUH2A
-         XrnZS/VaMwtJ/MA4/h9Nadbue81MOSrRhf1SMeHU=
-Date:   Tue, 4 Jun 2019 15:42:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-Message-ID: <20190604134213.GA26263@kroah.com>
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
- <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
- <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
- <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+        Tue, 4 Jun 2019 09:42:33 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35838 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727129AbfFDNmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:42:33 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54DfteG014985;
+        Tue, 4 Jun 2019 15:41:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=M1ARtYLXli88iDKYpkMnq7TdIq5neeJeurB8IVq3Y8M=;
+ b=b9g0hMiciQtFL5y2yOY571VXhnDx2lIN/CI7j+1MLpKo1hrGXeSH497fap8dykQRQigX
+ 5zC0ptZgKu3QpKYo/dSuF/bywTIktJ0N1OQK6gPHDE+Q4fGPxm/oglW40BWHia+02+Yf
+ dJE6nj4/ah802DrCqnbpweoyHTZpFes4l6OGcXBVtO/K86WFtANxHqVvRnyWV1KkCRnp
+ 3tYasdyHASH/fqtLBw6FH6A9TM0z75LgXQcdIytLXF75wWfGpY4rdDhXcyS6Fam9BFS0
+ dpCJjP+1epNmXoLPgp6uCfpf1GEZczW4Z5oDWXEJBAkehXQa8+wiY6i3wlnC/kW6A3Xe YA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sunds15t3-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 04 Jun 2019 15:41:56 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6908F70;
+        Tue,  4 Jun 2019 13:41:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 36F7D2AEA;
+        Tue,  4 Jun 2019 13:41:47 +0000 (GMT)
+Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Jun
+ 2019 15:41:47 +0200
+Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
+ SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
+ 15.00.1347.000; Tue, 4 Jun 2019 15:41:46 +0200
+From:   Erwan LE RAY <erwan.leray@st.com>
+To:     Borut Seljak <borut.seljak@t-2.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "\"; linux-arm-kernel\"@lists.infradead.org" 
+        <"; linux-arm-kernel"@lists.infradead.org>
+Subject: Re: Fwd: [PATCH] serial: stm32: fix a recursive locking in
+ stm32_config_rs485
+Thread-Topic: Fwd: [PATCH] serial: stm32: fix a recursive locking in
+ stm32_config_rs485
+Thread-Index: AQHVGr0egfGBr+I5bUuvhxEmcTN9eaaLX30A
+Date:   Tue, 4 Jun 2019 13:41:46 +0000
+Message-ID: <41dddd5f-5c1c-3346-890a-8018f26ebd49@st.com>
+References: <20190604095452.6360-1-borut.seljak@t-2.net>
+ <f2a264ac-e334-63b7-18c9-e45cde7bdf95@st.com>
+In-Reply-To: <f2a264ac-e334-63b7-18c9-e45cde7bdf95@st.com>
+Accept-Language: en-US, fr-FR
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.46]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <524BAF3F71F59E4E93DCC9EEEDA70D24@st.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:48:12PM +0900, Masahiro Yamada wrote:
-> On Tue, Jun 4, 2019 at 8:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Jun 4, 2019 at 1:23 PM Joe Perches <joe@perches.com> wrote:
-> > >
-> > > On Tue, 2019-06-04 at 20:13 +0900, Masahiro Yamada wrote:
-> > > > On the other hand, uapi headers are written in more strict C, where
-> > > > the C++ comment style is forbidden.
-> > >
-> > > Is this a real problem for any toolchain?
-> >
-> > There is likely some code that is built with -Wpedandic -Werror --std=c89
-> > or similar. Since glibc allows this combination for its own headers, it seems
-> > best to also allow it in kernel headers that may be included by libc headers
-> > or by applications, at least where it does not hurt.
-> >
-> > Realistically though, we probably assume c99 or gnu89 in user space
-> > headers anyway, since there is no 'long long' in earlier standards.
-> >
-> >        Arnd
-> 
-> In fact, I detected this issue by the following patch:
-> https://patchwork.kernel.org/patch/10974669/
-> 
-> When I worked on it, I wondered which
-> c-dialect flags should be used.
-> 
-> This code:
-> 
-> > # Unlike the kernel space, uapi headers are written in more strict C.
-> > #  - Forbid C++ style comments
-> > #  - Use '__inline', '__asm__' instead of 'inline', 'asm'
-> > #
-> > # -std=c90 (equivalent to -ansi) catches the violation of those.
-> > # We cannot go as far as adding -Wpedantic since it emits too many warnings.
-> > #
-> > # REVISIT: re-consider the proper set of compiler flags for uapi compile-test.
-> >
-> > UAPI_CFLAGS := -std=c90 -Wpedantic -Wall -Werror=implicit-function-declaration
-> 
-> Even "-std=c99 -Wpedantic" emits lots of warnings.
-> 
-> 
-> 
-> I noticed one more thing.
-> 
-> There are two ways to define fixed-width type.
-> 
-> [1] #include <linux/types.h>, __u8, __u16, __u32, __u64
-> 
->       vs
-> 
-> [2] #include <stdint.h>, uint8_t, uint16_t, uint32_t, uint64_t
-> 
-> 
-> Both are used in UAPI headers.
-> IIRC, <stdint.h> was standardized by C99.
-> 
-> So, we have already relied on C99 in user-space too.
+Hi Borut,
 
-Just because we have relied on it in the past, does not mean we need to
-keep relying on it.  I have had numerous complaints over the years from
-libc authors that our uapi headers are _NOT_ able to be directly
-consumed by them.  They all end up having to fix things up and include
-local "sanitized" copies.
+Please add the following line in the commit message (before your=20
+sign-off) in a V2 of your patch:
 
-So any work we can do here to make them more sane and work properly
-everywhere is a good thing, as right now, they are broken.
+fixes: 1bcda09d291081 ("serial: stm32: add support for RS485 hardware=20
+control mode")
 
-thanks,
+I'm OK with the patch itself.
 
-greg k-h
+Erwan.
+
+
+Subject: [PATCH] serial: stm32: fix a recursive locking in
+> stm32_config_rs485
+> Date: Tue,  4 Jun 2019 11:54:51 +0200
+> From: Borut Seljak <borut.seljak@t-2.net>
+> CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+> <alexandre.torgue@st.com>, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+> borut.seljak@t-2.net, linux-serial@vger.kernel.org, Jiri Slaby
+> <jslaby@suse.com>, linux-stm32@st-md-mailman.stormreply.com,
+> linux-arm-kernel@lists.infradead.org
+>
+> Remove spin_lock_irqsave in stm32_config_rs485, it cause recursive lockin=
+g.
+> Already locked in uart_set_rs485_config.
+>
+> Signed-off-by: Borut Seljak <borut.seljak@t-2.net>
+> ---
+>   drivers/tty/serial/stm32-usart.c | 2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/tty/serial/stm32-usart.c
+> b/drivers/tty/serial/stm32-usart.c
+> index e8d7a7bb4339..da373a465f51 100644
+> --- a/drivers/tty/serial/stm32-usart.c
+> +++ b/drivers/tty/serial/stm32-usart.c
+> @@ -107,7 +107,6 @@ static int stm32_config_rs485(struct uart_port *port,
+>   	bool over8;
+>   	unsigned long flags;
+>   -	spin_lock_irqsave(&port->lock, flags);
+>   	stm32_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
+>    	port->rs485 =3D *rs485conf;
+> @@ -147,7 +146,6 @@ static int stm32_config_rs485(struct uart_port *port,
+>   	}
+>    	stm32_set_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
+> -	spin_unlock_irqrestore(&port->lock, flags);
+>    	return 0;
+>   }=
