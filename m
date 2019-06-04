@@ -2,145 +2,216 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C00FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83954C04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F58C259B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D4423C07
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 01:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WY2Dv1TZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfFDBOQ (ORCPT
+        id S1726410AbfFDBaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 21:14:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbfFDBOP (ORCPT
+        Mon, 3 Jun 2019 21:30:01 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:23066 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfFDBaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 21:14:15 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x541CCVU136742
-        for <linux-kernel@vger.kernel.org>; Mon, 3 Jun 2019 21:14:14 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2swefmgmy9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:14:14 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 4 Jun 2019 02:14:13 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 02:14:09 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x541E8Gw18284804
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 01:14:08 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA40278064;
-        Tue,  4 Jun 2019 01:14:07 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27B4E7805C;
-        Tue,  4 Jun 2019 01:14:04 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.162.142])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue,  4 Jun 2019 01:14:03 +0000 (GMT)
-References: <87zhrj8kcp.fsf@morokweng.localdomain> <87womn8inf.fsf@morokweng.localdomain> <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org> <87tvfvbwpb.fsf@morokweng.localdomain> <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190520090939-mutt-send-email-mst@kernel.org>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-In-reply-to: <20190520090939-mutt-send-email-mst@kernel.org>
-Date:   Mon, 03 Jun 2019 22:13:59 -0300
+        Mon, 3 Jun 2019 21:30:00 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190604012945epoutp01368aa7e834a9d9fb04bec6d1c4571040~k2qfFpP4G1519615196epoutp019
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 01:29:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190604012945epoutp01368aa7e834a9d9fb04bec6d1c4571040~k2qfFpP4G1519615196epoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559611785;
+        bh=+D/nJ711q8xI2Qg5OY4D/1Bwae1+mpml8ufa46iKuH0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=WY2Dv1TZ9aLqSW+bTUPTZCjFLMAWoN0tffP3WM4AxIhTtIqOT6Cm7Q6Mp/5ANtt7x
+         KBqnmQBMS82Hr1+L0G23KEVbV4/w+mDi3WbIUsbrUHhj/FbRQA70RQuNNqpTIC9d72
+         nqGPdgORsYws9vaY8Z5J9QOF+c38EB9O64F4fgoU=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190604012941epcas1p1afe4518d6d508e36ce820f9b2b58b9a5~k2qb-czHJ0549305493epcas1p1E;
+        Tue,  4 Jun 2019 01:29:41 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D8.81.04142.189C5FC5; Tue,  4 Jun 2019 10:29:37 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190604012936epcas1p1cd77444b71c8af11bfd5c133032f2658~k2qXcGjl42511625116epcas1p1K;
+        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190604012936epsmtrp1c97223751318d720a8bcdc991f9ed0f0~k2qXbXuWd2985129851epsmtrp1U;
+        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
+X-AuditID: b6c32a36-cf9ff7000000102e-26-5cf5c981596a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A4.71.03692.089C5FC5; Tue,  4 Jun 2019 10:29:36 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190604012936epsmtip24b9e456115d0b7ff60eb1b52b9143769~k2qXSwF5O0107001070epsmtip2m;
+        Tue,  4 Jun 2019 01:29:36 +0000 (GMT)
+Subject: Re: [PATCH] extcon: gpio: Request reasonable interrupts
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <28b92b86-19ac-0bf3-57d8-c7ab4557a45b@samsung.com>
+Date:   Tue, 4 Jun 2019 10:31:42 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19060401-0004-0000-0000-00001517D37A
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011210; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01212884; UDB=6.00637431; IPR=6.00993944;
- MB=3.00027172; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-04 01:14:12
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060401-0005-0000-0000-00008BEB7B8D
-Message-Id: <877ea26tk8.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040004
+In-Reply-To: <20190530183932.4132-1-linus.walleij@linaro.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdlhTX7fx5NcYgy3HRC2m/FnOZLF5/h9G
+        i8u75rBZ3G5cwebA4nHn2h42j74tqxg9Pm+SC2COyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneO
+        NzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAdqmpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFV
+        Si1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOOP+bv2CFbMWMKS/YGxiniHcxcnJICJhI
+        vL/WxtLFyMUhJLCDUWLKrpusEM4nRonW8y1QmW+MEt8/b2OGabnc0scEkdjLKPGh6TxUy3tG
+        ianXz7KBVAkLOEjMuv6ZHcQWEQiX2HfsAFg3s4CNxMvtnWA1bAJaEvtf3ACz+QUUJa7+eMzY
+        xcjBwStgJ7HslhGIySKgIjHrjChIhahAhMSXnZsYQWxeAUGJkzOfsIDYnAK2Eg+ubGCDmC4u
+        cevJfCYIW16ieetsZpDTJATOsEkcuXQF6gEXiUkXfrFC2MISr45vYYewpSRe9rdB2dUSK08e
+        YYNo7mCU2LL/AlSDscT+pZOZQI5jFtCUWL9LHyKsKLHz91xGiMV8Eu++9rCClEgI8Ep0tAlB
+        lChLXH5wlwnClpRY3N7JNoFRaRaSd2YheWEWkhdmISxbwMiyilEstaA4Nz212LDACDmuNzGC
+        06GW2Q7GRed8DjEKcDAq8fBWiH+NEWJNLCuuzD3EKMHBrCTCm3j7S4wQb0piZVVqUX58UWlO
+        avEhRlNgYE9klhJNzgem6rySeENTI2NjYwsTQzNTQ0Mlcd547psxQgLpiSWp2ampBalFMH1M
+        HJxSDYzCXlIuc6yCgift78wzC5er6tHqmyR62vjAAeNztaKX7B0yTnXEaVz9yX6gJMmv2Wjq
+        TpZHu6zMj5z/nrJSqE/x6duj11bpNhita6vZGaqz+TaX+rwVrYd3Trd2Ofty34uuf0rFgdUv
+        Hi49lsCR8pMp93iK0hXh5YKFd1T0lCu+Zk1Pmn+DbakSS3FGoqEWc1FxIgCSPzvJnQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsWy7bCSvG7Dya8xBvuOG1pM+bOcyWLz/D+M
+        Fpd3zWGzuN24gs2BxePOtT1sHn1bVjF6fN4kF8AcxWWTkpqTWZZapG+XwJVx/jd/wQrZihlT
+        XrA3ME4R72Lk5JAQMJG43NLH1MXIxSEksJtR4tH224wQCUmJaRePMncxcgDZwhKHDxeDhIUE
+        3jJKLJirC2ILCzhIzLr+mR3EFhEIl5i94D0ziM0sYCPxcnsnG8TMCYwSDb9+giXYBLQk9r+4
+        wQZi8wsoSlz98ZgRZD6vgJ3EsltGICaLgIrErDOiIBWiAhESs3c1sIDYvAKCEidnPgGzOQVs
+        JR5c2cAGsUpd4s+8S1BrxSVuPZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC
+        4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOCo0NLcwXh5SfwhRgEORiUe3grxrzFCrIllxZW5
+        hxglOJiVRHgTb3+JEeJNSaysSi3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyW
+        iYNTqoHR/HDspFcfU2Y0h35fuWHiH4+1rMvWbvmt5ztrRei5u5H+ZS1VcxnzHgV+u/V62dGw
+        mYe5RbV0IrZJZTb73Lr/tanrzJVtbDUR+TtepE1/LiV+8dy9TTOr7tZE2kVv+ncjeoL90YKL
+        Ivw/bj4KVZ8bezhe4cjeiXemzJM0VErpviFoc/U6a/8jVyWW4oxEQy3mouJEALTEsKaGAgAA
+X-CMS-MailID: 20190604012936epcas1p1cd77444b71c8af11bfd5c133032f2658
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256
+References: <CGME20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256@epcas5p4.samsung.com>
+        <20190530183932.4132-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
+
+On 19. 5. 31. 오전 3:39, Linus Walleij wrote:
+> The only thing that makes sense is to request a falling edge interrupt
+> if the line is active low and a rising edge interrupt if the line is
+> active high, so just do that and get rid of the assignment from
+> platform data. The GPIO descriptor knows if the line is active high
+> or low.
+> 
+> Also make irq a local variable in probe(), it's not used anywhere else.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/extcon/extcon-gpio.c | 27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+> index 13ba3a6e81d5..a0674f1f3849 100644
+> --- a/drivers/extcon/extcon-gpio.c
+> +++ b/drivers/extcon/extcon-gpio.c
+> @@ -30,26 +30,22 @@
+>  /**
+>   * struct gpio_extcon_data - A simple GPIO-controlled extcon device state container.
+>   * @edev:		Extcon device.
+> - * @irq:		Interrupt line for the external connector.
+>   * @work:		Work fired by the interrupt.
+>   * @debounce_jiffies:	Number of jiffies to wait for the GPIO to stabilize, from the debounce
+>   *			value.
+>   * @gpiod:		GPIO descriptor for this external connector.
+>   * @extcon_id:		The unique id of specific external connector.
+>   * @debounce:		Debounce time for GPIO IRQ in ms.
+> - * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+>   * @check_on_resume:	Boolean describing whether to check the state of gpio
+>   *			while resuming from sleep.
+>   */
+>  struct gpio_extcon_data {
+>  	struct extcon_dev *edev;
+> -	int irq;
+>  	struct delayed_work work;
+>  	unsigned long debounce_jiffies;
+>  	struct gpio_desc *gpiod;
+>  	unsigned int extcon_id;
+>  	unsigned long debounce;
+> -	unsigned long irq_flags;
+>  	bool check_on_resume;
+>  };
+>  
+> @@ -77,6 +73,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>  {
+>  	struct gpio_extcon_data *data;
+>  	struct device *dev = &pdev->dev;
+> +	unsigned long irq_flags;
+> +	int irq;
+>  	int ret;
+>  
+>  	data = devm_kzalloc(dev, sizeof(struct gpio_extcon_data), GFP_KERNEL);
+> @@ -96,9 +94,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>  	data->gpiod = devm_gpiod_get(dev, "extcon", GPIOD_IN);
+>  	if (IS_ERR(data->gpiod))
+>  		return PTR_ERR(data->gpiod);
+> -	data->irq = gpiod_to_irq(data->gpiod);
+> -	if (data->irq <= 0)
+> -		return data->irq;
+> +	irq = gpiod_to_irq(data->gpiod);
+> +	if (irq <= 0)
+> +		return irq;
+> +
+> +	/*
+> +	 * It is unlikely that this is an acknowledged interrupt that goes
+> +	 * away after handling, what we are looking for are falling edges
+> +	 * if the signal is active low, and rising edges if the signal is
+> +	 * active high.
+> +	 */
+> +	if (gpiod_is_active_low(data->gpiod))
+> +		irq_flags = IRQF_TRIGGER_FALLING;
+
+If gpiod_is_active_low(data->gpiod) is true, irq_flags might be
+IRQF_TRIGGER_LOW instead of IRQF_TRIGGER_FALLING. How can we sure
+that irq_flags is always IRQF_TRIGGER_FALLING?
+
+> +	else
+> +		irq_flags = IRQF_TRIGGER_RISING;
+>  
+>  	/* Allocate the memory of extcon devie and register extcon device */
+>  	data->edev = devm_extcon_dev_allocate(dev, &data->extcon_id);
+> @@ -117,8 +126,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>  	 * Request the interrupt of gpio to detect whether external connector
+>  	 * is attached or detached.
+>  	 */
+> -	ret = devm_request_any_context_irq(dev, data->irq,
+> -					gpio_irq_handler, data->irq_flags,
+> +	ret = devm_request_any_context_irq(dev, irq,
+> +					gpio_irq_handler, irq_flags,
+>  					pdev->name, data);
+>  	if (ret < 0)
+>  		return ret;
+> 
 
 
-Michael S. Tsirkin <mst@redhat.com> writes:
-
-> On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
->> I rephrased it in terms of address translation. What do you think of
->> this version? The flag name is slightly different too:
->>
->>
->> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
->>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
->>     with the exception that address translation is guaranteed to be
->>     unnecessary when accessing memory addresses supplied to the device
->>     by the driver. Which is to say, the device will always use physical
->>     addresses matching addresses used by the driver (typically meaning
->>     physical addresses used by the CPU) and not translated further. This
->>     flag should be set by the guest if offered, but to allow for
->>     backward-compatibility device implementations allow for it to be
->>     left unset by the guest. It is an error to set both this flag and
->>     VIRTIO_F_ACCESS_PLATFORM.
->
->
-> OK so VIRTIO_F_ACCESS_PLATFORM is designed to allow unpriveledged
-> drivers. This is why devices fail when it's not negotiated.
-
-Just to clarify, what do you mean by unprivileged drivers? Is it drivers
-implemented in guest userspace such as with VFIO? Or unprivileged in
-some other sense such as needing to use bounce buffers for some reason?
-
-> This confuses me.
-> If driver is unpriveledged then what happens with this flag?
-> It can supply any address it wants. Will that corrupt kernel
-> memory?
-
-Not needing address translation doesn't necessarily mean that there's no
-IOMMU. On powerpc we don't use VIRTIO_F_ACCESS_PLATFORM but there's
-always an IOMMU present. And we also support VFIO drivers. The VFIO API
-for pseries (sPAPR section in Documentation/vfio.txt) has extra ioctls
-to program the IOMMU.
-
-For our use case, we don't need address translation because we set up an
-identity mapping in the IOMMU so that the device can use guest physical
-addresses.
-
-If the guest kernel is concerned that an unprivileged driver could
-jeopardize its integrity it should not negotiate this feature flag.
-Perhaps there should be a note about this in the flag definition? This
-concern is platform-dependant though. I don't believe it's an issue in
-pseries.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
