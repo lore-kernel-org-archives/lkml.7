@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A5FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7567CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E7120717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECAF2199C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N8jkDEwp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lqjILHti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfFDNTH (ORCPT
+        id S1727907AbfFDNTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:19:07 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39376 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfFDNTC (ORCPT
+        Tue, 4 Jun 2019 09:19:12 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55114 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbfFDNTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:19:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DIEoq119974;
-        Tue, 4 Jun 2019 08:18:14 -0500
+        Tue, 4 Jun 2019 09:19:06 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DIrkc028239;
+        Tue, 4 Jun 2019 08:18:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654294;
-        bh=iGGz8aJS305f8zkEMQQLmC9ZNt7J1jEUCbTcSQRPp8c=;
+        s=ti-com-17Q1; t=1559654333;
+        bh=3RfvV7ZEVCE0D/QH1puvv34eRoVr5xAL88W1PeCX6A4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=N8jkDEwpWuoOdA9t6AYdQYMuDLTffL+VUteLJp1OVzUM3ExXPoBOaemiDe1fXwRLR
-         Glb+o8SJQmgSkmPXTcE5fy+Tosxatv+/DcmsyY7omogGVF2OYIUCZp5iShHHYCT7rO
-         lpwRrvi1TP5cLGxqyTOADGGeWmDgY/RHw4XiW754=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DIENZ009122
+        b=lqjILHti8GW+J9yPp0G2kM2m0NZYyrO/BSfrIqPN8c7pyHo1d+TOvideKNaLfh4WW
+         QE1pti+R/YsfDiRspBX5/hRgrw5rwaxjTshIUyRxDvBxwCaDvYEgIY1SY8BH5SaYEB
+         gX5DqC/pDEPB++4O+vUUISSafhwcpPPycN31ytEA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DIraS044727
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:18:14 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:18:53 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:18:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:18:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:18:14 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:18:52 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGW098972;
-        Tue, 4 Jun 2019 08:18:09 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGd098972;
+        Tue, 4 Jun 2019 08:18:48 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -63,9 +63,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 16/30] PCI: endpoint: Assign function number of each PF in EPC  core
-Date:   Tue, 4 Jun 2019 18:45:02 +0530
-Message-ID: <20190604131516.13596-17-kishon@ti.com>
+Subject: [RFC PATCH 23/30] of/platform: Export of_platform_device_create_pdata()
+Date:   Tue, 4 Jun 2019 18:45:09 +0530
+Message-ID: <20190604131516.13596-24-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -77,144 +77,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The endpoint core relies on the drivers that invoke the API to bind
-a controller driver with a function driver to allocate and assign a
-function number to each physical function. Ideally the function
-numbers should be assinged by EPC core for each of the physical
-function that is bound to the EPC.
-
-Assign function number of each PF in EPC core and remove function
-number allocation in endpoint configfs.
+Export of_platform_device_create_pdata() to be used by drivers to
+create child devices with the given platform data. This can be used
+by platform specific driver to send platform data core driver. For e.g.,
+this will be used by TI's J721E SoC specific PCIe driver to send
+->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/endpoint/pci-ep-cfs.c   | 27 +++++----------------------
- drivers/pci/endpoint/pci-epc-core.c | 12 +++++++++++-
- include/linux/pci-epc.h             |  2 ++
- 3 files changed, 18 insertions(+), 23 deletions(-)
+ drivers/of/platform.c       | 9 ++++-----
+ include/linux/of_platform.h | 3 +++
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index d1288a0bd530..e7e8367eead1 100644
---- a/drivers/pci/endpoint/pci-ep-cfs.c
-+++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -29,7 +29,6 @@ struct pci_epc_group {
- 	struct config_group group;
- 	struct pci_epc *epc;
- 	bool start;
--	unsigned long function_num_map;
- };
- 
- static inline struct pci_epf_group *to_pci_epf_group(struct config_item *item)
-@@ -89,37 +88,22 @@ static int pci_epc_epf_link(struct config_item *epc_item,
- 			    struct config_item *epf_item)
- {
- 	int ret;
--	u32 func_no = 0;
- 	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item);
- 	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
- 	struct pci_epc *epc = epc_group->epc;
- 	struct pci_epf *epf = epf_group->epf;
- 
--	func_no = find_first_zero_bit(&epc_group->function_num_map,
--				      BITS_PER_LONG);
--	if (func_no >= BITS_PER_LONG)
--		return -EINVAL;
--
--	set_bit(func_no, &epc_group->function_num_map);
--	epf->func_no = func_no;
--
- 	ret = pci_epc_add_epf(epc, epf);
- 	if (ret)
--		goto err_add_epf;
-+		return ret;
- 
- 	ret = pci_epf_bind(epf);
--	if (ret)
--		goto err_epf_bind;
-+	if (ret) {
-+		pci_epc_remove_epf(epc, epf);
-+		return ret;
-+	}
- 
- 	return 0;
--
--err_epf_bind:
--	pci_epc_remove_epf(epc, epf);
--
--err_add_epf:
--	clear_bit(func_no, &epc_group->function_num_map);
--
--	return ret;
- }
- 
- static void pci_epc_epf_unlink(struct config_item *epc_item,
-@@ -134,7 +118,6 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
- 
- 	epc = epc_group->epc;
- 	epf = epf_group->epf;
--	clear_bit(epf->func_no, &epc_group->function_num_map);
- 	pci_epf_unbind(epf);
- 	pci_epc_remove_epf(epc, epf);
- }
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index eea07f9ec5ff..e5d8d8370686 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -471,6 +471,8 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312fd85b..94e0f733461a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -169,11 +169,9 @@ EXPORT_SYMBOL(of_device_alloc);
+  * Returns pointer to created platform device, or NULL if a device was not
+  * registered.  Unavailable devices will not get registered.
   */
- int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
+-static struct platform_device *of_platform_device_create_pdata(
+-					struct device_node *np,
+-					const char *bus_id,
+-					void *platform_data,
+-					struct device *parent)
++struct platform_device *
++of_platform_device_create_pdata(struct device_node *np, const char *bus_id,
++				void *platform_data, struct device *parent)
  {
-+	u32 func_no = 0;
-+
- 	if (epf->epc)
- 		return -EBUSY;
+ 	struct platform_device *dev;
  
-@@ -480,9 +482,16 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
- 	if (epf->func_no > epc->max_functions - 1)
- 		return -EINVAL;
- 
-+	mutex_lock(&epc->lock);
-+	func_no = find_first_zero_bit(&epc->function_num_map,
-+				      BITS_PER_LONG);
-+	if (func_no >= BITS_PER_LONG)
-+		return -EINVAL;
-+
-+	set_bit(func_no, &epc->function_num_map);
-+	epf->func_no = func_no;
- 	epf->epc = epc;
- 
--	mutex_lock(&epc->lock);
- 	list_add_tail(&epf->list, &epc->pci_epf);
- 	mutex_unlock(&epc->lock);
- 
-@@ -503,6 +512,7 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
- 		return;
- 
- 	mutex_lock(&epc->lock);
-+	clear_bit(epf->func_no, &epc->function_num_map);
- 	list_del(&epf->list);
- 	mutex_unlock(&epc->lock);
+@@ -203,6 +201,7 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	of_node_clear_flag(np, OF_POPULATED);
+ 	return NULL;
  }
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index a430d02aa1ff..ad118a3f1330 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -89,6 +89,7 @@ struct pci_epc_mem {
-  * @max_functions: max number of functions that can be configured in this EPC
-  * @group: configfs group representing the PCI EPC device
-  * @lock: mutex to protect pci_epc ops
-+ * @function_num_map: bitmap to manage physical function number
-  * @notifier: used to notify EPF of any EPC events (like linkup)
-  */
- struct pci_epc {
-@@ -100,6 +101,7 @@ struct pci_epc {
- 	struct config_group		*group;
- 	/* mutex to protect against concurrent access of EP controller */
- 	struct mutex			lock;
-+	unsigned long			function_num_map;
- 	struct atomic_notifier_head	notifier;
- };
++EXPORT_SYMBOL(of_platform_device_create_pdata);
  
+ /**
+  * of_platform_device_create - Alloc, initialize and register an of_device
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 84a966623e78..0f1f58775086 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -70,6 +70,9 @@ extern int of_platform_device_destroy(struct device *dev, void *data);
+ extern int of_platform_bus_probe(struct device_node *root,
+ 				 const struct of_device_id *matches,
+ 				 struct device *parent);
++extern struct platform_device *
++of_platform_device_create_pdata(struct device_node *np, const char *bus_id,
++				void *platform_data, struct device *parent);
+ #ifdef CONFIG_OF_ADDRESS
+ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
 -- 
 2.17.1
 
