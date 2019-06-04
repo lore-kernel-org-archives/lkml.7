@@ -2,145 +2,176 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC39C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FD8C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B49245BC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YbXtk1gZ"
+	by mail.kernel.org (Postfix) with ESMTP id DBC05245BC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfFDLph (ORCPT
+        id S1727403AbfFDLqW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:45:37 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46927 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfFDLpg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:45:36 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so6507128pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ROpXrP+r2OC9uJKtrd7VeU5I2GEkuLFi73TKRyEYr3w=;
-        b=YbXtk1gZpPouwSYE2Vhs1oY1Y4f37CPgCl4rhCDKDXOACPNCfLr9np6wKfbnqxvNqK
-         net1HG8o5wBQb4vNApxrOerpg8MX7Frcm0nkoJCRedOp4gIlsU8B+szPQLnyAp7uDFz6
-         18a5z5D1t2cCXPLwVyjN57+1xoFuuaOeWrZS3QYEL6m6NSRbpHdyTtJVRsjz8hDvO7ay
-         x4MfN3T0GXyhVOPDl8Cb4swrSICIbrgdMT9k5w6B73MKVGcGVf0T8Ojj0gm6GQdck4bi
-         ehe9TCYVm49T6ewlmRPV9pTGt0imE7M4Hg2EyyudgsziWrwS3zmaj416nN50DFpNVxSV
-         8gRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ROpXrP+r2OC9uJKtrd7VeU5I2GEkuLFi73TKRyEYr3w=;
-        b=PL0Y158zmhMRfuqlQOQzRuMU6o1DPHkHkR93RiTFWXuq27plDrXoXO77fwZm8K7OMD
-         HtwvDs1fQaXX9caD1vW2WpFYI8RIEgclecxYy7kEBvFiW58AlCOZBncCZ3NSnHQEGd7x
-         9v+BYF7iTAfsdY+jZEreqW4wpXFYwldtil4jY7ztXIZINF5At0NDXRMnULUlVrqmpMxh
-         F2Ii8/fCK4z7d5FeRCjn/TZw25VjFjMBfAMawzaEB+pJC36nGfnqvHPQ6hb8FQ5O9XI+
-         6t2yWadEr+H+7j65XI0ahc8A+XQEHxEvmpns9TlZ1WhQe/b0iO665e8/IDT6pfZ4lTZ0
-         0wlw==
-X-Gm-Message-State: APjAAAUkBVuMKqnFxGxSiBRmyUwYu93qHCMeYVK5bbw0vPuwE7ohUJfq
-        qd+1Z2KMs6UyaGLR5N3x4fv5chpcQPEy+IZUGx+SeA==
-X-Google-Smtp-Source: APXvYqw/MEeiL2bhH+9bBygV1lo6Im71uAjcUSVWx84fFkrTwjlzF36BIb4PZCfj0/vMKrfmiVx/F/2QMSAp/3q5QEs=
-X-Received: by 2002:a17:902:8609:: with SMTP id f9mr33680584plo.252.1559648735444;
- Tue, 04 Jun 2019 04:45:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <097bc300a5c6554ca6fd1886421bb2e0adb03420.1559580831.git.andreyknvl@google.com>
- <8ff5b0ff-849a-1e0b-18da-ccb5be85dd2b@oracle.com> <CAAeHK+xX2538e674Pz25unkdFPCO_SH0pFwFu=8+DS7RzfYnLQ@mail.gmail.com>
- <f6711d31-e52c-473a-d7ad-b2d63131d7a5@oracle.com> <20190603172916.GA5390@infradead.org>
- <7a687a26-fc3e-2caa-1d6a-464f1f7e684c@oracle.com>
-In-Reply-To: <7a687a26-fc3e-2caa-1d6a-464f1f7e684c@oracle.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 4 Jun 2019 13:45:24 +0200
-Message-ID: <CAAeHK+wccK1upfOWxNbZBR0BUWT23VFUFEqRTEp3H+8hXN8yzw@mail.gmail.com>
-Subject: Re: [PATCH v16 01/16] uaccess: add untagged_addr definition for other arches
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Tue, 4 Jun 2019 07:46:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55274 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbfFDLqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:46:21 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD7A630C084B;
+        Tue,  4 Jun 2019 11:46:15 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D23467269;
+        Tue,  4 Jun 2019 11:46:05 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
+        <87h89gjgaf.fsf@oldenburg2.str.redhat.com>
+        <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
+        <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
+        <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com>
+        <875zprm4jo.fsf@oldenburg2.str.redhat.com>
+        <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
+        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
+        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
+Date:   Tue, 04 Jun 2019 13:46:04 +0200
+In-Reply-To: <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Fri, 31 May 2019 14:10:57 -0400
+        (EDT)")
+Message-ID: <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 04 Jun 2019 11:46:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 8:17 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
->
-> On 6/3/19 11:29 AM, Christoph Hellwig wrote:
-> > On Mon, Jun 03, 2019 at 11:24:35AM -0600, Khalid Aziz wrote:
-> >> On 6/3/19 11:06 AM, Andrey Konovalov wrote:
-> >>> On Mon, Jun 3, 2019 at 7:04 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
-> >>>> Andrey,
-> >>>>
-> >>>> This patch has now become part of the other patch series Chris Hellwig
-> >>>> has sent out -
-> >>>> <https://lore.kernel.org/lkml/20190601074959.14036-1-hch@lst.de/>. Can
-> >>>> you coordinate with that patch series?
-> >>>
-> >>> Hi!
-> >>>
-> >>> Yes, I've seen it. How should I coordinate? Rebase this series on top
-> >>> of that one?
-> >>
-> >> That would be one way to do it. Better yet, separate this patch from
-> >> both patch series, make it standalone and then rebase the two patch
-> >> series on top of it.
-> >
-> > I think easiest would be to just ask Linus if he could make an exception
-> > and include this trivial prep patch in 5.2-rc.
-> >
->
-> Andrey,
->
-> Would you mind updating the commit log to make it not arm64 specific and
-> sending this patch out by itself. We can then ask Linus if he can
-> include just this patch in the next rc.
+* Mathieu Desnoyers:
 
-Sure! Just sent it out.
+> ----- On May 31, 2019, at 11:46 AM, Florian Weimer fweimer@redhat.com wrote:
+>
+>> * Mathieu Desnoyers:
+>> 
+>>> Let's break this down into the various sub-issues involved:
+>>>
+>>> 1) How early do we need to setup rseq ? Should it be setup before:
+>>>    - LD_PRELOAD .so constructors ?
+>>>      - Without circular dependency,
+>>>      - With circular dependency,
+>>>    - audit libraries initialization ?
+>>>    - IFUNC resolvers ?
+>>>    - other callbacks ?
+>>>    - memory allocator calls ?
+>>>
+>>> We may end up in a situation where we need memory allocation to be setup
+>>> in order to initialize TLS before rseq can be registered for the main
+>>> thread. I suspect we will end up needing a fallbacks which always work
+>>> for the few cases that would try to use rseq too early in dl/libc startup.
+>> 
+>> I think the answer to that depends on whether it's okay to have an
+>> observable transition from “no rseq kernel support” to “kernel supports
+>> rseq”.
+>
+> As far as my own use-cases are concerned, I only care that rseq is initialized
+> before LD_PRELOAD .so constructors are executed.
 
+<https://sourceware.org/bugzilla/show_bug.cgi?id=14379> is relevant in
+this context.  It requests the opposite behavior from LD_PRELOAD.
+
+> There appears to be some amount of documented limitations for what can be
+> done by the IFUNC resolvers. It might be acceptable to document that rseq
+> might not be initialized yet when those are executed.
+
+The only obstacle is that there are so many places where we could put
+this information.
+
+> I'd like to hear what others think about whether we should care about IFUNC
+> resolvers and audit libraries using restartable sequences TLS ?
+
+In audit libraries (and after dlmopen), the inner libc will have
+duplicated TLS values, so it will look as if the TLS area is not active
+(but a registration has happened with the kernel).  If we move
+__rseq_handled into the dynamic linker, its value will be shared along
+with ld.so with the inner objects.  However, the inner libc still has to
+ensure that its registration attempt does not succeed because that would
+activate the wrong rseq area.
+
+The final remaining case is static dlopen.  There is a copy of ld.so on
+the dynamic side, but it is completely inactive and has never run.  I do
+not think we need to support that because multi-threading does not work
+reliably in this scenario, either.  However, we should skip rseq
+registration in a nested libc (see the rtld_active function).
+
+>>> 4) Inability to touch a TLS variable (__rseq_abi) from ld-linux-*.so.2
+>>>    - Should we extend the dynamic linker to allow such TLS variable to be
+>>>      accessed ? If so, how much effort is required ?
+>>>    - Can we find an alternative way to initialize rseq early during
+>>>      dl init stages while still performing the TLS access from a function
+>>>      implemented within libc.so ?
+>> 
+>> This is again related to the answer for (1).  There are various hacks we
+>> could implement to make the initialization invisible (e.g., computing
+>> the address of the variable using the equivalent of dlsym, after loading
+>> all the initial objects and before starting relocation).  If it's not
+>> too hard to add TLS support to ld.so, we can consider that as well.
+>> (The allocation side should be pretty easy, relocation support it could
+>> be more tricky.)
+>> 
+>>> So far, I got rseq to be initialized before LD_PRELOADed library
+>>> constructors by doing the initialization in a constructor within
+>>> libc.so. I don't particularly like this approach, because the
+>>> constructor order is not guaranteed.
+>> 
+>> Right.
 >
-> Thanks,
-> Khalid
->
+> One question related to use of constructors: AFAIU, if a library depends
+> on glibc, ELF guarantees that the glibc constructor will be executed first,
+> before the other library.
+
+There are some exceptions, like DT_PREINIT_ARRAY functions and
+DF_1_INITFIRST.  Some of these mechanisms we use in the implementation
+itself, so they are not really usable to end users.  Cycles should not
+come into play here.
+
+By default, an object that uses the rseq area will have to link against
+libc (perhaps indirectly), and therefore the libc constructor runs
+first.
+
+> Which leaves us with the execution order of constructors within libc.so,
+> which is not guaranteed if we just use __attribute__ ((constructor)).
+> However, all gcc versions that are required to build recent glibc
+> seem to support a constructor with a "priority" value (lower gets
+> executed first, and those are executed before constructors without
+> priority).
+
+I'm not sure that's the right way to do it.  If we want to happen
+execution in a specific order, we should write a single constructor
+function which is called from _init.  For the time being, we can add the
+call to an appropriately defined inline function early in _init in
+elf/init-first.c (which is shared with Hurd, so Hurd will need some sort
+of stub function).
+
+Thanks,
+Florian
