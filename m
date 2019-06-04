@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57400C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7A3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C05A206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5136206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690756;
-	bh=fjhDZJsyBQxRSiPzjUNxPvagBNxuDS97BMGlYWT8VDQ=;
+	s=default; t=1559690765;
+	bh=7u/5WAQMZbc5TkreaeLjW0MfISjWR/sDS4GUnk1Atfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KPrIDRoct/Ht/AEqsmrvJqzq9sCY2+4mkWAz3uBXu8+7e/DKnDFyaf/nfz3Plhza
-	 WH9YKrPuzdsT1jIyl1V8OaC9TVb/IBYO+SWqpmr4TUeK6c+sRk1xcspiFiXNp9ATwI
-	 WSJH0PcdspRBvb3Ay4ASa2PMWAULoMz5zZUf6RtA=
+	b=U+aRENFYPcMm8/mIZU0U9k5vX82Ppvc2FqpBdK+bCZ4Kc/okAjpNzFfrTQw08bG4t
+	 dGrld0H4uZHw8rrxNimAeFABl3fNIwy056dWKi9P/znL8T8QBKunh/nSGsRUmw1C49
+	 Klx9O9VR9RRMnRtd9S/hZY9keHYGlIGlQokyxeCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfFDXZz (ORCPT
+        id S1728187AbfFDX0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbfFDXZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:48 -0400
+        id S1726597AbfFDXZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6940B208CB;
-        Tue,  4 Jun 2019 23:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4072E2085A;
+        Tue,  4 Jun 2019 23:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690748;
-        bh=fjhDZJsyBQxRSiPzjUNxPvagBNxuDS97BMGlYWT8VDQ=;
+        s=default; t=1559690746;
+        bh=7u/5WAQMZbc5TkreaeLjW0MfISjWR/sDS4GUnk1Atfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ea4w8eOsPA7F5zlpm84/2A4IIBpdL/DHmJZMhjT/1u1CdnqWwCeKDlALLUmxZffkZ
-         oCK/Z8tp6qB61ayfFQ5UIKpwtMNjQkfextZd05vnK/pii5595LzZ+MwwVTrcHt+KHJ
-         XWSpWLxcHyDo6GR/MWbbO+2DmkCF5C7B0ITcwqfA=
+        b=GId6dOHDggegOoWjrr1gR0jNvAPJisJXyxytRUkPpM2oDo0kTeh09V0XdyseIqp/E
+         doa2Nal4c3RgLnsLYdy3Q+s/uk9+QoJGCNVo+nGW7XmRwZ+KvSfpWImNfxIxa6OS+l
+         TPsMphMI6dko/NKezoCxWjPlKZqwui4qGJ9OZkcU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 10/10] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
-Date:   Tue,  4 Jun 2019 19:25:31 -0400
-Message-Id: <20190604232532.7953-10-sashal@kernel.org>
+Cc:     Kloetzke Jan <Jan.Kloetzke@preh.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/10] usbnet: fix kernel crash after disconnect
+Date:   Tue,  4 Jun 2019 19:25:29 -0400
+Message-Id: <20190604232532.7953-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
 References: <20190604232532.7953-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,69 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-kselftests exposed a problem in the s390 handling for memory slots.
-Right now we only do proper memory slot handling for creation of new
-memory slots. Neither MOVE, nor DELETION are handled properly. Let us
-implement those.
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
+
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
+
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
+
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ drivers/net/usb/usbnet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 5ddb1debba95..23911ecfbad6 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2721,21 +2721,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
--	int rc;
--
--	/* If the basics of the memslot do not change, we do not want
--	 * to update the gmap. Every update causes several unnecessary
--	 * segment translation exceptions. This is usually handled just
--	 * fine by the normal fault handler + gmap, but it will also
--	 * cause faults on the prefix page of running guest CPUs.
--	 */
--	if (old->userspace_addr == mem->userspace_addr &&
--	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
--	    old->npages * PAGE_SIZE == mem->memory_size)
--		return;
-+	int rc = 0;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 9710cf71054a..2502681369cd 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -499,6 +499,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
  
--	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
--		mem->guest_phys_addr, mem->memory_size);
-+	switch (change) {
-+	case KVM_MR_DELETE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		break;
-+	case KVM_MR_MOVE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		if (rc)
-+			break;
-+		/* FALLTHROUGH */
-+	case KVM_MR_CREATE:
-+		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-+				      mem->guest_phys_addr, mem->memory_size);
-+		break;
-+	case KVM_MR_FLAGS_ONLY:
-+		break;
-+	default:
-+		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1385,6 +1386,11 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
+ 	}
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
 +	}
- 	if (rc)
- 		pr_warn("failed to commit memory region\n");
- 	return;
+ 
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 -- 
 2.20.1
 
