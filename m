@@ -2,139 +2,136 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43538C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5870C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2733923FF6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CD9245EE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfFDLvy (ORCPT
+        id S1727626AbfFDLwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:51:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727374AbfFDLvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:51:54 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54BkXNI064863
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 07:51:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swqwbgm4f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:51:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Tue, 4 Jun 2019 12:51:50 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 12:51:46 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54Bpjia60424434
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 11:51:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B23BC52054;
-        Tue,  4 Jun 2019 11:51:45 +0000 (GMT)
-Received: from [9.143.107.15] (unknown [9.143.107.15])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 58C8452051;
-        Tue,  4 Jun 2019 11:51:45 +0000 (GMT)
-Subject: Re: [PATCH] ocxl: do not use C++ style comments in uapi header
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20190604111632.22479-1-yamada.masahiro@socionext.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Tue, 4 Jun 2019 13:51:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 4 Jun 2019 07:52:31 -0400
+Received: from foss.arm.com ([217.140.101.70]:41278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfFDLwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:52:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9539780D;
+        Tue,  4 Jun 2019 04:52:30 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21083F690;
+        Tue,  4 Jun 2019 04:52:28 -0700 (PDT)
+Subject: Re: [PATCH v5 2/3] arch/arm64: fpsimd: Introduce
+ fpsimd_save_and_flush_cpu_state() and use it
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Julien Grall <julien.grall@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, will.deacon@arm.com,
+        christoffer.dall@arm.com, james.morse@arm.com,
+        julien.thierry@arm.com, suzuki.poulose@arm.com,
+        Dave.Martin@arm.com, ard.biesheuvel@linaro.org
+References: <20190521172139.21277-1-julien.grall@arm.com>
+ <20190521172139.21277-3-julien.grall@arm.com>
+ <20190604111230.GA5668@arrakis.emea.arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <f5d4c8d2-9958-8257-8268-6b61ca485d60@arm.com>
+Date:   Tue, 4 Jun 2019 12:52:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604111632.22479-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr-MC
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060411-0016-0000-0000-00000283E89E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060411-0017-0000-0000-000032E0F85B
-Message-Id: <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040081
+In-Reply-To: <20190604111230.GA5668@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 04/06/2019 à 13:16, Masahiro Yamada a écrit :
-> Linux kernel tolerates C++ style comments these days. Actually, the
-> SPDX License tags for .c files start with //.
+On 04/06/2019 12:12, Catalin Marinas wrote:
+> On Tue, May 21, 2019 at 06:21:38PM +0100, Julien Grall wrote:
+>> The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
+>> the KVM FPSIMD code.
+>>
+>> A following patch will introduce a mechanism to acquire owernship of the
+>> FPSIMD/SVE context for performing context management operations. Rather
+>> than having to export the new helpers to get/put the context, we can just
+>> introduce a new function to combine fpsimd_save() and
+>> fpsimd_flush_cpu_state().
+>>
+>> This has also the advantage to remove any external call of fpsimd_save()
+>> and fpsimd_flush_cpu_state(), so they can be turned static.
+>>
+>> Lastly, the new function can also be used in the PM notifier.
+>>
+>> Signed-off-by: Julien Grall <julien.grall@arm.com>
+>> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+> [...]
+>> ---
+>>  arch/arm64/include/asm/fpsimd.h |  4 +---
+>>  arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
+>>  arch/arm64/kvm/fpsimd.c         |  4 +---
+>>  3 files changed, 15 insertions(+), 10 deletions(-)
 > 
-> On the other hand, uapi headers are written in more strict C, where
-> the C++ comment style is forbidden.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Marc, since this touches KVM, can I get an ack on this patch? I plan to
+> queue the series.
 
-Thanks!
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Sure. Please add my
 
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
-> 
->   include/uapi/misc/ocxl.h | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/uapi/misc/ocxl.h b/include/uapi/misc/ocxl.h
-> index 97937cfa3baa..6d29a60a896a 100644
-> --- a/include/uapi/misc/ocxl.h
-> +++ b/include/uapi/misc/ocxl.h
-> @@ -33,23 +33,23 @@ struct ocxl_ioctl_attach {
->   };
->   
->   struct ocxl_ioctl_metadata {
-> -	__u16 version; // struct version, always backwards compatible
-> +	__u16 version; /* struct version, always backwards compatible */
->   
-> -	// Version 0 fields
-> +	/* Version 0 fields */
->   	__u8  afu_version_major;
->   	__u8  afu_version_minor;
-> -	__u32 pasid;		// PASID assigned to the current context
-> +	__u32 pasid;		/* PASID assigned to the current context */
->   
-> -	__u64 pp_mmio_size;	// Per PASID MMIO size
-> +	__u64 pp_mmio_size;	/* Per PASID MMIO size */
->   	__u64 global_mmio_size;
->   
-> -	// End version 0 fields
-> +	/* End version 0 fields */
->   
-> -	__u64 reserved[13]; // Total of 16*u64
-> +	__u64 reserved[13]; /* Total of 16*u64 */
->   };
->   
->   struct ocxl_ioctl_p9_wait {
-> -	__u16 thread_id; // The thread ID required to wake this thread
-> +	__u16 thread_id; /* The thread ID required to wake this thread */
->   	__u16 reserved1;
->   	__u32 reserved2;
->   	__u64 reserved3[3];
-> 
+to the whole series.
 
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
