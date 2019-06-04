@@ -2,144 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F422EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD79BC46460
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C988323CBA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982EA23CBA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cx9qF2Xo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dnheEqEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfFDQdl (ORCPT
+        id S1727855AbfFDQeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:33:41 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45286 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbfFDQdk (ORCPT
+        Tue, 4 Jun 2019 12:34:00 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47148 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfFDQd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:33:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so17825356ioc.12;
-        Tue, 04 Jun 2019 09:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NFDCs9ixPwmop20pIDVV+hNZcExzVIIYIAvpTPqNIqM=;
-        b=cx9qF2XoM0ItvPLKYrfQK/oiAqbik/wsSMBvAMrHL8fu8Fx/K523FWLP62Taq5dCW+
-         GeVE1uM0MXw54dG4FfQpsBSSfIqJt+BeDwEtP+TaTJsYOGWnVZaxK6WHMMZEiIQCr7c1
-         29YRdE5YPlokMDEIYL8ZBSnQ9QFPiJckpS2Wm8iIFdCBR0HfTI2T0TOimv6v4CP1imSF
-         sOro/P3hwPspStkLZljA33Ma0X+9ae5JeNqKCeX5SHWY6K1oJDWZaC3n5E0+gY6UeDRI
-         PFhuNkiD8tQcLaUt1Hocggi8IY4A2cYLgXOSolXgPJu2RHVtQPEIXlj/1p468yO7GvqA
-         grtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NFDCs9ixPwmop20pIDVV+hNZcExzVIIYIAvpTPqNIqM=;
-        b=RjSBrSLlWd71CTKBLx1tRwJ2fZPW9aCCvTqr7pGXc0UTy/VP72CPSfww569TTD5TKg
-         UJUULe+2cDWBb5tZNvlQAxZwg4eK4UhDhZbc5liiZUTTTThzOfOcYB5cVA/9p87xAhTe
-         0aFebzWmVwp0XmESznMQEEcZICnGCfHTcnSbCVpMBI2SyCGLQbzSWoaS5Ou/etXCTaNB
-         OEULfdJPkiBwttK05xzcnASUs+XqEI8A0sNJgWWoeR62S1m8bNVXqOxUA8VZkJFYudJo
-         C0E+jSIQ8Ve3nfWEwZQaDirCBMEfMGdm2sTGbF2mTLEmKj/6M2nl2vfwIBISFRNkRjeT
-         i18g==
-X-Gm-Message-State: APjAAAVWjSZ2YqbDrD+kfrFlb/4g9vGh6xVrrR8kyUXnSzb6s9g4ULMj
-        8ndliXqGjYm9lFIfO9pIl+z8GcvZ3Pb9u3CCOrA=
-X-Google-Smtp-Source: APXvYqwJ2HUxS4FKK1XU93wJyd+x/7qURmSpYcNyYnkbHrNeudxQf8vE6jo+0sLFKE/Co6I3WhWb6ZA1CNw3cpjacA4=
-X-Received: by 2002:a6b:901:: with SMTP id t1mr14703305ioi.42.1559666019686;
- Tue, 04 Jun 2019 09:33:39 -0700 (PDT)
+        Tue, 4 Jun 2019 12:33:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559666037; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=j0HsjNCBgw6fb89AS0Z7APClR+xnsmHO6MK4li8L+Yg=;
+        b=dnheEqEuK7O6vdqyl/0cBNMRU4cw17F0bPm4lIdzfwqPlS/zyW9SIf2s9PnClisWI0PQNA
+        LnUy2qiihxP4YCHu9pkxA8k2GK12dcHGeBUprchnxPOUX3YDqrgfNbqsBZYuTiAk+KH1Ft
+        oHxUNTjM+ks36004qmTWCR0YqqD0oRo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org
+Subject: [PATCH] MIPS: lb60: Fix pin mappings
+Date:   Tue,  4 Jun 2019 18:33:11 +0200
+Message-Id: <20190604163311.19059-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-3-nitesh@redhat.com>
-In-Reply-To: <20190603170306.49099-3-nitesh@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 4 Jun 2019 09:33:28 -0700
-Message-ID: <CAKgT0UeRkG0FyESjjQQWeOs3x2O=BUzFYZAdDkjjLyXRiJMnCQ@mail.gmail.com>
-Subject: Re: [RFC][Patch v10 2/2] virtio-balloon: page_hinting: reporting to
- the host
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
-> Enables the kernel to negotiate VIRTIO_BALLOON_F_HINTING feature with the
-> host. If it is available and page_hinting_flag is set to true, page_hinting
-> is enabled and its callbacks are configured along with the max_pages count
-> which indicates the maximum number of pages that can be isolated and hinted
-> at a time. Currently, only free pages of order >= (MAX_ORDER - 2) are
-> reported. To prevent any false OOM max_pages count is set to 16.
->
-> By default page_hinting feature is enabled and gets loaded as soon
-> as the virtio-balloon driver is loaded. However, it could be disabled
-> by writing the page_hinting_flag which is a virtio-balloon parameter.
->
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/virtio/virtio_balloon.c     | 112 +++++++++++++++++++++++++++-
->  include/uapi/linux/virtio_balloon.h |  14 ++++
->  2 files changed, 125 insertions(+), 1 deletion(-)
+The pin mappings introduced in commit 636f8ba67fb6
+("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+are completely wrong. The pinctrl driver name is incorrect, and the
+function and group fields are swapped.
 
-<snip>
+Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/jz4740/board-qi_lb60.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-> index a1966cd7b677..25e4f817c660 100644
-> --- a/include/uapi/linux/virtio_balloon.h
-> +++ b/include/uapi/linux/virtio_balloon.h
-> @@ -29,6 +29,7 @@
->  #include <linux/virtio_types.h>
->  #include <linux/virtio_ids.h>
->  #include <linux/virtio_config.h>
-> +#include <linux/page_hinting.h>
+diff --git a/arch/mips/jz4740/board-qi_lb60.c b/arch/mips/jz4740/board-qi_lb60.c
+index 071e9d94eea7..daed44ee116d 100644
+--- a/arch/mips/jz4740/board-qi_lb60.c
++++ b/arch/mips/jz4740/board-qi_lb60.c
+@@ -466,27 +466,27 @@ static unsigned long pin_cfg_bias_disable[] = {
+ static struct pinctrl_map pin_map[] __initdata = {
+ 	/* NAND pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-nand",
+-			"10010000.jz4740-pinctrl", "nand", "nand-cs1"),
++			"10010000.pin-controller", "nand-cs1", "nand"),
+ 
+ 	/* fbdev pin configuration */
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_DEFAULT,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-8bit"),
++			"10010000.pin-controller", "lcd-8bit", "lcd"),
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_SLEEP,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-no-pins"),
++			"10010000.pin-controller", "lcd-no-pins", "lcd"),
+ 
+ 	/* MMC pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-1bit"),
++			"10010000.pin-controller", "mmc-1bit", "mmc"),
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-4bit"),
++			"10010000.pin-controller", "mmc-4bit", "mmc"),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD0", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD0", pin_cfg_bias_disable),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD2", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD2", pin_cfg_bias_disable),
+ 
+ 	/* PWM pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-pwm",
+-			"10010000.jz4740-pinctrl", "pwm4", "pwm4"),
++			"10010000.pin-controller", "pwm4", "pwm4"),
+ };
+ 
+ 
+-- 
+2.21.0.593.g511ec345e18
 
-So this include breaks the build and from what I can tell it isn't
-really needed. I deleted it in order to be able to build without
-warnings about the file not being included in UAPI.
-
->  /* The feature bitmap for virtio balloon */
->  #define VIRTIO_BALLOON_F_MUST_TELL_HOST        0 /* Tell before reclaiming pages */
-> @@ -36,6 +37,7 @@
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM        2 /* Deflate balloon on OOM */
->  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT        3 /* VQ to report free pages */
->  #define VIRTIO_BALLOON_F_PAGE_POISON   4 /* Guest is using page poisoning */
-> +#define VIRTIO_BALLOON_F_HINTING       5 /* Page hinting virtqueue */
->
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
-> @@ -108,4 +110,16 @@ struct virtio_balloon_stat {
->         __virtio64 val;
->  } __attribute__((packed));
->
-> +#ifdef CONFIG_PAGE_HINTING
-> +/*
-> + * struct hinting_data- holds the information associated with hinting.
-> + * @phys_add:  physical address associated with a page or the array holding
-> + *             the array of isolated pages.
-> + * @size:      total size associated with the phys_addr.
-> + */
-> +struct hinting_data {
-> +       __virtio64 phys_addr;
-> +       __virtio32 size;
-> +};
-> +#endif
->  #endif /* _LINUX_VIRTIO_BALLOON_H */
-> --
-> 2.21.0
->
