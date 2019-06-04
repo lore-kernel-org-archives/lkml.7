@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1FCC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C86C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DBB206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A5E206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690797;
-	bh=uz4++qtTPat8tHaKuxoRBw6ki8KVpq1T90My55tKfHw=;
+	s=default; t=1559690802;
+	bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChrOTuKVguf6OJwOBcgfFo9Z5ZMmfM0bAGsct9u7kPiHG7gpnjXr7UApTWSXMNb0B
-	 zET32rW1prNPxn8dLRXn5pAZmutKwJ5f1MX+cfBYhyjb9CMnEqPKY+oGl7J4k+3llX
-	 Q3aD1Irto1KJ8aWd/bjGtRAZZ9EBnWTkERBEv2vU=
+	b=FJYCde74185N/mjMRlJJFzHpp5UaX7s5MT9X9L+RkHWYkuhkqjhIHz/qjUPlKLccq
+	 UDCaPLJCJ9LrqD85wT6mnefXNN1X2nC9ECk6PBnP8KHHV4VINjXzrGkR2lT+v/3kn4
+	 DJ4aif+iT/70sLDXs8KhYyPsow7EuyAOSuqpPsRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfFDX0g (ORCPT
+        id S1728071AbfFDXZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbfFDXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 19:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbfFDXZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC3120862;
-        Tue,  4 Jun 2019 23:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F43B20859;
+        Tue,  4 Jun 2019 23:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690735;
-        bh=uz4++qtTPat8tHaKuxoRBw6ki8KVpq1T90My55tKfHw=;
+        s=default; t=1559690727;
+        bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w1hVyGrhaEAjuKODHChwKlGg5oZyDic7J7bIkC21+cw1sIoV618J88EH1RljhFBeK
-         h28xzpcQSa/Wo274cwAQXXAol073yqtstO64hGn7ibAUZLCBar1lfABTXNDBBPZYN/
-         VrIpDSpdDmUbjPzTG9hJAaInByxn3AXM8S+czZwo=
+        b=xaX56KFMYM7d4pz1lW5s97a13pRkjKCGjZW+80qg0vx+qBytAebEhK12Kh3PCZ+fg
+         u5MU43oIbvpDxReWSVhhcOfRxc5XEeg9WV52si2/QEO9ZSaKcUdcXzaJkpnvVobk1f
+         OffBHT0TWVkx1F9i6o9GFvPUnZGACKOcB7JPPJJ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/10] driver core: platform: Fix the usage of platform device name(pdev->name)
-Date:   Tue,  4 Jun 2019 19:25:23 -0400
-Message-Id: <20190604232532.7953-2-sashal@kernel.org>
+Cc:     Bernd Eckstein <3erndeckstein@gmail.com>,
+        Oliver Zweigle <Oliver.Zweigle@faro.com>,
+        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/17] usbnet: ipheth: fix racing condition
+Date:   Tue,  4 Jun 2019 19:24:55 -0400
+Message-Id: <20190604232459.7745-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
-References: <20190604232532.7953-1-sashal@kernel.org>
+In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
+References: <20190604232459.7745-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,89 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+From: Bernd Eckstein <3erndeckstein@gmail.com>
 
-[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
 
-Platform core is using pdev->name as the platform device name to do
-the binding of the devices with the drivers. But, when the platform
-driver overrides the platform device name with dev_set_name(),
-the pdev->name is pointing to a location which is freed and becomes
-an invalid parameter to do the binding match.
+Fix a racing condition in ipheth.c that can lead to slow performance.
 
-use-after-free instance:
+Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
+ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
+When this happens, the queue is stopped longer than it needs to be,
+thus reducing network performance.
 
-[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-			G S      W  O      4.19.30+ #3
-[   33.346835] Hardware name: MTP (DT)
-[   33.350419] Call trace:
-[   33.352941]  dump_backtrace+0x0/0x3b8
-[   33.356713]  show_stack+0x24/0x30
-[   33.360119]  dump_stack+0x160/0x1d8
-[   33.363709]  print_address_description+0x84/0x2e0
-[   33.368549]  kasan_report+0x26c/0x2d0
-[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-[   33.377248]  strcmp+0x8c/0xb0
-[   33.380306]  platform_match+0x70/0x1f8
-[   33.384168]  __driver_attach+0x78/0x3a0
-[   33.388111]  bus_for_each_dev+0x13c/0x1b8
-[   33.392237]  driver_attach+0x4c/0x58
-[   33.395910]  bus_add_driver+0x350/0x560
-[   33.399854]  driver_register+0x23c/0x328
-[   33.403886]  __platform_driver_register+0xd0/0xe0
+Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
+is always correct. In case, usb_submit_urb() fails, the queue is woken up
+again as callback will not fire.
 
-So, use dev_name(&pdev->dev), which fetches the platform device name from
-the kobject(dev->kobj->name) of the device instead of the pdev->name.
+Testing: This racing condition is usually not noticeable, as it has to
+occur very frequently to slowdown the network. The callback from the USB
+is usually triggered slow enough, so the situation does not appear.
+However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
+the we loose the race quite often and the following speedup can be noticed:
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
+With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
+
+Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
+Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/usb/ipheth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 065fcc4be263..071dd053a917 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -796,7 +796,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	if (len != -ENODEV)
- 		return len;
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index 01f95d192d25..2b16a5fed9de 100644
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
+ 			  dev);
+ 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
  
--	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-+	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
++	netif_stop_queue(net);
+ 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
+ 			__func__, retval);
+ 		dev->net->stats.tx_errors++;
+ 		dev_kfree_skb_any(skb);
++		netif_wake_queue(net);
+ 	} else {
+ 		dev->net->stats.tx_packets++;
+ 		dev->net->stats.tx_bytes += skb->len;
+ 		dev_consume_skb_any(skb);
+-		netif_stop_queue(net);
+ 	}
  
- 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
- }
-@@ -872,7 +872,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		return rc;
- 
- 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
--			pdev->name);
-+			dev_name(&pdev->dev));
- 	return 0;
- }
- 
-@@ -881,7 +881,7 @@ static const struct platform_device_id *platform_match_id(
- 			struct platform_device *pdev)
- {
- 	while (id->name[0]) {
--		if (strcmp(pdev->name, id->name) == 0) {
-+		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
- 			pdev->id_entry = id;
- 			return id;
- 		}
-@@ -925,7 +925,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
- 		return platform_match_id(pdrv->id_table, pdev) != NULL;
- 
- 	/* fall-back to driver name match */
--	return (strcmp(pdev->name, drv->name) == 0);
-+	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 	return NETDEV_TX_OK;
 -- 
 2.20.1
 
