@@ -2,42 +2,73 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A93C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B320C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDA624515
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF41624146
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfFDIgL (ORCPT
+        id S1727106AbfFDIgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:36:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37670 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbfFDIgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:36:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FB9DA78;
-        Tue,  4 Jun 2019 01:36:10 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7D243F246;
-        Tue,  4 Jun 2019 01:36:09 -0700 (PDT)
-Subject: Re: [RFC PATCH 46/57] driver: Add variants of driver_find_device()
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-47-git-send-email-suzuki.poulose@arm.com>
- <20190603191133.GE6487@kroah.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <373d3620-fa60-8306-1119-22d197d6ba93@arm.com>
-Date:   Tue, 4 Jun 2019 09:36:08 +0100
+        Tue, 4 Jun 2019 04:36:31 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43780 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfFDIga (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 04:36:30 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w33so30789535edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:36:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0AsC3ilwHmdxFF7yJyfpqnmQ/JMg+U2f+pGfnwNxLI4=;
+        b=keDcV7Se4pU/MJpNAKW9MEdrs5wVOy/lR368xgA5OAsD5NeKhg14uc7dD4hXBWsmR4
+         3e5DWKUDpF7YFcuK47b6aHkr2PbdU4sOMUuZ6FOvSpEgBOmAtAdPoP+Q0faindHiCIDD
+         mzgvzu8rFZHAycQf5NdencsMq88pT2PzUuUMDj0R0hLcaZytLanwJJ3+ArBGPD/PajjB
+         2eTjfrshLezHk1ySrE8o1UWGr849eRLtFM3YXNnhwZL0G562XwDRkZpVM7aynese6r/l
+         42Dut6UTO1anM8bQJDcA/8WUsZB3l94rUw7bSTQW1WtzK3XYPJRBwo2U8hUze6o5gcZK
+         iEmg==
+X-Gm-Message-State: APjAAAV/O4Z49KwlfftnXwYyqypwKEkrOXWNhSlOLyzAPjf66DUi+nQ7
+        6/eF4xD+2R7QC871eQAc3VxDTAgwIpY=
+X-Google-Smtp-Source: APXvYqyakQfdNKtHn1Kxax1xeVppcqd8SvB43SpKuhONd3xNwnNFFr8uJq0P1JIBMJrrbknl1KTn5Q==
+X-Received: by 2002:a17:906:5159:: with SMTP id s25mr7939368ejl.16.1559637388807;
+        Tue, 04 Jun 2019 01:36:28 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id n8sm3030495ejk.45.2019.06.04.01.36.27
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 01:36:27 -0700 (PDT)
+Subject: Re: hid-related 5.2-rc1 boot hang
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+ <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
+ <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
+ <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
+ <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com>
+ <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+ <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com>
+ <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
+ <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
+ <e431dafc-0fb4-4be3-ac29-dcf125929090@redhat.com>
+ <CAO-hwJ+5UYJMnuCS0UL4g45Xc181LraAzc-CMuYB2rcqKGe_Sw@mail.gmail.com>
+ <4548d196-b75f-c4d0-8f3c-3e734b9a758c@redhat.com>
+Message-ID: <c05929f4-00b6-e098-cd69-cd6539ccd3f1@redhat.com>
+Date:   Tue, 4 Jun 2019 10:36:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190603191133.GE6487@kroah.com>
+In-Reply-To: <4548d196-b75f-c4d0-8f3c-3e734b9a758c@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -46,83 +77,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 04-06-19 10:05, Hans de Goede wrote:
 
-On 03/06/2019 20:11, Greg KH wrote:
-> On Mon, Jun 03, 2019 at 04:50:12PM +0100, Suzuki K Poulose wrote:
->> Add a wrappers to lookup a device by name for a given driver, by various
->> generic properties of a device. This can avoid the proliferation of custom
->> match functions throughout the drivers.
+<snip>
+
+>>>> We should likely just remove c52f from the list of supported devices.
+>>>> C52f receivers seem to have a different firmware as they are meant to
+>>>> work with different devices than C534. So I guess it is safer to not
+>>>> handle those right now and get the code in when it is ready.
+>>>
+>>> Ack. Can you prepare a patch to drop the c52f id?
 >>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   include/linux/device.h | 44 ++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
+>> Yes. I have an other revert never submitted that I need to push, so I
+>> guess I can do a revert session today.
 >>
->> diff --git a/include/linux/device.h b/include/linux/device.h
->> index 52d59d5..68d6e04 100644
->> --- a/include/linux/device.h
->> +++ b/include/linux/device.h
->> @@ -401,6 +401,50 @@ struct device *driver_find_device(struct device_driver *drv,
->>   				  struct device *start, void *data,
->>   				  int (*match)(struct device *dev, const void *data));
->>   
->> +/**
->> + * driver_find_device_by_name - device iterator for locating a particular device
->> + * of a specific name.
->> + * @driver: the driver we're iterating
->> + * @start: Device to begin with
->> + * @name: name of the device to match
->> + */
->> +static inline struct device *driver_find_device_by_name(struct device_driver *drv,
->> +							struct device *start,
->> +							const char *name)
->> +{
->> +	return driver_find_device(drv, start, (void *)name, device_match_name);
+>> I think I'll also buy one device with hopefully the C52F receiver as
+>> the report descriptors attached in
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203619 seems different to
+>> what I would have expected.
 > 
-> Why is the cast needed?
+> They are actually what I expected :)
 > 
->> +}
->> +
->> +/**
->> + * driver_find_device_by_of_node- device iterator for locating a particular device
->> + * by of_node pointer.
->> + * @driver: the driver we're iterating
->> + * @start: Device to begin with
->> + * @np: of_node pointer to match.
->> + */
->> +static inline struct device *
->> +driver_find_device_by_of_node(struct device_driver *drv,
->> +			      struct device *start,
->> +			      const struct device_node *np)
->> +{
->> +	return driver_find_device(drv, start, (void *)np, device_match_of_node);
+> The first USB interface is a mouse boot class device, since this is a mouse
+> only receiver. This means that the mouse report is unnumbered and we need to
+> extend the unnumbered mouse-report handling to handle this case. Also the
+> device is using the same highres mouse-reports as the gaming receiver is.
 > 
-> Same here.
-> 
->> +}
->> +
->> +/**
->> + * driver_find_device_by_fwnode- device iterator for locating a particular device
->> + * by fwnode pointer.
->> + * @driver: the driver we're iterating
->> + * @start: Device to begin with
->> + * @fwnode: fwnode pointer to match.
->> + */
->> +static inline struct device *
->> +driver_find_device_by_fwnode(struct device_driver *drv,
->> +			     struct device *start,
->> +			     const struct fwnode_handle *fwnode)
->> +{
->> +	return driver_find_device(drv, start, (void *)fwnode, device_match_fwnode);
-> 
-> And here
+> I'm actually preparing a patch right now which should fix this. Still might
+> be better to do the revert for 5.2 and get proper support for the c52f
+> receiver into 5.3.
 
-Because the driver_find_device() expects a "void *" and not a "const void *".
-May be we could promote that to "const void *" in the core API too, since we
-have converted the "match" to const void * already. Thoughts ?
+I've attached a patch to the bug:
+https://bugzilla.kernel.org/show_bug.cgi?id=203619
 
-Suzuki
+Which should fix this. It is quite simple and safe, so if we get testing
+feedback relatively soon, we could go with the fix instead of dropping the
+product-id, your call.
 
+Regards,
+
+Hans
