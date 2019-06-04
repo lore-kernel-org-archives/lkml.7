@@ -2,179 +2,128 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF991C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BABC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79E624A9D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="bVN/R/sL"
+	by mail.kernel.org (Postfix) with ESMTP id 0B50524AB7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559660350;
+	bh=4Hjp/ObF0DbD3WwrkMygRC2ARB8hifTb1xokdd9AbmI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Zj//G/fn+FUbTmeBJZbuddTXW6vzxu0tTaaA4s4VSeS0WLxNb1dR1ZcB1Cb5gveah
+	 uCRi5rmrB3WEyR9yPqheHKkDlkNgPERGybWX4OlcBqN0hUHwmpjnCAsYSj1weohICE
+	 igQ6ES3/qFERBCGFdspXjdTdL4bbxduEyN9MbNJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfFDO6d (ORCPT
+        id S1727899AbfFDO7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:58:33 -0400
-Received: from mail-eopbgr720064.outbound.protection.outlook.com ([40.107.72.64]:49729
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727537AbfFDO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:58:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dkyBvH8VDYehPn/N5ezTXNCAie7hF3owBLh+v5GlZWI=;
- b=bVN/R/sLBHh3ZBz+VfgkoccGWVD34/WbQbQVJ02OIHek6DikgEATjZEtoP6BLGaM5rZcQ/FNFEYjYJDjdTbB/nD5mwyBPIw5RoEkga7C/75EiEY6AYRfg+Xp7b0U8wMyLWzSK+uvuYZK6T1OUHqp/TvC1hSC6WcTUT4d+bNfBG8=
-Received: from BN3PR03CA0087.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::47) by BY2PR03MB556.namprd03.prod.outlook.com
- (2a01:111:e400:2c3a::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.12; Tue, 4 Jun
- 2019 14:58:29 +0000
-Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by BN3PR03CA0087.outlook.office365.com
- (2a01:111:e400:7a4d::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.20 via Frontend
- Transport; Tue, 4 Jun 2019 14:58:28 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; gmx.de; dkim=none (message not signed)
- header.d=none;gmx.de; dmarc=bestguesspass action=none header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1943.19
- via Frontend Transport; Tue, 4 Jun 2019 14:58:28 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x54EwPCn008279
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 4 Jun 2019 07:58:25 -0700
-Received: from linux.ad.analog.com (10.32.224.122) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 4 Jun 2019 10:58:25 -0400
-From:   Stefan Popa <stefan.popa@analog.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stefan.popa@analog.com>
-Subject: [PATCH v6 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
-Date:   Tue, 4 Jun 2019 17:58:21 +0300
-Message-ID: <1559660301-12298-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(2980300002)(199004)(189003)(70206006)(70586007)(77096007)(53376002)(107886003)(476003)(2906002)(26005)(126002)(50466002)(16586007)(5660300002)(246002)(186003)(6306002)(356004)(6666004)(305945005)(44832011)(966005)(486006)(7696005)(51416003)(478600001)(8676002)(7416002)(36756003)(316002)(336012)(72206003)(8936002)(47776003)(2616005)(48376002)(106002)(426003)(54906003)(110136005)(4326008)(7636002)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB556;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 22353854-a950-4ab7-8a65-08d6e8fd1a74
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BY2PR03MB556;
-X-MS-TrafficTypeDiagnostic: BY2PR03MB556:
-X-MS-Exchange-PUrlCount: 3
-X-Microsoft-Antispam-PRVS: <BY2PR03MB556C576D9EC7C23B90C63C59D150@BY2PR03MB556.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-Forefront-PRVS: 0058ABBBC7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: IRycg2aCR4BvjLB1pdz7bam6khCXbJZSwY/dE2CTukFoHFjf18EMUqUzg2w7vC25Tq3pmoBptnKQtyekgfX6bwyH1j01eBFY5nGIT93cnF0L0QW/Scb7YAKrDPo0oljPUz3dPzNxt1ffZNT1rvlxAp5GaKADcRpQxH3HZ4Jnzech6YOy3Pge31OvZ49SPjbXFi3+pJIdgc4V8lbNnohB0S3IPrmpmRaPaLT1a29AOAhhm5eR3zEumjXEuD8/VtGbPzheW6K3OrXHhiwrUu7T/ZHjGj1X7Nv4R96LwfqXM+Yuo7K6QqgWk0CP5815sl1BVySor48G1g24N7thzrPAuRpHdYj6rAJEozlZKKVv/ovylbwqdIKgSefAC11bhxAxVKcfZ8kF4TXkxtVCh3zVJBDqSndJY/cfE+4CkBYXmCI=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2019 14:58:28.0143
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22353854-a950-4ab7-8a65-08d6e8fd1a74
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB556
+        Tue, 4 Jun 2019 10:59:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48664 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfFDO7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:59:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=3fMg2snLMaK3DY6bsSoeVywpNNwk9adJU5UweamOHes=; b=jafoolg+yknl
+        L7102yJp+Wua6W3SRTJPgRM7Dzke0Rdb3SDkl5fh+yBSdkgT6urtekcv13Hy3Bin8D+b8LPHovM41
+        rSevjtXij3ksr1qf7S916N6CRH/vkKRNMxkzugc6fLgYappul757aAzaq29xhdQJ6NsJtpGqFe8+m
+        ppQpQ=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYAtt-0006EI-PR; Tue, 04 Jun 2019 14:58:57 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id F07A6440046; Tue,  4 Jun 2019 15:58:56 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Marcus Cooper <codekipper@gmail.com>
+Cc:     alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
+        broonie@kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Mark Brown <broonie@kernel.org>,
+        maxime.ripard@free-electrons.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>, wens@csie.org
+Subject: Applied "ASoC: sun4i-i2s: Add offset to RX channel select" to the asoc tree
+In-Reply-To: <20190603174735.21002-3-codekipper@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190604145856.F07A6440046@finisterre.sirena.org.uk>
+Date:   Tue,  4 Jun 2019 15:58:56 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
+The patch
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+   ASoC: sun4i-i2s: Add offset to RX channel select
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From f9927000cb35f250051f0f1878db12ee2626eea1 Mon Sep 17 00:00:00 2001
+From: Marcus Cooper <codekipper@gmail.com>
+Date: Mon, 3 Jun 2019 19:47:28 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: Add offset to RX channel select
+
+Whilst testing the capture functionality of the i2s on the newer
+SoCs it was noticed that the recording was somewhat distorted.
+This was due to the offset not being set correctly on the receiver
+side.
+
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Changes in v2:
-	- Nothing changed.
-Changes in v3:
-	- Nothing changed.
-Changes in v4:
-	- Nothing changed.
-Changes in v5:
-	- Nothing changed.
-Changes in v6:
-	- Nothing changed.
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-new file mode 100644
-index 0000000..d7adf074
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 8162e107e50b..bc128e2a6096 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -460,6 +460,10 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+ 				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
+ 				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
 +
-+title: Analog Devices ADF4371 Wideband Synthesizer
-+
-+maintainers:
-+  - Popa Stefan <stefan.popa@analog.com>
-+
-+description: |
-+  Analog Devices ADF4371 SPI Wideband Synthesizer
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adf4371
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      Definition of the external clock (see clock/clock-bindings.txt)
-+    maxItems: 1
-+
-+  clock-names:
-+    description:
-+      Must be "clkin"
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        frequency@0 {
-+                compatible = "adi,adf4371";
-+                reg = <0>;
-+                spi-max-frequency = <1000000>;
-+                clocks = <&adf4371_clkin>;
-+                clock-names = "clkin";
-+        };
-+    };
-+...
++		regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
++				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
++				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
+ 	}
+ 
+ 	regmap_field_write(i2s->field_fmt_mode, val);
 -- 
-2.7.4
+2.20.1
 
