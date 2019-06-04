@@ -2,128 +2,87 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3E9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5FEC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35602075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rQWBsgW5"
+	by mail.kernel.org (Postfix) with ESMTP id A591A2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfFDT3x (ORCPT
+        id S1726463AbfFDTcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 15:29:53 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1632 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFDT3x (ORCPT
+        Tue, 4 Jun 2019 15:32:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37670 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfFDTcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 15:29:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6c6ae0000>; Tue, 04 Jun 2019 12:29:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 12:29:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 12:29:52 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 19:29:52 +0000
-Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
- get_user_pages_fast()
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     Pingfan Liu <kernelfans@gmail.com>, <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        <linux-kernel@vger.kernel.org>, Sanket Murti <smurti@nvidia.com>,
-        "Ralph Pattinson" <rpattinson@nvidia.com>
-References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
- <20190603164206.GB29719@infradead.org>
- <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4b448fa6-dd85-ca45-5cb8-d2c950bddf37@nvidia.com>
-Date:   Tue, 4 Jun 2019 12:29:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 15:32:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t76so1445476oih.4;
+        Tue, 04 Jun 2019 12:32:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+foDqFARTHSWTyodVanz5MQ4oguv8cWe5Ge3BJ5pUps=;
+        b=IKyTOOdx6AiEkq9QoYeUzziUBw/H3y3aLFqpdtD1EZ6xGS5BDYMgZ/bwIOSmz2RXJ0
+         k77AtPtwsooitG2iKu6lKnYtK2rp5H660dNtYwIcub6GtNPFC4E7U0hLZI5ZsJE6vhfo
+         +j+l9OVRZ4pWL2kp0UVgsuomDKcYNG1qFa2QMF1gylq+r/iBbNg//UBoRSqC0w9pRQsA
+         Vvn0iwZldoknan/rC7aHk4fLvRAa8aOY5BRPj4bXSY1PsAU+rWUwQLjNdHHcfQ97zOlS
+         SCc3VSmO5gvhrEo1VZVcK0qB+6cWjfSsGKiTMmGLyGRLGs/9pE9ld+uyyBaocvV57Zd0
+         lgKg==
+X-Gm-Message-State: APjAAAV44L1N7t79wWDA5dgK4KblTdBZfT0N2GqaayPro+p9ewaOV7EI
+        uU9RDGomokQ1XLMmRvDEMK9GUgcu32H7lyx5GwN7iz3D
+X-Google-Smtp-Source: APXvYqyCzxuBdnnN0GJKre76sfBrLX65clPn4InKFS4WmGhnfe8Fh4gjLbZCDE9PVdnG/NHS22bCsJxD8Ldfrmr/bW8=
+X-Received: by 2002:aca:c4d5:: with SMTP id u204mr5175689oif.131.1559676739766;
+ Tue, 04 Jun 2019 12:32:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559676591; bh=L5ssfsr4CdbgOzijHbr9sPxMKKvikmBYGkIxWSlzZPI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rQWBsgW5BRDGBf1MYzgpB3Q35yRaA45Lx6vyonOmAVTZnpSbwf2zHeSvs8Yh0CtyO
-         yhGbnjVHZsxQ5JRJtlCOI63vBIro0O+7q/ZqJChiGfgFQ7rX9uXSFWZNlqbwRei6tx
-         Wppl46/8Xx/ObqeQ/f5M8qolzh+OKE4Qj2NM666ELlnpWDyKZgOEtM35jz1Nn8qOit
-         VEDsbi7C6JAONUUIsKyZHjIMJ3mR9A0K80wih6aJYiEEMsA3vIynzzmfbveBjY0N6T
-         4gtxYjsCF2R7ZgYG9suvbq7rEE/CjgnJkNMDF+eAh9df3xa4fJ2Pof2ndbE7KfBelY
-         YtdL+BuoLdNBg==
+References: <20190530135317.3c8d0d7b@lwn.net> <20190601154248.GA17800@mit.edu> <20190604130837.24ea1d7b@lwn.net>
+In-Reply-To: <20190604130837.24ea1d7b@lwn.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Jun 2019 21:32:07 +0200
+Message-ID: <CAMuHMdW3ChMmeFY2cK0R61sc90BBArytdzMP4nscqCOpf56f1Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 4:56 PM, Ira Weiny wrote:
-> On Mon, Jun 03, 2019 at 09:42:06AM -0700, Christoph Hellwig wrote:
->>> +#if defined(CONFIG_CMA)
->>
->> You can just use #ifdef here.
->>
->>> +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
->>> +	struct page **pages)
->>
->> Please use two instead of one tab to indent the continuing line of
->> a function declaration.
->>
->>> +{
->>> +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
->>
->> IMHO it would be a little nicer if we could move this into the caller.
-> 
-> FWIW we already had this discussion and thought it better to put this here.
-> 
-> https://lkml.org/lkml/2019/5/30/1565
-> 
-> Ira
-> 
-> [PS John for some reason your responses don't appear in that thread?]
+Hi Jon,
 
+On Tue, Jun 4, 2019 at 9:09 PM Jonathan Corbet <corbet@lwn.net> wrote:
+> On Sat, 1 Jun 2019 11:42:48 -0400
+> "Theodore Ts'o" <tytso@mit.edu> wrote:
+> > Finally, I'm bit concerned about anything which states absolutes,
+> > because there are people who tend to be real stickler for the rules,
+> > and if they see something stated in absolute terms, they fail to
+> > understand that there are exceptions that are well understood, and in
+> > use for years before the existence of the document which is trying to
+> > codify best practices.
+>
+> Hence the "there are exceptions" text at the bottom of the document :)
+>
+> Anyway, I'll rework it to try to take your comments into account.  Maybe
+> we should consistently say "rebasing" for changing the parent commit of a
+> patch set, and "history modification" for the other tricks...?
 
-Thanks for pointing out the email glitches! It looks like it's making it over to
-lore.kernel.org/linux-mm, but not to lkml.org, nor to the lore.kernel.org/lkml 
-section either:
+Or just "reworking a branch" for the other tricks?
 
-    https://lore.kernel.org/linux-mm/e389551e-32c3-c9f2-2861-1a8819dc7cc9@nvidia.com/
+Gr{oetje,eeting}s,
 
-...and I've already checked the DKIM signatures, they're all good. So I think this
-is getting narrowed down to, messages from nvidia.com (or at least from me) are not
-making it onto the lkml list server.  I'm told that this can actually happen *because*
-of DKIM domains: list servers may try to avoid retransmitting from DKIM domains. sigh.
+                        Geert
 
-Any hints are welcome, otherwise I'll try to locate the lkml admins and see what can
-be done.
-
-(+Sanket, Ralph from our email team)
-
-
-thanks,
 -- 
-John Hubbard
-NVIDIA
- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
