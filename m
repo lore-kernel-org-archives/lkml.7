@@ -2,113 +2,106 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2C9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9369C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B5C2251C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5D324A00
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q+llcIgm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k+0FH7uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfFDNdV (ORCPT
+        id S1727749AbfFDNd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:33:21 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:44644 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727271AbfFDNdV (ORCPT
+        Tue, 4 Jun 2019 09:33:59 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:1833 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbfFDNd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:33:21 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190604133318epoutp028ecaab149a97c9db0beb37f74fc2d06b~lAiPACLmh2494824948epoutp02J
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 13:33:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190604133318epoutp028ecaab149a97c9db0beb37f74fc2d06b~lAiPACLmh2494824948epoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559655198;
-        bh=1aLsXVY/wr2CuW5Tk9MkhyWV/LeW13egcTyA8RW2iMM=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=q+llcIgmIE+nKyEDth0vGJXSKXjwIqcmCCtAk3njiGlG1Zcjo+KbhmDs46qiWA1Ip
-         VFw9TC0LpBOkTs1G52XMVguAPaPl4nJmo4zCxHitr5uK/SJ9H6HhAydGQGAJQyO8xh
-         ltM9eRTLDnk/uBBAFpTwycgde84/r1BGFStb8chY=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.40.193]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20190604133316epcas5p3b088c59033d7fd46263f8507907a9ba2~lAiM63HyX2076420764epcas5p3r;
-        Tue,  4 Jun 2019 13:33:16 +0000 (GMT)
-X-AuditID: b6c32a49-5b7ff70000000fe7-3f-5cf6731c2aaf
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.03.04071.C1376FC5; Tue,  4 Jun 2019 22:33:16 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE:(2) [PATCH 1/4] zstd: pass pointer rathen than structure to
- functions
-Reply-To: v.narang@samsung.com
-From:   Vaneet Narang <v.narang@samsung.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Maninder Singh <maninder1.s@samsung.com>
-CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "joe@perches.com" <joe@perches.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        PANKAJ MISHRA <pankaj.m@samsung.com>,
-        Vaneet Narang <v.narang@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190603144132.7611b8fe3cf6928d8391a24a@linux-foundation.org>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190604131935epcms5p1c4a375fca57e4df5d233fd2769a3c2be@epcms5p1>
-Date:   Tue, 04 Jun 2019 18:49:35 +0530
-X-CMS-MailID: 20190604131935epcms5p1c4a375fca57e4df5d233fd2769a3c2be
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmpq5M8bcYg/u/eS0u7k61mLN+DZvF
-        nPMtLBZb96hadL+SsZh9/zGLxZnuXIv7934yWVzeNYfN4vD8NhaLe2+2MlkcOjmX0YHHY3bD
-        RRaPLStvMnmsO6jqse2AqseJGb9ZPL6susbs0bdlFaPH501yARxROTYZqYkpqUUKqXnJ+SmZ
-        eem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QIcqKZQl5pQChQISi4uV9O1sivJL
-        S1IVMvKLS2yVUgtScgoMjQr0ihNzi0vz0vWS83OtDA0MjEyBKhNyMq73XmYpaGet6Pq2ia2B
-        8RNLFyMnh4SAiUTnhtesXYxcHEICuxkllh9eC+RwcPAKCEr83SEMYgoLBEvM/5MBUi4kICdx
-        /MZuRhBbWEBH4sS8NYwgJWwCWhIfW8JBTBGBSIlbq9RBBjILfGaWaD/ziRFiE6/EjPanUFul
-        JbYv3woW5xTwlri5bi87RFxU4ubqt3D2+2PzoXpFJFrvnWWGsAUlHvzcDbZWQkBGYtdbcZBd
-        EgLdjBITzi1nhXBmMEqc6n0D1WAucf7kfDCbV8BXYtGaq0wgNouAqsSLx+fZIQa5SPx+Vg4S
-        ZhbQlli28DUzSJhZQFNi/S59iCmyElNPrWOCKOGT6P39hAnmrR3zYGwliXMHd7JB2BISTzpn
-        Ql3gIfFobRs0kHuYJI5MPc08gVFhFiKcZyHZPAth8wJG5lWMkqkFxbnpqcWmBYZ5qeXIsbuJ
-        EZxqtTx3MM4653OIUYCDUYmHd0b8txgh1sSy4srcQ4wSHMxKIryJt7/ECPGmJFZWpRblxxeV
-        5qQWH2I0BQbBRGYp0eR8YB7IK4k3NDUyMzOwNDA1tjAzVBLnncR6NUZIID2xJDU7NbUgtQim
-        j4mDU6qBMXaV5hbHVOMPv5IOpYrc6VrwflfeDQ1btS8C1Wde/uK6qSF/56lU9cHVV158Kn1s
-        c36hcEQ/h0XvFZl5r86svsQjvO6hktDe2yeln4rFF27vNF0YVMap8POD7MWAzZZB2w8YTMvb
-        dLZxsZOWecOU+xPXPSnYY65gzJMRE2S0JPq+yukN+36vF1ViKc5INNRiLipOBACEjAf6ywMA
-        AA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc
-References: <20190603144132.7611b8fe3cf6928d8391a24a@linux-foundation.org>
-        <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
-        <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
-        <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcms5p1>
+        Tue, 4 Jun 2019 09:33:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf673440001>; Tue, 04 Jun 2019 06:33:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 06:33:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 06:33:58 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 13:33:57 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 7F1E540DE3; Tue,  4 Jun 2019 16:33:55 +0300 (EEST)
+Date:   Tue, 4 Jun 2019 16:33:55 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/10] NVIDIA Tegra clocksource driver improvements
+Message-ID: <20190604133355.GE29894@pdeschrijver-desktop.Nvidia.com>
+References: <20190603185948.30438-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190603185948.30438-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559655236; bh=2sojii35KxqDwKfii9xBSRKtdkHnDinO/EJKDqXI9KI=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=k+0FH7uj/+J5LyNT46gLV4oI/dgnh2cTKQ5C4mRdT73cX0uHgtKXpMfY5gFO+E01r
+         GwBsrw9gHcZSe2GBOoEj5hVOtqfADGMnSIKl7+GKIOreM3HbEigdYOPbPCYamNBJCz
+         8cfIgde29EzFB5vRVgIoeHkPpzEoYmvR1rQjaSjUiYL/SiBZizIkqRStkd4g6QAWWS
+         hI7WiSIBEj0PHmXtgP0DZjNEkdIEqx/lAC0JGl64i21d0vBmzEhbkDHtSg1RGFZ0FZ
+         W4hPHk/S3+CQwMVVs1rrroKe/HFYtI9Fkj/ntakRLsVXgJdoF+v18t4Zq9VdstgUke
+         pYE1tqtX7gdxw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-=C2=A0=0D=0A>But=C2=A0struct=C2=A0ZSTD_CCtx_s.params=C2=A0is=C2=A0still=C2=
-=A0a=C2=A0copied=C2=A0structure.=C2=A0=C2=A0Could=C2=A0we=0D=0A>make=C2=A0i=
-t=C2=A0=60const=C2=A0ZSTD_parameters=C2=A0*params'?=C2=A0=C2=A0Probably=C2=
-=A0not,=C2=A0due=C2=A0to=C2=A0lifetime=0D=0A>issues?=0D=0A=0D=0AZSTD=20main=
-tains=20its=20own=20ctxt.=20Yes=20we=20can=20avoid=20storing=20pointers=20o=
-f=20other=20modules=0D=0Abecause=20of=20lifetime=20issues.=20We=20should=20=
-keep=20ZSTD_CCtx_s.params=20as=20structure=20instead=20of=20pointer.=0D=0A=
-=0D=0A=0D=0AThanks=20&=20Regards,=0D=0AVaneet=20Narang=20=0D=0A=0D=0A=C2=A0=
-=0D=0A=C2=A0
+On Mon, Jun 03, 2019 at 09:59:38PM +0300, Dmitry Osipenko wrote:
+> Hello,
+> 
+> This series primarily unifies the driver code across all Tegra SoC
+> generations. In a result the clocksources are allocated per-CPU on
+> older Tegra's and have a higher rating than the arch-timer where
+> appropriate, the newer Tegra210 is getting support for microsecond
+> clocksource and the driver's code is getting much cleaner.
+> 
+> The series was extensively tested on Tegra20 and Tegra30.
+> 
+> Changelog:
+> 
+> v4: In the comment to v3 Peter De Schrijver pointed out that arch-timer
+>     isn't affected by DVFS changes and thus it is preferred over tegra-timer
+>     on [T114, T210). Added new patch to address that: "Lower clocksource
+>     rating for some Tegra's".
+> 
+>     Daniel Lezcano suggested that it will be worthwhile to rename driver's
+>     source file as driver now covers more SoC generations than it initially
+>     did. Hence the new "Rename timer-tegra20.c to timer-tegra.c" patch.
+> 
+> v3: Fixed compilation on ARM64. Turned out that it doesn't have the
+>     delay-timer, thanks to Nicolas Chauvet for the report.
+> 
+>     Added new "Support COMPILE_TEST universally" patch for better
+>     compile-test coverage.
+> 
+> v2: Rebased on recent linux-next. Now all of #ifdef's are removed from the
+>     code due to the recent patch that generalized persistent clocksource.
+> 
+>     Couple other minor cosmetic changes.
+
+Series Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
