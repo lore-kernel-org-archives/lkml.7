@@ -3,166 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F1BC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10902C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DF724088
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E792F2408B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfFDJBe (ORCPT
+        id S1727159AbfFDJBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 4 Jun 2019 05:01:37 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:56297 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727131AbfFDJBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 05:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfFDJBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:01:33 -0400
-Received: from oasis.local.home (unknown [146.247.46.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08BB24071;
-        Tue,  4 Jun 2019 09:01:27 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 05:01:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v4 7/9] iommu/vt-d: Add trace events for domain
- map/unmap
-Message-ID: <20190604050122.4a095569@oasis.local.home>
-In-Reply-To: <20190603011620.31999-8-baolu.lu@linux.intel.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
-        <20190603011620.31999-8-baolu.lu@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-5-JkTxSXOoNISA2RzXYu7j5g-1;
+ Tue, 04 Jun 2019 10:01:32 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 4 Jun 2019 10:01:32 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 4 Jun 2019 10:01:32 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Masahiro Yamada' <yamada.masahiro@socionext.com>
+CC:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "Vineet Gupta" <vgupta@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] kbuild: use more portable 'command -v' for
+ cc-cross-prefix
+Thread-Topic: [PATCH] kbuild: use more portable 'command -v' for
+ cc-cross-prefix
+Thread-Index: AQHVGfoc7Nk6FX5Ty02s910sxgLWxaaJxI+g///4bICAACdTsIAA4rqAgABrGkA=
+Date:   Tue, 4 Jun 2019 09:01:31 +0000
+Message-ID: <96b710063de5464ea347bfa1e03308b5@AcuMS.aculab.com>
+References: <20190603104902.23799-1-yamada.masahiro@socionext.com>
+ <863c29c5f0214c008fbcbb2aac517a5c@AcuMS.aculab.com>
+ <CAK7LNARHR=xv_YxQCkCM7PtW3vpNfXOgZrez0c4HbMX6C-8-uA@mail.gmail.com>
+ <810dd6ae018b4a31b70d26fb6b29e48d@AcuMS.aculab.com>
+ <CAK7LNAR_A1d5keiCRthNioW3nqkNadJkaCyMR3a5S8WS0jhgNQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAR_A1d5keiCRthNioW3nqkNadJkaCyMR3a5S8WS0jhgNQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: JkTxSXOoNISA2RzXYu7j5g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 09:16:18 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
-
-
-> +TRACE_EVENT(bounce_unmap_single,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +
-> +	TP_ARGS(dev, dev_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name),
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  __entry->size)
-> +);
-> +
-> +TRACE_EVENT(bounce_map_sg,
-> +	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
-> +		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
-> +
-> +	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(unsigned int, i)
-> +		__field(unsigned int, last)
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(phys_addr_t, phys_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->i = i;
-> +		__entry->last = nelems - 1;
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->phys_addr = phys_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name), __entry->i, __entry->last,
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  (unsigned long long)__entry->phys_addr,
-> +		  __entry->size)
-> +);
-> +
-> +TRACE_EVENT(bounce_unmap_sg,
-> +	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
-> +		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
-> +
-> +	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(unsigned int, i)
-> +		__field(unsigned int, last)
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(phys_addr_t, phys_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->i = i;
-> +		__entry->last = nelems - 1;
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->phys_addr = phys_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name), __entry->i, __entry->last,
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  (unsigned long long)__entry->phys_addr,
-> +		  __entry->size)
-> +);
-
-These last two events look identical. Please use the
-DECLARE_EVENT_CLASS() to describe the event and then DEFINE_EVENT() for
-the two events.
-
-Each TRACE_EVENT() can add up to 5k of data/text, where as a
-DEFINE_EVENT() just adds around 250 bytes.
-
-(Note, a TRACE_EVENT() is defined as a
-DECLARE_EVENT_CLASS()/DEFINE_EVENT() pair)
-
--- Steve
-
-
-> +#endif /* _TRACE_INTEL_IOMMU_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
+RnJvbTogTWFzYWhpcm8gWWFtYWRhDQo+IFNlbnQ6IDA0IEp1bmUgMjAxOSAwNDozMQ0KLi4uDQo+
+ID4gPiA+IFlvdSBjb3VsZCB1c2U6DQo+ID4gPiA+ICAgICAgICAgJChzaGVsbCBzaCAtYyAiY29t
+bWFuZCAtdiAkKGMpZ2NjIikNCj4gPiA+ID4gb3IgbWF5YmU6DQo+ID4gPiA+ICAgICAgICAgJChz
+aGVsbCBjb21tYW5kJCR7eDorfSAtdiAkKGMpZ2NjKQ0KPiA+ID4NCj4gPiA+DQo+ID4gPiBIb3cg
+YWJvdXQgdGhpcz8NCj4gPiA+DQo+ID4gPiAgICAgICAgICAgJChzaGVsbCA6IH47IGNvbW1hbmQg
+LXYgJChjKWdjYykNCj4gPg0KPiA+IE92ZXJjb21wbGljYXRlZCAuLi4uDQo+ID4NCj4gPiBJJ3Zl
+IG5vdCBsb29rZWQgYXQgdGhlIGxpc3Qgb2YgJ3NwZWNpYWwgY2hhcmFjdGVycycgaW4gbWFrZSwN
+Cj4gPiBidXQgSSBzdXNwZWN0IGFueSB2YXJpYWJsZSBleHBhbnNpb24gaXMgZW5vdWdoLg0KPiA+
+IFNpbmNlICR7eDorfSBhbHdheXMgZXhwYW5kcyB0byB0aGUgZW1wdHkgc3RyaW5nICh3aGV0aGVy
+IG9yDQo+ID4gbm90ICd4JyBpcyBkZWZpbmVkKSBpdCBjYW4ndCBoYXZlIGFueSB1bmZvcnR1bmF0
+ZSBzaWRlIGVmZmVjdHMuDQo+IA0KPiANCj4gUHJvYmFibHksIG15IGV5ZXMgYXJlIHVzZWQgdG8g
+TWFrZWZpbGUuDQo+ICI6IiBpcyBhIG5vLW9wIGNvbW1hbmQsIGFuZCBpdCBpcyB1c2VkIGV2ZXJ5
+d2hlcmUgaW4ga2VybmVsIE1ha2VmaWxlcw0KPiBpbiB0aGUgZm9ybSBvZiAiQDonDQo+IA0KPiBJ
+dCBkZXBlbmRzIG9uIHBlb3BsZSB3aGljaCBzb2x1dGlvbiBzZWVtcyBzaW1wbGVyLg0KPiBTbywg
+dGhpcyBhcmd1bWVudCB0ZW5kcyB0byBlbmQgdXAgd2l0aCBiaWtlc2hlZGluZy4NCg0KSSBhbSBm
+dWxseSBhd2FyZSBvZiAnOicsIGl0IGlzIGEgc2hlbGwgYnVpbHRpbiB0aGF0IGFsd2F5cyByZXR1
+cm4gc3VjY2Vzcy4NClVzdWFsbHkgdXNlZCB3aGVuIHlvdSB3YW50IHRoZSBzaWRlLWVmZmVjdHMg
+b2Ygc3Vic3RpdHV0aW9ucyB3aXRob3V0DQpleGVjdXRpbmcgYW55dGhpbmcgKGVnIDogJHtmb286
+PWJhcn0gKSwgdG8gY2hhbmdlIHRoZSByZXN1bHQgb2YgYQ0Kc2VxdWVuY2Ugb2Ygc2hlbGwgY29t
+bWFuZHMgb3IgYXMgYSBkdW1teSAoZWcgd2hpbGUgOjsgZG8gOjsgZG9uZTsgKQ0KVmVyeSBhbm5v
+eWluZ2x5IGJhc2ggcGFyc2VzICE6IGFzIHNvbWV0aGluZyBvdGhlciB0aGFuICdub3QgdHJ1ZScu
+DQoNCiQoc2hlbGwgY29tbWFuZCQke3g6K30gLXYgJChjKWdjYykgd2lsbCBiZSBtYXJnaW5hbGx5
+IGZhc3Rlcg0KYmVjYXVzZSBpdCBpcyBsZXNzIHBhcnNpbmcuDQoNCglEYXZpZA0KIA0KDQotDQpS
+ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
+dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
+DQo=
 
