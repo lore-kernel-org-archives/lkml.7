@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAE5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91126C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2878206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595D4206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691021;
-	bh=lof9AR5Zf1C/rohpY8vnmnhLKDF99BN1H3yJAS0NPyg=;
+	s=default; t=1559691032;
+	bh=D7/5dMo/UCZnQ0TVCk6RXHAn7vkRkagf2wi01fq/t5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sziFAsTnjoA5IQw1XnxtWKyCyrVIeY4PGJeB7ZIJgy4diLElZxqHIEFYR2NlwEZWU
-	 oL5EmC3h0JlusyQdAorXwGm63pWVJLJ+aVwIz7NGIkH9VB4LascsQAHCYRcHj422eg
-	 +c3gH5BPd5n5ojHMkdHiz3O/OKqGLSBFxKAw6NVA=
+	b=IafM++z4Z+mIZ5JpHdNlyo/78UxgAAxwlOMUGuoiLhl+s1BvTEUxeKlVDJWBAXQ0c
+	 dEfaYyGNgZ7lj8imxxOSiiJRWle4lLtg5LFhCQDmmoZKDh8BPZKQab91r7PHSmyvp3
+	 T9MY0GnnzuAbuiBQNx48mpwXnjWnbQ2jdMGTovv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfFDXaM (ORCPT
+        id S1727369AbfFDXXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfFDXX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:59 -0400
+        id S1727346AbfFDXXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598382085A;
-        Tue,  4 Jun 2019 23:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E923C20862;
+        Tue,  4 Jun 2019 23:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690639;
-        bh=lof9AR5Zf1C/rohpY8vnmnhLKDF99BN1H3yJAS0NPyg=;
+        s=default; t=1559690625;
+        bh=D7/5dMo/UCZnQ0TVCk6RXHAn7vkRkagf2wi01fq/t5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9ueT0Mwq8p7fRaKDWbAcOHDdIOp0K0PxLPqRQQFeGuE5vEmJ09bjO1DoTHiKmFXG
-         zIS7psD1Z5BLjZ4bBiXYXXBMncliUZxbJwps9YWIXnl3pjvjEwKIqys6MgSJVvQPhg
-         2JI24tNcKKFkAQekQTccRTrZqQk8lJXGR1L6QuLQ=
+        b=H6SN4Y7h2EDJsLOVeiZ8C2x+xCZ6gXAxtoIyWirj5VWW2mn6GHuwhlS9+rG8JGfbF
+         VCuKLys/QEwV2jbfVstiP3MFBz4ekoM4lYBQrl53/bpRzbGpcO6n1mRQkrHM+UKy5h
+         c1WW82p6GO2OeFCJcrzP1hSStJoTdSCDCxGqXokg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/36] scsi: lpfc: correct rcu unlock issue in lpfc_nvme_info_show
-Date:   Tue,  4 Jun 2019 19:23:09 -0400
-Message-Id: <20190604232333.7185-14-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/36] ALSA: seq: Cover unsubscribe_port() in list_mutex
+Date:   Tue,  4 Jun 2019 19:23:00 -0400
+Message-Id: <20190604232333.7185-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
 References: <20190604232333.7185-1-sashal@kernel.org>
@@ -61,122 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 79080d349f7f58a2e86c56043a3d04184d5f294a ]
+[ Upstream commit 7c32ae35fbf9cffb7aa3736f44dec10c944ca18e ]
 
-Many of the exit cases were not releasing the rcu read lock.  Corrected the
-exit paths.
+The call of unsubscribe_port() which manages the group count and
+module refcount from delete_and_unsubscribe_port() looks racy; it's
+not covered by the group list lock, and it's likely a cause of the
+reported unbalance at port deletion.  Let's move the call inside the
+group list_mutex to plug the hole.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Tested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_attr.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ sound/core/seq/seq_ports.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index cb19b12e7211..55cd96e2469c 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -341,7 +341,7 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
- 		  phba->sli4_hba.scsi_xri_max,
- 		  lpfc_sli4_get_els_iocb_cnt(phba));
- 	if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--		goto buffer_done;
-+		goto rcu_unlock_buf_done;
+diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
+index a31e16cc012e..16289aefb443 100644
+--- a/sound/core/seq/seq_ports.c
++++ b/sound/core/seq/seq_ports.c
+@@ -550,10 +550,10 @@ static void delete_and_unsubscribe_port(struct snd_seq_client *client,
+ 		list_del_init(list);
+ 	grp->exclusive = 0;
+ 	write_unlock_irq(&grp->list_lock);
+-	up_write(&grp->list_mutex);
  
- 	/* Port state is only one of two values for now. */
- 	if (localport->port_id)
-@@ -357,7 +357,7 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
- 		  wwn_to_u64(vport->fc_nodename.u.wwn),
- 		  localport->port_id, statep);
- 	if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--		goto buffer_done;
-+		goto rcu_unlock_buf_done;
+ 	if (!empty)
+ 		unsubscribe_port(client, port, grp, &subs->info, ack);
++	up_write(&grp->list_mutex);
+ }
  
- 	list_for_each_entry(ndlp, &vport->fc_nodes, nlp_listp) {
- 		nrport = NULL;
-@@ -384,39 +384,39 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
- 
- 		/* Tab in to show lport ownership. */
- 		if (strlcat(buf, "NVME RPORT       ", PAGE_SIZE) >= PAGE_SIZE)
--			goto buffer_done;
-+			goto rcu_unlock_buf_done;
- 		if (phba->brd_no >= 10) {
- 			if (strlcat(buf, " ", PAGE_SIZE) >= PAGE_SIZE)
--				goto buffer_done;
-+				goto rcu_unlock_buf_done;
- 		}
- 
- 		scnprintf(tmp, sizeof(tmp), "WWPN x%llx ",
- 			  nrport->port_name);
- 		if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--			goto buffer_done;
-+			goto rcu_unlock_buf_done;
- 
- 		scnprintf(tmp, sizeof(tmp), "WWNN x%llx ",
- 			  nrport->node_name);
- 		if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--			goto buffer_done;
-+			goto rcu_unlock_buf_done;
- 
- 		scnprintf(tmp, sizeof(tmp), "DID x%06x ",
- 			  nrport->port_id);
- 		if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--			goto buffer_done;
-+			goto rcu_unlock_buf_done;
- 
- 		/* An NVME rport can have multiple roles. */
- 		if (nrport->port_role & FC_PORT_ROLE_NVME_INITIATOR) {
- 			if (strlcat(buf, "INITIATOR ", PAGE_SIZE) >= PAGE_SIZE)
--				goto buffer_done;
-+				goto rcu_unlock_buf_done;
- 		}
- 		if (nrport->port_role & FC_PORT_ROLE_NVME_TARGET) {
- 			if (strlcat(buf, "TARGET ", PAGE_SIZE) >= PAGE_SIZE)
--				goto buffer_done;
-+				goto rcu_unlock_buf_done;
- 		}
- 		if (nrport->port_role & FC_PORT_ROLE_NVME_DISCOVERY) {
- 			if (strlcat(buf, "DISCSRVC ", PAGE_SIZE) >= PAGE_SIZE)
--				goto buffer_done;
-+				goto rcu_unlock_buf_done;
- 		}
- 		if (nrport->port_role & ~(FC_PORT_ROLE_NVME_INITIATOR |
- 					  FC_PORT_ROLE_NVME_TARGET |
-@@ -424,12 +424,12 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
- 			scnprintf(tmp, sizeof(tmp), "UNKNOWN ROLE x%x",
- 				  nrport->port_role);
- 			if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--				goto buffer_done;
-+				goto rcu_unlock_buf_done;
- 		}
- 
- 		scnprintf(tmp, sizeof(tmp), "%s\n", statep);
- 		if (strlcat(buf, tmp, PAGE_SIZE) >= PAGE_SIZE)
--			goto buffer_done;
-+			goto rcu_unlock_buf_done;
- 	}
- 	rcu_read_unlock();
- 
-@@ -491,7 +491,13 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
- 		  atomic_read(&lport->cmpl_fcp_err));
- 	strlcat(buf, tmp, PAGE_SIZE);
- 
--buffer_done:
-+	/* RCU is already unlocked. */
-+	goto buffer_done;
-+
-+ rcu_unlock_buf_done:
-+	rcu_read_unlock();
-+
-+ buffer_done:
- 	len = strnlen(buf, PAGE_SIZE);
- 
- 	if (unlikely(len >= (PAGE_SIZE - 1))) {
+ /* connect two ports */
 -- 
 2.20.1
 
