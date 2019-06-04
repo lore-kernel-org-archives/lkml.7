@@ -2,102 +2,80 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF38C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F64EC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCBA21976
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F56C21BF1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Td5FIUii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfFDJNQ (ORCPT
+        id S1727040AbfFDJO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:13:16 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63272 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727017AbfFDJNP (ORCPT
+        Tue, 4 Jun 2019 05:14:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34530 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfFDJO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:13:15 -0400
-X-UUID: f1b8df9676b74030890b8250c336d34e-20190604
-X-UUID: f1b8df9676b74030890b8250c336d34e-20190604
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1895715751; Tue, 04 Jun 2019 17:13:05 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 4 Jun
- 2019 17:13:03 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Jun 2019 17:13:03 +0800
-Message-ID: <1559639583.8487.76.camel@mhfsdcap03>
-Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 4 Jun 2019 17:13:03 +0800
-In-Reply-To: <20190604082407.GA3783@kroah.com>
-References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
-         <20190604073706.GA25045@kroah.com> <87k1e123mc.fsf@linux.intel.com>
-         <20190604082407.GA3783@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 4 Jun 2019 05:14:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DgNpdU17akAPklawfBcHfi1blxtQXT3PKnl2KsNaRgw=; b=Td5FIUiiAyWISjpDw8L/Gsvqp
+        ZCod+BEgR89Pvtr145ojdn8ftRmWolFwTcGD2IIb+/yyispNTEmfUtjGbRbnw9h5k4twWWC/Y5IHp
+        vyhr857+AMcfx9YtnVafDNV72Q0iw+IAFIIKsB1vfkKd3UroqQUrehaNe2S86NJMhPj/eYqLE49/t
+        4P3FUhHKfSWtaHIKW6ouqWTfZsN4zAA/m/r1fIp6GKczvM3GCjGOAmzWIN/qMwgIr8HLuAd+egYzc
+        S6yaroznMaYO11heWdxJ7OLbDGuy2Q2y6oXWdagtwAEtIYxiE08mxKEgCV8j1Zc/L+gxtwV7SVAR/
+        aden0FqIw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hY5WL-000370-A1; Tue, 04 Jun 2019 09:14:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 189442083FE28; Tue,  4 Jun 2019 11:14:16 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 11:14:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190604091416.GI3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520205918.22251-16-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-04 at 10:24 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 04, 2019 at 10:47:55AM +0300, Felipe Balbi wrote:
-> > 
-> > Hi,
-> > 
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > >> +struct dentry *usb_debugfs_init(void)
-> > >> +{
-> > >> +	if (!usb_debug_root)
-> > >> +		usb_debug_root = debugfs_create_dir("usb", NULL);
-> > >> +
-> > >> +	atomic_inc(&usb_debug_root_refcnt);
-> > >> +
-> > >> +	return usb_debug_root;
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
-> > >> +
-> > >> +void usb_debugfs_cleanup(void)
-> > >> +{
-> > >> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
-> > >> +		debugfs_remove_recursive(usb_debug_root);
-> > >> +		usb_debug_root = NULL;
-> > >> +	}
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
-> > >
-> > > Only remove the debugfs subdir if the usbcore module is removed.  Create
-> > > the debugfs subdir when the usbcore module is loaded.  No need for any
-> > > reference counting of any sort at all.  No need to overthink this :)
-> > 
-> > There is a slight need to overthink. He wants to use the same directory
-> > for gadget-only builds too :-)
+On Mon, May 20, 2019 at 04:59:14PM -0400, Waiman Long wrote:
+> On a 2-socket 40-core 80-thread Skylake system, the page_fault1 test of
+> the will-it-scale benchmark was run with various number of threads. The
+> number of operations done before reader optimistic spinning patches,
+> this patch and after this patch were:
 > 
-> Again, that's fine, this file will be loaded for those builds as well,
-> right?  
-Yes, either usbcore or gadget will select this file.
+>   Threads  Before rspin  Before patch  After patch    %change
+>   -------  ------------  ------------  -----------    -------
+>     20        5541068      5345484       5455667    -3.5%/ +2.1%
+>     40       10185150      7292313       9219276   -28.5%/+26.4%
+>     60        8196733      6460517       7181209   -21.2%/+11.2%
+>     80        9508864      6739559       8107025   -29.1%/+20.3%
 
-> Otherwise, how would this code even be present?  :)
-> 
-> thanks,
-> 
-> greg k-h
-
-
+'rspin' is patch 12 in this series, right?
