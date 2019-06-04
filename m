@@ -2,129 +2,78 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5C6C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC5824A8F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7556424A8F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jfoi2joh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfFDHRi convert rfc822-to-8bit (ORCPT
+        id S1726869AbfFDHRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:17:38 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42079 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfFDHRi (ORCPT
+        Tue, 4 Jun 2019 03:17:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49498 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfFDHRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:17:38 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so7510789lje.9;
-        Tue, 04 Jun 2019 00:17:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uXFhS7Fhht2cVxXQgdevMCQkg9IO5A4+7VWwz6q4IHQ=;
-        b=lhbcO5W86Xa6YxcXHXHNr3pV01dr02t+x3pwppEu10N2usOSKTzCfs15SvnkGbcq8K
-         N+HFL6ul3fD7EqTzn1XziT/A5TM4eMUve4ZN6RlcDdskVnzOT7V2JFzlRfRK/EfkH+WE
-         hE3eRAt1m6uwVscouaQi95NsUz8HQsOebHi+NIPiMttr3nstkwyJ2/XinpkqaUdAWM2g
-         qaOQ4JLAwfx89v5p5ZDPq/Lbq0rvkzDgIHaQ13JJf0RUpwAhac1GDUBRgRCBl6ysyk8G
-         klg2BeHdlgoyfhS8+3CyVJQfy0R1Soco7Yn+blLgbz6okw1aHON5HQlshxXGOJgSWE+D
-         us4Q==
-X-Gm-Message-State: APjAAAVLqXdhXgvu49Gj7TaghPEYq8z4euoQemHTtVGy2YXFlHyndPaK
-        6WBMke1YnZ3g2d4gBTZ5hbNUZ3qCbUtHvGD0p+VnMyPv
-X-Google-Smtp-Source: APXvYqyyZ2LjfsWzKbQvADxUxY+XiY/8hXkqr4Kstn7jTiKw8xfdZP/KjDVpKZALARnI7yGQkBB7ySKrnAGa0wizxpk=
-X-Received: by 2002:a2e:91c5:: with SMTP id u5mr4591585ljg.65.1559632655971;
- Tue, 04 Jun 2019 00:17:35 -0700 (PDT)
+        Tue, 4 Jun 2019 03:17:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FJORX3JeCyruZ/L/acO0maUXTCoUb/nO5fa3SUQgrYQ=; b=jfoi2joh/mzGfEk7oqOjRTOHD
+        fQCUDoMITayn+YGHm/kNmN0VOvtseeK+mDfRflr4iSKEQ6OZcKPm9BHvlzT65KuEY6P2+H/2WP2zi
+        eManJCcPModmnqLCoKEncNg3xHeP5udk7eKFYhOJIKBqs7cegzYTm2NKbXZAwbCfdzaTMaqjgNeGf
+        ly5O2TI3dwqi0Y8+m24YCrvDGhzgflwRsnWv1hWG1GbMsgITczeW3h/ssQi3KaXvpxxfNkA0YGQxq
+        gqtSvh8l0Mh/2Wbv2KLz03K3vU/Ch8YHaYZV7Vora+ti2qQBTwoyr1cQBQMEinLmojBDOeuxThWE/
+        vlpPMpsQQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hY3hL-0004Jf-RP; Tue, 04 Jun 2019 07:17:31 +0000
+Date:   Tue, 4 Jun 2019 00:17:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190604071731.GA10044@infradead.org>
+References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+ <20190603164206.GB29719@infradead.org>
+ <CAFgQCTtUdeq=M=SrVwvggR15Yk+i=ndLkhkw1dxJa7miuDp_AA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190528142424.19626-1-geert@linux-m68k.org> <20190528142424.19626-3-geert@linux-m68k.org>
- <15499.1559298884@warthog.procyon.org.uk>
-In-Reply-To: <15499.1559298884@warthog.procyon.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Jun 2019 09:17:23 +0200
-Message-ID: <CAMuHMdX57DKCMpLXdtZPE-w0esUNVv9-SwYjmT5=m+u9ryAiHQ@mail.gmail.com>
-Subject: Re: [PATCH] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Igor Konopko <igor.j.konopko@intel.com>,
-        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Matias Bjorling <mb@lightnvm.io>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-block@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTtUdeq=M=SrVwvggR15Yk+i=ndLkhkw1dxJa7miuDp_AA@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Tue, Jun 04, 2019 at 03:13:21PM +0800, Pingfan Liu wrote:
+> Is it a convention? scripts/checkpatch.pl can not detect it. Could you
+> show me some light so later I can avoid it?
 
-On Fri, May 31, 2019 at 12:35 PM David Howells <dhowells@redhat.com> wrote:
-> Here's my take on the patch.
->
-> David
-> ---
-> rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
->
-> With gcc 4.1:
->
->     net/rxrpc/output.c: In function ‘rxrpc_send_data_packet’:
->     net/rxrpc/output.c:338: warning: ‘ret’ may be used uninitialized in this function
->
-> Indeed, if the first jump to the send_fragmentable label is made, and
-> the address family is not handled in the switch() statement, ret will be
-> used uninitialized.
->
-> Fix this by BUG()'ing as is done in other places in rxrpc where internal
-> support for future address families will need adding.  It should not be
-> possible to reach this normally as the address families are checked
-> up-front.
->
-> Fixes: 5a924b8951f835b5 ("rxrpc: Don't store the rxrpc header in the Tx queue sk_buffs")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
+If you look at most kernel code you can see two conventions:
 
-I'm not such a big fan of BUG(), so I'd go for ret = -EAFNOSUPPORT, but given
-rxrpc is already full of BUG() calls, I guess it is an acceptable solution.
+ - double tabe indent
+ - indent to the start of the first agument line
 
-> ---
-> diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-> index 004c762c2e8d..6f2b4fb4b0aa 100644
-> --- a/net/rxrpc/output.c
-> +++ b/net/rxrpc/output.c
-> @@ -523,6 +523,9 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
->                 }
->                 break;
->  #endif
-> +
-> +       default:
-> +               BUG();
->         }
->
->         if (ret < 0)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Everything else is rather unusual.
