@@ -2,207 +2,149 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53EAC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9E3C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F8B23CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB35207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vhu7qZF9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kCYP3ZkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfFDRCE (ORCPT
+        id S1728047AbfFDRCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:02:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52834 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFDRCC (ORCPT
+        Tue, 4 Jun 2019 13:02:12 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:38439 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfFDRCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:02:02 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54H1wwT084272;
-        Tue, 4 Jun 2019 12:01:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559667718;
-        bh=dl/p6s8i6dqi8lgl0FcgfjjgtFbawMFoVouR4+ILAS8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vhu7qZF9moABxdkT+aW9Ao645OiPV0zAnvEGNxabRKevyI4H8l6AwsNK6ICoPPm8/
-         cnThrC9STLT+G8rcS7468Lo+F5kjyR8K3ssXdLr3yeyeeJweFk1bUILQuh01Ur1DGi
-         Kgvrb8ev2LcBxY8c56sIGp0HNenjyxZgDdMZkH+s=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54H1w9f010922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 12:01:58 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 12:01:56 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 12:01:56 -0500
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54H1uDi040970;
-        Tue, 4 Jun 2019 12:01:56 -0500
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x54H1tm17348;
-        Tue, 4 Jun 2019 12:01:55 -0500 (CDT)
-From:   Suman Anna <s-anna@ti.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 1/2] dt-bindings: mailbox: omap: Update bindings for TI K3 SoCs
-Date:   Tue, 4 Jun 2019 12:01:45 -0500
-Message-ID: <20190604170146.12205-2-s-anna@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190604170146.12205-1-s-anna@ti.com>
-References: <20190604170146.12205-1-s-anna@ti.com>
+        Tue, 4 Jun 2019 13:02:11 -0400
+Received: by mail-lf1-f51.google.com with SMTP id b11so17010859lfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rXMpeJuEOdKOx/HQKDVkHmCBlz8jhse9a4h820958SA=;
+        b=kCYP3ZkPc2TvMg2Wi6ykhEAq4aOHidw2VC3+oseBzc57ug/iY8JEtSMAXw6A6MUtF1
+         S9yL/tH/xkUNlN3qJW4dF10MPEQnzpcwNq7tvbstlGF03df00RR1u0SOhWMo+8mu6Aro
+         fwkZkPVtKFpCmx/STkQFd0upVUm2ETInWkqTgH+hEAGeH2C72eInDqu1Ky2MX/QdjMjF
+         dsqpTezlmEfIEMQO3UtEtcObUWMcTUp4e3piA1yK6iYuemvPhS+Ge3PGBVDG0ecFXmb9
+         c9JZwoRR02YUqGoN/2rOvmNEDw35p5/PZsL4p7Zo5PkE1hPFiUQsIlX3me9epNMjMa7d
+         nmbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rXMpeJuEOdKOx/HQKDVkHmCBlz8jhse9a4h820958SA=;
+        b=DecN7swQ6/zw870b/ZNhg079plA96koh2jIzc6agxWNYow4SPyJmBxkn4HwqWoHzsU
+         AaVDHZ4XyoYe8afEaIlEj6aJl/OoOgaReA4hMRMg2G/+E40MvVxNFUL49ibt/QGQO/3q
+         7MJmGhvpcnidiIyI7fU5YPfP7zzD+27pAX0jPy94trmAq6Me2ZVK5g40aCPgL+Bph6d1
+         hOvFBLLopkd9xYHI5ZUO/YTvc8Ao5QzAI1xpSMM6+x4qEeNY8YWbIAvWyB5feSxBAcy8
+         idHPhaw/2u30bap+ucKkGm32yJbyyTwDVXqPJ8b0QvZXlri7JVcqEANL2b+cxBkXDFym
+         g6MA==
+X-Gm-Message-State: APjAAAV6fAFSb8Dtj69UcBFI3LZRt6T1u10hCRcSErLFvjVtu5GPAg2i
+        ButEZFbIYudHc+PAQOngeIvbGII2UAzYzF7YOIC6kA==
+X-Google-Smtp-Source: APXvYqx3T5pRH32no890qB33wNihmq1VvYcMK9pbP5hOQJiKRjsEJv6pyoSP9K1gnMzp+pf+T7PWymXwtX8g7raiNnY=
+X-Received: by 2002:a05:6512:30a:: with SMTP id t10mr1839716lfp.22.1559667729967;
+ Tue, 04 Jun 2019 10:02:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <73fac64c-fe49-4738-49a4-0afe668eed94@canonical.com>
+ <201905310740.522B3A7C1@keescook> <c80362bd-1dec-3e4f-c3e8-1c58d3a33070@canonical.com>
+ <CANRnR9Q4AY1nyTebWgkVM-wUfZv7kKNLnsrchWPBH4HPbB-X6Q@mail.gmail.com> <201905311330.EA6B6E5F@keescook>
+In-Reply-To: <201905311330.EA6B6E5F@keescook>
+From:   Ke Wu <mikewu@google.com>
+Date:   Tue, 4 Jun 2019 10:01:58 -0700
+Message-ID: <CANRnR9R5mhMRMfTUkU5i_GhGwEiXmhhHBN2E6bo+N5KtBUVecQ@mail.gmail.com>
+Subject: Re: security/loadpin: Allow to exclude specific file types
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TI K3 AM65x and J721E family of SoCs have a new Mailbox IP that
-is based on the existing Mailbox IP present in OMAP architecture based
-SoCs. Update the existing OMAP Mailbox bindings for this new IP present
-on TI K3 AM65x and J721E SoCs. The same compatible from AM65x SoCs is
-reused for J721E SoCs.
+I sent out a new patch according to your last suggestion. Please take
+a look. Thanks!
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- .../bindings/mailbox/omap-mailbox.txt         | 59 ++++++++++++++++---
- 1 file changed, 50 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-index 0ef372656a3e..35c3f56b7f7b 100644
---- a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-@@ -1,4 +1,4 @@
--OMAP2+ Mailbox Driver
-+OMAP2+ and K3 Mailbox
- =====================
- 
- The OMAP mailbox hardware facilitates communication between different processors
-@@ -7,7 +7,7 @@ various processor subsystems and is connected on an interconnect bus. The
- communication is achieved through a set of registers for message storage and
- interrupt configuration registers.
- 
--Each mailbox IP block has a certain number of h/w fifo queues and output
-+Each mailbox IP block/cluster has a certain number of h/w fifo queues and output
- interrupt lines. An output interrupt line is routed to an interrupt controller
- within a processor subsystem, and there can be more than one line going to a
- specific processor's interrupt controller. The interrupt line connections are
-@@ -23,12 +23,16 @@ All the current OMAP SoCs except for the newest DRA7xx SoC has a single IP
- instance. DRA7xx has multiple instances with different number of h/w fifo queues
- and interrupt lines between different instances. The interrupt lines can also be
- routed to different processor sub-systems on DRA7xx as they are routed through
--the Crossbar, a kind of interrupt router/multiplexer.
-+the Crossbar, a kind of interrupt router/multiplexer. The K3 AM65x and J721E
-+SoCs has each of these instances form a cluster and combine multiple clusters
-+into a single IP block present within the Main NavSS. The interrupt lines from
-+all these clusters are multiplexed and routed to different processor subsystems
-+over a limited number of common interrupt output lines of an Interrupt Router.
- 
- Mailbox Device Node:
- ====================
--A Mailbox device node is used to represent a Mailbox IP instance within a SoC.
--The sub-mailboxes are represented as child nodes of this parent node.
-+A Mailbox device node is used to represent a Mailbox IP instance/cluster within
-+a SoC. The sub-mailboxes are represented as child nodes of this parent node.
- 
- Required properties:
- --------------------
-@@ -37,12 +41,12 @@ Required properties:
- 			    "ti,omap3-mailbox" for OMAP3430, OMAP3630 SoCs
- 			    "ti,omap4-mailbox" for OMAP44xx, OMAP54xx, AM33xx,
- 						   AM43xx and DRA7xx SoCs
-+			    "ti,am654-mailbox" for K3 AM65x and J721E SoCs
- - reg:			Contains the mailbox register address range (base
- 			address and length)
- - interrupts:		Contains the interrupt information for the mailbox
- 			device. The format is dependent on which interrupt
--			controller the OMAP device uses
--- ti,hwmods:		Name of the hwmod associated with the mailbox
-+			controller the Mailbox device uses
- - #mbox-cells:		Common mailbox binding property to identify the number
- 			of cells required for the mailbox specifier. Should be
- 			1
-@@ -50,6 +54,23 @@ Required properties:
- 			device can interrupt
- - ti,mbox-num-fifos:	Number of h/w fifo queues within the mailbox IP block
- 
-+SoC-specific Required properties:
-+---------------------------------
-+The following are mandatory properties for the OMAP architecture based SoCs
-+only:
-+- ti,hwmods:		Name of the hwmod associated with the mailbox. This
-+			should be defined in the mailbox node only if the node
-+			is not defined as a child node of a corresponding sysc
-+			interconnect node.
-+
-+The following are mandatory properties for the K3 AM65x and J721E SoCs only:
-+- interrupt-parent:	Should contain a phandle to the TI-SCI interrupt
-+			controller node that is used to dynamically program
-+			the interrupt routes between the IP and the main GIC
-+			controllers. See the following binding for additional
-+			details,
-+			Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-+
- Child Nodes:
- ============
- A child node is used for representing the actual sub-mailbox device that is
-@@ -98,7 +119,7 @@ to be used by the client user.
- Example:
- --------
- 
--/* OMAP4 */
-+1. /* OMAP4 */
- mailbox: mailbox@4a0f4000 {
- 	compatible = "ti,omap4-mailbox";
- 	reg = <0x4a0f4000 0x200>;
-@@ -123,7 +144,7 @@ dsp {
- 	...
- };
- 
--/* AM33xx */
-+2. /* AM33xx */
- mailbox: mailbox@480c8000 {
- 	compatible = "ti,omap4-mailbox";
- 	reg = <0x480C8000 0x200>;
-@@ -137,3 +158,23 @@ mailbox: mailbox@480c8000 {
- 		ti,mbox-rx = <0 0 3>;
- 	};
- };
-+
-+3. /* AM65x */
-+&cbass_main {
-+	cbass_main_navss: interconnect0 {
-+		mailbox0_cluster0: mailbox@31f80000 {
-+			compatible = "ti,am654-mailbox";
-+			reg = <0x00 0x31f80000 0x00 0x200>;
-+			#mbox-cells = <1>;
-+			ti,mbox-num-users = <4>;
-+			ti,mbox-num-fifos = <16>;
-+			interrupt-parent = <&intr_main_navss>;
-+			interrupts = <164 0>;
-+
-+			mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
-+				ti,mbox-tx = <1 0 0>;
-+				ti,mbox-rx = <0 0 0>;
-+			};
-+		};
-+	};
-+};
+On Fri, May 31, 2019 at 1:33 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, May 31, 2019 at 11:03:17AM -0700, Ke Wu wrote:
+> > I think Coverity is correct. Note that it's the size of
+> > kernel_read_file_str (rather than exclude_read_files) doesn't equal to
+> > ignore_read_file_id.
+> >
+> > This is because READING_MAX_ID is also an element in
+> > kernel_read_file_str, which makes the size of kernel_read_file_str to
+> > be READING_MAX_ID+1. I will send a new patch to fix the issue. Thanks
+> > for the  analysis!
+>
+> Ah! Yes, I see now. I was looking at the wrong things. It should be
+> possible to just do:
+>
+> > > >> 209                for (j = 0; j < ARRAY_SIZE(kernel_read_file_str); j++) {
+>
+> for (j = 0; j < ARRAY_SIZE(ignore_read_file_id); j++)
+>
+> and add a
+>
+> BUILD_BUG_ON(ARRAY_SIZE(kernel_read_file_str) < ARRAY_SIZE(ignore_read_file_id))
+>
+> for future robustness checking.
+>
+> Thanks for looking at this more closely!
+>
+> -Kees
+>
+> > > >> 210                        if (strcmp(cur, kernel_read_file_str[j]) == 0) {
+> > > >> 211                                pr_info("excluding: %s\n",
+> > > >> 212                                        kernel_read_file_str[j]);
+> > > >>
+> > > >> CID 81977 (#1 of 1): Out-of-bounds write
+> > > >> overrun-local: Overrunning array ignore_read_file_id of 8 4-byte
+> > > >> elements at element index 8 (byte offset 35) using index j (which
+> > > >> evaluates to 8).
+> > > >>
+> > > >> 213                                ignore_read_file_id[j] = 1;
+> > > >>
+> > > >> According to Coverity ignore_read_file_id is an array of 8 integers.
+> > > >> However, ARRAY_SIZE(kernel_read_file_str) is 9, so we have an out of
+> > > >> bounds write on ignore_read_file[j] when j is 8.
+> > > >
+> > > > What am I missing? This doesn't fail the build:
+> > > >
+> > > > +       BUILD_BUG_ON(ARRAY_SIZE(exclude_read_files) !=
+> > > > +                    ARRAY_SIZE(ignore_read_file_id));
+> > > >
+> > > > They have the same number of elements.
+> > > >
+> > >
+> > > Yep, that's very true. I'll discuss this with Coverity as this seems
+> > > like a weird false positive.
+> > >
+> > > Apologies for the noise.
+> > >
+> > > Colin
+> >
+> >
+> >
+> > --
+> > Ke Wu | Software Engineer | mikewu@google.com | Google Inc.
+>
+> --
+> Kees Cook
+
+
+
 -- 
-2.21.0
-
+Ke Wu | Software Engineer | mikewu@google.com | Google Inc.
