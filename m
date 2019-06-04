@@ -2,185 +2,153 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D05C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC942C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B102231F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911292231F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XZ/J6Yzq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sM1mzsQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfFDMd6 (ORCPT
+        id S1727770AbfFDMeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:33:58 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60168 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfFDMd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:33:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559651635; bh=BxxySmvFXnZjtb/3jRvUJ5xAJWsfsR3yPsxl6YMjSdM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XZ/J6YzqPnmG5/SSvTvNnIbG0FUOkSx2ZzQtC2SWzbRGDLTHYkE/9TjTjVyQbLjwx
-         47yTGEb8HeV2BYxRL9AEQDawcAw4Xg5XA3dxUN+GjP2OZnpImMdeH2zuif20Li4lz3
-         84MgE3lXOKt37uWn9fPy3MVThkkGtU93JB4rXP6Y=
-Date:   Tue, 4 Jun 2019 14:33:55 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6:
- Add IR receiver node
-Message-ID: <20190604123355.m47ufmhtzuzfvmp7@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-11-peron.clem@gmail.com>
- <20190530145550.amalnxmx7kpokykv@core.my.home>
- <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
- <20190531124630.q2guo54kjfzr7rkn@core.my.home>
- <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
+        Tue, 4 Jun 2019 08:34:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45349 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfFDMeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:34:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w34so10264282pga.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZHnFmrFfRfh/AvNJyyWOv1fZiunoT+xaBh/4jOpKvTQ=;
+        b=sM1mzsQHPWWZHTawBLKWAgVjQThohDWkimAMcbonijyC54y8P2c26E0W2rM2IJY/m8
+         LZvg01A94bMj1WlufObeLPkCPFVWlG1fpPGYAusKcJ0h4TSfntoPqPc6/wpa61VjjeSq
+         2wxM/o5o0K1ra4b5zRGlQW204mrf6zT/4yMmHX7lBOfDc4OCCgqvd6tNS4U2wlNLMmtL
+         bz7UkkIob9zlNFiuzQFjICyejDPOtW4/NuezAc/NufYaEQ9+bPzfXvEC2VUHLxA3jSpg
+         zi75erEDlO6/F+f3w/vSf+LFVBb/kHnrW1/Xu0/niwLqlxDvkQELtydqfx7PnZ4+YwSc
+         CMGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZHnFmrFfRfh/AvNJyyWOv1fZiunoT+xaBh/4jOpKvTQ=;
+        b=cZmaz9HpCSHDVHpK1pTWTEG8t9fLbVPJT8Edd3939tv3CMRAl/N76IEv2KBB1fiKCm
+         B93YJCLsC8yxBE4gzlWxXvuWpVDe46iwJW0tHFJ3MY+cKtoJjicXg4aIgJdxC4qwbKVs
+         C5ljv11ikdEA35cKW0AruJR+uvyfZ4v4vOfxqKicX/GFPbnX6sS4tQWLLPRBxkB82SnK
+         ZG3eQSiiNWOEY5w7ZuYCGU4f5kA1hH9eEUfZEPm+NEyOVZYs/ZEtNpN2vYmJ/18OnO4S
+         fSeAzl4v/zQf4v1a+2FfiuoC6LTCFq9shjJJNE9qI7mlNg9QZVSS9Fv87J/mNCpxl9zr
+         vYng==
+X-Gm-Message-State: APjAAAWsS0IVThkocxQhzg4ZnaTCJHbf9gYuk29/FP5vsikp4IPanxO8
+        oJZQV7NdF9LaFH90BwgD/L5i0zbplVwibICVL438lQ==
+X-Google-Smtp-Source: APXvYqwn1SWCI6udsJKomLgM6z7+qFO6mHtKOVLBDx9bpSrAmG/bLquj7gkAYUayFTQJ+Kz6TBw6JcOE/LCE3GzhNkY=
+X-Received: by 2002:a62:1c91:: with SMTP id c139mr29991024pfc.25.1559651689157;
+ Tue, 04 Jun 2019 05:34:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
+References: <c8311f9b759e254308a8e57d9f6eb17728a686a7.1559649879.git.andreyknvl@google.com>
+ <20190604122841.GB15385@ziepe.ca>
+In-Reply-To: <20190604122841.GB15385@ziepe.ca>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 4 Jun 2019 14:34:37 +0200
+Message-ID: <CAAeHK+x0qYsO+P=8pQ6N0nRa4y+N3HWTh4sFaUMM63X3q_QbBg@mail.gmail.com>
+Subject: Re: [PATCH v2] uaccess: add noop untagged_addr definition
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        sparclinux@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clément,
-
-On Mon, Jun 03, 2019 at 09:58:23PM +0200, Clément Péron wrote:
-> Hi Ondrej,
-> 
-> On Fri, 31 May 2019 at 14:46, Ondřej Jirman <megous@megous.com> wrote:
+On Tue, Jun 4, 2019 at 2:28 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Tue, Jun 04, 2019 at 02:04:47PM +0200, Andrey Konovalov wrote:
+> > Architectures that support memory tagging have a need to perform untagging
+> > (stripping the tag) in various parts of the kernel. This patch adds an
+> > untagged_addr() macro, which is defined as noop for architectures that do
+> > not support memory tagging. The oncoming patch series will define it at
+> > least for sparc64 and arm64.
 > >
-> > Hello Clément,
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> >  include/linux/mm.h | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
 > >
-> > On Fri, May 31, 2019 at 12:25:32AM +0200, Clément Péron wrote:
-> > > Hi Ondrej,
-> > >
-> > > On Thu, 30 May 2019 at 16:55, Ondřej Jirman <megous@megous.com> wrote:
-> > > >
-> > > > Hello Clément,
-> > > >
-> > > > On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
-> > > > > Allwinner H6 IR is similar to A31 and can use same driver.
-> > > > >
-> > > > > Add support for it.
-> > > > >
-> > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
-> > > > >  1 file changed, 19 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > index 16c5c3d0fd81..649cbdfe452e 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > @@ -647,6 +647,25 @@
-> > > > >                               pins = "PL0", "PL1";
-> > > > >                               function = "s_i2c";
-> > > > >                       };
-> > > > > +
-> > > > > +                     r_ir_rx_pin: r-ir-rx-pin {
-> > > > > +                             pins = "PL9";
-> > > > > +                             function = "s_cir_rx";
-> > > > > +                     };
-> > > > > +             };
-> > > > > +
-> > > > > +             r_ir: ir@7040000 {
-> > > > > +                             compatible = "allwinner,sun50i-h6-ir",
-> > > > > +                                          "allwinner,sun6i-a31-ir";
-> > > > > +                             reg = <0x07040000 0x400>;
-> > > > > +                             interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +                             clocks = <&r_ccu CLK_R_APB1_IR>,
-> > > > > +                                      <&r_ccu CLK_IR>;
-> > > > > +                             clock-names = "apb", "ir";
-> > > > > +                             resets = <&r_ccu RST_R_APB1_IR>;
-> > > > > +                             pinctrl-names = "default";
-> > > > > +                             pinctrl-0 = <&r_ir_rx_pin>;
-> > > > > +                             status = "disabled";
-> > > > >               };
-> > > >
-> > > > Please make a comment here, that this is known broken on some boards and may
-> > > > result IRQ flood if enabled. Otherwise noone will know.
-> > >
-> > > I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
-> > > suggested it.
-> > > https://github.com/clementperon/linux/tree/h6_ir_v4
-> > >
-> > > But maybe we could also use the bit 5 of the IRQ status.
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0e8834ac32b7..dd0b5f4e1e45 100644
+> > +++ b/include/linux/mm.h
+> > @@ -99,6 +99,17 @@ extern int mmap_rnd_compat_bits __read_mostly;
+> >  #include <asm/pgtable.h>
+> >  #include <asm/processor.h>
 > >
-> > Thanks, that's nice, but that will not make the HW work. That will just disable
-> > it. The comment is still necessary.
-> I have pushed a new version on my github.
-> https://github.com/clementperon/linux/commits/h6_ir_v4
-> 
-> I will submit it, if you are ok with it.
+> > +/*
+> > + * Architectures that support memory tagging (assigning tags to memory regions,
+> > + * embedding these tags into addresses that point to these memory regions, and
+> > + * checking that the memory and the pointer tags match on memory accesses)
+> > + * redefine this macro to strip tags from pointers.
+> > + * It's defined as noop for arcitectures that don't support memory tagging.
+> > + */
+> > +#ifndef untagged_addr
+> > +#define untagged_addr(addr) (addr)
+>
+> Can you please make this a static inline instead of this macro? Then
+> we can actually know what the input/output types are supposed to be.
+>
+> Is it
+>
+> static inline unsigned long untagged_addr(void __user *ptr) {return ptr;}
+>
+> ?
+>
+> Which would sort of make sense to me.
 
-the changes make it worse. Console is flooded with "Temporarily disable IRQ"
-and other symptoms are the same as I described before. Interrupts are not
-disabled in a any reasonable time. (I've waited for more > 5mins already.)
+Hm, I'm not sure. arm64 specifically defines this as a macro that
+works on different kinds of pointer compatible types to avoid casting
+everywhere it's used:
 
-You probably need to disable interrupts right away, not wait for 100k failures.
+https://elixir.bootlin.com/linux/v5.1.7/source/arch/arm64/include/asm/memory.h#L214
 
-thank you and regards,
-	o.
-
-> Thanks,
-> Clément
-> 
-> >
-> > thank you,
-> >         o.
-> >
-> > > Regards, Clement
-> > >
-> > > >
-> > > > thanks,
-> > > >         o.
-> > > >
-> > > > >               r_i2c: i2c@7081400 {
-> > > > > --
-> > > > > 2.20.1
-> > > > >
-> > > > >
-> > > > > _______________________________________________
-> > > > > linux-arm-kernel mailing list
-> > > > > linux-arm-kernel@lists.infradead.org
-> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.gmail.com.
-> > > For more options, visit https://groups.google.com/d/optout.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> Jason
