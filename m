@@ -4,120 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F5CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B2CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA5E23CCA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387BF2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gg+XXo5Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YUJDujui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfFDQVr (ORCPT
+        id S1728313AbfFDQWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:21:47 -0400
-Received: from vps.xff.cz ([195.181.215.36]:36852 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbfFDQVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:21:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559665305; bh=qm5r7h8IIEdRL40O9VMAH9oDefKlLBdaHOgDq3xcAx4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gg+XXo5YGTIbCkKbpbL3v8FG0/Jel8Q4iepzwyWg0wYkRjoNxyYP0/4SxXfYhN2yH
-         So04IwaJWADhd4PF9Ku/DQaA0uhU4TggtAkiHQvYXkgOb+zXVTzxsFa5xy2Acgzwf2
-         GpteETgWrKs2aV143FMJGHL+6CqDtmNnO5TXleg8=
-Date:   Tue, 4 Jun 2019 18:21:44 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH v2] clk: sunxi-ng: sun50i-h6-r: Fix
- incorrect W1 clock gate register
-Message-ID: <20190604162144.hba5bmkdnidco7pf@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190604154036.23211-1-megous@megous.com>
- <CAJiuCcda0ZDDrbdOF7TpTeoUOgt7GeS6wcgy45DRCo_U2XX6bQ@mail.gmail.com>
+        Tue, 4 Jun 2019 12:22:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32847 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728280AbfFDQWo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:22:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g21so8555942plq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=Xpjq9bw6slADT5XCKmt0erTi9PTdSuDRNC9m5h9fUkk=;
+        b=YUJDujuiWHJHMvNYD3L1Gz6F8jaVKgQZQqlqTNcqZmoo8heqS9GzRSWuBdYHy0ZsTN
+         RnIINRo7NVy7VfZknlFtNXSB1vyXygQ/TKOEXtM9LiTUugYZEWgXyB0p1auiKrhr6JPj
+         ZBUNdP9/fO5M96Cc/ttzxbSmKv8jS91EuMLqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=Xpjq9bw6slADT5XCKmt0erTi9PTdSuDRNC9m5h9fUkk=;
+        b=ZifOUGaHWUTultzXo7FHUZmr2rq2Wc++LRWFSfDDVSAWUF0tVxwE3OJF3w10RsViMN
+         bykcML4+CxHeogizAUIazwuBI9etbVWI5cq/kO6DRGYVkubBUHnJE3EPuhaWp0oW9Kzi
+         mJfcGADBNf23HmLGl69vlEETY/x+nYa6HMu5ioyoJXxL1iSOOMfAozKhiI7bYLaW9xuQ
+         hJOxvs0+k6+wyaW4OT2QCKFQjdp0AewqyI3FG9bJv5wGh9RF1cepKu9PqnTFRSymiLGC
+         6LKIJnlY+wgIZIeRyPEgPBPxgJvbmIXXowsZwsFMcSwxPQHB8cuD2GGgpqs17QPG3d8V
+         kaaQ==
+X-Gm-Message-State: APjAAAVpU9BIFUSZEGyTnLsb4Fn4434kPBIFxi1DLPNll0DnngW4WJkj
+        eBkB0CDJ1qzHh8628Tngm29Miw==
+X-Google-Smtp-Source: APXvYqyVXG8EIds+qzy7r1wtzTPqaJAQxUcsAxNH581QY9KBnrRJOGctYgOl+qzV8OAs14fzo3+vng==
+X-Received: by 2002:a17:902:bc8a:: with SMTP id bb10mr38409335plb.310.1559665363394;
+        Tue, 04 Jun 2019 09:22:43 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k8sm6855524pfk.177.2019.06.04.09.22.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 09:22:42 -0700 (PDT)
+Message-ID: <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcda0ZDDrbdOF7TpTeoUOgt7GeS6wcgy45DRCo_U2XX6bQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190604072001.9288-4-bjorn.andersson@linaro.org>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org> <20190604072001.9288-4-bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Evan Green <evgreen@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+User-Agent: alot/0.8.1
+Date:   Tue, 04 Jun 2019 09:22:42 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clément,
+Quoting Bjorn Andersson (2019-06-04 00:20:01)
+> Specify the UFS device-reset gpio, so that the controller will issue a
+> reset of the UFS device.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dt=
+s/qcom/sdm845-mtp.dts
+> index 2e78638eb73b..d116a0956a9c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -388,6 +388,8 @@
+>  &ufs_mem_hc {
+>         status =3D "okay";
+> =20
+> +       device-reset-gpios =3D <&tlmm 150 GPIO_ACTIVE_LOW>;
+> +
 
-On Tue, Jun 04, 2019 at 06:14:15PM +0200, Clément Péron wrote:
-> Hi Ondrej,
-> 
-> On Tue, 4 Jun 2019 at 17:40, megous via linux-sunxi
-> <linux-sunxi@googlegroups.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > The current code defines W1 clock gate to be at 0x1cc, overlaying it
-> > with the IR gate.
-> >
-> > Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
-> > causing interrupt floods on H6 (because interrupt flags can't be cleared,
-> > due to IR module's bus being disabled).
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU")
-> > ---
-> >  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-> > index 27554eaf6929..8d05d4f1f8a1 100644
-> > --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-> > +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-> > @@ -104,7 +104,7 @@ static SUNXI_CCU_GATE(r_apb2_i2c_clk,       "r-apb2-i2c",   "r-apb2",
-> >  static SUNXI_CCU_GATE(r_apb1_ir_clk,   "r-apb1-ir",    "r-apb1",
-> >                       0x1cc, BIT(0), 0);
-> >  static SUNXI_CCU_GATE(r_apb1_w1_clk,   "r-apb1-w1",    "r-apb1",
-> > -                     0x1cc, BIT(0), 0);
-> > +                     0x1ec, BIT(0), 0);
-> Just for information where did you find this information?
-> Using the vendor kernel or user manual?
+We had to do something similar on one particular brand of UFS that we had. I
+think it was an SK Hynix part that had trouble and wouldn't provision prope=
+rly.
+Either way, we did this with a pinctrl toggle in the DTS where the "init" s=
+tate
+has the UFS_RESET pin asserted and then "default" state has the pin deasser=
+ted.
+That was good enough to make this work.
 
-Informed guess. All gates and resets are in the same register. And
-you can see below that reset register for w1 is 0x1ec. (reset register
-for ir is 0x1cc)
+	&ufs_mem_hc {
+		pinctrl-names =3D "init", "default";
+		pinctrl-0 =3D <&ufs_dev_reset_assert>;
+		pinctrl-1 =3D <&ufs_dev_reset_deassert>;
+	};
 
-regards,
-	o.
+        ufs_dev_reset_assert: ufs_dev_reset_assert {
+                config {
+                        pins =3D "ufs_reset";
+                        bias-pull-down;         /* default: pull down */
+                        drive-strength =3D <8>;   /* default: 3.1 mA */
+                        output-low; /* active low reset */
+                };
+        };
 
-> Thanks,
-> Clément
-> 
-> >
-> >  /* Information of IR(RX) mod clock is gathered from BSP source code */
-> >  static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
-> > --
-> > 2.21.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190604154036.23211-1-megous%40megous.com.
-> > For more options, visit https://groups.google.com/d/optout.
+        ufs_dev_reset_deassert: ufs_dev_reset_deassert {
+                config {
+                        pins =3D "ufs_reset";
+                        bias-pull-down;         /* default: pull down */
+                        drive-strength =3D <8>;
+                        output-high; /* active low reset */
+                };
+        };
