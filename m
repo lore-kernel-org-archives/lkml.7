@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61CCC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB2AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB7420859
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1523C20859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690750;
-	bh=4wEi1bPV2mkdYqpVyv51im56z9mSOznmGZ7hJqaIZS0=;
+	s=default; t=1559690753;
+	bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmYhOjIsF3WDV+/NT1NcNQzTeoiAMjmw5Nphfd9HHLylrp+TRDHAChKBM+xJ02Bkh
-	 /dKM+P2wkmADqdFMSH9RquEPZm39epoDoRjqIRzqgoX6qfNwpGHX1TUCaz1ZyTzRY6
-	 0cGSFCuFWDtP+lIraMN+NkEyZaaIKXrZRuENyelc=
+	b=uWHN9HHSCku//PPA/4KuZF5iAei3cjVKoiAgrk4m3X6nAaErmteWhJD6udVm8U/5/
+	 a59tkb7QQk0mgwfBQHRPXBoXBVPW+PzKWQG5xzNoicERreptlmKB05J1kfv2LgMajK
+	 SkpVZ/Q6rqIhcib2+vLCaeDjWLX0CgcLPlTVXDbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfFDXZt (ORCPT
+        id S1728146AbfFDXZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37592 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbfFDXZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:41 -0400
+        id S1727217AbfFDXZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CCD2085A;
-        Tue,  4 Jun 2019 23:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA75F20859;
+        Tue,  4 Jun 2019 23:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690741;
-        bh=4wEi1bPV2mkdYqpVyv51im56z9mSOznmGZ7hJqaIZS0=;
+        s=default; t=1559690744;
+        bh=xHZbjZKGwvdeTJRemHBIVesdOZlSKG+NWWZhLikmVVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ik6OBrOS3TA0WsrtsQ4ccuQhgIlq7lpDzbU7WykM3KzRmsni+CCY88V6KSDQbTbwv
-         g0A0+ucIueCRX1ls4kdmvIf5H7KUyhiLf1DlSz+m1zMHB9hcjARONpzb54ufanDBLv
-         WT8IEGRgn2D2LVui0HbBsWlVNyv3l9EScJj5iYRc=
+        b=T12f+PmGi363ry9ObmA5799tpoZGzaXaBoanM8EmUSAgqLz84rVIrY2u33R/LQWQv
+         4XMALCSNJwLWQGMb8qK/yweOupJ8h6EHx6VYszNq7JwjUBH07wrHRryE/BJ8PqPpFU
+         weeYUzXeTaY/6QA6Uy6ETKUpvOJzwaN090j/QTxw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/10] scsi: lpfc: add check for loss of ndlp when sending RRQ
-Date:   Tue,  4 Jun 2019 19:25:26 -0400
-Message-Id: <20190604232532.7953-5-sashal@kernel.org>
+Cc:     Bernd Eckstein <3erndeckstein@gmail.com>,
+        Oliver Zweigle <Oliver.Zweigle@faro.com>,
+        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/10] usbnet: ipheth: fix racing condition
+Date:   Tue,  4 Jun 2019 19:25:28 -0400
+Message-Id: <20190604232532.7953-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
 References: <20190604232532.7953-1-sashal@kernel.org>
@@ -61,38 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Bernd Eckstein <3erndeckstein@gmail.com>
 
-[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
+[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
 
-There was a missing qualification of a valid ndlp structure when calling to
-send an RRQ for an abort.  Add the check.
+Fix a racing condition in ipheth.c that can lead to slow performance.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Tested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
+ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
+When this happens, the queue is stopped longer than it needs to be,
+thus reducing network performance.
+
+Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
+is always correct. In case, usb_submit_urb() fails, the queue is woken up
+again as callback will not fire.
+
+Testing: This racing condition is usually not noticeable, as it has to
+occur very frequently to slowdown the network. The callback from the USB
+is usually triggered slow enough, so the situation does not appear.
+However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
+the we loose the race quite often and the following speedup can be noticed:
+
+Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
+With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
+
+Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
+Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/usb/ipheth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 398c9a0a5ade..82a690924f5e 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -6498,7 +6498,10 @@ int
- lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
- {
- 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
--							rrq->nlp_DID);
-+						       rrq->nlp_DID);
-+	if (!ndlp)
-+		return 1;
-+
- 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
- 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
- 					 rrq->nlp_DID, rrq);
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index 01f95d192d25..2b16a5fed9de 100644
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
+ 			  dev);
+ 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
+ 
++	netif_stop_queue(net);
+ 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
+ 			__func__, retval);
+ 		dev->net->stats.tx_errors++;
+ 		dev_kfree_skb_any(skb);
++		netif_wake_queue(net);
+ 	} else {
+ 		dev->net->stats.tx_packets++;
+ 		dev->net->stats.tx_bytes += skb->len;
+ 		dev_consume_skb_any(skb);
+-		netif_stop_queue(net);
+ 	}
+ 
+ 	return NETDEV_TX_OK;
 -- 
 2.20.1
 
