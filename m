@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31B3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5BFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ABC23BA7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B71923BA7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mPNAsiSf"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wHBFMpvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfFDKQV (ORCPT
+        id S1727217AbfFDKPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:16:21 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:39165 "EHLO
+        Tue, 4 Jun 2019 06:15:38 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:39169 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbfFDKPi (ORCPT
+        with ESMTP id S1727027AbfFDKPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 06:15:38 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC7G032511;
-        Tue, 4 Jun 2019 19:14:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7G032511
+        by conuserg-08.nifty.com with ESMTP id x54AEC78032511;
+        Tue, 4 Jun 2019 19:14:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC78032511
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643263;
-        bh=VGjPFxsP6kBrwBDYVWYAlv4U8kztKdxrIjkfmrPtJXg=;
+        s=dec2015msa; t=1559643256;
+        bh=e9SJiB4wnNAkhH818NbOR4wiR7iq+acLPPc6r/sEHqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPNAsiSfLq57iHEV9xRwWBflUZfrT8ykBp+GDWZIAjQVsJRkpidrYn5NkG9tdx0QX
-         Z4wnRAsDdssWbfEuF/grcOod8QKRBuz5qp1MRl7V8lCPEHVjH0BEs56PXqBZutxt5e
-         66MwUD6gQ2OAu5/QtgktevdXDj9X4ST08oq01DRS3BK5Uqyv01nWs5TZQZJyahCJQb
-         0S0lRIy9WXxWAiPFrpoLLjQYe4L5LJOnXmbdbrwESnQQLXqqCx7keYmlD/Hx9UCqoL
-         2S3L71IWhirlHqf21BD7bSeBFGx/i+0MNV5ytyZJkEEdhnVzQW4tJQ2TG34DraNtat
-         m8IRGhxixPBmQ==
+        b=wHBFMpviCKXyTlZK9yx9rTb6w54/CFiGPJKXwz3QNn4NZbc6VjSt4uDy4FBFy4I5d
+         Ofpl6bCf61/AQZAtZjS5QtZvoIB2HxrHCZvJ58O6MpiexlY8Bkw62/v6GZN6W1oA3f
+         02a9bI9qWYRoL3jrINrk6i3GmRU994yZl4W2co2a9U0aYYVlK9MNNk1xlsPdgvPDK2
+         bKeuoBcMHpbm+RJ5ns27JAJHEQknqCQETn64BVurzli3sl6ogWLPTKMCu+sKNrjz37
+         yg7aqlh9VDlehbbmy/6qUwbJoroYTlc0JIsU91O9gOXSv8gNVu0hNTv9SNw2KLTWGg
+         ehBAHQJCJFt1Q==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -48,9 +48,9 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/15] kbuild: move hdr-inst shorthand to top Makefile
-Date:   Tue,  4 Jun 2019 19:14:04 +0900
-Message-Id: <20190604101409.2078-11-yamada.masahiro@socionext.com>
+Subject: [PATCH 02/15] kbuild: remove stale dependency between Documentation/ and headers_install
+Date:   Tue,  4 Jun 2019 19:13:56 +0900
+Message-Id: <20190604101409.2078-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
@@ -59,46 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that hdr-inst is used only in the top Makefile, move it there
-from scripts/Kbuild.include.
+Commit 8e2faea877eb ("Make Documenation depend on headers_install")
+dates back to 2014, which is before Sphinx was introduced for the
+kernel documentation.
+
+Since none of DOC_TARGET requires headers_install, it is strange to
+run it only for the single target "Documentation/".
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile               | 2 ++
- scripts/Kbuild.include | 6 ------
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ Makefile | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 608af32cc758..48bac02fb72d 100644
+index 7745bdd84861..67b866d19269 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1190,6 +1190,8 @@ headers_install: headers
+@@ -1745,8 +1745,7 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
+ PHONY += /
+ /: ./
  
- PHONY += archheaders archscripts
+-# Make sure the latest headers are built for Documentation
+-Documentation/ samples/: headers_install
++samples/: headers_install
+ %/: prepare FORCE
+ 	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
  
-+hdr-inst := -f $(srctree)/scripts/Makefile.headersinst obj
-+
- PHONY += headers
- headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archscripts
- 	$(if $(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/Kbuild),, \
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index f12e81eeb89b..9ae4493d5bcd 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -180,12 +180,6 @@ dtbinst := -f $(srctree)/scripts/Makefile.dtbinst obj
- # $(Q)$(MAKE) $(clean)=dir
- clean := -f $(srctree)/scripts/Makefile.clean obj
- 
--###
--# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.headersinst obj=
--# Usage:
--# $(Q)$(MAKE) $(hdr-inst)=dir
--hdr-inst := -f $(srctree)/scripts/Makefile.headersinst obj
--
- # echo command.
- # Short version is used, if $(quiet) equals `quiet_', otherwise full one.
- echo-cmd = $(if $($(quiet)cmd_$(1)),\
 -- 
 2.17.1
 
