@@ -2,99 +2,139 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66992C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EA5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306A524B39
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gZ2toIQ0"
+	by mail.kernel.org (Postfix) with ESMTP id E205524AF2
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfFDK3Z (ORCPT
+        id S1727291AbfFDK3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:29:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:50293 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfFDK3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:29:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45J7Sx4Bx3z9s3Z;
-        Tue,  4 Jun 2019 20:29:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559644162;
-        bh=WIejSqOqVWArGUwS80dnLpzCIBBF7ejgcfIQE3A3wCQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gZ2toIQ0UxbHR2sJ10+sYJ3SvpmBB8I1fSgYFk5s+1NZdNGar/HAcbyHm5IeGMFnH
-         mIiH8YPx44nfKkr/q/hDb3RwgsTD7mHa1pIO9HBM+5s7yUuv4QAGknaIx13Gi/8gfh
-         uLt9OYtw0QMul/6N0CtaibZsOIxxjoju2iQDgG6kU+NxG+Bhhd0TO7ifDJ+Al3Kqny
-         nicJfwpClEdmH/2G2HMmhS68zeaBoDK65fE0Pw2hSKXCpaTnMO4TbkaygK5k/rP9ZQ
-         phjpn1em8KVoDSvmML+aNpDeGayvraC72jiEM4KaLulnjWkRMKl56VhAokuXcJSF9H
-         VjhbSUfU8DQOw==
-Date:   Tue, 4 Jun 2019 20:29:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-next@vger.kernel.org,
-        linux-mm@kvack.org, "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [POWERPC][next-20190603] Boot failure : Kernel BUG at
- mm/vmalloc.c:470
-Message-ID: <20190604202918.17a1e466@canb.auug.org.au>
-In-Reply-To: <9F9C0085-F8A4-4B66-802B-382119E34DF5@linux.vnet.ibm.com>
-References: <9F9C0085-F8A4-4B66-802B-382119E34DF5@linux.vnet.ibm.com>
+        Tue, 4 Jun 2019 06:29:48 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42339 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFDK3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:29:48 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t28so8022649lje.9;
+        Tue, 04 Jun 2019 03:29:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KC6WYxlpcqhIp28quPcFujzF/rmNHk3TKH17hzBiGvA=;
+        b=hw+gveNYVD5uQUBCaKjvBBPmQLhpFopKknIODrN1W8tWgLQmFahFeQEwE13iTjXM1H
+         FQ7f01eJgDJU7Ywbnvig+7TTwZCQ0O20GUNLzCI8pTWimbG/0COOEoJeYVgV3Z739Irm
+         tDKDxGZRP5BpbFXgutvTShDrZxCLXCgt9YaMt7PO4I9EkxRKDZ6+lQgrpOOgRxLwAh6k
+         P9GBowdwAfx8K5ueFSG8+y89MHM9gazZ5euBaCzdY5JgqvrErLFEAuMm32zPaqwi0eIm
+         MQ97Iqio8Kbu7Q2gmjeINMPX3i5s581/3y4n9W19MsVJn9XhmvwYqBnQU8RI7TP0qVvv
+         hSSg==
+X-Gm-Message-State: APjAAAUkTkf1bBPeQtdJTPaFHmbkAmX64ePu/AOJXPa6eYzFkpj8SZJm
+        hnIlxQzwIRMQuves8K5dM4E+R8yMKS3rx10ZHdB/ZTA+6qY=
+X-Google-Smtp-Source: APXvYqzaAYC+UV3seO+WXdy5Gi7SOfofMsS+MSg3WFzpTkSP9cCsxuFgFUOf/eucH09eOywO+ZqM377EHrigh3XpR38=
+X-Received: by 2002:a2e:960e:: with SMTP id v14mr16623216ljh.31.1559644185874;
+ Tue, 04 Jun 2019 03:29:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/n.aGLPJk/wsZDAk8OiMeL=b"; protocol="application/pgp-signature"
+References: <20190530135317.3c8d0d7b@lwn.net>
+In-Reply-To: <20190530135317.3c8d0d7b@lwn.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Jun 2019 12:29:33 +0200
+Message-ID: <CAMuHMdWFdkzcFEsxVAzo17o1hVp6Z-3GftFcN6hDhg-ewX4M6g@mail.gmail.com>
+Subject: Re: [PATCH RFC] Rough draft document on merging and rebasing
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n.aGLPJk/wsZDAk8OiMeL=b
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jon,
 
-Hi Sachin,
-
-On Tue, 4 Jun 2019 14:45:43 +0530 Sachin Sant <sachinp@linux.vnet.ibm.com> =
-wrote:
+On Thu, May 30, 2019 at 9:54 PM Jonathan Corbet <corbet@lwn.net> wrote:
+> This is a first attempt at following through on last month's discussion
+> about common merging and rebasing errors.  The hope here is to document
+> existing best practices rather than trying to define new ones.  I've
+> certainly failed somewhere along the way; please set me straight and I'll
+> try to do better next time.
 >
-> While booting linux-next [next-20190603] on a POWER9 LPAR following
-> BUG is encountered and the boot fails.
->=20
-> If I revert the following 2 patches I no longer see this BUG message
->=20
-> 07031d37b2f9 ( mm/vmalloc.c: switch to WARN_ON() and move it under unlink=
-_va() )
-> 728e0fbf263e ( mm/vmalloc.c: get rid of one single unlink_va() when merge=
- )
+> Thanks,
+>
+> jon
+>
+> -------------
+> docs: Add a document on repository management
+>
+> Every merge window seems to involve at least one episode where subsystem
+> maintainers don't manage their trees as Linus would like.  Document the
+> expectations so that at least he has something to point people to.
+>
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
-This latter patch has been fixed in today's linux-next ...
+Thanks!
 
---=20
-Cheers,
-Stephen Rothwell
+> --- /dev/null
+> +++ b/Documentation/maintainer/repo-hygiene.rst
 
---Sig_/n.aGLPJk/wsZDAk8OiMeL=b
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +One thing to be aware of in general is that, unlike many other projects,
+> +the kernel community is not scared by seeing merge commits in its
+> +development history.  Indeed, given the scale of the project, avoiding
+> +merges would be nearly impossible.  Some problems encountered by
+> +maintainers results from a desire to avoid merges, while others come from
 
------BEGIN PGP SIGNATURE-----
+result
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz2R/4ACgkQAVBC80lX
-0GxNXwf/fJ0Go1oz1h68yR3tc7OY90gu/bZ5Klbs+GSN973ZKndwaWH4q79zzjie
-LYHNzKdPpxDLckq08NQSFajRzh6gIvzI+qeaLHjss93qbxpOhzLRjI7UQsD+isR2
-S2HsUU7Tn1hAsVZhbZp3McmIOPIRet/p6jA0K43BH+eeXrcT7R6TOTNkiIV1X1/o
-AGsvFmJ80rVbJ/q4mCeC4q5Dz0BrTnCRKhHXChocYDPqSRvjSrwfnI+Uqk9ywHuD
-TIMSsoc1JR/xDGmxnoR8hW91OkQkQ5q8N4OSQSxEqS42HSQkLShxyyHiCBQDQa3N
-8jYQuik/cymkDKNlptMJG/Ft6lrldA==
-=JezC
------END PGP SIGNATURE-----
+> +merging a little too often.
 
---Sig_/n.aGLPJk/wsZDAk8OiMeL=b--
+[...]
+
+> + - Realize the rebasing a patch series changes the environment in which it
+
+Realize that
+
+> +   was developed and, likely, invalidates much of the testing that was
+> +   done.  A rebased patch series should, as a general rule, be treated like
+> +   new code and retested from the beginning.
+
+> +Finally
+> +=======
+> +
+> +It is relatively common to merge with the mainline toward the beginning of
+> +the development cycle in order to pick up changes and fixes done elsewhere
+> +in the tree.  As always, such a merge should pick a well-known release
+> +point rather than some random spot.  If your upstream-bound branch has
+> +emptied entirely into the mainline during the merge window, you can pull it
+> +forward with a command like::
+> +
+> +  git merge v5.2-rc1^0
+> +
+> +The "^0" will cause Git to do a fast-forward merge (which should be
+> +possible in this situation), thus avoiding the addition of a spurious merge
+> +commit.
+
+I usually use
+
+     git rebase v5.2-rc1 <mybranch>
+
+_after_ verifying everything has been merged, i.e.
+
+    git cherry -v v5.2-rc1 <mybranch>
+
+did not give any output.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
