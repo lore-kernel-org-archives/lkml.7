@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A90C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3EBC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395D92085A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2E320859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690727;
-	bh=bS1WUeWETqkknD0xFwDKGa0SWyHszAHTUtGTiwD4rIs=;
+	s=default; t=1559690731;
+	bh=iH9EqOw6zCrQVr34RNstGkrJmyvWsQfb6b4zAUYzBsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxKhWpMl6b8KMnvOj4SXkMk2W0o2S7Au96/mdqwbQhkeTrqfxXBudn9Y+MFsuykaI
-	 hC49djJDGek6CwcuJRkv9ELSYmGBxTx3Y+AAPrlNYvHMU5hpc7/ApFJYJFYrKnlRo5
-	 lS5pQmSxE2TcFU+yqS5urvVDzqv7cV4eRJngw9pk=
+	b=CIO8SygxZarUBwY+d0IyyKkMo9R8iRrnYI4he4TYL2njRlyMOx4bx5jc9EekzxIX0
+	 sWj6woC+hFaK/ynPJ4oTJ3I993fJ8alzuv9n1gUsxYMrAA7ZWT9Imnhd9U3K1uPSHo
+	 4nl6E2DqMPLYWQHH51Td+VBrb8HeFP4wDuanGh9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfFDXZ0 (ORCPT
+        id S1728042AbfFDXZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbfFDXZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:24 -0400
+        id S1727954AbfFDXZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CBBD2085A;
-        Tue,  4 Jun 2019 23:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A3820859;
+        Tue,  4 Jun 2019 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690722;
-        bh=bS1WUeWETqkknD0xFwDKGa0SWyHszAHTUtGTiwD4rIs=;
+        s=default; t=1559690720;
+        bh=iH9EqOw6zCrQVr34RNstGkrJmyvWsQfb6b4zAUYzBsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AzikZmCSmW+ZwrWyRVaxnSdXdS/A1Tj3ZGQb0Iqjoe0RK/B94fc9DxsULLFvpWKA0
-         O2oM3DmkT8smfTiCMIGn6e2uapR/paDef3819nr7BvpwxTVHLtxx0U5cdA8f17i2Uz
-         o12HCi2xJvk4msYod/Adl88WPtMgLYWNmZ7PmpGo=
+        b=vxQCg1BVr1ogAgfP2fJ9a3eWq1i3fHo0AlDQcyExP9lDDEHxcyBTilGDjXCfipXKd
+         Qme3zwy5xOnnlUX6ygojO7qf+lQO2IDuIIyaV8XuHkOIeUQOGNz1UV5RSspbRlRAFq
+         q0N5TtSZiQ6LrPDuPpmfAcXJMG5dtRyTEXSjMpAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 11/17] arm64/mm: Inhibit huge-vmap with ptdump
-Date:   Tue,  4 Jun 2019 19:24:52 -0400
-Message-Id: <20190604232459.7745-11-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/17] scsi: lpfc: add check for loss of ndlp when sending RRQ
+Date:   Tue,  4 Jun 2019 19:24:51 -0400
+Message-Id: <20190604232459.7745-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
 References: <20190604232459.7745-1-sashal@kernel.org>
@@ -62,76 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
+[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
 
-The arm64 ptdump code can race with concurrent modification of the
-kernel page tables. At the time this was added, this was sound as:
+There was a missing qualification of a valid ndlp structure when calling to
+send an RRQ for an abort.  Add the check.
 
-* Modifications to leaf entries could result in stale information being
-  logged, but would not result in a functional problem.
-
-* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
-  were performed when the ptdump code cannot be invoked.
-
-* At runtime, modifications to non-leaf entries only occurred in the
-  vmalloc region, and these were strictly additive, as intermediate
-  entries were never freed.
-
-However, since commit:
-
-  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
-
-... it has been possible to create huge mappings in the vmalloc area at
-runtime, and as part of this existing intermediate levels of table my be
-removed and freed.
-
-It's possible for the ptdump code to race with this, and continue to
-walk tables which have been freed (and potentially poisoned or
-reallocated). As a result of this, the ptdump code may dereference bogus
-addresses, which could be fatal.
-
-Since huge-vmap is a TLB and memory optimization, we can disable it when
-the runtime ptdump code is in use to avoid this problem.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
-Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/mmu.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 0a56898f8410..efd65fc85238 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -765,13 +765,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
- 
- int __init arch_ioremap_pud_supported(void)
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 4905455bbfc7..b5be4df05733 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -6789,7 +6789,10 @@ int
+ lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
  {
--	/* only 4k granule supports level 1 block mappings */
--	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
-+	/*
-+	 * Only 4k granule supports level 1 block mappings.
-+	 * SW table walks can't handle removal of intermediate entries.
-+	 */
-+	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
-+	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
- }
- 
- int __init arch_ioremap_pmd_supported(void)
- {
--	return 1;
-+	/* See arch_ioremap_pud_supported() */
-+	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
- }
- 
- int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
+ 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
+-							rrq->nlp_DID);
++						       rrq->nlp_DID);
++	if (!ndlp)
++		return 1;
++
+ 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
+ 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
+ 					 rrq->nlp_DID, rrq);
 -- 
 2.20.1
 
