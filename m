@@ -2,130 +2,130 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85116C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166D9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6457424AB7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00DB24AB7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559660374;
+	bh=JAkTNWpl6Vnw9XnoJVZ89x7XsOw0H/wj2o7r+Fmj5Tk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=RJzEmcETywbtTqkcL9S9uEDIl6GKm0V0RFXMZ13LpvcwtstNFtxfI/sb5Kvcqd1Hn
+	 4f9x2pxK+H4LRxB8JdfQheFVIvLrT2XQdzuaVTfztaIk7ZhKFiZTc8I4AJXOZlbDSS
+	 5mjSPfMoU6+bke1HPnBK5BWp/a/273kF0KHpIwbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfFDO7T (ORCPT
+        id S1727953AbfFDO7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:59:19 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43577 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfFDO7Q (ORCPT
+        Tue, 4 Jun 2019 10:59:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48736 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfFDO7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:59:16 -0400
-X-Originating-IP: 90.88.144.139
-Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E4BFE6000C;
-        Tue,  4 Jun 2019 14:59:07 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 16:59:07 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" 
-        <linux-input@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Message-ID: <20190604145907.j3fp52gxupd3bkih@flea>
-References: <20190604144252.26965-1-luca@z3ntu.xyz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zeywvuntmrvlmigf"
-Content-Disposition: inline
-In-Reply-To: <20190604144252.26965-1-luca@z3ntu.xyz>
-User-Agent: NeoMutt/20180716
+        Tue, 4 Jun 2019 10:59:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=RbstzphZvlrTV6oS0dsnCRyk4ToW/lQ4snN4C+vyhtE=; b=RWsKsz7nmfQ/
+        u7wQuxhxavNRgyeEccQTmkwSX4SAJTO5a+2SrtQyDtYC0/eK014eSfNOSMmb7qWCTW654mOAKw5A6
+        LCtvxpJ+8wOaUR2Dufse2OTcMUhxkV0zpzkmObfsfCyTP8ROhskEa2vhqRf6G9xk5eZXug0u7EA2c
+        wJU9c=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYAtx-0006Eo-EN; Tue, 04 Jun 2019 14:59:01 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id E9721440049; Tue,  4 Jun 2019 15:59:00 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: cx2072x: remove set but not used variable 'is_right_j '" to the asoc tree
+In-Reply-To: <20190525123204.16148-1-yuehaibing@huawei.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190604145900.E9721440049@finisterre.sirena.org.uk>
+Date:   Tue,  4 Jun 2019 15:59:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---zeywvuntmrvlmigf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: cx2072x: remove set but not used variable 'is_right_j '
 
-Hi Luca,
+has been applied to the asoc tree at
 
-On Tue, Jun 04, 2019 at 04:42:53PM +0200, Luca Weiss wrote:
-> Add a node describing the KEYADC on the A64.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
-You should have a changelog detailing which changes you made to your
-patch with the previous version, and why you made those changes (for
-example because we looked at the a83t datasheet and found the two
-controllers to be very similar).
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> ---
->  .../devicetree/bindings/input/sun4i-lradc-keys.txt        | 1 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             | 8 ++++++++
->  2 files changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> index 496125c6bfb7..507b737612ea 100644
-> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> @@ -5,6 +5,7 @@ Required properties:
->   - compatible: should be one of the following string:
->  		"allwinner,sun4i-a10-lradc-keys"
->  		"allwinner,sun8i-a83t-r-lradc"
-> +		"allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
->   - reg: mmio address range of the chip
->   - interrupts: interrupt to which the chip is connected
->   - vref-supply: powersupply for the lradc reference voltage
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 7734f70e1057..3a42352b5c9f 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -704,6 +704,14 @@
->  			status = "disabled";
->  		};
->
-> +		lradc: lradc@1c21800 {
-> +			compatible = "allwinner,sun50i-a64-lradc",
-> +				     "allwinner,sun8i-a83t-r-lradc";
-> +			reg = <0x01c21800 0x400>;
-> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-The bindings and the dt changes should be two different patches as
-well.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Thanks!
-Maxime
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Mark
 
---zeywvuntmrvlmigf
-Content-Type: application/pgp-signature; name="signature.asc"
+From 190d9e0332ab43b28cbb1856fc73ed7fafbfad7c Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Sat, 25 May 2019 20:32:04 +0800
+Subject: [PATCH] ASoC: cx2072x: remove set but not used variable 'is_right_j '
 
------BEGIN PGP SIGNATURE-----
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPaHOwAKCRDj7w1vZxhR
-xSCVAP9HifWQjLo0644GCGN5e5COuSQdxy0ZI0cNk9VMK0ez6wEAsx9jt6NTjM24
-Trk40SgSkATAuyASrgr34Yguf/iQbQk=
-=yHyP
------END PGP SIGNATURE-----
+sound/soc/codecs/cx2072x.c: In function cx2072x_config_i2spcm:
+sound/soc/codecs/cx2072x.c:679:6: warning: variable is_right_j set but not used [-Wunused-but-set-variable]
 
---zeywvuntmrvlmigf--
+It's never used and can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/cx2072x.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
+index 8b0830854bb3..f2cb35a50726 100644
+--- a/sound/soc/codecs/cx2072x.c
++++ b/sound/soc/codecs/cx2072x.c
+@@ -676,7 +676,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+ 	unsigned int bclk_rate = 0;
+ 	int is_i2s = 0;
+ 	int has_one_bit_delay = 0;
+-	int is_right_j = 0;
+ 	int is_frame_inv = 0;
+ 	int is_bclk_inv = 0;
+ 	int pulse_len;
+@@ -740,7 +739,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+ 
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 		is_i2s = 1;
+-		is_right_j = 1;
+ 		pulse_len = frame_len / 2;
+ 		break;
+ 
+-- 
+2.20.1
+
