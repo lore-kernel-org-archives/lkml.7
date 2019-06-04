@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A16C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E55C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B53F206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48622206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691099;
-	bh=v37XWTXYLOMMk+Eg1kuGeq+Ikko11JiXlRFcLmbIr8c=;
+	s=default; t=1559691113;
+	bh=iWSbiFnhIIDjOnuZj9cOzoMDZNfvc7+hkcwYKwJDwXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5JE/cqK1+Py/WUWEjxq5RTeYmfpqUWW1WGOPtAYBV7f9LWdQDj0+ntThkRGzrVRa
-	 AGOPvqz+YWK0usExhC5QwRBRAOD+7csPPBQsIru/tieNKwNUhHAJlmOxXWvIdbtRKN
-	 LOjawD+n3qUPHoA3TZSBA7TmVxhN2Gom8Kt5m6aM=
+	b=kYiamA0iMsRB4EOsR6hE07OhUQK472JZqnms6/K6LD7cK+PFN44BXiHbo5FY/X3ty
+	 A0qw4/ZWgf1eNgoRlfOxJIlMFYONNSVXcSnjoBDYkdp/a4WKGDJW07u38Go0RGGGGh
+	 +r4Rw2ORJgPf+6PJUoMXdVK7+tNJGFrmDVuDCR/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfFDXW5 (ORCPT
+        id S1727485AbfFDXbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:31:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfFDXWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:54 -0400
+        id S1727003AbfFDXWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E3420866;
-        Tue,  4 Jun 2019 23:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C07020B7C;
+        Tue,  4 Jun 2019 23:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690573;
-        bh=v37XWTXYLOMMk+Eg1kuGeq+Ikko11JiXlRFcLmbIr8c=;
+        s=default; t=1559690569;
+        bh=iWSbiFnhIIDjOnuZj9cOzoMDZNfvc7+hkcwYKwJDwXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVtnRYzaU6u95CMAqhdYpyaKi8ytZSeS9/bduAHvC8tIsm3L/VTljZROE9Wu9zJRa
-         n2X0ZdvF/RYB8JIAHEJ5z1nGWg9DL+H/2lahIVANUwlKMVEvxGBWGVHIjyP6VYZSDf
-         PFAcwzxrXqZ+Sju5yuD7xrbW0uCDjSmnMqoNbA5I=
+        b=17/AV3t35NCiU90irG8+4mrObsgBjaN/vSAebZmwq8K4eaJ/phXmxxZysLhDwM3Ht
+         dqBkjye1ZUrgx3LFXrrvufQcCy/g1MIXxUkn8yQFvvp3mppTSP5QN/KV8/oMQ8WH/m
+         DtSLfVYpLN4WuUrgdDwEUE2T+t61JP8xtknEYwKI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 25/60] arm64/mm: Inhibit huge-vmap with ptdump
-Date:   Tue,  4 Jun 2019 19:21:35 -0400
-Message-Id: <20190604232212.6753-25-sashal@kernel.org>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 23/60] enetc: Fix NULL dma address unmap for Tx BD extensions
+Date:   Tue,  4 Jun 2019 19:21:33 -0400
+Message-Id: <20190604232212.6753-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -62,76 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
+[ Upstream commit f4a0be84d73ec648628bf8094600ceb73cb6073f ]
 
-The arm64 ptdump code can race with concurrent modification of the
-kernel page tables. At the time this was added, this was sound as:
+For the unlikely case of TxBD extensions (i.e. ptp)
+the driver tries to unmap the tx_swbd corresponding
+to the extension, which is bogus as it has no buffer
+attached.
 
-* Modifications to leaf entries could result in stale information being
-  logged, but would not result in a functional problem.
-
-* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
-  were performed when the ptdump code cannot be invoked.
-
-* At runtime, modifications to non-leaf entries only occurred in the
-  vmalloc region, and these were strictly additive, as intermediate
-  entries were never freed.
-
-However, since commit:
-
-  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
-
-... it has been possible to create huge mappings in the vmalloc area at
-runtime, and as part of this existing intermediate levels of table my be
-removed and freed.
-
-It's possible for the ptdump code to race with this, and continue to
-walk tables which have been freed (and potentially poisoned or
-reallocated). As a result of this, the ptdump code may dereference bogus
-addresses, which could be fatal.
-
-Since huge-vmap is a TLB and memory optimization, we can disable it when
-the runtime ptdump code is in use to avoid this problem.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
-Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/mmu.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/freescale/enetc/enetc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index e97f018ff740..ece9490e3018 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -936,13 +936,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index 5bb9eb35d76d..491475d87736 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -313,7 +313,9 @@ static bool enetc_clean_tx_ring(struct enetc_bdr *tx_ring, int napi_budget)
+ 	while (bds_to_clean && tx_frm_cnt < ENETC_DEFAULT_TX_WORK) {
+ 		bool is_eof = !!tx_swbd->skb;
  
- int __init arch_ioremap_pud_supported(void)
- {
--	/* only 4k granule supports level 1 block mappings */
--	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
-+	/*
-+	 * Only 4k granule supports level 1 block mappings.
-+	 * SW table walks can't handle removal of intermediate entries.
-+	 */
-+	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
-+	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
- }
- 
- int __init arch_ioremap_pmd_supported(void)
- {
--	return 1;
-+	/* See arch_ioremap_pud_supported() */
-+	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
- }
- 
- int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
+-		enetc_unmap_tx_buff(tx_ring, tx_swbd);
++		if (likely(tx_swbd->dma))
++			enetc_unmap_tx_buff(tx_ring, tx_swbd);
++
+ 		if (is_eof) {
+ 			napi_consume_skb(tx_swbd->skb, napi_budget);
+ 			tx_swbd->skb = NULL;
 -- 
 2.20.1
 
