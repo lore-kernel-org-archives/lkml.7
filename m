@@ -6,50 +6,49 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427D4C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F834C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4624D44
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B3B24D45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfFDIBL (ORCPT
+        id S1727148AbfFDIB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:01:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36011 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfFDIBK (ORCPT
+        Tue, 4 Jun 2019 04:01:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43318 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfFDIB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:01:10 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i21so4188354ljj.3;
-        Tue, 04 Jun 2019 01:01:09 -0700 (PDT)
+        Tue, 4 Jun 2019 04:01:26 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j29so1784931lfk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:01:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BvFaMGVaktx6XKkqQeK7fvOreSNIgCtTOvEyHkLilfU=;
-        b=DAb7HhVvVZXE7KmaOg63b5oZ3xfDHo3PHX8yNQrI36YjlYr9XySitHPZIpDFkeXhxT
-         BNFYlijKk/lvgjKqdkmSvN8rPKbDLQj2GD57ewoHqu+/WcgIQ+zntFvmTHbrqOo4uJH3
-         6BawJPNXhGKEm4qW2zKF1RNDd6P7OKKXCANGNQmANcTHkc+jFJLBIq4hr6r/vZqW2H2o
-         ev6PFKRkPATvQqd3zNromvM+hy88EHKYbWesIJ87U01UCtzfv4CbZLkzY+XHiJxX5lDg
-         THYMuA7HTIaLIll+wdpuDu9qvTLjyfJvWK761EpgH+appuc8or/tPEpfS3DGsABapHyl
-         9N1w==
-X-Gm-Message-State: APjAAAXsYcnhc5E/8ieOYsgAZJ9+w2kxEcWefqM0IDv0QTaGgX2UPfMY
-        d4mn25j1hskOnVeDZ5HnzLWTsX8ft6kTaPfkFrEyUQok
-X-Google-Smtp-Source: APXvYqzdKDfUrdD2yLUySgCqLbrKLPjcc3QTgMFqln86lXM7PL5KME2KFi2ut8N2lB5NlBCCEusCB8gbB7d/u3/+cHc=
-X-Received: by 2002:a2e:9255:: with SMTP id v21mr9188077ljg.178.1559635268569;
- Tue, 04 Jun 2019 01:01:08 -0700 (PDT)
+        bh=RoNWrIjH+E7/bSiZkpKchET/gQgnLxVGmbQQCHz5kr0=;
+        b=jJcrOeYoipLNsC9MmemKocRCLLRzkAd5kKq7jQKaA6nVWDr1vylW0S0pv1c2ZpcamM
+         g0Rlc02hfcEzAEIohwJx5/JJWIq/Bj0IMKK6O3JcT82KqxfsGMqgZYtsONf8E4lXHlqm
+         hrf1NKrErnO9qFBpJMjmRkmvx1Lvm4131LJr/q+KSHYEBo1/EdKaga8+CPl5anVqEyY/
+         g23TvxaEQroR9lX7HR8YE1B7YADraKNro9QHyQ3vZt+6ZCL3jvYvv907zMkyMzrKNrEc
+         63am7JwH5zCQa/UhqdWQwXbUF5rDaHin/4Se2NMUMFVTsbUHwg/HcsZfV/o8xA6RF/jf
+         1iPw==
+X-Gm-Message-State: APjAAAWRvcYlXWjifzBaghU9GGIE/HVuuGADLrBzIPWCTbEyNvPKlnvz
+        hlzW4z/J33tqpe4ENfbYwTLRl5aAznjJI5Yi1v8=
+X-Google-Smtp-Source: APXvYqyZUeZ7KHNXoKdeeJzkEG9PfXx1xtb7SMLcI01Tjx1TH432of8WYTv0XPJ90daVuhCZ/rLtVnkacIL/EvYFPSw=
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr16052712lfn.75.1559635284767;
+ Tue, 04 Jun 2019 01:01:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559635137-20900-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1559635137-20900-1-git-send-email-krzk@kernel.org>
+References: <1559635193-21151-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1559635193-21151-1-git-send-email-krzk@kernel.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Jun 2019 10:00:55 +0200
-Message-ID: <CAMuHMdX04Y2n8v641bv5P+P0oeRfO7arOft_6dk6w0wQF1yzew@mail.gmail.com>
-Subject: Re: [PATCH] s390: configs: Remove useless UEVENT_HELPER_PATH
+Date:   Tue, 4 Jun 2019 10:01:12 +0200
+Message-ID: <CAMuHMdWXv6X0Omvy0TdDackohOKoA3zm-xMbsNzDsRce30gncw@mail.gmail.com>
+Subject: Re: [PATCH] um: configs: Remove useless UEVENT_HELPER_PATH
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
@@ -58,7 +57,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Tue, Jun 4, 2019 at 10:00 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > Remove the CONFIG_UEVENT_HELPER_PATH because:
 > 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
 >    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
