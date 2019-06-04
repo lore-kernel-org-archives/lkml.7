@@ -2,236 +2,131 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0BFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A16EC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF14C23CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6BB23CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfFDQxi (ORCPT
+        id S1727913AbfFDQyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:53:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37718 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbfFDQxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:53:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 22so804374wmg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:53:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8+kN7XB2dqdcyQLG9cR8YBMKFohsyQdRAKFpsE2wetQ=;
-        b=XFbPMLjW1svc1W4G1czd+oUfYKOg5xEZhsWLl+UH5A2KLNdv7zXg03tsQiKYNkGjMf
-         JK9Ur3ztQ0M0IDngUrhs89jKxxtnkvEUHJj7YYTIN7PFRfKbLQ8pWxWbm1nHAuZ3+KBW
-         bQoN2TwXMvMVyPTDflC4gBQEgiOBE7NBxQ0XQYhUZz0OR5Qa0C4uhk1FVJZTiuBLoGFP
-         zxrsvU/YUBNfL1IyjtyEBh6388WCzll6saqOydvurJSxUXGINI/7fHMDk1nLMphBqfj4
-         SD4PsNSTwIGEtJCxrgzBrgbYQthoPyVSYO/Pu6EPrZmf48pMyxSkKM0u1ug1GYWlInLT
-         RPGw==
-X-Gm-Message-State: APjAAAVJkTkI9alXH/k+Yl5ckQJZqU5j0+mmhrGq80814GFpIHLh4oAc
-        /8n/7b8qb2qj5jBhWETvTBPS3A==
-X-Google-Smtp-Source: APXvYqzfVkVEM5YKEFd/k0uosz5QOdtyvXljVg0Vy5pqTtIadiRvfRhGO9VD9x3aqhKqA7A5AhGrVA==
-X-Received: by 2002:a1c:44d4:: with SMTP id r203mr16648433wma.158.1559667215692;
-        Tue, 04 Jun 2019 09:53:35 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id v13sm14321603wmj.46.2019.06.04.09.53.34
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 09:53:35 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
- msr read intercepts
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-2-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
-Date:   Tue, 4 Jun 2019 18:53:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 12:54:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50580 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfFDQyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:54:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:54:24 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2019 09:54:24 -0700
+Date:   Tue, 4 Jun 2019 09:55:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190604165533.GA3980@iweiny-DESK2.sc.intel.com>
+References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+ <20190603164206.GB29719@infradead.org>
+ <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
+ <20190604070808.GA28858@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <1558418814-6822-2-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604070808.GA28858@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/19 08:06, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Tue, Jun 04, 2019 at 12:08:08AM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 03, 2019 at 04:56:10PM -0700, Ira Weiny wrote:
+> > On Mon, Jun 03, 2019 at 09:42:06AM -0700, Christoph Hellwig wrote:
+> > > > +#if defined(CONFIG_CMA)
+> > > 
+> > > You can just use #ifdef here.
+> > > 
+> > > > +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
+> > > > +	struct page **pages)
+> > > 
+> > > Please use two instead of one tab to indent the continuing line of
+> > > a function declaration.
+> > > 
+> > > > +{
+> > > > +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
+> > > 
+> > > IMHO it would be a little nicer if we could move this into the caller.
+> > 
+> > FWIW we already had this discussion and thought it better to put this here.
+> > 
+> > https://lkml.org/lkml/2019/5/30/1565
 > 
-> Allow guest reads CORE cstate when exposing host CPU power management capabilities 
-> to the guest. PKG cstate is restricted to avoid a guest to get the whole package 
-> information in multi-tenant scenario.
+> I don't see any discussion like this.  FYI, this is what I mean,
+> code might be easier than words:
+
+Indeed that is more clear.  My apologies.
+
+Ira
+
 > 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v1 -> v2:
->  * use a separate bit for KVM_CAP_X86_DISABLE_EXITS
 > 
->  Documentation/virtual/kvm/api.txt | 1 +
->  arch/x86/include/asm/kvm_host.h   | 1 +
->  arch/x86/kvm/vmx/vmx.c            | 6 ++++++
->  arch/x86/kvm/x86.c                | 5 ++++-
->  arch/x86/kvm/x86.h                | 5 +++++
->  include/uapi/linux/kvm.h          | 4 +++-
->  tools/include/uapi/linux/kvm.h    | 4 +++-
->  7 files changed, 23 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-> index 33cd92d..91fd86f 100644
-> --- a/Documentation/virtual/kvm/api.txt
-> +++ b/Documentation/virtual/kvm/api.txt
-> @@ -4894,6 +4894,7 @@ Valid bits in args[0] are
->  #define KVM_X86_DISABLE_EXITS_MWAIT            (1 << 0)
->  #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
->  #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-> +#define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ddde097cf9e4..62d770b18e2c 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2197,6 +2197,27 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+>  	return ret;
+>  }
 >  
->  Enabling this capability on a VM provides userspace with a way to no
->  longer intercept some instructions for improved latency in some
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index d5457c7..1ce8289 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -882,6 +882,7 @@ struct kvm_arch {
->  	bool mwait_in_guest;
->  	bool hlt_in_guest;
->  	bool pause_in_guest;
-> +	bool cstate_in_guest;
+> +#ifdef CONFIG_CMA
+> +static int reject_cma_pages(struct page **pages, int nr_pinned)
+> +{
+> +	int i = 0;
+> +
+> +	for (i = 0; i < nr_pinned; i++)
+> +		if (is_migrate_cma_page(pages[i])) {
+> +			put_user_pages(pages + i, nr_pinned - i);
+> +			return i;
+> +		}
+> +	}
+> +
+> +	return nr_pinned;
+> +}
+> +#else
+> +static inline int reject_cma_pages(struct page **pages, int nr_pinned)
+> +{
+> +	return nr_pinned;
+> +}
+> +#endif /* CONFIG_CMA */
+> +
+>  /**
+>   * get_user_pages_fast() - pin user pages in memory
+>   * @start:	starting user address
+> @@ -2237,6 +2258,9 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>  		ret = nr;
+>  	}
 >  
->  	unsigned long irq_sources_bitmap;
->  	s64 kvmclock_offset;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 0861c71..da24f18 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6637,6 +6637,12 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->  	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
->  	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
->  	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
-> +	if (kvm_cstate_in_guest(kvm)) {
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
-
-I think I have changed my mind on the implementation of this, sorry.
-
-1) We should emulate these MSRs always, otherwise the guest API changes
-between different values of KVM_CAP_X86_DISABLE_EXITS which is not
-intended.  Also, KVM_CAP_X86_DISABLE_EXITS does not prevent live
-migration, so it should be possible to set the MSRs in the host to
-change the delta between the host and guest values.
-
-2) If both KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are
-disabled (i.e. exit happens), the MSRs will be purely emulated.
-C3/C6/C7 residency will never increase (it will remain the value that is
-set by the host).  When the VM executes an hlt vmexit, it should save
-the current TSC.  When it comes back, the C1 residency MSR should be
-increased by the time that has passed.
-
-3) If KVM_X86_DISABLE_EXITS_HLT is enabled but
-KVM_X86_DISABLE_EXITS_MWAIT is disabled (i.e. mait exits happen),
-C3/C6/C7 residency will also never increase, but the C1 residency value
-should be read using rdmsr from the host, with a delta added from the
-host value.
-
-4) If KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are both
-disabled (i.e. mwait exits do not happen), all four residency values
-should be read using rdmsr from the host, with a delta added from the
-host value.
-
-5) If KVM_X86_DISABLE_EXITS_HLT is disabled and
-KVM_X86_DISABLE_EXITS_MWAIT is enabled, the configuration makes no sense
-so it's okay not to be very optimized.  In this case, the residency
-value should be read as in (4), but hlt vmexits will be accounted as in
-(2) so we need to be careful not to double-count the residency during
-hlt.  This means doing four rdmsr before the beginning of the hlt vmexit
-and four at the end of the hlt vmexit.
-
-Therefore the data structure should be something like
-
-struct kvm_residency_msr {
-	u64 value;
-	bool delta_from_host;
-	bool count_with_host;
-}
-
-u64 kvm_residency_read_host(struct kvm_residency_msr *msr)
-{
-	u64 unscaled_value = rdmsrl(msr->index);
-	// apply TSC scaling...
-	return ...
-}
-
-u64 kvm_residency_read(struct kvm_residency_msr *msr)
-{
-	return msr->value +
-		(msr->delta_from_host ? kvm_residency_read_host(msr) : 0);
-}
-
-void kvm_residency_write(struct kvm_residency_msr *msr,
-			 u64 value)
-{
-	msr->value = value -
-		(msr->delta_from_host ? kvm_residency_read_host(msr) : 0);
-}
-
-// count_with_host is true for C1 iff any of KVM_CAP_DISABLE_EXITS_HLT
-// or KVM_CAP_DISABLE_EXITS_MWAIT is set
-// count_with_host is true for C3/C6/C7 iff KVM_CAP_DISABLE_EXITS_MWAIT
-is set
-void kvm_residency_setup(struct kvm_residency_msr *msr, u16 index,
-			 bool count_with_host)
-{
-	/* Preserve value on calls after the first */
-	u64 value = msr->index ? kvm_residency_read(msr) : 0;
-	msr->delta_from_host = msr->count_with_host = count_with_host;
-	msr->index = index;
-	kvm_residency_write(msr, value);
-}
-
-// The following functions are called from hlt vmexits.
-
-void kvm_residency_start_hlt(struct kvm_residency_msr *msr)
-{
-	if (msr->count_with_host) {
-		WARN_ON(msr->delta_from_host);
-		msr->value += kvm_residency_read_host(msr);
-		msr->delta_from_host = false;
-	}
-}
-
-// host_tsc_waited is 0 except for MSR_CORE_C1_RES
-void kvm_residency_end_hlt(struct kvm_residency_msr *msr,
-			   u64 host_tsc_waited)
-{
-	if (msr->count_with_host) {
-		WARN_ON(!msr->delta_from_host);
-		msr->value -= kvm_residency_read_host(msr);
-		msr->delta_from_host = true;
-	}
-	if (host_tsc_waited) {
-		// ... apply TSC scaling to host_tsc_waited ...
-		msr->value += ...;
-	}
-}
-
-Thanks,
-
-Paolo
+> +	if (nr && unlikely(gup_flags & FOLL_LONGTERM))
+> +		nr = reject_cma_pages(pages, nr);
+> +
+>  	if (nr < nr_pages) {
+>  		/* Try to get the remaining pages with get_user_pages */
+>  		start += nr << PAGE_SHIFT;
+> 
