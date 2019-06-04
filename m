@@ -2,167 +2,115 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA21FC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12F5C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11DF20851
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2B6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n7729tdV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="doTgsxvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfFDXfO (ORCPT
+        id S1726742AbfFDXgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:35:14 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39263 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDXfN (ORCPT
+        Tue, 4 Jun 2019 19:36:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43595 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfFDXgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:35:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p24so11249939lfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 16:35:12 -0700 (PDT)
+        Tue, 4 Jun 2019 19:36:02 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j29so3809031lfk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 16:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yUmGpFNz6fygF8JqTGIH7xCmXTGijTn5zshzVeIRyeU=;
-        b=n7729tdVd3jiiQzxyuAeBqRs5Gxta2lFj3c+5zHccv1uoJt2AmyWyIDUmg3JxWlagm
-         M7C85QUZ1yXvYp4uRNAObTU5YeMqh3a1wo5N9AJPUoMbdbPZFo/1bO/N1rShEEWiWI/v
-         Q5BI60V/NuZ52yrsR6VbaGcuc0c695fmqthfBEC0S0U3y4gF1Q08eneEUDigrRf9hMyB
-         iQhbHsK661Yo5QjuEON5MQg+g2Pkp/H8jIb/fz9zGMrFKEuNEFNEvKupY/jJ8Vu91CzS
-         9bZX4E1E7GESuDjTm/u2NlMe8YNUYbmht0QRBeMkkioK7eHniavWPW592kDJkctLp/+R
-         YphA==
+        bh=WV3sJyKzvv2hglik5laJLi6zk95U7YCGm4MZG0UbbBM=;
+        b=doTgsxvdZv8uU0x8XW1L0hFFxk7NVRCh4EcK48wmJsmGLsH6XMlLAb/m9hX5yAKfq/
+         mpAOXL47upaREgDMBi3qMSM8JV9L1dBVgYXWkO08XRJIh04mvW8/RphRVPAe4EgWjIYG
+         dOxwWXAQNwFnvP+7LdEIctpkg0tJPmm6BMtrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yUmGpFNz6fygF8JqTGIH7xCmXTGijTn5zshzVeIRyeU=;
-        b=idgpaLpjZcW0D+o6XCouATobzAgYS1o1ajknGrJfRi0k4P0UfyqIoa1NcIIKUvsEDD
-         gHTrpyMgZDxFP2XGaBKGz4pmnEXdaiHVo/zY+qaeoL24EHHi5ta6nqa87jn8PIQ8IeO8
-         I8AKIxL0nSBE65GKVHHMi8Mvxzr65O976vCIdWFRMfmFDS7iln+Nvi2W+3DTITrR6g2k
-         79KtuyVkJDAbPQRkBKut6HCbpb/W2TndxT1hzqpnA0eRFZXDOwTPcia5MIHTM3iBONd6
-         PRigLMX64FgLR5F/rlLTGCMOKyBewP3gQ13IcLOvVjpIOj9ndaQXwBseMJYViXsfuCUb
-         j49A==
-X-Gm-Message-State: APjAAAXeIB6fd552eUIsawNGWPPUsWX3kMbCQno20TepcIuOyqHzLahS
-        fTyDR0v9sfsOMZPe2AGSj+Nifss4+HnvSJUc1T9/MQ==
-X-Google-Smtp-Source: APXvYqxFVfsY2uUyOvHDHQWsWPz6JVCPCIp44WWY+H6aJDJ/TaoNNgHz4dGto/MoXWH1ptk3ODVootrUgExaXb/yDLQ=
-X-Received: by 2002:a19:7110:: with SMTP id m16mr18059760lfc.4.1559691310771;
- Tue, 04 Jun 2019 16:35:10 -0700 (PDT)
+        bh=WV3sJyKzvv2hglik5laJLi6zk95U7YCGm4MZG0UbbBM=;
+        b=HTjEwdgmJ7QdIprnQ4XleQTOuIussdhp3PYyjF63FtT46vejxn7L7o2YeD9BbGYocX
+         EAkgvEfhpw3ZsLHZcqktFvJIxL2WzxJKKWktMV1DDPcAwwMbK7TxnKNX6RA/DtKn4Rh9
+         CiCZrZWouOs1rVNG0JU02wAc6i0VFHWCldKunlH3vSve1gBRWocKTyFZ9m+ig0s7Yx4Y
+         aF3BofwItgc7AccTvt/yu3nmlBVh7itYcnJP1Y4gyj0qElh9UKMrKiy0LOgpYdqo9OVP
+         e1JYcC7MD3xqirxhaNQHEqNzI2dBUgyan+JpFIs5RXZL+apkcc697WKvfYtto7aoyAG/
+         4VbA==
+X-Gm-Message-State: APjAAAWwScxj9gBKsYYjip+O/FfKYqkYqkngHdYzDd17699UeCCd4hhp
+        ljpD7Y2iUyS4bFLIDE8LLbus7izjoEQ=
+X-Google-Smtp-Source: APXvYqzcVSmtpx5DFvT1D5tIc3VnsncdsgXxLM4V7AQ93jjMcQTlea6trAAfgtwe4vCjJy4r3bSIbQ==
+X-Received: by 2002:a19:ab1a:: with SMTP id u26mr10234931lfe.6.1559691359928;
+        Tue, 04 Jun 2019 16:35:59 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id v17sm2039417ljg.36.2019.06.04.16.35.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 16:35:59 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id m23so3111074lje.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 16:35:59 -0700 (PDT)
+X-Received: by 2002:a2e:5d9c:: with SMTP id v28mr18287829lje.32.1559691358483;
+ Tue, 04 Jun 2019 16:35:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-3-brendanhiggins@google.com> <20190517003847.0962F2082E@mail.kernel.org>
-In-Reply-To: <20190517003847.0962F2082E@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 4 Jun 2019 16:34:58 -0700
-Message-ID: <CAFd5g45taSVNXSQJrXnHLG_Rtum650vFw1zccqv1Tyru5A5d8w@mail.gmail.com>
-Subject: Re: [PATCH v4 02/18] kunit: test: add test resource management API
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Tue, 4 Jun 2019 16:35:21 -0700
+X-Gmail-Original-Message-ID: <CAE=gft7nZNLykioozOJUDitXWc8PgFjDmCucmoz-3wtxzg_4CA@mail.gmail.com>
+Message-ID: <CAE=gft7nZNLykioozOJUDitXWc8PgFjDmCucmoz-3wtxzg_4CA@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 5:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Jun 4, 2019 at 4:24 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> Quoting Brendan Higgins (2019-05-14 15:16:55)
-> > diff --git a/kunit/test.c b/kunit/test.c
-> > index 86f65ba2bcf92..a15e6f8c41582 100644
-> > --- a/kunit/test.c
-> > +++ b/kunit/test.c
-> [..]
-> > +
-> > +void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
-> > +{
-> > +       struct kunit_kmalloc_params params;
-> > +       struct kunit_resource *res;
-> > +
-> > +       params.size = size;
-> > +       params.gfp = gfp;
-> > +
-> > +       res = kunit_alloc_resource(test,
-> > +                                  kunit_kmalloc_init,
-> > +                                  kunit_kmalloc_free,
-> > +                                  &params);
-> > +
-> > +       if (res)
-> > +               return res->allocation;
-> > +       else
-> > +               return NULL;
+> After issuing a PHY_START request to the QMP, the hardware documentation
+> states that the software should wait for the PCS_READY_STATUS to become
+> 1.
 >
-> Can be written as
+> With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
+> controller") an additional 1ms delay was introduced between the start
+> request and the check of the status bit. This greatly increases the
+> chances for the hardware to actually becoming ready before the status
+> bit is read.
 >
->         if (res)
->                 return ....
->         return
+> The result can be seen in that UFS PHY enabling is now reported as a
+> failure in 10% of the boots on SDM845, which is a clear regression from
+> the previous rare/occasional failure.
 >
-> and some static analysis tools prefer this.
+> This patch fixes the "break condition" of the poll to check for the
+> correct state of the status bit.
+>
+> Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
+> register, which means that the code checks a bit that's always 0. So the
+> patch also fixes these, in order to not regress these targets.
+>
+> Cc: stable@vger.kernel.org
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
+> Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Sounds reasonable, will fix in next revision.
+Nice find.
 
-> > +}
-> > +
-> > +void kunit_cleanup(struct kunit *test)
-> > +{
-> > +       struct kunit_resource *resource, *resource_safe;
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&test->lock, flags);
->
-> Ah ok, test->lock is protecting everything now? Does it need to be a
-> spinlock, or can it be a mutex?
-
-No it needs to be a spin lock. There are some conceivable
-circumstances where the test object can be accessed by code in which
-it isn't safe to sleep.
-
-> > +       list_for_each_entry_safe(resource,
-> > +                                resource_safe,
-> > +                                &test->resources,
-> > +                                node) {
-> > +               kunit_free_resource(test, resource);
-> > +       }
-> > +       spin_unlock_irqrestore(&test->lock, flags);
-> > +}
-> > +
+Reviewed-by: Evan Green <evgreen@chromium.org>
