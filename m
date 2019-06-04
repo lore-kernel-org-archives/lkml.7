@@ -2,133 +2,135 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73898C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196ECC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B27245C5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E120F24AF2
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYCsaPX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfFDKcr (ORCPT
+        id S1727346AbfFDKdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:32:47 -0400
-Received: from foss.arm.com ([217.140.101.70]:39946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfFDKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:32:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7184C80D;
-        Tue,  4 Jun 2019 03:32:46 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E84873F246;
-        Tue,  4 Jun 2019 03:32:44 -0700 (PDT)
-Subject: Re: [PATCH] irqchip: ti-sci-inta: Fix kernel crash if
- irq_create_fwspec_mapping fail
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, lokeshvutla@ti.com,
-        tglx@linutronix.de, jason@lakedaemon.net
-Cc:     nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190604101751.8265-1-peter.ujfalusi@ti.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <b2e32aa1-3f85-cbd2-d0b4-4eb67c681513@arm.com>
-Date:   Tue, 4 Jun 2019 11:32:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 06:33:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40028 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFDKdN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:33:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so10400023wre.7;
+        Tue, 04 Jun 2019 03:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=earafvYrtHKW675fqvDjWCC/8Qf9Geg5oAtOEq+3h4s=;
+        b=qYCsaPX3965LwfBNITJf+QhEYqlYgjqgsLeUo6L/o7Ti1263rsedKnAiaw0j/tRPYf
+         t42+5ATBBW5NZ/DDqebnlSmYiiaibe+Ort8iULSCZwFuujnCieGl8uZ7Nt4G5H+Pmifq
+         klXo8h/0txLzbeK5bbJCSYy0SQufMmnyMt/cQidS6idO0iNK5oPFONK/ARuzTp/MgUJR
+         0O4s6+8SxMW1Mt8gJwDTk/VtfmK4MyDDlpTftFih4oTtkL09uKN3bS8R2vKL5UE5GACx
+         H5V88iRDEJiBwtV6kFqssasb39pa+qvMJD2ksOrv5cM+odfqp6Eza3vLq9Bwr4PnoGBz
+         +b3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=earafvYrtHKW675fqvDjWCC/8Qf9Geg5oAtOEq+3h4s=;
+        b=NZR0ziiQC+BgBhJd1FinFySOqovBONzYb2gwvt9zwbNxi9ldB+W1c8RBVuDO6mGNpk
+         PRr4+i1hM3ZKC6CFt3Txpixfhectt2Ygclj11rfj8yawGfcE4HCiOGJ1gv+NF66C8tfH
+         W25WqtCZB/WGCHVpdmnTkOTjBypCBvkdWmk/ZADLxXLGOP9L8JiYDt/r4DCRuB2fPd4O
+         XCX+I/a+FArzX9tRLlOQ4znmtzkhibLIGJ2jR89jA5olowEcwphSgdLMBFTMb9aHTX3k
+         VLwLyWl4aJl7TvaQzysJ1FuFpuMGrqnFfnUxQsZ1XJHRsEcockEU1yO+6lp8gBNUSFb3
+         7gxQ==
+X-Gm-Message-State: APjAAAVlUU5TggkhPAqcyfwieEYiuC22RNUy6icTnhP2svvxTT3B0osO
+        2rRDW/qUZzpnWcNtHm3dDJs=
+X-Google-Smtp-Source: APXvYqzvrV4tFMgHpWkR4RpdGNb7oSeNaRa2s36bVeHEWmNTjau4k7L60C8i2Ea7H2n+YhYaHfNOvA==
+X-Received: by 2002:a5d:694c:: with SMTP id r12mr6551209wrw.214.1559644391661;
+        Tue, 04 Jun 2019 03:33:11 -0700 (PDT)
+Received: from 5WDYG62 (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
+        by smtp.gmail.com with ESMTPSA id o21sm16990674wmc.46.2019.06.04.03.33.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 03:33:10 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 12:33:03 +0200
+From:   Romain Izard <romain.izard.pro@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Richard Gong <richard.gong@linux.intel.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+Subject: Re: A potential broken at platform driver?
+Message-ID: <20190604103241.GA4097@5WDYG62>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604101751.8265-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603180255.GA18054@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/2019 11:17, Peter Ujfalusi wrote:
-> irq_create_fwspec_mapping() can fail, returning 0 as parent_virq. In this
-> case vint_desc is going to be NULL in ti_sci_inta_alloc_irq() which will
-> cause NULL pointer dereference.
+On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+> > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+> >  	.remove = stratix10_rsu_remove,
+> >  	.driver = {
+> >  		.name = "stratix10-rsu",
+> > -		.groups = rsu_groups,
+> > +//		.groups = rsu_groups,
 > 
-> Also note that irq_create_fwspec_mapping() returns 'unsigned int' so the
-> check '<=' was wrong.
+> Are you sure this is the correct pointer?  I think that might be
+> pointing to the driver's attributes, not the device's attributes.
 > 
-> Use -EINVAL if irq_create_fwspec_mapping() returned with 0.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/irqchip/irq-ti-sci-inta.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-> index 011b60a49e3f..ef4d625d2d80 100644
-> --- a/drivers/irqchip/irq-ti-sci-inta.c
-> +++ b/drivers/irqchip/irq-ti-sci-inta.c
-> @@ -159,9 +159,9 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
->  	parent_fwspec.param[1] = vint_desc->vint_id;
->  
->  	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
-> -	if (parent_virq <= 0) {
-> +	if (parent_virq == 0) {
->  		kfree(vint_desc);
-> -		return ERR_PTR(parent_virq);
-> +		return ERR_PTR(-EINVAL);
->  	}
->  	vint_desc->parent_virq = parent_virq;
->  
-> 
+> If platform drivers do not have a way to register groups properly, then
+> that really needs to be fixed, as trying to register it by yourself as
+> you are doing, is ripe for racing with userspace.
+ 
+This is a very common issue with platform drivers, and it seems to me that
+it is not possible to add device attributes when binding a device to a
+driver without entering the race condition.
 
-Nice one. I've queued it as part of the stuff I need to send to Thomas
-at the end of the week.
+My understanding is the following one:
 
-Thanks,
+The root cause is that the device has already been created and reported
+to the userspace with a KOBJ_ADD uevent before the device and the driver
+are bound together. On receiving this event, userspace will react, and
+it will try to read the device's attributes. In parallel the kernel will
+try to find a matching driver. If a driver is found, the kernel will
+call the probe function from the driver with the device as a parameter,
+and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+is a recent addition.
 
-	M.
+Unfortunately, not all created devices will be bound to a driver, and the
+existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+If new per-device attributes have been added to the device during the
+binding stage userspace may or may not see them, depending on when userspace
+tries to read the device's attributes.
+
+I have this possible workaround, but I do not know if it is a good solution:
+
+When binding the device and the driver together, create a new device as a
+child to the current device, and fill its "groups" member to point to the
+per-device attributes' group. As the device will be created with all the
+attributes, it will not be affected by the race issues. The functions
+handling the attributes will need to be modified to use the parents of their
+"device" parameter, instead of the device itself. Additionnaly, the sysfs
+location of the attributes will be different, as the child device will show
+up in the sysfs path. But for a newly introduced device this will not be
+a problem.
+
+Is this a good compromise ?
+
+Best regards,
 -- 
-Jazz is not dead. It just smells funny...
+Romain Izard
