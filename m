@@ -2,115 +2,106 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E88EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30840C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6231E24C4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0106F24C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:56:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RjX2tYwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfFDIzy (ORCPT
+        id S1727124AbfFDI4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:55:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:38072 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbfFDIzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:55:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22552A78;
-        Tue,  4 Jun 2019 01:55:52 -0700 (PDT)
-Received: from e107533-lin.cambridge.arm.com (unknown [10.37.9.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4595D3F246;
-        Tue,  4 Jun 2019 01:55:43 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 09:55:36 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     arm@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v2] ARM: configs: Remove useless UEVENT_HELPER_PATH
-Message-ID: <20190604085536.GA23250@e107533-lin.cambridge.arm.com>
-References: <1559636093-26005-1-git-send-email-krzk@kernel.org>
+        Tue, 4 Jun 2019 04:56:01 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52804 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726883AbfFDIz6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 04:55:58 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x548tKLM021280;
+        Tue, 4 Jun 2019 10:55:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=9gSGjqYoy+Fbf2xPESzbOyGUbO7HOvEvjLu/ZOx6/bE=;
+ b=RjX2tYwV8kgxxGc0rW2nlLgfguePoiuo03mr3r/QBAvY1398mhHF0ZhRzQNWn5bE9d6S
+ JjdZvKhT2l5TNZTaGOH56n5+f7o6/DGH+XW+I5PgIZU/bfXv06tg5G0a4iFt99j+6Yhd
+ proABBwOSJSFvveL0vtq2K6k0rQUgGupK9KlDj3M5L9pAmQbkY6e0PU9ml4ch3w0CswS
+ h2LORq1cYDJ7Kk/FZ2xOn1ZwlLO99bkCKJq97UTyX9q/TOM+bGgYf/7VFJ9h937XIr4t
+ G+4vVg/ez6o3VFTNzLD128GoKisdyMDyfdA3osNOhFm/mbwFxgOYDpdpO2IJBtdF6P5P EA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sundryngp-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 04 Jun 2019 10:55:32 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ADF15159;
+        Tue,  4 Jun 2019 08:55:25 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 83E0E2503;
+        Tue,  4 Jun 2019 08:55:25 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019
+ 10:55:25 +0200
+Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019 10:55:25
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>,
+        Bich Hemon <bich.hemon@st.com>
+Subject: [PATCH 01/10] dt-bindings: serial: stm32: add wakeup option
+Date:   Tue, 4 Jun 2019 10:55:10 +0200
+Message-ID: <1559638519-6128-2-git-send-email-erwan.leray@st.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559636093-26005-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.31]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 10:14:53AM +0200, Krzysztof Kozlowski wrote:
-> Remove the CONFIG_UEVENT_HELPER_PATH because:
-> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
->    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
->    made default to 'n',
-> 2. It is not recommended (help message: "This should not be used today
->    [...] creates a high system load") and was kept only for ancient
->    userland,
-> 3. Certain userland specifically requests it to be disabled (systemd
->    README: "Legacy hotplug slows down the system and confuses udev").
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Remove unrelated files.
-> 2. Add Geert's ack.
-> ---
+Add a note for enabling wakeup capabilities of usart
 
-[...]
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-> diff --git a/arch/arm/configs/vexpress_defconfig b/arch/arm/configs/vexpress_defconfig
-> index d170da388389..25753552277a 100644
-> --- a/arch/arm/configs/vexpress_defconfig
-> +++ b/arch/arm/configs/vexpress_defconfig
-> @@ -45,7 +45,6 @@ CONFIG_IP_PNP_BOOTP=y
->  # CONFIG_WIRELESS is not set
->  CONFIG_NET_9P=y
->  CONFIG_NET_9P_VIRTIO=y
-> -CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
->  CONFIG_DEVTMPFS=y
->  CONFIG_DMA_CMA=y
->  CONFIG_MTD=y
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+index 9d3efed..5ec80c1 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
++++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+@@ -19,6 +19,11 @@ Optional properties:
+   linux,rs485-enabled-at-boot-time: see rs485.txt.
+ - dmas: phandle(s) to DMA controller node(s). Refer to stm32-dma.txt
+ - dma-names: "rx" and/or "tx"
++- wakeup-source: bool flag to indicate this device has wakeup capabilities
++- interrupt-names, if optional wake-up interrupt is used, should be:
++  - "event": the name for the interrupt line of the USART instance
++  - "wakeup" the name for the optional wake-up interrupt
++
+ 
+ Examples:
+ usart4: serial@40004c00 {
+-- 
+1.9.1
 
-(for vexpress)
-
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
---
-Regards,
-Sudeep
