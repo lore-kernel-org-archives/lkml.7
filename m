@@ -2,198 +2,102 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB282C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C494AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915B12070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7492070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559670227;
+	bh=q9FCF59QilTvzP7T56Okch9a0m+P6mELSmCw7lx2Jdg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kP22YhGSu0VuY3CWWyo36UGh3fEDFrxb3h3ua3ETOwWOUkQX6isTle8SaEcRvyXQx
+	 tHJJfwkMkhDfeZPwQjRzO9mU1H1esDXz7CAh1lGemu0KtrWZB4dyj+voCWU6QB4oo2
+	 zLBFW3xWguXHVujPi8+E+KSeR0mXAVw/l8OGZ9LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfFDRkN (ORCPT
+        id S1726373AbfFDRnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:40:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40990 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfFDRkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:40:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 72B2CAE05;
-        Tue,  4 Jun 2019 17:40:10 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     mbrugger@suse.de, sboyd@kernel.org, eric@anholt.net,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
-        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] cpufreq: add driver for Raspbery Pi
-Date:   Tue,  4 Jun 2019 19:32:25 +0200
-Message-Id: <20190604173223.4229-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190604173223.4229-1-nsaenzjulienne@suse.de>
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+        Tue, 4 Jun 2019 13:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfFDRnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:43:45 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850E72070B
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 17:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559670224;
+        bh=q9FCF59QilTvzP7T56Okch9a0m+P6mELSmCw7lx2Jdg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iUJtv0HucSbDarovWS1Z7qwfmDSbs5V9BN4rc4AfZZPIhTLPWwcEgKdhs+XzNMK+s
+         pP8EDf6d0HflzvWnlJ4iq2AvL5hnyP/MdAXApObUvjiErqeduqz/IyMephgucibraL
+         8s2h2J/D8oHyhQ7Laf/f2tfZG/DdDxC54JI8t/7o=
+Received: by mail-wm1-f53.google.com with SMTP id s3so963914wms.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:43:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAV65yTqMezWYy7epLLaekSkOPBGMf+8SHPSazCNUp4Sc5xjGzYD
+        lJBUCKbIdCkh7yhyWsX6RDdHIX/k3pVsDtjgANGsUA==
+X-Google-Smtp-Source: APXvYqxmFA0LxGXReVPmYeoh54PQ9wGQ/UBD/iQSPrsklI94PoCtyKGznvMTvJtTVRnlwuNsvcMNxx02fdTaRs78X5M=
+X-Received: by 2002:a1c:6242:: with SMTP id w63mr15439095wmb.161.1559670223114;
+ Tue, 04 Jun 2019 10:43:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 10:43:32 -0700
+X-Gmail-Original-Message-ID: <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
+Message-ID: <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Raspberry Pi's firmware offers and interface though which update it's
-performance requirements. It allows us to request for specific runtime
-frequencies, which the firmware might or might not respect, depending on
-the firmware configuration and thermals.
+On Tue, Jun 4, 2019 at 9:35 AM David Howells <dhowells@redhat.com> wrote:
+>
+>
+> Hi Al,
+>
+> Here's a set of patches to add a general variable-length notification queue
+> concept and to add sources of events for:
 
-As the maximum and minimum frequencies are configurable in the firmware
-there is no way to know in advance their values. So the Raspberry Pi
-cpufreq driver queries them, builds an opp frequency table to then
-launch cpufreq-dt.
+I asked before and didn't see a response, so I'll ask again.  Why are
+you paying any attention at all to the creds that generate an event?
+It seems like the resulting security model will be vary hard to
+understand and probably buggy.  Can't you define a sensible model in
+which only the listener creds matter?
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+> LSM support is included:
+>
+>  (1) The creds of the process that did the fput() that reduced the refcount
+>      to zero are cached in the file struct.
+>
+>  (2) __fput() overrides the current creds with the creds from (1) whilst
+>      doing the cleanup, thereby making sure that the creds seen by the
+>      destruction notification generated by mntput() appears to come from
+>      the last fputter.
 
-Changes since RFC:
-  - Alphabetically ordered relevant stuff
-  - Updated Kconfig to select firmware interface
-  - Correctly unref clk_dev after use
-  - Remove all opps on failure
-  - Remove use of dev_pm_opp_set_sharing_cpus()
+That looks like duct tape that is, at best, likely to be very buggy.
 
- drivers/cpufreq/Kconfig.arm           |  8 +++
- drivers/cpufreq/Makefile              |  1 +
- drivers/cpufreq/raspberrypi-cpufreq.c | 84 +++++++++++++++++++++++++++
- 3 files changed, 93 insertions(+)
- create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+>
+>  (3) security_post_notification() is called for each queue that we might
+>      want to post a notification into, thereby allowing the LSM to prevent
+>      covert communications.
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index f8129edc145e..556d432cc826 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
- 	  The driver implements the cpufreq interface for this HW engine.
- 	  Say Y if you want to support CPUFreq HW.
- 
-+config ARM_RASPBERRYPI_CPUFREQ
-+	tristate "Raspberry Pi cpufreq support"
-+	select RASPBERRYPI_FIRMWARE
-+	help
-+	  This adds the CPUFreq driver for Raspberry Pi
-+
-+	  If in doubt, say N.
-+
- config ARM_S3C_CPUFREQ
- 	bool
- 	help
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 689b26c6f949..121c1acb66c0 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
- obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
- obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
-+obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
- obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
- obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
- obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
-diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
-new file mode 100644
-index 000000000000..2b3a195a9d37
---- /dev/null
-+++ b/drivers/cpufreq/raspberrypi-cpufreq.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Raspberry Pi cpufreq driver
-+ *
-+ * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/cpufreq.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+
-+static const struct of_device_id machines[] __initconst = {
-+	{ .compatible = "raspberrypi,3-model-b-plus" },
-+	{ .compatible = "raspberrypi,3-model-b" },
-+	{ .compatible = "raspberrypi,2-model-b" },
-+	{ /* sentinel */ }
-+};
-+
-+static int __init raspberrypi_cpufreq_driver_init(void)
-+{
-+	struct platform_device *pdev;
-+	struct device *cpu_dev;
-+	unsigned long min, max;
-+	unsigned long rate;
-+	struct clk *clk;
-+	int ret;
-+
-+	if (!of_match_node(machines, of_root))
-+		return -ENODEV;
-+
-+	cpu_dev = get_cpu_device(0);
-+	if (!cpu_dev) {
-+		pr_err("Cannot get CPU for cpufreq driver\n");
-+		return -ENODEV;
-+	}
-+
-+	clk = clk_get(cpu_dev, 0);
-+	if (IS_ERR(clk)) {
-+		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	/*
-+	 * The max and min frequencies are configurable in the Raspberry Pi
-+	 * firmware, so we query them at runtime
-+	 */
-+	min = clk_round_rate(clk, 0);
-+	max = clk_round_rate(clk, ULONG_MAX);
-+	clk_put(clk);
-+
-+	for (rate = min; rate < max; rate += 100000000) {
-+		ret = dev_pm_opp_add(cpu_dev, rate, 0);
-+		if (ret)
-+			goto remove_opp;
-+	}
-+
-+	ret = dev_pm_opp_add(cpu_dev, max, 0);
-+	if (ret)
-+		goto remove_opp;
-+
-+	pdev = platform_device_register_data(NULL, "cpufreq-dt", -1, NULL, 0);
-+	ret = PTR_ERR_OR_ZERO(pdev);
-+	if (ret) {
-+		dev_err(cpu_dev, "Failed to create platform device, %d\n", ret);
-+		goto remove_opp;
-+	}
-+
-+	return 0;
-+
-+remove_opp:
-+	dev_pm_opp_remove_all_dynamic(cpu_dev);
-+
-+	return ret;
-+}
-+
-+late_initcall(raspberrypi_cpufreq_driver_init);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
-+MODULE_DESCRIPTION("Raspberry Pi cpufreq driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.21.0
-
+This seems like the wrong approach.  If an LSM wants to prevent covert
+communication from, say, mount actions, then it shouldn't allow the
+watch to be set up in the first place.
