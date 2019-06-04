@@ -2,195 +2,295 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F3EC46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725ADC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518C32146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346BA20843
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="Kz74tCOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfFDPSy (ORCPT
+        id S1728108AbfFDPTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:18:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37322 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfFDPSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:18:54 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 254043087BA9;
-        Tue,  4 Jun 2019 15:18:37 +0000 (UTC)
-Received: from ovpn-112-67.rdu2.redhat.com (ovpn-112-67.rdu2.redhat.com [10.10.112.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 08F1F52C4;
-        Tue,  4 Jun 2019 15:18:27 +0000 (UTC)
-Message-ID: <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Dan Williams <dcbw@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, abhishek.esse@gmail.com,
-        Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Date:   Tue, 04 Jun 2019 10:18:26 -0500
-In-Reply-To: <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
-         <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
-         <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
-         <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
-         <20190531233306.GB25597@minitux>
-         <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
-         <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
-         <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
-         <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 4 Jun 2019 11:19:15 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41160 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfFDPTP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:19:15 -0400
+Received: by mail-qt1-f194.google.com with SMTP id s57so7059993qte.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=+GLB//FJMzoRKaojHbKWRnGBjh+3MN+YOG5PwzjbOKg=;
+        b=Kz74tCOv53muyp8/p6NdupmKuw+XBhRNaC5yX+mvvvW2aM/wgTht9w/CQQMz87v6av
+         RRLydBUfqR0vg/cIPBv/dRHuAic6/t5AeV+DLSsAbG9uqANgKsbHC/r5+OyyPkV3vCLx
+         MWkFUIsH3Cw8JQO1FtJ347AqdviS7DbhW5/AZdfxAX2IhhJvTf9Ytj96UYlmCcyeEWN8
+         oHGE3BPxff1UAEsKSzvr9bQ2kt2XfPE3Pu6hTw+JYobZld4K8nhMS6/c456krekjDFnB
+         9zh8Kx0ZfOUtcfdABTAx5b3+PwQzrZxpaiVJQh/pnb+fjJBdRExm//FyxxjNgXe3qBfr
+         dQcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=+GLB//FJMzoRKaojHbKWRnGBjh+3MN+YOG5PwzjbOKg=;
+        b=CtjRw9b3KV/SIqPwyaQdw8Cib6zOQIlB/gPuS+8rJigSnEnykMLyUazl2OvrEhoS1K
+         Wrq8SM5wOHwXdyYYRWdleXqdM5USeFQ5WC/Ilj8xlEH+N1fwkk3lyj+56ZwIgZQcxl3I
+         CU/8EN775NJmkG1AV7AOZPkmrDw2W0AYH8OPawoQtPWECoGA64MsaSMgHGSXaWLm0N/+
+         7dYGi846/StIOUxGfiYrpxPpmAFX2OMcKxJsQUGIXHTpPfAj47QE/F/A7Ebzg+/PDbah
+         4sQr7uXuExSZ0e11SmLXszv2a9cKjUy5m+bJPlEvEnGH9N8jFV3+myskA2/Cii4Sn8i4
+         W2hw==
+X-Gm-Message-State: APjAAAXnp65rCGkop1MsLMLJzQeuudLHRyS7Yy451BOc7gqtyvVvpKTR
+        q2gMvl5o/twfQLabzqSLL7lvGg==
+X-Google-Smtp-Source: APXvYqwm+1CXoL9l4dlrHmtzp93ARlNFcklMLRuzN9brlvTUPxE84r5ERddU/N72qkOlVTTtM69AOQ==
+X-Received: by 2002:aed:2389:: with SMTP id j9mr2200835qtc.244.1559661554019;
+        Tue, 04 Jun 2019 08:19:14 -0700 (PDT)
+Received: from tpx230-nicolas (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
+        by smtp.gmail.com with ESMTPSA id x7sm7286334qka.6.2019.06.04.08.19.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 08:19:13 -0700 (PDT)
+Message-ID: <1cb8cc0c89f0017962226fdb84ae11e763fdd233.camel@ndufresne.ca>
+Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+Date:   Tue, 04 Jun 2019 11:19:11 -0400
+In-Reply-To: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-z2rjHTDfEa06D9UEeCQq"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 04 Jun 2019 15:18:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
-> On Mon, Jun 3, 2019 at 3:32 PM Alex Elder <elder@linaro.org> wrote:
-> > On 6/3/19 5:04 AM, Arnd Bergmann wrote:
-> > > On Sat, Jun 1, 2019 at 1:59 AM Subash Abhinov Kasiviswanathan
-> > > 
-> > > - What I'm worried about most here is the flow control handling
-> > > on the
-> > >   transmit side. The IPA driver now uses the modern BQL method to
-> > >   control how much data gets submitted to the hardware at any
-> > > time.
-> > >   The rmnet driver also uses flow control using the
-> > >   rmnet_map_command() function, that blocks tx on the higher
-> > >   level device when the remote side asks us to.
-> > >   I fear that doing flow control for a single physical device on
-> > > two
-> > >   separate netdev instances is counterproductive and confuses
-> > >   both sides.
-> > 
-> > I understand what you're saying here, and instinctively I think
-> > you're right.
-> > 
-> > But BQL manages the *local* interface's ability to get rid of
-> > packets, whereas the QMAP flow control is initiated by the other
-> > end of the connection (the modem in this case).
-> > 
-> > With multiplexing, it's possible that one of several logical
-> > devices on the modem side has exhausted a resource and must
-> > ask the source of the data on the host side to suspend the
-> > flow.  Meanwhile the other logical devices sharing the physical
-> > link might be fine, and should not be delayed by the first one.
-> > 
-> > It is the multiplexing itself that confuses the BQL algorithm.
-> > The abstraction obscures the *real* rates at which individual
-> > logical connections are able to transmit data.
-> 
-> I would assume that the real rate constantly changes, at least
-> for wireless interfaces that are also shared with other users
-> on the same network. BQL is meant to deal with that, at least
-> when using a modern queuing algorithm.
-> 
-> > Even if the multiple logical interfaces implemented BQL, they
-> > would not get the feedback they need directly from the IPA
-> > driver, because transmitting over the physical interface might
-> > succeed even if the logical interface on the modem side can't
-> > handle more data.  So I think the flow control commands may be
-> > necessary, given multiplexing.
-> 
-> Can you describe what kind of multiplexing is actually going on?
-> I'm still unclear about what we actually use multiple logical
-> interfaces for here, and how they relate to one another.
 
-Each logical interface represents a different "connection" (PDP/EPS
-context) to the provider network with a distinct IP address and QoS.
-VLANs may be a suitable analogy but here they are L3+QoS.
+--=-z2rjHTDfEa06D9UEeCQq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In realistic example the main interface (say rmnet0) would be used for
-web browsing and have best-effort QoS. A second interface (say rmnet1)
-would be used for VOIP and have certain QoS guarantees from both the
-modem and the network itself.
+Le lundi 03 juin 2019 =C3=A0 13:28 +0200, Hans Verkuil a =C3=A9crit :
+> Since Thomasz was very busy with other things, I've taken over this
+> patch series. This v4 includes his draft changes and additional changes
+> from me.
+>=20
+> This series attempts to add the documentation of what was discussed
+> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+> later Embedded Linux Conference Europe 2014 in D=C3=BCsseldorf and then
+> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+> video team (but mostly in a cosmetic way or making the document more
+> precise), during the several years of Chrome OS using the APIs in
+> production.
+>=20
+> Note that most, if not all, of the API is already implemented in
+> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+> this series is just to formalize what we already have.
+>=20
+> Thanks everyone for the huge amount of useful comments to previous
+> versions of this series. Much of the credits should go to Pawel Osciak
+> too, for writing most of the original text of the initial RFC.
+>=20
+> This v4 incorporates all known comments (let me know if I missed
+> something!) and should be complete for the decoder.
+>=20
+> For the encoder there are two remaining TODOs for the API:
+>=20
+> 1) Setting the frame rate so bitrate control can make sense, since
+>    they need to know this information.
+>=20
+>    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+>    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+>    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+>    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+>    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
 
-QMAP can also aggregate frames for a given channel (connection/EPS/PDP
-context/rmnet interface/etc) to better support LTE speeds.
+I agree, as long as it's documented. I can imagine how this could be
+confusing for new users.
 
-Dan
+>=20
+> 2) Interactions between OUTPUT and CAPTURE formats.
+>=20
+>    The main problem is what to do if the capture sizeimage is too small
+>    for the OUTPUT resolution when streaming starts.
+>=20
+>    Proposal: width and height of S_FMT(OUTPUT) are used to
+>    calculate a minimum sizeimage (app may request more). This is
+>    driver-specific.
+>=20
+>    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
+>    for the encoder (i.e. we don't support mid-stream resolution
+>    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
+>    supported. See https://patchwork.linuxtv.org/patch/56478/ for
+>    the patch adding this flag.
+>=20
+>    Of course, if we start to support mid-stream resolution
+>    changes (or other changes that require a source change event),
+>    then this flag should be dropped by the encoder driver and
+>    documentation on how to handle the source change event should
+>    be documented in the encoder spec. I prefer to postpone this
+>    until we have an encoder than can actually do mid-stream
+>    resolution changes.
+>=20
+>    If sizeimage of the OUTPUT is too small for the CAPTURE
+>    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
+>    then the second STREAMON (either CAPTURE or OUTPUT) will
+>    return -ENOMEM since there is not enough memory to do the
+>    encode.
 
-> > The rmnet driver could use BQL, and could return NETDEV_TX_BUSY
-> > for a logical interface when its TX flow has been stopped by a
-> > QMAP command.  That way the feedback for BQL on the logical
-> > interfaces would be provided in the right place.
-> > 
-> > I have no good intuition about the interaction between
-> > two layered BQL managed queues though.
-> 
-> Returning NETDEV_TX_BUSY is usually a bad idea as that
-> leads to unnecessary frame drop.
-> 
-> I do think that using BQL and the QMAP flow command on
-> the /same/ device would be best, as that throttles the connection
-> when either of the two algorithms wants us to slow down.
-> 
-> The question is mainly which of the two devices that should be.
-> Doing it in the ipa driver is probably easier to implement here,
-> but ideally I think we'd only have a single queue visible to the
-> network stack, if we can come up with a way to do that.
-> 
-> > > - I was a little confused by the location of the rmnet driver in
-> > >   drivers/net/ethernet/... More conventionally, I think as a
-> > > protocol
-> > >   handler it should go into net/qmap/, with the ipa driver going
-> > >   into drivers/net/qmap/ipa/, similar to what we have fo
-> > > ethernet,
-> > >   wireless, ppp, appletalk, etc.
-> > > 
-> > > - The rx_handler uses gro_cells, which as I understand is meant
-> > >   for generic tunnelling setups and takes another loop through
-> > >   NAPI to aggregate data from multiple queues, but in case of
-> > >   IPA's single-queue receive calling gro directly would be
-> > > simpler
-> > >   and more efficient.
-> > 
-> > I have been planning to investigate some of the generic GRO
-> > stuff for IPA but was going to wait on that until the basic
-> > code was upstream.
-> 
-> That's ok, that part can easily be changed after the fact, as it
-> does not impact the user interface or the general design.
-> 
-> > >   From the overall design and the rmnet Kconfig description, it
-> > >   appears as though the intention as that rmnet could be a
-> > >   generic wrapper on top of any device, but from the
-> > >   implementation it seems that IPA is not actually usable that
-> > >   way and would always go through IPA.
-> > 
-> > As far as I know *nothing* upstream currently uses rmnet; the
-> > IPA driver will be the first, but as Bjorn said others seem to
-> > be on the way.  I'm not sure what you mean by "IPA is not
-> > usable that way."  Currently the IPA driver assumes a fixed
-> > configuration, and that configuration assumes the use of QMAP,
-> > and therefore assumes the rmnet driver is layered above it.
-> > That doesn't preclude rmnet from using a different back end.
-> 
-> Yes, that's what I meant above: IPA can only be used through
-> rmnet (I wrote "through IPA", sorry for the typo), but cannot be
-> used by itself.
-> 
->        Arnd
+You seem confident that we will know immediately if it's too small. But
+what I remember is that HW has an interrupt for this, allowing
+userspace to allocate a larger buffer and resume.
+
+Should we make the capture queue independent of the streaming state, so
+that we can streamoff/reqbufs/.../streamon to resume from an ENOMEM
+error ? And shouldn't ENOMEM be returned by the following capture DQBUF
+when such an interrupt is raised ?
+
+>=20
+>    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
+>    be the case for all current encoders), then any bitrate controls
+>    will be limited in range to what the current state (CAPTURE and
+>    OUTPUT formats and frame rate) supports.
+>=20
+> Comments regarding these two encoder proposals are welcome!
+>=20
+> Regards,
+>=20
+> 	Hans
+>=20
+> Changes since v3:
+>=20
+> - Lots of stylistic fixes and fixing typos/grammar/etc.
+>=20
+> Decoder:
+>=20
+> - width/height for S_FMT(OUTPUT):
+>=20
+>   Expects that the output width and height is always a valid
+>   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
+>   instead of returning an error. Note that this resolution is a placehold=
+er
+>   until the actual resolution is parsed from the stream.
+>=20
+> - Dropped step 3 (Query the minimum number of buffers required for the CA=
+PTURE
+>   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to b=
+e
+>   a left-over from earlier versions. The same information is also in Step=
+ 10,
+>   so no need to have this in two places.
+>=20
+> - Added step 5 in the Capture Setup section: set COMPOSE rectangle if nee=
+ded.
+>=20
+> - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
+>=20
+> Encoder:
+>=20
+> - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE forma=
+t
+>   are marked as read-only and are based on the encoders current state suc=
+h
+>   as the OUTPUT format.
+>=20
+> - Drop TGT_COMPOSE support in the encoder: there are currently
+>   no encoders that can do composing/scaling.
+>=20
+> - Document corner cases in the Drain sequence
+>=20
+> - Document error handling.
+>=20
+> - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
+>=20
+> Changes since v2:
+> (https://lore.kernel.org/patchwork/cover/1002474/)
+> Decoder:
+>  - Specified that the initial source change event is signaled
+>    regardless of whether the client-set format matches the
+>    stream format.
+>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
+>    for the bitstream input buffers of decoders.
+>  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
+>    if the stream information is not available.
+>  - Described decode error handling.
+>  - Mentioned that timestamps can be observed after a seek to
+>    determine whether the CAPTURE buffers originated from before
+>    or after the seek.
+>  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
+>    V4L2_DEC_CMD_START, the decoder is not reset and preserves
+>    all the state.
+>=20
+> Encoder:
+>  - Specified that width and height of CAPTURE format are ignored
+>    and always zero.
+>  - Explicitly noted the common use case for the CROP target with
+>    macroblock-unaligned video resolutions.
+>  - Added a reference to Request API.
+>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
+>    for the bitstream output buffers of encoders.
+>  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
+>    V4L2_ENC_CMD_START, the encoder is not reset and preserves
+>    all the state.
+>=20
+> General:
+>  - Dropped format enumeration from "Initialization", since it's already
+>    a part of "Querying capabilities".
+>  - Many spelling, grammar, stylistic, etc. changes.
+>  - Changed the style of note blocks.
+>  - Rebased onto Hans' documentation cleanup series.
+>    (https://patchwork.kernel.org/cover/10775407/
+>     https://patchwork.kernel.org/patch/10776737/)
+>  - Moved the interfaces under the "Video Memory-To-Memory Interface"
+>    section.
+>=20
+> For changes since v1 see the v2:
+> https://lore.kernel.org/patchwork/cover/1002474/
+>=20
+> For changes since RFC see the v1:
+> https://patchwork.kernel.org/cover/10542207/
+>=20
+> Tomasz Figa (2):
+>   media: docs-rst: Document memory-to-memory video decoder interface
+>   media: docs-rst: Document memory-to-memory video encoder interface
+>=20
+>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+>  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
+>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
+>  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+>  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
+>  7 files changed, 1779 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
+>=20
+
+--=-z2rjHTDfEa06D9UEeCQq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXPaL7wAKCRBxUwItrAao
+HLX/AJ4rYDmpomVuz9vTkwkuMNuprybr0wCfZlXD1+znpT3mx2TZpf1q2fEUoRk=
+=7kSa
+-----END PGP SIGNATURE-----
+
+--=-z2rjHTDfEa06D9UEeCQq--
 
