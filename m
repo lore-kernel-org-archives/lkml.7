@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42039C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA2C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E822206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4AF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691140;
-	bh=EJJixapn+OfFqWZNxsdSJTKShf4QSQTWzA0SfKy3OjU=;
+	s=default; t=1559691144;
+	bh=mIl1qkLw6ixFkw961ZXi8NjSN8yh49bdoYo0oKYcreE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aSj2VSYxiqSSBXgoKw2BGei+M317hdLy3Xmg2ixVZD1dZ2Nab9830LwLxmGfT3g93
-	 TzMVAYknBMN5pPYxIwnbX22vkvEeH2etN9D9exLpx8Iw7hv3V4PYbiRYDgxIY6umu7
-	 b5owGyHorGkRKHfdLQUVxajoynW8ih4HofIGWjKk=
+	b=SM25iKa5KqnwfDOpU14GKzZeLiLGg93onEOVapF7qLknSC3TClgJCVmazQsRMJSms
+	 ijelDNiYP7vd9nWY8CYvhY3F9AYCtUwfN/0Yj0o9DNz+qvIpzRRekxbNRppiUPFdRW
+	 eKFE+5x4lcsv6AtqOA4xBncRXzz3HmPfSuqcYdyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfFDXcT (ORCPT
+        id S1726939AbfFDXWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbfFDXWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:42 -0400
+        id S1726876AbfFDXWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF76F208E3;
-        Tue,  4 Jun 2019 23:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B8520859;
+        Tue,  4 Jun 2019 23:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690561;
-        bh=EJJixapn+OfFqWZNxsdSJTKShf4QSQTWzA0SfKy3OjU=;
+        s=default; t=1559690558;
+        bh=mIl1qkLw6ixFkw961ZXi8NjSN8yh49bdoYo0oKYcreE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=op09FNz/HRjdU5W1lWmh/qQSaWgtus+ET6Gb/7hOy7kTTty2ymGqGHARUWRTggb0w
-         Fm7PHj+J3NoVygN7tJw6HNjGKex6+A2rm60IgscFiyXgXSKFePW0TuUTStjTu11Ngq
-         ua+F7V9ghTxeX25hQkCDkgdtIKmeysGS8zrO66/I=
+        b=og9rgRypUkY8bkK+WmJpvzoZqJa4It4V+Z2MD1UxPMvhds255BdAkFTzD1PomUgIG
+         M/hS7+aMkkVFM1W13sLNv7t8FIpAe73ADPnRMDNdMTsiG8WcXGd6DvQrgF+Cj6B2zx
+         BHlf2QQCVYi2rP+xVK3Z6kTeI4vE1JGVJXTLbZpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 17/60] scsi: qedi: remove set but not used variables 'cdev' and 'udev'
-Date:   Tue,  4 Jun 2019 19:21:27 -0400
-Message-Id: <20190604232212.6753-17-sashal@kernel.org>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 14/60] bpf: sockmap fix msg->sg.size account on ingress skb
+Date:   Tue,  4 Jun 2019 19:21:24 -0400
+Message-Id: <20190604232212.6753-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -60,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
+[ Upstream commit cabede8b4f2b746232aa25730a0b752de1cb82ca ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When converting a skb to msg->sg we forget to set the size after the
+latest ktls/tls code conversion. This patch can be reached by doing
+a redir into ingress path from BPF skb sock recv hook. Then trying to
+read the size fails.
 
-drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
-drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
-drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
+Fix this by setting the size.
 
-These have never been used since introduction.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ net/core/skmsg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index bf371e7b957d..c3d0d246df14 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -809,8 +809,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	struct qedi_endpoint *qedi_ep;
- 	struct sockaddr_in *addr;
- 	struct sockaddr_in6 *addr6;
--	struct qed_dev *cdev  =  NULL;
--	struct qedi_uio_dev *udev = NULL;
- 	struct iscsi_path path_req;
- 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
- 	u32 iscsi_cid = QEDI_CID_RESERVED;
-@@ -830,8 +828,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	}
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 49d1efa329d7..93bffaad2135 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -411,6 +411,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb)
+ 	sk_mem_charge(sk, skb->len);
+ 	copied = skb->len;
+ 	msg->sg.start = 0;
++	msg->sg.size = copied;
+ 	msg->sg.end = num_sge == MAX_MSG_FRAGS ? 0 : num_sge;
+ 	msg->skb = skb;
  
- 	qedi = iscsi_host_priv(shost);
--	cdev = qedi->cdev;
--	udev = qedi->udev;
- 
- 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
- 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
 -- 
 2.20.1
 
