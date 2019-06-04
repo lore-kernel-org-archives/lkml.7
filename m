@@ -2,210 +2,135 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF5CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372A4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF53B24543
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EC12493C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S4x3JH7O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PhE+NmWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfFDHHT (ORCPT
+        id S1726806AbfFDHIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:07:19 -0400
-Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:12959
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726568AbfFDHHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:07:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4bTf0X6dx6lURlProVrMnE4lDDovDMdjPISoiIyLfGE=;
- b=S4x3JH7OvePCIL9waWFJIkZaoHLDIRCnuxu2mYujfnpF1jNQS+/khmojSXMY7L7Zx2KWFrrzByC9yTuEdoi7Z814UZCsUt0wRsX7ZWxEaHnAG8+MANOkKDK5AjH7aSEtxh0tKTZaP2ygnS7SNRNYkJrB4QnRHVgzx9YXXzgFqtI=
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
- AM5PR0402MB2689.eurprd04.prod.outlook.com (10.175.46.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Tue, 4 Jun 2019 07:06:34 +0000
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::a1bf:17d:a52:3824]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::a1bf:17d:a52:3824%4]) with mapi id 15.20.1965.011; Tue, 4 Jun 2019
- 07:06:34 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Ran Wang <ran.wang_1@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v4 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Topic: [PATCH v4 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Index: AQHVDvGJHigpnFjbr0+iCnHCepvpt6aLJ1JQ
-Date:   Tue, 4 Jun 2019 07:06:34 +0000
-Message-ID: <AM5PR0402MB286535CF9B49BCF651C2322BF1150@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190520095238.29210-1-ran.wang_1@nxp.com>
-In-Reply-To: <20190520095238.29210-1-ran.wang_1@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 71305ebc-2a8b-430b-1e05-08d6e8bb2e0f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2689;
-x-ms-traffictypediagnostic: AM5PR0402MB2689:
-x-microsoft-antispam-prvs: <AM5PR0402MB2689BA5A54623C8896D88015F1150@AM5PR0402MB2689.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0058ABBBC7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(81156014)(81166006)(33656002)(25786009)(52536014)(5660300002)(71190400001)(8936002)(71200400001)(6246003)(6506007)(66476007)(316002)(5024004)(8676002)(66066001)(305945005)(76116006)(14444005)(66446008)(64756008)(66556008)(86362001)(66946007)(256004)(7736002)(73956011)(4326008)(54906003)(7416002)(74316002)(476003)(6436002)(6116002)(486006)(53936002)(99286004)(3846002)(102836004)(76176011)(14454004)(7696005)(53546011)(11346002)(229853002)(446003)(26005)(186003)(68736007)(478600001)(110136005)(2906002)(9686003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2689;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d0SGIP6BPEpfND4Zg/03Z2N33glU1BQrILfsfnp4S9vq2jAmgkCeX6Lex618bGkhvlNFgxvsXnxCkyLmvyTa4Cv0fm8qpRd1ZGl/PG9+6dDOWFox5YZsFulRuX625FZfgmLxN0V5X9y+L5uHVQ/u4u0rHfTtCPCdzX8C6s/4WcE6XAZKh7j/qEzU/G404c0HpHrCIKWxX3uVB6whUISgvTeDM4z+C2iewsKjObuUttdcPhVoSoahW0PnuITObMSwdn3a8FDNofPmM6aNBwDVnvb98FVgzqXafwr9fMeKt84eM1EzGbKrz9lrMAAziydmEpYTc6B1rsbJcfy4hP2gCoMdxx1AwGwSi5Hw0STjmPjTwX0JnwNtNTLOwOVZWF1cJLT3VwVKo8fzZXIlXGyMQ59ltTcUrMYrfMqBHZsU9GU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Jun 2019 03:08:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46124 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfFDHIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 03:08:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m/punIg9+myPZqcO5Fex4TzU8Z+bUAZ/ApxJa070rqw=; b=PhE+NmWcH3ODsjbf5DgAK0rDR
+        wNbT88AC4wWX+ZvyP5MM1KqyooYM0+mAkuIdGtabHS44vr1bAfF+mOtJyPthTKg+/syEbcFJyBQ+D
+        vdlie6qPJkRzG+Nif1tIPr8FKNxoIgKFarWD5+HgSCI8eL9EpEd1969URTGDodzK0Vg9YxN6Dg7QU
+        I1kZVZJSe2kjVSjBZt5VvJQJa8z6/2JIw+0EauSETmT3ODTqSj1eOnowCy7paNrTgZbjGe15oASWA
+        pDcGtfUIgJqflfZtG65779lHUaUM7n3J7aSzRx1j3fTyF7KFC5P99GbYE/BvDYP7gnYfAk+D0GuSR
+        juu0GR9+w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hY3YG-0000zz-I4; Tue, 04 Jun 2019 07:08:08 +0000
+Date:   Tue, 4 Jun 2019 00:08:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190604070808.GA28858@infradead.org>
+References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
+ <20190603164206.GB29719@infradead.org>
+ <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71305ebc-2a8b-430b-1e05-08d6e8bb2e0f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 07:06:34.7543
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ran.wang_1@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2689
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sirs,
-    Could anyone please comment this patch set or tell me if I have missed
-maintainer in mail list? I'd like to let review process move forward.
-    Thank you.
+On Mon, Jun 03, 2019 at 04:56:10PM -0700, Ira Weiny wrote:
+> On Mon, Jun 03, 2019 at 09:42:06AM -0700, Christoph Hellwig wrote:
+> > > +#if defined(CONFIG_CMA)
+> > 
+> > You can just use #ifdef here.
+> > 
+> > > +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
+> > > +	struct page **pages)
+> > 
+> > Please use two instead of one tab to indent the continuing line of
+> > a function declaration.
+> > 
+> > > +{
+> > > +	if (unlikely(gup_flags & FOLL_LONGTERM)) {
+> > 
+> > IMHO it would be a little nicer if we could move this into the caller.
+> 
+> FWIW we already had this discussion and thought it better to put this here.
+> 
+> https://lkml.org/lkml/2019/5/30/1565
 
-Regards,=20
-Ran
+I don't see any discussion like this.  FYI, this is what I mean,
+code might be easier than words:
 
-On Monday, May 20, 2019 17:53 Ran Wang wrote:
->=20
-> Some user might want to go through all registered wakeup sources and doin=
-g
-> things accordingly. For example, SoC PM driver might need to do HW
-> programming to prevent powering down specific IP which wakeup source
-> depending on. And is user's responsibility to identify if this wakeup sou=
-rce he is
-> interested in.
->=20
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Change in v4:
-> 	- None.
->=20
-> Change in v3:
-> 	- Adjust indentation of *attached_dev;.
->=20
-> Change in v2:
-> 	- None.
->=20
->  drivers/base/power/wakeup.c |   18 ++++++++++++++++++
->  include/linux/pm_wakeup.h   |    3 +++
->  2 files changed, 21 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c in=
-dex
-> 5b2b6a0..6904485 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -14,6 +14,7 @@
->  #include <linux/suspend.h>
->  #include <linux/seq_file.h>
->  #include <linux/debugfs.h>
-> +#include <linux/of_device.h>
->  #include <linux/pm_wakeirq.h>
->  #include <trace/events/power.h>
->=20
-> @@ -226,6 +227,22 @@ void wakeup_source_unregister(struct wakeup_source
-> *ws)
->  	}
->  }
->  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
-> +/**
-> + * wakeup_source_get_next - Get next wakeup source from the list
-> + * @ws: Previous wakeup source object, null means caller want first one.
-> + */
-> +struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
-> +{
-> +	struct list_head *ws_head =3D &wakeup_sources;
-> +
-> +	if (ws)
-> +		return list_next_or_null_rcu(ws_head, &ws->entry,
-> +				struct wakeup_source, entry);
-> +	else
-> +		return list_entry_rcu(ws_head->next,
-> +				struct wakeup_source, entry);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_source_get_next);
->=20
->  /**
->   * device_wakeup_attach - Attach a wakeup source object to a device obje=
-ct.
-> @@ -242,6 +259,7 @@ static int device_wakeup_attach(struct device *dev,
-> struct wakeup_source *ws)
->  		return -EEXIST;
->  	}
->  	dev->power.wakeup =3D ws;
-> +	ws->attached_dev =3D dev;
->  	if (dev->power.wakeirq)
->  		device_wakeup_attach_irq(dev, dev->power.wakeirq);
->  	spin_unlock_irq(&dev->power.lock);
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h index
-> 0ff134d..913b2fb 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -50,6 +50,7 @@
->   * @wakeup_count: Number of times the wakeup source might abort suspend.
->   * @active: Status of the wakeup source.
->   * @has_timeout: The wakeup source has been activated with a timeout.
-> + * @attached_dev: The device it attached to
->   */
->  struct wakeup_source {
->  	const char 		*name;
-> @@ -70,6 +71,7 @@ struct wakeup_source {
->  	unsigned long		wakeup_count;
->  	bool			active:1;
->  	bool			autosleep_enabled:1;
-> +	struct device		*attached_dev;
->  };
->=20
->  #ifdef CONFIG_PM_SLEEP
-> @@ -101,6 +103,7 @@ static inline void device_set_wakeup_path(struct devi=
-ce
-> *dev)  extern void wakeup_source_remove(struct wakeup_source *ws);  exter=
-n
-> struct wakeup_source *wakeup_source_register(const char *name);  extern
-> void wakeup_source_unregister(struct wakeup_source *ws);
-> +extern struct wakeup_source *wakeup_source_get_next(struct
-> +wakeup_source *ws);
->  extern int device_wakeup_enable(struct device *dev);  extern int
-> device_wakeup_disable(struct device *dev);  extern void
-> device_set_wakeup_capable(struct device *dev, bool capable);
-> --
-> 1.7.1
 
+diff --git a/mm/gup.c b/mm/gup.c
+index ddde097cf9e4..62d770b18e2c 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2197,6 +2197,27 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_CMA
++static int reject_cma_pages(struct page **pages, int nr_pinned)
++{
++	int i = 0;
++
++	for (i = 0; i < nr_pinned; i++)
++		if (is_migrate_cma_page(pages[i])) {
++			put_user_pages(pages + i, nr_pinned - i);
++			return i;
++		}
++	}
++
++	return nr_pinned;
++}
++#else
++static inline int reject_cma_pages(struct page **pages, int nr_pinned)
++{
++	return nr_pinned;
++}
++#endif /* CONFIG_CMA */
++
+ /**
+  * get_user_pages_fast() - pin user pages in memory
+  * @start:	starting user address
+@@ -2237,6 +2258,9 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 		ret = nr;
+ 	}
+ 
++	if (nr && unlikely(gup_flags & FOLL_LONGTERM))
++		nr = reject_cma_pages(pages, nr);
++
+ 	if (nr < nr_pages) {
+ 		/* Try to get the remaining pages with get_user_pages */
+ 		start += nr << PAGE_SHIFT;
