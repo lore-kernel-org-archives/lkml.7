@@ -2,99 +2,130 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E059C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94021C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176C723426
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7708023426
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfFDO4S (ORCPT
+        id S1727896AbfFDO4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:56:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:45960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfFDO4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:56:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E82BC341;
-        Tue,  4 Jun 2019 07:56:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 664F33F690;
-        Tue,  4 Jun 2019 07:56:15 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 15:56:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
- __do_page_fault()
-Message-ID: <20190604145612.GM6610@arrakis.emea.arm.com>
-References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
- <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
+        Tue, 4 Jun 2019 10:56:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727826AbfFDO4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:56:25 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54EbtGi048817
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 10:56:23 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2swr8hysqj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:56:23 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 4 Jun 2019 15:56:21 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 15:56:18 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54EuFI151314830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 14:56:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C71E1A4059;
+        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43716A404D;
+        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.145])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
+Date:   Tue, 4 Jun 2019 16:56:13 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
+In-Reply-To: <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+        <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060414-4275-0000-0000-0000033CA10B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060414-4276-0000-0000-0000384CB085
+Message-Id: <20190604165613.4d2803b4.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=841 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
-> __do_page_fault() is over complicated with multiple goto statements. This
-> cleans up the code flow and while there drops local variable vm_fault_t.
+On Thu, 23 May 2019 11:36:12 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-I'd change the subject as well here to something like refactor or
-simplify __do_page_fault().
+> On 5/21/19 11:34 AM, Pierre Morel wrote:
+> > This patch series implements PQAP/AQIC interception in KVM.
+> > 
 
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 4bb65f3..41fa905 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
->  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
->  			   unsigned int mm_flags, unsigned long vm_flags)
->  {
-> -	struct vm_area_struct *vma;
-> -	vm_fault_t fault;
-> +	struct vm_area_struct *vma = find_vma(mm, addr);
->  
-> -	vma = find_vma(mm, addr);
-> -	fault = VM_FAULT_BADMAP;
->  	if (unlikely(!vma))
-> -		goto out;
-> -	if (unlikely(vma->vm_start > addr))
-> -		goto check_stack;
-> +		return VM_FAULT_BADMAP;
->  
->  	/*
->  	 * Ok, we have a good vm_area for this memory access, so we can handle
->  	 * it.
->  	 */
-> -good_area:
-> +	if (unlikely(vma->vm_start > addr)) {
-> +		if (!(vma->vm_flags & VM_GROWSDOWN))
-> +			return VM_FAULT_BADMAP;
-> +		if (expand_stack(vma, addr))
-> +			return VM_FAULT_BADMAP;
-> +	}
+[..]
 
-You could have a single return here:
+> > 
+> > Tony, I did not rebase this series above the dynamic configuration
+> > patches because:
+> > - This series do the work it needs to do without having to take
+> >    care on the dynamic configuration.
+> > - It is guarantied that interrupt will be shut off after removing
+> >    the APQueue device
+> > - The dynamic configuration series is not converging.  
+> 
+> Would you consider the following?
+> 
+> * Take dynconfig patch "s390: vfio-ap: wait for queue empty on queue
 
-	if (unlikely(vma->vm_start > addr) &&
-	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
-		return VM_FAULT_BADMAP;
+[..]
 
-Not sure it's any clearer though.
+> 
+> If you do the things above, then I can base the dynconfig series on
+> the IRQ series without much of a merge issue. What say you?
+> 
+> Note: I've included review comments for patch 3/4 to match the
+>        suggestions above.
+> 
+> > 
+> > However Tony, the choice is your's, I won't be able to help
+> > in a near future.
 
--- 
-Catalin
+Since Pierre won't available for a while, and the patches look good
+enough to me, I would like to pick these if nobody objects.
+
+Any objection?
+
+@Tony: Could you please have another look at patch 3? That is the only
+one you haven't r-b yet...
+
+Regards,
+Halil
+
