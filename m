@@ -2,96 +2,122 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1638DC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4630CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45D3214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F7323A79
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQl8HXs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfFDNDJ (ORCPT
+        id S1727229AbfFDNFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:03:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5100 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfFDNB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:01:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 06:01:56 -0700
-X-ExtLoop1: 1
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Jun 2019 06:01:55 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jin Yao <yao.jin@linux.intel.com>,
+        Tue, 4 Jun 2019 09:05:39 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42704 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfFDNFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:05:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so8479141lje.9;
+        Tue, 04 Jun 2019 06:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AtISXc3jFgJoLSHh5PWT1AZKuf7dNq1h2+HU+Zatn7w=;
+        b=VQl8HXs1JvXKlRqQOH9bH729BCGyptIFjlxS+jppf2VLBZo+mL1enMs5UmCOFlyv3Z
+         4yJDQT2HFDx/yrQXMuVS1l1J5S4mEJC5pDv7GkyKaa6etpNNGQhY9iewWE/PYdFaVt6U
+         dZIJh3EFXEXFs/i0A4+avgzW97bzdABWVg8VF6YR6CvLRhkbmMJ097ZSHVVEjjYmLH0D
+         rFivNev2y3Gv8KOP82JmOSdewgrhE4DoIalHbgPtzusxZkkUk4imEHOmVmCQaCDAKdFC
+         XpnpCKce7q6C8Z7azvoDK9Tuc6t/QvDp7xZLNen/7xVV5quPsigoJLQqEy5Evls0JDDU
+         M39w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AtISXc3jFgJoLSHh5PWT1AZKuf7dNq1h2+HU+Zatn7w=;
+        b=i/TtvCVwkinWco/tpHszJR2kc5akoNTQlbfdF98nSES1jPL4GPMMImi6TRfRCV+gXo
+         C3Y0OYoFoZeX2Aj6TCoiGFO6+8kgdH0/XzfI+c25cHCXuJ8n6uJYIsVVgTabXBUphk7+
+         0vLIdm1U1STb2I/k85lVetmezDE6oDYL2vNtu6dk/nnNePgTZDt2USxTQi/OhmcO/dqw
+         bEIDc9jW6tbVHrukdhBvF32khoZydcT8zp/kIgKWtOCupxjt0072Lh/wbtxHPsP+YQtI
+         q1SZvjqiFEz8ENkAgEu/3g7xKRtNb6ppo3p3HLOtv3yUsOgRZB4ibBPzN9LjoWgD+2hK
+         BPBQ==
+X-Gm-Message-State: APjAAAXUdvhQ+dYdxvdljpM3uxoj1w59rL3AXY89HoMmGSLUe/GxkqpV
+        Axb4+BV0GgdrD+KHjW1qBG2waBK7
+X-Google-Smtp-Source: APXvYqzN2rPb0j0exDHrTMAjnJbEwSNFphqt3mgRuA0QVXlgI5G9vdQFmdEim7ot3iAS1BFrMVcT3g==
+X-Received: by 2002:a2e:3a01:: with SMTP id h1mr4872724lja.132.1559653535252;
+        Tue, 04 Jun 2019 06:05:35 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id l22sm3205565ljb.39.2019.06.04.06.05.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 06:05:33 -0700 (PDT)
+Subject: Re: [PATCH v4 05/16] PM / devfreq: tegra: Don't set EMC clock rate to
+ maximum on probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/19] perf intel-pt: Add lookahead callback
-Date:   Tue,  4 Jun 2019 16:00:02 +0300
-Message-Id: <20190604130017.31207-5-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604130017.31207-1-adrian.hunter@intel.com>
-References: <20190604130017.31207-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-6-digetx@gmail.com> <20190604110042.GE16519@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <71f7b41c-b33f-92fa-e0a5-85fefeb57274@gmail.com>
+Date:   Tue, 4 Jun 2019 16:05:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190604110042.GE16519@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a callback function to enable the decoder to lookahead at subsequent
-trace buffers. This will be used to implement a "fast forward" facility
-which will be needed to support efficient time interval filtering.
+04.06.2019 14:00, Thierry Reding пишет:
+> On Thu, May 02, 2019 at 02:38:04AM +0300, Dmitry Osipenko wrote:
+>> There is no real benefit from doing so, hence let's drop that rate setting
+>> for consistency.
+>>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra-devfreq.c | 2 --
+>>  1 file changed, 2 deletions(-)
+> 
+> Do you have any numbers to tell how long it would take for the EMC rate
+> to get incremented? My understanding is that ACTMON basically reacts to
+> system load, so I could imagine that not setting to the maximum
+> frequency after this is loaded might make the system slow in the short
+> term. Only after ACTMON has collected enough data to determine that it
+> needs to clock the EMC higher would system speed resume normal.
+> 
+> I guess technically this patch doesn't change anything if the system
+> already boots at the highest EMC frequency anyway, which I think it does
+> on many (although not all) devices.
+> 
+> Anyway, you said you've tested this and are satisfied with the
+> performance, so it can't be that bad:
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 2 ++
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.h | 3 +++
- 2 files changed, 5 insertions(+)
+It takes 12ms for ACTMON to react and then about (couple) hundred
+microseconds to change memory freq. This is a very short period of time
+that human being can't notice.
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index 9eb778f9c911..13123b195083 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -104,6 +104,7 @@ struct intel_pt_decoder {
- 			 uint64_t *insn_cnt_ptr, uint64_t *ip, uint64_t to_ip,
- 			 uint64_t max_insn_cnt, void *data);
- 	bool (*pgd_ip)(uint64_t ip, void *data);
-+	int (*lookahead)(void *data, intel_pt_lookahead_cb_t cb, void *cb_data);
- 	void *data;
- 	struct intel_pt_state state;
- 	const unsigned char *buf;
-@@ -233,6 +234,7 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
- 	decoder->get_trace          = params->get_trace;
- 	decoder->walk_insn          = params->walk_insn;
- 	decoder->pgd_ip             = params->pgd_ip;
-+	decoder->lookahead          = params->lookahead;
- 	decoder->data               = params->data;
- 	decoder->return_compression = params->return_compression;
- 	decoder->branch_enable      = params->branch_enable;
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-index 6a61773dc44b..de36254c6ac9 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-@@ -102,12 +102,15 @@ struct intel_pt_buffer {
- 	uint64_t trace_nr;
- };
- 
-+typedef int (*intel_pt_lookahead_cb_t)(struct intel_pt_buffer *, void *);
-+
- struct intel_pt_params {
- 	int (*get_trace)(struct intel_pt_buffer *buffer, void *data);
- 	int (*walk_insn)(struct intel_pt_insn *intel_pt_insn,
- 			 uint64_t *insn_cnt_ptr, uint64_t *ip, uint64_t to_ip,
- 			 uint64_t max_insn_cnt, void *data);
- 	bool (*pgd_ip)(uint64_t ip, void *data);
-+	int (*lookahead)(void *data, intel_pt_lookahead_cb_t cb, void *cb_data);
- 	void *data;
- 	bool return_compression;
- 	bool branch_enable;
--- 
-2.17.1
-
+AFAIK, in practice there are no devices in the wild that boot up with
+DRAM clocked at lowest rate. Most devices have a video output and thus
+require significant memory bandwidth at a boot time already. Secondly,
+higher memory bandwidth is only really needed for a cases like
+multimedia, in most generic cases CPU is hitting cache and not utilizing
+DRAM a lot.
