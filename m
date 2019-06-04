@@ -2,111 +2,89 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4DEC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ADBC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B719F208E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C493208E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gouvuNPs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PpjWXm1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfFDRaz (ORCPT
+        id S1726583AbfFDRbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:30:55 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:42678 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFDRaz (ORCPT
+        Tue, 4 Jun 2019 13:31:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36966 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDRbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:30:55 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x54HUnnO031843;
-        Wed, 5 Jun 2019 02:30:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x54HUnnO031843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559669449;
-        bh=Ke3jFtfR0IupnNpNkmhdXNiTmzoHjUV+JOucXec4i/o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gouvuNPsRL1KPQx3usdUnyGSAtghsqRSSL1X5706V2o1jpuvlLrCB14TFpPlkGpTa
-         2H/XOz+b7Ij7fRWgufOm6duIIdd4ySwdZ9KlRgzKg1NhTELMbyTy8WrL/bsOi+QaVp
-         M3jTeS8HWd0hYM/ZaLT4suZERvpzgtshXAQB1gq+Fmj43UduIGiCKgFeDfcH3HFk0h
-         1AFkdDBtTCMuFvNzl7GBL88TnY24CCMuyNo+dsJ350CevRFPQ5mllP8Z6GpDlYZB4L
-         ejFSJTRraxGDULAoU8MoTB6GOhirynJe46vUqrrTSXSGJWrn6G/E9NPsXcE9P92hRI
-         Wx0rOeGwZAbow==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id q64so4361681vsd.1;
-        Tue, 04 Jun 2019 10:30:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAUS1agjubygkoR54QcHdWL+al8py5iDTNHpj8r0+YmnKfPKD+YI
-        sduniP9kmOGB3YzYyrWeUcFPTACIqFkORCeeVw8=
-X-Google-Smtp-Source: APXvYqz3/kHIsgtyIFnnNahMh+SN4Xp6WTSHW5hu+Dg4XzzBTK/seNpmLpSrwi/yKzKncJCj/FybysBaeNlwQd7QEtw=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr1245218vsn.54.1559669448381;
- Tue, 04 Jun 2019 10:30:48 -0700 (PDT)
+        Tue, 4 Jun 2019 13:31:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 131so7962392ljf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Bc8vPbFX2tliT9MrCWMKPuMK6hgmMamCpZ5rNAKRQw=;
+        b=PpjWXm1jVPIsRz7rulWNvQn99keNFaa71SZ17GTZf1SYK/jEtb5wWtm5IBbo5AVEMi
+         ByaWfyVjsM9XfsE9TmckhXdg1Riz8kFWR/ZvaYEZ8VKjx2JtGKOELtmijpjpjann4eLE
+         fkmg3y+jJjn8JdWU1wYsVAGZOg/W4AVA1+ZrI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Bc8vPbFX2tliT9MrCWMKPuMK6hgmMamCpZ5rNAKRQw=;
+        b=IQ7rsNMerSWuSiaR3kpLRdAaKoeM6GzUMIQSnGxWl070EsUjpyygh9OMgcFufRWYnt
+         AJDHllJjaJh8/14R59IDaO8cIpCqMV8VXHInBszXP+z6MHrgEcBCb8dcLmNwITFgeZ2r
+         WangHn9BqboTfAsOtN4QUuV05sV4KKLYG93ikh/wcIWL4GJk86EDkqDQzUkNf35y79i3
+         WEaGDyu8GgVIJ942Rta9TNMOVnnjw9LSRQ37v47PxmCSKVsUMluRf+44hZ6Re2rb1/il
+         26jjPooPpJpuxGamYtBhqNFMKD0OrxdMHUJUVGimC8IqcQc8Y3K49yupxVHLsjZnBJpU
+         GkJg==
+X-Gm-Message-State: APjAAAXvQZ7wXFicz3u7Ve+I0PFMa4DBQqPVyRD4d+wQpQ+xpXiHGTPF
+        4Y+gbFm4EvBnoyFYhBixxb3ChYc1ETo=
+X-Google-Smtp-Source: APXvYqywlFnyX3ClrEq3wZ7PMe1SOUFkuh7cOMapQGQuYXDikAm39N5uG/3Dwz/a6cR//yo4t1M7vQ==
+X-Received: by 2002:a2e:7216:: with SMTP id n22mr3016840ljc.42.1559669491706;
+        Tue, 04 Jun 2019 10:31:31 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id t3sm1514851lfk.59.2019.06.04.10.31.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 10:31:29 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id i21so5950330ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:31:29 -0700 (PDT)
+X-Received: by 2002:a2e:9582:: with SMTP id w2mr2373368ljh.136.1559669489250;
+ Tue, 04 Jun 2019 10:31:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520151614.19188-1-dan.rue@linaro.org>
-In-Reply-To: <20190520151614.19188-1-dan.rue@linaro.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 5 Jun 2019 02:30:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARonAGTShZTyiDL02qtP3PUg7jyYZRHG9C-MUY+zKY22g@mail.gmail.com>
-Message-ID: <CAK7LNARonAGTShZTyiDL02qtP3PUg7jyYZRHG9C-MUY+zKY22g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: teach kselftest-merge to find nested config files
-To:     Dan Rue <dan.rue@linaro.org>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190604172910.107199-1-briannorris@chromium.org>
+In-Reply-To: <20190604172910.107199-1-briannorris@chromium.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 4 Jun 2019 10:31:17 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXOBhe81Z2V-s_-=briPhXGQys7YcRyWZ-j=F07b_X6zWA@mail.gmail.com>
+Message-ID: <CA+ASDXOBhe81Z2V-s_-=briPhXGQys7YcRyWZ-j=F07b_X6zWA@mail.gmail.com>
+Subject: Re: [PATCH] mwifiex: drop 'set_consistent_dma_mask' log message
+To:     Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:19 AM Dan Rue <dan.rue@linaro.org> wrote:
+On Tue, Jun 4, 2019 at 10:29 AM Brian Norris <briannorris@chromium.org> wrote:
 >
-> Current implementation of kselftest-merge only finds config files that
-> are one level deep using `$(srctree)/tools/testing/selftests/*/config`.
+> This message is pointless.
 >
-> Often, config files are added in nested directories, and do not get
-> picked up by kselftest-merge.
+> While we're at it, include the error code in the error message, which is
+> not pointless.
 >
-> Use `find` to catch all config files under
-> `$(srctree)/tools/testing/selftests` instead.
->
-> Signed-off-by: Dan Rue <dan.rue@linaro.org>
-> ---
->  Makefile | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index a45f84a7e811..e99e7f9484af 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1228,9 +1228,8 @@ kselftest-clean:
->  PHONY += kselftest-merge
->  kselftest-merge:
->         $(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
-> -       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh \
-> -               -m $(objtree)/.config \
-> -               $(srctree)/tools/testing/selftests/*/config
-> +       $(Q)find $(srctree)/tools/testing/selftests -name config | \
-> +               xargs $(srctree)/scripts/kconfig/merge_config.sh -m $(objtree)/.config
->         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
->
->  # ---------------------------------------------------------------------------
-> --
-> 2.21.0
->
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-
-Applied to linux-kbuild/fixes. Thanks.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Oops, I sent this patch twice. Sorry!
