@@ -2,92 +2,204 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247DBC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDADC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A4524AD6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBBA24AD6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vVtJICAM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQwXpuCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFDGNS (ORCPT
+        id S1726741AbfFDGPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:13:18 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40518 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbfFDGNS (ORCPT
+        Tue, 4 Jun 2019 02:15:23 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40236 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfFDGPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:13:18 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x546DEPx008945;
-        Tue, 4 Jun 2019 01:13:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559628794;
-        bh=u/BALELt1gi51fdTWElCfv9ApNJCaqkJ3slwOHkec3k=;
-        h=From:To:CC:Subject:Date;
-        b=vVtJICAMD4fIQEIW+OsqJ5W5Nr40K5re924DLGkEuN/0u6t5G0yDIdGimv8/p5/3N
-         C1r4RYW1eB9uYi8b/jTL0Mp6u7gKFN632jwvVOie5P/R46Sr5qDlVOI7Ow7gWLL/jV
-         yQ2J/aQjrGcbYWZ1ZhfLz5Ng6PFW58QdrVX6dZm8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x546DDKQ068713
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 01:13:13 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 01:13:13 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 01:13:13 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x546DAmR040385;
-        Tue, 4 Jun 2019 01:13:11 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <tony@atomide.com>, <robh+dt@kernel.org>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
-        <j-keerthy@ti.com>
-Subject: [PATCH] arm: dts: dra72x: Disable usb4_tm target module
-Date:   Tue, 4 Jun 2019 11:43:35 +0530
-Message-ID: <20190604061335.8264-1-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 4 Jun 2019 02:15:22 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u16so8102393wmc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 23:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oNrnRCUzinS7MBOEvkCWHhxILAHdwQHQATVFVobeDlI=;
+        b=kQwXpuCBELr3dX5uqEhOJFYLyxkuIEq0NSG4lz6eYsk8KUMn8QgyMDH4O6VPhbDM5x
+         zxc9H7/KqiS/H8m00vtJxuIDei1MnfmCcGDoknk+AUBBCuUEHP3wM/7b3ymHXtF903S3
+         L9y0xxcHRUy0gPhtwhQNKuRDPLTQWS80eLFQksyPtYJpxbpsPwlHrcb482PY1NjMh/Pl
+         0vfBdDKHLlnLaFoOMJnsXA+fUrazYYi2QtKMRgy4XgvBkRbpeHpvrBLyf++39KkAItE9
+         dUgPcy68a3wrIHHoxFPnMDp0i9odmQF6qD+hdT3qxIYfyd0jcATIDHB9Ah1v6npmhu6c
+         fS/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oNrnRCUzinS7MBOEvkCWHhxILAHdwQHQATVFVobeDlI=;
+        b=uTKfvYH0wkqKms6cN98/Nme83x+iiUaEL2S5R9rkzZe0PDXIN0rYgLXzBz7r0EGW3L
+         rHkPFQ9tEXTb7+hi07WN25wrXi0dZlxiLtCo6Y375i7FaZslqgS/loA1AruzaKkN0bBO
+         KKC8b5fdtJHS3fXa3U0B0ykYM3vigkp87wmGJ0mfuLJObPxWXZuwK2b8aeOQ3EldrDET
+         ezCP1GTyy7AJg1v8P6QsxhUlnH6QAKcZ29harq0nV5ValhJ83By7n3O8G66AJ/dBZ9Of
+         T7X196AFyyYgmWv9VZE69cUivRH+NIMzaAYbvesB9nna+5Ikt3Q7KdmSTJ9ywFM493kq
+         xCPA==
+X-Gm-Message-State: APjAAAUEzvTXBREdhYdsWsS2U/tHwH0iCfIMEx4qru0u+4Djn0Hq7KVr
+        t9JOUjR9MvoUFPKGK8Th64zVFA==
+X-Google-Smtp-Source: APXvYqzK84IpeZCsP3YLU4WmcD+GyCn2MmS9oGwB2ZvCxsCvJESWnYWXPDhjkiJKu13mLrvFm6o38g==
+X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr16540932wmm.62.1559628919933;
+        Mon, 03 Jun 2019 23:15:19 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id w3sm11388400wmc.8.2019.06.03.23.15.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 23:15:19 -0700 (PDT)
+Subject: Re: [PATCH V3 0/8] genirq/timings: Fixes and selftests
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
+References: <20190527205521.12091-1-daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ee0d9f68-2f85-ca56-1af9-f3f6a165863b@linaro.org>
+Date:   Tue, 4 Jun 2019 08:15:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190527205521.12091-1-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usb4_tm is unsed on dra72 and accessing the module
-with ti,sysc is causing a boot crash hence disable its target
-module.
 
-Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
-Reported-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/dra72x.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-index 89831552cd86..9c39c6b9b5d6 100644
---- a/arch/arm/boot/dts/dra72x.dtsi
-+++ b/arch/arm/boot/dts/dra72x.dtsi
-@@ -62,3 +62,7 @@
- &pcie2_rc {
- 	compatible = "ti,dra726-pcie-rc", "ti,dra7-pcie";
- };
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
+is it possible to consider this series for merging?
+
+Thanks in advance
+
+  -- Daniel
+
+
+On 27/05/2019 22:55, Daniel Lezcano wrote:
+> This series provides a couple of fixes, an optimization and the code
+> to do the selftests.
+> 
+> While writing the selftests, a couple of issues were spotted with
+> the circular buffer handling and the routine searching for the pattern
+> multiple times.
+> 
+> In addition, a small optimization has been found while investigating the
+> bugs above.
+> 
+> In order to write the selftest, the routine needed by the core code and
+> the tests are wrapped into function which are always inline so the current
+> code is not impacted by a new function call. There is no functional
+> changes in this part.
+> 
+> Finally, the selftest uses samples to insert values in the arrays and
+> use them to predict the next event. These tests cover the most difficult
+> part of the code.
+> 
+> Changelog:
+> 
+> V3:
+>   - Removed patch using the min macro
+>   - Fixed comment typos in patch 1/8
+> V2:
+>   - Removed defaulting to 'n' as it is already the case
+> 
+> 
+> *** BLURB HERE ***
+> 
+> Daniel Lezcano (8):
+>   genirq/timings: Fix next event index function
+>   genirq/timings: Fix timings buffer inspection
+>   genirq/timings: Optimize the period detection speed
+>   genirq/timings: Encapsulate timings push
+>   genirq/timings: Encapsulate storing function
+>   genirq/timings: Add selftest for circular array
+>   genirq/timings: Add selftest for irqs circular buffer
+>   genirq/timings: Add selftest for next event computation
+> 
+>  kernel/irq/Makefile    |   3 +
+>  kernel/irq/internals.h |  21 +-
+>  kernel/irq/timings.c   | 453 +++++++++++++++++++++++++++++++++++++----
+>  lib/Kconfig.debug      |   8 +
+>  4 files changed, 442 insertions(+), 43 deletions(-)
+> 
+
+
 -- 
-2.17.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
