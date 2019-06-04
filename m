@@ -2,97 +2,114 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D4C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DA0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AE2218CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921C8218CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="m3lilr1b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHEln+l+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfFDMNd (ORCPT
+        id S1727641AbfFDMOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:13:33 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:36786 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfFDMNc (ORCPT
+        Tue, 4 Jun 2019 08:14:42 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33209 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfFDMOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:13:32 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x54CDEKR026129
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 21:13:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x54CDEKR026129
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559650395;
-        bh=j4ooK2TXA9XEPYH9036qD0m6269InPrHu8MiGbjtEI8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m3lilr1biUthCuT3Fwb+7h7x3OjfKAVGp2bE9jsxFdz480cpK4zWyzWgX0dKePLGR
-         mZgdShIwhX49q0ci93vDu4QMpb3zu1PBaoyEXspH1/tGh9Yz05fmjmiw+H54h3mvG9
-         CE27QOl3GpPGUyGx+EyypLmb9OnDengqyh6NLeeKlWpSL8p0ZCExPOJnWOY93Eb+eC
-         xIBTysqsJhGAJnIDOBGDroEPy+9ky7qW+3FlZs0wDfGb/P/BHjgju6X+QjLBL1Fu5n
-         c6EHM0wI2SdESGglwNFIbv6slL+rSBQrDZt2ch3jhU1JHtuRD1pOtBlpkeOLQ1L8Ya
-         W12YaCpqjT5DQ==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id e9so7687671uar.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:13:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAUzPq2LIMlrbuMlX3r3seqLQn2mQEa2BtQSRfQQ82IAbdvN5iRR
-        pOASzed0cP3wOq9Cuei+Hjil47r3DA+zDBFj1sY=
-X-Google-Smtp-Source: APXvYqz4S65tSxS052C5ndvPnTtlUmiHYxC0T11Z+OAFLZHKhv7vZjxFm8n9N1K3MCaX2SBo2i2B1jVPvSDV1C8QIe0=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr392723uaf.95.1559650393956;
- Tue, 04 Jun 2019 05:13:13 -0700 (PDT)
+        Tue, 4 Jun 2019 08:14:42 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m8so4239557vsj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 05:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9g3FESup/SmZ3oHvcpa2xVipr1qLAdxv85nHopg58TA=;
+        b=MHEln+l+9xztHv04LW7tnFWYBlSKM3dYQANaMOcKzoy5zjY6lOv3HVpzNsHRPfdchE
+         l4oTqYq04TC5clbejyu2uu3iPevSvccEF9S7qKMLb8TsZ3SFyQD7QknpeSqLHs0H5d1F
+         WJy/NP95r27Bla28Faue2ayL2Lojz9RmhkN7mLoaRjiQrEg4BsnjFbIxBPQvyWGpp58H
+         NI4sfj3cl0y78YYDW+T+n6C2ewvdxw5KVhFtr9e2Y2A63YomVzCVw3NcqSaDEpRebDhA
+         HikVWYwAssK//+YQghI2R3rJKLROOKpZrW8ZpO1jQG+kHEHUkkH8ght8ev8izP5g065U
+         ot9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9g3FESup/SmZ3oHvcpa2xVipr1qLAdxv85nHopg58TA=;
+        b=negQjhTjpij+nrFDDShsgUU0no6tCsD72wl0ac/b6+QID8WIiOU9wq1rY0LWfzB9pJ
+         +LF41z1puNerpj9bK2hO2Tl9zvHFs6XLOlItAqdfyfW6t9lafLQeRJzo5paP3CgiupiG
+         fJJXjhtndoQcepWVss0R3EKujW0cwwMuOzcqO4bVoX0rJaRaqKke3yZZj4ne973jqQ6E
+         TMn8BUI7QKroX1CNTPho68WiKufsjHOlZ0wenQGmnxGXioOXHCJJ25QHCEIE6gZKodol
+         /hIOGJC2w1DLSBWQ1Yq2LEFk5xdjRsPSih3nZ8qN/oc3duLr3J0BI8W62lVZvY9pNjGh
+         4l/w==
+X-Gm-Message-State: APjAAAUwF3zVJbN9O3v36q2Z4sNgAHUOL2ImniYFmPoDdoMXO4Kg5u/w
+        6DTuXRf2rwEdERyIyrETjO0Dsqv1OUFr5MR3JZrVGA==
+X-Google-Smtp-Source: APXvYqxlMWl5gP5oUCM4QhDHfhJo9IFZQe0HOFLuHSt1cApbtQAKL7VD9D97H31Z4rE2OM5WBK4y2zb/1dPEmGVDcGM=
+X-Received: by 2002:a67:b147:: with SMTP id z7mr4744202vsl.228.1559650481392;
+ Tue, 04 Jun 2019 05:14:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604111632.22479-1-yamada.masahiro@socionext.com> <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
-In-Reply-To: <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 4 Jun 2019 21:12:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
-Message-ID: <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
-Subject: Re: [PATCH] ocxl: do not use C++ style comments in uapi header
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190604113519.4666-1-ttayar@habana.ai>
+In-Reply-To: <20190604113519.4666-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Tue, 4 Jun 2019 15:14:15 +0300
+Message-ID: <CAFCwf13gd-tNn_YAiNzDCNdi-now-N4YPzd9+tqfZypyBrML1Q@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Read upper bits of trace buffer from RWPHI
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 8:54 PM Frederic Barrat <fbarrat@linux.ibm.com> wrot=
-e:
+On Tue, Jun 4, 2019 at 2:35 PM Tomer Tayar <ttayar@habana.ai> wrote:
 >
+> The trace buffer address is 40 bits wide.
+> The end of the buffer is set in the RWP register (lower 32 bits), and in
+> the RWPHI register (upper 8 bits).
+> Currently only the lower 32 bits are read, and this patch fixes it and
+> concatenates the upper 8 bits to the output address.
 >
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/goya/goya_coresight.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 >
-> Le 04/06/2019 =C3=A0 13:16, Masahiro Yamada a =C3=A9crit :
-> > Linux kernel tolerates C++ style comments these days. Actually, the
-> > SPDX License tags for .c files start with //.
-> >
-> > On the other hand, uapi headers are written in more strict C, where
-> > the C++ comment style is forbidden.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
+> diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/habanalabs/goya/goya_coresight.c
+> index 39f62ce72660..d7ec7ad84cc6 100644
+> --- a/drivers/misc/habanalabs/goya/goya_coresight.c
+> +++ b/drivers/misc/habanalabs/goya/goya_coresight.c
+> @@ -425,8 +425,18 @@ static int goya_config_etr(struct hl_device *hdev,
+>                 WREG32(base_reg + 0x28, 0);
+>                 WREG32(base_reg + 0x304, 0);
 >
-> Thanks!
-> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> -               if (params->output_size >= sizeof(u32))
+> -                       *(u32 *) params->output = RREG32(base_reg + 0x18);
+> +               if (params->output_size >= sizeof(u64)) {
+> +                       u32 rwp, rwphi;
+> +
+> +                       /*
+> +                        * The trace buffer address is 40 bits wide. The end of
+> +                        * the buffer is set in the RWP register (lower 32
+> +                        * bits), and in the RWPHI register (upper 8 bits).
+> +                        */
+> +                       rwp = RREG32(base_reg + 0x18);
+> +                       rwphi = RREG32(base_reg + 0x3c) & 0xff;
+> +                       *(u64 *) params->output = ((u64) rwphi << 32) | rwp;
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 2.17.1
 >
 
-Please hold on this patch until
-we get consensus about the C++ comment style.
-
-Discussion just started here:
-https://lore.kernel.org/patchwork/patch/1083801/
-
-
---=20
-Best Regards
-Masahiro Yamada
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+applied to -fixes
