@@ -2,115 +2,92 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A47C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F6AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200E62075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:11:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUfYX4GI"
+	by mail.kernel.org (Postfix) with ESMTP id 105D42081C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfFDPLh (ORCPT
+        id S1727955AbfFDPMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:11:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42564 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbfFDPLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:11:36 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so8457642plb.9;
-        Tue, 04 Jun 2019 08:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jDLUJPykC5/Y1mNCCU1kADVW3AUxBzLw3C7Ot4NO/8Q=;
-        b=MUfYX4GItKkRpkJ42mRt71QxBcAaWcnQJDgiNK/S38Vzuk1umd7Q3fm6lAuUd4VWrl
-         lqGi7lV5C25v2FcO9xhoxARBBEKME5XDjGKW2WljEp5btv3tMJ5SSUV7UPF7BHboJlGy
-         /g1d//6fAy/cS88Eqy5amrYF/acmEl+Ic6ATRa09kaAtQ4GjytRjPqkZsh7rhdJYtttf
-         ywJMILfOPSYwl1y8MIs+XmDXOQR3KxsuV3nTYvl2qSTjhlmGKn9H3giw0DsrY9oAytQe
-         R9cLbCgJ+8h+5+ZnWzr3rNzatR7Qg7neyerzGvTfRsFKOghGYcCafw2d6u66HB+7+jgw
-         rNSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jDLUJPykC5/Y1mNCCU1kADVW3AUxBzLw3C7Ot4NO/8Q=;
-        b=ZgHaj8S7crniyQHmJtMnz6WTNZQdNi9vDUjCl9tLOsl1kddormahf93X5VAzgDitNq
-         RDzpP26DMvU/hJkUC8r20J9o7bDhDEBWx72vTrRpMj/z0riORYQmVY85rSF0Oo8b7XXF
-         k03/KCRqP3pVmCnOzLFgeeZ+Nb4QTQeRr9Qq3mPo7Ru75P9PZ+ovSWnHTuQfRPdmuqtY
-         wyhVnZqBK7BCMcHZgJvPlj+BDNhR1mMZ444xmJxLzsJLSPADPCz7YFs1jv7dIHTlNecm
-         cHvOUIdTO0Kfi2sFui0D+ZtWt8xf3DB5U6jX58UhyTfme552vA+eq0Ftz5Q3mzLc6QQ+
-         Yhpw==
-X-Gm-Message-State: APjAAAVCXbQEpF4GuAVd+7K3i93+qoIzeQaXEySgOy3lW8A+oDeZHfls
-        6DvR8a3Gh5FK+tWyGoLt/VM=
-X-Google-Smtp-Source: APXvYqzrVlMOw4ymbe2FZBKLaK7Rxa6KBNW6v9wcab/jwPl92urYS5Lx6wquBTKoFq+2/IclK9PdrQ==
-X-Received: by 2002:a17:902:864b:: with SMTP id y11mr34427172plt.92.1559661095252;
-        Tue, 04 Jun 2019 08:11:35 -0700 (PDT)
-Received: from icarus ([2001:268:c0e2:41af:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id d3sm13939380pfa.176.2019.06.04.08.11.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 08:11:34 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 00:11:15 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Patrick Havelange <patrick.havelange@essensium.com>,
-        Jonathan.Cameron@huawei.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] counter/ftm-quaddec: Add missing dependencies in
- Kconfig
-Message-ID: <20190604151034.GA12804@icarus>
-References: <20190604140326.12295-1-patrick.havelange@essensium.com>
+        Tue, 4 Jun 2019 11:12:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11667 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727790AbfFDPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:12:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 08:12:53 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 04 Jun 2019 08:12:53 -0700
+Received: from kwong4-mobl.amr.corp.intel.com (unknown [10.252.203.122])
+        by linux.intel.com (Postfix) with ESMTP id 43E185800BD;
+        Tue,  4 Jun 2019 08:12:52 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v2 13/22] docs: soundwire: locking: fix tags
+ for a code-block
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <cover.1559656538.git.mchehab+samsung@kernel.org>
+ <0ea9c284f8db3867985c410d2764a2b68e5b35c1.1559656538.git.mchehab+samsung@kernel.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <50782689-9cc1-9f4e-c2c0-23e6229cd2be@linux.intel.com>
+Date:   Tue, 4 Jun 2019 10:12:52 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190604140326.12295-1-patrick.havelange@essensium.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <0ea9c284f8db3867985c410d2764a2b68e5b35c1.1559656538.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 04:03:26PM +0200, Patrick Havelange wrote:
-> This driver uses devm_ioremap and of* functions. This fixes a
-> linking failure with e.g. ARCH=um.
+On 6/4/19 9:17 AM, Mauro Carvalho Chehab wrote:
+> There's an ascii artwork at Example 1 whose code-block is not properly
+> idented, causing those warnings.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+>      Documentation/driver-api/soundwire/locking.rst:50: WARNING: Inconsistent literal block quoting.
+>      Documentation/driver-api/soundwire/locking.rst:51: WARNING: Line block ends without a blank line.
+>      Documentation/driver-api/soundwire/locking.rst:55: WARNING: Inline substitution_reference start-string without end-string.
+>      Documentation/driver-api/soundwire/locking.rst:56: WARNING: Line block ends without a blank line.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+Thanks for fixing this.
+
 > ---
->  drivers/counter/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>   Documentation/driver-api/soundwire/locking.rst | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-> index 233ac305d878..c9e3f5c98484 100644
-> --- a/drivers/counter/Kconfig
-> +++ b/drivers/counter/Kconfig
-> @@ -50,6 +50,7 @@ config STM32_LPTIMER_CNT
->  
->  config FTM_QUADDEC
->  	tristate "Flex Timer Module Quadrature decoder driver"
-> +	depends on HAS_IOMEM && OF
->  	help
->  	  Select this option to enable the Flex Timer Quadrature decoder
->  	  driver.
-> -- 
-> 2.19.1
+> diff --git a/Documentation/driver-api/soundwire/locking.rst b/Documentation/driver-api/soundwire/locking.rst
+> index 253f73555255..3a7ffb3d87f3 100644
+> --- a/Documentation/driver-api/soundwire/locking.rst
+> +++ b/Documentation/driver-api/soundwire/locking.rst
+> @@ -44,7 +44,9 @@ Message transfer.
+>        b. Transfer message (Read/Write) to Slave1 or broadcast message on
+>           Bus in case of bank switch.
+>   
+> -     c. Release Message lock ::
+> +     c. Release Message lock
+> +
+> +     ::
+>   
+>   	+----------+                    +---------+
+>   	|          |                    |         |
+> 
 
-Fixes: a3b9a99 ("counter: add FlexTimer Module Quadrature decoder counter driver")
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-
-Jonathan, would you pick this up through IIO?
-
-Patrick, I noticed the FlexTimer Module Quadrature decoder driver is
-missing an entry in MAINTAINERS. Please submit an additional patch to
-address that as well so that we'll have a point of contact listed for
-this driver.
-
-Thanks,
-
-William Breathit Gray
