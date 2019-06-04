@@ -2,76 +2,79 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E91C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEEDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D5320828
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710E52070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFDRY1 (ORCPT
+        id S1726474AbfFDR0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:24:27 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48522 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfFDRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:24:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 121D380D;
-        Tue,  4 Jun 2019 10:24:24 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44D773F5AF;
-        Tue,  4 Jun 2019 10:24:23 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: clean up asym packing
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
- <1559571436-29091-1-git-send-email-vincent.guittot@linaro.org>
- <7280a3b0-0727-f365-4453-8b4b01a64559@arm.com>
- <CAKfTPtCU_+YJgMVpk-CKhetqTbOcNWVOmbUOD_xuTJqSD64J=w@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <22ddd35b-a901-0292-9dab-6b5efcd16d93@arm.com>
-Date:   Tue, 4 Jun 2019 18:24:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 13:26:01 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:34819 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfFDR0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:26:01 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 48212200B5;
+        Tue,  4 Jun 2019 19:25:55 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 19:25:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jani Nikula <jani.nikula@intel.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2] kbuild: add support for ensuring headers are
+ self-contained
+Message-ID: <20190604172553.GA2383@ravnborg.org>
+References: <20190604101409.2078-14-yamada.masahiro@socionext.com>
+ <20190604124248.5564-1-jani.nikula@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCU_+YJgMVpk-CKhetqTbOcNWVOmbUOD_xuTJqSD64J=w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604124248.5564-1-jani.nikula@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=taGs_qngAAAA:8
+        a=c-n4J4-pAAAA:8 a=NZ-89VFvAAAA:8 a=7gkXJVJtAAAA:8 a=QyXUC8HyAAAA:8
+        a=92KSPt4HXbW4kmdNYy0A:9 a=CjuIK1q_8ugA:10 a=DM_PlaNYpjARcMQr2apF:22
+        a=L0NDqeB7ZLmQzAogN4cw:22 a=pm31WBKQz9GEXVZSZ1ft:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2019 19:32, Vincent Guittot wrote:
-> On Mon, 3 Jun 2019 at 20:15, Valentin Schneider
-[...]
-> My original goal was to add a group type to classify the group but
-> this would have broken the current behavior whereas I only want to
-> move code
+On Tue, Jun 04, 2019 at 03:42:48PM +0300, Jani Nikula wrote:
+> Sometimes it's useful to be able to explicitly ensure certain headers
+> remain self-contained, i.e. that they are compilable as standalone
+> units, by including and/or forward declaring everything they depend on.
 > 
->>
->> Also, why tag this group in update_sd_pick_busiest()? It would make more
->> sense to do so in update_sg_lb_stats() like with the other sg_lb_stats fields:
+> Add special target header-test-y where individual Makefiles can add
+> headers to be tested if CONFIG_HEADER_TEST is enabled. This will
+> generate a dummy C file per header that gets built as part of extra-y.
 > 
-> With your proposal below, the test is called for every groups'
-> statistic update whereas it is only done lastly after checking other
-> rules in the current code and I don't want to modify the current
-> behavior but only move code to set imbalance in calculate imbalance.
-> 
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-Adding a new group_type would make sense. From a behavioral point of view
-your change is fine, but from a logical one it sits halfway between being
-a new stat and being a new group_type. I'd rather see a new group_type,
-though as you said that's a different topic than cleaning up duplicate
-operations.
+Looks good, thanks.
 
-> A bigger cleanup will come in next steps
-> 
-[...]
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
