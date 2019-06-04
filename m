@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F166FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3011DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55CE24B6F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1031E24B70
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfFDLPR (ORCPT
+        id S1727619AbfFDLPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:15:17 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40556 "EHLO
+        Tue, 4 Jun 2019 07:15:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40592 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbfFDLPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:15:15 -0400
+        id S1727548AbfFDLPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:15:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FED01682;
-        Tue,  4 Jun 2019 04:15:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 788B8169E;
+        Tue,  4 Jun 2019 04:15:18 -0700 (PDT)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8ADF43F690;
-        Tue,  4 Jun 2019 04:15:12 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAAB93F690;
+        Tue,  4 Jun 2019 04:15:16 -0700 (PDT)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Quentin Perret <quentin.perret@arm.com>,
         Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v3 3/6] sched: Add new tracepoints to track pelt at rq level
-Date:   Tue,  4 Jun 2019 12:14:56 +0100
-Message-Id: <20190604111459.2862-4-qais.yousef@arm.com>
+Subject: [PATCH v3 5/6] sched: Add sched_overutilized tracepoint
+Date:   Tue,  4 Jun 2019 12:14:58 +0100
+Message-Id: <20190604111459.2862-6-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604111459.2862-1-qais.yousef@arm.com>
 References: <20190604111459.2862-1-qais.yousef@arm.com>
@@ -47,130 +47,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new tracepoints allow tracking PELT signals at rq level for all
-scheduling classes + irq.
+The new tracepoint allows us to track the changes in overutilized
+status.
+
+Overutilized status is associated with EAS. It indicates that the system
+is in high performance state. EAS is disabled when the system is in this
+state since there's not much energy savings while high performance tasks
+are pushing the system to the limit and it's better to default to the
+spreading behavior of the scheduler.
+
+This tracepoint helps understanding and debugging the conditions under
+which this happens.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 ---
- include/trace/events/sched.h | 23 +++++++++++++++++++++++
- kernel/sched/fair.c          |  6 ++++++
- kernel/sched/pelt.c          |  9 ++++++++-
- 3 files changed, 37 insertions(+), 1 deletion(-)
+ include/trace/events/sched.h |  4 ++++
+ kernel/sched/fair.c          | 11 +++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index c8c7c7efb487..520b89d384ec 100644
+index c7dd9bc7f001..edd96e04049f 100644
 --- a/include/trace/events/sched.h
 +++ b/include/trace/events/sched.h
-@@ -594,6 +594,29 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+@@ -621,6 +621,10 @@ DECLARE_TRACE(pelt_se_tp,
+ 	TP_PROTO(struct sched_entity *se),
+ 	TP_ARGS(se));
  
- 	TP_printk("cpu=%d", __entry->cpu)
- );
-+
-+/*
-+ * Following tracepoints are not exported in tracefs and provide hooking
-+ * mechanisms only for testing and debugging purposes.
-+ *
-+ * Postfixed with _tp to make them easily identifiable in the code.
-+ */
-+DECLARE_TRACE(pelt_cfs_tp,
-+	TP_PROTO(struct cfs_rq *cfs_rq),
-+	TP_ARGS(cfs_rq));
-+
-+DECLARE_TRACE(pelt_rt_tp,
-+	TP_PROTO(struct rq *rq),
-+	TP_ARGS(rq));
-+
-+DECLARE_TRACE(pelt_dl_tp,
-+	TP_PROTO(struct rq *rq),
-+	TP_ARGS(rq));
-+
-+DECLARE_TRACE(pelt_irq_tp,
-+	TP_PROTO(struct rq *rq),
-+	TP_ARGS(rq));
++DECLARE_TRACE(sched_overutilized_tp,
++	TP_PROTO(int overutilized, struct root_domain *rd),
++	TP_ARGS(overutilized, rd));
 +
  #endif /* _TRACE_SCHED_H */
  
  /* This part must be outside protection */
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 18c89ebadfc7..dee1338ec4a9 100644
+index 8e0015ebf109..e2418741608e 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -3353,6 +3353,8 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
- 	update_tg_cfs_util(cfs_rq, se, gcfs_rq);
- 	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
+@@ -5179,8 +5179,10 @@ static inline bool cpu_overutilized(int cpu)
  
-+	trace_pelt_cfs_tp(cfs_rq);
-+
- 	return 1;
- }
- 
-@@ -3505,6 +3507,8 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
- 
- 	cfs_rq_util_change(cfs_rq, flags);
-+
-+	trace_pelt_cfs_tp(cfs_rq);
- }
- 
- /**
-@@ -3524,6 +3528,8 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 	add_tg_cfs_propagate(cfs_rq, -se->avg.load_sum);
- 
- 	cfs_rq_util_change(cfs_rq, 0);
-+
-+	trace_pelt_cfs_tp(cfs_rq);
- }
- 
- /*
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index befce29bd882..c9d4945861a4 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -28,6 +28,8 @@
- #include "sched.h"
- #include "pelt.h"
- 
-+#include <trace/events/sched.h>
-+
- /*
-  * Approximate:
-  *   val * y^n,    where y^32 ~= 0.5 (~1 scheduling period)
-@@ -292,6 +294,7 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
- 				cfs_rq->curr != NULL)) {
- 
- 		___update_load_avg(&cfs_rq->avg, 1, 1);
-+		trace_pelt_cfs_tp(cfs_rq);
- 		return 1;
- 	}
- 
-@@ -317,6 +320,7 @@ int update_rt_rq_load_avg(u64 now, struct rq *rq, int running)
- 				running)) {
- 
- 		___update_load_avg(&rq->avg_rt, 1, 1);
-+		trace_pelt_rt_tp(rq);
- 		return 1;
- 	}
- 
-@@ -340,6 +344,7 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
- 				running)) {
- 
- 		___update_load_avg(&rq->avg_dl, 1, 1);
-+		trace_pelt_dl_tp(rq);
- 		return 1;
- 	}
- 
-@@ -388,8 +393,10 @@ int update_irq_load_avg(struct rq *rq, u64 running)
- 				1,
- 				1);
- 
--	if (ret)
-+	if (ret) {
- 		___update_load_avg(&rq->avg_irq, 1, 1);
-+		trace_pelt_irq_tp(rq);
+ static inline void update_overutilized_status(struct rq *rq)
+ {
+-	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
++	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+ 		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
++		trace_sched_overutilized_tp(1, rq->rd);
 +	}
- 
- 	return ret;
  }
+ #else
+ static inline void update_overutilized_status(struct rq *rq) { }
+@@ -8542,8 +8544,13 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+ 
+ 		/* Update over-utilization (tipping point, U >= 0) indicator */
+ 		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
++
++		trace_sched_overutilized_tp(!!(sg_status & SG_OVERUTILIZED), rd);
+ 	} else if (sg_status & SG_OVERUTILIZED) {
+-		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
++		struct root_domain *rd = env->dst_rq->rd;
++
++		WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
++		trace_sched_overutilized_tp(1, rd);
+ 	}
+ }
+ 
 -- 
 2.17.1
 
