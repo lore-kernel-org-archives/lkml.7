@@ -2,134 +2,146 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE115C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8590C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44702075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82B82075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfFDRPz (ORCPT
+        id S1726211AbfFDRQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:15:55 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48372 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbfFDRPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:15:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A091780D;
-        Tue,  4 Jun 2019 10:15:53 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A7C43F5AF;
-        Tue,  4 Jun 2019 10:15:52 -0700 (PDT)
-Subject: Re: [PATCH 11/21] EDAC, ghes: Unify trace_mc_event() code with
- edac_mc driver
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190529084344.28562-1-rrichter@marvell.com>
- <20190529084344.28562-12-rrichter@marvell.com>
- <37d47356-a40b-2739-10df-f5ab83fa2b36@arm.com>
- <20190603131005.e23lovwyvii53vzo@rric.localdomain>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <1fac170a-f461-a779-9e82-5b4a0fa2c154@arm.com>
-Date:   Tue, 4 Jun 2019 18:15:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 13:16:18 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2047 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFDRQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:16:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 10:16:17 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2019 10:16:11 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1hYD2h-0001Jc-6c; Tue, 04 Jun 2019 20:16:11 +0300
+Date:   Tue, 4 Jun 2019 20:16:11 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Eduardo Valentin <eduval@amazon.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, brendanhiggins@google.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
+ and queue messages
+Message-ID: <20190604171611.GS9224@smile.fi.intel.com>
+References: <20190531043347.4196-1-eduval@amazon.com>
+ <20190531043347.4196-3-eduval@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190603131005.e23lovwyvii53vzo@rric.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531043347.4196-3-eduval@amazon.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
-
-On 03/06/2019 14:10, Robert Richter wrote:
-> On 29.05.19 16:12:38, James Morse wrote:
->> On 29/05/2019 09:44, Robert Richter wrote:
->>> Almost duplicate code, remove it.
->>
->>> Note: there is a difference in the calculation of the grain_bits,
->>> using the edac_mc's version here.
->>
->> But is it the right thing to do?
->>
->> Is this an off-by-one bug being papered over as some cleanup?
->> If so could you post a separate fix that can be picked up for an rc.
->>
->> Do Marvell have firmware that populates this field?
->>
->> ...
->>
->> Unless the argument is no one cares about this...
->>
->> >From ghes_edac_report_mem_error():
->> |	/* Error grain */
->> |	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
->> |		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
->>
->> Fishy, why would the kernel page-size be relevant here?
+On Thu, May 30, 2019 at 09:33:46PM -0700, Eduardo Valentin wrote:
+> From: Haiyue Wang <haiyue.wang@linux.intel.com>
 > 
-> That looked broken to me too, I did not put to much effort in fixing
-> the grain yet. So I just took the edac_mc version first in the
-> assumption, that one is working.
-
-(Ah, it would have been good to note this in the commit-message)
-
-
-> It looks like the intention here is to limit the grain to the page
-> size.
-I'm not convinced that makes sense. If some architecture let you configure the page-size,
-(as arm64 does), and your hypervisor had a bigger page-size, then any hardware fault would
-be rounded up to hypervisor's page-size.
-
-The kernel's page-size has very little to do with the error, it only matters for when we
-go unmapping stuff in memory_failure().
-
-
-> But right, the calculation is wrong here. I am also going to
-> reply to your patch you sent on this.
-
-Thanks!
-
-
->> If physical_addr_mask were the same as PAGE_MASK this wouldn't this always give ~0?
->> (masking logic like this always does my head in)
->>
->> /me gives it ago:
->> | {1}[Hardware Error]:   physical_address: 0x00000000deadbeef
->> | {1}[Hardware Error]:   physical_address_mask: 0xffffffffffff0000
->> | {1}[Hardware Error]:   error_type: 6, master abort
->> | EDAC MC0: 1 CE Master abort on unknown label ( page:0xdead offset:0xbeef
->> | grain:-1 syndrome:0x0 - status(0x0000000000000001): reserved)
->>
->> That 'grain:-1' is because the calculated e->grain was an unlikely 0xffffffffffffffff.
->> Patch incoming, if you could test it on your platform that'd be great.
->>
->> I don't think ghes_edac.c wants this '+1'.
+> Some protocols over I2C are designed for bi-directional transferring
+> messages by using I2C Master Write protocol. Like the MCTP (Management
+> Component Transport Protocol) and IPMB (Intelligent Platform Management
+> Bus), they both require that the userspace can receive messages from
+> I2C dirvers under slave mode.
 > 
-> The +1 looks odd to me also for the edac_mc driver, but I need to take
-> a closer look here as well as some logs suggest the grain is
-> calculated correctly.
+> This new slave mqueue backend is used to receive and queue messages, it
+> will exposes these messages to userspace by sysfs bin file.
+> 
+> Note: DT interface and a couple of minor fixes here and there
+> by Eduardo, so I kept the original authorship here.
 
-My theory on this is that ghes_edac.c is generating a grain like 0x1000, fls() does the
-right thing. Other edac drivers are generating a grain like 0xfff to describe the same
-size, fls() is now off-by-one, hence the addition.
-I don't have a platform where I can trigger any other edac driver to test this though.
+> +#define MQ_MSGBUF_SIZE		CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
+> +#define MQ_QUEUE_SIZE		CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
 
-The way round this would be to put the grain_bits in struct edac_raw_error_desc so that
-ghes_edac.c can calculate it directly.
+> +#define MQ_QUEUE_NEXT(x)	(((x) + 1) & (MQ_QUEUE_SIZE - 1))
+
+Also possible ((x + 1) % ..._SIZE)
+
+> +	mq = dev_get_drvdata(container_of(kobj, struct device, kobj));
+
+kobj_to_dev()
+
+> +static int i2c_slave_mqueue_probe(struct i2c_client *client,
+> +				  const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct mq_queue *mq;
+> +	int ret, i;
+> +	void *buf;
+> +
+> +	mq = devm_kzalloc(dev, sizeof(*mq), GFP_KERNEL);
+> +	if (!mq)
+> +		return -ENOMEM;
+> +
+
+> +	BUILD_BUG_ON(!is_power_of_2(MQ_QUEUE_SIZE));
+
+Perhaps start function with this kind of assertions?
+
+> +
+> +	buf = devm_kmalloc_array(dev, MQ_QUEUE_SIZE, MQ_MSGBUF_SIZE,
+> +				 GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < MQ_QUEUE_SIZE; i++)
+> +		mq->queue[i].buf = buf + i * MQ_MSGBUF_SIZE;
 
 
-Thanks,
+Just wondering if kfifo API can bring an advantage here?
 
-James
+> +	return 0;
+> +}
+
+> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
+> +	{
+> +		.compatible = "i2c-slave-mqueue",
+> +	},
+
+> +	{ },
+
+No need for comma here.
+
+> +};
+
+> +
+> +static struct i2c_driver i2c_slave_mqueue_driver = {
+> +	.driver = {
+> +		.name	= "i2c-slave-mqueue",
+
+> +		.of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
+
+Wouldn't compiler warn you due to unused data?
+Perhaps drop of_match_ptr() for good...
+
+> +	},
+> +	.probe		= i2c_slave_mqueue_probe,
+> +	.remove		= i2c_slave_mqueue_remove,
+> +	.id_table	= i2c_slave_mqueue_id,
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
