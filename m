@@ -2,105 +2,190 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D32BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3D0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5348D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E1E2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fIzt6mvr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9EC/wHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfFDPOv (ORCPT
+        id S1728039AbfFDPPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:14:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55804 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbfFDPOu (ORCPT
+        Tue, 4 Jun 2019 11:15:44 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43166 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbfFDPPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:14:50 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54FEibt022139;
-        Tue, 4 Jun 2019 10:14:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559661284;
-        bh=Sl5OBcsT70V82QK3ubUuQgvQHwkd1HO9ZqCFNycFHNU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fIzt6mvrmu7C92OZ5lEXYzJwHk5/WxmY/o+l+4iuXfCKHhcae7HmJ5TI4oHvMR8J4
-         c5jTn+giscmdXCIOZt1af8SZG4Fge2VMN7evJIA1f4jxnYErj/ukfI/ravAlyvDsqq
-         8EDdTCqPcvM9TkDq1odziB+H6x5x9NUwydc+mJto=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54FEiMT013864
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 10:14:44 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 10:14:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 10:14:43 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54FEhtF014871;
-        Tue, 4 Jun 2019 10:14:43 -0500
-Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
- enable flexible
-To:     Mark Brown <broonie@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-2-dmurphy@ti.com>
- <20190523130311.GA17245@sirena.org.uk>
- <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
- <20190526124838.GH2456@sirena.org.uk>
- <2398099b-16e6-f155-5852-45ba3dbc21ef@ti.com>
- <20190529151000.GP2456@sirena.org.uk>
- <afd2e445-09a9-a07f-f020-ede6870dce6e@ti.com>
- <20190530152643.GS2456@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f9ad6600-3060-65c5-6f87-8a167c75f8b0@ti.com>
-Date:   Tue, 4 Jun 2019 10:14:42 -0500
+        Tue, 4 Jun 2019 11:15:42 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j29so2834560lfk.10;
+        Tue, 04 Jun 2019 08:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dqsJKzxhe80xvf5e11Y99K/RlIOiTj57Fl1tDHoqcJY=;
+        b=Z9EC/wHs4twCaHh7hj1ljtETiisVZ7buWrCY9QRqMW88GgnAa3wTunzZlleg7pNvsq
+         DKwxcqr62xjN0sICdxWiwpTIrZMppBfgWYEhecXE8f/Oj7JWvZ06xTX6ncOI0vSr2yRX
+         ydEx3617QoZpVPPrHuTZtBpb89HJMRoO1IadzjswrJu9HvpP/j6lw0izfsrfkyBjpltC
+         mEU4DVLXMPhHeUtt4Ch3lOvz5z2uWz4OIeYJiC8WudrhkJUZ4ns8nwWhiUbpS/dTDD8m
+         I65uOaiuqi/H+JcAnbkOaOyAxkHiZxhPBupvUPfHaNgZt8l54qNiuwKg3RDCG0oEOI8A
+         En3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dqsJKzxhe80xvf5e11Y99K/RlIOiTj57Fl1tDHoqcJY=;
+        b=WdAOIsCDAedXIoA9PjeoH8bxTXrQhBerWf+YIVa4fvbs17GM84+xSwLf6jXCqihkZj
+         3mrtqLXdUYSjuSsQiiaEYKNDYYQbofUj2pjspQv/VLu4jQftnzpAg1zyulbDJDeoLkb6
+         kUZO0sFhiE3+tn8lbMNRnANDnd62CrPw4oh5nYhcXCaGlSjc750guyPgyXSTv8RJbHMn
+         hbYVTT/CFAa/bDdFcsmiMMj3NgzbD1H6QkHyIQNVEhGSTuI7cnQpaYFZ9AJ0FMmk9Lrw
+         0EzvcEmuFhprH5Rxe50hOQcsrzYuFHktIb3hfNexWdyNqn8jwjtON6sO3BxCfjrgEs9H
+         VZQg==
+X-Gm-Message-State: APjAAAXtaQ1sRWC+0yDicnfOQrXaVGvFdXKjc1IDLGlKsF5fhWH3fjVG
+        PmYLI05xgKUdjZfvAzR67IKj0iHi
+X-Google-Smtp-Source: APXvYqy6EGXCoVgKm+GfOiye5cEkZPDhJ0doR7YOee1h8sHokhBSoV/SVCCtG9iawwWJNkOeQN0Dvg==
+X-Received: by 2002:a19:5515:: with SMTP id n21mr10561863lfe.26.1559661339169;
+        Tue, 04 Jun 2019 08:15:39 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id l15sm3833814lji.5.2019.06.04.08.15.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 08:15:37 -0700 (PDT)
+Subject: Re: [PATCH v4 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for the
+ driver
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-15-digetx@gmail.com> <20190604112026.GN16519@ulmo>
+ <ed2c502f-8f49-d89b-32c6-4b5415e1fa47@gmail.com> <20190604141031.GB397@ulmo>
+ <20190604141824.GC397@ulmo> <02a6651f-17f3-2e79-7780-57657596ba23@gmail.com>
+ <20190604145004.GA3208@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <df040294-37d1-064c-009e-ba2fcac90364@gmail.com>
+Date:   Tue, 4 Jun 2019 18:15:36 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190530152643.GS2456@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190604145004.GA3208@ulmo>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+04.06.2019 17:50, Thierry Reding пишет:
+> On Tue, Jun 04, 2019 at 05:41:53PM +0300, Dmitry Osipenko wrote:
+>> 04.06.2019 17:18, Thierry Reding пишет:
+>>> On Tue, Jun 04, 2019 at 04:10:31PM +0200, Thierry Reding wrote:
+>>>> On Tue, Jun 04, 2019 at 04:53:17PM +0300, Dmitry Osipenko wrote:
+>>>>> 04.06.2019 14:20, Thierry Reding пишет:
+>>>>>> On Thu, May 02, 2019 at 02:38:13AM +0300, Dmitry Osipenko wrote:
+>>>>>>> The driver's compilation doesn't have any specific dependencies, hence
+>>>>>>> the COMPILE_TEST option can be supported in Kconfig.
+>>>>>>>
+>>>>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>> ---
+>>>>>>>  drivers/devfreq/Kconfig | 2 +-
+>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>>>>>>> index 56db9dc05edb..a6bba6e1e7d9 100644
+>>>>>>> --- a/drivers/devfreq/Kconfig
+>>>>>>> +++ b/drivers/devfreq/Kconfig
+>>>>>>> @@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
+>>>>>>>  
+>>>>>>>  config ARM_TEGRA_DEVFREQ
+>>>>>>>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+>>>>>>> -	depends on ARCH_TEGRA
+>>>>>>> +	depends on ARCH_TEGRA || COMPILE_TEST
+>>>>>>>  	select PM_OPP
+>>>>>>>  	help
+>>>>>>>  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+>>>>>>
+>>>>>> You need to be careful with these. You're using I/O register accessors,
+>>>>>> which are not supported on the UM architecture, for example.
+>>>>>>
+>>>>>> This may end up getting flagged during build testing.
+>>>>>
+>>>>> We have similar cases in other drivers and it doesn't cause any known
+>>>>> problems because (I think) build-bots are aware of this detail. Hence
+>>>>
+>>>> I don't understand how the build-bots would be aware of this detail.
+>>>> Unless you explicitly state what the dependencies are, how would the
+>>>> build-bots know? Perhaps there's some logic built-in somewhere that I
+>>>> don't know about?
+>>>
+>>> So looks like COMPILE_TEST has a !UML dependency, so this might just
+>>> work.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>
+>>
+>> Thank you very much for the clarification! Certainly that would caused
+>> problems already since there are such cases all over the kernel,
+>> including Tegra drivers.
+> 
+> In the cases that I'm aware of we used to explicitly list all the
+> dependencies that would've otherwise been pulled in by the ARCH_TEGRA
+> dependency to make sure there were no issues.
+> 
+> Now that we've been discussing this I vaguely recall a discussion about
+> the only real issue nowadays being HAS_IOMEM and since that's only
+> missing on UML, that may have been the reason for why the !UML
+> dependency was added.
+> 
+> Yes, looks like that was it:
+> 
+> 	commit bc083a64b6c035135c0f80718f9e9192cc0867c6
+> 	Author: Richard Weinberger <richard@nod.at>
+> 	Date:   Tue Aug 2 14:03:27 2016 -0700
+> 
+> 	    init/Kconfig: make COMPILE_TEST depend on !UML
+> 
+> 	    UML is a bit special since it does not have iomem nor dma.  That means a
+> 	    lot of drivers will not build if they miss a dependency on HAS_IOMEM.
+> 	    s390 used to have the same issues but since it gained PCI support UML is
+> 	    the only stranger.
+> 
+> 	    We are tired of patching dozens of new drivers after every merge window
+> 	    just to un-break allmod/yesconfig UML builds.  One could argue that a
+> 	    decent driver has to know on what it depends and therefore a missing
+> 	    HAS_IOMEM dependency is a clear driver bug.  But the dependency not
+> 	    obvious and not everyone does UML builds with COMPILE_TEST enabled when
+> 	    developing a device driver.
+> 
+> 	    A possible solution to make these builds succeed on UML would be
+> 	    providing stub functions for ioremap() and friends which fail upon
+> 	    runtime.  Another one is simply disabling COMPILE_TEST for UML.  Since
+> 	    it is the least hassle and does not force use to fake iomem support
+> 	    let's do the latter.
+> 
+> 	    Link: http://lkml.kernel.org/r/1466152995-28367-1-git-send-email-richard@nod.at
+> 	    Signed-off-by: Richard Weinberger <richard@nod.at>
+> 	    Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 	    Cc: Al Viro <viro@zeniv.linux.org.uk>
+> 	    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> 	    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 
-On 5/30/19 10:26 AM, Mark Brown wrote:
->
-> That code is rather far away from the code you're changing and it's
-> really not clear that this will do the right thing for new devices, it
-> already appears that we're handling two devices without obvious code for
-> that (the regulator IDs get reused AFAICT).  If there were a switch
-> statement right there it'd be clearer.
->
-> Part of this is a reviewability thing - I initially stopped on the patch
-> because it looked like it was using the enable field for something other
-> than the intended purpose and now there's all this chasing around to see
-> if the code is OK.
+That was a wise solution. Thank you very much again for the detailed
+comment! Very appreciate that!
 
-I am going to introduce this update in patch 4 of this series when the 
-LM36274 is introduced to the regulator driver.
+> Oh wow... almost three years now.
 
-It makes more sense to add it there as in patch 1 there is not really a 
-need to extend the value or mask as it only supports the LM3632 device.� 
-It makes sense to add the condition when adding another device to support
-
-Thoughts?
-
-Dan
-
+Please don't pay much attention to the time, it never stops. Live in the
+moment :)
