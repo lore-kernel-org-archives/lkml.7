@@ -2,107 +2,188 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD162C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134FAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871FB24483
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60E22463D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:01:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="HJSNN4aG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfFDN7E (ORCPT
+        id S1727450AbfFDOBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:59:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:37277 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFDN7E (ORCPT
+        Tue, 4 Jun 2019 10:01:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40975 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfFDOBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:59:04 -0400
-Received: from [192.168.1.110] ([95.118.47.44]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N2Dgk-1gZ99F0Wxa-013hyP; Tue, 04 Jun 2019 15:59:03 +0200
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: RFC: use of_match_ptr() and conditional of match table declaration
-Organization: metux IT consult
-Message-ID: <293b771e-252c-d376-1347-1e6570758be9@metux.net>
-Date:   Tue, 4 Jun 2019 13:59:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 4 Jun 2019 10:01:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id s21so9158141lji.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cCCcfuCqU/qdREtoEDzLnVLy4LPKMGX0jGv9c5Rh1B8=;
+        b=HJSNN4aGaVf75WsJzCiqd24YGmv+eZuyGZvznilJ1e+2a0cE9WH+E2w1582cVJHoki
+         7R15HFWDhBVWJe95YMNP8tx/FFttEqVFVHJwcCY7JKwNjDsvxC0GDd1Fsj1omDTbMOYV
+         9NMNrqjplqfUQr+pP71ijNH1O1RSDigcSsd0c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cCCcfuCqU/qdREtoEDzLnVLy4LPKMGX0jGv9c5Rh1B8=;
+        b=JQsvo/9SaTH+Mk/fIcwhGJW5+84g3J/Rb38mbLcq2YZodNNxyvmEK5qqOG6U+fH9AO
+         eP/EmN2l/GCu89HbnS2ElSszeQ2DUHXRTEsxypY1sU3GX94xS5ttD2suNcGJX2RDL3F9
+         c+pLdfbfJsSQLFbXR+/i1dabwavyyH5yrQNi9yTDyiG4hnsz0wHG9Qa5sDiRjkgfqDyC
+         MG3On0epOFs3yT8wu/aQwxPvOncTMOxyXUBiP3SMXK9vObxjVpLSvn552dtdyvSo4LEr
+         H9KCdr4HeMXayWFW8KKRFvMFniqV9vHfxUBwiqo/dLP2WzlBEDkkf4gXidpHKfEkWv/h
+         9Zfg==
+X-Gm-Message-State: APjAAAWcK19fO2HILmtLyKHA1EHNSBxhSD3DVGp0F+XyAq0jw7GlIV3t
+        2bpGUjiweMPtOICJ1v/pSfzWsw==
+X-Google-Smtp-Source: APXvYqwG4oEZZFnE0bcH3TRJ/Wba3p5uDNigTPmrPwm+Ag78TvQVmitBkN+Um1v3cCkDe6yNMmLSRw==
+X-Received: by 2002:a2e:834f:: with SMTP id l15mr13058888ljh.56.1559656863956;
+        Tue, 04 Jun 2019 07:01:03 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id x27sm3831041ljm.52.2019.06.04.07.01.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 07:01:03 -0700 (PDT)
+Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+References: <20190601222738.6856-1-joel@joelfernandes.org>
+ <20190601222738.6856-2-joel@joelfernandes.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <0ff9e0e3-b9fb-8953-1f76-807102f785ee@rasmusvillemoes.dk>
+Date:   Tue, 4 Jun 2019 16:01:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190601222738.6856-2-joel@joelfernandes.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:udZWyoJrYZ44zOAntaBgdJjWFU+mmriA+Px9COjKpx2qEYsyPTT
- HDRBb20EHG/bCCZhHEmui9tcHA34ZGp8WW39pySt9PU6GUcYoJE3zVAR6jz30CyV5c0i5xT
- z2SI2Vgnenw7f8DctCruXoVk/H58FhVJwSLsUi2oa6HxIcIjgQcH77QSjrvmQxtE/RkUpyF
- DnTLOVkzT2CIWSYyEGr6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bGfkRfbFDeE=:gxyinuRReu0ha4ZO3q5urt
- zNz66nreAcPyzosIk7EQHkaStIK0vz68/0TwUB+IuK29uqnugX09+L3AEOjTO+4BMJY/pUKIZ
- H+ZKzOS03oZ79C9EKqJCR/MxFy6SAOBN56qRJDygEdmCi3DOa4y9KejGr6nwFIBCOrIU8yMwP
- qJ8RwZSxKH3HRmrF1IW+vIO4y5lUMLkoxXuDzEolRJGLcECe7tpv+BeBoqDPitXwUSCe4q5hO
- wXFDXtCUA8TJpMy5O93B2NrvcTccFClMwu/KVoIpW5Cx3P/PISXCfu4v8jVRNtve1TidkFjxT
- Ox+H9u8OFC+zqahoPPLgkJIyIeFCF9+JnU+J+/huxLGGwT6e8QIGSOqgixruyCdLizNi9jfO8
- 4ryvEA8J2nJItCL0I90elqmAUl5AvS9wEhb8rb6mMku7SwUrFHrTRH/09TsHX0UmgJ3dURJ8Y
- jEARHzwoFPHyqIVvPZE+stLyXdBMrl/1tx89QfA9S+rlwsF0UWgmNRkFKhVG9gmd3XLPOp4pD
- PY7ivVu7f1DRaKbIzfD91yLVXcwLZlpBzBqklwvTAUwl1WiwtKZOY8S5QuKoED05uuXPJQkUo
- xKi6vRkddEqjCnBM6ROkLFKHKkXky/8KwFIhqXsnqd6JuvMOExJXr7bX7yo/9AJ1Uwp4OrABr
- kjr0OJAc6q1n6+2pu32cZZfXGGBObXfzaOVbxnB1EjZYSJVYX4CA8w1w82/7BcpgiPCq2RHpp
- U1L1VD8GMZGBoLq4BxykkupC6In5rG1Dobvqywsvz0CPMZN+vTOpnziTRs4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On 02/06/2019 00.27, Joel Fernandes (Google) wrote:
+> This patch adds support for checking RCU reader sections in list
+> traversal macros. Optionally, if the list macro is called under SRCU or
+> other lock/mutex protection, then appropriate lockdep expressions can be
+> passed to make the checks pass.
+> 
+> Existing list_for_each_entry_rcu() invocations don't need to pass the
+> optional fourth argument (cond) unless they are under some non-RCU
+> protection and needs to make lockdep check pass.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  include/linux/rculist.h  | 40 ++++++++++++++++++++++++++++++++++++----
+>  include/linux/rcupdate.h |  7 +++++++
+>  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
+>  3 files changed, 69 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> index e91ec9ddcd30..b641fdd9f1a2 100644
+> --- a/include/linux/rculist.h
+> +++ b/include/linux/rculist.h
+> @@ -40,6 +40,25 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+>   */
+>  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+>  
+> +/*
+> + * Check during list traversal that we are within an RCU reader
+> + */
+> +#define __list_check_rcu()						\
+> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),			\
+> +			 "RCU-list traversed in non-reader section!")
+> +
+> +static inline void __list_check_rcu_cond(int dummy, ...)
+> +{
+> +	va_list ap;
+> +	int cond;
+> +
+> +	va_start(ap, dummy);
+> +	cond = va_arg(ap, int);
+> +	va_end(ap);
+> +
+> +	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),
+> +			 "RCU-list traversed in non-reader section!");
+> +}
+>  /*
+>   * Insert a new entry between two known consecutive entries.
+>   *
+> @@ -338,6 +357,9 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
+>  						  member) : NULL; \
+>  })
+>  
+> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
+> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
+> +>  /**
+>   * list_for_each_entry_rcu	-	iterate over rcu list of given type
+>   * @pos:	the type * to use as a loop cursor.
+> @@ -348,9 +370,14 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
+>   * the _rcu list-mutation primitives such as list_add_rcu()
+>   * as long as the traversal is guarded by rcu_read_lock().
+>   */
+> -#define list_for_each_entry_rcu(pos, head, member) \
+> -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
+> -		&pos->member != (head); \
+> +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
+> +	if (COUNT_VARGS(cond) != 0) {					\
+> +		__list_check_rcu_cond(0, ## cond);			\
+> +	} else {							\
+> +		__list_check_rcu();					\
+> +	}								\
+> +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
+> +		&pos->member != (head);					\
+>  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
 
+Wouldn't something as simple as
 
-we have a dozen drivers that can be built w/ and w/o oftree support.
-In those cases we need conditional compiling (check for CONFIG_OF).
-Some already use the of_match_ptr() macro, others still are cluttered
-w/ ifdef's.
+#define __list_check_rcu(dummy, cond, ...) \
+       RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(), \
+			 "RCU-list traversed in non-reader section!");
 
-I've converted some of them to using of_match_ptr(), but I'm curious
-whether we also should convert all drivers and make this the standard
-policy (also let checkpatch check for it).
+for ( ({ __list_check_rcu(junk, ##cond, 0); }), pos = ... )
 
-Most of that can be done automatically, few cases need some manual
-intervention. (already have queue here, which just needs to be a bit
-sorted and posted to the individual maintainers)
+work just as well (i.e., no need for two list_check_rcu and
+list_check_rcu_cond variants)? If there's an optional cond, we use that,
+if not, we pick the trailing 0, so !cond disappears and it reduces to
+your __list_check_rcu(). Moreover, this ensures the RCU_LOCKDEP_WARN
+expansion actually picks up the __LINE__ and __FILE__ where the for loop
+is used, and not the __FILE__ and __LINE__ of the static inline function
+from the header file. It also makes it a bit more type safe/type generic
+(if the cond expression happened to have type long or u64 something
+rather odd could happen with the inline vararg function).
 
-How do you think about this idea ?
-
-Are there some good reasons for not using this macro ?
-
-
-By the way: I'm also experimenting w/ using a macro for declaring the
-match tables conditionally, so we can reduce the boilerplate a bit.
-It then looks like that:
-
-    MODULE_DECLARE_OF_TABLE(foo, { first entry }, { second entry }, ...)
-
-This macro declares a static const struct of_device_id
-array by given name, initializes with the given parameters adds the
-sentinel (so no chance for forgetting it anymore ;-)), and finally calls
-MODULE_DEVICE_TABLE(of, foo)  - but only if CONFIG_OF is enabled.
-
-What I haven't sorted out yet: what exactly to do in !CONFIG_OF case ?
-
-a) if we're always using of_match_ptr() - don't need to do anything
-b) declare a static const *pointer* variable, initialized to NULL,
-    so the variable name can be used as before - hoping the compiler
-    is clever enough to just optimize it away.
-
-What's your oppinion on that ?
-
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Rasmus
