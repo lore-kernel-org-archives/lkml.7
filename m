@@ -2,167 +2,183 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061B7C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7517EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F6D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7AD2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8SAKmcM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVwP8RgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfFDRJl (ORCPT
+        id S1727973AbfFDRIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:09:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45363 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbfFDRII (ORCPT
+        Tue, 4 Jun 2019 13:08:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51216 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFDRIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:08:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so1917754wre.12;
-        Tue, 04 Jun 2019 10:08:07 -0700 (PDT)
+        Tue, 4 Jun 2019 13:08:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f10so860016wmb.1;
+        Tue, 04 Jun 2019 10:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EwNKLdhvHIZWuc2AMTf/Nh+UlcpRZAbzNWQ1cMFMEHc=;
-        b=D8SAKmcMepeCU71WMObGfrZhdbyauHSxKeduE7juWpihIWzSd6OA85eGA9K/DQ/Pd0
-         Npe8PVsQyuLR5d8mCbQkXJdLo7aT24ZIZfk0NoUOOQeRehO2YHTlq6HULDqV2fLilghq
-         BrYIiJW2UDpUr+V8B5vNPqNr0FJzsHMOAq1UqnHfTZKHWHYQGw1P7ZIx9o7q+mZZtv2v
-         /ADQhaCn74/YJ2cseCFUN0WXXszb7tmUEhVGCNIBBHDBYA/2vXrLGtjh5JVXBwpDxaMF
-         7KE1LGBM7xIkOVT24rk6GXP5ZaUJSSgp9cP8FbzgEZSrf090Zld1+2JFS+H3MzsdzBgG
-         yDEQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=/jzhbDmfo+eT+RLl0oPZh7YQ7EUQAaaQtE0f9tyUcVQ=;
+        b=XVwP8RgOOrBpRgRj/NtiMrUCigejRV/DGNu6a35NxX7Y4T+D4hAmqDcbupetd1UcB4
+         4EtnWyqfqc3tyL8LVxgwxh/VGr5PBFurGhFi1YVfwI5vpitTTF/ntdQwm/vseo9eu0Aj
+         ObCWVEf7z3PAauD39smD5cY47K3vlrZftlhsp/QMTJcBr+OPiBLTUmxZISE50bcOPvQ9
+         azEdrZiQF6OwHC4scxbT6H3Yp9efoRBVwNN35tG0dLQ7oCO6i6NcAzjKH4TIUFOSfy2U
+         AGk5ytaBeITd4E8b7N3mDBuWorJi3E+xj8+3txbTFYae83iy9fJTg3jvjsTtU2VS06CR
+         SxDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EwNKLdhvHIZWuc2AMTf/Nh+UlcpRZAbzNWQ1cMFMEHc=;
-        b=Gwe6+dtGvCvjtm7kFNAByddPDxbKUvTj2P3FvM9hHu3X7tLG14CagrDDEsw4JAWJEQ
-         u+yWVWX1toVHDHn6rVLY7NSoP6jxMRuUPAwAaHuS9A9wHGFajdA3dWvFT4ZiCsPu1jVV
-         4ndUF2gl+DwEEa0x/RwYDp2lBZu6zvufZLSg8jD0ZSMAQFCskh7Da8WuQf4oxp+Mcib/
-         R/H+M2UniBqLKuaYzx1ilk+w7ZPNF4Q4278Oy15okE5aPx4kiq0mMrpP9fg1ZBzexsZQ
-         zIctKuZXstFYHUgbiIngqj6RyLZZ9sb9DhtwhmwAYF6mOSECpe+4rQChca83vPy8oF83
-         U+ig==
-X-Gm-Message-State: APjAAAWikVEFdpi6TFrQEcCCMD3PZ0wYe1OgWAthcIqCefBXGYQgNeDt
-        c56NYXZORCuNzdZaCtuJJpQ=
-X-Google-Smtp-Source: APXvYqxQSPgeN5YppLz1uZK+S/fEyGTT26eYimJpLpaVw9f3fC98pvFz0tlfMXa0nKTBJ7UpBHzNaQ==
-X-Received: by 2002:a5d:5186:: with SMTP id k6mr4630818wrv.30.1559668086642;
-        Tue, 04 Jun 2019 10:08:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/jzhbDmfo+eT+RLl0oPZh7YQ7EUQAaaQtE0f9tyUcVQ=;
+        b=WJoxy/nVoRDihMaPKhTPMMz6uEGMhOHJyFe9BtWmo/URZIT5GTyduCgx0WM68liMvo
+         krRihpb5lsNEPRK/P7eroOPWEx3Qpl4BRsgZPrmb/qWKATzAAUhORTVkVdrEIZbLVbUc
+         igCf07Xp9WsKcwIPJ/+g3SYKDKIE45f359chlz2zwzOszvVjH6JFEiephGMjnsa+3CjZ
+         3oBEE2fZ5NRDw1cwkz19Lus6fMMBJWyGI8fk/bV6WeYFElMckl2hO/j2UFfXdhpoJJ8O
+         UT30CiritDE8NCxmerHEaMz9rBZ3u26vN2BAaFNZZdDSW9EvgDo598GX/QAN1zdn0ICv
+         Ej3w==
+X-Gm-Message-State: APjAAAU1Zwbjvlnk1YePAvYQ6Ifthz2cxmU68XskGjJYktRsmkXMFwIS
+        uzwLldaRIYKngb3YI9wZLrI=
+X-Google-Smtp-Source: APXvYqxHAVMUh1eKnglzhAzNUZVsSXBxQcEwqmgmwX7ij2yVZz0mCMfyndri+4mXcGa521ra31BC5A==
+X-Received: by 2002:a1c:80c1:: with SMTP id b184mr6321849wmd.24.1559668083150;
+        Tue, 04 Jun 2019 10:08:03 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.27.188])
-        by smtp.gmail.com with ESMTPSA id f2sm19692218wme.12.2019.06.04.10.08.05
+        by smtp.gmail.com with ESMTPSA id f2sm19692218wme.12.2019.06.04.10.08.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:08:06 -0700 (PDT)
+        Tue, 04 Jun 2019 10:08:02 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net, richardcochran@gmail.com,
         john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3 net-next 03/17] net: dsa: tag_8021q: Create helper function for removing VLAN header
-Date:   Tue,  4 Jun 2019 20:07:42 +0300
-Message-Id: <20190604170756.14338-4-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
+Date:   Tue,  4 Jun 2019 20:07:39 +0300
+Message-Id: <20190604170756.14338-1-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604170756.14338-1-olteanv@gmail.com>
-References: <20190604170756.14338-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This removes the existing implementation from tag_sja1105, which was
-partially incorrect (it was not changing the MAC header offset, thereby
-leaving it to point 4 bytes earlier than it should have).
+This patchset adds the following:
 
-This overwrites the VLAN tag by moving the Ethernet source and
-destination MACs 4 bytes to the right. Then skb->data (assumed to be
-pointing immediately after the EtherType) is temporarily pushed to the
-beginning of the new Ethernet header, the new Ethernet header offset and
-length are recorded, then skb->data is moved back to where it was.
+ - A timecounter/cyclecounter based PHC for the free-running
+   timestamping clock of this switch.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
-Changes in v3:
+ - A state machine implemented in the DSA tagger for SJA1105, which
+   keeps track of metadata follow-up Ethernet frames (the switch's way
+   of transmitting RX timestamps).
 
-None.
+Clock manipulations on the actual hardware PTP clock will have to be
+implemented anyway, for the TTEthernet block and the time-based ingress
+policer.
 
-Changes in v2:
+This depends upon the "FDB updates for SJA1105 DSA driver" series at:
+https://patchwork.ozlabs.org/project/netdev/list/?series=111354&state=*
 
-Patch is new.
+v2 patchset can be found at:
+https://lkml.org/lkml/2019/6/2/146
 
- include/linux/dsa/8021q.h |  7 +++++++
- net/dsa/tag_8021q.c       | 15 +++++++++++++++
- net/dsa/tag_sja1105.c     |  3 +--
- 3 files changed, 23 insertions(+), 2 deletions(-)
+Changes from v2:
 
-diff --git a/include/linux/dsa/8021q.h b/include/linux/dsa/8021q.h
-index 3911e0586478..463378812f18 100644
---- a/include/linux/dsa/8021q.h
-+++ b/include/linux/dsa/8021q.h
-@@ -31,6 +31,8 @@ int dsa_8021q_rx_switch_id(u16 vid);
- 
- int dsa_8021q_rx_source_port(u16 vid);
- 
-+struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb);
-+
- #else
- 
- int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
-@@ -71,6 +73,11 @@ int dsa_8021q_rx_source_port(u16 vid)
- 	return 0;
- }
- 
-+struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
-+{
-+	return NULL;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
- 
- #endif /* _NET_DSA_8021Q_H */
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index 65a35e976d7b..0ce680ef8e83 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -261,6 +261,21 @@ struct sk_buff *dsa_8021q_rcv(struct sk_buff *skb, struct net_device *netdev,
- }
- EXPORT_SYMBOL_GPL(dsa_8021q_rcv);
- 
-+struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
-+{
-+	u8 *from = skb_mac_header(skb);
-+	u8 *dest = from + VLAN_HLEN;
-+
-+	memmove(dest, from, ETH_HLEN - VLAN_HLEN);
-+	skb_push(skb, ETH_HLEN);
-+	skb_reset_mac_header(skb);
-+	skb_reset_mac_len(skb);
-+	skb_pull(skb, ETH_HLEN);
-+
-+	return skb;
-+}
-+EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
-+
- static const struct dsa_device_ops dsa_8021q_netdev_ops = {
- 	.name		= "8021q",
- 	.proto		= DSA_TAG_PROTO_8021Q,
-diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
-index d43737e6c3fb..535d8a1aabe1 100644
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -106,8 +106,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
- 	 * it there, see dsa_switch_rcv: skb_push(skb, ETH_HLEN).
- 	 */
- 	if (is_tagged)
--		memmove(skb->data - ETH_HLEN, skb->data - ETH_HLEN - VLAN_HLEN,
--			ETH_HLEN - VLAN_HLEN);
-+		skb = dsa_8021q_remove_header(skb);
- 
- 	return skb;
- }
+- Broke previous 09/10 patch (timestamping) into multiple smaller
+  patches.
+
+- Every patch in the series compiles.
+
+v1 patchset can be found at:
+https://lkml.org/lkml/2019/5/28/1093
+
+Changes from v1:
+
+- Removed the addition of the DSA .can_timestamp callback.
+
+- Waiting for meta frames is done completely inside the tagger, and all
+  frames emitted on RX are already partially timestamped.
+
+- Added a global data structure for the tagger common to all ports.
+
+- Made PTP work with ports in standalone mode, by limiting use of the
+  DMAC-mangling "incl_srcpt" mode only when ports are bridged, aka when
+  the DSA master is already promiscuous and can receive anything.
+  Also changed meta frames to be sent at the 01-80-C2-00-00-0E DMAC.
+
+- Made some progress w.r.t. observed negative path delay.  Apparently it
+  only appears when the delay mechanism is the delay request-response
+  (end-to-end) one. If peer delay is used (-P), the path delay is
+  positive and appears reasonable for an 1000Base-T link (485 ns in
+  steady state).
+
+  SJA1105 as PTP slave (OC) with E2E path delay:
+
+ptp4l[55.600]: master offset          8 s2 freq  +83677 path delay     -2390
+ptp4l[56.600]: master offset         17 s2 freq  +83688 path delay     -2391
+ptp4l[57.601]: master offset          6 s2 freq  +83682 path delay     -2391
+ptp4l[58.601]: master offset         -1 s2 freq  +83677 path delay     -2391
+
+  SJA1105 as PTP slave (OC) with P2P path delay:
+
+ptp4l[48.343]: master offset          5 s2 freq  +83715 path delay       484
+ptp4l[48.468]: master offset         -3 s2 freq  +83705 path delay       485
+ptp4l[48.593]: master offset          0 s2 freq  +83708 path delay       485
+ptp4l[48.718]: master offset          1 s2 freq  +83710 path delay       485
+ptp4l[48.844]: master offset          1 s2 freq  +83710 path delay       485
+ptp4l[48.969]: master offset         -5 s2 freq  +83702 path delay       485
+ptp4l[49.094]: master offset          3 s2 freq  +83712 path delay       485
+ptp4l[49.219]: master offset          4 s2 freq  +83714 path delay       485
+ptp4l[49.344]: master offset         -5 s2 freq  +83702 path delay       485
+ptp4l[49.469]: master offset          3 s2 freq  +83713 path delay       487
+
+Vladimir Oltean (17):
+  net: dsa: Keep a pointer to the skb clone for TX timestamping
+  net: dsa: Add teardown callback for drivers
+  net: dsa: tag_8021q: Create helper function for removing VLAN header
+  net: dsa: sja1105: Move sja1105_change_tpid into
+    sja1105_vlan_filtering
+  net: dsa: sja1105: Reverse TPID and TPID2
+  net: dsa: sja1105: Limit use of incl_srcpt to bridge+vlan mode
+  net: dsa: sja1105: Add support for the PTP clock
+  net: dsa: sja1105: Move sja1105_is_link_local to include/linux
+  net: dsa: sja1105: Add logic for TX timestamping
+  net: dsa: sja1105: Build a minimal understanding of meta frames
+  net: dsa: sja1105: Add support for the AVB Parameters Table
+  net: dsa: sja1105: Make sja1105_is_link_local not match meta frames
+  net: dsa: sja1105: Receive and decode meta frames
+  net: dsa: sja1105: Add a global sja1105_tagger_data structure
+  net: dsa: sja1105: Increase priority of CPU-trapped frames
+  net: dsa: sja1105: Add a state machine for RX timestamping
+  net: dsa: sja1105: Expose PTP timestamping ioctls to userspace
+
+ drivers/net/dsa/sja1105/Kconfig               |   7 +
+ drivers/net/dsa/sja1105/Makefile              |   1 +
+ drivers/net/dsa/sja1105/sja1105.h             |  29 ++
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  |   2 +
+ drivers/net/dsa/sja1105/sja1105_main.c        | 319 ++++++++++++--
+ drivers/net/dsa/sja1105/sja1105_ptp.c         | 392 ++++++++++++++++++
+ drivers/net/dsa/sja1105/sja1105_ptp.h         |  64 +++
+ drivers/net/dsa/sja1105/sja1105_spi.c         |  33 ++
+ .../net/dsa/sja1105/sja1105_static_config.c   |  59 +++
+ .../net/dsa/sja1105/sja1105_static_config.h   |  10 +
+ include/linux/dsa/8021q.h                     |   7 +
+ include/linux/dsa/sja1105.h                   |  51 +++
+ include/net/dsa.h                             |   1 +
+ net/dsa/dsa2.c                                |   3 +
+ net/dsa/slave.c                               |   3 +
+ net/dsa/tag_8021q.c                           |  15 +
+ net/dsa/tag_sja1105.c                         | 203 ++++++++-
+ 17 files changed, 1152 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_ptp.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_ptp.h
+
 -- 
 2.17.1
 
