@@ -2,340 +2,208 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03BEC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0362EC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E682070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C601C20851
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfFDVO7 (ORCPT
+        id S1726474AbfFDVTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:14:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60780 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726293AbfFDVO6 (ORCPT
+        Tue, 4 Jun 2019 17:19:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:47217 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDVTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:14:58 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54KwtNi000550
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 17:14:56 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2swwyhp1eh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 17:14:56 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 4 Jun 2019 22:14:55 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 22:14:51 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54LEosl34144530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 21:14:50 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 805E5B2064;
-        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C4ECB2066;
-        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.212.108])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A270016C3783; Tue,  4 Jun 2019 14:14:49 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 14:14:49 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Reply-To: paulmck@linux.ibm.com
-References: <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
- <20150921193045.GA13674@lerouge>
- <20150921204327.GH4029@linux.vnet.ibm.com>
- <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
- <20190603000617.GD28207@linux.ibm.com>
- <20190603030324.kl3bckqmebzis2vw@gondor.apana.org.au>
- <CAHk-=wj2t+GK+DGQ7Xy6U7zMf72e7Jkxn4_-kGyfH3WFEoH+YQ@mail.gmail.com>
- <CAHk-=wgZcrb_vQi5rwpv+=wwG+68SRDY16HcqcMtgPFL_kdfyQ@mail.gmail.com>
- <20190603195304.GK28207@linux.ibm.com>
- <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
+        Tue, 4 Jun 2019 17:19:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id r27so17404880iob.14
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:19:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0iJ/CisaeAFt6kjSxf0PDnzBYqaLMd8GZ6ICt72+F8c=;
+        b=MUDtg/boKAwpVXe0inh9RNYAulAUO+vafYeIe6qxiSPK+Y8l74rV50d0O5+hejbZt8
+         REG+qLihFlFmeAavKF78OJ91M1unWVuGAUOHsXlOTjvovsIfg61xctvDtLAMdN9csOTq
+         u9tnIbmDSmKbyRAjEO9QxdUpMcAXI5ZWWlMQUPXhqdS7RIVrYVymI9sJe+JiUn1xOJIH
+         4ej6+ysJGdk94HKswqe5SjleIqpW7jvwjprn0p4JJh5CdEulKaesoEhH7jqK9hc2B0nk
+         oDaxtfUrrVpd2LHNc1qk1a7pZ8Upa6UmCzmb8Zi0JzbzsplaKK9VETw5wDGbHSvjEmHA
+         AE2g==
+X-Gm-Message-State: APjAAAX+E50wnUzKs/wLTWChowz4pedy6vQ7ju8fMaG5TDb/IQNjSUyD
+        o4LbdXUY7S3vU4+MhT/fgLijnnxlvn4e9U3CWfB2umonUZl/
+X-Google-Smtp-Source: APXvYqww+IWWlnUeKm2m4DZKJtmvDhFfbtTotLDezLfaqhvRpapQUBIBo5TiP0EjNwhcIykXfggRbGqXtXWEOZsR5RvhIHP9g4NH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060421-2213-0000-0000-0000039A1A2E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011215; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01213277; UDB=6.00637671; IPR=6.00994345;
- MB=3.00027185; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-04 21:14:54
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060421-2214-0000-0000-00005EB5AC43
-Message-Id: <20190604211449.GU28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040133
+X-Received: by 2002:a6b:6f0e:: with SMTP id k14mr22747234ioc.257.1559683145579;
+ Tue, 04 Jun 2019 14:19:05 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 14:19:05 -0700
+In-Reply-To: <000000000000543e45058a3cf40b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dac5a0058a860712@google.com>
+Subject: Re: possible deadlock in get_user_pages_unlocked (2)
+From:   syzbot <syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        dan.j.williams@intel.com, ira.weiny@intel.com, jhubbard@nvidia.com,
+        keith.busch@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rppt@linux.ibm.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 01:24:32PM -0700, Linus Torvalds wrote:
-> On Mon, Jun 3, 2019 at 12:53 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> >
-> > I agree that !PREEMPT rcu_read_lock() would not affect compiler code
-> > generation, but given that get_user() is a volatile asm, isn't the
-> > compiler already forbidden from reordering it with the volatile-casted
-> > WRITE_ONCE() access, even if there was nothing at all between them?
-> > Or are asms an exception to the rule that volatile executions cannot
-> > be reordered?
-> 
-> Paul, you MAKE NO SENSE.
-> 
-> What is wrong with you?
+syzbot has found a reproducer for the following crash on:
 
-Mostly that I didn't check all architectures' definitions of get_user().
-Had I done so, I would have seen that not all of the corresponding asms
-have the "volatile" keyword.  And of course, without that keyword, there
-is absolutely nothing preventing the compiler from reordering the asm
-with pretty much anything.  The only things that would be absolutely
-guaranteed to prevent reordering would be things like memory clobbers
-(barrier()) or accesses that overlap the asm's input/output list.
+HEAD commit:    56b697c6 Add linux-next specific files for 20190604
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13241716a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=e1374b2ec8f6a25ab2e5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165757eea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10dd3e86a00000
 
-Yeah, I know, even with the "volatile" keyword, it is not entirely clear
-how much reordering the compiler is allowed to do.  I was relying on
-https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html, which says:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com
 
-	Qualifiers
+IPVS: ftp: loaded support on port[0] = 21
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc3-next-20190604 #8 Not tainted
+------------------------------------------------------
+syz-executor842/8767 is trying to acquire lock:
+00000000badb3a6d (&mm->mmap_sem#2){++++}, at:  
+get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
 
-	volatile
+but task is already holding lock:
+0000000052562d44 (&sb->s_type->i_mutex_key#10){+.+.}, at: inode_trylock  
+include/linux/fs.h:798 [inline]
+0000000052562d44 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
 
-		The typical use of extended asm statements is to
-		manipulate input values to produce output values. However,
-		your asm statements may also produce side effects. If so,
-		you may need to use the volatile qualifier to disable
-		certain optimizations. See Volatile.
+which lock already depends on the new lock.
 
-But the linked-to "Volatile" section later in that same web page mostly
-talks about the compiler's ability to hoist asms out of loops.
 
-> I just showed you an example of where rcu_read_lock() needs to be a
-> compiler barrier, and then you make incoherent noises about
-> WRITE_ONCE() that do not even exist in that example.
+the existing dependency chain (in reverse order) is:
 
-I thought we were discussing this example, but it doesn't matter because
-I was missing your point about get_user() and page faults:
+-> #1 (&sb->s_type->i_mutex_key#10){+.+.}:
+        down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+        inode_lock include/linux/fs.h:778 [inline]
+        process_measurement+0x15ae/0x15e0  
+security/integrity/ima/ima_main.c:228
+        ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+        security_file_mprotect+0xd5/0x100 security/security.c:1426
+        do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+        __do_sys_mprotect mm/mprotect.c:582 [inline]
+        __se_sys_mprotect mm/mprotect.c:579 [inline]
+        __x64_sys_mprotect+0x78/0xb0 mm/mprotect.c:579
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-     get_user(val, ptr)
-     rcu_read_lock();
-     WRITE_ONCE(state, 1);
+-> #0 (&mm->mmap_sem#2){++++}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+        down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+        get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+        __gup_longterm_unlocked mm/gup.c:2193 [inline]
+        get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+        iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+        dio_refill_pages fs/direct-io.c:171 [inline]
+        dio_get_page fs/direct-io.c:215 [inline]
+        do_direct_IO fs/direct-io.c:983 [inline]
+        do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+        __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+        ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+        ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+        generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+        __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+        ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+        call_write_iter include/linux/fs.h:1870 [inline]
+        new_sync_write+0x4d3/0x770 fs/read_write.c:483
+        __vfs_write+0xe1/0x110 fs/read_write.c:496
+        vfs_write+0x268/0x5d0 fs/read_write.c:558
+        ksys_write+0x14f/0x290 fs/read_write.c:611
+        __do_sys_write fs/read_write.c:623 [inline]
+        __se_sys_write fs/read_write.c:620 [inline]
+        __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-But regardless, given that some architectures omit volatile from their
-asms implementing get_user(), even an optimistic interpretation of that
-part of the GCC documentation would still permit reordering the above.
-And again, I was missing your point about get_user() causing page faults
-and thus context switches.
+other info that might help us debug this:
 
-> Forget about your READ_ONCE/WRITE_ONCE theories. Herbert already
-> showed code that doesn't have those accessors, so reality doesn't
-> match your fevered imagination.
+  Possible unsafe locking scenario:
 
-I get the feeling that you believe that I want LKMM to be some sort of
-final judge and absolute arbiter of what code is legal and not from
-a memory-ordering perspective.  This is absolutely -not- the case.
-The current state of the art, despite the recent impressive progress,
-simply cannot reasonably do this.  So all I can claim is that LKMM
-dispenses advice, hopefully good advice.  (It is early days for LKMM's
-handling of plain accesses, so some work might be required to deliver
-on the "good advice" promise, but we have to start somewhere.  Plus it
-is progressing nicely.)
+        CPU0                    CPU1
+        ----                    ----
+   lock(&sb->s_type->i_mutex_key#10);
+                                lock(&mm->mmap_sem#2);
+                                lock(&sb->s_type->i_mutex_key#10);
+   lock(&mm->mmap_sem#2);
 
-The places where long-standing RCU patterns require rcu_dereference()
-and rcu_assign_pointer() do require some attention to avoid compiler
-optimizations, and {READ,WRITE}_ONCE() is one way of addressing this.
-But not the only way, nor always the best way.  For example, some
-fastpaths might need the optimizations that {READ,WRITE}_ONCE()
-suppresses.  Therefore, Linux kernel hackers have a number of other
-ways of paying attention.  For example, accesses might be constrained
-via barrier() and friends.  For another example, some developers might
-check assembly output (hopefully scripted somehow).
+  *** DEADLOCK ***
 
-Again, the Linux-kernel memory model dispenses advice, not absolutes.
-Furthermore, the way it dispenses advice is currently a bit limited.
-It can currently say that it is nervous about lack of {READ,WRITE}_ONCE(),
-as in "Flag data-race", but it would be difficult to make it recommend
-the other options in an intelligent way.  So we should interpret "Flag
-data-race" as LKMM saying "I am nervous about your unmarked accesses"
-rather than "You absolutely must call {READ,WRITE}_ONCE() more often!!!"
-Again, advice, not absolutes.
+2 locks held by syz-executor842/8767:
+  #0: 0000000065e8e19a (sb_writers#3){.+.+}, at: file_start_write  
+include/linux/fs.h:2836 [inline]
+  #0: 0000000065e8e19a (sb_writers#3){.+.+}, at: vfs_write+0x485/0x5d0  
+fs/read_write.c:557
+  #1: 0000000052562d44 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+inode_trylock include/linux/fs.h:798 [inline]
+  #1: 0000000052562d44 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
 
-So the idea is that you add and remove {READ,WRITE}_ONCE() to/from the
--litmus- -tests- to determine which accesses LKMM is nervous about.
-But that doesn't necessarily mean that {READ,WRITE}_ONCE() goes into
-the corresponding places in the Linux kernel.
-
-Does that help, or am I still confused?
-
-> And sometimes it's not even possible, since you can't do a bitfield
-> access, for example, with READ_ONCE().
-
-Ah, good point.  So the Linux kernel uses bitfields to communicate
-between mainline and interrupt handlers.  New one on me.  :-/
-
-> > We can of course put them back in,
-> 
-> Stop the craziness. It's not "we can". It is a "we will".
-> 
-> So I will add that barrier, and you need to stop arguing against it
-> based on specious theoretical arguments that do not match reality. And
-> we will not ever remove that barrier again. Herbert already pointed to
-> me having to do this once before in commit 386afc91144b ("spinlocks
-> and preemption points need to be at least compiler barriers"), and
-> rcu_read_lock() clearly has at a minimum that same preemption point
-> issue.
-
-And the lack of "volatile" allows get_user() to migrate page faults
-(and thus context switches) into RCU read-side critical sections
-in CONFIG_PREEMPT=n.  Yes, this would be very bad.
-
-OK, I finally got it, so please accept my apologies for my earlier
-confusion.
-
-I don't yet see a commit from you, so I queued the one below locally
-and started testing.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 9b4766c5523efb8d3d52b2ba2a29fd69cdfc65bb
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Tue Jun 4 14:05:52 2019 -0700
-
-    rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()
-    
-    Commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree
-    RCU readers") removed the barrier() calls from rcu_read_lock() and
-    rcu_write_lock() in CONFIG_PREEMPT=n&&CONFIG_PREEMPT_COUNT=n kernels.
-    Within RCU, this commit was OK, but it failed to account for things like
-    get_user() that can pagefault and that can be reordered by the compiler.
-    Lack of the barrier() calls in rcu_read_lock() and rcu_read_unlock()
-    can cause these page faults to migrate into RCU read-side critical
-    sections, which in CONFIG_PREEMPT=n kernels could result in too-short
-    grace periods and arbitrary misbehavior.  Please see commit 386afc91144b
-    ("spinlocks and preemption points need to be at least compiler barriers")
-    for more details.
-    
-    This commit therefore restores the barrier() call to both rcu_read_lock()
-    and rcu_read_unlock().  It also removes them from places in the RCU update
-    machinery that used to need compensatory barrier() calls, effectively
-    reverting commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny
-    and Tree RCU readers").
-    
-    Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 0c9b92799abc..8f7167478c1d 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -56,14 +56,12 @@ void __rcu_read_unlock(void);
- 
- static inline void __rcu_read_lock(void)
- {
--	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
--		preempt_disable();
-+	preempt_disable();
- }
- 
- static inline void __rcu_read_unlock(void)
- {
--	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
--		preempt_enable();
-+	preempt_enable();
- }
- 
- static inline int rcu_preempt_depth(void)
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3f52d8438e0f..841060fce33c 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -288,7 +288,6 @@ void rcu_note_context_switch(bool preempt)
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 	struct rcu_node *rnp;
- 
--	barrier(); /* Avoid RCU read-side critical sections leaking down. */
- 	trace_rcu_utilization(TPS("Start context switch"));
- 	lockdep_assert_irqs_disabled();
- 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
-@@ -340,7 +339,6 @@ void rcu_note_context_switch(bool preempt)
- 	if (rdp->exp_deferred_qs)
- 		rcu_report_exp_rdp(rdp);
- 	trace_rcu_utilization(TPS("End context switch"));
--	barrier(); /* Avoid RCU read-side critical sections leaking up. */
- }
- EXPORT_SYMBOL_GPL(rcu_note_context_switch);
- 
-@@ -828,11 +826,6 @@ static void rcu_qs(void)
-  * dyntick-idle quiescent state visible to other CPUs, which will in
-  * some cases serve for expedited as well as normal grace periods.
-  * Either way, register a lightweight quiescent state.
-- *
-- * The barrier() calls are redundant in the common case when this is
-- * called externally, but just in case this is called from within this
-- * file.
-- *
-  */
- void rcu_all_qs(void)
- {
-@@ -847,14 +840,12 @@ void rcu_all_qs(void)
- 		return;
- 	}
- 	this_cpu_write(rcu_data.rcu_urgent_qs, false);
--	barrier(); /* Avoid RCU read-side critical sections leaking down. */
- 	if (unlikely(raw_cpu_read(rcu_data.rcu_need_heavy_qs))) {
- 		local_irq_save(flags);
- 		rcu_momentary_dyntick_idle();
- 		local_irq_restore(flags);
- 	}
- 	rcu_qs();
--	barrier(); /* Avoid RCU read-side critical sections leaking up. */
- 	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(rcu_all_qs);
-@@ -864,7 +855,6 @@ EXPORT_SYMBOL_GPL(rcu_all_qs);
-  */
- void rcu_note_context_switch(bool preempt)
- {
--	barrier(); /* Avoid RCU read-side critical sections leaking down. */
- 	trace_rcu_utilization(TPS("Start context switch"));
- 	rcu_qs();
- 	/* Load rcu_urgent_qs before other flags. */
-@@ -877,7 +867,6 @@ void rcu_note_context_switch(bool preempt)
- 		rcu_tasks_qs(current);
- out:
- 	trace_rcu_utilization(TPS("End context switch"));
--	barrier(); /* Avoid RCU read-side critical sections leaking up. */
- }
- EXPORT_SYMBOL_GPL(rcu_note_context_switch);
- 
+stack backtrace:
+CPU: 0 PID: 8767 Comm: syz-executor842 Not tainted 5.2.0-rc3-next-20190604  
+#8
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+  check_prev_add kernel/locking/lockdep.c:2311 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+  validate_chain kernel/locking/lockdep.c:2801 [inline]
+  __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+  down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+  get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+  __gup_longterm_unlocked mm/gup.c:2193 [inline]
+  get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+  iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+  dio_refill_pages fs/direct-io.c:171 [inline]
+  dio_get_page fs/direct-io.c:215 [inline]
+  do_direct_IO fs/direct-io.c:983 [inline]
+  do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+  ? 0xffffffff81000000
+  __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+  ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+  ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+  ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440a49
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 bb 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc18e28968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004a22e0 RCX: 0000000000440a49
+RDX: 0000000020000012 RSI: 0000000020000000 RDI: 0000000000000005
+RBP: 00000000004a2370 R08: 0000000000000012 R09: 0000000000000100
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f90
+R13: 0000000000402020 R14: 0000000000000000 R15: 0000000000000000
 
