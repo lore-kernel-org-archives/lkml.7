@@ -2,176 +2,197 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FD8C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BE9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC05245BC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C932245BC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxfJmMNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfFDLqW convert rfc822-to-8bit (ORCPT
+        id S1727585AbfFDLqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:46:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55274 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfFDLqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:46:21 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD7A630C084B;
-        Tue,  4 Jun 2019 11:46:15 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-187.str.redhat.com [10.33.192.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D23467269;
-        Tue,  4 Jun 2019 11:46:05 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <87h89gjgaf.fsf@oldenburg2.str.redhat.com>
-        <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
-        <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
-        <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com>
-        <875zprm4jo.fsf@oldenburg2.str.redhat.com>
-        <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
-        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
-Date:   Tue, 04 Jun 2019 13:46:04 +0200
-In-Reply-To: <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 31 May 2019 14:10:57 -0400
-        (EDT)")
-Message-ID: <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 4 Jun 2019 07:46:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44886 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfFDLqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:46:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p67so2887462ljp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tAJHzdtoUHBGcl/ayUBAfIA8bNQX6pMqdoZW2RgjLw8=;
+        b=MxfJmMNaRkzihyUPNF6atM911sUNuCUizSvuv0oNDUFV9WWwPX5jZbwllidOdbgwqn
+         hOHRyselYkHjWCb/JyFMvF7EqwgpFXr8lIgi7xJfZHfoe9YWACUt8sGeE0puDLvSMKlE
+         WHFUVnSDjfz0ftC5hCi/mA61LuFFITvuBoe2Zc4BZx/w1zGQ4+bgjyVhdYTnHjYnEY6o
+         Ef0w1M+5NW7rWY/ziXa2+JlNNUhOMnozExj0lTimQGQPkMV7qKREFbl1+P0LUO8JwiVl
+         WuOWgEOGza80fOa0AATy0POyWYX/pbm9CPz1gBqjz6r9bKAZYMBUte/5EKE3SM3cResT
+         riBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tAJHzdtoUHBGcl/ayUBAfIA8bNQX6pMqdoZW2RgjLw8=;
+        b=tsJMckalhP+voRB8703+UWPJWBJMTLGxSSV4+qRQAuQ1yapgF7GL0UUOtYyXNq74g3
+         iE+Wt9PntgEWL0vtLyDk2HknbxPCbH70icVWIjkzYF/ymfSOLd84eFoQQfv6gZTgFW84
+         Z4fbIkiKcrXTP5Y+gIGNmVprQ2DvlQB137jw3WSATVQkE8IHbOQQydhbBntNxqNpqqUx
+         /ilja7z2Lj5duNJIOOEZpsbU/JQfw1bOFRc9G11Aq3pHk6hMk/mMLLE7/YTfEYp+JI0z
+         VnI6N7MdCLAETL81WdvuKlwRcR9/m+WQasV20osWl/1hJ11Ob6eb+YtmueqHe+bYr0Dx
+         VXZQ==
+X-Gm-Message-State: APjAAAVg1W2dGWwx1jWIjtwTlvXw+0Uuq7xrWBxzIR2l5k+lFZHWg/Ga
+        pfrsKXIIROVp1UkJ7Eny7bTizac58ZACsv/pRKg=
+X-Google-Smtp-Source: APXvYqxETLRosCoZ7Yw7GzrbRjReXddCRP3sa4I467L9SGwoKgWaLtcI36oqbAY+jJUssD7dP9zolGJjPLweS4I39JM=
+X-Received: by 2002:a2e:5b1b:: with SMTP id p27mr7121973ljb.97.1559648789873;
+ Tue, 04 Jun 2019 04:46:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 04 Jun 2019 11:46:21 +0000 (UTC)
+References: <20190603174735.21002-1-codekipper@gmail.com> <20190603174735.21002-4-codekipper@gmail.com>
+ <CAGb2v65vfQEiXYN6rvdfP6rAvXRVTAnCzxEgpjsJAkDJ16Y+rg@mail.gmail.com>
+In-Reply-To: <CAGb2v65vfQEiXYN6rvdfP6rAvXRVTAnCzxEgpjsJAkDJ16Y+rg@mail.gmail.com>
+From:   Code Kipper <codekipper@gmail.com>
+Date:   Tue, 4 Jun 2019 13:46:17 +0200
+Message-ID: <CAEKpxBme2KTNrtb3GpB+UPF5LHbj=iqngu5jrYpFecCZ9d8Whw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v4 3/9] ASoC: sun4i-i2s: Add regmap field to
+ sign extend sample
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
-
-> ----- On May 31, 2019, at 11:46 AM, Florian Weimer fweimer@redhat.com wrote:
+On Tue, 4 Jun 2019 at 09:53, Chen-Yu Tsai <wens@csie.org> wrote:
 >
->> * Mathieu Desnoyers:
->> 
->>> Let's break this down into the various sub-issues involved:
->>>
->>> 1) How early do we need to setup rseq ? Should it be setup before:
->>>    - LD_PRELOAD .so constructors ?
->>>      - Without circular dependency,
->>>      - With circular dependency,
->>>    - audit libraries initialization ?
->>>    - IFUNC resolvers ?
->>>    - other callbacks ?
->>>    - memory allocator calls ?
->>>
->>> We may end up in a situation where we need memory allocation to be setup
->>> in order to initialize TLS before rseq can be registered for the main
->>> thread. I suspect we will end up needing a fallbacks which always work
->>> for the few cases that would try to use rseq too early in dl/libc startup.
->> 
->> I think the answer to that depends on whether it's okay to have an
->> observable transition from “no rseq kernel support” to “kernel supports
->> rseq”.
+> On Tue, Jun 4, 2019 at 1:47 AM <codekipper@gmail.com> wrote:
+> >
+> > From: Marcus Cooper <codekipper@gmail.com>
+> >
+> > On the newer SoCs this is set by default to transfer a 0 after
+> > each sample in each slot. However the platform that this driver
+> > was developed on had the default setting where it padded the
+> > audio gain with zeros. This isn't a problem whilst we have only
+> > support for 16bit audio but with larger sample resolution rates
+> > in the pipeline then it should be fixed to also pad. Without this
+> > the audio gets distorted.
 >
-> As far as my own use-cases are concerned, I only care that rseq is initialized
-> before LD_PRELOAD .so constructors are executed.
-
-<https://sourceware.org/bugzilla/show_bug.cgi?id=14379> is relevant in
-this context.  It requests the opposite behavior from LD_PRELOAD.
-
-> There appears to be some amount of documented limitations for what can be
-> done by the IFUNC resolvers. It might be acceptable to document that rseq
-> might not be initialized yet when those are executed.
-
-The only obstacle is that there are so many places where we could put
-this information.
-
-> I'd like to hear what others think about whether we should care about IFUNC
-> resolvers and audit libraries using restartable sequences TLS ?
-
-In audit libraries (and after dlmopen), the inner libc will have
-duplicated TLS values, so it will look as if the TLS area is not active
-(but a registration has happened with the kernel).  If we move
-__rseq_handled into the dynamic linker, its value will be shared along
-with ld.so with the inner objects.  However, the inner libc still has to
-ensure that its registration attempt does not succeed because that would
-activate the wrong rseq area.
-
-The final remaining case is static dlopen.  There is a copy of ld.so on
-the dynamic side, but it is completely inactive and has never run.  I do
-not think we need to support that because multi-threading does not work
-reliably in this scenario, either.  However, we should skip rseq
-registration in a nested libc (see the rtld_active function).
-
->>> 4) Inability to touch a TLS variable (__rseq_abi) from ld-linux-*.so.2
->>>    - Should we extend the dynamic linker to allow such TLS variable to be
->>>      accessed ? If so, how much effort is required ?
->>>    - Can we find an alternative way to initialize rseq early during
->>>      dl init stages while still performing the TLS access from a function
->>>      implemented within libc.so ?
->> 
->> This is again related to the answer for (1).  There are various hacks we
->> could implement to make the initialization invisible (e.g., computing
->> the address of the variable using the equivalent of dlsym, after loading
->> all the initial objects and before starting relocation).  If it's not
->> too hard to add TLS support to ld.so, we can consider that as well.
->> (The allocation side should be pretty easy, relocation support it could
->> be more tricky.)
->> 
->>> So far, I got rseq to be initialized before LD_PRELOADed library
->>> constructors by doing the initialization in a constructor within
->>> libc.so. I don't particularly like this approach, because the
->>> constructor order is not guaranteed.
->> 
->> Right.
+> Curious, both the A10 and A20 manuals say the default value for this
+> field is 0, which means 0 padding.
 >
-> One question related to use of constructors: AFAIU, if a library depends
-> on glibc, ELF guarantees that the glibc constructor will be executed first,
-> before the other library.
+> sun4i_i2s_reg_defaults[] also has that field set to 0.
+>
+> You're saying you are seeing the field set to 1?
 
-There are some exceptions, like DT_PREINIT_ARRAY functions and
-DF_1_INITFIRST.  Some of these mechanisms we use in the implementation
-itself, so they are not really usable to end users.  Cycles should not
-come into play here.
-
-By default, an object that uses the rseq area will have to link against
-libc (perhaps indirectly), and therefore the libc constructor runs
-first.
-
-> Which leaves us with the execution order of constructors within libc.so,
-> which is not guaranteed if we just use __attribute__ ((constructor)).
-> However, all gcc versions that are required to build recent glibc
-> seem to support a constructor with a "priority" value (lower gets
-> executed first, and those are executed before constructors without
-> priority).
-
-I'm not sure that's the right way to do it.  If we want to happen
-execution in a specific order, we should write a single constructor
-function which is called from _init.  For the time being, we can add the
-call to an appropriately defined inline function early in _init in
-elf/init-first.c (which is shared with Hurd, so Hurd will need some sort
-of stub function).
-
-Thanks,
-Florian
+On the newer SoCs (H3 onwards) this setting defaults to 3 which is
+"Transfer 0 after each sample in each slot" which resulted in distortion.
+Setting SEXT to 0 "Zeros or audio gain padding at LSB" alligns the
+setup with that of the earlier block and fixed the issue we were hearing.
+It's really noticeable with HDMI audio.
+BR,
+CK
+>
+> ChenYu
+>
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > ---
+> >  sound/soc/sunxi/sun4i-i2s.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > index fd7c37596f21..e2961d8f6e8c 100644
+> > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > @@ -134,6 +134,7 @@
+> >   * @field_fmt_bclk: regmap field to set clk polarity.
+> >   * @field_fmt_lrclk: regmap field to set frame polarity.
+> >   * @field_fmt_mode: regmap field to set the operational mode.
+> > + * @field_fmt_sext: regmap field to set the sign extension.
+> >   * @field_txchanmap: location of the tx channel mapping register.
+> >   * @field_rxchanmap: location of the rx channel mapping register.
+> >   * @field_txchansel: location of the tx channel select bit fields.
+> > @@ -159,6 +160,7 @@ struct sun4i_i2s_quirks {
+> >         struct reg_field                field_fmt_bclk;
+> >         struct reg_field                field_fmt_lrclk;
+> >         struct reg_field                field_fmt_mode;
+> > +       struct reg_field                field_fmt_sext;
+> >         struct reg_field                field_txchanmap;
+> >         struct reg_field                field_rxchanmap;
+> >         struct reg_field                field_txchansel;
+> > @@ -183,6 +185,7 @@ struct sun4i_i2s {
+> >         struct regmap_field     *field_fmt_bclk;
+> >         struct regmap_field     *field_fmt_lrclk;
+> >         struct regmap_field     *field_fmt_mode;
+> > +       struct regmap_field     *field_fmt_sext;
+> >         struct regmap_field     *field_txchanmap;
+> >         struct regmap_field     *field_rxchanmap;
+> >         struct regmap_field     *field_txchansel;
+> > @@ -342,6 +345,9 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+> >                                    SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> >                                    SUN8I_I2S_FMT0_LRCK_PERIOD(32));
+> >
+> > +       /* Set sign extension to pad out LSB with 0 */
+> > +       regmap_field_write(i2s->field_fmt_sext, 0);
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -887,6 +893,7 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
+> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+> >         .has_slave_select_bit   = true,
+> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
+> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
+> >         .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
+> >         .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+> >         .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+> > @@ -904,6 +911,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
+> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+> >         .has_slave_select_bit   = true,
+> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
+> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
+> >         .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
+> >         .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+> >         .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+> > @@ -944,6 +952,7 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+> >         .field_fmt_bclk         = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
+> >         .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 19, 19),
+> >         .field_fmt_mode         = REG_FIELD(SUN4I_I2S_CTRL_REG, 4, 5),
+> > +       .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 4, 5),
+> >         .field_txchanmap        = REG_FIELD(SUN8I_I2S_TX_CHAN_MAP_REG, 0, 31),
+> >         .field_rxchanmap        = REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
+> >         .field_txchansel        = REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
+> > @@ -1006,6 +1015,12 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+> >         if (IS_ERR(i2s->field_fmt_mode))
+> >                 return PTR_ERR(i2s->field_fmt_mode);
+> >
+> > +       i2s->field_fmt_sext =
+> > +                       devm_regmap_field_alloc(dev, i2s->regmap,
+> > +                                               i2s->variant->field_fmt_sext);
+> > +       if (IS_ERR(i2s->field_fmt_sext))
+> > +               return PTR_ERR(i2s->field_fmt_sext);
+> > +
+> >         i2s->field_txchanmap =
+> >                         devm_regmap_field_alloc(dev, i2s->regmap,
+> >                                                 i2s->variant->field_txchanmap);
+> > --
+> > 2.21.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190603174735.21002-4-codekipper%40gmail.com.
+> > For more options, visit https://groups.google.com/d/optout.
