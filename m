@@ -2,34 +2,34 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ED9C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3796DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DA722580
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180E42084A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfFDKNC (ORCPT
+        id S1727493AbfFDKNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:13:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54058 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727258AbfFDKMO (ORCPT
+        Tue, 4 Jun 2019 06:13:04 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42698 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727256AbfFDKMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 06:12:14 -0400
-X-UUID: 01d1ab16a8cf47b3b1f4c1755a56206e-20190604
-X-UUID: 01d1ab16a8cf47b3b1f4c1755a56206e-20190604
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+X-UUID: 507e439b8181492fba6365cbd70071ab-20190604
+X-UUID: 507e439b8181492fba6365cbd70071ab-20190604
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1987726043; Tue, 04 Jun 2019 18:12:02 +0800
+        with ESMTP id 767814066; Tue, 04 Jun 2019 18:12:06 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 4 Jun 2019 18:12:02 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 4 Jun 2019 18:12:01 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
  Transport; Tue, 4 Jun 2019 18:12:01 +0800
@@ -43,134 +43,112 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v4 12/14] [media] mtk-mipicsi: add debug message for mipicsi driver
-Date:   Tue, 4 Jun 2019 18:11:53 +0800
-Message-ID: <1559643115-15124-13-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v4 07/14] [media] mtk-mipicsi: add function to get the number of subdev link
+Date:   Tue, 4 Jun 2019 18:11:48 +0800
+Message-ID: <1559643115-15124-8-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: F8EDD96C39312300CC9BE38EF59A9647DED5B847D22FF143A7A139D6D6217F8D2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add debug message for mipicsi driver.
+This patch add function to get subdev link.
+
+Mt2712 can serve at most four camera link for each mipicsi port.
+The number of link according to the value which is
+defined in dts, the string is "mediatek,mipicsi_max_vc".
+This value "max_vc" is the number of subdev link.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 40 ++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index aaaea5c6f280..b291c95bbf0e 100644
+index f5cb29077022..ea1edbc6401b 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -25,6 +25,7 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/moduleparam.h>
-+#include <linux/time64.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
-@@ -109,6 +110,15 @@
- 
- #define notifier_to_mipicsi(n) container_of(n, struct mtk_mipicsi_dev, \
- 					    notifier)
-+static int mtk_mipicsi_dbg_level;
-+#define mtk_mipicsi_dbg(level, fmt, args...)				 \
-+	do {								 \
-+		if (mtk_mipicsi_dbg_level >= level)			\
-+			pr_info("[MTK_MIPICSI%d] L%d %s %d: " fmt "\n", \
-+				mipicsi->id, level,  __func__, __LINE__, \
-+				##args);	\
-+	} while (0)
-+
- /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -168,6 +178,8 @@ struct mtk_mipicsi_dev {
- 	u8 link_reg_val;
- 	char drv_name[16];
- 	u32 id;
-+	struct timespec64 fps_time_cur;
-+	struct timespec64 fps_time_pre;
- 
- 	spinlock_t		irqlock;
- 	spinlock_t		queue_lock;
-@@ -535,6 +547,11 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 		buf->prepare_flag = 1;
- 		buf->vb_dma_addr_phy =
- 			vb2_dma_contig_plane_dma_addr(vb, 0);
-+
-+		mtk_mipicsi_dbg(1, "vb_dma_addr_phy=%lx size=%d",
-+			(unsigned long)buf->vb_dma_addr_phy,
-+			vb->planes[0].bytesused);
-+
- 		buf->vb = vb;
- 	}
- 
-@@ -581,6 +598,8 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 		mtk_mipicsi_write_camsv(mipicsi, vb->index, mipicsi->camsv_num);
- 
- 	spin_unlock(&mipicsi->irqlock);
-+
-+	mtk_mipicsi_dbg(2, "enqueue NO.%d buffer(%p).", vb->index, vb);
- }
- 
- static void mtk_mipicsi_cmos_vf_enable(struct mtk_mipicsi_dev *mipicsi,
-@@ -888,6 +907,7 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	struct mtk_mipicsi_buf *tmp = NULL;
- 	unsigned int index = 0;
- 	unsigned int next = 0;
-+	long time_interval;
- 
- 	for (i = 0; i < mipicsi->camsv_num; ++i)
- 		ch[i].irq_status = false;
-@@ -895,8 +915,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	i = 0;
- 
- 	/* only one buffer left */
--	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list)) {
-+		mtk_mipicsi_dbg(1, "only 1 buffer left, drop frame");
- 		return;
-+	}
- 
- 	/*for each fb_lst 2 times to get the top 2 buffer.*/
- 	list_for_each_entry_safe(new_cam_buf, tmp,
-@@ -920,6 +942,21 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 		VB2_BUF_STATE_DONE);
- 
- 	list_del_init(&(mipicsi->cam_buf[index].queue));
-+
-+	if (mtk_mipicsi_dbg_level >= 2) {
-+		ktime_get_real_ts64(&(mipicsi->fps_time_cur));
-+
-+		time_interval = (mipicsi->fps_time_cur.tv_sec
-+			- mipicsi->fps_time_pre.tv_sec) * 1000000000
-+			+ (mipicsi->fps_time_cur.tv_nsec
-+			- mipicsi->fps_time_pre.tv_nsec);
-+		mtk_mipicsi_dbg(0, "time interval is %ld\n",
-+			time_interval);
-+		mipicsi->fps_time_pre.tv_sec =
-+			mipicsi->fps_time_cur.tv_sec;
-+		mipicsi->fps_time_pre.tv_nsec =
-+			mipicsi->fps_time_cur.tv_nsec;
-+	}
- }
- 
- static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-@@ -1575,5 +1612,6 @@ static struct platform_driver mtk_mipicsi_driver = {
+@@ -120,6 +120,7 @@ struct mtk_mipicsi_subdev {
+ 	struct device_node *node;
+ 	struct v4l2_async_subdev asd;
+ 	struct v4l2_subdev *subdev;
++	unsigned int max_vc;
  };
  
- module_platform_driver(mtk_mipicsi_driver);
-+module_param(mtk_mipicsi_dbg_level, int, 0644);
- MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
- MODULE_LICENSE("GPL v2");
+ struct mtk_mipicsi_channel {
+@@ -153,6 +154,8 @@ struct mtk_mipicsi_dev {
+ 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
+ 	struct list_head	fb_list;
+ 	bool streamon;
++	unsigned int link;
++	u8 link_reg_val;
+ 	char drv_name[16];
+ 	u32 id;
+ 
+@@ -182,6 +185,25 @@ static const struct mtk_format mtk_mipicsi_formats[] = {
+ },
+ };
+ 
++static int get_subdev_link(struct mtk_mipicsi_dev *mipicsi,
++	unsigned int *link, u8 *link_reg_val)
++{
++	struct device *dev = &mipicsi->pdev->dev;
++	struct mtk_mipicsi_subdev *sd = &mipicsi->mipicsi_sd;
++
++	if (sd->max_vc == 1) {
++		*link = 1;
++		*link_reg_val = 0x1;
++		dev_info(dev, "mtk mipicsi support 1 channel\n");
++
++		return 0;
++	}
++
++	dev_info(dev, "mtk mipicsi support %d channel\n", sd->max_vc);
++
++	return 0;
++}
++
+ static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
+ {
+ 	if (enable) {
+@@ -877,6 +899,7 @@ static int mtk_mipicsi_node_parse(struct mtk_mipicsi_dev *mipicsi)
+ 	struct resource *res = NULL;
+ 	struct device_node *common_node = NULL;
+ 	struct platform_device *pdev = NULL;
++	struct mtk_mipicsi_subdev *sd = &mipicsi->mipicsi_sd;
+ 
+ 	dev = &mipicsi->pdev->dev;
+ 	pdev = mipicsi->pdev;
+@@ -891,6 +914,14 @@ static int mtk_mipicsi_node_parse(struct mtk_mipicsi_dev *mipicsi)
+ 	(void)sprintf(mipicsi->drv_name, MTK_MIPICSI_DRV_NAME"%d",
+ 		mipicsi->id);
+ 
++	/*get the number of virtual channel*/
++	ret = of_property_read_u32(dev->of_node, "mediatek,mipicsi_max_vc",
++				   &sd->max_vc);
++	if (ret != 0) {
++		dev_info(dev, "not set mediatek,mipicsi_max_vc, use default value 1\n");
++		sd->max_vc = 1;
++	}
++
+ 	/* get and parse seninf_mux_camsv */
+ 	camsv_num = of_count_phandle_with_args(dev->of_node,
+ 		"mediatek,seninf_mux_camsv", NULL);
+@@ -1165,6 +1196,8 @@ static int mtk_mipicsi_open(struct file *file)
+ 	if (ret)
+ 		v4l2_subdev_call(sd, core, s_power, 0);
+ 
++	get_subdev_link(mipicsi, &mipicsi->link, &mipicsi->link_reg_val);
++
+ 	pm_runtime_get_sync(&mipicsi->pdev->dev);
+ 
+ fh_rel:
 -- 
 2.18.0
 
