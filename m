@@ -2,149 +2,263 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D1CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60995C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6E324AF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2705524AEC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUMxlDW8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3GVvJag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfFDHZG (ORCPT
+        id S1726876AbfFDH0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:25:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34483 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfFDHZG (ORCPT
+        Tue, 4 Jun 2019 03:26:24 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45252 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfFDH0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:25:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so16555991iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:25:06 -0700 (PDT)
+        Tue, 4 Jun 2019 03:26:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x7so6997654plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/1V/guL5iAuFPzWbu/J5qn2zrr3eBIKvgYB5FT90pHk=;
-        b=FUMxlDW8cb4jgkfWiO5VPMAL16GJ8wbtKN8sWb6IyMltJRS7oag9E+ZyEmy7EMM1Pf
-         TRJrWvzLM48XnFw9C/Ve1YK1Ro502Vv7oyMbW8RlUfZagKdCnYHjyOseCduxGZn5BlMG
-         MfXtVkAiWKnumHu+WM7xisNiDuJTu9/JtxA+nW5XR3m6FI/upiv26yfqFmYUEZiwr0cd
-         NdiYtm/gYxshs3FPpMY+lT6/UmdfBcT63nBFiD3qDJuJ10ZP1yTeBtBKHtDXGjLEdywN
-         KKMKVgwJ6xs0CllzBenJWsa+SMtOjpJH3W08ON3VLUy9r9PLIUkfxznEkQ19wKB6qG9Q
-         4Muw==
+        h=from:to:cc:subject:date:message-id;
+        bh=f6lqyr2BfengWxFqHdlTowTllezFlrs3heXkz9HMYTU=;
+        b=Y3GVvJagUgHx3WtvpI5wZzCkScGOTP8c2Nerrvzl4t/n5Dz1P3nmPGl+PV7wJklq1c
+         V1xA7pFvEErx/7xHdNbouUEUqqPV/hu3CVLHobmhxoaxGRn2AB9U7zCxGk9mJi79VdBx
+         GfF5MhXPSXWHl8g6DQPQ+uOOFdqctuhJlefhLkETVKWtwZVe/0VF+mi6otJLc6bho2Mg
+         aErjdSMnuBy1O2NzrVwlChx99ecc6xNXIKSucHlDawiL7t/+5cUlToaDeX9VQtbZmxHz
+         4hxW97y7dPSenJJxJndkqHorMn/zL0v87NxXt/v0OyoU7S//2mdIhiRWIY9Tk00ganOt
+         VosQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/1V/guL5iAuFPzWbu/J5qn2zrr3eBIKvgYB5FT90pHk=;
-        b=N1d59yAK+cGn6d6tnqBRxW4rLM9Z4Sd+evSceq7VA/F8lCfghKYRyfPL8R4COX0aqw
-         /rCx5uHyrbeH1gxHwWiaWDbmN0d5+9/gKBuOTKi+JHU5t6i6q3zunaldYQxDWSXXAUQ1
-         N7guEbrky8mz5N2iC/QgU3xiATwMVxFoIyESXRuY+eLWJ4LnO3UDIgkwyXn0zlk0yVSf
-         nPhJMxQ5u13PK1OvszkJmrDlgUvp6e4c6xDiv7IGv/EZix+Hge+0NM4hykEuu5bhMaZV
-         2csfbcmiLSIV++mn2rDmRxtCQvirvfZ/GY+IG5hWl8JlG7dXQSwnjg066AZ+3jvY8UHv
-         Utjg==
-X-Gm-Message-State: APjAAAXnMJUTSUdsTyKQx2kHMHYLStz0XtgokaUL92LKGDmrRSnmIgOQ
-        kDRbG/cRe3ORux98ZLOvE7ewi5puu91OwQpZCg==
-X-Google-Smtp-Source: APXvYqxP8lQ9qPiM5mHYH7yiqijauzm9S16RYrWR8flgxA2r9BGMRJA+HbMZnSkg9/qdZabc+Iq1s0o59ucjrdD/Eto=
-X-Received: by 2002:a6b:5106:: with SMTP id f6mr8539654iob.15.1559633105620;
- Tue, 04 Jun 2019 00:25:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
- <20190603164206.GB29719@infradead.org> <20190603235610.GB29018@iweiny-DESK2.sc.intel.com>
- <20190604070808.GA28858@infradead.org>
-In-Reply-To: <20190604070808.GA28858@infradead.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=f6lqyr2BfengWxFqHdlTowTllezFlrs3heXkz9HMYTU=;
+        b=BQivyi0hn/2wnbcTz/3MK8Lez4iQTuhez/0DjhCMB5UapZ1ZPnkGK3ltu7t8wjjxpa
+         R29T4CepnrVCXMdKE46Ynn5fofLjH7ZsfPR/WSk1EgKkZJT+nziIMBRH9Agcuiit3P4A
+         RJPKEi6WEeO4H7Kz/WaVRAZQww94pnV0RaZScqGgY7qigP3FAY682hcZYyB54QHC0hs+
+         eP22I0ER8w3fx3s+jmfCi/DQiO2s17YsEzwBrtidisk32Qn78OVoOTLFdhra0cZ2Xf+1
+         I3qecZP4ysBAThYXP3pr73meVkZ1xdHZ+nZPMFTSUVfq7CBUQClTtteIr/PV7yy94VLG
+         X7NQ==
+X-Gm-Message-State: APjAAAV4qYNxikkz27no4wfSPPAjX4BhnTnG0bhE7W7O4mr211ijWFQ7
+        7yo4PzPfi8BWUV+d9pim9XIFPGM=
+X-Google-Smtp-Source: APXvYqzqFwkFw17oWfgcJRnP/Byrcg8l33w6SlO+CnZNXQp16bR9IEbAVSoS/WbBu98ZS5c2itf2gA==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr33612048plc.272.1559633182666;
+        Tue, 04 Jun 2019 00:26:22 -0700 (PDT)
+Received: from mylaptop.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id q17sm25748582pfq.74.2019.06.04.00.26.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 00:26:22 -0700 (PDT)
 From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Tue, 4 Jun 2019 15:24:54 +0800
-Message-ID: <CAFgQCTtXQtL0DQdqQCUEKMjDYB-AFA0SsJsvcbhqUtNbiCu1Eg@mail.gmail.com>
-Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         John Hubbard <jhubbard@nvidia.com>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Keith Busch <keith.busch@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/gup: remove unnecessary check against CMA in __gup_longterm_locked()
+Date:   Tue,  4 Jun 2019 15:26:00 +0800
+Message-Id: <1559633160-14809-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 3:08 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Mon, Jun 03, 2019 at 04:56:10PM -0700, Ira Weiny wrote:
-> > On Mon, Jun 03, 2019 at 09:42:06AM -0700, Christoph Hellwig wrote:
-> > > > +#if defined(CONFIG_CMA)
-> > >
-> > > You can just use #ifdef here.
-> > >
-> > > > +static inline int reject_cma_pages(int nr_pinned, unsigned int gup_flags,
-> > > > + struct page **pages)
-> > >
-> > > Please use two instead of one tab to indent the continuing line of
-> > > a function declaration.
-> > >
-> > > > +{
-> > > > + if (unlikely(gup_flags & FOLL_LONGTERM)) {
-> > >
-> > > IMHO it would be a little nicer if we could move this into the caller.
-> >
-> > FWIW we already had this discussion and thought it better to put this here.
-> >
-> > https://lkml.org/lkml/2019/5/30/1565
->
-> I don't see any discussion like this.  FYI, this is what I mean,
-> code might be easier than words:
->
->
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097cf9e4..62d770b18e2c 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2197,6 +2197,27 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
->         return ret;
->  }
->
-> +#ifdef CONFIG_CMA
-> +static int reject_cma_pages(struct page **pages, int nr_pinned)
-> +{
-> +       int i = 0;
-> +
-> +       for (i = 0; i < nr_pinned; i++)
-> +               if (is_migrate_cma_page(pages[i])) {
-> +                       put_user_pages(pages + i, nr_pinned - i);
-> +                       return i;
-> +               }
-> +       }
-> +
-> +       return nr_pinned;
-> +}
-> +#else
-> +static inline int reject_cma_pages(struct page **pages, int nr_pinned)
-> +{
-> +       return nr_pinned;
-> +}
-> +#endif /* CONFIG_CMA */
-> +
->  /**
->   * get_user_pages_fast() - pin user pages in memory
->   * @start:     starting user address
-> @@ -2237,6 +2258,9 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->                 ret = nr;
->         }
->
-> +       if (nr && unlikely(gup_flags & FOLL_LONGTERM))
-> +               nr = reject_cma_pages(pages, nr);
-> +
-Yeah. Looks better to keep reject_cma_pages() away from gup flags.
+The PF_MEMALLOC_NOCMA is set by memalloc_nocma_save(), which is finally
+cast to ~_GFP_MOVABLE.  So __get_user_pages_locked() will get pages from
+non CMA area and pin them.  There is no need to
+check_and_migrate_cma_pages().
 
->         if (nr < nr_pages) {
->                 /* Try to get the remaining pages with get_user_pages */
->                 start += nr << PAGE_SHIFT;
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/gup.c | 146 ---------------------------------------------------------------
+ 1 file changed, 146 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index f173fcb..9d931d1 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1275,149 +1275,6 @@ static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
+ 	return false;
+ }
+ 
+-#ifdef CONFIG_CMA
+-static struct page *new_non_cma_page(struct page *page, unsigned long private)
+-{
+-	/*
+-	 * We want to make sure we allocate the new page from the same node
+-	 * as the source page.
+-	 */
+-	int nid = page_to_nid(page);
+-	/*
+-	 * Trying to allocate a page for migration. Ignore allocation
+-	 * failure warnings. We don't force __GFP_THISNODE here because
+-	 * this node here is the node where we have CMA reservation and
+-	 * in some case these nodes will have really less non movable
+-	 * allocation memory.
+-	 */
+-	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
+-
+-	if (PageHighMem(page))
+-		gfp_mask |= __GFP_HIGHMEM;
+-
+-#ifdef CONFIG_HUGETLB_PAGE
+-	if (PageHuge(page)) {
+-		struct hstate *h = page_hstate(page);
+-		/*
+-		 * We don't want to dequeue from the pool because pool pages will
+-		 * mostly be from the CMA region.
+-		 */
+-		return alloc_migrate_huge_page(h, gfp_mask, nid, NULL);
+-	}
+-#endif
+-	if (PageTransHuge(page)) {
+-		struct page *thp;
+-		/*
+-		 * ignore allocation failure warnings
+-		 */
+-		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
+-
+-		/*
+-		 * Remove the movable mask so that we don't allocate from
+-		 * CMA area again.
+-		 */
+-		thp_gfpmask &= ~__GFP_MOVABLE;
+-		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
+-		if (!thp)
+-			return NULL;
+-		prep_transhuge_page(thp);
+-		return thp;
+-	}
+-
+-	return __alloc_pages_node(nid, gfp_mask, 0);
+-}
+-
+-static long check_and_migrate_cma_pages(struct task_struct *tsk,
+-					struct mm_struct *mm,
+-					unsigned long start,
+-					unsigned long nr_pages,
+-					struct page **pages,
+-					struct vm_area_struct **vmas,
+-					unsigned int gup_flags)
+-{
+-	long i;
+-	bool drain_allow = true;
+-	bool migrate_allow = true;
+-	LIST_HEAD(cma_page_list);
+-
+-check_again:
+-	for (i = 0; i < nr_pages; i++) {
+-		/*
+-		 * If we get a page from the CMA zone, since we are going to
+-		 * be pinning these entries, we might as well move them out
+-		 * of the CMA zone if possible.
+-		 */
+-		if (is_migrate_cma_page(pages[i])) {
+-
+-			struct page *head = compound_head(pages[i]);
+-
+-			if (PageHuge(head)) {
+-				isolate_huge_page(head, &cma_page_list);
+-			} else {
+-				if (!PageLRU(head) && drain_allow) {
+-					lru_add_drain_all();
+-					drain_allow = false;
+-				}
+-
+-				if (!isolate_lru_page(head)) {
+-					list_add_tail(&head->lru, &cma_page_list);
+-					mod_node_page_state(page_pgdat(head),
+-							    NR_ISOLATED_ANON +
+-							    page_is_file_cache(head),
+-							    hpage_nr_pages(head));
+-				}
+-			}
+-		}
+-	}
+-
+-	if (!list_empty(&cma_page_list)) {
+-		/*
+-		 * drop the above get_user_pages reference.
+-		 */
+-		for (i = 0; i < nr_pages; i++)
+-			put_page(pages[i]);
+-
+-		if (migrate_pages(&cma_page_list, new_non_cma_page,
+-				  NULL, 0, MIGRATE_SYNC, MR_CONTIG_RANGE)) {
+-			/*
+-			 * some of the pages failed migration. Do get_user_pages
+-			 * without migration.
+-			 */
+-			migrate_allow = false;
+-
+-			if (!list_empty(&cma_page_list))
+-				putback_movable_pages(&cma_page_list);
+-		}
+-		/*
+-		 * We did migrate all the pages, Try to get the page references
+-		 * again migrating any new CMA pages which we failed to isolate
+-		 * earlier.
+-		 */
+-		nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
+-						   pages, vmas, NULL,
+-						   gup_flags);
+-
+-		if ((nr_pages > 0) && migrate_allow) {
+-			drain_allow = true;
+-			goto check_again;
+-		}
+-	}
+-
+-	return nr_pages;
+-}
+-#else
+-static long check_and_migrate_cma_pages(struct task_struct *tsk,
+-					struct mm_struct *mm,
+-					unsigned long start,
+-					unsigned long nr_pages,
+-					struct page **pages,
+-					struct vm_area_struct **vmas,
+-					unsigned int gup_flags)
+-{
+-	return nr_pages;
+-}
+-#endif
+-
+ /*
+  * __gup_longterm_locked() is a wrapper for __get_user_pages_locked which
+  * allows us to process the FOLL_LONGTERM flag.
+@@ -1462,9 +1319,6 @@ static long __gup_longterm_locked(struct task_struct *tsk,
+ 			rc = -EOPNOTSUPP;
+ 			goto out;
+ 		}
+-
+-		rc = check_and_migrate_cma_pages(tsk, mm, start, rc, pages,
+-						 vmas_tmp, gup_flags);
+ 	}
+ 
+ out:
+-- 
+2.7.5
+
