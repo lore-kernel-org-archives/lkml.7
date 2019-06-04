@@ -2,200 +2,95 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF01BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39DDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780882070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559680352;
-	bh=/AqGiZDSEw4WYJPXkLsV5qAXCrwMCotDuhGsf4zvuCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pGPlOgnXfkN8l1KxeCWcKYOISWuaVWELMf8M+CYspMVKD+AnnzE55MWPnsOhKX4U+
-	 jXTVjp8I0F+SXmSeocesf82ljrc5RTu+Fzkc74Kqv7x0Hc7bkYMHTWeQu3lJT8P0Ar
-	 X4GDhBejikhK3Zmq4OOY55rPlpkLAH5zjkQPvHK8=
+	by mail.kernel.org (Postfix) with ESMTP id A97192070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZ16VgBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfFDUc1 (ORCPT
+        id S1726532AbfFDUdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbfFDUcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:32:24 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A842070B;
-        Tue,  4 Jun 2019 20:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559680011;
-        bh=/AqGiZDSEw4WYJPXkLsV5qAXCrwMCotDuhGsf4zvuCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pokyw4qBpjQn4MzvAhuN6BHrC10UueaDCimFSZNh8SNIadcM8xlChWRwa/QoQIpTK
-         QC4EuJ3iVx+GZKfzuqTTfHp4LIabb94QKzdaikpaMTH3dNttmhZdIF0ETxfVf4uwXq
-         C/4ZSc2bhCFIG1th7FFi+HfYl1OnWpmzOVLxXkTI=
-Date:   Tue, 4 Jun 2019 15:26:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     mj@ucw.cz, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Add PCIe 5.0 data rate (32 GT/s) support
-Message-ID: <20190604202648.GC84290@google.com>
-References: <92365e3caf0fc559f9ab14bcd053bfc92d4f661c.1559664969.git.gustavo.pimentel@synopsys.com>
+        Tue, 4 Jun 2019 16:33:52 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39638 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfFDUdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:33:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 196so11021812pgc.6;
+        Tue, 04 Jun 2019 13:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hXC/2/MzxNes+DPxbYu8rbPijB+wJo91rnKEeiN64qk=;
+        b=jZ16VgBpozscYLlEYideku+hB2+dcvvqT6XGssHSIMyc59YrL5efsBqsG9o/QEkvhX
+         mtqzboXa6Z3zBHMrXPZqyemXpN2lvS7+OKt0gXtDZ/c3VlwH4x0CrvjNrdoPPmX9RZqS
+         cIH/JTbRmemcxAfKkBAkcr0aC2a2JJQBNuTWi50YT5CrPb49N7ywI5nmxNYXCSw8f1CU
+         2jy1EPsM+EiFqGeB/WPnBAbxpfjb7N7jjNfnOQ+WhitHU3kH+S1sycBqD4kggB4GM4rO
+         jE/xU32dSVzvJhZHxeP6N+8H1YbP04ADvoagpyeZNf0NqZMO61GgG1iL6c0JDTcDwf/+
+         JRdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hXC/2/MzxNes+DPxbYu8rbPijB+wJo91rnKEeiN64qk=;
+        b=QOdBmPItKLZPRqquw1MCiJAvSqfE6Z/rGIo7a1VKlMM+AJqeMjzGGkmmPOoX8M8T6r
+         6rhSSwzrOPp8fq5705ea1lMzWnz/yiVKRacGB67bLlHeVot7RTjNLWDk25W1shFJcERF
+         JIzRKHqWRIR/0JVQC60aXDLwmlm0N+WoQ5FWkkmYjrGp7WmWNJZ3nxxalxEq/Wds39bK
+         CyicFg1twNPriUWEGCBMjIhHEE2fbJITsSlZ/70oc8vHl/RSOKQD9E47nNgO6k+gVPlH
+         rwW4o3JLuWe75V8FTvkXXQAyTYv4n8pP7/Q+rkdi743dAXvLgKhWsRLa1mId/67sFs9u
+         ze0g==
+X-Gm-Message-State: APjAAAUV1ACKbAg21n/6weGaq5mnAjoNw20wBkQzeGdFk4/0NzoWYe8M
+        7MidmUlLMPB79/sxzrWgkjoZwhh1
+X-Google-Smtp-Source: APXvYqxaRIpajJebtbtLZuYPKStcI0FB7V8SRd7LI07Zm7jwcSGFPcTThJ8EMI7zM1D+TPoryWNngw==
+X-Received: by 2002:a17:90a:9f90:: with SMTP id o16mr40136106pjp.72.1559680431122;
+        Tue, 04 Jun 2019 13:33:51 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id m6sm20717993pgr.18.2019.06.04.13.33.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 13:33:50 -0700 (PDT)
+Subject: Re: [PATCH v3 net-next 05/17] net: dsa: sja1105: Reverse TPID and
+ TPID2
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
+        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190604170756.14338-1-olteanv@gmail.com>
+ <20190604170756.14338-6-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <d063b199-f807-330b-90ff-46240221bf30@gmail.com>
+Date:   Tue, 4 Jun 2019 13:33:49 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92365e3caf0fc559f9ab14bcd053bfc92d4f661c.1559664969.git.gustavo.pimentel@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190604170756.14338-6-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 06:24:43PM +0200, Gustavo Pimentel wrote:
-> PCIe 5.0 allows an effective 32.0 GT/s speed per lane.
+
+
+On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
+> From reading the P/Q/R/S user manual, it appears that TPID is used by
+> the switch for detecting S-tags and TPID2 for C-tags.  Their meaning is
+> not clear from the E/T manual.
 > 
-> Currently if you read a PCIe 5.0 EP link data rate through sysfs, the
-> resulting output will be "Unknown speed" instead of "32.0 GT/s" as we
-> would be expect.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
-Applied to pci/enumeration for v5.3, thanks!
 
-I reworded the commit log to emphasize that this only affects
-*decoding* of the new speed; the actual *support* for operating at this
-speed is in the hardware and needs no assistance from the OS.
-
-  PCI: Decode PCIe 32 GT/s link speed
-
-  PCIe r5.0, sec 7.5.3.18, defines a new 32.0 GT/s bit in the Supported Link
-  Speeds Vector of Link Capabilities 2.  Decode this new speed.  This does
-  not affect the speed of the link, which should be negotiated automatically
-  by the hardware; it only adds decoding when showing the speed to the user.
-
-  Previously, reading the speed of a link operating at this speed showed
-  "Unknown speed" instead of "32.0 GT/s".
-
-> ---
-> Changes:
-> v1 -> v2
->  - Rebase patch
-> 
->  drivers/pci/pci-sysfs.c       | 3 +++
->  drivers/pci/pci.c             | 4 +++-
->  drivers/pci/probe.c           | 2 +-
->  drivers/pci/slot.c            | 1 +
->  include/linux/pci.h           | 1 +
->  include/uapi/linux/pci_regs.h | 4 ++++
->  6 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d27475..d52d304 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -182,6 +182,9 @@ static ssize_t current_link_speed_show(struct device *dev,
->  		return -EINVAL;
->  
->  	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
-> +	case PCI_EXP_LNKSTA_CLS_32_0GB:
-> +		speed = "32 GT/s";
-> +		break;
->  	case PCI_EXP_LNKSTA_CLS_16_0GB:
->  		speed = "16 GT/s";
->  		break;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 8abc843..4729a7c 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5621,7 +5621,9 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
->  	 */
->  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
->  	if (lnkcap2) { /* PCIe r3.0-compliant */
-> -		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
-> +		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
-> +			return PCIE_SPEED_32_0GT;
-> +		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
->  			return PCIE_SPEED_16_0GT;
->  		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
->  			return PCIE_SPEED_8_0GT;
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 0e8e2c1..c5f27c8 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -668,7 +668,7 @@ const unsigned char pcie_link_speed[] = {
->  	PCIE_SPEED_5_0GT,		/* 2 */
->  	PCIE_SPEED_8_0GT,		/* 3 */
->  	PCIE_SPEED_16_0GT,		/* 4 */
-> -	PCI_SPEED_UNKNOWN,		/* 5 */
-> +	PCIE_SPEED_32_0GT,		/* 5 */
->  	PCI_SPEED_UNKNOWN,		/* 6 */
->  	PCI_SPEED_UNKNOWN,		/* 7 */
->  	PCI_SPEED_UNKNOWN,		/* 8 */
-> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-> index f4d92b1..ae4aa0e 100644
-> --- a/drivers/pci/slot.c
-> +++ b/drivers/pci/slot.c
-> @@ -75,6 +75,7 @@ static const char *pci_bus_speed_strings[] = {
->  	"5.0 GT/s PCIe",	/* 0x15 */
->  	"8.0 GT/s PCIe",	/* 0x16 */
->  	"16.0 GT/s PCIe",	/* 0x17 */
-> +	"32.0 GT/s PCIe",	/* 0x18 */
->  };
->  
->  static ssize_t bus_speed_read(enum pci_bus_speed speed, char *buf)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 4a5a84d..2173e6b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -258,6 +258,7 @@ enum pci_bus_speed {
->  	PCIE_SPEED_5_0GT		= 0x15,
->  	PCIE_SPEED_8_0GT		= 0x16,
->  	PCIE_SPEED_16_0GT		= 0x17,
-> +	PCIE_SPEED_32_0GT		= 0x18,
->  	PCI_SPEED_UNKNOWN		= 0xff,
->  };
->  
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 2716476..f28e562 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -528,6 +528,7 @@
->  #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
->  #define  PCI_EXP_LNKCAP_SLS_8_0GB 0x00000003 /* LNKCAP2 SLS Vector bit 2 */
->  #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
-> +#define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
->  #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
->  #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
->  #define  PCI_EXP_LNKCAP_L0SEL	0x00007000 /* L0s Exit Latency */
-> @@ -556,6 +557,7 @@
->  #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
->  #define  PCI_EXP_LNKSTA_CLS_8_0GB 0x0003 /* Current Link Speed 8.0GT/s */
->  #define  PCI_EXP_LNKSTA_CLS_16_0GB 0x0004 /* Current Link Speed 16.0GT/s */
-> +#define  PCI_EXP_LNKSTA_CLS_32_0GB 0x0005 /* Current Link Speed 32.0GT/s */
->  #define  PCI_EXP_LNKSTA_NLW	0x03f0	/* Negotiated Link Width */
->  #define  PCI_EXP_LNKSTA_NLW_X1	0x0010	/* Current Link Width x1 */
->  #define  PCI_EXP_LNKSTA_NLW_X2	0x0020	/* Current Link Width x2 */
-> @@ -661,6 +663,7 @@
->  #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
->  #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
->  #define  PCI_EXP_LNKCAP2_SLS_16_0GB	0x00000010 /* Supported Speed 16GT/s */
-> +#define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
->  #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
->  #define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
->  #define  PCI_EXP_LNKCTL2_TLS		0x000f
-> @@ -668,6 +671,7 @@
->  #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
->  #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
->  #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
-> +#define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
->  #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
->  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
->  #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
