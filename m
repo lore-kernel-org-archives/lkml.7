@@ -2,101 +2,156 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196EDC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC28C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26572070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD05207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ge1KY/Qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFDUMd (ORCPT
+        id S1726642AbfFDUN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:12:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:65370 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfFDUMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:12:32 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 13:12:32 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2019 13:12:32 -0700
-Date:   Tue, 4 Jun 2019 13:12:32 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
-        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>
-Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190604201232.GA7775@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
- <20190422215831.GL1236@linux.intel.com>
- <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
- <20190424002653.GB14422@linux.intel.com>
+        Tue, 4 Jun 2019 16:13:29 -0400
+Received: from mail-eopbgr50050.outbound.protection.outlook.com ([40.107.5.50]:38629
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbfFDUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:13:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cQgKmCxWL5uhQ45PzO7xtWZM46pb7Q/3ek6oP6HpdLE=;
+ b=Ge1KY/QopbO+9dx3fpfw4kheoxlYFGetUaPH6en5wddTmcGTHqfRyHqhkzzlE4SGEtaa5DitdxkNdLyjpytRNhpCj2rl+WAkUEbI8YLgwL37LO5w2fJWKz9W+NGceTCsW/n3SeO/gxZTGn8MTTuYjoxWQVWnw0QTWHMAKJSdPv8=
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
+ VI1PR04MB5919.eurprd04.prod.outlook.com (20.178.205.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Tue, 4 Jun 2019 20:13:18 +0000
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::9577:379c:2078:19a1]) by VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::9577:379c:2078:19a1%7]) with mapi id 15.20.1965.011; Tue, 4 Jun 2019
+ 20:13:18 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Patrick Titiano <ptitiano@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Emilio Lopez <emilio@elopez.com.ar>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Zening Wang <zening.wang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 0/3] Add support of busfreq
+Thread-Topic: [RFC PATCH 0/3] Add support of busfreq
+Thread-Index: AQHU2dO+g7FtRU5+MUaLzLMJn01eLA==
+Date:   Tue, 4 Jun 2019 20:13:18 +0000
+Message-ID: <VI1PR04MB5055E9AB9BD3D68BB6C1F6C2EE150@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190313193408.23740-1-abailon@baylibre.com>
+ <CAEG3pNA+U1tw4sWq9i2cTni6QKQkLyd3qyZXd2i8M7WFDF4ZsQ@mail.gmail.com>
+ <8af96425-a6f5-0114-7abb-c2a67b952e1b@baylibre.com>
+ <AM0PR04MB643434FB6A26B4D70F52F350EE080@AM0PR04MB6434.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39167B9EAE9A741AB0F20E30F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fc6a45d7-1d39-4d95-c153-08d6e92915a8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5919;
+x-ms-traffictypediagnostic: VI1PR04MB5919:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VI1PR04MB59193C94A656BCAFBD65F5A3EE150@VI1PR04MB5919.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(396003)(39860400002)(366004)(199004)(189003)(52084003)(5660300002)(6436002)(486006)(6506007)(53546011)(110136005)(54906003)(74316002)(33656002)(44832011)(7696005)(7416002)(476003)(186003)(6306002)(71200400001)(71190400001)(55016002)(26005)(9686003)(66946007)(73956011)(102836004)(66556008)(76116006)(446003)(64756008)(66446008)(66476007)(52536014)(91956017)(76176011)(3846002)(2906002)(68736007)(316002)(7736002)(14444005)(66066001)(256004)(6116002)(478600001)(305945005)(966005)(6246003)(4326008)(8936002)(53936002)(229853002)(25786009)(81156014)(81166006)(14454004)(86362001)(8676002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5919;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7OLi5rOxRkW0300175HB9h8BZ5hRv16J792FSldcyWlvMol3t6WpiUHs36sfW5JIxJHE/29sM0upHznrxcuSWVuRXPGBeyR3dyR3zTiE2c/Nlz/aOKtokL3ZQ/wEykn342jZIPGLH8pRUv9VodSjjdspHjwh16Ikb7JFU58OEgY+fV19kVDZ3+/IKa4RzIJ3hwU0esnB8IVmf/xGqVtHrZ/xbS02Ljy2TDgTfzgNAh28PdDtT1yM0BeuVMGEKaxUotnGHIeJ/60XdVyt+TrBOibWVbuEzucUkiSY9livj83VohG5HvUVUT/VKNDQG9QKRdNaX0E0DryGTQvtRqL/W29P0ZEs+J8yLJReIXaiDh5mlH6mVTfvUzKmPoCI2FmnhYeAT7t5YNr1t39bfGF9+wrPJL2ekzBNjcmHFwHnVKU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424002653.GB14422@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc6a45d7-1d39-4d95-c153-08d6e92915a8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 20:13:18.4216
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5919
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 05:26:53PM -0700, Sean Christopherson wrote:
-> On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
-> > On 2019-04-22 14:58, Sean Christopherson wrote:
-> > >Where do we stand on removing the ACPI and platform_driver dependencies?
-> > >Can we get rid of them sooner rather than later?
-> > 
-> > You know my position on this...
-> > https://www.spinics.net/lists/linux-sgx/msg00624.html . I don't really have
-> > any new arguments.
-> > 
-> > Considering the amount of planned changes for the driver post-merge, I think
-> > it's crucial that the driver part can be swapped out with alternative
-> > implementations.
-> 
-> This gets far outside of my area of expertise as I think this is more of
-> a policy question as opposed to a technical question, e.g. do we export
-> function simply to allow out-of-tree alternatives.
-> 
-> > >Now that the core SGX code is approaching stability, I'd like to start
-> > >sending RFCs for the EPC virtualization and KVM bits to hash out that side
-> > >of things.  The ACPI crud is the last chunk of code that would require
-> > >non-trivial changes to the core SGX code for the proposed virtualization
-> > >implementation.  I'd strongly prefer to get it out of the way before
-> > >sending the KVM RFCs.
-> > 
-> > What kind of changes? Wouldn't KVM just be another consumer of the same API
-> > used by the driver?
-> 
-> Nope, userspace "only" needs to be able to mmap() arbitrary chunks of EPC.
-> Except for EPC management, which is already in built into the kernel, the
-> EPC virtualization code has effectively zero overlap with the driver.  Of
-> course this is all technically speculative since none of this is upstream...
-
-Jarkko, can you weigh in with your thoughts on the ACPI stuff?
+On 6/4/2019 11:44 AM, Anson Huang wrote:=0A=
+>>>>> As exemple, this series implements busfreq for i.MX8MM whose=0A=
+>>>>> upstreaming is in progress. Because this relies on ATF to do the=0A=
+>>>>> frequency scaling, it won't be hard make it work.=0A=
+> =0A=
+> I have similar question as previous reviewer, is there any branch that we=
+ can test=0A=
+> this series?=0A=
+=0A=
+I've been looking at this and pushed a fixed-up functional variant to my =
+=0A=
+personal github:=0A=
+=0A=
+     https://github.com/cdleonard/linux/commits/next_imx8mm_busfreq=0A=
+=0A=
+It builds and probes and switches DRAM freq between low and high based =0A=
+on whether ethernet is down or up (for testing purposes). The pile of =0A=
+out-of-tree patches required to get this work is quite small.=0A=
+=0A=
+The DRAM freq switch is done via a clk wrapper previously sent as RFC:=0A=
+=0A=
+     https://patchwork.kernel.org/patch/10968303/=0A=
+=0A=
+That part needs more work but it could serve as a neat encapsulation =0A=
+similar to imx_cpu clk used for cpufreq-dt.=0A=
+=0A=
+> And, from the patch, it has multiple levels description of fabric arch, w=
+hile we ONLY=0A=
+> intend to scale "bus" frequency per devices' request, here "bus" includes=
+ DRAM, NOC and=0A=
+> AHB, AXI, should we make it more flatter, such as just a virtual fabric a=
+s a single provider, and then=0A=
+> all other devices as nodes under this provider?=0A=
+=0A=
+The imx8mm interconnect bindings describe many bus endpoints but all =0A=
+requests are aggregated to a single platform-level OPP which is =0A=
+equivalent to "low/audio/high mode" from NXP tree.=0A=
+=0A=
+It might be better to associate clks to several ICC nodes and this way =0A=
+scale NOC and DRAM separately? As far as I understand an interconnect =0A=
+provider is free to decide on granularity.=0A=
+=0A=
+As a wilder idea it might even be possible to use a stanard =0A=
+"devfreq-with-perfmon" for DDRC and have interconnect request a min freq =
+=0A=
+to that instead of doing clk_set_rate on dram directly. That could bring =
+=0A=
+features from both worlds, scaling both proactively and reactively.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
