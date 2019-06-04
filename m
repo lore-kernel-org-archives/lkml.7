@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF8BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E7FC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C5524A1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1190024A1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfFDK4Y (ORCPT
+        id S1727537AbfFDK4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:56:24 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:52391 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726877AbfFDK4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 06:56:12 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07489662|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.122591-0.00828454-0.869125;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.EhJB.ip_1559645769;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EhJB.ip_1559645769)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Tue, 04 Jun 2019 18:56:09 +0800
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:41233 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727038AbfFDK4I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:56:08 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07446621|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.72441-0.0119977-0.263592;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.EhJUzkJ_1559645765;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EhJUzkJ_1559645765)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Tue, 04 Jun 2019 18:56:05 +0800
 From:   Mao Han <han_mao@c-sky.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
         Guo Ren <guoren@kernel.org>
-Subject: [PATCH V5 6/6] csky: Fix perf record in kernel/user space
-Date:   Tue,  4 Jun 2019 18:54:49 +0800
-Message-Id: <210ca538c85e6f1b9f1539fd9f69cc59d046dc11.1559644961.git.han_mao@c-sky.com>
+Subject: [PATCH V5 1/6] csky: Init pmu as a device
+Date:   Tue,  4 Jun 2019 18:54:44 +0800
+Message-Id: <06bdeb08d3d1240900c37a83c2c5dfa131f61554.1559644961.git.han_mao@c-sky.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1559644961.git.han_mao@c-sky.com>
 References: <cover.1559644961.git.han_mao@c-sky.com>
@@ -42,76 +42,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-csky_pmu_event_init is called several times during the perf record
-initialzation. After configure the event counter in either kernel
-space or user space, csky_pmu_event_init is called twice with no
-attr specified. Configuration will be overwritten with sampling in
-both kernel space and user space. --all-kernel/--all-user is
-useless without this patch applied.
+This patch change the csky pmu initialization from arch init to
+device init. The pmu can be configued with information from
+device tree(pmu device name, irq number and etc.).
 
 Signed-off-by: Mao Han <han_mao@c-sky.com>
 Cc: Guo Ren <guoren@kernel.org>
-Cc: linux-csky@vger.kernel.org
 ---
- arch/csky/kernel/perf_event.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ arch/csky/kernel/perf_event.c | 50 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
 diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
-index 499427e..13a254e 100644
+index 376c972..2282554 100644
 --- a/arch/csky/kernel/perf_event.c
 +++ b/arch/csky/kernel/perf_event.c
-@@ -976,15 +976,6 @@ static int csky_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	int ret;
- 
--	if (event->attr.exclude_user)
--		csky_pmu.hpcr = BIT(2);
--	else if (event->attr.exclude_kernel)
--		csky_pmu.hpcr = BIT(3);
--	else
--		csky_pmu.hpcr = BIT(2) | BIT(3);
--
--	csky_pmu.hpcr |= BIT(1) | BIT(0);
--
- 	switch (event->attr.type) {
- 	case PERF_TYPE_HARDWARE:
- 		if (event->attr.config >= PERF_COUNT_HW_MAX)
-@@ -993,21 +984,32 @@ static int csky_pmu_event_init(struct perf_event *event)
- 		if (ret == HW_OP_UNSUPPORTED)
- 			return -ENOENT;
- 		hwc->idx = ret;
--		return 0;
-+		break;
- 	case PERF_TYPE_HW_CACHE:
- 		ret = csky_pmu_cache_event(event->attr.config);
- 		if (ret == CACHE_OP_UNSUPPORTED)
- 			return -ENOENT;
- 		hwc->idx = ret;
--		return 0;
-+		break;
- 	case PERF_TYPE_RAW:
- 		if (hw_raw_read_mapping[event->attr.config] == NULL)
- 			return -ENOENT;
- 		hwc->idx = event->attr.config;
--		return 0;
-+		break;
- 	default:
- 		return -ENOENT;
- 	}
-+
-+	if (event->attr.exclude_user)
-+		csky_pmu.hpcr = BIT(2);
-+	else if (event->attr.exclude_kernel)
-+		csky_pmu.hpcr = BIT(3);
-+	else
-+		csky_pmu.hpcr = BIT(2) | BIT(3);
-+
-+	csky_pmu.hpcr |= BIT(1) | BIT(0);
-+
-+	return 0;
+@@ -949,7 +949,7 @@ static int csky_pmu_add(struct perf_event *event, int flags)
+ 	return 0;
  }
  
- /* starts all counters */
+-int __init init_hw_perf_events(void)
++int init_hw_perf_events(void)
+ {
+ 	csky_pmu.pmu = (struct pmu) {
+ 		.pmu_enable	= csky_pmu_enable,
+@@ -1028,4 +1028,50 @@ int __init init_hw_perf_events(void)
+ 
+ 	return perf_pmu_register(&csky_pmu.pmu, "cpu", PERF_TYPE_RAW);
+ }
+-arch_initcall(init_hw_perf_events);
++
++int csky_pmu_device_probe(struct platform_device *pdev,
++			  const struct of_device_id *of_table)
++{
++	int ret;
++
++	ret = init_hw_perf_events();
++	if (ret) {
++		pr_notice("[perf] failed to probe PMU!\n");
++		return ret;
++	}
++
++	return ret;
++}
++
++const static struct of_device_id csky_pmu_of_device_ids[] = {
++	{.compatible = "csky,csky-pmu"},
++	{},
++};
++
++static int csky_pmu_dev_probe(struct platform_device *pdev)
++{
++	return csky_pmu_device_probe(pdev, csky_pmu_of_device_ids);
++}
++
++static struct platform_driver csky_pmu_driver = {
++	.driver = {
++		   .name = "csky-pmu",
++		   .of_match_table = csky_pmu_of_device_ids,
++		   },
++	.probe = csky_pmu_dev_probe,
++};
++
++static int __init csky_pmu_probe(void)
++{
++	int ret;
++
++	ret = platform_driver_register(&csky_pmu_driver);
++	if (ret)
++		pr_notice("[perf] PMU initialization failed\n");
++	else
++		pr_notice("[perf] PMU initialization done\n");
++
++	return ret;
++}
++
++device_initcall(csky_pmu_probe);
 -- 
 2.7.4
 
