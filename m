@@ -2,133 +2,72 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E53C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19925C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE972070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1352075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfFDTVX (ORCPT
+        id S1726474AbfFDTXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 15:21:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44130 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDTVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 15:21:23 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 7052C281D9F
-Message-ID: <9460817290d5846a34b81470b15ac36d88a08aad.camel@collabora.com>
-Subject: Re: [PATCH v12] dm: add support to directly boot to a mapped device
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Stephen Boyd <swboyd@chromium.org>, dm-devel@redhat.com
-Cc:     wad@chromium.org, keescook@chromium.org, snitzer@redhat.com,
-        linux-doc@vger.kernel.org, richard.weinberger@gmail.com,
-        linux-kernel@vger.kernel.org, linux-lvm@redhat.com,
-        enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
-Date:   Tue, 04 Jun 2019 16:21:10 -0300
-In-Reply-To: <d6b4fb26-9a1b-0acd-ce4a-e48322a17e7d@collabora.com>
-References: <20190221203334.24504-1-helen.koike@collabora.com>
-         <5cf5a724.1c69fb81.1e8f0.08fb@mx.google.com>
-         <d6b4fb26-9a1b-0acd-ce4a-e48322a17e7d@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Tue, 4 Jun 2019 15:23:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40972 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfFDTXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 15:23:51 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 12:23:49 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2019 12:23:45 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 9177E20BEB; Tue,  4 Jun 2019 22:23:44 +0300 (EEST)
+Date:   Tue, 4 Jun 2019 22:23:44 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
+References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Vishal,
 
-On Tue, 2019-06-04 at 14:38 -0300, Helen Koike wrote:
-> Hi Stephen,
-> 
-> On 6/3/19 8:02 PM, Stephen Boyd wrote:
-> > Quoting Helen Koike (2019-02-21 12:33:34)
-> > > Add a "create" module parameter, which allows device-mapper targets to be
-> > > configured at boot time. This enables early use of dm targets in the boot
-> > > process (as the root device or otherwise) without the need of an initramfs.
-> > > 
-> > > The syntax used in the boot param is based on the concise format from the
-> > > dmsetup tool to follow the rule of least surprise:
-> > > 
-> > >         sudo dmsetup table --concise /dev/mapper/lroot
-> > > 
-> > > Which is:
-> > >         dm-mod.create=<name>,<uuid>,<minor>,<flags>,<table>[,<table>+][;<name>,<uuid>,<minor>,<flags>,<table>[,<table>+]+]
-> > > 
-> > > Where,
-> > >         <name>          ::= The device name.
-> > >         <uuid>          ::= xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx | ""
-> > >         <minor>         ::= The device minor number | ""
-> > >         <flags>         ::= "ro" | "rw"
-> > >         <table>         ::= <start_sector> <num_sectors> <target_type> <target_args>
-> > >         <target_type>   ::= "verity" | "linear" | ...
-> > > 
-> > > For example, the following could be added in the boot parameters:
-> > > dm-mod.create="lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:32 0" root=/dev/dm-0
-> > > 
-> > > Only the targets that were tested are allowed and the ones that doesn't
-> > > change any block device when the dm is create as read-only. For example,
-> > > mirror and cache targets are not allowed. The rationale behind this is
-> > > that if the user makes a mistake, choosing the wrong device to be the
-> > > mirror or the cache can corrupt data.
-> > > 
-> > > The only targets allowed are:
-> > > * crypt
-> > > * delay
-> > > * linear
-> > > * snapshot-origin
-> > > * striped
-> > > * verity
-> > > 
-> > > Co-developed-by: Will Drewry <wad@chromium.org>
-> > > Co-developed-by: Kees Cook <keescook@chromium.org>
-> > > Co-developed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > 
-> > > ---
-> > > 
-> > 
-> > I'm trying to boot a mainline linux kernel on a chromeos device with dm
-> > verity and a USB stick but it's not working for me even with this patch.
-> > I've had to hack around two problems:
-> > 
-> >  1) rootwait isn't considered
-> > 
-> >  2) verity doesn't seem to accept UUID for <hash_dev> or <dev>
-> > 
-> > For the first problem, it happens every boot for me because I'm trying
-> > to boot off of a USB stick and it's behind a hub that takes a few
-> > seconds to enumerate. If I hack up the code to call dm_init_init() after
-> > the 'rootdelay' cmdline parameter is used then I can make this work. It
-> > would be much nicer if the whole mechanism didn't use a late initcall
-> > though. If it used a hook from prepare_namespace() and then looped
-> > waiting for devices to create when rootwait was specified it would work.
-> 
-> The patch was implemented with late initcall partially to be contained
-> in drivers/md/*, but to support rootwait, adding a hook from
-> prepare_namespace seems the way to go indeed.
-> 
+On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
 
-Thanks for bringing this up.
+> +Optional properties:
+> +--------------------
+> +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+> +  Without this property the driver won't be loaded as IP won't be able to generate
+> +  media bus format compliant stream output.
 
-Helen and I have been looking at this code, and we think it's possible
-to move things around and add some helpers, so we can implement rootwait
-behavior, without actually cluttering init/do_mounts.c.
+I think we previously concluded that the format will be just different in
+this case. So the description appears incorrect.
 
-And along the way, we might get the chance to clean-up this code even
-further.
-
-Regards,
-Eze
-
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
