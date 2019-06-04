@@ -2,177 +2,122 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DADCC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F5CC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3798123CBC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA5E23CCA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Imyztnv0"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gg+XXo5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfFDQSl (ORCPT
+        id S1728279AbfFDQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:18:41 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:6658 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbfFDQSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:18:41 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
-   d="scan'208";a="35533999"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Jun 2019 09:18:38 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 4 Jun 2019 09:18:37 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Tue, 4 Jun 2019 09:18:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3tI8LXi5R3L7VQnDezNvjooeBm3q62YSN/CRKjnfe4=;
- b=Imyztnv0YaM49ySTHizWxKmSKC1DXvAYzcYluxBdmyDi2F9UO3b7AE21Y/knd3AMX06uDWJX01QmEe6P4Nb/jMd2KzelsPt7Td3MfSNcGEHu3kaTBbmrY885hZcnEK6YdKhj4xSsqiEGESN1mXJ0SkbLaIl4d2+jYktkf70qp+A=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1583.namprd11.prod.outlook.com (10.172.53.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.20; Tue, 4 Jun 2019 16:18:34 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
- 16:18:34 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <sam@ravnborg.org>, <thierry.reding@gmail.com>
-CC:     <linux-pwm@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <daniel@ffwll.ch>,
-        <lee.jones@linaro.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaZgDjOAgCvdRQA=
-Date:   Tue, 4 Jun 2019 16:18:33 +0000
-Message-ID: <c361b013-2d98-76e3-d30f-cec83000933c@microchip.com>
-References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
- <20190507182713.GA16862@ravnborg.org>
-In-Reply-To: <20190507182713.GA16862@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0701CA0032.eurprd07.prod.outlook.com
- (2603:10a6:800:90::18) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190604191820598
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8622c385-bc4e-430f-465f-08d6e9084a4d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1583;
-x-ms-traffictypediagnostic: MWHPR11MB1583:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MWHPR11MB1583EDA94CA77947B5B5DB6B87150@MWHPR11MB1583.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0058ABBBC7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(199004)(189003)(52116002)(76176011)(316002)(66476007)(66556008)(64756008)(66446008)(5660300002)(446003)(26005)(486006)(66946007)(73956011)(2906002)(66066001)(2616005)(3846002)(31696002)(6506007)(386003)(7416002)(68736007)(6116002)(8676002)(86362001)(72206003)(81156014)(186003)(8936002)(81166006)(14444005)(476003)(305945005)(7736002)(478600001)(256004)(6436002)(229853002)(25786009)(14454004)(6512007)(6306002)(11346002)(53936002)(966005)(54906003)(110136005)(31686004)(6246003)(102836004)(99286004)(71190400001)(71200400001)(6486002)(4326008)(36756003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1583;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d3gRv7rqLimiMosEx4WSpSnFA41PAJYeK+DYVDlFUzW6TWXPYWQeHqf8u06t5qbCwdyLorTdFYBhtcQO2iU4I5XMNKub1DwRy4a2Jg7CMlaCb+iadRICGWcRB2UZaEcjXv8os7uvVLbIvE7HZBrUSFd6FFJoQGq8hVYUpkbsAt74V9XUzAQZCpl0HRRxSyf3ZTFH/XHSbUXkp7VSGLqH1i/FZstjBq6cviMMEwgGHj2HxcNeiRnrzqGQqE9xMXX7cwS762Pn4lr2mvGPoqJbDmXK2WLj8InOzaXc9K0kalOjm1IC+bD4S48EafdGx+e5mJru7tkLbCVQOfz0nrX/W33JO3nSPQR6mcB0aKryfdPNjDBTyX22veJgouT3ZCj9Qd0+wCJZznGYFID9REYiExpasWKHlCi9yAW4hKzQfao=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EDBCAD05C24604EBEFA9A6EEF02CDE8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 4 Jun 2019 12:21:47 -0400
+Received: from vps.xff.cz ([195.181.215.36]:36852 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728166AbfFDQVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:21:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559665305; bh=qm5r7h8IIEdRL40O9VMAH9oDefKlLBdaHOgDq3xcAx4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gg+XXo5YGTIbCkKbpbL3v8FG0/Jel8Q4iepzwyWg0wYkRjoNxyYP0/4SxXfYhN2yH
+         So04IwaJWADhd4PF9Ku/DQaA0uhU4TggtAkiHQvYXkgOb+zXVTzxsFa5xy2Acgzwf2
+         GpteETgWrKs2aV143FMJGHL+6CqDtmNnO5TXleg8=
+Date:   Tue, 4 Jun 2019 18:21:44 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [linux-sunxi] [PATCH v2] clk: sunxi-ng: sun50i-h6-r: Fix
+ incorrect W1 clock gate register
+Message-ID: <20190604162144.hba5bmkdnidco7pf@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190604154036.23211-1-megous@megous.com>
+ <CAJiuCcda0ZDDrbdOF7TpTeoUOgt7GeS6wcgy45DRCo_U2XX6bQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8622c385-bc4e-430f-465f-08d6e9084a4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 16:18:33.8565
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1583
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcda0ZDDrbdOF7TpTeoUOgt7GeS6wcgy45DRCo_U2XX6bQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FtLA0KDQpPbiAwNy4wNS4yMDE5IDIxOjI3LCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+IEV4
-dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IEhpIFRoaWVycnkuDQo+IA0KPj4gICBwd206IGF0bWVs
-LWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBXTQ0KPiBPSyB0byBh
-ZGQgdGhlICJwd206IGF0bWVsLWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENE
-QydzIFBXTSINCj4gcGF0Y2ggdmlhIGRybS1taXNjPw0KPiBUaGVuIHdlIGNhbiBhZGQgYWxsIDYg
-cGF0Y2hlcyBpbiBvbmUgZ28uDQoNClNpbmNlIHdlIGRvbid0IGhhdmUgYW4gYW5zd2VyIGZyb20g
-VGhpZXJyeSB0aWxsIG5vdywgZG8geW91IHRoaW5rIGl0IGNvdWxkDQpiZSBmZWFzaWJsZSB0byB0
-YWtlIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzPyBBZnRlciB0aGF0IEkN
-CndpbGwgcmUtc2VuZCB0aGUgUFdNIHBhdGNoIHRvIFBXTSBsaXN0Lg0KDQpUaGFuayB5b3UsDQpD
-bGF1ZGl1IEJlem5lYQ0KDQo+IA0KPiAJU2FtDQo+IA0KPiAoS2VwdCByZW1haW5pbmcgb2YgbWFp
-bCBmb3IgcmVmZXJlbmNlKQ0KPj4NCj4+IEhpLA0KPj4NCj4+IFRoZXNlIHBhdGNoZXMgYWRkcyBz
-dXBwb3J0IGZvciBTQU05WDYwJ3MgTENEIGNvbnRyb2xsZXIuDQo+Pg0KPj4gRmlyc3QgcGF0Y2hl
-cyBhZGQgb3B0aW9uIHRvIHNwZWNpZnkgaWYgY29udHJvbGxlciBjbG9jayBzb3VyY2UgaXMgZml4
-ZWQuDQo+PiBTZWNvbmQgcGF0Y2ggYXZvaWQgYSB2YXJpYWJsZSBpbml0aWFsaXphdGlvbiBpbiBh
-dG1lbF9obGNkY19jcnRjX21vZGVfc2V0X25vZmIoKS4NCj4+IFRoZSAzcmQgYWRkIGNvbXBhdGli
-bGVzIGluIHB3bS1hdG1lbC1obGNkYyBkcml2ZXIuDQo+PiBUaGUgNHRoIHBhdGNoIGVuYWJsZXMg
-c3lzX2NsayBpbiBwcm9iZSBzaW5jZSBTQU05WDYwIG5lZWRzIHRoaXMuDQo+PiBTcGVjaWZpYyBz
-dXBwb3J0IHdhcyBhZGRlZCBhbHNvIGluIHN1c3BlbmQvcmVzdW1lIGhvb2tzLg0KPj4gVGhlIDV0
-aCBwYXRjaCBhZGRzIFNBTTlYNjAncyBMQ0QgY29uZmlndXJhdGlvbiBhbmQgZW5hYmxlZCBpdC4N
-Cj4+DQo+PiBJIHRvb2sgdGhlIGNoYW5nZXMgb2YgdGhpcyBzZXJpZXMgYW5kIGludHJvZHVjZWQg
-YWxzbyBhIGZpeA0KPj4gKHRoaXMgaXMgdGhlIDZ0aCBwYXRjaCBpbiB0aGlzIHNlcmllcykgLSBp
-ZiB5b3Ugd2FudCB0byBzZW5kIGl0IHNlcGFyYXRlbHkNCj4+IEkgd291bGQgZ2xhZGx5IGRvIGl0
-Lg0KPj4NCj4+IEkgcmVzZW5kIHRoaXMgdG8gYWxzbyBpbmNsdWRlIExlZSBKb25lcyBmb3IgcHdt
-LWF0bWVsLWhsY2RjIGNoYW5nZXMuDQo+Pg0KPj4gVGhhbmsgeW91LA0KPj4gQ2xhdWRpdSBCZXpu
-ZWENCj4+DQo+PiBDaGFuZ2VzIGluIHYzOg0KPj4gLSBrZWVwIGNvbXBhdGlibGUgc3RyaW5nIG9u
-IHBhdGNoIDMvNiBvbiBhIHNpbmdsZSBsaW5lIChJIGtlZXAgaGVyZSBhIHRhYg0KPj4gICBpbiBm
-cm9udCBvZiAiLmNvbXBhdGlibGUiIHRvIGJlIGFsaWduZWQgd2l0aCB0aGUgcmVzdCBvZiB0aGUg
-Y29kZSBpbg0KPj4gICBhdG1lbF9obGNkY19kdF9pZHNbXSkNCj4+IC0gcGF0Y2hlcyA0LzcgYW5k
-IDMvNyBmcm9tIHYyIHdlcmUgYXBwbGllZCBzbyByZW1vdmUgdGhlbSBmcm9tIHRoaXMgdmVyc2lv
-bg0KPj4gLSBhZGQgYSBmaXggZm9yIGF0bWVsX2hsY2RjIChwYXRjaCA2LzYpDQo+Pg0KPj4gQ2hh
-bmdlcyBpbiB2MjoNCj4+IC0gdXNlICJ8IiBvcGVyYXRvciBpbiBwYXRjaCAxLzcgdG8gc2V0IEFU
-TUVMX0hMQ0RDX0NMS1NFTCBvbiBjZmcNCj4+IC0gY29sbGVjdCBBY2tlZC1ieSwgUmV2aWV3ZWQt
-YnkgdGFncw0KPj4NCj4+IENsYXVkaXUgQmV6bmVhICg0KToNCj4+ICAgZHJtOiBhdG1lbC1obGNk
-YzogYWRkIGNvbmZpZyBvcHRpb24gZm9yIGNsb2NrIHNlbGVjdGlvbg0KPj4gICBkcm06IGF0bWVs
-LWhsY2RjOiBhdm9pZCBpbml0aWFsaXppbmcgY2ZnIHdpdGggemVybw0KPj4gICBwd206IGF0bWVs
-LWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBXTQ0KPj4gICBkcm0v
-YXRtZWwtaGNsY2RjOiByZXZlcnQgc2hpZnQgYnkgOA0KPj4NCj4+IFNhbmRlZXAgU2hlcmlrZXIg
-TWFsbGlrYXJqdW4gKDIpOg0KPj4gICBkcm06IGF0bWVsLWhsY2RjOiBlbmFibGUgc3lzX2NsayBk
-dXJpbmcgaW5pdGFsaXphdGlvbi4NCj4+ICAgZHJtOiBhdG1lbC1obGNkYzogYWRkIHNhbTl4NjAg
-TENEIGNvbnRyb2xsZXINCj4+DQo+PiAgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVs
-X2hsY2RjX2NydGMuYyAgfCAgMTggKystLQ0KPj4gIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNk
-Yy9hdG1lbF9obGNkY19kYy5jICAgIHwgMTIwICsrKysrKysrKysrKysrKysrKysrKysrLQ0KPj4g
-IGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19kYy5oICAgIHwgICAyICsN
-Cj4+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfcGxhbmUuYyB8ICAg
-MiArLQ0KPj4gIGRyaXZlcnMvcHdtL3B3bS1hdG1lbC1obGNkYy5jICAgICAgICAgICAgICAgICAg
-IHwgICAxICsNCj4+ICA1IGZpbGVzIGNoYW5nZWQsIDEzMiBpbnNlcnRpb25zKCspLCAxMSBkZWxl
-dGlvbnMoLSkNCj4+DQo+PiAtLSANCj4+IDIuNy40DQo+Pg0KPj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QN
-Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4+IGh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsDQo+IA0KPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4g
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsDQo+IA0KPiANCg==
+Hi Clément,
+
+On Tue, Jun 04, 2019 at 06:14:15PM +0200, Clément Péron wrote:
+> Hi Ondrej,
+> 
+> On Tue, 4 Jun 2019 at 17:40, megous via linux-sunxi
+> <linux-sunxi@googlegroups.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > The current code defines W1 clock gate to be at 0x1cc, overlaying it
+> > with the IR gate.
+> >
+> > Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
+> > causing interrupt floods on H6 (because interrupt flags can't be cleared,
+> > due to IR module's bus being disabled).
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU")
+> > ---
+> >  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+> > index 27554eaf6929..8d05d4f1f8a1 100644
+> > --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+> > @@ -104,7 +104,7 @@ static SUNXI_CCU_GATE(r_apb2_i2c_clk,       "r-apb2-i2c",   "r-apb2",
+> >  static SUNXI_CCU_GATE(r_apb1_ir_clk,   "r-apb1-ir",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> >  static SUNXI_CCU_GATE(r_apb1_w1_clk,   "r-apb1-w1",    "r-apb1",
+> > -                     0x1cc, BIT(0), 0);
+> > +                     0x1ec, BIT(0), 0);
+> Just for information where did you find this information?
+> Using the vendor kernel or user manual?
+
+Informed guess. All gates and resets are in the same register. And
+you can see below that reset register for w1 is 0x1ec. (reset register
+for ir is 0x1cc)
+
+regards,
+	o.
+
+> Thanks,
+> Clément
+> 
+> >
+> >  /* Information of IR(RX) mod clock is gathered from BSP source code */
+> >  static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
+> > --
+> > 2.21.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190604154036.23211-1-megous%40megous.com.
+> > For more options, visit https://groups.google.com/d/optout.
