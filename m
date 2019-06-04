@@ -2,133 +2,178 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913BCC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E8FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7422E206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A55206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFDWKZ (ORCPT
+        id S1726559AbfFDWMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:10:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6264 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFDWKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:10:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 15:10:24 -0700
-X-ExtLoop1: 1
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 15:10:24 -0700
-Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 4 Jun 2019 15:10:23 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX162.amr.corp.intel.com ([169.254.3.190]) with mapi id 14.03.0415.000;
- Tue, 4 Jun 2019 15:10:24 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Stephen Smalley" <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED
- address
-Thread-Topic: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED
- address
-Thread-Index: AQHVGAkhOWaRiY3eFUikM4z1CKpVNqaL3IKAgACNcAD//6h8oA==
-Date:   Tue, 4 Jun 2019 22:10:22 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-3-sean.j.christopherson@intel.com>
- <20190604114951.GC30594@linux.intel.com>
- <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
-In-Reply-To: <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTViMzE3OTQtY2NkZi00ZWM4LWEzMTAtNmQyNWExNzc4MDRmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaXI3M1Jpa2o5dGpHbjhYR3NYd3FIM1pJQWhpamtWRytkQW1seTVnTWdpanpsQTZiendSOWRKcDhpMUVVXC9WdlgifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 4 Jun 2019 18:12:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:37910 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfFDWMG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 18:12:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id h4so8349302iol.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 15:12:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=4zrtG0XmRafv3j5Yib6bgh6/3I23mwuyh2DcSRuqNzk=;
+        b=d3rpC1Oy9RQtmOP9nk9OriRCNG0JVIpWrF26bdKalzpI6nWVogGXzQscj5rn4Uw68m
+         6gyDmyd6Eo9w1S3lWQgz8BXAlvbr/70Ff+ThOaTQYDfRzrV5XOFE7AGB//KSGOv7eIhC
+         /4AX4IpUfy7j5lTw0rDzLQAJRsJwbS1oc0hKs4en9hJQebPPfdDVHvboDeBiJrJm/XhX
+         34GKIMZgBOyIRv2jUhz3nmkRs0cPyaZeR7q/gf/8SWeuiVACNQbzkB7FAFQ/f0eJ4doX
+         exB1YyC8Hbt9Txq8Ao9AvQzjVIJzSBnKZB/W2vbFl9fXUjzufWFt/WptY9EqPSS9eSyK
+         QvuA==
+X-Gm-Message-State: APjAAAVIccjhOiv1txscX5fBevEnyjbzTU3jtrrS7H9b5PSudNwfjef0
+        hNN4jMXhMx9uoFM1thDiypYx1youZq34K3nmgcTABgU18poy
+X-Google-Smtp-Source: APXvYqyNJ+gd5jysKsWYyTwYnobocMOkgWWRkeyweRn8et0HytOaI9WhC680fGF93uhAY2xSNGZ1sHTsisk9c/7/ehL/n8R/wmnL
 MIME-Version: 1.0
+X-Received: by 2002:a5d:81c6:: with SMTP id t6mr6110231iol.86.1559686325550;
+ Tue, 04 Jun 2019 15:12:05 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 15:12:05 -0700
+In-Reply-To: <00000000000097025d058a7fd785@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000065453c058a86c539@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in css_task_iter_advance
+From:   syzbot <syzbot+9343b7623bc03dc680c1@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
+        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1zZ3gtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtc2d4
-LQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBBbmR5IEx1dG9taXJza2kN
-Cj4gU2VudDogVHVlc2RheSwgSnVuZSAwNCwgMjAxOSAxOjE2IFBNDQo+IA0KPiBPbiBUdWUsIEp1
-biA0LCAyMDE5IGF0IDQ6NTAgQU0gSmFya2tvIFNha2tpbmVuDQo+IDxqYXJra28uc2Fra2luZW5A
-bGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIEZyaSwgTWF5IDMxLCAyMDE5IGF0
-IDA0OjMxOjUyUE0gLTA3MDAsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+ID4gPiBTR1gg
-ZW5jbGF2ZXMgaGF2ZSBhbiBhc3NvY2lhdGVkIEVuY2xhdmUgTGluZWFyIFJhbmdlIChFTFJBTkdF
-KSB0aGF0DQo+ID4gPiBpcyB0cmFja2VkIGFuZCBlbmZvcmNlZCBieSB0aGUgQ1BVIHVzaW5nIGEg
-YmFzZSttYXNrIGFwcHJvYWNoLA0KPiA+ID4gc2ltaWxhciB0byBob3cgaGFyZHdhcmUgcmFuZ2Ug
-cmVnaXN0ZXJzIHN1Y2ggYXMgdGhlIHZhcmlhYmxlIE1UUlJzLg0KPiA+ID4gQXMgYSByZXN1bHQs
-IHRoZSBFTFJBTkdFIG11c3QgYmUgbmF0dXJhbGx5IHNpemVkIGFuZCBhbGlnbmVkLg0KPiA+ID4N
-Cj4gPiA+IFRvIHJlZHVjZSBib2lsZXJwbGF0ZSBjb2RlIHRoYXQgd291bGQgYmUgbmVlZGVkIGlu
-IGV2ZXJ5IHVzZXJzcGFjZQ0KPiA+ID4gZW5jbGF2ZSBsb2FkZXIsIHRoZSBTR1ggZHJpdmVyIG5h
-dHVyYWxseSBhbGlnbnMgdGhlIG1tYXAoKSBhZGRyZXNzDQo+ID4gPiBhbmQgYWxzbyByZXF1aXJl
-cyB0aGUgcmFuZ2UgdG8gYmUgbmF0dXJhbGx5IHNpemVkLiAgVW5mb3J0dW5hdGVseSwNCj4gPiA+
-IFNHWCBmYWlscyB0byBncmFudCBhIHdhaXZlciB0byB0aGUgTUFQX0ZJWEVEIGNhc2UsIGUuZy4g
-aW5jb3JyZWN0bHkNCj4gPiA+IHJlamVjdHMgbW1hcCgpIGlmIHVzZXJzcGFjZSBpcyBhdHRlbXB0
-aW5nIHRvIG1hcCBhIHNtYWxsIHNsaWNlIG9mIGFuDQo+IGV4aXN0aW5nIGVuY2xhdmUuDQo+ID4g
-Pg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogU2VhbiBDaHJpc3RvcGhlcnNvbiA8c2Vhbi5qLmNocmlz
-dG9waGVyc29uQGludGVsLmNvbT4NCj4gPg0KPiA+IFdoeSB5b3Ugd2FudCB0byBhbGxvdyBtbWFw
-KCkgdG8gYmUgY2FsbGVkIG11bHRpcGxlIHRpbWVzPyBtbWFwKCkgY291bGQNCj4gPiBiZSBhbGxv
-d2VkIG9ubHkgb25jZSB3aXRoIFBST1RfTk9ORSBhbmQgZGVuaWVkIGFmdGVyd2FyZHMuIElzIHRo
-aXMgZm9yDQo+ID4gc2VuZGluZyBmZCB0byBhbm90aGVyIHByb2Nlc3MgdGhhdCB3b3VsZCBtYXAg
-YWxyZWFkeSBleGlzdGluZyBlbmNsYXZlPw0KPiA+DQo+ID4gSSBkb24ndCBzZWUgYW55IGNoZWNr
-cyBmb3Igd2hldGhlciB0aGUgaXMgZW5jbGF2ZSB1bmRlcm5lYXRoLiBBbHNvLCBJDQo+ID4gdGhp
-bmsgdGhhdCBpbiBhbGwgY2FzZXMgbW1hcCgpIGNhbGxiYWNrIHNob3VsZCBhbGxvdyBvbmx5IFBS
-T1RfTk9ORSBhcw0KPiA+IHBlcm1pc3Npb25zIGZvciBjbGFyaXR5IGV2ZW4gaWYgaXQgY291bGQg
-Y2FsbGVkIG11bHRpcGxlIHRpbWVzLg0KPiA+DQo+IA0KPiBXaGF0J3MgdGhlIGFkdmFudGFnZSB0
-byBvbmx5IGFsbG93aW5nIFBST1RfTk9ORT8gIFRoZSBpZGVhIGhlcmUgaXMgdG8NCj4gYWxsb3cg
-YSBQUk9UX05PTkUgbWFwIGZvbGxvd2VkIGJ5IHNvbWUgcmVwbGFjZW1ldHMgdGhhdCBvdmVybGF5
-IGl0IGZvcg0KPiB0aGUgaW5kaXZpZHVhbCBzZWdtZW50cy4gIEFkbWl0dGVkbHksIG1wcm90ZWN0
-KCkgY2FuIGRvIHRoZSBzYW1lIHRoaW5nLA0KPiBidXQgZGlzYWxsb3dpbmcgbW1hcCgpIHNlZW1z
-IGF0IGxlYXN0IGEgYml0IHN1cnByaXNpbmcuDQoNCkRpc2FsbG93aW5nIG1tYXAoKSBpcyBub3Qg
-b25seSBzdXJwcmlzaW5nIGJ1dCBhbHNvIHVubmVjZXNzYXJ5Lg0KDQpBIGJpdCBvZmYgdG9waWMg
-aGVyZS4gVGhpcyBtbWFwKCkvbXByb3RlY3QoKSBkaXNjdXNzaW9uIHJlbWluZHMgbWUgYSBxdWVz
-dGlvbiAoZ3Vlc3MgZm9yIEphcmtrbyk6IE5vdyB0aGF0IHZtYS0+dm1fZmlsZS0+cHJpdmF0ZV9k
-YXRhIGtlZXBzIGEgcG9pbnRlciB0byB0aGUgZW5jbGF2ZSwgd2h5IGRvIHdlIHN0b3JlIGl0IGFn
-YWluIGluIHZtYS0+dm1fcHJpdmF0ZT8gSXQgaXNuJ3QgYSBiaWcgZGVhbCBidXQgbm9uLU5VTEwg
-dm1fcHJpdmF0ZSBkb2VzIHByZXZlbnQgbXByb3RlY3QoKSBmcm9tIG1lcmdpbmcgYWRqYWNlbnQg
-Vk1Bcy4gDQoNCg==
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    56b697c6 Add linux-next specific files for 20190604
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=122c965aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=9343b7623bc03dc680c1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=102ab292a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f0e27ca00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9343b7623bc03dc680c1@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in css_task_iter_advance+0x49b/0x540  
+kernel/cgroup/cgroup.c:4507
+Read of size 4 at addr ffff8880a2013d64 by task syz-executor561/8892
+
+CPU: 0 PID: 8892 Comm: syz-executor561 Not tainted 5.2.0-rc3-next-20190604  
+#8
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  css_task_iter_advance+0x49b/0x540 kernel/cgroup/cgroup.c:4507
+  css_task_iter_next+0x101/0x190 kernel/cgroup/cgroup.c:4569
+  pidlist_array_load+0x1bf/0xa80 kernel/cgroup/cgroup-v1.c:373
+  cgroup_pidlist_start+0x37e/0x4c0 kernel/cgroup/cgroup-v1.c:442
+  cgroup_seqfile_start+0xa4/0xd0 kernel/cgroup/cgroup.c:3752
+  kernfs_seq_start+0xdc/0x190 fs/kernfs/file.c:118
+  seq_read+0x2a7/0x1110 fs/seq_file.c:224
+  kernfs_fop_read+0xed/0x560 fs/kernfs/file.c:252
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  do_preadv+0x1c4/0x280 fs/read_write.c:1089
+  __do_sys_preadv fs/read_write.c:1139 [inline]
+  __se_sys_preadv fs/read_write.c:1134 [inline]
+  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4471c9
+Code: e8 4c bb 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7fb370bdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 00000000006dcc58 RCX: 00000000004471c9
+RDX: 0000000000000001 RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 00000000006dcc50 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc5c
+R13: 00007fffdb647a6f R14: 00007f7fb370c9c0 R15: 0000000000000001
+
+Allocated by task 8773:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  __do_kmalloc mm/slab.c:3654 [inline]
+  __kmalloc+0x15c/0x740 mm/slab.c:3663
+  kmalloc include/linux/slab.h:552 [inline]
+  tomoyo_realpath_from_path+0xcd/0x7a0 security/tomoyo/realpath.c:277
+  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+  tomoyo_path_number_perm+0x1dd/0x520 security/tomoyo/file.c:723
+  tomoyo_file_ioctl+0x23/0x30 security/tomoyo/tomoyo.c:335
+  security_file_ioctl+0x77/0xc0 security/security.c:1366
+  ksys_ioctl+0x57/0xd0 fs/ioctl.c:711
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8773:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x106/0x2a0 mm/slab.c:3753
+  tomoyo_realpath_from_path+0x1de/0x7a0 security/tomoyo/realpath.c:319
+  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+  tomoyo_path_number_perm+0x1dd/0x520 security/tomoyo/file.c:723
+  tomoyo_file_ioctl+0x23/0x30 security/tomoyo/tomoyo.c:335
+  security_file_ioctl+0x77/0xc0 security/security.c:1366
+  ksys_ioctl+0x57/0xd0 fs/ioctl.c:711
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a20127c0
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 1444 bytes to the right of
+  4096-byte region [ffff8880a20127c0, ffff8880a20137c0)
+The buggy address belongs to the page:
+page:ffffea0002880480 refcount:1 mapcount:0 mapping:ffff8880aa400dc0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002311108 ffffea0002885488 ffff8880aa400dc0
+raw: 0000000000000000 ffff8880a20127c0 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a2013c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a2013c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a2013d00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                                        ^
+  ffff8880a2013d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a2013e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
