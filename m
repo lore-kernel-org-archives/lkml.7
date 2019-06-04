@@ -2,82 +2,70 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D03FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ACDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F5C24146
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A2D24146
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfFDIgf (ORCPT
+        id S1727130AbfFDIg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:36:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58324 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726872AbfFDIge (ORCPT
+        Tue, 4 Jun 2019 04:36:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36788 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726793AbfFDIg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:36:34 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x548Xj0Q120975
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 04:36:33 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swjwvpexa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:36:33 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 4 Jun 2019 09:36:32 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 09:36:29 +0100
+        Tue, 4 Jun 2019 04:36:57 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x548XDXT134515;
+        Tue, 4 Jun 2019 04:36:30 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2swkssuyua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Jun 2019 04:36:30 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x542cumf012105;
+        Tue, 4 Jun 2019 02:41:32 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01dal.us.ibm.com with ESMTP id 2suh097dk5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Jun 2019 02:41:32 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x548aS8h19726796
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x548aSf339452998
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 4 Jun 2019 08:36:28 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF2E7B2068;
+        by IMSVA (Postfix) with ESMTP id B47C7B205F;
         Tue,  4 Jun 2019 08:36:28 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D1C9B206A;
+        by IMSVA (Postfix) with ESMTP id 5EC86B2066;
         Tue,  4 Jun 2019 08:36:28 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.85.171.86])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Tue,  4 Jun 2019 08:36:28 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D2BED16C5D9E; Tue,  4 Jun 2019 00:45:49 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 00:45:49 -0700
+        id 2E81416C63E5; Tue,  4 Jun 2019 01:14:35 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 01:14:35 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
-        linux-kernel@vger.kernel.org
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, jpoimboe@redhat.com,
+        mojha@codeaurora.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
  disrupting offline
+Message-ID: <20190604081435.GQ28207@linux.ibm.com>
 Reply-To: paulmck@linux.ibm.com
 References: <20190602011253.GA6167@linux.ibm.com>
  <20190603083848.GB3436@hirez.programming.kicks-ass.net>
- <20190603114455.GA16119@lakrids.cambridge.arm.com>
- <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
+In-Reply-To: <20190603083848.GB3436@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19060408-0040-0000-0000-000004F85F29
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011212; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01213024; UDB=6.00637520; IPR=6.00994092;
- MB=3.00027177; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-04 08:36:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060408-0041-0000-0000-000009047D28
-Message-Id: <20190604074549.GP28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -90,111 +78,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
-> On 6/3/19 1:44 PM, Mark Rutland wrote:
-> >On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
-> >>On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
-> >>>Scheduling-clock interrupts can arrive late in the CPU-offline process,
-> >>>after idle entry and the subsequent call to cpuhp_report_idle_dead().
-> >>>Once execution passes the call to rcu_report_dead(), RCU is ignoring
-> >>>the CPU, which results in lockdep complaints when the interrupt handler
-> >>>uses RCU:
-> >>
-> >>>diff --git a/kernel/cpu.c b/kernel/cpu.c
-> >>>index 448efc06bb2d..3b33d83b793d 100644
-> >>>--- a/kernel/cpu.c
-> >>>+++ b/kernel/cpu.c
-> >>>@@ -930,6 +930,7 @@ void cpuhp_report_idle_dead(void)
-> >>>  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
-> >>>  	BUG_ON(st->state != CPUHP_AP_OFFLINE);
-> >>>+	local_irq_disable();
-> >>>  	rcu_report_dead(smp_processor_id());
-> >>>  	st->state = CPUHP_AP_IDLE_DEAD;
-> >>>  	udelay(1000);
-> >>
-> >>Urgh... I'd almost suggest we do something like the below.
-> >>
-> >>
-> >>But then I started looking at the various arch_cpu_idle_dead()
-> >>implementations and ran into arm's implementation, which is calling
-> >>complete() where generic code already established this isn't possible
-> >>(see for example cpuhp_report_idle_dead()).
-> >
-> >IIRC, that should have been migrated over to cpu_report_death(), as
-> >arm64 was in commit:
-> >
-> >   05981277a4de1ad6 ("arm64: Use common outgoing-CPU-notification code")
-> >
-> >... but it looks like Paul's patch to do so [1] fell through the cracks;
-> >I'm not aware of any reason that shouldn't have been taken.
-> >[1] https://lore.kernel.org/lkml/1431467407-1223-8-git-send-email-paulmck@linux.vnet.ibm.com/
-> >
-> >Paul, do you want to resend that?
+On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
+> On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
+> > Scheduling-clock interrupts can arrive late in the CPU-offline process,
+> > after idle entry and the subsequent call to cpuhp_report_idle_dead().
+> > Once execution passes the call to rcu_report_dead(), RCU is ignoring
+> > the CPU, which results in lockdep complaints when the interrupt handler
+> > uses RCU:
 > 
-> Please do. We're carrying this patch out-of-tree for while now in
-> our EAS integration to get cpu hotplug tests passing on TC2 (arm).
+> > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > index 448efc06bb2d..3b33d83b793d 100644
+> > --- a/kernel/cpu.c
+> > +++ b/kernel/cpu.c
+> > @@ -930,6 +930,7 @@ void cpuhp_report_idle_dead(void)
+> >  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
+> >  
+> >  	BUG_ON(st->state != CPUHP_AP_OFFLINE);
+> > +	local_irq_disable();
+> >  	rcu_report_dead(smp_processor_id());
+> >  	st->state = CPUHP_AP_IDLE_DEAD;
+> >  	udelay(1000);
+> 
+> Urgh... I'd almost suggest we do something like the below.
+> 
+> 
+> But then I started looking at the various arch_cpu_idle_dead()
+> implementations and ran into arm's implementation, which is calling
+> complete() where generic code already established this isn't possible
+> (see for example cpuhp_report_idle_dead()).
 
-Huh.  It still applies.  But I have no means of testing it.
+Yeah, my patch that would have changed that never was acked or taken
+by the maintainer, as discussed later in this thread.
 
-And it looks like the reason I dropped it was that I didn't get any
-response from the maintainer.  I sent a message to this effect to
-linux-arm-kernel@lists.infradead.org and linux@arm.linux.org.uk on May
-21, 2015.
+> And then there's powerpc which for some obscure reason thinks it needs
+> to enable preemption when dying ?! pseries_cpu_die() actually calls
+> msleep() ?!?!
 
-So here it is again.  ;-)
+Isn't pseries_cpu_die() invoked via the smp_ops->cpu_die() function
+pointer, whch is invoked from __cpu_die() in arch/powerpc/kernel/smp.c?
+Then, if I am reading the code correctly, __cpu_die() is invoked from
+takedown_cpu(), which is invoked not from the dying CPU but rather from
+a surviving CPU.  Or am I misreading the code?
 
-I have queued this locally.  Left to myself, I add the two of you on its
-Cc: list and run it through my normal process.  But given the history,
-I would still want either an ack from the maintainer or, better, for
-the maintainer to take the patch.
+> Sparc64 agains things it should enable preemption when playing dead.
+> 
+> So clearly this isn't going to work well :/
 
-Or is there a better way for us to proceed on this?
+Well, it looks like it will work at least as well as my patch.  I will
+test it out this evening, ten timezones east of my usual location.  ;-)
 
 							Thanx, Paul
 
-------------------------------------------------------------------------
-
-arm: Use common outgoing-CPU-notification code
-
-This commit removes the open-coded CPU-offline notification with new
-common code.  In particular, this change avoids calling scheduler code
-using RCU from an offline CPU that RCU is ignoring.  This is a minimal
-change.  A more intrusive change might invoke the cpu_check_up_prepare()
-and cpu_set_state_online() functions at CPU-online time, which would
-allow onlining throw an error if the CPU did not go offline properly.
-
-Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Russell King <linux@arm.linux.org.uk>
-
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index ebc53804d57b..8687d619260f 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -267,15 +267,13 @@ int __cpu_disable(void)
- 	return 0;
- }
- 
--static DECLARE_COMPLETION(cpu_died);
--
- /*
-  * called on the thread which is asking for a CPU to be shutdown -
-  * waits until shutdown has completed, or it is timed out.
-  */
- void __cpu_die(unsigned int cpu)
- {
--	if (!wait_for_completion_timeout(&cpu_died, msecs_to_jiffies(5000))) {
-+	if (!cpu_wait_death(cpu, 5)) {
- 		pr_err("CPU%u: cpu didn't die\n", cpu);
- 		return;
- 	}
-@@ -322,7 +320,7 @@ void arch_cpu_idle_dead(void)
- 	 * this returns, power and/or clocks can be removed at any point
- 	 * from this CPU and its cache by platform_cpu_kill().
- 	 */
--	complete(&cpu_died);
-+	(void)cpu_report_death();
- 
- 	/*
- 	 * Ensure that the cache lines associated with that completion are
-
+> ---
+>  include/linux/tick.h | 10 ----------
+>  kernel/sched/idle.c  |  5 +++--
+>  2 files changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/tick.h b/include/linux/tick.h
+> index f92a10b5e112..196a0a7bfc4f 100644
+> --- a/include/linux/tick.h
+> +++ b/include/linux/tick.h
+> @@ -134,14 +134,6 @@ extern unsigned long tick_nohz_get_idle_calls(void);
+>  extern unsigned long tick_nohz_get_idle_calls_cpu(int cpu);
+>  extern u64 get_cpu_idle_time_us(int cpu, u64 *last_update_time);
+>  extern u64 get_cpu_iowait_time_us(int cpu, u64 *last_update_time);
+> -
+> -static inline void tick_nohz_idle_stop_tick_protected(void)
+> -{
+> -	local_irq_disable();
+> -	tick_nohz_idle_stop_tick();
+> -	local_irq_enable();
+> -}
+> -
+>  #else /* !CONFIG_NO_HZ_COMMON */
+>  #define tick_nohz_enabled (0)
+>  static inline int tick_nohz_tick_stopped(void) { return 0; }
+> @@ -164,8 +156,6 @@ static inline ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
+>  }
+>  static inline u64 get_cpu_idle_time_us(int cpu, u64 *unused) { return -1; }
+>  static inline u64 get_cpu_iowait_time_us(int cpu, u64 *unused) { return -1; }
+> -
+> -static inline void tick_nohz_idle_stop_tick_protected(void) { }
+>  #endif /* !CONFIG_NO_HZ_COMMON */
+>  
+>  #ifdef CONFIG_NO_HZ_FULL
+> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> index 80940939b733..e4bc4aa739b8 100644
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -241,13 +241,14 @@ static void do_idle(void)
+>  		check_pgt_cache();
+>  		rmb();
+>  
+> +		local_irq_disable();
+> +
+>  		if (cpu_is_offline(cpu)) {
+> -			tick_nohz_idle_stop_tick_protected();
+> +			tick_nohz_idle_stop_tick();
+>  			cpuhp_report_idle_dead();
+>  			arch_cpu_idle_dead();
+>  		}
+>  
+> -		local_irq_disable();
+>  		arch_cpu_idle_enter();
+>  
+>  		/*
+> 
