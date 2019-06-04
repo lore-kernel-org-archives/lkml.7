@@ -3,105 +3,281 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ADCC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D2EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB460206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690928;
-	bh=nh0lPNtU7stzpWYvVlQm/DEHacNPeiTiSaWypLnmXYI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=samTq5scpUXD71yN2SFURKz42AglPnsb97AOaGgFSV0UN9Ey3S/wLxm8gK4RsfSNf
-	 6y81SOsVt1Q+u1D/v6UD47H5C0lwmtjogkeYC6bISX1zEiVRCjohIY7vAwNOddROuR
-	 b9mcRo5hqUl8lbfFAHKmUKhN5yPxrrZG2tUwh5t4=
+	by mail.kernel.org (Postfix) with ESMTP id D610F206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="y8DM+fbl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IXUclJDN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfFDX2q (ORCPT
+        id S1727899AbfFDX2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbfFDXYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:24:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E577206C1;
-        Tue,  4 Jun 2019 23:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690681;
-        bh=nh0lPNtU7stzpWYvVlQm/DEHacNPeiTiSaWypLnmXYI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkXp3fXsnuqPV7XyHG4WxWwmzwuqrI0U/DAaH8QSI4HU+aEEVZx+LyR5+UxKodtAL
-         BrO9H9hYDffJkXNzD8VIcca0SRuZRvT4UpUblKiXW0A9uYHLhX6cjeF0/Wlco+eRR7
-         jca70VAFqFUXq6O7L3l1oyLej2Yizs3I3KsEsFu0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/24] scsi: qedi: remove set but not used variables 'cdev' and 'udev'
-Date:   Tue,  4 Jun 2019 19:24:03 -0400
-Message-Id: <20190604232416.7479-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232416.7479-1-sashal@kernel.org>
-References: <20190604232416.7479-1-sashal@kernel.org>
+        Tue, 4 Jun 2019 19:28:51 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51825 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727859AbfFDX2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:28:49 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3A7882229C;
+        Tue,  4 Jun 2019 19:28:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 04 Jun 2019 19:28:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        pedrovanzella.com; h=from:to:cc:subject:date:message-id
+        :mime-version:content-transfer-encoding; s=fm3; bh=wfJMe3HNm7cln
+        fP62yJHBDEVEPSz1OD003EC0Ygu62A=; b=y8DM+fblG7S4iENn5aPwumWdVxPol
+        0DEKu109ZoNiyFcrK3pTGWYqy5SEct59IV4idXW1GYRzpvQGd9JVdzpcVT60yvi4
+        Wua7zRkKfLpnNt+yBYmOp5CDLVBupM1nHAFxLtBiMMpA6ueRJBCMllrT8tKaD1JA
+        eGhG/WNzrOhe7cMyzy18+GL0yQRoN/ntOdzbBsHms4xakOjKBXe4fRzefnAytZTf
+        QYRGMuIoTfVMXzsrP8xKsadAcdrrFKZEVo4t4YMCugp/7xyIs4eKUi3i4j0ifgVj
+        mM9NJz5lGwW+4fCxCp6Ku1MLUXJny4w7sQWFBWmqOiOT6tIp/fihItIGQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wfJMe3HNm7clnfP62
+        yJHBDEVEPSz1OD003EC0Ygu62A=; b=IXUclJDNoxm+hUhJkaGK5aQ9Bf4pvSKDs
+        S2BilRnQJwAJe9gSoxSGA5o5bnn8DaT2bvtVaBtk2lIG9vmMrakJsrfZG7uDlrQE
+        36ypcRET/z5ISPevV5FRHoJA0ydTZFX2CJCwwt4MxydcCflw7S2HaERPADck2mzD
+        bJQPxIDl7GtIPSUkf8j0YHNUxRmb9wUhd6C1FJPnMDPtAOexYMRWsuSLEjhemdg+
+        g38PJLAr96dELmRsKJYet0Dhr+4pS5Wss1ZswSYkN71KKh5jKzLasxL4+0fbvn1u
+        I2JBXMZJudBkhS0dZgX6joLov5qndKFlbSsNYjAXfTLLRTE7NIkDw==
+X-ME-Sender: <xms:r_72XCzqMA4iFQpElUtqZz5pp7P4u2e1nB8gHwHIf3Gu4r8721QW4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeguddgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefrvggurhhoucgg
+    rghniigvlhhlrgcuoehpvggurhhosehpvggurhhovhgrnhiivghllhgrrdgtohhmqeenuc
+    fkphepjedtrddvjedrvdejrddugeelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpvggu
+    rhhosehpvggurhhovhgrnhiivghllhgrrdgtohhmnecuvehluhhsthgvrhfuihiivgepud
+X-ME-Proxy: <xmx:r_72XI1KsXNUQy9m7UqsFNEWLtav75BVSdOkng7yksD4O7fEtacbpg>
+    <xmx:r_72XA56k2T6XJYsHFnfDheOGOWCiWmiuh86Wurx2vbSSuFdBvYvhw>
+    <xmx:r_72XLXBnKhxLuavdUO_MtwF39Py0_nEnaRARQHHUwI8T6GKL3SFqw>
+    <xmx:sP72XJjSYOEZ4kRqLO5PYDqSQ7d_yHJ0MYW5uKjuOnYgixwAUWnAMg>
+Received: from localhost (toroon020aw-lp130-02-70-27-27-149.dsl.bell.ca [70.27.27.149])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E415A380083;
+        Tue,  4 Jun 2019 19:28:46 -0400 (EDT)
+From:   Pedro Vanzella <pedro@pedrovanzella.com>
+To:     linux-input@vger.kernel.org
+Cc:     Pedro Vanzella <pedro@pedrovanzella.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] HID: hid-logitech-hidpp: Report battery voltage
+Date:   Tue,  4 Jun 2019 19:28:26 -0400
+Message-Id: <20190604232827.26008-1-pedro@pedrovanzella.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Newer devices have a feature with id 0x1001 that reports the battery
+voltage instead of the old feature with id 0x1000 that reports a
+percentage.
 
-[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
+This patch fetches and decodes this data for all devices that
+support it.
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
-drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
-drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
-
-These have never been used since introduction.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 108 ++++++++++++++++++++++++++++++-
+ 1 file changed, 106 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 0b7267e68336..94f3829b1974 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -817,8 +817,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	struct qedi_endpoint *qedi_ep;
- 	struct sockaddr_in *addr;
- 	struct sockaddr_in6 *addr6;
--	struct qed_dev *cdev  =  NULL;
--	struct qedi_uio_dev *udev = NULL;
- 	struct iscsi_path path_req;
- 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
- 	u32 iscsi_cid = QEDI_CID_RESERVED;
-@@ -838,8 +836,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 72fc9c0566db..e68ea44b0d24 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -91,6 +91,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+ #define HIDPP_CAPABILITY_HIDPP20_BATTERY	BIT(1)
+ #define HIDPP_CAPABILITY_BATTERY_MILEAGE	BIT(2)
+ #define HIDPP_CAPABILITY_BATTERY_LEVEL_STATUS	BIT(3)
++#define HIDPP_CAPABILITY_BATTERY_VOLTAGE	BIT(4)
+ 
+ /*
+  * There are two hidpp protocols in use, the first version hidpp10 is known
+@@ -139,12 +140,14 @@ struct hidpp_report {
+ struct hidpp_battery {
+ 	u8 feature_index;
+ 	u8 solar_feature_index;
++	u8 voltage_feature_index;
+ 	struct power_supply_desc desc;
+ 	struct power_supply *ps;
+ 	char name[64];
+ 	int status;
+ 	int capacity;
+ 	int level;
++	int voltage; /* in millivolts */
+ 	bool online;
+ };
+ 
+@@ -1223,6 +1226,93 @@ static int hidpp20_battery_event(struct hidpp_device *hidpp,
+ 	return 0;
+ }
+ 
++/* -------------------------------------------------------------------------- */
++/* 0x1001: Battery voltage                                                    */
++/* -------------------------------------------------------------------------- */
++
++#define HIDPP_PAGE_BATTERY_VOLTAGE 0x1001
++
++#define CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE 0x00
++
++static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage)
++{
++	int status;
++
++	switch (data[2]) {
++	case 0x00: /* discharging */
++		status = POWER_SUPPLY_STATUS_DISCHARGING;
++		break;
++	case 0x10: /* wireless charging */
++	case 0x80: /* charging */
++		status = POWER_SUPPLY_STATUS_CHARGING;
++		break;
++	case 0x81: /* fully charged */
++		status = POWER_SUPPLY_STATUS_FULL;
++		break;
++	default:
++		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
++	}
++
++	*voltage = (data[0] << 8) + data[1];
++
++	return status;
++}
++
++static int hidpp20_battery_get_battery_voltage(struct hidpp_device *hidpp,
++					       u8 feature_index,
++					       int *status, int *voltage)
++{
++	struct hidpp_report response;
++	int ret;
++	u8 *params = (u8 *)response.fap.params;
++
++	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
++					  CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE,
++					  NULL, 0, &response);
++
++	if (ret > 0) {
++		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
++			__func__, ret);
++		return -EPROTO;
++	}
++	if (ret)
++		return ret;
++
++	hidpp->capabilities |= HIDPP_CAPABILITY_BATTERY_VOLTAGE;
++
++	*status = hidpp20_battery_map_status_voltage(params, voltage);
++
++	return 0;
++}
++
++static int hidpp20_query_battery_voltage_info(struct hidpp_device *hidpp)
++{
++	u8 feature_type;
++	int ret;
++	int status, voltage;
++
++	if (hidpp->battery.voltage_feature_index == 0xff) {
++		ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_BATTERY_VOLTAGE,
++					     &hidpp->battery.voltage_feature_index,
++					     &feature_type);
++		if (ret)
++			return ret;
++	}
++
++	ret = hidpp20_battery_get_battery_voltage(hidpp,
++						  hidpp->battery.voltage_feature_index,
++						  &status, &voltage);
++
++	if (ret)
++		return ret;
++
++	hidpp->battery.status = status;
++	hidpp->battery.voltage = voltage;
++	hidpp->battery.online = status != POWER_SUPPLY_STATUS_NOT_CHARGING;
++
++	return 0;
++}
++
+ static enum power_supply_property hidpp_battery_props[] = {
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_STATUS,
+@@ -1232,6 +1322,7 @@ static enum power_supply_property hidpp_battery_props[] = {
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+ 	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY, */
+ 	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY_LEVEL, */
++	0, /* placeholder for POWER_SUPPLY_PROP_VOLTAGE_NOW, */
+ };
+ 
+ static int hidpp_battery_get_property(struct power_supply *psy,
+@@ -1269,6 +1360,9 @@ static int hidpp_battery_get_property(struct power_supply *psy,
+ 		case POWER_SUPPLY_PROP_SERIAL_NUMBER:
+ 			val->strval = hidpp->hid_dev->uniq;
+ 			break;
++		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++			val->intval = hidpp->battery.voltage;
++			break;
+ 		default:
+ 			ret = -EINVAL;
+ 			break;
+@@ -3208,12 +3302,16 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
+ 
+ 	hidpp->battery.feature_index = 0xff;
+ 	hidpp->battery.solar_feature_index = 0xff;
++	hidpp->battery.voltage_feature_index = 0xff;
+ 
+ 	if (hidpp->protocol_major >= 2) {
+ 		if (hidpp->quirks & HIDPP_QUIRK_CLASS_K750)
+ 			ret = hidpp_solar_request_battery_event(hidpp);
+-		else
++		else {
+ 			ret = hidpp20_query_battery_info(hidpp);
++			if (ret)
++				ret = hidpp20_query_battery_voltage_info(hidpp);
++		}
+ 
+ 		if (ret)
+ 			return ret;
+@@ -3238,7 +3336,7 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
+ 	if (!battery_props)
+ 		return -ENOMEM;
+ 
+-	num_battery_props = ARRAY_SIZE(hidpp_battery_props) - 2;
++	num_battery_props = ARRAY_SIZE(hidpp_battery_props) - 3;
+ 
+ 	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_MILEAGE)
+ 		battery_props[num_battery_props++] =
+@@ -3248,6 +3346,10 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
+ 		battery_props[num_battery_props++] =
+ 				POWER_SUPPLY_PROP_CAPACITY_LEVEL;
+ 
++	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
++		battery_props[num_battery_props++] =
++			POWER_SUPPLY_PROP_VOLTAGE_NOW;
++
+ 	battery = &hidpp->battery;
+ 
+ 	n = atomic_inc_return(&battery_no) - 1;
+@@ -3412,6 +3514,8 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
+ 			hidpp10_query_battery_status(hidpp);
+ 	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_BATTERY) {
+ 		hidpp20_query_battery_info(hidpp);
++		if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
++			hidpp20_query_battery_voltage_info(hidpp);
  	}
- 
- 	qedi = iscsi_host_priv(shost);
--	cdev = qedi->cdev;
--	udev = qedi->udev;
- 
- 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
- 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
+ 	if (hidpp->battery.ps)
+ 		power_supply_changed(hidpp->battery.ps);
 -- 
-2.20.1
+2.21.0
 
