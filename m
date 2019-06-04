@@ -2,241 +2,111 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6DAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3DA2488E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DECB24A47
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PtFB4f60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfFDOIZ (ORCPT
+        id S1727569AbfFDOJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:08:25 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48058 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfFDOIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:08:24 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYA6v-0001Xj-6y; Tue, 04 Jun 2019 16:08:21 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     xieqinick@gmail.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, nick@khadas.com
-Subject: Re: [PATCH] arm64: dts: rockchip: Add support for Khadas Edge/Edge-V/Captain boards
-Date:   Tue, 04 Jun 2019 16:08:20 +0200
-Message-ID: <2074921.iWOsiWxYGh@phil>
-In-Reply-To: <1559035267-1884-1-git-send-email-xieqinick@gmail.com>
-References: <1559035267-1884-1-git-send-email-xieqinick@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Tue, 4 Jun 2019 10:09:11 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:54730 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727137AbfFDOJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:09:10 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2C084C1E9B;
+        Tue,  4 Jun 2019 14:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559657360; bh=CNaripZJWBBGgHfQPfeFqx/UkaowmltCstrxiqbgyLI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=PtFB4f60CQpa1hgnxV0AX7d6PikBrH2M3jt4W9ntxHV6RiAtd4igEBX6KBTFO8o9G
+         gjSjzUOdycc3Bes/ioNwt7SSa5DswK0liG5LpBtZ8EgAM8OKDXN5PNeSwgElYr79ZH
+         qq+1eeuOVCx86aWwi57uyd42dfQzhRC/h+TQGm+qu6/OdzOC/n2c/PHDLG5B/pjH9F
+         cLmNKSsaPRtiE+YKU81JTDzpMoug91EgjFdbKoZ+Kf19MsWNhG0u9elSBvFfbMlcRz
+         TMGoJa44KC1wgYdUZuNAjAFodJ/57UlAAe1W5g2AseTQtgyPxFM5Dh8vmwbzI4aLfp
+         6YaVWHGZE/SxQ==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 3D452A009B;
+        Tue,  4 Jun 2019 14:09:08 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 4 Jun 2019 07:09:07 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
+ 4 Jun 2019 16:09:05 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Voon Weifeng <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>
+Subject: RE: [PATCH net-next v6 0/5] net: stmmac: enable EHL SGMII
+Thread-Topic: [PATCH net-next v6 0/5] net: stmmac: enable EHL SGMII
+Thread-Index: AQHVGsR25h4NaxykoEO+uo0c6U7qv6aLiCVA
+Date:   Tue, 4 Jun 2019 14:09:04 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B93D72D@DE02WEMBXB.internal.synopsys.com>
+References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+In-Reply-To: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+From: Voon Weifeng <weifeng.voon@intel.com>
 
-devicetrees look mostly good, with a bit of "bookkeeping" issues and
-some small nits below.
+> This patch-set is to enable Ethernet controller
+> (DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lak=
+e.
+> The DW Ethernet PCS is the Physical Coding Sublayer that is between Ether=
+net
+> MAC and PHY and uses MDIO Clause-45 as Communication.
+>=20
+> Selttests results:
+> root@intel-corei7-64:~# ethtool -t eth0
+> The test result is PASS
+> The test extra info:
+>  1. MAC Loopback                 0
+>  2. PHY Loopback                 -95
+>  3. MMC Counters                 0
+>  4. EEE                          -95
+>  5. Hash Filter MC               0
+>  6. Perfect Filter UC            0
+>  7. MC Filter                    0
+>  8. UC Filter                    0
+>  9. Flow Control                 0
 
-Am Dienstag, 28. Mai 2019, 11:21:07 CEST schrieb xieqinick@gmail.com:
-> From: Nick <nick@khadas.com>
+Thanks for testing and addressing all review comments!
 
-Can you provide a full name (first-+surename) for patch from and Signed-off
-lines please?
+Acked-by: Jose Abreu <joabreu@synopsys.com>
 
-
-> Add devicetree support for Khadas Edge/Edge-V/Captain boards.
-> Khadas Edge is an expandable Rockchip RK3399 board with goldfinger.
-> Khadas Captain is the carrier board for Khadas Edge.
-> Khadas Edge-V is a Khadas VIM form factor Rockchip RK3399 board.
-> 
-> Signed-off-by: Nick <nick@khadas.com>
-> ---
->  arch/arm64/boot/dts/rockchip/Makefile              |   3 +
->  .../boot/dts/rockchip/rk3399-khadas-captain.dts    |  27 +
->  .../boot/dts/rockchip/rk3399-khadas-edge-v.dts     |  28 +
-
-when adding boards, please also make sure to add entries to
-	Documentation/devicetree/bindings/arm/rockchip.yaml
-
-Take a look at the "FriendlyElec NanoPi4 series boards" for an
-example on how to add a family of boards like your Edge/Captain.
-
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts
-> new file mode 100644
-> index 0000000..85eb51c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-captain.dts
-> @@ -0,0 +1,27 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
-> + * (https://www.khadas.com)
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-khadas-edge.dtsi"
-> +
-> +/ {
-> +	model = "Khadas Captain";
-> +	compatible = "khadas,captain", "rockchip,rk3399";
-> +};
-> +
-> +&gmac {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	ep-gpios = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts
-> new file mode 100644
-> index 0000000..396b7f4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge-v.dts
-> @@ -0,0 +1,28 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
-> + * (https://www.khadas.com)
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-khadas-edge.dtsi"
-> +
-> +/ {
-> +	model = "Khadas Edge-V";
-> +	compatible = "khadas,edge-v", "rockchip,rk3399";
-> +};
-> +
-> +&gmac {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	ep-gpios = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	status = "okay";
-> +};
-> +
-
-Both Captain and Edge-V seem to be identical from a component point
-of view, so should likely share the same dts, or is there some major
-difference coming later?
-
-For the time being you can represent the individual boards like:
-
-	model = "Khadas Edge-V/Captain";
-	compatible = "khadas,edge-v", "khadas,edge-captain", "rockchip,rk3399";
-
-Also to show that it's Edge+Captain baseboard, maybe you want to
-change the name like shown above (see rk3399-puma-haikou for a similar
-setup).
-
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts
-> new file mode 100644
-> index 0000000..f0d5bae
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dts
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Shenzhen Wesion Technology Co., Ltd.
-> + * (https://www.khadas.com)
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-khadas-edge.dtsi"
-> +
-> +/ {
-> +	model = "Khadas Edge";
-> +	compatible = "khadas,edge", "rockchip,rk3399";
-> +};
-> +
-> +&gmac {
-> +	status = "disabled";
-
-the Edge-V/Captain boards do enable the gmac, so you shouldn't need
-a special disable here. Just keep it disabled in the edge.dtsi
-[aka it comes in the disabled state from rk3399.dtsi already].
-
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-> new file mode 100644
-> index 0000000..872b535
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-> @@ -0,0 +1,795 @@
-
-[...]
-
-> +&gmac {
-> +	assigned-clocks = <&cru SCLK_RMII_SRC>;
-> +	assigned-clock-parents = <&clkin_gmac>;
-> +	clock_in_out = "input";
-> +	phy-supply = <&vcc_lan>;
-> +	phy-mode = "rgmii";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&rgmii_pins>;
-> +	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
-> +	snps,reset-active-low;
-> +	snps,reset-delays-us = <0 10000 50000>;
-> +	tx_delay = <0x28>;
-> +	rx_delay = <0x11>;
-> +	status = "disabled";
-
-status is disabled coming from rk3399.dtsi, so there is no need
-to "re-disable" it here.
-
-> +};
-> +
-
-[...]
-
-> +&sdio0 {
-> +	/* WiFi & BT combo module Ampak AP6356S */
-> +	bus-width = <4>;
-> +	cap-sdio-irq;
-> +	cap-sd-highspeed;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	num-slots = <1>;
-
-num-slots is not needed anymore
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-> +	sd-uhs-sdr104;
-> +
-> +	/* Power supply */
-
-drop that comment and blank line please. Properties called
-*-supply already tell you that they are power supplies :-) .
-
-
-Heiko
-
-
+Thanks,
+Jose Miguel=20
+Abreu
