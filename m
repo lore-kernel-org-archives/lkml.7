@@ -2,81 +2,94 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178B6C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0548FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CC021734
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05A52166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfFDOrf (ORCPT
+        id S1727937AbfFDOry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:47:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43104 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbfFDOrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:47:33 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 07:47:32 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 04 Jun 2019 07:47:29 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 04 Jun 2019 17:47:28 +0300
-Date:   Tue, 4 Jun 2019 17:47:28 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH] pwm: pca9685: fix pwm/gpio inter-operation
-Message-ID: <20190604144728.GY2781@lahna.fi.intel.com>
-References: <20190603151223.5311-1-TheSven73@gmail.com>
- <20190604091425.GL2781@lahna.fi.intel.com>
- <CAGngYiUc5_A1umM=8f12BLejq-3aqHnExEQ2RxNABv8u3HdqnA@mail.gmail.com>
+        Tue, 4 Jun 2019 10:47:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42318 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727545AbfFDOrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:47:53 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BA6526D2F651EA5B57BA;
+        Tue,  4 Jun 2019 22:47:50 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 4 Jun 2019 22:47:42 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <edumazet@google.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH net] tcp: avoid creating multiple req socks with the same tuples
+Date:   Tue, 4 Jun 2019 22:55:43 +0800
+Message-ID: <20190604145543.61624-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGngYiUc5_A1umM=8f12BLejq-3aqHnExEQ2RxNABv8u3HdqnA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:34:46AM -0400, Sven Van Asbroeck wrote:
-> Thank you for the review, Mika ! See comments below.
-> 
-> On Tue, Jun 4, 2019 at 5:14 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > > This approach will also prevent the request of the "all" pwm channel, if any
-> > > other pwm channel is already in use. Is this correct behaviour?
-> >
-> > Sounds correct to me.
-> 
-> Something that occurred to me right after I pressed the send button:
-> 
-> This patch will prevent a pwm 'all channels' request if at least one
-> of the pwm's is in use. But it will not guard against the opposite:
-> after the 'all channels' pwm is requested, it will still allow requests
-> for other pwms/gpios !
-> 
-> This is identical to the old behaviour. But maybe this is an oversight
-> and not a feature?
+There is one issue about bonding mode BOND_MODE_BROADCAST, and
+two slaves with diffierent affinity, so packets will be handled
+by different cpu. These are two pre-conditions in this case.
 
-Most probably an oversight.
+When two slaves receive the same syn packets at the same time,
+two request sock(reqsk) will be created if below situation happens:
+1. syn1 arrived tcp_conn_request, create reqsk1 and have not yet called
+inet_csk_reqsk_queue_hash_add.
+2. syn2 arrived tcp_v4_rcv, it goes to tcp_conn_request and create reqsk2
+because it can't find reqsk1 in the __inet_lookup_skb.
 
-> Proposal:
-> 1. prevent request of 'all channel' if any of the pwms/gpios are in use
-> 2. prevent request of all other pwms/gpios if 'all channels' is in use
+Then reqsk1 and reqsk2 are added to establish hash table, and two synack with different
+seq(seq1 and seq2) are sent to client, then tcp ack arrived and will be
+processed in tcp_v4_rcv and tcp_check_req, if __inet_lookup_skb find the reqsk2, and
+tcp ack packet is ack_seq is seq1, it will be failed after checking:
+TCP_SKB_CB(skb)->ack_seq != tcp_rsk(req)->snt_isn + 1)
+and then tcp rst will be sent to client and close the connection.
 
-Makes sense.
+To fix this, do lookup before calling inet_csk_reqsk_queue_hash_add
+to add reqsk2 to hash table, if it finds the existed reqsk1 with the same five tuples,
+it removes reqsk2 and does not send synack to client.
+
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/ipv4/tcp_input.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 08a477e74cf3..c75eeb1fe098 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6569,6 +6569,15 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ 		bh_unlock_sock(fastopen_sk);
+ 		sock_put(fastopen_sk);
+ 	} else {
++		struct sock *sk1 = req_to_sk(req);
++		struct sock *sk2 = NULL;
++		sk2 = __inet_lookup_established(sock_net(sk1), &tcp_hashinfo,
++									sk1->sk_daddr, sk1->sk_dport,
++									sk1->sk_rcv_saddr, sk1->sk_num,
++									inet_iif(skb),inet_sdif(skb));
++		if (sk2 != NULL)
++			goto drop_and_release;
++
+ 		tcp_rsk(req)->tfo_listener = false;
+ 		if (!want_cookie)
+ 			inet_csk_reqsk_queue_hash_add(sk, req,
+-- 
+2.20.1
+
