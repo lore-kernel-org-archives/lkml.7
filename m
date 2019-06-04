@@ -2,123 +2,330 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECB0C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4DEC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486E32067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2454D20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sxVPDH4y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dq1xqiHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfFDWac (ORCPT
+        id S1726642AbfFDWal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:30:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32989 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfFDWa3 (ORCPT
+        Tue, 4 Jun 2019 18:30:41 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36740 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfFDWak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:30:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h17so11200415pgv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 15:30:29 -0700 (PDT)
+        Tue, 4 Jun 2019 18:30:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v22so330121wml.1;
+        Tue, 04 Jun 2019 15:30:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=LmDCNIRDhs7DNH9NPW4xy+8J+i5MZl5x+uVtCFZTa5g=;
-        b=sxVPDH4yKTfJRPnVkbZ54wQ58ysVL1hfzaDD4ECK1ZYB3PTci6r3+sjVoj2lHmW1pA
-         AxyVgqJ30L6RACIMF0z+XOHSpGmMpm7vxX09D6iqPUVhLzQ5pqTNJ1h+ASZHtuiOp4/3
-         G2UROw7Iuy2bKZ0EuE+MyGB8C//LUGCveyBYXkkvxzoCg+bM/M8/PZPCq548R2ehAOj9
-         3xhPO+FITtygmugNozKr3AKWahz91BWyY+TCRv5Ktmbo+9zR+xPjsGJkYOKz+5Kuiipr
-         WuxcpjbIEfEN/zxdK91N2P/Ked7QePfxQ/jtygOfuYTR1y4ygVj4KmOVD6ce5eEoPuuw
-         FPiA==
+        bh=0HZv+59CaHYbd/c5vedTEKSAGdZDFqylChiEzbWamok=;
+        b=Dq1xqiHfjVezN0XEY5L7ErrFzEAXrX5BtefTkboNzmMQzbhJPn9uwqZ9pZVV6tKwxT
+         OJmmhXckiZJCfi5jWCyt5TJjfjbN+tjUf9xr458RbMXewn1kP+1t/eMB8sAJV7MCA9J9
+         Uo0S3wMI2jxy7G78DeUOr8fgVdCxyNFIle1aylGIFgk+2ZkCWp7Dblf8VQECMW0+GSV0
+         +Vvsv/zz2CwFdP8rXYAWbDL+IEev4FkOtdkqPjGJPBXYQhBNoD681guxMqbtvC8JjYGU
+         rKsWuHDWKJCPbiKkh3yyiJzEaV+h8imlNAfOKCJSNGHWWx2MIB1HNfQcVNBtl7Z7MUxR
+         rbEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LmDCNIRDhs7DNH9NPW4xy+8J+i5MZl5x+uVtCFZTa5g=;
-        b=uix4JMnfDho1OtMygv83QAZdYzq9ZSvsMsbcWQh7QA3ezymUsG1I/O3QnVlDL4GbmT
-         Vo50ippTfSpywGcX3fuW9e7zEjxoeqGDpUsloFg+W+opFN4zM2OPK51N7/1tAaTjYanq
-         81mOHAY/t6bnEqVZGw/Cvn/x2b4KJIcar9I6VAxIHf/Sq5+L5rspT2xwy5RUOA08v+Wi
-         FQ6DvYmwMgeWYHiLz3EonjnKKnm8ldwA29QYkGppZDBDJGNGtJ7DDfpg8phs+VJqEmul
-         RDHjsD3W9rDkkeD3F2F4zMRzlszAVchYBxYxp7++1TtkN1fhvdW34qeJMLrEd6mnW+Qp
-         Bdog==
-X-Gm-Message-State: APjAAAXBFhrCEmaKGLDInGGLT7x/bJBYUmLO+wiHyXyGJi20RtresHg3
-        nbBpxwhogmk+rMFoECJbEIa0Yg==
-X-Google-Smtp-Source: APXvYqzTEUN7udbEF/IQ5S4vaSRT5SZ53qYu6Xq5+iodypdDvCByZtaq5dCbtg4MhJ1JM8f0B77mJg==
-X-Received: by 2002:a17:90a:c38a:: with SMTP id h10mr37802679pjt.112.1559687428923;
-        Tue, 04 Jun 2019 15:30:28 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u5sm16516107pgp.19.2019.06.04.15.30.26
+        bh=0HZv+59CaHYbd/c5vedTEKSAGdZDFqylChiEzbWamok=;
+        b=OPKtXC452lo6g8MLBOzssQWCjKhxMpogVRu9WR6j7iYh+5C0Yb1+5BSU4CDvB9nSWG
+         pY8luxcurlzL/nE4GPK3wXhE++xQmu3sCGwt4OGCBHMlTk4SqLFs2juxmyjr/733Sl6S
+         TTtCFHyR5hVqr66FpAO+E2G+ki2q/lX9qrzj7Cvett/7hQc/B4yxuxQEmWIC9mBhP4uO
+         KBQIHXOtc6J8ZINPdapRL15W/VHJ7IOfDb26KwSScni3MOyNyVlPZ+zreF2tFJ6Sc+iv
+         JbNmFCqUzi8LB7HDTpof86wwbJ1m0jZtF9myVIvkpezzHCyGH/4OBkyZOCGP3LKIcdJG
+         PcYA==
+X-Gm-Message-State: APjAAAVp/RhFPDlBD9ha9440vQxIrwuWWbS5CPpWg8uV85qEtyF9ysQ8
+        o8NGsorlr2UX75owRB2XpGY=
+X-Google-Smtp-Source: APXvYqzVPL3/lJPiWZwh9HoivInuPZ+OKka+h2YnhdopdI3zHuFuqo06Oam+EXPNyNs3RwwL7zY0xw==
+X-Received: by 2002:a1c:c105:: with SMTP id r5mr20051797wmf.46.1559687437236;
+        Tue, 04 Jun 2019 15:30:37 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id q21sm14134478wmq.13.2019.06.04.15.30.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 15:30:27 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 15:30:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-Message-ID: <20190604223025.GD4814@minitux>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <20190604072001.9288-3-bjorn.andersson@linaro.org>
- <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
+        Tue, 04 Jun 2019 15:30:36 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 00:30:34 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
+        Steven Honeyman <stevenhoneyman@gmail.com>,
+        Valdis.Kletnieks@vt.edu,
+        Jochen Eisinger <jochen@penguin-breeder.org>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com,
+        Alex Hung <alex.hung@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Message-ID: <20190604223034.quik44psi43wu4hf@pali>
+References: <20180127133209.28995-1-pali.rohar@gmail.com>
+ <20190602132003.1911-1-pali.rohar@gmail.com>
+ <20190604165729.4b67222f@endymion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="eca7kglr7r7hy3co"
 Content-Disposition: inline
-In-Reply-To: <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190604165729.4b67222f@endymion>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04 Jun 01:13 PDT 2019, Bean Huo (beanhuo) wrote:
-> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba
-> >*hba)
-> > 	int retries = MAX_HOST_RESET_RETRIES;
-> >
-> > 	do {
-> >+		/* Reset the attached device */
-> >+		ufshcd_device_reset(hba);
-> >+
-> 
-> what's problem you met, and you should reset UFS device here? could you give more info?
-> 
-> It is true that we don't reset UFS device in case of device fatal error. According to UFS host spec,
-> Host should be device reset except that in addition to resetting UIC. But as so far,
-> We didn't experience any problems result from this missing reset.
-> 
-> We have three UFS device reset ways.  Comparing to this hardware reset, 
-> I prefer to use DME_ENDPOINTRESET.req software reset.
-> 
 
-Hi Bean,
+--eca7kglr7r7hy3co
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your questions. With some memories we see issues establishing
-the link during bootup, so that's the purpose of issuing this reset.
+Hi!
 
-Unfortunately the downstream Qualcomm patch [1] (which I should have
-remembered to attribute), does not mention why the reset during host
-controller reset is needed - but I'm fairly certain that this scenario
-would be similar to the handover from bootloader to kernel that we do
-see an issue with.
+On Tuesday 04 June 2019 16:57:29 Jean Delvare wrote:
+> Hi Pali,
+>=20
+> Next time, please start a new thread for a new version of a patch.
 
+Ok!
 
-[1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/commit/?h=msm-4.4&id=0c82737188e2d63a08196e078e411032dbbc3b89
+> On Sun,  2 Jun 2019 15:20:03 +0200, Pali Roh=C3=A1r wrote:
+> > Dell platform team told us that some (DMI whitelisted) Dell Latitude
+> > machines have ST microelectronics accelerometer at i2c address 0x29.
+> >=20
+> > Presence of that ST microelectronics accelerometer is verified by exist=
+ence
+> > of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+> > ACPI device does not specify i2c address.
+> >=20
+> > This patch registers lis3lv02d device for selected Dell Latitude machin=
+es
+> > at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
+> > i2c address 0x1d which was manually detected.
+> >=20
+> > Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+> > conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines=
+ so
+> > lis3lv02d correctly initialize accelerometer.
+> >=20
+> > Tested on Dell Latitude E6440.
+> >=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> >=20
+> > ---
+> > Changes since v2:
+> >  * Use explicit list of SMOxx ACPI devices
+> >=20
+> > Changes since v1:
+> >  * Added Dell Vostro V131 based on Micha=C5=82 K=C4=99pie=C5=84 testing
+> >  * Changed DMI product structure to include also i2c address
+> > ---
+> >  drivers/i2c/busses/i2c-i801.c       | 118 ++++++++++++++++++++++++++++=
+++++++++
+> >  drivers/platform/x86/dell-smo8800.c |   1 +
+> >  2 files changed, 119 insertions(+)
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i80=
+1.c
+> > index ac7f7817dc89..2ac8ff41cc24 100644
+> > --- a/drivers/i2c/busses/i2c-i801.c
+> > +++ b/drivers/i2c/busses/i2c-i801.c
+> > @@ -1134,6 +1134,121 @@ static void dmi_check_onboard_devices(const str=
+uct dmi_header *dm, void *adap)
+> >  	}
+> >  }
+> > =20
+> > +/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800=
+=2Ec */
+> > +static const struct acpi_device_id acpi_smo8800_ids[] =3D {
+> > +	{ "SMO8800", 0 },
+> > +	{ "SMO8801", 0 },
+> > +	{ "SMO8810", 0 },
+> > +	{ "SMO8811", 0 },
+> > +	{ "SMO8820", 0 },
+> > +	{ "SMO8821", 0 },
+> > +	{ "SMO8830", 0 },
+> > +	{ "SMO8831", 0 },
+> > +};
+> > +
+> > +static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
+> > +					     u32 nesting_level,
+> > +					     void *context,
+> > +					     void **return_value)
+> > +{
+> > +	struct acpi_device_info *info;
+> > +	acpi_status status;
+> > +	char *hid;
+> > +	int i;
+> > +
+> > +	status =3D acpi_get_object_info(obj_handle, &info);
+> > +	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
+> > +		return AE_OK;
+> > +
+> > +	hid =3D info->hardware_id.string;
+> > +	if (!hid)
+> > +		return AE_OK;
+> > +
+> > +	for (i =3D 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
+> > +		if (strcmp(hid, acpi_smo8800_ids[i].id) =3D=3D 0) {
+> > +			*((bool *)return_value) =3D true;
+> > +			return AE_CTRL_TERMINATE;
+> > +		}
+> > +	}
+> > +
+> > +	return AE_OK;
+> > +
+>=20
+> Unneeded blank line.
 
-Regards,
-Bjorn
+Ok.
+
+> > +}
+> > +
+> > +static bool is_dell_system_with_lis3lv02d(void)
+> > +{
+> > +	bool found;
+> > +	acpi_status status;
+> > +	const char *vendor;
+> > +
+> > +	vendor =3D dmi_get_system_info(DMI_SYS_VENDOR);
+> > +	if (strcmp(vendor, "Dell Inc.") !=3D 0)
+> > +		return false;
+> > +
+> > +	/*
+> > +	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
+>=20
+> I see how you check that the device exists, but not that it is enabled.
+
+Hm.. you are right. I will add missing check.
+
+> > +	 * device represent our ST microelectronics lis3lv02d accelerometer b=
+ut
+> > +	 * unfortunately without any other information (like i2c address).
+>=20
+> I2C
+
+I will change i2c to I2C in whole patch.
+
+> > +	 */
+> > +	found =3D false;
+> > +	status =3D acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
+> > +				  (void **)&found);
+> > +	if (!ACPI_SUCCESS(status) || !found)
+> > +		return false;
+> > +
+> > +	return true;
+>=20
+> Looks more complex than it needs to be. You don't really care about the
+> status, as in the end you return the same on error as you do when no
+> device is found. So I think you can simply go with:
+>=20
+> 	found =3D false;
+> 	acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
+> 				  (void **)&found);
+>=20
+> 	return found;
+
+Ok, it really simplify that check.
+
+>=20
+> > +}
+> > +
+> > +/*
+> > + * Accelerometer's i2c address is not specified in DMI nor ACPI,
+>=20
+> I2C
+>=20
+> > + * so it is needed to define mapping table based on DMI product names.
+> > + */
+> > +static struct {
+>=20
+> Any reason to not make it const?
+
+No, I will make it const.
+
+> > +	const char *dmi_product_name;
+> > +	unsigned short i2c_addr;
+> > +} dell_lis3lv02d_devices[] =3D {
+> > +	/*
+> > +	 * Dell platform team told us that these Latitude devices have
+> > +	 * ST microelectronics accelerometer at i2c address 0x29.
+>=20
+> I2C
+>=20
+> > +	 */
+> > +	{ "Latitude E5250",     0x29 },
+> > +	{ "Latitude E5450",     0x29 },
+> > +	{ "Latitude E5550",     0x29 },
+> > +	{ "Latitude E6440",     0x29 },
+> > +	{ "Latitude E6440 ATG", 0x29 },
+> > +	{ "Latitude E6540",     0x29 },
+> > +	/*
+> > +	 * Additional individual entries were added after verification.
+> > +	 */
+> > +	{ "Vostro V131",        0x1d },
+> > +};
+> > +
+> > +static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
+> > +{
+> > +	struct i2c_board_info info;
+> > +	const char *dmi_product_name;
+> > +	int i;
+> > +
+> > +	dmi_product_name =3D dmi_get_system_info(DMI_PRODUCT_NAME);
+> > +	for (i =3D 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
+> > +		if (strcmp(dmi_product_name,
+> > +			   dell_lis3lv02d_devices[i].dmi_product_name) =3D=3D 0)
+> > +			break;
+> > +	}
+> > +
+> > +	if (i =3D=3D ARRAY_SIZE(dell_lis3lv02d_devices)) {
+> > +		dev_warn(&priv->pci_dev->dev,
+> > +			 "Accelerometer lis3lv02d is present on i2c bus but its"
+>=20
+> i2c bus -> SMBus
+>=20
+> > +			 " i2c address is unknown, skipping registration...\n");
+>=20
+> I2C (or just s/i2c //, as it's kind of redundant)
+>=20
+> Suspension points not really needed IMHO.
+
+Ok, it will be in V4 which I sent in few minutes.
+
+> > +		return;
+> > +	}
+> > + (...)
+>=20
+> All the rest looks good to me.
+>=20
+> Thanks,
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--eca7kglr7r7hy3co
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXPbxCAAKCRCL8Mk9A+RD
+UmSYAKCDBhuuIH1W7/2goRbozB6f9Pw11QCdGPIqJhmPcVKPoecrt7BLyZd1wa4=
+=cnP+
+-----END PGP SIGNATURE-----
+
+--eca7kglr7r7hy3co--
