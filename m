@@ -2,163 +2,161 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB60C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E9A23F50
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA2F20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfFDMXg (ORCPT
+        id S1727766AbfFDMYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:23:36 -0400
-Received: from verein.lst.de ([213.95.11.211]:35883 "EHLO newverein.lst.de"
+        Tue, 4 Jun 2019 08:24:55 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32822 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727766AbfFDMXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:23:34 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id 98D4868B20; Tue,  4 Jun 2019 14:23:08 +0200 (CEST)
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-References: <20190604122150.29D6468B05@newverein.lst.de>
-Message-Id: <20190604122308.98D4868B20@newverein.lst.de>
-Date:   Tue,  4 Jun 2019 14:23:08 +0200 (CEST)
+        id S1727409AbfFDMYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:24:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 05:24:54 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 05:24:47 -0700
+Date:   Tue, 4 Jun 2019 15:24:47 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 4/9] mm: Introduce vm_ops->mprotect()
+Message-ID: <20190604122447.GE30594@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-5-sean.j.christopherson@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531233159.30992-5-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus. eDP output goes
-to an Innolux N116BGE panel.
+On Fri, May 31, 2019 at 04:31:54PM -0700, Sean Christopherson wrote:
+> SGX will use the mprotect() hook to prevent userspace from circumventing
+> various security checks, i.e. Linux Security Modules.
+> 
+> Enclaves are built by copying data from normal memory into the Enclave
+> Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
+> single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
+> single MAP_SHARED vm_file.  Furthermore, all enclaves will need read,
+> write and execute pages in the EPC.
 
-Enable it in the device tree.
+What does the last sentence is pointing out? Enclaves read, write and
+execute pages, so?
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
- 1 file changed, 61 insertions(+), 4 deletions(-)
+> As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
+> can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
+> that originated in a non-EXECUTE file (which is long gone by the time
+> mprotect() is called).
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 0ec46b969a75..a0ad438b037f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -65,6 +65,21 @@
- 		};
- 	};
- 
-+	panel: panel {
-+		compatible ="innolux,n116bge", "simple-panel";
-+		status = "okay";
-+		power-supply = <&reg_dcdc1>;
-+		backlight = <&backlight>;
-+
-+		ports {
-+			panel_in: port {
-+				panel_in_edp: endpoint {
-+					remote-endpoint = <&anx6345_out>;
-+				};
-+			};
-+		};
-+	};
-+
- 	reg_usb1_vbus: usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
-@@ -81,20 +96,48 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				anx6345_in: endpoint {
-+					remote-endpoint = <&tcon0_out_anx6345>;
-+				};
-+			};
-+			port@1 {
-+				anx6345_out: endpoint {
-+					remote-endpoint = <&panel_in_edp>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -279,6 +322,20 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-2.16.4
+I'm not sure what kind of scenario this is describing where some LSM
+can't dent PROT_EXEC. Kind of cryptic paragraph, have to say.
 
+> By hooking mprotect(), SGX can make explicit LSM upcalls while an
+> enclave is being built, i.e. when the kernel has a handle to origin of
+> each enclave page, and enforce the result of the LSM policy whenever
+> userspace maps the enclave page in the future.
+
+How does mprotect() enabled adding new LSM hooks?
+
+> Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
+> that approach is quite ugly, e.g. would require userspace to call an
+> SGX ioctl() prior to using mprotect() to extend a page's protections.
+
+Not really sure I got this. SGX gets page permissions in SECINFO.
+Also recurring comment about MAY_* constants.
+
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  include/linux/mm.h |  2 ++
+>  mm/mprotect.c      | 15 +++++++++++----
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0e8834ac32b7..50a42364a885 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -458,6 +458,8 @@ struct vm_operations_struct {
+>  	void (*close)(struct vm_area_struct * area);
+>  	int (*split)(struct vm_area_struct * area, unsigned long addr);
+>  	int (*mremap)(struct vm_area_struct * area);
+> +	int (*mprotect)(struct vm_area_struct * area, unsigned long start,
+> +			unsigned long end, unsigned long prot);
+
+Right, the hook must be here obviously because mprotect() can be called
+when /dev/sgx/enclave is closed. Can you describe start and end i.e.
+what range they are in?
+
+>  	vm_fault_t (*fault)(struct vm_fault *vmf);
+>  	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+>  			enum page_entry_size pe_size);
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index bf38dfbbb4b4..e466ca5e4fe0 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -547,13 +547,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+>  			goto out;
+>  		}
+>  
+> -		error = security_file_mprotect(vma, reqprot, prot);
+> -		if (error)
+> -			goto out;
+> -
+>  		tmp = vma->vm_end;
+>  		if (tmp > end)
+>  			tmp = end;
+> +
+> +		if (vma->vm_ops && vma->vm_ops->mprotect) {
+> +			error = vma->vm_ops->mprotect(vma, nstart, tmp, prot);
+> +			if (error)
+> +				goto out;
+> +		}
+> +
+> +		error = security_file_mprotect(vma, reqprot, prot);
+
+Why is mprotect callback called post the LSM hook?
+
+> +		if (error)
+> +			goto out;
+
+/Jarkko
