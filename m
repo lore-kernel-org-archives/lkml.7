@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B343BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E92255DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941F3255DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfFDCZP (ORCPT
+        id S1726708AbfFDCZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 22:25:15 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:37762 "EHLO
+        Mon, 3 Jun 2019 22:25:16 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:50973 "EHLO
         smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726583AbfFDCZL (ORCPT
+        by vger.kernel.org with ESMTP id S1726369AbfFDCZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 22:25:11 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08621082|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.457986-0.024733-0.517281;FP=8026422909421434835|2|2|3|0|-1|-1|-1;HT=e02c03310;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.Eh75bE2_1559615109;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.Eh75bE2_1559615109)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Tue, 04 Jun 2019 10:25:09 +0800
+        Mon, 3 Jun 2019 22:25:12 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09231208|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.412593-0.0549792-0.532428;FP=4993171859445338579|2|2|3|0|-1|-1|-1;HT=e02c03275;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Eh6wegv_1559615110;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.Eh6wegv_1559615110)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Tue, 04 Jun 2019 10:25:10 +0800
 From:   Mao Han <han_mao@c-sky.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH V4 4/6] dt-bindings: csky: Add csky PMU bindings
-Date:   Tue,  4 Jun 2019 10:23:58 +0800
-Message-Id: <0ac19e3d8840bc422967653dba9c9b96f5767357.1559614824.git.han_mao@c-sky.com>
+        Guo Ren <guoren@kernel.org>
+Subject: [PATCH V4 6/6] csky: Fix perf record in kernel/user space
+Date:   Tue,  4 Jun 2019 10:24:00 +0800
+Message-Id: <3a6a5379b4f692773d82ff5ad18a7b22ceaf5a80.1559614824.git.han_mao@c-sky.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1559614824.git.han_mao@c-sky.com>
 References: <cover.1559614824.git.han_mao@c-sky.com>
@@ -42,61 +42,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the documentation to describe that how to add pmu node in
-dts.
+csky_pmu_event_init is called several times during the perf record
+initialzation. After configure the event counter in either kernel
+space or user space, csky_pmu_event_init is called twice with no
+attr specified. Configuration will be overwritten with sampling in
+both kernel space and user space. --all-kernel/--all-user is
+useless without this patch applied.
 
 Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Guo Ren <guoren@kernel.org>
+Cc: linux-csky@vger.kernel.org
 ---
- Documentation/devicetree/bindings/csky/pmu.txt | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/csky/pmu.txt
+ arch/csky/kernel/perf_event.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/csky/pmu.txt b/Documentation/devicetree/bindings/csky/pmu.txt
-new file mode 100644
-index 0000000..53c3b0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/csky/pmu.txt
-@@ -0,0 +1,38 @@
-+============================
-+C-SKY Performance Monitor Units
-+============================
+diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
+index dc84dc7..e3308ab 100644
+--- a/arch/csky/kernel/perf_event.c
++++ b/arch/csky/kernel/perf_event.c
+@@ -983,6 +983,12 @@ static int csky_pmu_event_init(struct perf_event *event)
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	int ret;
+ 
++	if (event->attr.type != PERF_TYPE_HARDWARE &&
++	    event->attr.type != PERF_TYPE_HW_CACHE &&
++	    event->attr.type != PERF_TYPE_RAW) {
++		return -ENOENT;
++	}
 +
-+C-SKY 8xx series cores often have a PMU for counting cpu and cache events.
-+The C-SKY PMU representation in the device tree should be done as under:
-+
-+==============================
-+PMU node bindings definition
-+==============================
-+
-+	Description: Describes PMU
-+
-+	PROPERTIES
-+
-+	- compatible
-+		Usage: required
-+		Value type: <string>
-+		Definition: must be "csky,csky-pmu"
-+	- interrupts
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be pmu irq num defined by soc
-+	- count-width
-+		Usage: optional
-+		Value type: <u32>
-+		Definition: the width of pmu counter
-+
-+Examples:
-+---------
-+
-+        pmu {
-+                compatible = "csky,csky-pmu";
-+                interrupts = <0x17 IRQ_TYPE_EDGE_RISING>;
-+                interrupt-parent = <&intc>;
-+		count-width = <0x30>;
-+        };
-+
+ 	if (event->attr.exclude_user)
+ 		csky_pmu.hpcr = BIT(2);
+ 	else if (event->attr.exclude_kernel)
 -- 
 2.7.4
 
