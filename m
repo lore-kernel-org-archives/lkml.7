@@ -2,343 +2,197 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B43EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC14FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F69C2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AABD2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nOlg5MsL"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FYzxb29G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfFDP5y (ORCPT
+        id S1728256AbfFDP6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:57:54 -0400
-Received: from mail.efficios.com ([167.114.142.138]:45566 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbfFDP5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:57:54 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 4C4CB234FD7;
-        Tue,  4 Jun 2019 11:57:51 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Zp6BZiNExbXZ; Tue,  4 Jun 2019 11:57:50 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 3EC9E234FC7;
-        Tue,  4 Jun 2019 11:57:50 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3EC9E234FC7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1559663870;
-        bh=W2jdImb6kIMUSLl7hFGPg77zIGSS8POEJyXEdDpjCn8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=nOlg5MsL+VlB9bLqn+88PkSIMr1Zs+aFQZ1Ta9ibMUJ02YB8XQxhL5YKaVDkh5u9M
-         NdT++QkxVHCDJ2Q3sYSvMzohv1QvDgRqd4J/qXkN5ah+AnyTC7lhzYyOWR+QBG/oP4
-         9AErFY+kv029DhIuXETZaVhRGGRY12V+wrkyQkn7P/XngJAKHCk9pmVXO6t9hwboqP
-         9SjF1a92k3XRyzF5Z0FyLpLbXItxbQqbnuTXg6hDmQ1dSh96yVa/+fJk3v0H+I/tE5
-         E7tcsn6Tkkem4drZIDadIVUF11iPXBCysM1BtYeicq5qdHpMoucypLz+0YDOf30x0r
-         V6SulU3F2wHHg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 3ZrLWlYrLBqf; Tue,  4 Jun 2019 11:57:50 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 22D49234FBF;
-        Tue,  4 Jun 2019 11:57:50 -0400 (EDT)
-Date:   Tue, 4 Jun 2019 11:57:50 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com> <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com> <875zprm4jo.fsf@oldenburg2.str.redhat.com> <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com> <87muj2k4ov.fsf@oldenburg2.str.redhat.com> <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com> <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Tue, 4 Jun 2019 11:58:04 -0400
+Received: from mail-eopbgr770040.outbound.protection.outlook.com ([40.107.77.40]:9539
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727422AbfFDP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:58:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4jBKXr+/OasCKHUWnkQcHw5ZzynnvwLr8ZgCYtc2sgA=;
+ b=FYzxb29GNmi0CnuWptP1aXHhXHQUbEhBm6/HG7yIgfW9nSyLpfzbsJN8Y8LPHT4syd4JRXq9MkfEu3q/xUuV+msnmf5CTrbNZ+vbITD8leNNPii2y5omZQbdb81m6Y2bF+0hl/i4yKrs8g3qr0NPJF9lvAfpCOAiB24KsUVspZM=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB2746.namprd12.prod.outlook.com (20.176.118.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Tue, 4 Jun 2019 15:56:14 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::bcaf:86d4:677f:9555]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::bcaf:86d4:677f:9555%6]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 15:56:14 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Baoquan He <bhe@redhat.com>
+CC:     "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: The current SME implementation fails kexec/kdump kernel booting.
+Thread-Topic: The current SME implementation fails kexec/kdump kernel booting.
+Thread-Index: AQHVGtxpl7Okj5q6IUu+1zsUud1soaaLplcA
+Date:   Tue, 4 Jun 2019 15:56:14 +0000
+Message-ID: <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
+References: <20190604134952.GC26891@MiWiFi-R3L-srv>
+In-Reply-To: <20190604134952.GC26891@MiWiFi-R3L-srv>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0201CA0050.namprd02.prod.outlook.com
+ (2603:10b6:803:20::12) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 858a807c-ca9a-4963-4bcf-08d6e9052c25
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB2746;
+x-ms-traffictypediagnostic: DM6PR12MB2746:
+x-microsoft-antispam-prvs: <DM6PR12MB27463E5CC03B3A2995BEDE8DEC150@DM6PR12MB2746.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(136003)(39860400002)(396003)(189003)(199004)(14444005)(256004)(31696002)(64756008)(73956011)(66946007)(66476007)(66556008)(36756003)(54906003)(6116002)(3846002)(86362001)(11346002)(476003)(102836004)(446003)(26005)(2906002)(81156014)(6246003)(2616005)(68736007)(66066001)(81166006)(25786009)(53936002)(186003)(7736002)(305945005)(8676002)(4326008)(8936002)(66446008)(229853002)(6512007)(31686004)(71190400001)(52116002)(486006)(76176011)(5660300002)(6486002)(316002)(72206003)(6436002)(6506007)(386003)(53546011)(99286004)(71200400001)(478600001)(6916009)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2746;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IW0ZyDsOez+RkEtH82npNt4nPCKymOPbYw0WbX1cteoWXZCA9488q6QOM+2c3U2pjnyVeVHZggi6CVxMS4XlV8j7rrmir8tS2Z2J1ewuQPJfhr9a+TmyFkzcWPaVYuHy8OrmtGjlClkOerSDI4K1ILA1xj2ITQWOAUABu9diWspjKdmgFZ42juLK7yWsmNFfgZp2gPYmmUtXKIym3WV7Uc11msF+c11RDwVciW9cfe9lcjLEjrHw862wGHHASnQuQXlxbnY3AMQmDKj/qOaoJRYWjwKTHodB1QB7Fh3xV4z0z8bj0ACFnzrzHbiUwMrxsvU3MubDO+rTz0Z86xaGR8C/8nJw9WUq/D4nYzSGuLXji8f9hgiHaTJ79U6A0Q/WRi88Dojb8A/yvM5CInVQaCn5TkA24x4H0APTB197X6I=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D13757902CD10A43859E451C8DC1BB6A@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: qOC3WlaZbEwJZoJXLOv6rJz7GkQdxA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 858a807c-ca9a-4963-4bcf-08d6e9052c25
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 15:56:14.7711
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2746
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 4, 2019, at 7:46 AM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Mathieu Desnoyers:
->=20
->> ----- On May 31, 2019, at 11:46 AM, Florian Weimer fweimer@redhat.com wr=
-ote:
->>
->>> * Mathieu Desnoyers:
->>>=20
->>>> Let's break this down into the various sub-issues involved:
->>>>
->>>> 1) How early do we need to setup rseq ? Should it be setup before:
->>>>    - LD_PRELOAD .so constructors ?
->>>>      - Without circular dependency,
->>>>      - With circular dependency,
->>>>    - audit libraries initialization ?
->>>>    - IFUNC resolvers ?
->>>>    - other callbacks ?
->>>>    - memory allocator calls ?
->>>>
->>>> We may end up in a situation where we need memory allocation to be set=
-up
->>>> in order to initialize TLS before rseq can be registered for the main
->>>> thread. I suspect we will end up needing a fallbacks which always work
->>>> for the few cases that would try to use rseq too early in dl/libc star=
-tup.
->>>=20
->>> I think the answer to that depends on whether it's okay to have an
->>> observable transition from =E2=80=9Cno rseq kernel support=E2=80=9D to =
-=E2=80=9Ckernel supports
->>> rseq=E2=80=9D.
->>
->> As far as my own use-cases are concerned, I only care that rseq is initi=
-alized
->> before LD_PRELOAD .so constructors are executed.
->=20
-> <https://sourceware.org/bugzilla/show_bug.cgi?id=3D14379> is relevant in
-> this context.  It requests the opposite behavior from LD_PRELOAD.
-
-This link is very interesting. It sheds some light into how a LD_PRELOAD us=
-er
-wants to override malloc.
-
-Should we plan ahead for such scheme to override which library "owns" rseq
-registration from a LD_PRELOAD library ? If so, then we would want glibc to
-set __rseq_handled _after_ LD_PRELOAD ctors are executed.
-
-However, this brings the following situation: lttng-ust can be LD_PRELOADed
-into applications, and I intend to make it provide rseq registration *only =
-if*
-the glibc does not provide it.
-
-As a brainstorm idea, one way around this would be to turn __rseq_handled i=
-nto
-a 4-states variable:
-
-RSEQ_REG_UNSET =3D 0, -> no library handles rseq
-RSEQ_REG_PREINIT =3D 1, -> libc supports RSEQ, initialization not done yet,
-RSEQ_REG_LIBC =3D 2, -> libc supports RSEQ, owns registration,
-RSEQ_REG_OVERRIDE =3D 3, -> LD_PRELOAD library owns registration.
-
-So a lttng-ust LD_PRELOAD could manage rseq registration by setting
-__rseq_handled =3D RSEQ_REG_OVERRIDE only after observing the state
-RSEQ_REG_UNSET.
-
-A LD_PRELOAD library wishing to override the libc rseq management should se=
-t
-__rseq_handled to RSEQ_REG_OVERRIDE after observing either UNSET or PREINIT=
-.
-
->=20
->> There appears to be some amount of documented limitations for what can b=
-e
->> done by the IFUNC resolvers. It might be acceptable to document that rse=
-q
->> might not be initialized yet when those are executed.
->=20
-> The only obstacle is that there are so many places where we could put
-> this information.
-
-If we postpone the actual rseq registration by glibc after LD_PRELOAD ctors
-execution, I think it makes it clear that we have a part of the startup
-which executes without rseq being registered:
-
-(please let me know if I'm getting some things wrong in the following seque=
-nces)
-
-A) Startup sequence (glibc owns rseq):
-
-                                  __rseq_handled          __rseq_abi (TLS)
-                                  --------------          -----------------=
------
-                                  RSEQ_REG_UNSET          no TLS available
-                                  RSEQ_REG_PREINIT
-IFUNC resolvers,
-audit libraries...
-                                                          TLS becomes avail=
-able
-LD_PRELOAD ctors
-glibc initialization              RSEQ_REG_LIBC
-                                                          registered to ker=
-nel by sys_rseq.
-
-
-B) Startup sequence (LD_PRELOAD lttng-ust owns rseq, old glibc):
-
-                                  __rseq_handled          __rseq_abi (TLS)
-                                  --------------          -----------------=
------
-                                  RSEQ_REG_UNSET          no TLS available
-IFUNC resolvers,
-audit libraries...
-                                                          TLS becomes avail=
-able
-LD_PRELOAD ctors                  RSEQ_REG_OVERRIDE
-                                                          registered to ker=
-nel by sys_rseq.
-
-
-C) Startup sequence (LD_PRELOAD rseq override library owning rseq):
-
-                                  __rseq_handled          __rseq_abi (TLS)
-                                  --------------          -----------------=
------
-                                  RSEQ_REG_UNSET          no TLS available
-                                  RSEQ_REG_PREINIT
-IFUNC resolvers,
-audit libraries...
-                                                          TLS becomes avail=
-able
-LD_PRELOAD ctors                  RSEQ_REG_OVERRIDE
-                                                          registered to ker=
-nel by sys_rseq.
-glibc initialization
-
->=20
->> I'd like to hear what others think about whether we should care about IF=
-UNC
->> resolvers and audit libraries using restartable sequences TLS ?
->=20
-> In audit libraries (and after dlmopen), the inner libc will have
-> duplicated TLS values, so it will look as if the TLS area is not active
-> (but a registration has happened with the kernel).  If we move
-> __rseq_handled into the dynamic linker, its value will be shared along
-> with ld.so with the inner objects.  However, the inner libc still has to
-> ensure that its registration attempt does not succeed because that would
-> activate the wrong rseq area.
-
-Having an intermediate RSEQ_REG_PREINIT state covering the entire
-duration where the inner libc is in use should do the trick to ensure
-the duplicated TLS area is not used at that point.
-
-The covered use-cases would be to override rseq registration ownership
-from LD_PRELOADed libraries, but disallow it from IFUNC resolvers and
-audit libraries.
-
-As a consequence of this, rseq critical sections should be prepared
-to use a fall-back mechanism (e.g. the cpu_opv system call I have been
-trying to upstream) when they notice rseq is not yet initialized
-for a rseq c.s. executed within a preinit stage, or very early/late
-in a thread's lifetime. This is a requirement I have seen coming for
-a while now. Testing for non-registered rseq is very straightforward
-and fast to do on a fast-path through the __rseq_abi.cpu_id field:
-it has a negative value if rseq is not registered for the current
-thread.
-
->=20
-> The final remaining case is static dlopen.  There is a copy of ld.so on
-> the dynamic side, but it is completely inactive and has never run.  I do
-> not think we need to support that because multi-threading does not work
-> reliably in this scenario, either.  However, we should skip rseq
-> registration in a nested libc (see the rtld_active function).
-
-So for SHARED, if (!rtld_active ()), we should indeed leave the state of
-__rseq_handled as it is, because we are within a nested inactive ld.so.
-
->=20
->>>> 4) Inability to touch a TLS variable (__rseq_abi) from ld-linux-*.so.2
->>>>    - Should we extend the dynamic linker to allow such TLS variable to=
- be
->>>>      accessed ? If so, how much effort is required ?
->>>>    - Can we find an alternative way to initialize rseq early during
->>>>      dl init stages while still performing the TLS access from a funct=
-ion
->>>>      implemented within libc.so ?
->>>=20
->>> This is again related to the answer for (1).  There are various hacks w=
-e
->>> could implement to make the initialization invisible (e.g., computing
->>> the address of the variable using the equivalent of dlsym, after loadin=
-g
->>> all the initial objects and before starting relocation).  If it's not
->>> too hard to add TLS support to ld.so, we can consider that as well.
->>> (The allocation side should be pretty easy, relocation support it could
->>> be more tricky.)
->>>=20
->>>> So far, I got rseq to be initialized before LD_PRELOADed library
->>>> constructors by doing the initialization in a constructor within
->>>> libc.so. I don't particularly like this approach, because the
->>>> constructor order is not guaranteed.
->>>=20
->>> Right.
->>
->> One question related to use of constructors: AFAIU, if a library depends
->> on glibc, ELF guarantees that the glibc constructor will be executed fir=
-st,
->> before the other library.
->=20
-> There are some exceptions, like DT_PREINIT_ARRAY functions and
-> DF_1_INITFIRST.  Some of these mechanisms we use in the implementation
-> itself, so they are not really usable to end users.  Cycles should not
-> come into play here.
->=20
-> By default, an object that uses the rseq area will have to link against
-> libc (perhaps indirectly), and therefore the libc constructor runs
-> first.
-
-If we agree on postponing the actual TLS registration _after_ LD_PRELOAD
-ctors are executed, the problem becomes easier. We then only need to
-move __rseq_handled to ld.so, and set it to a PREINIT state until we
-eventually perform the TLS registration (after LD_PRELOAD ctors).
-
->=20
->> Which leaves us with the execution order of constructors within libc.so,
->> which is not guaranteed if we just use __attribute__ ((constructor)).
->> However, all gcc versions that are required to build recent glibc
->> seem to support a constructor with a "priority" value (lower gets
->> executed first, and those are executed before constructors without
->> priority).
->=20
-> I'm not sure that's the right way to do it.  If we want to happen
-> execution in a specific order, we should write a single constructor
-> function which is called from _init.  For the time being, we can add the
-> call to an appropriately defined inline function early in _init in
-> elf/init-first.c (which is shared with Hurd, so Hurd will need some sort
-> of stub function).
-
-In my attempts, there were some cases where _init was not invoked before
-LD_PRELOAD ctors, but I cannot remember which at this point. Anyhow, if
-we choose to postpone the actual TLS registration after LD_PRELOAD ctors,
-this becomes a non-issue.
-
-We might want to rename the __rseq_handled symbol to a better name if
-it becomes a 4-states variable, e.g. __rseq_reg_owner.
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
-
->=20
-> Thanks,
-> Florian
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+T24gNi80LzE5IDg6NDkgQU0sIEJhb3F1YW4gSGUgd3JvdGU6DQo+IEhpIFRvbSwNCj4gDQo+IExp
+YW5ibyByZXBvcnRlZCBrZHVtcCBrZXJuZWwgY2FuJ3QgYm9vdCB3ZWxsIHdpdGggJ25va2FzbHIn
+IGFkZGVkLCBhbmQNCj4gaGF2ZSB0byBlbmFibGUgS0FTTFIgaW4ga2R1bXAga2VybmVsIHRvIG1h
+a2UgaXQgYm9vdCBzdWNjZXNzZnVsbHkuIFRoaXMNCj4gYmxvY2tlZCBoaXMgd29yayBvbiBlbmFi
+bGluZyBzbWUgZm9yIGtleGVjL2tkdW1wLiBBbmQgb24gc29tZSBtYWNoaW5lcw0KPiBTTUUga2Vy
+bmVsIGNhbid0IGJvb3QgaW4gMXN0IGtlcm5lbC4NCj4gDQo+IEkgY2hlY2tlZCBjb2RlIG9mIFNN
+RSBpbXBsZW1lbnRhdGlvbiwgYW5kIGZvdW5kIG91dCB0aGUgcm9vdCBjYXVzZS4gVGhlDQo+IGFi
+b3ZlIGZhaWx1cmVzIGFyZSBjYXVzZWQgYnkgU01FIGNvZGUsIHNtZV9lbmNyeXB0X2tlcm5lbCgp
+LiBJbg0KPiBzbWVfZW5jcnlwdF9rZXJuZWwoKSwgeW91IGdldCBhIDJNIG9mIGVuY3J5cHRpb24g
+d29yayBhcmVhIGFzIGludGVybWVkaWF0ZQ0KPiBidWZmZXIgdG8gZW5jcnlwdCBrZXJuZWwgaW4t
+cGxhY2UuIEFuZCB0aGUgd29yayBhcmVhIGlzIGp1c3QgYWZ0ZXIgX2VuZCBvZg0KPiBrZXJuZWwu
+DQoNCkkgcmVtZW1iZXIgd29ycnlpbmcgYWJvdXQgc29tZXRoaW5nIGxpa2UgdGhpcyBiYWNrIHdo
+ZW4gSSB3YXMgdGVzdGluZyB0aGUNCmtleGVjIHN1cHBvcnQuIEkgaGFkIGNvbWUgdXAgd2l0aCBh
+IHBhdGNoIHRvIGFkZHJlc3MgaXQsIGJ1dCBuZXZlciBnb3QgdGhlDQp0aW1lIHRvIHRlc3QgYW5k
+IHN1Ym1pdCBpdC4gIEkndmUgaW5jbHVkZWQgaXQgaGVyZSBpZiB5b3UnZCBsaWtlIHRvIHRlc3QN
+Cml0IChJIGhhdmVuJ3QgZG9uZSBydW4gdGhpcyBwYXRjaCBpbiBxdWl0ZSBzb21lIHRpbWUpLiBJ
+ZiBpdCB3b3Jrcywgd2UgY2FuDQp0aGluayBhYm91dCBzdWJtaXR0aW5nIGl0Lg0KDQpUaGFua3Ms
+DQpUb20NCg0KLS0tDQp4ODYvbW06IENyZWF0ZSBhbiBTTUUgd29ya2FyZWEgaW4gdGhlIGtlcm5l
+bCBmb3IgZWFybHkgZW5jcnlwdGlvbg0KDQpGcm9tOiBUb20gTGVuZGFja3kgPHRob21hcy5sZW5k
+YWNreUBhbWQuY29tPg0KDQpUaGUgU01FIHdvcmthcmVhIHVzZWQgZHVyaW5nIGVhcmx5IGVuY3J5
+cHRpb24gb2YgdGhlIGtlcm5lbCBkdXJpbmcgYm9vdA0KaXMgc2l0dWF0ZWQgb24gYSAyTUIgYm91
+bmRhcnkgYWZ0ZXIgdGhlIGVuZCBvZiB0aGUga2VybmVsIHRleHQsIGRhdGEsDQpldGMuIHNlY3Rp
+b25zIChfZW5kKS4gIFRoaXMgd29ya3Mgd2VsbCBkdXJpbmcgaW5pdGlhbCBib290IG9mIGEgY29t
+cHJlc3NlZA0Ka2VybmVsIGJlY2F1c2Ugb2YgdGhlIHJlbG9jYXRpb24gdXNlZCBmb3IgZGVjb21w
+cmVzc2lvbiBvZiB0aGUga2VybmVsLg0KQnV0IHdoZW4gcGVyZm9ybWluZyBhIGtleGVjIGJvb3Qs
+IHRoZXJlJ3MgYSBjaGFuY2UgdGhhdCB0aGUgU01FIHdvcmthcmVhDQptYXkgbm90IGJlIG1hcHBl
+ZCBieSB0aGUga2V4ZWMgcGFnZXRhYmxlcyBvciB0aGF0IHNvbWUgb2YgdGhlIG90aGVyIGRhdGEN
+CnVzZWQgYnkga2V4ZWMgY291bGQgZXhpc3QgaW4gdGhpcyByYW5nZS4NCg0KQ3JlYXRlIGEgc2Vj
+dGlvbiBmb3IgU01FIGluIHRoZSB2bWxpbnV4Lmxkcy5TLiAgUG9zaXRpb24gaXQgYWZ0ZXIgIl9l
+bmQiDQpzbyB0aGF0IHRoZSBtZW1vcnkgd2lsbCBiZSByZWNsYWltZWQgZHVyaW5nIGJvb3QgYW5k
+IHNpbmNlIGl0IGlzIGFsbA0KemVyb2VzIGl0IGNvbXByZXNzZXMgd2VsbC4gIFNpbmNlIHRoaXMg
+bmV3IHNlY3Rpb24gd2lsbCBiZSBwYXJ0IG9mIHRoZQ0Ka2VybmVsLCBrZXhlYyB3aWxsIGFjY291
+bnQgZm9yIGl0IGluIHBhZ2V0YWJsZSBtYXBwaW5ncyBhbmQgcGxhY2VtZW50IG9mDQpkYXRhIGFm
+dGVyIHRoZSBrZXJuZWwuDQoNCkhlcmUncyBhbiBleGFtcGxlIG9mIGEga2VybmVsIHNpemUgd2l0
+aG91dCBhbmQgd2l0aCB0aGUgU01FIHNlY3Rpb246DQoJd2l0aG91dDoNCgkJdm1saW51eDoJMzYs
+NTAxLDYxNg0KCQliekltYWdlOgkgNiw0OTcsMzQ0DQoNCgkJMTAwMDAwMDAwLTQ3ZjM3ZmZmZiA6
+IFN5c3RlbSBSQU0NCgkJICAxZTQwMDAwMDAtMWU0NzY3N2Q0IDogS2VybmVsIGNvZGUJKDB4NzY3
+N2Q0KQ0KCQkgIDFlNDc2NzdkNS0xZTRlMmUwYmYgOiBLZXJuZWwgZGF0YQkoMHg2YzY4ZWEpDQoJ
+CSAgMWU1MDc0MDAwLTFlNTM3MmZmZiA6IEtlcm5lbCBic3MJKDB4MmZlZmZmKQ0KDQoJd2l0aDoN
+CgkJdm1saW51eDoJNDQsNDE5LDQwOA0KCQliekltYWdlOgkgNiw1MDMsMTM2DQoNCgkJODgwMDAw
+MDAwLWM3ZmY3ZmZmZiA6IFN5c3RlbSBSQU0NCgkJICA4Y2YwMDAwMDAtOGNmNzY3N2Q0IDogS2Vy
+bmVsIGNvZGUJKDB4NzY3N2Q0KQ0KCQkgIDhjZjc2NzdkNS04Y2ZlMmUwYmYgOiBLZXJuZWwgZGF0
+YQkoMHg2YzY4ZWEpDQoJCSAgOGQwMDc0MDAwLThkMDM3MmZmZiA6IEtlcm5lbCBic3MJKDB4MmZl
+ZmZmKQ0KDQpTaWduZWQtb2ZmLWJ5OiBUb20gTGVuZGFja3kgPHRob21hcy5sZW5kYWNreUBhbWQu
+Y29tPg0KLS0tDQogYXJjaC94ODYva2VybmVsL3ZtbGludXgubGRzLlMgICAgICB8ICAgMTYgKysr
+KysrKysrKysrKysrKw0KIGFyY2gveDg2L21tL21lbV9lbmNyeXB0X2lkZW50aXR5LmMgfCAgIDIy
+ICsrKysrKysrKysrKysrKysrKysrLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvdm1saW51
+eC5sZHMuUyBiL2FyY2gveDg2L2tlcm5lbC92bWxpbnV4Lmxkcy5TDQppbmRleCAwODUwYjUxNDkz
+NDUuLjhjNDM3Nzk4M2U1NCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2tlcm5lbC92bWxpbnV4Lmxk
+cy5TDQorKysgYi9hcmNoL3g4Ni9rZXJuZWwvdm1saW51eC5sZHMuUw0KQEAgLTM3OSw2ICszNzks
+MjIgQEAgU0VDVElPTlMNCiAJLiA9IEFMSUdOKFBBR0VfU0laRSk7CQkvKiBrZWVwIFZPX0lOSVRf
+U0laRSBwYWdlIGFsaWduZWQgKi8NCiAJX2VuZCA9IC47DQogDQorI2lmZGVmIENPTkZJR19BTURf
+TUVNX0VOQ1JZUFQNCisJLyoNCisJICogU01FIHdvcmthcmVhIHNlY3Rpb246IExpdmVzIG91dHNp
+ZGUgb2YgdGhlIGtlcm5lbCBwcm9wZXINCisJICogKF90ZXh0IC0gX2VuZCkgZm9yIHBlcmZvcm1p
+bmcgaW4tcGxhY2UgZW5jcnlwdGlvbi4gUmVzaWRlcw0KKwkgKiBvbiBhIDJNQiBib3VuZGFyeSB0
+byBzaW1wbGlmeSB0aGUgcGFnZXRhYmxlIHNldHVwIHVzZWQgZm9yDQorCSAqIHRoZSBlbmNyeXB0
+aW9uLg0KKwkgKi8NCisJLiA9IEFMSUdOKEhQQUdFX1NJWkUpOw0KKwkuc21lIDogQVQoQUREUigu
+c21lKSAtIExPQURfT0ZGU0VUKSB7DQorCQlfX3NtZV9iZWdpbiA9IC47DQorCQkqKC5zbWUpDQor
+CQkuID0gQUxJR04oSFBBR0VfU0laRSk7DQorCQlfX3NtZV9lbmQgPSAuOw0KKwl9DQorI2VuZGlm
+DQorDQogCVNUQUJTX0RFQlVHDQogCURXQVJGX0RFQlVHDQogDQpkaWZmIC0tZ2l0IGEvYXJjaC94
+ODYvbW0vbWVtX2VuY3J5cHRfaWRlbnRpdHkuYyBiL2FyY2gveDg2L21tL21lbV9lbmNyeXB0X2lk
+ZW50aXR5LmMNCmluZGV4IDRhYTliMTQ4MDg2Ni4uYzU1YzJlYzhmYjEyIDEwMDY0NA0KLS0tIGEv
+YXJjaC94ODYvbW0vbWVtX2VuY3J5cHRfaWRlbnRpdHkuYw0KKysrIGIvYXJjaC94ODYvbW0vbWVt
+X2VuY3J5cHRfaWRlbnRpdHkuYw0KQEAgLTczLDYgKzczLDE5IEBAIHN0cnVjdCBzbWVfcG9wdWxh
+dGVfcGdkX2RhdGEgew0KIAl1bnNpZ25lZCBsb25nIHZhZGRyX2VuZDsNCiB9Ow0KIA0KKy8qDQor
+ICogVGhpcyB3b3JrIGFyZWEgbGl2ZXMgaW4gdGhlIC5zbWUgc2VjdGlvbiwgd2hpY2ggbGl2ZXMg
+b3V0c2lkZSBvZg0KKyAqIHRoZSBrZXJuZWwgcHJvcGVyLiBJdCBpcyBzaXplZCB0byBob2xkIHRo
+ZSBpbnRlcm1lZGlhdGUgY29weSBidWZmZXINCisgKiBhbmQgbW9yZSB0aGFuIGVub3VnaCBwYWdl
+dGFibGUgcGFnZXMuDQorICoNCisgKiBCeSB1c2luZyB0aGlzIHNlY3Rpb24sIHRoZSBrZXJuZWwg
+Y2FuIGJlIGVuY3J5cHRlZCBpbiBwbGFjZSBhbmQgd2UNCisgKiBhdm9pZCBhbnkgcG9zc2liaWxp
+dHkgb2YgYm9vdCBwYXJhbWV0ZXJzIG9yIGluaXRyYW1mcyBpbWFnZXMgYmVpbmcNCisgKiBwbGFj
+ZWQgc3VjaCB0aGF0IHRoZSBpbi1wbGFjZSBlbmNyeXB0aW9uIGxvZ2ljIG92ZXJ3cml0ZXMgdGhl
+bS4gIFRoaXMNCisgKiBzZWN0aW9uIGlzIDJNQiBhbGlnbmVkIHRvIGFsbG93IGZvciBzaW1wbGUg
+cGFnZXRhYmxlIHNldHVwIHVzaW5nIG9ubHkNCisgKiBQTUQgZW50cmllcyAoc2VlIHZtbGludXgu
+bGRzLlMpLg0KKyAqLw0KK3N0YXRpYyBjaGFyIHNtZV93b3JrYXJlYVsyICogUE1EX1BBR0VfU0la
+RV0gX19zZWN0aW9uKC5zbWUpOw0KKw0KIHN0YXRpYyBjaGFyIHNtZV9jbWRsaW5lX2FyZ1tdIF9f
+aW5pdGRhdGEgPSAibWVtX2VuY3J5cHQiOw0KIHN0YXRpYyBjaGFyIHNtZV9jbWRsaW5lX29uW10g
+IF9faW5pdGRhdGEgPSAib24iOw0KIHN0YXRpYyBjaGFyIHNtZV9jbWRsaW5lX29mZltdIF9faW5p
+dGRhdGEgPSAib2ZmIjsNCkBAIC0zMTQsOCArMzI3LDEzIEBAIHZvaWQgX19pbml0IHNtZV9lbmNy
+eXB0X2tlcm5lbChzdHJ1Y3QgYm9vdF9wYXJhbXMgKmJwKQ0KIAl9DQogI2VuZGlmDQogDQotCS8q
+IFNldCB0aGUgZW5jcnlwdGlvbiB3b3JrYXJlYSB0byBiZSBpbW1lZGlhdGVseSBhZnRlciB0aGUg
+a2VybmVsICovDQotCXdvcmthcmVhX3N0YXJ0ID0ga2VybmVsX2VuZDsNCisJLyoNCisJICogV2Un
+cmUgcnVubmluZyBpZGVudGl0eSBtYXBwZWQsIHNvIHdlIG11c3Qgb2J0YWluIHRoZSBhZGRyZXNz
+IHRvIHRoZQ0KKwkgKiBTTUUgZW5jcnlwdGlvbiB3b3JrYXJlYSB1c2luZyByaXAtcmVsYXRpdmUg
+YWRkcmVzc2luZy4NCisJICovDQorCWFzbSAoImxlYSBzbWVfd29ya2FyZWEoJSVyaXApLCAlMCIN
+CisJICAgICA6ICI9ciIgKHdvcmthcmVhX3N0YXJ0KQ0KKwkgICAgIDogInAiIChzbWVfd29ya2Fy
+ZWEpKTsNCiANCiAJLyoNCiAJICogQ2FsY3VsYXRlIHJlcXVpcmVkIG51bWJlciBvZiB3b3JrYXJl
+YSBieXRlcyBuZWVkZWQ6DQoNCg0KPiANCj4gVGhpcyBoYXBwZW5zIHRvIHdvcmsgaW4gMXN0IGtl
+cm5lbC4gQnV0IGl0IHdpbGwgZmFpbCBrZXhlYy9rZHVtcCBrZXJuZWwNCj4gYWJzb2x1dGVseS4g
+QmVjYXVzZSB3ZSBsb2FkIHJlYWxtb2RlL2tlcm5lbC9pbml0cmQgaW4ga2V4ZWMtdG9vbHMgZnJv
+bQ0KPiB0b3AgdG8gZG93bi4gSW4ga2V4ZWMtdG9vbHMsIHJlYWxtb2RlIGlzIHB1dCBqdXN0IGFm
+dGVyIGtlcm5lbCBpbWFnZS4gSWYNCj4gS0FTTFIgZW5hYmxlZCwga2VybmVsIG1heSBiZSByYW5k
+b21pemVkIHRvIG90aGVyIHBvc2l0aW9uLCB0aGVuIGtkdW1wDQo+IGtlcm5lbCBjYW4gYm9vdC4g
+SG93ZXZlciwgaWYgbm9rYXNsciBzcGVjaWZpZWQsIHRoZSAyTSBpbnRlcm1lZGlhdGUNCj4gZW5j
+cnlwdGlvbiB3b3JrYXJlYSB3aWxsIGRlZmluaXRlbHkgc3R1bXAgaW50byB0aGUgZm9sbG93aW5n
+IHJlYWxtb2RlLA0KPiBhbmQgZmFpbCBrZXhlYy9rZHVtcCBrZXJuZWwgYm9vdGluZy4NCj4gDQo+
+IEkgaGF2ZSBoYWNrZWQga2V4ZWMtdG9vbHMgY29kZSB0byBwdXQgcmVhbCBtb2RlIGFyZWEgNE0g
+YXdheSBmcm9tIHRoZQ0KPiBrZXJuZWwgaW1hZ2UgZW5kLCBpdCB3b3JrcyBhbmQgY29uZmlybSBt
+eSBmaW5kaW5nLiBTbyB0aGUgY3VycmVudCBTTUUNCj4gaW4tcGxhY2UgZW5jcnlwdGlvbiB3YXkg
+aXMgbm90IG9ubHkgYSBrZXhlYy9rZHVtcCBpc3N1ZSwgYnV0IGFsc28gYW4NCj4gaXNzdWUgaW4g
+MXN0IGtlcm5lbC4gQmVjYXVzZSBLQVNMUiBjb3VsZCBwdXQga2VybmVsIGF0IHRoZSBlbmQgb2Yg
+YW4NCj4gYXZhaWxhYmxlIG1lbW9yeSByZWdpb24sIGhvdyB0byBtYWtlIHN1cmUgdGhlIG5leHQg
+Mk0gaW50ZXJtZWRpYXRlDQo+IHdvcmthcmVhIG11c3QgZXhpc3Q7IGlmIEtBU0xSIHB1dCBrZXJu
+ZWwgdG8gYmUgY2xvc2UgdG8gc3RhcnRpbmcgYWRkcmVzcw0KPiBvZiBhbnkgY21kbGluZS9pbml0
+cmQvc2V0dXBfZGF0YSwgaG93IHRvIG1ha2Ugc3VyZSB0aGUgZ2FwIGJldHdlZW4gdGhlbQ0KPiBt
+dXN0IGJlIGxhcmdlciB0aGFuIDJNLg0KPiANCj4gVGhhbmtzDQo+IEJhb3F1YW4NCj4gDQo=
