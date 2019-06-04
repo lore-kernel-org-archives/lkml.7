@@ -2,122 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62CFC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFD623A79
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4589723A79
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mjM5BDuR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exCfEpz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfFDMxr (ORCPT
+        id S1727882AbfFDMyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:53:47 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:23155 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfFDMxq (ORCPT
+        Tue, 4 Jun 2019 08:54:45 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44749 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfFDMyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:53:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559652822;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=VdoUWsvZWV89sTtg0Ev9avLZKnfeDC7oajjC1QE6iiQ=;
-        b=mjM5BDuRFBE8ztk42AKPhAA7+L7YQ7H7CXTRgadttwFK87iD0eZBLQKZhYPahyypCZ
-        g4i6UJncwB0UtUALSoI7vFjYF6+2vfwZHN3PJ3/YQK/e0YyXCQElh2S8+4xxdsbwVdvr
-        L0EilBmXLC6FvN7ehUBttPbQW4nkcLTwZi5JFk7JenfpbXXEN0s93xhZ1OBKyAc9mWEm
-        Von8SKW+FLlmBLyddPoEH0L2ShkysbAChBO72SSBav7/OckL26wIM7nSZ9qxHjnlcTfu
-        qnv/bTqNlNffV55SxJLjVDT8FjRCfb9h63E0ILhtl4Qm6B0sa8eMx1XHbKrKilL3lrHG
-        DQOw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzTh/eDM="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
-        with ESMTPSA id i01b98v54Cra7YB
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 4 Jun 2019 14:53:36 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
-        marek.belisko@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 1/2] drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
-Date:   Tue,  4 Jun 2019 14:53:33 +0200
-Message-Id: <9eb82ea247a8c3ab5198976d45c599375815c4c1.1559652814.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1559652814.git.hns@goldelico.com>
-References: <cover.1559652814.git.hns@goldelico.com>
+        Tue, 4 Jun 2019 08:54:44 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v129so4146747vsb.11;
+        Tue, 04 Jun 2019 05:54:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I8kO1ihPctG1ALoFxeAqn+bcx97sgjF7Igmu2hN3Q44=;
+        b=exCfEpz0aDM5HyM575FloA/YfJ++ceTkjCpBJK2XDsYT/gpO2+xGgJndeT0AC/ht2a
+         wkNEotuLchAUzVIFK7e3lM3C+vWW6sEG7IqujCq+/qH/Gbi7xOmh5DpnIG33JQKDsylf
+         60g9fz5sTCU66lDj5+XCOUVOSZr41pY18POyyahHIId6UN8/9M0jgMFvQMDneojjaOiE
+         1L6LO96oyRw1vaFQSbapW/Gfo/sf3sUry+QLeNLqi162T7LbdR4a/J9kVlIeUS0RLo8o
+         AV3bk6hO5+vbLl/bDW0Gx0mDrVu3P080n4+1E2VT7yhIvh6cBtympMYd4vtxvUywvUZw
+         TGwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I8kO1ihPctG1ALoFxeAqn+bcx97sgjF7Igmu2hN3Q44=;
+        b=UIadTNvFk/uGjFWyb38afnPRFXA0BZGZVVxXMY9g2XW9rrKU9vDjSahrcT/i0jG+V7
+         535WmB6yAXplosgWTtURlEiTXRTcVbwIwHjSaYkJERLfnz1eFRELDiif1K939qQ9Kgtj
+         I1XQbMMz0sDFEL6Mk03veilZKNuDZqNG6tUPG2yHpP94dl/CHIRW2TxD0d5A8jl8Hvly
+         JIVQNaui+w5wrP0/xju4obfcxb1bcL9RCOIov69R3nxItwneIrsJHAkfgWu3lLdogHF8
+         vs2/jWR1svullARXQSHajVDa9N8TcmpV+Z6YUWWhHWP+1bchL74SPSxg/OMGw2ttTtb9
+         x4zQ==
+X-Gm-Message-State: APjAAAWseRT2vZ3drI/gPFHYLAfeMzFPBXwqI9GsogA2Kps+Pax2LRxc
+        0TWMmpu7/QxEYXDAl2FWMkw5YSGIQHjT/sfzEWI=
+X-Google-Smtp-Source: APXvYqzU2dVgdxzCtI1Ajw8zYy3APA2LeWIn9GRpeCCU4Pvxi/E5TV+54X0G2v27ha80GXHttClSXmmRzeaSXyhw34c=
+X-Received: by 2002:a67:cd14:: with SMTP id u20mr737938vsl.36.1559652883964;
+ Tue, 04 Jun 2019 05:54:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1559651505-18137-1-git-send-email-92siuyang@gmail.com> <a4887243-9018-9926-0cbe-8c1ae3b7769e@iogearbox.net>
+In-Reply-To: <a4887243-9018-9926-0cbe-8c1ae3b7769e@iogearbox.net>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Tue, 4 Jun 2019 20:54:02 +0800
+Message-ID: <CAKgHYH1oBX-uquY2F=K5MDc37YKw=ts7NJb3cLRJ6jN0=Z37bA@mail.gmail.com>
+Subject: Re: [PATCH] net: compat: fix msg_controllen overflow in scm_detach_fds_compat()
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change adds support for the Sharp LQ070Y3DG3B 7.0" TFT LCD panel.
+On Tue, Jun 4, 2019 at 8:46 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> On 06/04/2019 02:31 PM, Young Xiao wrote:
+> > There is a missing check between kmsg->msg_controllen and cmlen,
+> > which can possibly lead to overflow.
+> >
+> > This bug is similar to vulnerability that was fixed in commit 6900317f5eff
+> > ("net, scm: fix PaX detected msg_controllen overflow in scm_detach_fds").
+>
+> Back then I mentioned in commit 6900317f5eff:
+>
+>     In case of MSG_CMSG_COMPAT (scm_detach_fds_compat()), I haven't seen an
+>     issue in my tests as alignment seems always on 4 byte boundary. Same
+>     should be in case of native 32 bit, where we end up with 4 byte boundaries
+>     as well.
+>
+> Do you have an actual reproducer or is it based on code inspection?
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+based on inspection.
+>
+> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> > ---
+> >  net/compat.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/net/compat.c b/net/compat.c
+> > index a031bd3..8e74dfb 100644
+> > --- a/net/compat.c
+> > +++ b/net/compat.c
+> > @@ -301,6 +301,8 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
+> >                       err = put_user(cmlen, &cm->cmsg_len);
+> >               if (!err) {
+> >                       cmlen = CMSG_COMPAT_SPACE(i * sizeof(int));
+> > +                     if (kmsg->msg_controllen < cmlen)
+> > +                             cmlen = kmsg->msg_controllen;
+> >                       kmsg->msg_control += cmlen;
+> >                       kmsg->msg_controllen -= cmlen;
+> >               }
+> >
+>
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 569be4efd8d1..5b27829c5a78 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2204,6 +2204,33 @@ static const struct panel_desc samsung_ltn140at29_301 = {
- 	},
- };
- 
-+static const struct drm_display_mode sharp_lq070y3dg3b_mode = {
-+	.clock = 33260,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 64,
-+	.hsync_end = 800 + 64 + 128,
-+	.htotal = 800 + 64 + 128 + 64,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 8,
-+	.vsync_end = 480 + 8 + 2,
-+	.vtotal = 480 + 8 + 2 + 35,
-+	.vrefresh = 60,
-+	.flags = DISPLAY_FLAGS_PIXDATA_POSEDGE,
-+};
-+
-+static const struct panel_desc sharp_lq070y3dg3b = {
-+	.modes = &sharp_lq070y3dg3b_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,	/* 152.4mm */
-+		.height = 91,	/* 91.4mm */
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
-+		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
-+};
-+
- static const struct drm_display_mode sharp_lq035q7db03_mode = {
- 	.clock = 5500,
- 	.hdisplay = 240,
-@@ -2786,6 +2813,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "sharp,lq035q7db03",
- 		.data = &sharp_lq035q7db03,
-+	}, {
-+		.compatible = "sharp,lq070y3dg3b",
-+		.data = &sharp_lq070y3dg3b,
- 	}, {
- 		.compatible = "sharp,lq101k1ly04",
- 		.data = &sharp_lq101k1ly04,
+
 -- 
-2.19.1
+Best regards!
 
+Young
+-----------------------------------------------------------
