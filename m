@@ -2,142 +2,122 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111B2C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89261C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D130B20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:42:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="som4VuEn"
+	by mail.kernel.org (Postfix) with ESMTP id 6912E2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFDVmo (ORCPT
+        id S1726635AbfFDVnN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:42:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44964 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDVmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:42:42 -0400
-Received: by mail-oi1-f196.google.com with SMTP id e189so10018871oib.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MmbOSyUJaWKC7E6mkMCzZ130rukGjBMZ7YsMSlPmAOc=;
-        b=som4VuEnLAm6NcFA4G/8bUu59DJs6RQOXDu6uZ1dl355pmtObd2mRXHG+QnM2NILle
-         6DTXAQBmdRMaZD/x8iF9Y+ryzMErSw+5JBQo8Ro6J+sgLvZco1iE/lfnV+f4LAl3DAHn
-         BAy+HURpJHjZM6ifsf+NaHt6OzO9VRQgq9Rko4eWC5NCxUiL5IegRMqCGfwNenMs3zrq
-         yAHjmwOlHQrfADQgDM4ZbZgN/gs2XWJsOhdjaDVoJadZeL6PHpmdxdY1+b8bHDr2gD1D
-         TjQRJZ66edOjw2MfQXWpKr98kqESN59Fy+Gb7g6GhFh4MYAVLfUPkUh5tK+kWuRZ8sbq
-         Tu/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MmbOSyUJaWKC7E6mkMCzZ130rukGjBMZ7YsMSlPmAOc=;
-        b=WVl9tlC5uvIphtbipOaEePNn2y1GpPMJ5rBVoLtZ1GNQbYgxOSYrNPPQ9vnjpgLnXu
-         iXKYaoQambzKnURTUD3nTecp/QJhT34hxkzWIj07dftCplc5ITRRzZltzKQNEWxKewGj
-         ig9+hn8BJpzboYNygU6zVTVunAAWmzR4F1oJDmos99Cm2Hhx7i10HsgQ0lx+pEhvnirD
-         Rd+BqGUkI/fxG2Pp78tVsxXTdCYmMQZRSYDubyhVGubeOJQsO70j6JV8C2EGAGo6QvJU
-         wDcgFCiNejECZhSxAhpBvoVCZyLNpjUMpPP0mv7Q2eLH4fHu1idssO3QhMJO2q1jR23w
-         rBHA==
-X-Gm-Message-State: APjAAAVD4UatiHLs63nsjWq4y1apXr3xd4b+A2mfGQTCO0QiavxROi75
-        bdPSb6tcsjpNu6iRK/gNvd3VbGr1vYNwy4QvmWB1YQ==
-X-Google-Smtp-Source: APXvYqwy/zP1uRQYn1PObI3YjbeOg8OAYcgtGZPJVk80vheA3mZKMw14QcF60p+PtjD68c6OpiKRTCMpu+IhxFZif08=
-X-Received: by 2002:aca:6087:: with SMTP id u129mr5555815oib.70.1559684562041;
- Tue, 04 Jun 2019 14:42:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604164813.31514-1-ira.weiny@intel.com> <cfd74a0f-71b5-1ece-80af-7f415321d5c1@nvidia.com>
- <CAPcyv4hmN7M3Y1HzVGSi9JuYKUUmvBRgxmkdYdi_6+H+eZAyHA@mail.gmail.com> <4d97645c-0e55-37c0-1a16-8649706b9e78@nvidia.com>
-In-Reply-To: <4d97645c-0e55-37c0-1a16-8649706b9e78@nvidia.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 4 Jun 2019 14:42:30 -0700
-Message-ID: <CAPcyv4h8fgkaP_zVT0bBwnstkO+=V8RRH5z4a=EemQLFamXB1Q@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/swap: Fix release_pages() when releasing devmap pages
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+        Tue, 4 Jun 2019 17:43:13 -0400
+Received: from mga09.intel.com ([134.134.136.24]:52309 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfFDVnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 17:43:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 14:43:11 -0700
+X-ExtLoop1: 1
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2019 14:43:10 -0700
+Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 4 Jun 2019 14:43:10 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX151.amr.corp.intel.com ([169.254.7.185]) with mapi id 14.03.0415.000;
+ Tue, 4 Jun 2019 14:43:10 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        "Paul Moore" <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: RE: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
+ for Intel SGX
+Thread-Topic: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
+ for Intel SGX
+Thread-Index: AQHVGAkjeU1nLGbLQ0COV0gRY1rFBqaMbZsAgAACI4D//5wC8A==
+Date:   Tue, 4 Jun 2019 21:43:09 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654EDB7D@ORSMSX116.amr.corp.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-9-sean.j.christopherson@intel.com>
+ <CALCETrXf3ujAn6uOwWMU8SRZOvBRb8ALvo_LQvwxc899mrakwQ@mail.gmail.com>
+ <20190604203649.GC7775@linux.intel.com>
+In-Reply-To: <20190604203649.GC7775@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjk3ZmNiZGEtZTJkNi00ZTMzLWI3MzYtYzNlOTBlZTg5NzlmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9oejQ4MHBleU1KeXlYQXU3S3JFeHhwK1d2WUJGRTJibitsMmRcL2YzQ3N4U0tOY29KSms0SEVSZWtiSmZxUE1PIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 1:17 PM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 6/4/19 1:11 PM, Dan Williams wrote:
-> > On Tue, Jun 4, 2019 at 12:48 PM John Hubbard <jhubbard@nvidia.com> wrote:
-> >>
-> >> On 6/4/19 9:48 AM, ira.weiny@intel.com wrote:
-> >>> From: Ira Weiny <ira.weiny@intel.com>
-> >>>
-> ...
-> >>> diff --git a/mm/swap.c b/mm/swap.c
-> >>> index 7ede3eddc12a..6d153ce4cb8c 100644
-> >>> --- a/mm/swap.c
-> >>> +++ b/mm/swap.c
-> >>> @@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
-> >>>               if (is_huge_zero_page(page))
-> >>>                       continue;
-> >>>
-> >>> -             /* Device public page can not be huge page */
-> >>> -             if (is_device_public_page(page)) {
-> >>> +             if (is_zone_device_page(page)) {
-> >>>                       if (locked_pgdat) {
-> >>>                               spin_unlock_irqrestore(&locked_pgdat->lru_lock,
-> >>>                                                      flags);
-> >>>                               locked_pgdat = NULL;
-> >>>                       }
-> >>> -                     put_devmap_managed_page(page);
-> >>> -                     continue;
-> >>> +                     /*
-> >>> +                      * Not all zone-device-pages require special
-> >>> +                      * processing.  Those pages return 'false' from
-> >>> +                      * put_devmap_managed_page() expecting a call to
-> >>> +                      * put_page_testzero()
-> >>> +                      */
-> >>
-> >> Just a documentation tweak: how about:
-> >>
-> >>                         /*
-> >>                          * ZONE_DEVICE pages that return 'false' from
-> >>                          * put_devmap_managed_page() do not require special
-> >>                          * processing, and instead, expect a call to
-> >>                          * put_page_testzero().
-> >>                          */
+> From: Christopherson, Sean J
+> Sent: Tuesday, June 04, 2019 1:37 PM
+> 
+> On Tue, Jun 04, 2019 at 01:29:10PM -0700, Andy Lutomirski wrote:
+> > On Fri, May 31, 2019 at 4:32 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long
+> > > addr, diff --git a/include/linux/lsm_hooks.h
+> > > b/include/linux/lsm_hooks.h index 47f58cfb6a19..0562775424a0 100644
+> > > --- a/include/linux/lsm_hooks.h
+> > > +++ b/include/linux/lsm_hooks.h
+> > > @@ -1446,6 +1446,14 @@
+> > >   * @bpf_prog_free_security:
+> > >   *     Clean up the security information stored inside bpf prog.
+> > >   *
+> > > + * Security hooks for Intel SGX enclaves.
+> > > + *
+> > > + * @enclave_load:
+> > > + *     On success, returns 0 and optionally adjusts @allowed_prot
+> > > + *     @vma: the source memory region of the enclave page being
+> loaded.
+> > > + *     @prot: the initial protection of the enclave page.
 > >
-> > Looks better to me, but maybe just go ahead and list those
-> > expectations explicitly. Something like:
-> >
-> >                         /*
-> >                          * put_devmap_managed_page() only handles
-> >                          * ZONE_DEVICE (struct dev_pagemap managed)
-> >                          * pages when the hosting dev_pagemap has the
-> >                          * ->free() or ->fault() callback handlers
-> >                          *  implemented as indicated by
-> >                          *  dev_pagemap.type. Otherwise the expectation
-> >                          *  is to fall back to a plain decrement /
-> >                          *  put_page_testzero().
-> >                          */
->
-> I like it--but not here, because it's too much internal detail in a
-> call site that doesn't use that level of detail. The call site looks
-> at the return value, only.
->
-> Let's instead put that blurb above (or in) the put_devmap_managed_page()
-> routine itself. And leave the blurb that I wrote where it is. And then I
-> think everything will have an appropriate level of detail in the right places.
+> > What do you mean "initial"?  The page is always mapped PROT_NONE when
+> > this is called, right?  I feel like I must be missing something here.
+> 
+> Initial protection in the EPCM.  Yet another reason to ignore SECINFO.
 
-Ok.  Ideally there wouldn't be any commentary needed at the call site
-and the put_page() could be handled internal to
-put_devmap_managed_page(), but I did not see a way to do that without
-breaking the compile out / static branch optimization when there are
-no active ZONE_DEVICE users.
+I know you guys are talking in the background that all pages are mmap()'ed PROT_NONE. But that's an unnecessary limitation. And @prot here should be @target_vma->vm_flags&(VM_READ|VM_WRITE|VM_EXEC). 
