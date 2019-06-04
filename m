@@ -2,98 +2,128 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250FEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489A7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C7224BA4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270F824D42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfFDGpe (ORCPT
+        id S1726855AbfFDGqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:45:34 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:51674 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfFDGpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:45:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 3795C201D6;
-        Tue,  4 Jun 2019 08:45:32 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TGvq5BVqSfeq; Tue,  4 Jun 2019 08:45:31 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 7601920068;
-        Tue,  4 Jun 2019 08:45:31 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
- 08:45:31 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 5885A3180550;
- Tue,  4 Jun 2019 08:45:30 +0200 (CEST)
-Date:   Tue, 4 Jun 2019 08:45:30 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-CC:     <peterz@infradead.org>, <akpm@linux-foundation.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Question about padata's callback cpu
-Message-ID: <20190604064530.GP17989@gauss3.secunet.de>
-References: <20190528233707.gc4xomnlcuiszqht@ca-dmjordan1.us.oracle.com>
+        Tue, 4 Jun 2019 02:46:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37240 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726694AbfFDGqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:46:05 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x546hLH8128811
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 02:46:04 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2swjgntr1a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:46:04 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Tue, 4 Jun 2019 07:46:02 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 07:45:58 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x546jwk752035712
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 06:45:58 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E576F42045;
+        Tue,  4 Jun 2019 06:45:57 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B4DD42041;
+        Tue,  4 Jun 2019 06:45:57 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.224.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jun 2019 06:45:57 +0000 (GMT)
+Subject: Re: [RFC PATCH 32/57] drivers: s390-crypto: Use
+ class_device_find_by_name() helper
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-33-git-send-email-suzuki.poulose@arm.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Tue, 4 Jun 2019 08:45:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190528233707.gc4xomnlcuiszqht@ca-dmjordan1.us.oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <1559577023-558-33-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19060406-0028-0000-0000-00000374D56F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060406-0029-0000-0000-00002434AB8C
+Message-Id: <8d555ff8-816d-f4c4-485a-ca6015e044e9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
-
-On Tue, May 28, 2019 at 07:37:07PM -0400, Daniel Jordan wrote:
-> Hi Steffen,
-> 
-> I'm working on some padata patches and stumbled across this thread about the
-> purpose of the callback CPU in padata_do_parallel.
-> 
->     https://lore.kernel.org/lkml/20100402112326.GA19502@secunet.com/
-
-Well, that's quite long ago :)
-
-> 
-> The relevant part is,
-> 
->   andrew> - Why would I want to specify which CPU the parallel completion
->   andrew>   callback is to be executed on?
->   
->     steffen> Well, for IPsec for example it is quite interesting to separate the
->     steffen> different flows to different cpus. pcrypt does this by choosing different
->     steffen> callback cpus for the requests belonging to different transforms.
->     steffen> Others might want to see the object on the same cpu as it was before
->     steffen> the parallel codepath.
-> 
-> Not too familiar with IPsec, but I'm guessing it's interesting to separate the
-> flows for performance reasons.  Is the goal to keep multiple flows from
-> interfering with each other (ensuring they run on different CPUs), or maybe to
-> get better locality (ensuring each always runs on the same CPU)?  It'd be
-> helpful if you could expand on this.
-
-Yes, separating flows is for performance reasons. In networking, the packet
-order inside a flow is very important. If network packets get reordered,
-performance will drop down. So packets of the same flow should always
-stay on the same cpu, otherwise you can't ensure the packet order. But to
-process the network packets as parallel as possible, you can move different
-flows to different cpus by choosing a callback cpu for each flow.
-
-> By the way, the padata patches extend the code to parallelize more places
-> around the kernel, as Peter suggested.
-
-That's great, go ahead!
+On 03.06.19 17:49, Suzuki K Poulose wrote:
+> Use the new class_find_device_by_name() helper.
+>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/s390/crypto/zcrypt_api.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
+> index 1058b4b..16cad8e 100644
+> --- a/drivers/s390/crypto/zcrypt_api.c
+> +++ b/drivers/s390/crypto/zcrypt_api.c
+> @@ -133,12 +133,6 @@ struct zcdn_device {
+>  static int zcdn_create(const char *name);
+>  static int zcdn_destroy(const char *name);
+>  
+> -/* helper function, matches the name for find_zcdndev_by_name() */
+> -static int __match_zcdn_name(struct device *dev, const void *data)
+> -{
+> -	return strcmp(dev_name(dev), (const char *)data) == 0;
+> -}
+> -
+>  /* helper function, matches the devt value for find_zcdndev_by_devt() */
+>  static int __match_zcdn_devt(struct device *dev, const void *data)
+>  {
+> @@ -152,10 +146,8 @@ static int __match_zcdn_devt(struct device *dev, const void *data)
+>   */
+>  static inline struct zcdn_device *find_zcdndev_by_name(const char *name)
+>  {
+> -	struct device *dev =
+> -		class_find_device(zcrypt_class, NULL,
+> -				  (void *) name,
+> -				  __match_zcdn_name);
+> +	struct device *dev = class_find_device_by_name(zcrypt_class,
+> +							NULL, (void *) name);
+>  
+>  	return dev ? to_zcdn_dev(dev) : NULL;
+>  }
+fine with me, thanks
+acked-by: Harald Freudenberger <freude@linux.ibm.com>
 
