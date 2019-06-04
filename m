@@ -2,188 +2,224 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D674C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D6FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165F520717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xswXLDjN"
+	by mail.kernel.org (Postfix) with ESMTP id E4C38207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFDRsG (ORCPT
+        id S1726336AbfFDRwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:48:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34251 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbfFDRsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:48:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c85so4339366pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WO/pU2tXKcWaOz/Mz8XljUSgZVyxjPQIhAnHQSTWhKk=;
-        b=xswXLDjNe6Jf8a386sadmYdZwL+QReS4MtQ+UfRYLrhTIRzkvqzQ03azY36uhAFiZ6
-         VUlZKPeFui2lSXPN/A1Ld5L6ikHcGCXM0hfmX2/Daawvc4dvYRdpTQNj2TB11YyjMros
-         4yJDUHelpg3r8bdjufBbLRnEpioOFwufDjlJU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WO/pU2tXKcWaOz/Mz8XljUSgZVyxjPQIhAnHQSTWhKk=;
-        b=NyRh/87a3rtcB1Ec52Ne0Yw7EO/apFJ/FrxG2irIJmgN213BcHbz/97KGYagZp1TKj
-         DDM/qSyeLYf4a7vrkPSaBeRFwDpt/9+1I+Cm7icGpQt4apnDwAnjPgTjUPiwbY27yrK6
-         DWjKmLC/Gf1kLGreLaxTxrFBzdulW/AQrelT1BBk68fIw17cPAMNqD5oeIVJjy3Te7+N
-         aYUTnKK6mbj0oMvf3luvz++48jQnDf16kFF8DJHhNaEnDw0gr5TCxC0UA6rZ2h3ekOYN
-         bipK5MmUMuGQSeevwtyS4f3HEbeZvSkoYf51AACL/YKAVRSiQEi8Z65wC86r2qZ91e4c
-         guEA==
-X-Gm-Message-State: APjAAAVVj7zShG4BNALxvuB/chiOVzn+Lw20mE5jGjNsvF9AnQ+mLwsL
-        k7lG/1r0WUJ0yx8oRkqtxhpjzA==
-X-Google-Smtp-Source: APXvYqx8jMof6CsO9RKVykzVQR/GUv12PGEyjyOIN6xEEzRdygdf09yxJH05WCP0zIpQf4tWt1xQtQ==
-X-Received: by 2002:a62:5487:: with SMTP id i129mr38037550pfb.68.1559670484899;
-        Tue, 04 Jun 2019 10:48:04 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v4sm24304610pff.45.2019.06.04.10.48.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 10:48:03 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:48:02 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-Message-ID: <20190604174802.GB228607@google.com>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
- <20190601222738.6856-2-joel@joelfernandes.org>
- <20190603080128.GA3436@hirez.programming.kicks-ass.net>
- <20190603141847.GA94186@google.com>
- <20190604065358.73347ced@oasis.local.home>
+        Tue, 4 Jun 2019 13:52:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36912 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbfFDRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:52:00 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DC01AC04FFF1;
+        Tue,  4 Jun 2019 17:51:59 +0000 (UTC)
+Received: from [10.36.116.79] (ovpn-116-79.ams2.redhat.com [10.36.116.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 735B9600CC;
+        Tue,  4 Jun 2019 17:51:53 +0000 (UTC)
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add temporary arch_remove_memory()
+ implementation
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-5-david@redhat.com>
+ <20190603214139.mercn5hol2yyfl2s@master>
+ <5059f68d-45d2-784e-0770-ee67060773c7@redhat.com>
+ <7a5b8c8d-f1bb-9c7e-9809-405af374fecd@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <4f2a87e9-7fd6-4b2b-892d-52482a330235@redhat.com>
+Date:   Tue, 4 Jun 2019 19:51:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604065358.73347ced@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7a5b8c8d-f1bb-9c7e-9809-405af374fecd@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 04 Jun 2019 17:52:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 06:53:58AM -0400, Steven Rostedt wrote:
-> On Mon, 3 Jun 2019 10:18:47 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
+On 04.06.19 19:36, Robin Murphy wrote:
+> On 04/06/2019 07:56, David Hildenbrand wrote:
+>> On 03.06.19 23:41, Wei Yang wrote:
+>>> On Mon, May 27, 2019 at 01:11:45PM +0200, David Hildenbrand wrote:
+>>>> A proper arch_remove_memory() implementation is on its way, which also
+>>>> cleanly removes page tables in arch_add_memory() in case something goes
+>>>> wrong.
+>>>
+>>> Would this be better to understand?
+>>>
+>>>      removes page tables created in arch_add_memory
+>>
+>> That's not what this sentence expresses. Have a look at
+>> arch_add_memory(), in case  __add_pages() fails, the page tables are not
+>> removed. This will also be fixed by Anshuman in the same shot.
+>>
+>>>
+>>>>
+>>>> As we want to use arch_remove_memory() in case something goes wrong
+>>>> during memory hotplug after arch_add_memory() finished, let's add
+>>>> a temporary hack that is sufficient enough until we get a proper
+>>>> implementation that cleans up page table entries.
+>>>>
+>>>> We will remove CONFIG_MEMORY_HOTREMOVE around this code in follow up
+>>>> patches.
+>>>>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>>> Cc: Chintan Pandya <cpandya@codeaurora.org>
+>>>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>>>> Cc: Jun Yao <yaojun8558363@gmail.com>
+>>>> Cc: Yu Zhao <yuzhao@google.com>
+>>>> Cc: Robin Murphy <robin.murphy@arm.com>
+>>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>> ---
+>>>> arch/arm64/mm/mmu.c | 19 +++++++++++++++++++
+>>>> 1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>>> index a1bfc4413982..e569a543c384 100644
+>>>> --- a/arch/arm64/mm/mmu.c
+>>>> +++ b/arch/arm64/mm/mmu.c
+>>>> @@ -1084,4 +1084,23 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>>> 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+>>>> 			   restrictions);
+>>>> }
+>>>> +#ifdef CONFIG_MEMORY_HOTREMOVE
+>>>> +void arch_remove_memory(int nid, u64 start, u64 size,
+>>>> +			struct vmem_altmap *altmap)
+>>>> +{
+>>>> +	unsigned long start_pfn = start >> PAGE_SHIFT;
+>>>> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+>>>> +	struct zone *zone;
+>>>> +
+>>>> +	/*
+>>>> +	 * FIXME: Cleanup page tables (also in arch_add_memory() in case
+>>>> +	 * adding fails). Until then, this function should only be used
+>>>> +	 * during memory hotplug (adding memory), not for memory
+>>>> +	 * unplug. ARCH_ENABLE_MEMORY_HOTREMOVE must not be
+>>>> +	 * unlocked yet.
+>>>> +	 */
+>>>> +	zone = page_zone(pfn_to_page(start_pfn));
+>>>
+>>> Compared with arch_remove_memory in x86. If altmap is not NULL, zone will be
+>>> retrieved from page related to altmap. Not sure why this is not the same?
+>>
+>> This is a minimal implementation, sufficient for this use case here. A
+>> full implementation is in the works. For now, this function will not be
+>> used with an altmap (ZONE_DEVICE is not esupported for arm64 yet).
 > 
-> > On Mon, Jun 03, 2019 at 10:01:28AM +0200, Peter Zijlstra wrote:
-> > > On Sat, Jun 01, 2019 at 06:27:33PM -0400, Joel Fernandes (Google) wrote:  
-> > > > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > > +	} else {							\
-> > > > +		__list_check_rcu();					\
-> > > > +	}								\
-> > > > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > > > +		&pos->member != (head);					\
-> > > >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-> > > >  
-> > > >  /**
-> > > > @@ -621,7 +648,12 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-> > > >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > > >   * as long as the traversal is guarded by rcu_read_lock().
-> > > >   */
-> > > > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > > +	} else {							\
-> > > > +		__list_check_rcu();					\
-> > > > +	}								\
-> > > >  	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> > > >  			typeof(*(pos)), member);			\
-> > > >  		pos;							\  
-> > > 
-> > > 
-> > > This breaks code like:
-> > > 
-> > > 	if (...)
-> > > 		list_for_each_entry_rcu(...);
-> > > 
-> > > as they are no longer a single statement. You'll have to frob it into
-> > > the initializer part of the for statement.  
-> > 
-> > Thanks a lot for that. I fixed it as below (diff is on top of the patch):
-> > 
-> > If not for that '##' , I could have abstracted the whole if/else
-> > expression into its own macro and called it from list_for_each_entry_rcu() to
-> > keep it more clean.
-> > 
-> > ---8<-----------------------
-> > 
-> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > index b641fdd9f1a2..cc742d294bb0 100644
-> > --- a/include/linux/rculist.h
-> > +++ b/include/linux/rculist.h
-> > @@ -371,12 +372,15 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-> >   * as long as the traversal is guarded by rcu_read_lock().
-> >   */
-> >  #define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > -	if (COUNT_VARGS(cond) != 0) {					\
-> > -		__list_check_rcu_cond(0, ## cond);			\
-> > -	} else {							\
-> > -		__list_check_rcu();					\
-> > -	}								\
-> > -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > +	for (								\
-> > +	     ({								\
-> > +		if (COUNT_VARGS(cond) != 0) {				\
-> > +			__list_check_rcu_cond(0, ## cond);		\
-> > +		} else {						\
-> > +			__list_check_rcu_nocond();			\
-> > +		}							\
-> > +	      }),							\
+> FWIW the other pieces of ZONE_DEVICE are now due to land in parallel, 
+> but as long as we don't throw the ARCH_ENABLE_MEMORY_HOTREMOVE switch 
+> then there should still be no issue. Besides, given that we should 
+> consistently ignore the altmap everywhere at the moment, it may even 
+> work out regardless.
+
+Thanks for the info.
+
 > 
-> For easier to read I would do something like this:
+> One thing stands out about the failure path thing, though - if 
+> __add_pages() did fail, can it still be guaranteed to have initialised 
+> the memmap such that page_zone() won't return nonsense? Last time I 
+
+if __add_pages() fails, then arch_add_memory() fails and
+arch_remove_memory() will not be called in the context of this series.
+Only if it succeeded.
+
+> looked that was still a problem when removing memory which had been 
+> successfully added, but never onlined (although I do know that 
+> particular case was already being discussed at the time, and I've not 
+> been paying the greatest attention since).
+
+Yes, that part is next on my list. It works but is ugly. The memory
+removal process should not care about zones at all.
+
+Slowly moving into the right direction :)
+
 > 
-> #define check_rcu_list(cond)						\
-> 	({								\
-> 		if (COUNT_VARGS(cond) != 0)				\
-> 			__list_check_rcu_cond(0, ## cond);		\
-> 		else							\
-> 			__list_check_rcu_nocond();			\
-> 	})
+> Robin.
 > 
-> #define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> 	for (check_rcu_list(cond),					\
-
-Yes, already doing it this way as I replied to Peter here:
-https://lore.kernel.org/patchwork/patch/1082846/#1278489
-
-Thanks!
-
- - Joel
 
 
+-- 
+
+Thanks,
+
+David / dhildenb
