@@ -2,123 +2,78 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C94C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5D524A1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFn/A+31"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1F524A24
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfFDKz6 (ORCPT
+        id S1727499AbfFDK4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:55:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40563 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbfFDKz6 (ORCPT
+        Tue, 4 Jun 2019 06:56:07 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:43221 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727353AbfFDK4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:55:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so10470943wre.7;
-        Tue, 04 Jun 2019 03:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5vyxbHW00w/BGnkxIR9NeNgINEbwzVv+l8xg7qtHVhg=;
-        b=TFn/A+314vn81aJfVxuAHSufWthkN3kRXPyFpGX7PRhiGx7/ERRkIgAvYMffy4rOOk
-         qn/ZFVIGQq77HzKa5jSdc5tzLSw30uDKr9YbWJSlTv0BOFXSqJWnetsifyEHcQaVeQsU
-         M8RznYADDw4Om86FPlt7x6EXm+QsKJ8ZmDjbOho3wVH73HM2u0UCJIN79S17lIrNcYd6
-         w4hvV2MbwM66U79rnJlI0MOGewWUotrhVLJjeVc6ue/01c1h5jy7Sx1URAd+uNzZpHU3
-         +ONPVPt8op/K2a4yOK67hJWYmD3lzARTTPZGDAvOtZcat2NHQ9namzpoGmYRZlZftwe8
-         8iXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5vyxbHW00w/BGnkxIR9NeNgINEbwzVv+l8xg7qtHVhg=;
-        b=lb8FOjDscr5jExiwwuik0/JeuK1DWoWLnLdDKyD0I7BvJbX8JSoGXPqLIiGtSFoIpq
-         Pwmf9JZYAN3AVfP0OOqkuvun1OwsY9fTAz3gTksWfQkOnvfoLNrd58dGh47+Xy2w+XD/
-         MGEic60vQqfzh2mfDXsiTJ7CLVIeSCs0cYBqrKwsQlf0DEcvhdk9uhCdQlYidUreGKBa
-         hOlH0s0LG9DdEjpfN4KPs+0DIx36VlMwVY5f2/wMaR9VjzdLKBgxFXUKCD4/Z2JsOQYR
-         rifQPPceqieDrLbT5qin+F4iCZw9mdRyeSroEgaUjMSI3OtttA5CfXaZ5dECVvGBmWWD
-         H81w==
-X-Gm-Message-State: APjAAAWB/uoTJvILJbZALVjfk+rRal93+EP2cFIkLME9AcXnXBkU159N
-        XhR21urEkxzQoQXZVzMOEOA=
-X-Google-Smtp-Source: APXvYqy/1qGnGiwqQyf3ci6g2uZH1Z6z5dJTezgiCpPWMAGcVylvNP/W/8l26RaL6IOJYWeSLNFjnw==
-X-Received: by 2002:a5d:5586:: with SMTP id i6mr19804970wrv.299.1559645756327;
-        Tue, 04 Jun 2019 03:55:56 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id l1sm6294463wmg.13.2019.06.04.03.55.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 03:55:55 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 12:55:54 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/16] PM / devfreq: tegra: Replace readl-writel with
- relaxed versions
-Message-ID: <20190604105554.GB16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-3-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-3-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 4 Jun 2019 06:56:07 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0782919|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.102947-0.0128022-0.88425;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07391;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.EhJTrBQ_1559645764;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EhJTrBQ_1559645764)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Tue, 04 Jun 2019 18:56:04 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
+        Guo Ren <guoren@kernel.org>
+Subject: [PATCH V5 0/6] csky: Add pmu hardware sampling support
+Date:   Tue,  4 Jun 2019 18:54:43 +0800
+Message-Id: <cover.1559644961.git.han_mao@c-sky.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set add hardware sampling support for csky-pmu, and
+also add some properties to pmu node definition. perf can record
+on hardware event with this patch applied.
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Guo Ren <guoren@kernel.org>
 
-On Thu, May 02, 2019 at 02:38:01AM +0300, Dmitry Osipenko wrote:
-> There is no need to insert memory barrier on each readl/writel
-> invocation, hence use the relaxed versions.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+Changes since v4:
+  - remove some function hook registration
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Changes since v3:
+  - change reg-io-width to count-width
+  - use macro sign_extend64
+  - update commit log
 
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v2:
+  - update dt-binding(csky pmu use rising edge interrupt)
+  - use cpuhp_setup_state to enable irq(fix irq enable on smp)
 
------BEGIN PGP SIGNATURE-----
+Changes since v1:
+  - do not update hpcr when event type is invalid(fix option
+    --all-kernel/--all-user)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2TjoACgkQ3SOs138+
-s6HCig/+MYGm5lDlw7UEH/pX4xq0xSFTzfNLCvBD6nL3btL51CHXKvLRfsOJT1yy
-mvGMSI7THp7XjAJkMWQfu3dyhdTFMsEKl+BAafPV4EhUtK0XkL4Jjttb7cP64ryf
-l8OLys9nDOFLx3qHy1ZQ3HeWmWcxykzeVaX+ymvICq++6H6WR+hNYGO+bUuOA92y
-588v7IjusMz4gxhiO0U6f8JhNJIvyco+TtND/KfeeNC1Svc3epWeijG25O/Zd1Yu
-uYHo9F852kgM2ZVIPnVBQljZXX+5H5cOmCkP2L9iF3TcQRcCJwsTaIRpATBmWgJR
-EcqM2XF+aJ2hlA8SlaJkLma0MP5EuZllYYrIO5+FpPfcDnEjOFNlK+2B1rN151pR
-Zi35DCYQ0XZoK2ZKvw7ICQdPv56TZpW17u6GMS7qx+KbiCWHOFGMTg6KVNO4TeO6
-Uk+nm9U4JzAhwdHdvkelGsIHIcer1QuAPCiT+v+JZNcdV0QE8nn30Np27EEVWdqK
-EyNDxplwghjO8/PUaBHNwqjQs/fMemM/XCB6ffledqxi8SHLL4HZ/02KvYVI3rX7
-wYyVs/HRaHaottLqKLGeaUFLz7XQkZ+eB4vmMuwSDjyRTcqAJDKf5eiN4TfTQvU/
-up1EiOF/H31z8jGNyYfXZ4MK7s3+XKvouYN2ayy02N1ti9U/CjA=
-=jArK
------END PGP SIGNATURE-----
+Guo Ren (1):
+  csky: Fixup some error count in 810 & 860.
 
---gatW/ieO32f1wygP--
+Mao Han (5):
+  csky: Init pmu as a device
+  csky: Add count-width property for csky pmu
+  csky: Add pmu interrupt support
+  dt-bindings: csky: Add csky PMU bindings
+  csky: Fix perf record in kernel/user space
+
+ Documentation/devicetree/bindings/csky/pmu.txt |  38 +++
+ arch/csky/kernel/perf_event.c                  | 422 +++++++++++++++++++++++--
+ 2 files changed, 425 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/csky/pmu.txt
+
+-- 
+2.7.4
+
