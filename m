@@ -2,122 +2,131 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F1C46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287C4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F8F2499C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E4024999
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559658521;
-	bh=O7gbnZkk6GvrbVTl6bI9UPon+W+udWxZvh/zYblS/1E=;
+	s=default; t=1559658577;
+	bh=e2U0OXKWp8FRquT8izb7ZbfUMaGwyeAP1fVt/nF96tU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKyZIYncpprSbGP3Tu6Ubq93jaOKD/r3gpmuILgyhMrn+XIqToVhdX87w+MpPaIcl
-	 5uoTcn1wCbQUOx2N/prZEgTOWb3eq17zvDXYWxGsZQ+QVuTaTdgBtIDytwbJaPvXny
-	 tV+GOeg5APigNcalGHel2RyJ0bx5N7ewxYhkkZNw=
+	b=AZG+GlM5wHNBZJ8CRljRgespQBW109SMtyfxNd5DYaZe0W6xThBf2z2fr49th3qyK
+	 nwq98UCpTKbKkKawLS48reG1/7LAoP0/f7zuh/E3ArIulLSQZz9Sh/P8d4KUkrxweU
+	 gJEUMYZsDon19oHQeXVfXUGHzqANWhFJlTiCsOUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfFDO2l (ORCPT
+        id S1727793AbfFDO3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42988 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 10:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbfFDO2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:28:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727665AbfFDO3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:29:36 -0400
+Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4AD2498F;
-        Tue,  4 Jun 2019 14:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11B592498E;
+        Tue,  4 Jun 2019 14:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559658520;
-        bh=O7gbnZkk6GvrbVTl6bI9UPon+W+udWxZvh/zYblS/1E=;
+        s=default; t=1559658575;
+        bh=e2U0OXKWp8FRquT8izb7ZbfUMaGwyeAP1fVt/nF96tU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mGq/RcvUMLPKU/cWsDJ4IfF8EVqouENT3sn2nQ+9c7sYPAiCQmC0RxTwbc/mjHy5d
-         83v105+qfyjymk+w+8cgUQ1eZuSbkvJHDCja+sAdzS+Dn8gRWNndYNjSvj0jOlm0HG
-         emi4ss3C/xcI9UBK1CIYD1M/pARhXG19y7/N8KP4=
-Date:   Tue, 4 Jun 2019 16:28:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Richard Gong <richard.gong@linux.intel.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
-        atull@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sen.li@intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: A potential broken at platform driver?
-Message-ID: <20190604142837.GB28355@kroah.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
- <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
- <20190603180255.GA18054@kroah.com>
- <b3dd022b-b585-3dfb-5fe6-9c9f5498bc77@linux.intel.com>
+        b=z4Z1WHSGWW5naTDdIGeZ8nwbIhCCD7p0bsavlhFkuFAZpp6axT20u8tOGAnJyjDFg
+         //wWqa/e2E/APW7+fVpo1zk2xZpZfmtno50ihIaQoUYsbtaW5fhY3jSlWTPhnGifY3
+         AmpI34HFfssnAyikSFV54QgoP87Y+ylXVFp1dWhc=
+Date:   Tue, 4 Jun 2019 16:29:31 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH v3] kernel/module.c: Only return -EEXIST for modules that
+ have finished loading
+Message-ID: <20190604142931.GA3570@linux-8ccs>
+References: <20190529112625.28699-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <b3dd022b-b585-3dfb-5fe6-9c9f5498bc77@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190529112625.28699-1-prarit@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:08:37PM -0500, Richard Gong wrote:
-> Hi Greg,
-> 
-> On 6/3/19 1:02 PM, Greg KH wrote:
-> > On Mon, Jun 03, 2019 at 10:57:18AM -0500, Richard Gong wrote:
-> > > 
-> > > Hi Greg,
-> > > 
-> > > Following your suggestion, I replaced devm_device_add_groups() with .group =
-> > > rus_groups in my version #4 submission. But I found out that RSU driver
-> > > outputs the garbage data if I use .group = rsu_groups.
-> > 
-> > What is "garbage"?
-> I mean incorrect status info.
-> 
-> > 
-> > > To make RSU driver work properly, I have to revert the change at version #4
-> > > and use devm_device_add_groups() again. Sorry, I didn't catch this problem
-> > > early.
-> > > 
-> > > I did some debug & below are captured log, you can see priv pointer get
-> > > messed at current_image_show(). I am not sure if something related to
-> > > platform driver work properly. I attach my debug patch in this mail.
-> > > 
-> > > 1. Using .groups = rsu_groups,
-> > > 
-> > > [    1.191115] *** rsu_status_callback:
-> > > [    1.194782] res->a1=2000000
-> > > [    1.197588] res->a1=0
-> > > [    1.199865] res->a2=0
-> > > [    1.202150] res->a3=0
-> > > [    1.204433] priv=0xffff80007aa28e80
-> > > [    1.207933] version=0, state=0, current_image=2000000, fail_image=0,
-> > > error_location=0, error_details=0
-> > > [    1.217249] *** stratix10_rsu_probe: priv=0xffff80007aa28e80
-> > > root@stratix10:/sys/bus/platform/drivers/stratix10-rsu# cat current_image
-> > > [   38.849341] *** current_image_show: priv=0xffff80007aa28d00
-> > > ... output garbage data
-> > > priv pointer got changed
-> > 
-> > I don't understand this, sorry.  Are you sure you are actually using the
-> > correct pointer to your device?
-> > 
-> I think so.
-> 
-> The dev pointer at current_image_show() should points to RSU device, but it
-> seems point to driver_private if I use .group = rsU_groups. As a result I
-> can't get the priv pointer properly at current_image_show().
++++ Prarit Bhargava [29/05/19 07:26 -0400]:
+>Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+>linux guests boot with repeated errors:
+>
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>
+>The warnings occur because the module code erroneously returns -EEXIST
+>for modules that have failed to load and are in the process of being
+>removed from the module list.
+>
+>module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+>modules.dep, systemd will load edac_mce_amd for every request of
+>amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+>state MODULE_STATE_UNFORMED and once the module load fails and the state
+>becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+>executes and add_unformed_module() will erroneously return -EEXIST even
+>though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+>Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+>fails because of unknown symbols from edac_mce_amd.
+>
+>add_unformed_module() must wait to return for any case other than
+>MODULE_STATE_LIVE to prevent a race between multiple loads of
+>dependent modules.
+>
+>Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>Signed-off-by: Barret Rhoden <brho@google.com>
+>Cc: David Arcari <darcari@redhat.com>
+>Cc: Jessica Yu <jeyu@kernel.org>
+>Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-It points to the driver kobject, not the device kobject.  So that's the
-issue here.  See the patch that I just posted for a potential fix for
-this.
+Applied. Thanks!
 
-thanks,
+Jessica
 
-greg k-h
+>---
+> kernel/module.c | 6 ++----
+> 1 file changed, 2 insertions(+), 4 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 6e6712b3aaf5..1e7dcbe527af 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -3397,8 +3397,7 @@ static bool finished_loading(const char *name)
+> 	sched_annotate_sleep();
+> 	mutex_lock(&module_mutex);
+> 	mod = find_module_all(name, strlen(name), true);
+>-	ret = !mod || mod->state == MODULE_STATE_LIVE
+>-		|| mod->state == MODULE_STATE_GOING;
+>+	ret = !mod || mod->state == MODULE_STATE_LIVE;
+> 	mutex_unlock(&module_mutex);
+>
+> 	return ret;
+>@@ -3588,8 +3587,7 @@ static int add_unformed_module(struct module *mod)
+> 	mutex_lock(&module_mutex);
+> 	old = find_module_all(mod->name, strlen(mod->name), true);
+> 	if (old != NULL) {
+>-		if (old->state == MODULE_STATE_COMING
+>-		    || old->state == MODULE_STATE_UNFORMED) {
+>+		if (old->state != MODULE_STATE_LIVE) {
+> 			/* Wait in case it fails to load. */
+> 			mutex_unlock(&module_mutex);
+> 			err = wait_event_interruptible(module_wq,
+>-- 
+>2.21.0
+>
