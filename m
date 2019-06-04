@@ -2,53 +2,94 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847D3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADEEC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645AD2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E3C207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559678995;
+	bh=rsbL/iQgYUm8P310UyHh/V+bI7YMsHKg+pKvWOUOE0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i90GJZxXNzbolAWOCKoUEYyjhFTOWdaDP0BKWPIQcc0NbDApK2aU/emdYZeBiVXnD
+	 jfHhfwjE3t4RLvxeQ3PeipDF/pVcYAeeatVZW61M8l8pYQFAbI0GqqCnUjziO/yqCq
+	 CG/O+WjbdzCtWMMgkkEtBIyzqvyT/oVb1VdCg/v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfFDUJl (ORCPT
+        id S1726636AbfFDUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:09:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50970 "EHLO gloria.sntech.de"
+        Tue, 4 Jun 2019 16:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfFDUJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:09:41 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYFkU-00035B-AC; Tue, 04 Jun 2019 22:09:34 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] pwm: rockchip: Use of_clk_get_parent_count()
-Date:   Tue, 04 Jun 2019 22:09:33 +0200
-Message-ID: <1745663.OII0xTbMCj@diego>
-In-Reply-To: <20190527135509.184544-1-wangkefeng.wang@huawei.com>
-References: <20190525115941.108309-1-wangkefeng.wang@huawei.com> <20190527135509.184544-1-wangkefeng.wang@huawei.com>
+        id S1726211AbfFDUJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:09:54 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21ABA2070D;
+        Tue,  4 Jun 2019 20:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559678993;
+        bh=rsbL/iQgYUm8P310UyHh/V+bI7YMsHKg+pKvWOUOE0o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t8VVDqEp6rkua7kxWfBtQMgvLtlaYMcv1ZtKfmYg11Ania77yZ9EA0glfMPSGKqeG
+         4fdFHQvwJaXwuR+QrJxwJVU2Su6p4WsrOfFS9ZW/c5y9Q1+R0i5BNVoSSPgNN2hLcZ
+         FOdvf+aRCMxTSjlm0e0DoSMeFJxihH9IZ4wsZ3j8=
+Date:   Tue, 4 Jun 2019 16:09:51 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, corbet@lwn.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        tee-dev@lists.linaro.org
+Subject: Re: [PATCH v4 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190604200951.GB29739@sasha-vm>
+References: <20190530152758.16628-1-sashal@kernel.org>
+ <20190530152758.16628-2-sashal@kernel.org>
+ <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 27. Mai 2019, 15:55:09 CEST schrieb Kefeng Wang:
-> Use of_clk_get_parent_count() instead of open coding.
-> 
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+On Tue, Jun 04, 2019 at 11:45:52AM +0530, Sumit Garg wrote:
+>On Thu, 30 May 2019 at 20:58, Sasha Levin <sashal@kernel.org> wrote:
+>> +       /* Open context with TEE driver */
+>> +       pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+>> +                                               NULL);
+>> +       if (IS_ERR(pvt_data->ctx)) {
+>> +               dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
+>
+>Is this well tested? I see this misleading error multiple times as
+>follows although TEE driver works pretty well.
 
-on multiple rockchip boards with multiple pwm-regulator and -backlight
-Tested-by: Heiko Stuebner <heiko@sntech.de>
+Yes, this was all functionally tested.
 
+Why is this error message misleading? I'd be happy to fix it.
 
+>Module built with "CONFIG_TCG_FTPM_TEE=y"
+>
+>[    1.436878] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+>[    1.509471] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+>[    1.517268] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+>[    1.525596] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+
+Does the TEE have the fTPM implementation and such? Could you provide
+details about your testing environment (hardware, fTPM verions, etc)?
+
+--
+Thanks,
+Sasha
