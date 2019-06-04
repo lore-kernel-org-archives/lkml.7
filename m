@@ -2,162 +2,84 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFCAC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D58C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA94123CB9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E279207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfFDREI (ORCPT
+        id S1727951AbfFDRGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:04:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27906 "EHLO mga09.intel.com"
+        Tue, 4 Jun 2019 13:06:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35990 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfFDREH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:04:07 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 10:04:07 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2019 10:04:04 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hYCqy-0001Dt-19; Tue, 04 Jun 2019 20:04:04 +0300
-Date:   Tue, 4 Jun 2019 20:04:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
-        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v3 4/6] i2c: core: Move ACPI IRQ handling to probe time
-Message-ID: <20190604170404.GR9224@smile.fi.intel.com>
-References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
- <20190528142900.24147-4-ckeepax@opensource.cirrus.com>
+        id S1727715AbfFDRGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:06:15 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E7E3281E0A;
+        Tue,  4 Jun 2019 17:06:14 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF20C1001DFD;
+        Tue,  4 Jun 2019 17:06:11 +0000 (UTC)
+Subject: Re: [PATCH v8 17/19] locking/rwsem: Merge owner into count on x86-64
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-18-longman@redhat.com>
+ <20190604094537.GK3402@hirez.programming.kicks-ass.net>
+ <d03f319a-790c-3084-2908-76f44d3f41f5@redhat.com>
+ <20190604170218.GE3419@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <28a6c7b5-c40e-1c89-03e2-688c1135f3b5@redhat.com>
+Date:   Tue, 4 Jun 2019 13:06:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528142900.24147-4-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190604170218.GE3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 04 Jun 2019 17:06:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 03:28:58PM +0100, Charles Keepax wrote:
-> Bring the ACPI path in sync with the device tree path and handle all the
-> IRQ fetching at probe time. This leaves the only IRQ handling at device
-> registration time being that which is passed directly through the board
-> info as either a resource or an actual IRQ number.
-> 
+On 6/4/19 1:02 PM, Peter Zijlstra wrote:
+> On Tue, Jun 04, 2019 at 11:47:21AM -0400, Waiman Long wrote:
+>> On 6/4/19 5:45 AM, Peter Zijlstra wrote:
+>>> On Mon, May 20, 2019 at 04:59:16PM -0400, Waiman Long wrote:
+>>>> With separate count and owner, there are timing windows where the two
+>>>> values are inconsistent. That can cause problem when trying to figure
+>>>> out the exact state of the rwsem. For instance, a RT task will stop
+>>>> optimistic spinning if the lock is acquired by a writer but the owner
+>>>> field isn't set yet. That can be solved by combining the count and
+>>>> owner together in a single atomic value.
+>>> I just realized we can use cmpxchg_double() here (where available of
+>>> course).
+>> Does the 2 doubles need to be 128-bit aligned to use cmpxchg_double()? I
+>> don't think we can guarantee that unless we explicitly set this alignment.
+> It does :/ and yes, we'd need to play games with __align(2*sizeof(long))
+> and such.
 
-It seems my comments weren't addressed by one or another reason.
-This one I would rather to split with exporting function as a separate patch.
+So do you want this as an option now as it will be x86 specific? Or we
+can do that as a follow-up if we want to.
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> Changes since v2:
->  - Add kernel doc for i2c_acpi_get_irq
-> 
-> Thanks,
-> Charles
-> 
->  drivers/i2c/i2c-core-acpi.c | 16 ++++++++++------
->  drivers/i2c/i2c-core-base.c |  5 ++++-
->  drivers/i2c/i2c-core.h      |  7 +++++++
->  3 files changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index c107f260e252f..62a938c17cbd2 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -148,8 +148,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
->  	return 1; /* No need to add resource to the list */
->  }
->  
-> -static int i2c_acpi_get_irq(struct acpi_device *adev)
-> +/**
-> + * i2c_acpi_get_irq - get device IRQ number from ACPI
-> + * @client: Pointer to the I2C client device
-> + *
-> + * Find the IRQ number used by a specific client device.
-> + *
-> + * Return: The IRQ number or an error code.
-> + */
-> +int i2c_acpi_get_irq(struct i2c_client *client)
->  {
-> +	struct acpi_device *adev = ACPI_COMPANION(&client->adapter->dev);
->  	struct list_head resource_list;
->  	int irq = -ENOENT;
->  	int ret;
-> @@ -201,11 +210,6 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
->  	if (adapter_handle)
->  		*adapter_handle = lookup.adapter_handle;
->  
-> -	/* Then fill IRQ number if any */
-> -	ret = i2c_acpi_get_irq(adev);
-> -	if (ret > 0)
-> -		info->irq = ret;
-> -
->  	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
->  			  sizeof(info->type));
->  
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 84bf11b25a120..b6b009bfe842b 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -335,7 +335,10 @@ static int i2c_device_probe(struct device *dev)
->  			if (irq == -EINVAL || irq == -ENODATA)
->  				irq = of_irq_get(dev->of_node, 0);
->  		} else if (ACPI_COMPANION(dev)) {
-> -			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
-> +			irq = i2c_acpi_get_irq(client);
-> +
-> +			if (irq == -ENOENT)
-> +				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
->  		}
->  		if (irq == -EPROBE_DEFER)
->  			return irq;
-> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-> index 8f3a08dc73a25..15c1411f35f07 100644
-> --- a/drivers/i2c/i2c-core.h
-> +++ b/drivers/i2c/i2c-core.h
-> @@ -72,6 +72,8 @@ const struct acpi_device_id *
->  i2c_acpi_match_device(const struct acpi_device_id *matches,
->  		      struct i2c_client *client);
->  void i2c_acpi_register_devices(struct i2c_adapter *adap);
-> +
-> +int i2c_acpi_get_irq(struct i2c_client *client);
->  #else /* CONFIG_ACPI */
->  static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
->  static inline const struct acpi_device_id *
-> @@ -80,6 +82,11 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
->  {
->  	return NULL;
->  }
-> +
-> +static inline int i2c_acpi_get_irq(struct i2c_client *client)
-> +{
-> +	return 0;
-> +}
->  #endif /* CONFIG_ACPI */
->  extern struct notifier_block i2c_acpi_notifier;
->  
-> -- 
-> 2.11.0
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Cheers,
+Longman
 
