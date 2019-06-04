@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593C1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D22C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9F724AB7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFC624AEC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559660362;
-	bh=lN+qBEnZ0s/tloxLdpm+NpwQ58sif7RQAdcaFE5YLpo=;
+	s=default; t=1559660365;
+	bh=Kn6WIdJTnDo8Mrp6WEzeHOrO7ROabhyjdCHg6Iee8PY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=dShti5L2Rj+X5ZHCv5CR7jm1FpIY26XZAfSTSASYwfag33t/af4xNlX9r1LVpjU6X
-	 2MSJHFdUhZBBco+r3DhymNhee9LN9qFdQ3tjbqdr/fjvAMoPFe9kBsxiSMPGM/y4UO
-	 mbhWE5QWeidSM8DejUji0xlGEnehztgHDezpLaTw=
+	b=2fWypGh/j8aUdKYW/DNGK/5gBVf0iXqtUozE+iP/WNb+il3gro5RXZgE0zb8UbiSI
+	 9aPpooNx0rXMRW1hBKG8zZ2CsiN9SsQscwo51GntxIrI1JbmnyRKfZWTPSwz/EaxKr
+	 CbQ1mNB0NaAd02VUnCLtfqhSqSbPO2srRB6fKPEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfFDO7U (ORCPT
+        id S1728026AbfFDO7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:59:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48966 "EHLO
+        Tue, 4 Jun 2019 10:59:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49118 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbfFDO7P (ORCPT
+        with ESMTP id S1728001AbfFDO7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:59:15 -0400
+        Tue, 4 Jun 2019 10:59:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KJndiTBlNhoODFuKB7HEW0uTpDTeJGa/gjvrJqwZm40=; b=ashcMC599Hot
-        FC9kiBFa0K0pnuu/h8v/cv2VNuqFJnrsgDpJvxi4hFDIA5R7wRNmjkBqE+d4GCRaLkP+vBaCzQ6Kz
-        Lboi0QxeFj/+nExh+13db+yPkrxeJdJ8bcjP3rs7msVfHaJZ7FkG74r0v2/aNlqh5pvTwToUr/GIc
-        pbpLU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        List-Archive; bh=H/ZcNeXJodL5Cb2bnUP5HmMZO4APpeQuHpnxJOQLxfk=; b=whxSdku8q/zL
+        lOLDiPZC2Yeb3aEsSRQyxXApgSYlPeIxbaBAg/2QQ2J/tHSTd5cHMjOFOuRulT2I9DIS1UkAde92w
+        fuPcrjbaZ3+dfqvYA8W4HtR0yw/lZDy7rpkTeLNCXOhMxOQjfbgB/nIpvTAxzUCG8hIwO3qXPODa0
+        1fd1M=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hYAtv-0006EW-Lw; Tue, 04 Jun 2019 14:58:59 +0000
+        id 1hYAtw-0006Eg-SR; Tue, 04 Jun 2019 14:59:01 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 3CED2440046; Tue,  4 Jun 2019 15:58:59 +0100 (BST)
+        id 5CA98440046; Tue,  4 Jun 2019 15:59:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        tiwai@suse.com, yingjiang.zhu@linux.intel.com
-Subject: Applied "ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error" to the asoc tree
-In-Reply-To: <20190531142526.12712-1-yuehaibing@huawei.com>
+        Hulk Robot <hulkci@huawei.com>, kaichieh.chuang@mediatek.com,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
+        perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: mediatek: Make some symbols static" to the asoc tree
+In-Reply-To: <20190529150437.19004-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190604145859.3CED2440046@finisterre.sirena.org.uk>
-Date:   Tue,  4 Jun 2019 15:58:59 +0100 (BST)
+Message-Id: <20190604145900.5CA98440046@finisterre.sirena.org.uk>
+Date:   Tue,  4 Jun 2019 15:59:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error
+   ASoC: mediatek: Make some symbols static
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,52 +90,71 @@ to this mail.
 Thanks,
 Mark
 
-From ad169f9f0dbb531cd68db921b351ccafcf684ae4 Mon Sep 17 00:00:00 2001
+From 52194513ba1388443a067cee9606d6fe27e7650e Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 31 May 2019 22:25:26 +0800
-Subject: [PATCH] ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error
+Date: Wed, 29 May 2019 23:04:37 +0800
+Subject: [PATCH] ASoC: mediatek: Make some symbols static
 
-while building without PCI:
+Fix sparse warnings:
 
-sound/soc/sof/intel/hda.o: In function `hda_dsp_probe':
-hda.c:(.text+0x79c): undefined reference to `pci_ioremap_bar'
-hda.c:(.text+0x79c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
-hda.c:(.text+0x7c4): undefined reference to `pci_ioremap_bar'
-hda.c:(.text+0x7c4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
+sound/soc/mediatek/common/mtk-btcvsd.c:410:5: warning: symbol 'mtk_btcvsd_write_to_bt' was not declared. Should it be static?
+sound/soc/mediatek/common/mtk-btcvsd.c:698:9: warning: symbol 'mtk_btcvsd_snd_read' was not declared. Should it be static?
+sound/soc/mediatek/common/mtk-btcvsd.c:779:9: warning: symbol 'mtk_btcvsd_snd_write' was not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e13ef82a9ab8 ("ASoC: SOF: add COMPILE_TEST for PCI options")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sof/intel/hda.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/mediatek/common/mtk-btcvsd.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-index 8f5c68861bbc..9e2e0f21524e 100644
---- a/sound/soc/sof/intel/hda.c
-+++ b/sound/soc/sof/intel/hda.c
-@@ -227,7 +227,9 @@ static int hda_init(struct snd_sof_dev *sdev)
+diff --git a/sound/soc/mediatek/common/mtk-btcvsd.c b/sound/soc/mediatek/common/mtk-btcvsd.c
+index bd55c546e790..c7a81c4be068 100644
+--- a/sound/soc/mediatek/common/mtk-btcvsd.c
++++ b/sound/soc/mediatek/common/mtk-btcvsd.c
+@@ -407,11 +407,11 @@ static int mtk_btcvsd_read_from_bt(struct mtk_btcvsd_snd *bt,
+ 	return 0;
+ }
  
- 	/* initialise hdac bus */
- 	bus->addr = pci_resource_start(pci, 0);
-+#if IS_ENABLED(CONFIG_PCI)
- 	bus->remap_addr = pci_ioremap_bar(pci, 0);
-+#endif
- 	if (!bus->remap_addr) {
- 		dev_err(bus->dev, "error: ioremap error\n");
- 		return -ENXIO;
-@@ -454,7 +456,9 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
- 		goto hdac_bus_unmap;
+-int mtk_btcvsd_write_to_bt(struct mtk_btcvsd_snd *bt,
+-			   enum bt_sco_packet_len packet_type,
+-			   unsigned int packet_length,
+-			   unsigned int packet_num,
+-			   unsigned int blk_size)
++static int mtk_btcvsd_write_to_bt(struct mtk_btcvsd_snd *bt,
++				  enum bt_sco_packet_len packet_type,
++				  unsigned int packet_length,
++				  unsigned int packet_num,
++				  unsigned int blk_size)
+ {
+ 	unsigned int i;
+ 	unsigned long flags;
+@@ -695,9 +695,9 @@ static int wait_for_bt_irq(struct mtk_btcvsd_snd *bt,
+ 	return 0;
+ }
  
- 	/* DSP base */
-+#if IS_ENABLED(CONFIG_PCI)
- 	sdev->bar[HDA_DSP_BAR] = pci_ioremap_bar(pci, HDA_DSP_BAR);
-+#endif
- 	if (!sdev->bar[HDA_DSP_BAR]) {
- 		dev_err(sdev->dev, "error: ioremap error\n");
- 		ret = -ENXIO;
+-ssize_t mtk_btcvsd_snd_read(struct mtk_btcvsd_snd *bt,
+-			    char __user *buf,
+-			    size_t count)
++static ssize_t mtk_btcvsd_snd_read(struct mtk_btcvsd_snd *bt,
++				   char __user *buf,
++				   size_t count)
+ {
+ 	ssize_t read_size = 0, read_count = 0, cur_read_idx, cont;
+ 	unsigned int cur_buf_ofs = 0;
+@@ -776,9 +776,9 @@ ssize_t mtk_btcvsd_snd_read(struct mtk_btcvsd_snd *bt,
+ 	return read_count;
+ }
+ 
+-ssize_t mtk_btcvsd_snd_write(struct mtk_btcvsd_snd *bt,
+-			     char __user *buf,
+-			     size_t count)
++static ssize_t mtk_btcvsd_snd_write(struct mtk_btcvsd_snd *bt,
++				    char __user *buf,
++				    size_t count)
+ {
+ 	int written_size = count, avail = 0, cur_write_idx, write_size, cont;
+ 	unsigned int cur_buf_ofs = 0;
 -- 
 2.20.1
 
