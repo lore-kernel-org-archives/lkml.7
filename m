@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFD6C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F04C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47F42479E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD602473C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559657888;
-	bh=ZH92tvX7FmSj9eWf9UO99t6Kr3zTPYlBNbYMT4GIuh4=;
+	s=default; t=1559657891;
+	bh=tg1snAq50ga80L5HNj7DR1J2JPxP1uMLuwKP4FpBov8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLIKAgYhjEtLkxyy1H708zkW4474LuXlXnO3Zfqrbgfnr8wrnTlB6OXvTuIO+qOtw
-	 tRwYI+ywGHhB5nV7jOg8pAGz+q49ANWdNNUbuq34UtjywAhlyCpLholDMomcQ65Nkz
-	 7aIQrVkm+Y9aPwV6pgg8eny4yVyppz0uGMx7SHFs=
+	b=PuZ5TlKcXWaWm18d13n5B96NoeBOfEG55bMx8UpT5nEkbJYo7oWjrnuHgNFKRJ6nv
+	 yn81QQuGr8J8wf7TqV4yMvWEKGZt398/hN4IMEKdv11ARBzcVdFp6XM0QQ2tdCqSPh
+	 VGigyD/8bQV4wy0mLaCw+NguHnNFbTUctO1n6eL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfFDOSH (ORCPT
+        id S1727867AbfFDOSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:18:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52550 "EHLO
+        Tue, 4 Jun 2019 10:18:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52560 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbfFDOSD (ORCPT
+        with ESMTP id S1727725AbfFDOSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 10:18:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,34 +34,43 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kjhz9ZDClKO+GVwWomvO0sdT8nN7V5kJ8pUXdG9VfXk=; b=JTYXEHZMLzldK0P3t1DJm7x6nb
-        BQmvT1qrKWPVRiEbb53beHUKHD30P1fdTUfE0YObx5pm6PM+ksAgw35d0J3/9gTMHsm5TFTEsajWy
-        60UoXiA/rNuU+y+k99eOJadMchlmm4pSTkYo7UancRfAKIyHzPvk5kwCMJ3sJ+pJ2Y7iaCBL/Iems
-        FrwZ4B+lpEg1lLmiAF979ZFmN6zicC33fN8sPhNdztaXa+vP6Rfrjl0FUBCYlkwUZhIlDRFHW3LuD
-        yhi4IUPvVHEMRbwoW+WyuZPiMAgeqrrqKj5eZe/J8yJZJUq4wXroABdmkCPrNmtXeuppgD+x1fawI
-        9kHZ5WDQ==;
+        bh=fnKal4vlAfnEhHiZ62MpoW51VyknnUeB4tHqDSZ7yb0=; b=QGB5fTPS0Y1QbkDcmoH+UkgrxA
+        1pMk8z+7aPIz0M+LOllnD+yAWo2PKijhU9Of83jsAWaNOGHbvnhM2IQck3GnEi+acdgX4PFfjXX1W
+        8dYMp+e54crQ0CzwiC48jwbmrELFhJ/gciYLAQXJe7mP/wV/+2HI55UusjHY/V6bFASKi5HgkPP8Q
+        /bkB7ouKvrGMio/R1G2oLILaMq7yd6Ah+rImQZ6uCGXSZrYPpd7QLN9erf94Abeheb/CCJfEZt9RB
+        qRJj+GdOJUVq+4w4bfEshAGOm9wTPo4f9yMhKZrNIpSOMQmMnojudwXZzDT8MIJIASC6ZhOHf4clg
+        y0SDma1Q==;
 Received: from [179.182.172.34] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYAGH-0001Rs-VW; Tue, 04 Jun 2019 14:18:01 +0000
+        id 1hYAGH-0001Rz-VM; Tue, 04 Jun 2019 14:18:01 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hYAGE-0002l7-Mq; Tue, 04 Jun 2019 11:17:58 -0300
+        id 1hYAGE-0002lw-V3; Tue, 04 Jun 2019 11:17:58 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 08/22] gpu: i915.rst: Fix references to renamed files
-Date:   Tue,  4 Jun 2019 11:17:42 -0300
-Message-Id: <bd7dd29b9fb2101c954c8cfb2c3b4efc7d277045.1559656538.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Hocko <mhocko@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Changbin Du <changbin.du@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 18/22] docs: move protection-keys.rst to the core-api book
+Date:   Tue,  4 Jun 2019 11:17:52 -0300
+Message-Id: <07193510c4ce4be2332ec03e5232779c36e7bb4c.1559656538.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559656538.git.mchehab+samsung@kernel.org>
 References: <cover.1559656538.git.mchehab+samsung@kernel.org>
@@ -72,42 +81,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Hardware workarounds ./drivers/gpu/drm/i915/intel_workarounds.c' failed with return code 1
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Logical Rings, Logical Ring Contexts and Execlists ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 1
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 2
+This document is used by multiple architectures:
 
-Fixes: 112ed2d31a46 ("drm/i915: Move GraphicsTechnology files under gt/")
+	$ echo $(git grep -l  pkey_mprotect arch|cut -d'/' -f 2|sort|uniq)
+	alpha arm arm64 ia64 m68k microblaze mips parisc powerpc s390 sh sparc x86 xtensa
+
+So, let's move it to the core book and adjust the links to it
+accordingly.
+
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/gpu/i915.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/core-api/index.rst                    | 1 +
+ Documentation/{x86 => core-api}/protection-keys.rst | 0
+ Documentation/x86/index.rst                         | 1 -
+ arch/powerpc/Kconfig                                | 2 +-
+ arch/x86/Kconfig                                    | 2 +-
+ tools/testing/selftests/x86/protection_keys.c       | 2 +-
+ 6 files changed, 4 insertions(+), 4 deletions(-)
+ rename Documentation/{x86 => core-api}/protection-keys.rst (100%)
 
-diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
-index 055df45596c1..6c75380b2928 100644
---- a/Documentation/gpu/i915.rst
-+++ b/Documentation/gpu/i915.rst
-@@ -61,7 +61,7 @@ Intel GVT-g Host Support(vGPU device model)
- Workarounds
- -----------
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index ee1bb8983a88..2466a4c51031 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -34,6 +34,7 @@ Core utilities
+    timekeeping
+    boot-time-mm
+    memory-hotplug
++   protection-keys
  
--.. kernel-doc:: drivers/gpu/drm/i915/intel_workarounds.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_workarounds.c
-    :doc: Hardware workarounds
  
- Display Hardware Handling
-@@ -379,10 +379,10 @@ User Batchbuffer Execution
- Logical Rings, Logical Ring Contexts and Execlists
- --------------------------------------------------
+ Interfaces for kernel debugging
+diff --git a/Documentation/x86/protection-keys.rst b/Documentation/core-api/protection-keys.rst
+similarity index 100%
+rename from Documentation/x86/protection-keys.rst
+rename to Documentation/core-api/protection-keys.rst
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index ae36fc5fc649..f2de1b2d3ac7 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -19,7 +19,6 @@ x86-specific Documentation
+    tlb
+    mtrr
+    pat
+-   protection-keys
+    intel_mpx
+    amd-memory-encryption
+    pti
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1120ff8ac715..e437aa3e78b4 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -898,7 +898,7 @@ config PPC_MEM_KEYS
+ 	  page-based protections, but without requiring modification of the
+ 	  page tables when an application changes protection domains.
  
--.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
-    :doc: Logical Rings, Logical Ring Contexts and Execlists
+-	  For details, see Documentation/vm/protection-keys.rst
++	  For details, see Documentation/core-api/protection-keys.rst
  
--.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
-    :internal:
+ 	  If unsure, say y.
  
- Global GTT views
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 23de3b9da480..61244bdb886f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1911,7 +1911,7 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	  page-based protections, but without requiring modification of the
+ 	  page tables when an application changes protection domains.
+ 
+-	  For details, see Documentation/x86/protection-keys.txt
++	  For details, see Documentation/core-api/protection-keys.rst
+ 
+ 	  If unsure, say y.
+ 
+diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
+index 5d546dcdbc80..480995bceefa 100644
+--- a/tools/testing/selftests/x86/protection_keys.c
++++ b/tools/testing/selftests/x86/protection_keys.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Tests x86 Memory Protection Keys (see Documentation/x86/protection-keys.txt)
++ * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
+  *
+  * There are examples in here of:
+  *  * how to set protection keys on memory
 -- 
 2.21.0
 
