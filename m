@@ -2,90 +2,299 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0143CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881D7C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85C124A1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622F024992
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfFDLkM (ORCPT
+        id S1727623AbfFDLkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:40:12 -0400
-Received: from mga01.intel.com ([192.55.52.88]:6123 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfFDLkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 07:40:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 04:40:05 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Jun 2019 04:39:57 -0700
-Date:   Tue, 4 Jun 2019 14:39:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190604113957.GA30594@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com>
- <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
- <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
- <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
- <20190603205405.GE4894@linux.intel.com>
- <20190603212336.GM13384@linux.intel.com>
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:51619 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727522AbfFDLkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:40:01 -0400
+X-UUID: d4b738bd0a4949dda0268905dd8e7ffc-20190604
+X-UUID: d4b738bd0a4949dda0268905dd8e7ffc-20190604
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <min.guo@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 380529264; Tue, 04 Jun 2019 19:39:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 4 Jun 2019 19:39:44 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 4 Jun 2019 19:39:43 +0800
+From:   <min.guo@mediatek.com>
+To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
+        <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
+Subject: [PATCH v6 3/6] usb: musb: Add get/set toggle hooks
+Date:   Tue, 4 Jun 2019 19:39:16 +0800
+Message-ID: <1559648359-6569-4-git-send-email-min.guo@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
+References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603212336.GM13384@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 02:23:36PM -0700, Sean Christopherson wrote:
-> Please read through the RFC, I think it address a lot of your questions.
-> Hopefully that will help us avoid some thrash.
+From: Min Guo <min.guo@mediatek.com>
 
-I promise to read it through with detail albeit I just said that as a
-patch set it is broken :-) Internals still need documentation tho...
+Add get/set toggle hooks in struct musb_io and struct musb_platform_ops
+for special platform; remove function musb_save_toggle, use the set/get
+callback to handle toggle.
 
-/Jarkko
+Signed-off-by: Min Guo <min.guo@mediatek.com>
+---
+changes in v6:
+1. no changes
+
+changes in v5:
+1. no changes
+
+new patch based on v4:
+---
+ drivers/usb/musb/musb_core.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/musb/musb_core.h |  5 +++++
+ drivers/usb/musb/musb_host.c | 46 ++++++++++----------------------------------
+ drivers/usb/musb/musb_io.h   |  4 ++++
+ 4 files changed, 61 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 9f5a481..491d361 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -274,6 +274,38 @@ static void musb_default_writew(void __iomem *addr, unsigned offset, u16 data)
+ 	__raw_writew(data, addr + offset);
+ }
+ 
++static u16 musb_default_get_toggle(struct musb_qh *qh, int is_out)
++{
++	void __iomem *epio = qh->hw_ep->regs;
++	u16 csr;
++
++	if (is_out)
++		csr = musb_readw(epio, MUSB_TXCSR) & MUSB_TXCSR_H_DATATOGGLE;
++	else
++		csr = musb_readw(epio, MUSB_RXCSR) & MUSB_RXCSR_H_DATATOGGLE;
++
++	return csr;
++}
++
++static u16 musb_default_set_toggle(struct musb_qh *qh, int is_out,
++				   struct urb *urb)
++{
++	u16 csr;
++	u16 toggle;
++
++	toggle = usb_gettoggle(urb->dev, qh->epnum, is_out);
++
++	if (is_out)
++		csr = toggle ? (MUSB_TXCSR_H_WR_DATATOGGLE
++				| MUSB_TXCSR_H_DATATOGGLE)
++				: MUSB_TXCSR_CLRDATATOG;
++	else
++		csr = toggle ? (MUSB_RXCSR_H_WR_DATATOGGLE
++				| MUSB_RXCSR_H_DATATOGGLE) : 0;
++
++	return csr;
++}
++
+ /*
+  * Load an endpoint's FIFO
+  */
+@@ -2278,6 +2310,16 @@ static void musb_deassert_reset(struct work_struct *work)
+ 	else
+ 		musb->io.write_fifo = musb_default_write_fifo;
+ 
++	if (musb->ops->get_toggle)
++		musb->io.get_toggle = musb->ops->get_toggle;
++	else
++		musb->io.get_toggle = musb_default_get_toggle;
++
++	if (musb->ops->set_toggle)
++		musb->io.set_toggle = musb->ops->set_toggle;
++	else
++		musb->io.set_toggle = musb_default_set_toggle;
++
+ 	if (!musb->xceiv->io_ops) {
+ 		musb->xceiv->io_dev = musb->controller;
+ 		musb->xceiv->io_priv = musb->mregs;
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 04203b7..9f5a69c 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -27,6 +27,7 @@
+ struct musb;
+ struct musb_hw_ep;
+ struct musb_ep;
++struct musb_qh;
+ 
+ /* Helper defines for struct musb->hwvers */
+ #define MUSB_HWVERS_MAJOR(x)	((x >> 10) & 0x1f)
+@@ -123,6 +124,8 @@ enum musb_g_ep0_state {
+  * @writew:	write 16 bits
+  * @read_fifo:	reads the fifo
+  * @write_fifo:	writes to fifo
++ * @get_toggle:	platform specific get toggle function
++ * @set_toggle:	platform specific set toggle function
+  * @dma_init:	platform specific dma init function
+  * @dma_exit:	platform specific dma exit function
+  * @init:	turns on clocks, sets up platform-specific registers, etc
+@@ -167,6 +170,8 @@ struct musb_platform_ops {
+ 	void	(*writew)(void __iomem *addr, unsigned offset, u16 data);
+ 	void	(*read_fifo)(struct musb_hw_ep *hw_ep, u16 len, u8 *buf);
+ 	void	(*write_fifo)(struct musb_hw_ep *hw_ep, u16 len, const u8 *buf);
++	u16	(*get_toggle)(struct musb_qh *qh, int is_out);
++	u16	(*set_toggle)(struct musb_qh *qh, int is_out, struct urb *urb);
+ 	struct dma_controller *
+ 		(*dma_init) (struct musb *musb, void __iomem *base);
+ 	void	(*dma_exit)(struct dma_controller *c);
+diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
+index eb308ec..ca866bc 100644
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -286,26 +286,6 @@ static void musb_giveback(struct musb *musb, struct urb *urb, int status)
+ 	spin_lock(&musb->lock);
+ }
+ 
+-/* For bulk/interrupt endpoints only */
+-static inline void musb_save_toggle(struct musb_qh *qh, int is_in,
+-				    struct urb *urb)
+-{
+-	void __iomem		*epio = qh->hw_ep->regs;
+-	u16			csr;
+-
+-	/*
+-	 * FIXME: the current Mentor DMA code seems to have
+-	 * problems getting toggle correct.
+-	 */
+-
+-	if (is_in)
+-		csr = musb_readw(epio, MUSB_RXCSR) & MUSB_RXCSR_H_DATATOGGLE;
+-	else
+-		csr = musb_readw(epio, MUSB_TXCSR) & MUSB_TXCSR_H_DATATOGGLE;
+-
+-	usb_settoggle(urb->dev, qh->epnum, !is_in, csr ? 1 : 0);
+-}
+-
+ /*
+  * Advance this hardware endpoint's queue, completing the specified URB and
+  * advancing to either the next URB queued to that qh, or else invalidating
+@@ -320,6 +300,7 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+ 	struct musb_hw_ep	*ep = qh->hw_ep;
+ 	int			ready = qh->is_ready;
+ 	int			status;
++	u16			toggle;
+ 
+ 	status = (urb->status == -EINPROGRESS) ? 0 : urb->status;
+ 
+@@ -327,7 +308,8 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+ 	switch (qh->type) {
+ 	case USB_ENDPOINT_XFER_BULK:
+ 	case USB_ENDPOINT_XFER_INT:
+-		musb_save_toggle(qh, is_in, urb);
++		toggle = musb->io.get_toggle(qh, !is_in);
++		usb_settoggle(urb->dev, qh->epnum, !is_in, toggle ? 1 : 0);
+ 		break;
+ 	case USB_ENDPOINT_XFER_ISOC:
+ 		if (status == 0 && urb->error_count)
+@@ -772,13 +754,8 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 					);
+ 			csr |= MUSB_TXCSR_MODE;
+ 
+-			if (!hw_ep->tx_double_buffered) {
+-				if (usb_gettoggle(urb->dev, qh->epnum, 1))
+-					csr |= MUSB_TXCSR_H_WR_DATATOGGLE
+-						| MUSB_TXCSR_H_DATATOGGLE;
+-				else
+-					csr |= MUSB_TXCSR_CLRDATATOG;
+-			}
++			if (!hw_ep->tx_double_buffered)
++				csr |= musb->io.set_toggle(qh, is_out, urb);
+ 
+ 			musb_writew(epio, MUSB_TXCSR, csr);
+ 			/* REVISIT may need to clear FLUSHFIFO ... */
+@@ -860,17 +837,12 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 
+ 	/* IN/receive */
+ 	} else {
+-		u16	csr;
++		u16 csr = 0;
+ 
+ 		if (hw_ep->rx_reinit) {
+ 			musb_rx_reinit(musb, qh, epnum);
++			csr |= musb->io.set_toggle(qh, is_out, urb);
+ 
+-			/* init new state: toggle and NYET, maybe DMA later */
+-			if (usb_gettoggle(urb->dev, qh->epnum, 0))
+-				csr = MUSB_RXCSR_H_WR_DATATOGGLE
+-					| MUSB_RXCSR_H_DATATOGGLE;
+-			else
+-				csr = 0;
+ 			if (qh->type == USB_ENDPOINT_XFER_INT)
+ 				csr |= MUSB_RXCSR_DISNYET;
+ 
+@@ -933,6 +905,7 @@ static void musb_bulk_nak_timeout(struct musb *musb, struct musb_hw_ep *ep,
+ 	void __iomem		*epio = ep->regs;
+ 	struct musb_qh		*cur_qh, *next_qh;
+ 	u16			rx_csr, tx_csr;
++	u16			toggle;
+ 
+ 	musb_ep_select(mbase, ep->epnum);
+ 	if (is_in) {
+@@ -970,7 +943,8 @@ static void musb_bulk_nak_timeout(struct musb *musb, struct musb_hw_ep *ep,
+ 			urb->actual_length += dma->actual_len;
+ 			dma->actual_len = 0L;
+ 		}
+-		musb_save_toggle(cur_qh, is_in, urb);
++		toggle = musb->io.get_toggle(cur_qh, !is_in);
++		usb_settoggle(urb->dev, cur_qh->epnum, !is_in, toggle ? 1 : 0);
+ 
+ 		if (is_in) {
+ 			/* move cur_qh to end of queue */
+diff --git a/drivers/usb/musb/musb_io.h b/drivers/usb/musb/musb_io.h
+index 8058a58..8179334 100644
+--- a/drivers/usb/musb/musb_io.h
++++ b/drivers/usb/musb/musb_io.h
+@@ -22,6 +22,8 @@
+  * @read_fifo:	platform specific function to read fifo
+  * @write_fifo:	platform specific function to write fifo
+  * @busctl_offset: platform specific function to get busctl offset
++ * @get_toggle: platform specific function to get toggle
++ * @set_toggle: platform specific function to set toggle
+  */
+ struct musb_io {
+ 	u32	(*ep_offset)(u8 epnum, u16 offset);
+@@ -30,6 +32,8 @@ struct musb_io {
+ 	void	(*read_fifo)(struct musb_hw_ep *hw_ep, u16 len, u8 *buf);
+ 	void	(*write_fifo)(struct musb_hw_ep *hw_ep, u16 len, const u8 *buf);
+ 	u32	(*busctl_offset)(u8 epnum, u16 offset);
++	u16	(*get_toggle)(struct musb_qh *qh, int is_out);
++	u16	(*set_toggle)(struct musb_qh *qh, int is_out, struct urb *urb);
+ };
+ 
+ /* Do not add new entries here, add them the struct musb_io instead */
+-- 
+1.9.1
+
