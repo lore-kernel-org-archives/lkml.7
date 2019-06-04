@@ -2,93 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB17C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211D72070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PV21JUG8"
+	by mail.kernel.org (Postfix) with ESMTP id 88D402070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfFDUfr (ORCPT
+        id S1726691AbfFDUgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:35:47 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34823 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDUfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:35:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so5409353pgl.2;
-        Tue, 04 Jun 2019 13:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6qj//DmBzKyv27IYTdT81caJN/gQm8wzDZgiyqoLawY=;
-        b=PV21JUG8RHNG9Clu/w06cbzs3wu3YgWr9p3r0T1O2VLOalMuV4mDosdeSX456Pqrpu
-         4offUi/3LaCpFWNyA3XIyIJUwlhF2iFWGajGi2DDF2vcYuAvS6yNVn89v/pT1Z91N27K
-         QJBTDcTnm4OGyMCvZc6eMKwk77JyJrOlJ/zpZb8jbCnhQK6PrLKF1k0Tn5Hg5rS+GYed
-         cmXVHJqwi9gAO8sA6ryXfhuByEkzRPfpg470Fq5UY34vnuGNdNhooXGEMaJ32jNOhVH/
-         UYI8w/0KS9xXnWq+AVynpgHztIui+jOhLJ7ZFI1GDzwBjSMAVICcIUQnwpKeEdru2tTu
-         GGXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6qj//DmBzKyv27IYTdT81caJN/gQm8wzDZgiyqoLawY=;
-        b=G0rF2yzSKO8hHxBVJSguJ3nSU/z0MVfiqrY/FU4F3bIU7TW6bTDt3urfPOs+2mcpNy
-         60GyyZeAFs7FU+gm7mt1LB+2B0wjaIP7ao1IiJK66WZG6VXGHo+gmU7RQPr1bLKvnIlC
-         eW9Mq5iL9ffi4tZPb4a/njHUNECEWye8iJB6BGse58mB9XlZ+EXAu5rtnNc4dTH2Tcil
-         XfrX5HdkiaxXZXN1+kvAuexIlbVoVecjK8xTamCa0H5DjWzEmVanbA1+xIlYZadFNeBO
-         YosTFMynZ9qUZRi0JyC2Meivuh7qUMSzbOi5/c15ODWjUsely3SBL7rej/rTaQdl45gq
-         RJlQ==
-X-Gm-Message-State: APjAAAWAeM2WP2ljD4sEj7xLJLOU/uVyxRte9F4WZUqB/MLNCYj/7qyu
-        qPFYFUJZtrH2Oez08yYRAEFWQupc
-X-Google-Smtp-Source: APXvYqzPOWQdw9Rl8dYdqs5anqLV7ETnzm8+dokWJ+A4+7JK2wd3Lab0O//a4F2NOBrvAK99AG64Bw==
-X-Received: by 2002:a63:6e48:: with SMTP id j69mr611892pgc.34.1559680546107;
-        Tue, 04 Jun 2019 13:35:46 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id 132sm6508789pfz.83.2019.06.04.13.35.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:35:45 -0700 (PDT)
-Subject: Re: [PATCH v3 net-next 08/17] net: dsa: sja1105: Move
- sja1105_is_link_local to include/linux
-To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, davem@davemloft.net, richardcochran@gmail.com,
-        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604170756.14338-9-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <5459cccd-d945-34a6-d20d-2e0487bb524a@gmail.com>
-Date:   Tue, 4 Jun 2019 13:35:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 16:36:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34042 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFDUgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:36:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 36F60C1EB1EC;
+        Tue,  4 Jun 2019 20:36:19 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE9F519C69;
+        Tue,  4 Jun 2019 20:36:17 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 14:36:17 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/IOV: Fix VF cfg_size
+Message-ID: <20190604143617.0a226555@x1.home>
+In-Reply-To: <155966918965.10361.16228304474160813310.stgit@gimli.home>
+References: <155966918965.10361.16228304474160813310.stgit@gimli.home>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190604170756.14338-9-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 04 Jun 2019 20:36:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 04 Jun 2019 11:26:42 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-
-On 6/4/2019 10:07 AM, Vladimir Oltean wrote:
-> This function will be reused from the .port_rxtstamp callback to see if
-> the received SKB can be timestamped by the switch.
+> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
+> other VFs") attempts to cache the config space size of VF0 to re-use
+> for all other VFs, but the cache is setup before the call to
+> pci_setup_device(), where we use set_pcie_port_type() to setup the
+> pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
+> pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
+> has a bypass through pci_cfg_space_size(), so its size is reported
+> correctly, but all subsequent VFs incorrectly report 256 bytes of
+> config space.
 > 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Resolve by delaying pci_read_vf_config_common() until after
+> pci_setup_device().
+> 
+> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
+> Cc: KarimAllah Ahmed <karahmed@amazon.de>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/pci/iov.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 3aa115ed3a65..34b1f78f4d31 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	virtfn->is_virtfn = 1;
+>  	virtfn->physfn = pci_dev_get(dev);
+>  
+> -	if (id == 0)
+> -		pci_read_vf_config_common(virtfn);
+> -
+>  	rc = pci_setup_device(virtfn);
+>  	if (rc)
+>  		goto failed1;
+>  
+> +	if (id == 0)
+> +		pci_read_vf_config_common(virtfn);
+> +
+>  	virtfn->dev.parent = dev->dev.parent;
+>  	virtfn->multifunction = 0;
+>  
+> 
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Would it actually make more sense to revert 975bb8b4dc93 and just
+assume any is_virtfn device has PCI_CFG_SPACE_EXP_SIZE for cfg_size?
+Per the SR-IOV spec, VFs are required to implement a PCIe capability,
+which should imply 4K of config space.  The reachability of that
+extended config space seems unnecessary to test if we assume that it
+has the same characteristics as the PF, which must be reachable if
+we're able to enable SR-IOV.  Thoughts?  Thanks,
+
+Alex
