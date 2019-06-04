@@ -2,139 +2,113 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E656C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2D3C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325F22199C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935EE20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUvQrA/t"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="H+I7whk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfFDNUu (ORCPT
+        id S1727577AbfFDNVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:20:50 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42231 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfFDNUt (ORCPT
+        Tue, 4 Jun 2019 09:21:39 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15850 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727093AbfFDNVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:20:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id b18so2757429qkc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 06:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uqzhH7pqH9fWSLubAoSMZ9XsppGtow2rVqWRSJtHqZ8=;
-        b=GUvQrA/tbu1BqAHG6b2qEaL+7AR/FaZ+bMvRDq/GZpWem6ylArBJX8D8kFGRNkxunX
-         2iQCLGGv3kGhCILtA47/QpQ5VN/l6J9dYdXycOVt6CLApiKvZ2qb0XnB0CO9yZ4zihAf
-         dJWd1LN1IuBF87IT47teHaDICPrVLq/VkNUNtk1/baTlc8rAxEvSTu9weHP4Y1QNkr6p
-         PjyS+LFFr11obpUwiggJBE9GB0kXqUWnhePzbVFyQruAJg5fffVyCy7pdQAjfHeGeWPL
-         SOXxKBaZSpq8WiRIN0vS5S5u+Q+h+fmsx5rWNIn8u6F9p2IRqbfKa77emCpJ/eWwkynE
-         yhFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uqzhH7pqH9fWSLubAoSMZ9XsppGtow2rVqWRSJtHqZ8=;
-        b=PuRv4nTGI0Iw6HbHraJJIWxMSIEQN5LWlpuIakRpKgdvHpPHUBpuudHJ2+lsQkSnZG
-         W6wTFul2yR6S8BnfnzVa6Sht+1VkcDik+te5z0u8GJ/cMWdXL/xuyGTVkumSNQkHfRoe
-         SufRQ2leOwQgcayL2BbYh/HGS49fNQNY3zTgIWX+6tALdj3wKFBcpkITC2akY6NkyWqE
-         L5GBNS/dAoo4gw88NaQUi6Rmvz0fw4UacqkUoMJibsFPemmLYKSkKkQ/E/jLXxKSn3uK
-         nTSfrBiSbdEyCO+aU2omVCI6vsUpVfBLH7klIGiVLWPA5XhTdf7jfEJ+SUy3EBq3rwi/
-         gcoA==
-X-Gm-Message-State: APjAAAXgtDqMhFU5OlpRXU/GEeYRPu2SlBRL67T210vCcZQbrpHSDA4g
-        xkWSA8ctEqvvYAoyFfLtI+sxOUvE
-X-Google-Smtp-Source: APXvYqyRgLw39GiS1aSTkx+EwKCFx5pdbv7jQCxkY4iMVFGCbfPTTndfVLVVFWEf0ko6qV9Sj2bdPg==
-X-Received: by 2002:a05:620a:13f9:: with SMTP id h25mr26437977qkl.283.1559654448215;
-        Tue, 04 Jun 2019 06:20:48 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id f67sm10594421qtb.68.2019.06.04.06.20.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 06:20:47 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0007141149; Tue,  4 Jun 2019 10:20:44 -0300 (-03)
-Date:   Tue, 4 Jun 2019 10:20:44 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/22] perf intel-pt: Fix itrace defaults for perf script
-Message-ID: <20190604132044.GA24504@kernel.org>
-References: <20190520113728.14389-1-adrian.hunter@intel.com>
- <20190520113728.14389-2-adrian.hunter@intel.com>
- <20190520144516.GL8945@kernel.org>
- <20190531164547.GC20408@kernel.org>
- <7f73ed6e-7935-b325-14af-0b9e43144ed4@intel.com>
+        Tue, 4 Jun 2019 09:21:39 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54DHe5h015265;
+        Tue, 4 Jun 2019 15:21:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Z2wZnvXgH6bB09YHyNfYI32IlYynHCA1Xqq9/7lFTwg=;
+ b=H+I7whk9sG8h4A89ycMv5XHr1o7DazjFe9o/suKueQljc0gCwHkcZKiPP8ZO72HqyO9N
+ KsELv+j+c8gXO+WvAhhb4FDUdC+5kljDnqeqS0uceyHzFlDHuditRub05LqtzFLCAF3L
+ aIrIYywGTIzQ0D/uHBHrn4syzqPkmMqUG2PmkfYnLO8Ld/pfiVdX/yJiv8iUUa52BeNN
+ 7guXsQ9Mpk74TSDAjHEKoIhtxYkN9i+WjgEYaMa8/rjlyHR5Kt7onZftDkoWJgFZP8je
+ MOmDmRVeqkFF2sFS6TPsuOZHuyQl0DSXGGBCObvpLydJ2KNxGtkZN3RRGeHTplD0eomE jQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sunmegvxm-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 04 Jun 2019 15:21:13 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0BB0F34;
+        Tue,  4 Jun 2019 13:21:11 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF6662A65;
+        Tue,  4 Jun 2019 13:21:10 +0000 (GMT)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Jun 2019 15:21:10
+ +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: [PATCH] i2c: i2c-stm32f7: Add I2C_SMBUS_I2C_BLOCK_DATA support
+Date:   Tue, 4 Jun 2019 15:20:51 +0200
+Message-ID: <1559654451-26612-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f73ed6e-7935-b325-14af-0b9e43144ed4@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 04, 2019 at 02:32:15PM +0300, Adrian Hunter escreveu:
-> On 31/05/19 7:45 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, May 20, 2019 at 11:45:16AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Mon, May 20, 2019 at 02:37:07PM +0300, Adrian Hunter escreveu:
-> >>> Commit 4eb068157121 ("perf script: Make itrace script default to all
-> >>> calls") does not work because 'use_browser' is being used to determine
-> >>> whether to default to periodic sampling (i.e. better for perf report).
-> >>> The result is that nothing but CBR events display for perf script
-> >>> when no --itrace option is specified.
+This patch adds the support of I2C_SMBUS_I2C_BLOCK_DATA transaction type
+for the stm32f7 SMBUS Controller.
+Use emulated I2C_SMBUS_I2C_BLOCK_DATA transactions as there is no specific
+hardware in STM32 I2C to manage this (e.g. like no need for PEC here).
+Emulated transfer will fall back calling i2c transfer method where there's
+already support for DMAs for example.
+So, use the I2C_FUNC_SMBUS_I2C_BLOCK in stm32f7_i2c_func(), and rely on
+emulated transfer by returning -EOPNOTSUPP in the smbus_xfer() routine
+for such a case.
 
-> >>> Fix by using 'default_no_sample' and 'inject' instead.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> >> Applied 1-3 for now, concentrating on fixes, will process 4-22 later.
-
-> > Tested the ones that affect sqlite databases an the GUI, all look good,
-> > added committer notes and text screenshots as committer notes, thanks!
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 48337be..68a751e 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -953,6 +953,9 @@ static int stm32f7_i2c_smbus_xfer_msg(struct stm32f7_i2c_dev *i2c_dev,
+ 		cr2 &= ~STM32F7_I2C_CR2_RD_WRN;
+ 		f7_msg->read_write = I2C_SMBUS_READ;
+ 		break;
++	case I2C_SMBUS_I2C_BLOCK_DATA:
++		/* Rely on emulated i2c transfer (through master_xfer) */
++		return -EOPNOTSUPP;
+ 	default:
+ 		dev_err(dev, "Unsupported smbus protocol %d\n", f7_msg->size);
+ 		return -EOPNOTSUPP;
+@@ -1803,7 +1806,8 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+ 		I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
+ 		I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+ 		I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
+-		I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC;
++		I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
++		I2C_FUNC_SMBUS_I2C_BLOCK;
+ }
  
-> Thanks for applying!  Are patches 11-22 in your tree?
+ static struct i2c_algorithm stm32f7_i2c_algo = {
+-- 
+2.7.4
 
-Yeah, delayed a bit push out as I was doing some automated tests, see
-below what is there right now, if there is something missing, please let
-me know, I also added commiter notes to most of them as I tested to see
-if the comments matched the code and end GUI results.
-
-- Arnaldo
-
-ed1108bd8107 (HEAD -> perf/core, quaco/perf/core, acme/perf/core) perf augmented_raw_syscalls: Tell which args are filenames and how many bytes to copy
-095b72ea8bc6 perf scripts python: exported-sql-viewer.py: Select find text when find bar is activated
-08810ed07c90 perf scripts python: exported-sql-viewer.py: Add IPC information to Call Tree
-96234e319dbe perf scripts python: exported-sql-viewer.py: Add IPC information to Call Graph Graph
-18d0b3fa8f07 perf scripts python: exported-sql-viewer.py: Add CallGraphModelParams
-a3f0fbba872e perf scripts python: exported-sql-viewer.py: Add IPC information to the Branch reports
-44bd2140868f perf scripts python: export-to-postgresql.py: Export IPC information
-ea76f3ba4a25 perf scripts python: export-to-sqlite.py: Export IPC information
-75302e535b23 perf db-export: Export IPC information
-a99d75fa022c perf db-export: Add brief documentation
-0f9eea5e6974 perf thread-stack: Accumulate IPC information
-1e80115f84a3 perf intel-pt: Document IPC usage
-990917373744 perf intel-pt: Accumulate cycle count from TSC/TMA/MTC packets
-17fa778da83e perf intel-pt: Re-factor TIP cases in intel_pt_walk_to_ip
-dbb8dfd91a18 perf intel-pt: Record when decoding PSB+ packets
-03386978a23b perf script: Add output of IPC ratio
-f7c15a499e28 perf intel-pt: Add support for samples to contain IPC ratio
-885ae6d43172 perf tools: Add IPC information to perf_sample
-db3e60dd79a4 perf intel-pt: Accumulate cycle count from CYC packets
-73a5a91c762d perf intel-pt: Factor out intel_pt_update_sample_time
-3bbac0d75719 perf record: Allow mixing --user-regs with --call-graph=dwarf
-7122f4bdb56d perf symbols: Remove unused variable 'err'
-eea796aa2d6f perf data: Document directory format header: HEADER_DIR_FORMAT
-cad909dc61fb perf data: Document clockid header: HEADER_CLOCKID
-e1b3ce6a6898 perf data: Document memory topology header: HEADER_MEM_TOPOLOGY
-8ab1ebfbb696 perf data: Add description of header HEADER_BPF_PROG_INFO and HEADER_BPF_BTF
-b33fb3cf6f5e Merge tag 'perf-core-for-mingo-5.3-20190529' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core
-14f1cfd4f7b4 (tag: perf-core-for-mingo-5.3-20190529) perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
-<SNIP>
