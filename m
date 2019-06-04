@@ -2,179 +2,131 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E0C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B13C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5923C24A1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F1524A1E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APWwtveP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFDKyL (ORCPT
+        id S1727447AbfFDKyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfFDKyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:54:11 -0400
-Received: from oasis.local.home (unknown [146.247.46.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A53624986;
-        Tue,  4 Jun 2019 10:54:03 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 06:53:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
-Message-ID: <20190604065358.73347ced@oasis.local.home>
-In-Reply-To: <20190603141847.GA94186@google.com>
-References: <20190601222738.6856-1-joel@joelfernandes.org>
-        <20190601222738.6856-2-joel@joelfernandes.org>
-        <20190603080128.GA3436@hirez.programming.kicks-ass.net>
-        <20190603141847.GA94186@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 4 Jun 2019 06:54:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37751 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbfFDKyv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:54:51 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 22so5989052wmg.2;
+        Tue, 04 Jun 2019 03:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j6hUjIqRG1YkL75o/DPFfpMfo/IVNVfXJC4sNpNd0tg=;
+        b=APWwtvePIWTDcmPk7AtpRlDbr1f2wInftq4QFEJXHzXrs/AXrq6ZbwtQ6YVl7LxQSc
+         OCrQKXigLLaA0wNdtGjyDGmGgZpSRWsnhoNLR+hiD5Cn4c81m48Xovo/n6axPPo0K86t
+         k8ZV0YwsVLhYgj5Ocx6ujK13fNgxIY3QROEmaetKSyh4SQ1/axt/exIWF8thZkdo6AYo
+         jwmcOCjvNiDZ9MdIzwb9s4QhLF9mSh8ZogUMm6xNW+FIgkdJXVGfH4UUzvBBpYjoKQ7x
+         BeAXdkKv+r1swHZ2ySRHqSQstSfq+0Pps0Ce0tRJ12MRhC7k050di+ydIzofqtbej1xN
+         HMVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j6hUjIqRG1YkL75o/DPFfpMfo/IVNVfXJC4sNpNd0tg=;
+        b=gwRQ/2HqaeqnRfLOrMFKaqDhz/Eqm8mzloQ/4nV1P2grSVvVPnHlg6uGBD8gRKr4sE
+         +2hDMX6HN83sBYfp3HTJH5MDFzBhBi0N8q13cp2VkQo9OvdTKPyh/A3BqN9qHk9JDEtE
+         sn0MmnG5ElPDPusbBvSXxCBHjgjYju18N5egyo1ZHup2pAJET3fW1oT3LuUr95D/VJPq
+         Gncd7I5xQRqdAqZMiI1RDMEbZf5wnT9xeQp/0BCM3RVG66btyVQf0zdwjJz76rTTNYRM
+         v0/Rzdx0aM7abySEWXa9R1jVCFS0L41f//FoNnTNqPjRxxHyQRdKCoL+X7vHP/c8P+sw
+         AG/A==
+X-Gm-Message-State: APjAAAU2+Wqpa2mMApN/75MWm0dmrooCiq6rNFJBfQW4PUVJBMPTJFw6
+        eHORhN2L8Ri6rcFatqMfn04=
+X-Google-Smtp-Source: APXvYqxutJ6NBBR2g6rHF5LKUIMrFLHnOtdFcq1XJfM/uFiLfMehOpzohOS+/agVOJNsl49BvO9GHA==
+X-Received: by 2002:a1c:be03:: with SMTP id o3mr17643273wmf.139.1559645688942;
+        Tue, 04 Jun 2019 03:54:48 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id b5sm13175277wrx.22.2019.06.04.03.54.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 03:54:47 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 12:54:46 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] PM / devfreq: tegra: Fix kHz to Hz conversion
+Message-ID: <20190604105446.GA16519@ulmo>
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-2-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <20190501233815.32643-2-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 10:18:47 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
 
-> On Mon, Jun 03, 2019 at 10:01:28AM +0200, Peter Zijlstra wrote:
-> > On Sat, Jun 01, 2019 at 06:27:33PM -0400, Joel Fernandes (Google) wrote:  
-> > > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > +	} else {							\
-> > > +		__list_check_rcu();					\
-> > > +	}								\
-> > > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> > > +		&pos->member != (head);					\
-> > >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-> > >  
-> > >  /**
-> > > @@ -621,7 +648,12 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-> > >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > >   * as long as the traversal is guarded by rcu_read_lock().
-> > >   */
-> > > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> > > +	if (COUNT_VARGS(cond) != 0) {					\
-> > > +		__list_check_rcu_cond(0, ## cond);			\
-> > > +	} else {							\
-> > > +		__list_check_rcu();					\
-> > > +	}								\
-> > >  	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> > >  			typeof(*(pos)), member);			\
-> > >  		pos;							\  
-> > 
-> > 
-> > This breaks code like:
-> > 
-> > 	if (...)
-> > 		list_for_each_entry_rcu(...);
-> > 
-> > as they are no longer a single statement. You'll have to frob it into
-> > the initializer part of the for statement.  
-> 
-> Thanks a lot for that. I fixed it as below (diff is on top of the patch):
-> 
-> If not for that '##' , I could have abstracted the whole if/else
-> expression into its own macro and called it from list_for_each_entry_rcu() to
-> keep it more clean.
-> 
-> ---8<-----------------------
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index b641fdd9f1a2..cc742d294bb0 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -371,12 +372,15 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
->   * as long as the traversal is guarded by rcu_read_lock().
->   */
->  #define list_for_each_entry_rcu(pos, head, member, cond...)		\
-> -	if (COUNT_VARGS(cond) != 0) {					\
-> -		__list_check_rcu_cond(0, ## cond);			\
-> -	} else {							\
-> -		__list_check_rcu();					\
-> -	}								\
-> -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-> +	for (								\
-> +	     ({								\
-> +		if (COUNT_VARGS(cond) != 0) {				\
-> +			__list_check_rcu_cond(0, ## cond);		\
-> +		} else {						\
-> +			__list_check_rcu_nocond();			\
-> +		}							\
-> +	      }),							\
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For easier to read I would do something like this:
+On Thu, May 02, 2019 at 02:38:00AM +0300, Dmitry Osipenko wrote:
+> The kHz to Hz is incorrectly converted in a few places in the code,
+> this results in a wrong frequency being calculated because devfreq core
+> uses OPP frequencies that are given in Hz to clamp the rate, while
+> tegra-devfreq gives to the core value in kHz and then it also expects to
+> receive value in kHz from the core. In a result memory freq is always set
+> to a value which is close to ULONG_MAX because of the bug. Hence the EMC
+> frequency is always capped to the maximum and the driver doesn't do
+> anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
+> frequency scaling works properly now.
+>=20
+> Cc: <stable@vger.kernel.org> # 4.14+
+> Tested-by: Steev Klimaszewski <steev@kali.org>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
 
-#define check_rcu_list(cond)						\
-	({								\
-		if (COUNT_VARGS(cond) != 0)				\
-			__list_check_rcu_cond(0, ## cond);		\
-		else							\
-			__list_check_rcu_nocond();			\
-	})
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-	for (check_rcu_list(cond),					\
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- Steve
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2TfQACgkQ3SOs138+
+s6GExg/9HsPjT2SjCQvZabaE2o3s+/XY1gquN4JnV0phciJyXkDiCEYstAtLTcwR
+K464Jww0SwHI9j28NVkTwfCI5ZCV8PJgjY+5R/NRSW0JidhZS8AaMKkFfCMa8Ubz
+8KBWHvn+iRlGR4Lpssr/nWPqk0NLga+exxpzQVQmY7iPZ02yxoC3sNiJmbXHT54F
+o7QgAd1qwFST5DQ/yMHzZK27iUhFdupDGkyb2BVh2X0y6q2iseuvoW5at81ZuoVI
+TB8Knl5dWItuG/ERGfnfoU8hV5i7RJDzTcnlLh//GSdD4cpRLGFVDbDE7lgnd4vq
+DSCu/I4befv91FmHVIgEgI5qmccCzm9sFUrRT3Ga8hGtclm/namJyL8std4Jxh+b
+9s7O9EeBAo/ZisfXhlzZnY5mg2Z8dfCxwxbxXhPZE/Mz6/ndmGfVFKsXRIvVBd5f
+lDn71dlug/uXWQ5Tudkz/23JQyGW6dbQK14BZPt/2EEygyJnsmJckQuyOYUhy3Ak
+xBkemlaQNzBS/ILhs7TVKA/+EFkdS/8Fcow5Kl4RdORdx9aXpbNxPIOMNWqyJYVH
+v7Y0DsHPN98oshCFNQ7K0z9XIV6auZrlZ7RCnyfXhCz4NLQcxlrGYGQX6NIafFN8
+ZXJgm+e4fuFBdNGBWUeh5STwqInQ4zLEdp9RwywxzH+SUoA6ePg=
+=8Afm
+-----END PGP SIGNATURE-----
 
-> +	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
->  		&pos->member != (head);					\
->  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
->  
-> @@ -649,12 +653,15 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
->   * as long as the traversal is guarded by rcu_read_lock().
->   */
->  #define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-> -	if (COUNT_VARGS(cond) != 0) {					\
-> -		__list_check_rcu_cond(0, ## cond);			\
-> -	} else {							\
-> -		__list_check_rcu();					\
-> -	}								\
-> -	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
-> +	for (								\
-> +	     ({								\
-> +		if (COUNT_VARGS(cond) != 0) {				\
-> +			__list_check_rcu_cond(0, ## cond);		\
-> +		} else {						\
-> +			__list_check_rcu_nocond();			\
-> +		}							\
-> +	     }),							\
-> +	     pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
->  			typeof(*(pos)), member);			\
->  		pos;							\
->  		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-
+--LZvS9be/3tNcYl/X--
