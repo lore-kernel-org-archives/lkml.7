@@ -2,91 +2,111 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA4EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C754C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE6324C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FD824C98
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AhznUoab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFDHqh (ORCPT
+        id S1726943AbfFDHqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:46:37 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49895 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfFDHqg (ORCPT
+        Tue, 4 Jun 2019 03:46:51 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51672 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfFDHqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:46:36 -0400
-X-Originating-IP: 90.88.144.139
-Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 4D2541BF203;
-        Tue,  4 Jun 2019 07:46:33 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 09:46:32 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     codekipper@gmail.com
-Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
-Subject: Re: [PATCH v4 4/9] ASoC: sun4i-i2s: Reduce quirks for sun8i-h3
-Message-ID: <20190604074632.tby6r57vjehb4jne@flea>
-References: <20190603174735.21002-1-codekipper@gmail.com>
- <20190603174735.21002-5-codekipper@gmail.com>
+        Tue, 4 Jun 2019 03:46:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x547kG9S007930;
+        Tue, 4 Jun 2019 02:46:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559634376;
+        bh=UpgmdeZyCTRIwhuCuN32EY5nvq17K3TOta5SIK7paXY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AhznUoab3S89GGZ6N2WWwEGRLlDH429QSWHzDrufkfHAmSI37dtQ6rUNefzvIsVEL
+         Y+600RHZvALUOYtwvm99WCWPIvfVjuWm1plhECrorBnTnGGDXcUKlEDPSZwah1HcGN
+         2UpWw/Cz2IULZtwzreL0VlIhkWTGRGHkSbQ6dR2g=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x547kGvN045289
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jun 2019 02:46:16 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
+ 2019 02:46:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 4 Jun 2019 02:46:15 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x547k9fZ035276;
+        Tue, 4 Jun 2019 02:46:10 -0500
+Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+To:     Pawel Laszczak <pawell@cadence.com>, <devicetree@vger.kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
+        <mark.rutland@arm.com>, <linux-usb@vger.kernel.org>,
+        <hdegoede@redhat.com>, <heikki.krogerus@linux.intel.com>,
+        <andy.shevchenko@gmail.com>, <robh+dt@kernel.org>, <rogerq@ti.com>,
+        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>, <nm@ti.com>,
+        <sureshp@cadence.com>, <peter.chen@nxp.com>, <kurahul@cadence.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-6-git-send-email-pawell@cadence.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
+Date:   Tue, 4 Jun 2019 13:16:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7jshcfboaepnhnot"
-Content-Disposition: inline
-In-Reply-To: <20190603174735.21002-5-codekipper@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1554882504-9010-6-git-send-email-pawell@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/04/19 1:18 PM, Pawel Laszczak wrote:
+> +static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
+> +					     struct cdns3_endpoint *priv_ep)
+> +{
+> +	int dma_index;
+> +	u32 doorbell;
+> +
+> +	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
 
---7jshcfboaepnhnot
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +	dma_index = (readl(&priv_dev->regs->ep_traddr) -
+> +		    priv_ep->trb_pool_dma) / TRB_SIZE;
 
-On Mon, Jun 03, 2019 at 07:47:30PM +0200, codekipper@gmail.com wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
->
-> We have a number of flags used to identify the functionality
-> of the IP block found on the sun8i-h3 and later devices. As it
-> is only neccessary to identify this new block then replace
-> these flags with just one.
->
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+This gets upgraded to 64-bit by 64-bit division whenever dma_addr_t is 
+64-bit. That should be avoided. Following diff should fix it. 
+But please review the logic itself. You are subtracting a 64 bit entity 
+from a 32-bit entity. What is guaranteeing that priv_ep->trb_pool_dma is 
+32-bit?
 
-This carries exactly the same meaning than the compatible, so this is
-entirely redundant.
+There is one more instance of same issue in cdns3_request_handled().
 
-The more I think of it, the more I fell like we should have function
-pointers instead, and have hooks to deal with these kind of things.
+Thanks,
+Sekhar
 
-I've been working a lot on that driver recently, and there's some many
-parameters and regmap_fields that it becomes pretty hard to work on.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---7jshcfboaepnhnot
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYh2AAKCRDj7w1vZxhR
-xaKlAQD09oK9E3ZBJRJxBZlg7egPOYq9H1Wo09ND2ytEbNrr1QD+MC6qd8dznfXK
-puvwjUoowAllTkmYM3ex11Z+Gejg0A4=
-=YpYf
------END PGP SIGNATURE-----
-
---7jshcfboaepnhnot--
+[1]
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index bfd5dbf40c7e..e73b618501fb 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -749,8 +749,8 @@ static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
+ 	u32 doorbell;
+ 
+ 	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
+-	dma_index = (readl(&priv_dev->regs->ep_traddr) -
+-		    priv_ep->trb_pool_dma) / TRB_SIZE;
++	dma_index = readl(&priv_dev->regs->ep_traddr) - priv_ep->trb_pool_dma;
++	dma_index /= TRB_SIZE;
