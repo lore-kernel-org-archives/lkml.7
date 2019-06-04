@@ -2,101 +2,83 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFF7C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A381C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED90B208E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cBf5XbKE"
+	by mail.kernel.org (Postfix) with ESMTP id 36D89208E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfFDR3F (ORCPT
+        id S1726635AbfFDR3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:29:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46840 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfFDR3E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:29:04 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so6870373pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFo+Cml7JxiPey2gwmiRmH8tPb+Deo/oS3silL2yxZc=;
-        b=cBf5XbKESWpXtgyIzi/8h+k25RwP+X0uA6/LU0BccXujypKyhJkbIKEYGQd9tcfPNs
-         W4vSpAt8axOiZd5j3jvEjzXC79+UULFH5sAYlOVAyzP3Y2GzclNlGnuY1LdnmSKSXRgT
-         3oHdfwDdRi7oMHldyCnZX6D/9a15qwBJmqK9A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFo+Cml7JxiPey2gwmiRmH8tPb+Deo/oS3silL2yxZc=;
-        b=Xe98NwmP6Qa3LVnmEkPKN5hlECWSVhI0PL+E0BFGHII4GWYAXyFVwjDzknIO2WvOnn
-         c2ajHsaN55X7uvq4y2V1flmh73cWSO09++M92EsFUkVm9+0S8Y5nSZ7cdfnOl55DyqZc
-         mq88sz11qg+VBBgHkoYX5ZrKwJuqnFCfqhj67T+omwpM5CyFUmLNijHG91GZLvNmCWMb
-         ntjSC8COFwdFfDLK8YatJzn0jez6oFCV5/SZAxH3T4vnysmkQpsIiUnPWbaxp+Bsdepp
-         OH2F/ncAhZRagpM5ltK7ifFEssNO5moyLjaRJMCfsoibKPpkqKBz10unwP3k4pq5OxF+
-         BtQA==
-X-Gm-Message-State: APjAAAVZxFA6B6e/EYYQ/xcYam8gdM+gBXsy6pbG/XaN1tWJ/WD0aFdf
-        ZKx9VJDd1NKncXh0MjBx8rGAVA==
-X-Google-Smtp-Source: APXvYqzPO4ICaqAPtnx7zJzFCLLGLjyR8STtZCGEnKZqvBb6BI3ZWdE7H0kogepUqmM0OHWQkgdnQw==
-X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr21601217plp.71.1559669344327;
-        Tue, 04 Jun 2019 10:29:04 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id b128sm13591829pfa.165.2019.06.04.10.29.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:29:03 -0700 (PDT)
-From:   Brian Norris <briannorris@chromium.org>
-To:     Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] mwifiex: drop 'set_consistent_dma_mask' log message
-Date:   Tue,  4 Jun 2019 10:28:58 -0700
-Message-Id: <20190604172858.107084-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
+        Tue, 4 Jun 2019 13:29:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46887 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfFDR3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:29:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9290B3004159;
+        Tue,  4 Jun 2019 17:29:06 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 282F21001DD2;
+        Tue,  4 Jun 2019 17:29:06 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 11:29:05 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Hao Zheng <mowendugu@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Quan Xu <quan.xu0@gmail.com>
+Subject: Re: [PATCH 1/1] PCI/IOV: Fix VF0 cached config space size for other
+ VFs
+Message-ID: <20190604112905.1f16232c@x1.home>
+In-Reply-To: <1558358244-35832-1-git-send-email-mowendugu@gmail.com>
+References: <1558358244-35832-1-git-send-email-mowendugu@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 04 Jun 2019 17:29:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This message is pointless.
+On Mon, 20 May 2019 21:17:24 +0800
+Hao Zheng <mowendugu@gmail.com> wrote:
 
-While we're at it, include the error code in the error message, which is
-not pointless.
+> Set the pcie_cap field before getting the config space size for
+> other VFs. Otherwise, the config space size of other VFs are error
+> set to 256, while the size of VF0 is 4096.
+> 
+> Signed-off-by: Hao Zheng <mowendugu@gmail.com>
+> Signed-off-by: Quan Xu <quan.xu0@gmail.com>
+> ---
+>  drivers/pci/iov.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 3aa115e..239fad1 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -133,6 +133,7 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  	pci_read_config_word(virtfn, PCI_SUBSYSTEM_ID,
+>  			     &physfn->sriov->subsystem_device);
+>  
+> +	set_pcie_port_type(virtfn);
+>  	physfn->sriov->cfg_size = pci_cfg_space_size(virtfn);
+>  }
+>  
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/pcie.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This results in set_pci_port_type() being called multiple times on
+VF0.  Why not simply delay calling pci_read_vf_config_common() until
+after pci_setup_device()?  Here's the alternate approach:
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3fe81b2a929a..82f58bf0fc43 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -2924,10 +2924,9 @@ static int mwifiex_init_pcie(struct mwifiex_adapter *adapter)
- 
- 	pci_set_master(pdev);
- 
--	pr_notice("try set_consistent_dma_mask(32)\n");
- 	ret = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
- 	if (ret) {
--		pr_err("set_dma_mask(32) failed\n");
-+		pr_err("set_dma_mask(32) failed: %d\n", ret);
- 		goto err_set_dma_mask;
- 	}
- 
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+https://lore.kernel.org/linux-pci/155966918965.10361.16228304474160813310.stgit@gimli.home/
 
+Thanks,
+Alex
