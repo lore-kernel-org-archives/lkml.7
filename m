@@ -2,130 +2,218 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94021C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27255C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7708023426
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEE624A59
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfFDO4Z (ORCPT
+        id S1727916AbfFDO4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:56:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34344 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727826AbfFDO4Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:56:25 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54EbtGi048817
-        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 10:56:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2swr8hysqj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:56:23 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 4 Jun 2019 15:56:21 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 15:56:18 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54EuFI151314830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 14:56:15 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C71E1A4059;
-        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43716A404D;
-        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.145])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Jun 2019 14:56:15 +0000 (GMT)
-Date:   Tue, 4 Jun 2019 16:56:13 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
-In-Reply-To: <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-        <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 4 Jun 2019 10:56:35 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55411 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfFDO4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:56:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 07:56:34 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2019 07:56:33 -0700
+Received: from [10.125.252.178] (abudanko-mobl.ccr.corp.intel.com [10.125.252.178])
+        by linux.intel.com (Postfix) with ESMTP id 5FF225803EA;
+        Tue,  4 Jun 2019 07:56:31 -0700 (PDT)
+Subject: Re: [PATCH v5] perf record: collect user registers set jointly with
+ dwarf stacks
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e7fd37b1-af22-0d94-a0dc-5895e803bbfe@linux.intel.com>
+ <20190530194111.GA6540@kernel.org>
+ <3dc0c67e-9ea3-b9f5-1aa2-e87603b29c37@linux.intel.com>
+ <20190604141220.GG24504@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <ecf1d25f-8c28-934d-f426-26c9d0a68304@linux.intel.com>
+Date:   Tue, 4 Jun 2019 17:56:30 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190604141220.GG24504@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060414-4275-0000-0000-0000033CA10B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060414-4276-0000-0000-0000384CB085
-Message-Id: <20190604165613.4d2803b4.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=841 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 11:36:12 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> On 5/21/19 11:34 AM, Pierre Morel wrote:
-> > This patch series implements PQAP/AQIC interception in KVM.
-> > 
-
-[..]
-
-> > 
-> > Tony, I did not rebase this series above the dynamic configuration
-> > patches because:
-> > - This series do the work it needs to do without having to take
-> >    care on the dynamic configuration.
-> > - It is guarantied that interrupt will be shut off after removing
-> >    the APQueue device
-> > - The dynamic configuration series is not converging.  
+On 04.06.2019 17:12, Arnaldo Carvalho de Melo wrote:
+> Em Fri, May 31, 2019 at 09:27:38AM +0300, Alexey Budankov escreveu:
+<SNIP>
 > 
-> Would you consider the following?
+> Now cross building to a few arches is failing, so far:
 > 
-> * Take dynconfig patch "s390: vfio-ap: wait for queue empty on queue
+> [perfbuilder@quaco ~]$ cat /tmp/dm.log/summary
+>  alpine:3.4: Ok
+>  alpine:3.5: Ok
+>  alpine:3.6: Ok
+>  alpine:3.7: Ok
+>  alpine:3.8: Ok
+>  alpine:3.9: Ok
+>  alpine:edge: Ok
+>  amazonlinux:1: Ok
+>  amazonlinux:2: Ok
+>  android-ndk:r12b-arm: Ok
+>  android-ndk:r15c-arm: Ok
+>  centos:5: Ok
+>  centos:6: Ok
+>  centos:7: Ok
+>  clearlinux:latest: Ok
+>  debian:8: Ok
+>  debian:9: Ok
+>  debian:experimental: Ok
+>  debian:experimental-x-arm64: Ok
+>  debian:experimental-x-mips: FAIL
+>  debian:experimental-x-mips64: FAIL
+>  debian:experimental-x-mipsel: FAIL
+>  fedora:20: Ok
+>  fedora:22: Ok
+>  fedora:23: Ok
+>  fedora:24: Ok
+>  fedora:24-x-ARC-uClibc: FAIL
+>  fedora:25: Ok
+>  fedora:26: Ok
+>  fedora:27: Ok
+> [perfbuilder@quaco ~]$
 
-[..]
+That below can fix it. Unfortunately can't test in advance on that architectures.
+
+Thanks,
+Alexey
+
+---
+ tools/perf/util/evsel.c     | 4 +---
+ tools/perf/util/perf_regs.h | 4 ++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 375ab4eb7560..cc6e7a0dda92 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -669,8 +669,6 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
+ 	return ret;
+ }
+ 
+-#define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+-
+ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+ 					   struct record_opts *opts,
+ 					   struct callchain_param *param)
+@@ -704,7 +702,7 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+ 		if (!function) {
+ 			perf_evsel__set_sample_bit(evsel, REGS_USER);
+ 			perf_evsel__set_sample_bit(evsel, STACK_USER);
+-			if (opts->sample_user_regs) {
++			if (opts->sample_user_regs && DWARF_MINIMAL_REGS != PERF_REGS_MASK) {
+ 				attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+ 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
+ 					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index cb9c246c8962..47fe34e5f7d5 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -29,12 +29,16 @@ uint64_t arch__user_reg_mask(void);
+ #ifdef HAVE_PERF_REGS_SUPPORT
+ #include <perf_regs.h>
+ 
++#define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
++
+ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+ 
+ #else
+ #define PERF_REGS_MASK	0
+ #define PERF_REGS_MAX	0
+ 
++#define DWARF_MINIMAL_REGS PERF_REGS_MASK
++
+ static inline const char *perf_reg_name(int id __maybe_unused)
+ {
+ 	return NULL;
+---
 
 > 
-> If you do the things above, then I can base the dynconfig series on
-> the IRQ series without much of a merge issue. What say you?
+> For instance:
 > 
-> Note: I've included review comments for patch 3/4 to match the
->        suggestions above.
+> [perfbuilder@quaco ~]$ cat /tmp/dm.log/debian\:experimental-x-mips64
+> <SNIP>
+>   CC       /tmp/build/perf/tests/pmu.o
+> util/evsel.c: In function '__perf_evsel__config_callchain':
+> util/evsel.c:672:38: error: 'PERF_REG_IP' undeclared (first use in this function); did you mean 'PERF_REGS_MAX'?
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                       ^~~~~~~~~~~
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+> util/evsel.c:672:38: note: each undeclared identifier is reported only once for each function it appears in
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                       ^~~~~~~~~~~
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+> util/evsel.c:672:62: error: 'PERF_REG_SP' undeclared (first use in this function); did you mean 'PERF_MEM_S'?
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                                               ^~~~~~~~~~~
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+>   LD       /tmp/build/perf/bench/perf-in.o
+>   CC       /tmp/build/perf/tests/hists_common.o
+> mv: cannot stat '/tmp/build/perf/util/.evsel.o.tmp': No such file or directory
+> make[4]: *** [/git/linux/tools/build/Makefile.build:97: /tmp/build/perf/util/evsel.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> <SNIP>
 > 
-> > 
-> > However Tony, the choice is your's, I won't be able to help
-> > in a near future.
-
-Since Pierre won't available for a while, and the patches look good
-enough to me, I would like to pick these if nobody objects.
-
-Any objection?
-
-@Tony: Could you please have another look at patch 3? That is the only
-one you haven't r-b yet...
-
-Regards,
-Halil
-
+> 
+> 
+> [perfbuilder@quaco ~]$ cat /tmp/dm.log/fedora\:24-x-ARC-uClibc
+> 
+> <SNIP>
+>   CC       /tmp/build/perf/tests/mmap-basic.o
+>   CC       /tmp/build/perf/ui/hist.o
+> util/evsel.c: In function '__perf_evsel__config_callchain':
+> util/evsel.c:672:38: error: 'PERF_REG_IP' undeclared (first use in this function); did you mean 'PERF_MEM_S'?
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                       ^
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+> util/evsel.c:672:38: note: each undeclared identifier is reported only once for each function it appears in
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                       ^
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+> util/evsel.c:672:62: error: 'PERF_REG_SP' undeclared (first use in this function); did you mean 'PERF_REG_IP'?
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>                                                               ^
+> util/evsel.c:708:31: note: in expansion of macro 'DWARF_MINIMAL_REGS'
+>      attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+>                                ^~~~~~~~~~~~~~~~~~
+>   MKDIR    /tmp/build/perf/ui/stdio/
+> mv: cannot stat '/tmp/build/perf/util/.evsel.o.tmp': No such file or directory
+> /git/linux/tools/build/Makefile.build:96: recipe for target '/tmp/build/perf/util/evsel.o' failed
+> make[4]: *** [/tmp/build/perf/util/evsel.o] Error 1
+> 
+> 
