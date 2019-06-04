@@ -2,81 +2,267 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAECBC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EBFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE8D24B62
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C634224B6F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ShGen+o8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfFDLMg (ORCPT
+        id S1727350AbfFDLOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:12:36 -0400
-Received: from foss.arm.com ([217.140.101.70]:40454 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbfFDLMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:12:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E61280D;
-        Tue,  4 Jun 2019 04:12:36 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC0753F690;
-        Tue,  4 Jun 2019 04:12:33 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 12:12:31 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, will.deacon@arm.com,
-        christoffer.dall@arm.com, marc.zyngier@arm.com,
-        james.morse@arm.com, julien.thierry@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        ard.biesheuvel@linaro.org
-Subject: Re: [PATCH v5 2/3] arch/arm64: fpsimd: Introduce
- fpsimd_save_and_flush_cpu_state() and use it
-Message-ID: <20190604111230.GA5668@arrakis.emea.arm.com>
-References: <20190521172139.21277-1-julien.grall@arm.com>
- <20190521172139.21277-3-julien.grall@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521172139.21277-3-julien.grall@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 4 Jun 2019 07:14:45 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:53228 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfFDLOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:14:45 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x54BDaaN019787;
+        Tue, 4 Jun 2019 20:13:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x54BDaaN019787
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559646817;
+        bh=i87f1EzLAVXjNr+Xr7KY6Eno863iAYx32VAHpgBSDhU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ShGen+o8KRrLorQiNuoKnRzGUmpt/AggzUoBpdSASuh6Cu4qRFrDy6BbXYaDAuu+q
+         IRk5ZXVM9KDM45zAyZW7Xdq1gZ2J8emn/vuVELUqa6VxYcTXSkXA0PPg6XvyiFp3qb
+         OiHsXQzvNEBPjKAwMj430y9UnmWaj6vT/VB0B5LEI3ZEru8JuCpJeOqtKb9BTmLwZ6
+         1lVkxUOF3qx8xQJ/fD23CbBUM2YzYT4+YMLKYuGMYpUA+Jmsn0lLgkwCNhyqGIk+jy
+         e3h0JmwYE24u3QTu3eEqSDuW7NFCFfCUt3gcppjGMZP49M8i6Zxul/ZOHbkgvY4LfY
+         nSQTymT3Rhk4Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: do not use C++ style comments in uapi headers
+Date:   Tue,  4 Jun 2019 20:13:34 +0900
+Message-Id: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 06:21:38PM +0100, Julien Grall wrote:
-> The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
-> the KVM FPSIMD code.
-> 
-> A following patch will introduce a mechanism to acquire owernship of the
-> FPSIMD/SVE context for performing context management operations. Rather
-> than having to export the new helpers to get/put the context, we can just
-> introduce a new function to combine fpsimd_save() and
-> fpsimd_flush_cpu_state().
-> 
-> This has also the advantage to remove any external call of fpsimd_save()
-> and fpsimd_flush_cpu_state(), so they can be turned static.
-> 
-> Lastly, the new function can also be used in the PM notifier.
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-[...]
-> ---
->  arch/arm64/include/asm/fpsimd.h |  4 +---
->  arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
->  arch/arm64/kvm/fpsimd.c         |  4 +---
->  3 files changed, 15 insertions(+), 10 deletions(-)
+Linux kernel tolerates C++ style comments these days. Actually, the
+SPDX License tags for .c files start with //.
 
-Marc, since this touches KVM, can I get an ack on this patch? I plan to
-queue the series.
+On the other hand, uapi headers are written in more strict C, where
+the C++ comment style is forbidden.
 
-Thanks.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ include/uapi/linux/dvb/audio.h |   2 +-
+ include/uapi/linux/dvb/osd.h   | 170 ++++++++++++++++++++-------------
+ 2 files changed, 103 insertions(+), 69 deletions(-)
+
+diff --git a/include/uapi/linux/dvb/audio.h b/include/uapi/linux/dvb/audio.h
+index afeae063e640..977bed135e22 100644
+--- a/include/uapi/linux/dvb/audio.h
++++ b/include/uapi/linux/dvb/audio.h
+@@ -52,7 +52,7 @@ typedef enum {
+ typedef struct audio_mixer {
+ 	unsigned int volume_left;
+ 	unsigned int volume_right;
+-  // what else do we need? bass, pass-through, ...
++  /* what else do we need? bass, pass-through, ... */
+ } audio_mixer_t;
+ 
+ 
+diff --git a/include/uapi/linux/dvb/osd.h b/include/uapi/linux/dvb/osd.h
+index e163508b9ae8..723824ce3622 100644
+--- a/include/uapi/linux/dvb/osd.h
++++ b/include/uapi/linux/dvb/osd.h
+@@ -28,74 +28,108 @@
+ #include <linux/compiler.h>
+ 
+ typedef enum {
+-  // All functions return -2 on "not open"
+-  OSD_Close=1,    // ()
+-  // Disables OSD and releases the buffers
+-  // returns 0 on success
+-  OSD_Open,       // (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..15](color&0xF0))
+-  // Opens OSD with this size and bit depth
+-  // returns 0 on success, -1 on DRAM allocation error, -2 on "already open"
+-  OSD_Show,       // ()
+-  // enables OSD mode
+-  // returns 0 on success
+-  OSD_Hide,       // ()
+-  // disables OSD mode
+-  // returns 0 on success
+-  OSD_Clear,      // ()
+-  // Sets all pixel to color 0
+-  // returns 0 on success
+-  OSD_Fill,       // (color)
+-  // Sets all pixel to color <col>
+-  // returns 0 on success
+-  OSD_SetColor,   // (color,R{x0},G{y0},B{x1},opacity{y1})
+-  // set palette entry <num> to <r,g,b>, <mix> and <trans> apply
+-  // R,G,B: 0..255
+-  // R=Red, G=Green, B=Blue
+-  // opacity=0:      pixel opacity 0% (only video pixel shows)
+-  // opacity=1..254: pixel opacity as specified in header
+-  // opacity=255:    pixel opacity 100% (only OSD pixel shows)
+-  // returns 0 on success, -1 on error
+-  OSD_SetPalette, // (firstcolor{color},lastcolor{x0},data)
+-  // Set a number of entries in the palette
+-  // sets the entries "firstcolor" through "lastcolor" from the array "data"
+-  // data has 4 byte for each color:
+-  // R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
+-  OSD_SetTrans,   // (transparency{color})
+-  // Sets transparency of mixed pixel (0..15)
+-  // returns 0 on success
+-  OSD_SetPixel,   // (x0,y0,color)
+-  // sets pixel <x>,<y> to color number <col>
+-  // returns 0 on success, -1 on error
+-  OSD_GetPixel,   // (x0,y0)
+-  // returns color number of pixel <x>,<y>,  or -1
+-  OSD_SetRow,     // (x0,y0,x1,data)
+-  // fills pixels x0,y through  x1,y with the content of data[]
+-  // returns 0 on success, -1 on clipping all pixel (no pixel drawn)
+-  OSD_SetBlock,   // (x0,y0,x1,y1,increment{color},data)
+-  // fills pixels x0,y0 through  x1,y1 with the content of data[]
+-  // inc contains the width of one line in the data block,
+-  // inc<=0 uses blockwidth as linewidth
+-  // returns 0 on success, -1 on clipping all pixel
+-  OSD_FillRow,    // (x0,y0,x1,color)
+-  // fills pixels x0,y through  x1,y with the color <col>
+-  // returns 0 on success, -1 on clipping all pixel
+-  OSD_FillBlock,  // (x0,y0,x1,y1,color)
+-  // fills pixels x0,y0 through  x1,y1 with the color <col>
+-  // returns 0 on success, -1 on clipping all pixel
+-  OSD_Line,       // (x0,y0,x1,y1,color)
+-  // draw a line from x0,y0 to x1,y1 with the color <col>
+-  // returns 0 on success
+-  OSD_Query,      // (x0,y0,x1,y1,xasp{color}}), yasp=11
+-  // fills parameters with the picture dimensions and the pixel aspect ratio
+-  // returns 0 on success
+-  OSD_Test,       // ()
+-  // draws a test picture. for debugging purposes only
+-  // returns 0 on success
+-// TODO: remove "test" in final version
+-  OSD_Text,       // (x0,y0,size,color,text)
+-  OSD_SetWindow, //  (x0) set window with number 0<x0<8 as current
+-  OSD_MoveWindow, //  move current window to (x0, y0)
+-  OSD_OpenRaw,	// Open other types of OSD windows
++	/* All functions return -2 on "not open" */
++	OSD_Close=1,	/* () */
++	/*
++	 * Disables OSD and releases the buffers
++	 * returns 0 on success
++	 */
++	OSD_Open,	/* (x0,y0,x1,y1,BitPerPixel[2/4/8](color&0x0F),mix[0..15](color&0xF0)) */
++	/*
++	 * Opens OSD with this size and bit depth
++	 * returns 0 on success, -1 on DRAM allocation error, -2 on "already open"
++	 */
++	OSD_Show,	/* () */
++	/*
++	 * enables OSD mode
++	 * returns 0 on success
++	 */
++	OSD_Hide,	/* () */
++	/*
++	 * disables OSD mode
++	 * returns 0 on success
++	 */
++	OSD_Clear,	/* () */
++	/*
++	 * Sets all pixel to color 0
++	 * returns 0 on success
++	 */
++	OSD_Fill,	/* (color) */
++	/*
++	 * Sets all pixel to color <col>
++	 * returns 0 on success
++	 */
++	OSD_SetColor,	/* (color,R{x0},G{y0},B{x1},opacity{y1}) */
++	/*
++	 * set palette entry <num> to <r,g,b>, <mix> and <trans> apply
++	 * R,G,B: 0..255
++	 * R=Red, G=Green, B=Blue
++	 * opacity=0:      pixel opacity 0% (only video pixel shows)
++	 * opacity=1..254: pixel opacity as specified in header
++	 * opacity=255:    pixel opacity 100% (only OSD pixel shows)
++	 * returns 0 on success, -1 on error
++	 */
++	OSD_SetPalette,	/* (firstcolor{color},lastcolor{x0},data) */
++	/*
++	 * Set a number of entries in the palette
++	 * sets the entries "firstcolor" through "lastcolor" from the array "data"
++	 * data has 4 byte for each color:
++	 * R,G,B, and a opacity value: 0->transparent, 1..254->mix, 255->pixel
++	 */
++	OSD_SetTrans,	/* (transparency{color}) */
++	/*
++	 * Sets transparency of mixed pixel (0..15)
++	 * returns 0 on success
++	 */
++	OSD_SetPixel,	/* (x0,y0,color) */
++	/*
++	 * sets pixel <x>,<y> to color number <col>
++	 * returns 0 on success, -1 on error
++	 */
++	OSD_GetPixel,	/* (x0,y0) */
++	/* returns color number of pixel <x>,<y>,  or -1 */
++	OSD_SetRow,	/* (x0,y0,x1,data) */
++	/*
++	 * fills pixels x0,y through  x1,y with the content of data[]
++	 * returns 0 on success, -1 on clipping all pixel (no pixel drawn)
++	 */
++	OSD_SetBlock,	/* (x0,y0,x1,y1,increment{color},data) */
++	/*
++	 * fills pixels x0,y0 through  x1,y1 with the content of data[]
++	 * inc contains the width of one line in the data block,
++	 * inc<=0 uses blockwidth as linewidth
++	 * returns 0 on success, -1 on clipping all pixel
++	 */
++	OSD_FillRow,	/* (x0,y0,x1,color) */
++	/*
++	 * fills pixels x0,y through  x1,y with the color <col>
++	 * returns 0 on success, -1 on clipping all pixel
++	 */
++	OSD_FillBlock,	/* (x0,y0,x1,y1,color) */
++	/*
++	 * fills pixels x0,y0 through  x1,y1 with the color <col>
++	 * returns 0 on success, -1 on clipping all pixel
++	 */
++	OSD_Line,	/* (x0,y0,x1,y1,color) */
++	/*
++	 * draw a line from x0,y0 to x1,y1 with the color <col>
++	 * returns 0 on success
++	 */
++	OSD_Query,	/* (x0,y0,x1,y1,xasp{color}}), yasp=11 */
++	/*
++	 * fills parameters with the picture dimensions and the pixel aspect ratio
++	 * returns 0 on success
++	 */
++	OSD_Test,       /* () */
++	/*
++	 * draws a test picture. for debugging purposes only
++	 * returns 0 on success
++	 * TODO: remove "test" in final version
++	 */
++	OSD_Text,	/* (x0,y0,size,color,text) */
++	OSD_SetWindow,	/* (x0) set window with number 0<x0<8 as current */
++	OSD_MoveWindow,	/* move current window to (x0, y0) */
++	OSD_OpenRaw,	/* Open other types of OSD windows */
+ } OSD_Command;
+ 
+ typedef struct osd_cmd_s {
 -- 
-Catalin
+2.17.1
+
