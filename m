@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA177C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE701C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9507C206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECF3206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690768;
-	bh=XOQsj7LhOQZBOh6NMkjXt0yudzIxokbXiey5V7Uw9cI=;
+	s=default; t=1559690785;
+	bh=bxPVqEV9wO4+2nhR1ulIniT7wJTey7yUOQFdUmgGE/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=os1yIugs3DCfXlknzFBF8T6dsel8/MBqVCNrL6bljh2WzgJpMdtMiVVF/63m+vCTz
-	 qOvEVbYAJq9BGtcxArlhsPHxeyeZi2eeqkrD6bGwrRsbwDjw7XsnYyOKJEZyr5tDkA
-	 q1rbJHb+bzVk48H+AyxYIOdjAXDeiKdI99aUaH0M=
+	b=JkovhkhakHnf9bvZaZNGmpa5N6nFvIGRn15mtCEzP8b+piOuupMb3pm02FoNJi6i/
+	 5IXzt1IHmWqAgGeeHnfe1HZiOV7PzLIk7Of7rkJx1TSdKnG5hxWJxVLrGMtmwmWDEw
+	 fNTakvww0fs2jSyW8zqWpquEMj/FFvbwnUx0Me2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfFDX0D (ORCPT
+        id S1727279AbfFDX0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37760 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbfFDXZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:47 -0400
+        id S1728112AbfFDXZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F57D20862;
-        Tue,  4 Jun 2019 23:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E8C920862;
+        Tue,  4 Jun 2019 23:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690747;
-        bh=XOQsj7LhOQZBOh6NMkjXt0yudzIxokbXiey5V7Uw9cI=;
+        s=default; t=1559690742;
+        bh=bxPVqEV9wO4+2nhR1ulIniT7wJTey7yUOQFdUmgGE/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9/B6DBDYOFAGL6wMMrlL3fUlnrv6bZ+vt6LbFpzZCNiZWbWMsiP61e+6ZQcltsGw
-         kLnyBAGbmnaqSuKmbRh9frv+yApXoxryBhD/Sux7qjdNekXqrTaTfA6W54nSnHE4Pk
-         EKE7HklkwMkWjGpzD4hSSquK/bQRDyUEkBI4IGic=
+        b=QgZZno6enpRx1ZuWwCwkD5rNZr5LzaLEAl/tOKmxt11BinaFfqDLx1HSvP4hHn7BT
+         U3V2FQ8ETijIIZZZY8gDfC2jZUsy72MSq2KFTgqbvpy3XkchOCaniwvLqIUepKZ0Bz
+         +bsOheYDZjwzsBPXU5UNUySfRw6GD2Y0ZFX+1p48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/10] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
-Date:   Tue,  4 Jun 2019 19:25:30 -0400
-Message-Id: <20190604232532.7953-9-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/10] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
+Date:   Tue,  4 Jun 2019 19:25:27 -0400
+Message-Id: <20190604232532.7953-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
 References: <20190604232532.7953-1-sashal@kernel.org>
@@ -59,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
+[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
 
-According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
-each MSR may be written with any value, and the high-order 8 bits are
-sign-extended according to the value of bit 31", but the fixed counters
-in real hardware are limited to the width of the fixed counters ("bits
-beyond the width of the fixed-function counter are reserved and must be
-written as zeros").  Fix KVM to do the same.
+Currently an int is being shifted and the result is being cast to a u64
+which leads to undefined behaviour if the shift is more than 31 bits. Fix
+this by casting the integer value 1 to u64 before the shift operation.
 
-Reported-by: Nadav Amit <nadav.amit@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Addresses-Coverity: ("Bad shift operation")
+Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 23a7c7ba377a..8fc07ea23344 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -235,11 +235,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
--		    (pmc = get_fixed_pmc(pmu, msr))) {
--			if (!msr_info->host_initiated)
--				data = (s64)(s32)data;
--			pmc->counter += data - pmc_read_counter(pmc);
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+			if (msr_info->host_initiated)
-+				pmc->counter = data;
-+			else
-+				pmc->counter = (s32)data;
-+			return 0;
-+		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+			pmc->counter = data;
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+index 28c671b609b2..0c71b69b9f88 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+@@ -829,7 +829,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
+ 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
+ 			(u64)err_entry->data.err_warn_bitmap_lo;
+ 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
+-			if (err_warn_bit_map & (u64) (1 << i)) {
++			if (err_warn_bit_map & ((u64)1 << i)) {
+ 				err_warn = i;
+ 				break;
+ 			}
 -- 
 2.20.1
 
