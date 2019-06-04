@@ -2,105 +2,111 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA282C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326B624BF6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BEB324C21
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="emCZJ7it"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="Na2RgsmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfFDLfN (ORCPT
+        id S1727473AbfFDLff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:35:13 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15548 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfFDLfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:35:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6576e0000>; Tue, 04 Jun 2019 04:35:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 04:35:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 04:35:11 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 11:35:11 +0000
-Received: from [10.26.11.158] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun 2019
- 11:35:08 +0000
-Subject: Re: [PATCH 07/26] iommu/dma: move the arm64 wrappers to common code
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-8-hch@lst.de>
- <06b331f0-7df7-a6cd-954c-789f89a0836d@arm.com>
- <acb46c7f-0855-de30-485f-a6242968f947@nvidia.com>
- <20190604060554.GA14536@lst.de>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5e119919-bbfd-14a4-0258-93e8249d11c4@nvidia.com>
-Date:   Tue, 4 Jun 2019 12:35:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190604060554.GA14536@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 4 Jun 2019 07:35:35 -0400
+Received: from mail-eopbgr20096.outbound.protection.outlook.com ([40.107.2.96]:9639
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727170AbfFDLfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:35:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HvSJyGtCMjMHYZ8+/wie/cfb3STQSQQ1DeRdIvzTUvY=;
+ b=Na2RgsmKbRzvETRiu46nv5AuffnZTURjbj/kTl2WUHp+KoNnjX5GLkQGbYGo1ZXxuU4/i8A1NrwSNiD6pUrmLKzE6fsSQUrW70UOs/8DEnyC71JIwzwLzBHLTIDcqTbfuER8gvDpQ2UqmqhXovcLge7dcZeDG/owV0A4bBeYEbU=
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
+ VI1PR02MB4445.eurprd02.prod.outlook.com (20.178.11.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.21; Tue, 4 Jun 2019 11:35:30 +0000
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::d45e:25f0:5b42:30e2]) by VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::d45e:25f0:5b42:30e2%2]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 11:35:30 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] habanalabs: Read upper bits of trace buffer from RWPHI
+Thread-Topic: [PATCH] habanalabs: Read upper bits of trace buffer from RWPHI
+Thread-Index: AQHVGsmdcXQepJAB1Ee56KtlMbauWQ==
+Date:   Tue, 4 Jun 2019 11:35:30 +0000
+Message-ID: <20190604113519.4666-1-ttayar@habana.ai>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559648110; bh=VdqCX9RhIKbSosQO8ZrtJXPmMRZiVMAZh+LN9yQt9Zk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=emCZJ7it6lQS53IGu3TzNnekDYJaA//l1h7EaXgGok72LlXH4v9jhBAOGQz59yBV4
-         uYLIm9wA8pSFenLXo9wX7QKjEjv1kcJRtovDerKh6hs3he51kpHfqrKB19qfA8gG2N
-         Y37awIOpATCkodK1yiiLnWKsYxhHzIPMofESI5qT+J2Pu+7R+6uDdYfIRE3tHij3LC
-         wuYTsm1vWBrKeeJ3WgBQkWNLGs1mOxBO/NnkHfhYBVTqVNVhwNh3Eg49AVRVUD9SIR
-         Uzr4wK1ElNJox0xa4xVXPelS4UcglZJJ7ebbiM61sRgdQ84RBEMjJqexYIaLMth4JY
-         Lh71EqBvSMgrw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0502CA0023.eurprd05.prod.outlook.com
+ (2603:10a6:203:91::33) To VI1PR02MB3054.eurprd02.prod.outlook.com
+ (2603:10a6:802:17::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [31.154.190.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11182ad2-8ba6-4653-28c5-08d6e8e0bf9e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB4445;
+x-ms-traffictypediagnostic: VI1PR02MB4445:
+x-microsoft-antispam-prvs: <VI1PR02MB444504EB318FD861AF8CDF25D2150@VI1PR02MB4445.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(396003)(136003)(39850400004)(189003)(199004)(66066001)(1076003)(5660300002)(26005)(74482002)(6436002)(71200400001)(6486002)(68736007)(486006)(36756003)(86362001)(71190400001)(2501003)(2616005)(476003)(2351001)(99286004)(6506007)(81166006)(256004)(50226002)(2906002)(81156014)(8676002)(186003)(8936002)(316002)(4326008)(305945005)(1361003)(14454004)(478600001)(66556008)(6916009)(386003)(5640700003)(66946007)(66446008)(64756008)(66476007)(73956011)(6512007)(102836004)(3846002)(6116002)(52116002)(25786009)(7736002)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB4445;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: R43F6c50g7xjBwVy9jo2n/Tg2s8E2m3NXCHby9h+p4JlGD8yTT8klRHJ6ltgPwoEaGmy4dYeR9dHjJXg59P2WZVlyjcNRgQ9IwpBXLuVZX0RR1hDu4vyabszrnJTXuJYr9nHNip3d8E0RTbxmVyMn2Qm2ZGcUxO8XM5NXnnB0OijKO0epbvxZ76RA2hxoygvUiO3it8QXHjHgD5WbUIX+2roSHu+EgJ/YnLml6EmQK51yKJzByNva0LfqffaIUOc/tUGlTkvdfI8MKDzMp3kve2qxqYRO6ceJMaGd9xURrFFh1cdu6zYco4om/y93Afn1HrzDEaZGfeOJwcIQUAxBes5Qi8C1+ivUa9V2pI443A7zyl/yC/NAlrgrRxkkjDrT28g6S0ZJglZ5lLi22W/EAsx8sZCXI2pnUQ3yt3YhUQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11182ad2-8ba6-4653-28c5-08d6e8e0bf9e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 11:35:30.7683
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ttayar@habana.ai
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB4445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/06/2019 07:05, Christoph Hellwig wrote:
-> On Mon, Jun 03, 2019 at 08:47:57PM +0100, Jon Hunter wrote:
->> Since next-20190529 one of our tests for MMC has started failing, where
->> the symptom is that the data written to the MMC does not match the
->> source. Bisecting this is pointing to this commit. Unfortunately, I am
->> not able to cleanly revert this on top of -next, but wanted to report
->> this if case you have any ideas.
-> 
-> Does this fix your problem?
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/?h=generic-dma-ops&id=1b961423158caaae49d3900b7c9c37477bbfa9b3
-
-Yes I can confirm with this patch on today's -next the issue is no
-longer seen, and reverting this patch on top of today's -next causes the
-problem to occur again. So yes this fixes my problem.
-
-Thanks!
-Jon
-
--- 
-nvpublic
+VGhlIHRyYWNlIGJ1ZmZlciBhZGRyZXNzIGlzIDQwIGJpdHMgd2lkZS4NClRoZSBlbmQgb2YgdGhl
+IGJ1ZmZlciBpcyBzZXQgaW4gdGhlIFJXUCByZWdpc3RlciAobG93ZXIgMzIgYml0cyksIGFuZCBp
+bg0KdGhlIFJXUEhJIHJlZ2lzdGVyICh1cHBlciA4IGJpdHMpLg0KQ3VycmVudGx5IG9ubHkgdGhl
+IGxvd2VyIDMyIGJpdHMgYXJlIHJlYWQsIGFuZCB0aGlzIHBhdGNoIGZpeGVzIGl0IGFuZA0KY29u
+Y2F0ZW5hdGVzIHRoZSB1cHBlciA4IGJpdHMgdG8gdGhlIG91dHB1dCBhZGRyZXNzLg0KDQpTaWdu
+ZWQtb2ZmLWJ5OiBUb21lciBUYXlhciA8dHRheWFyQGhhYmFuYS5haT4NCi0tLQ0KIGRyaXZlcnMv
+bWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YV9jb3Jlc2lnaHQuYyB8IDE0ICsrKysrKysrKysrKy0t
+DQogMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9nb3lhL2dveWFfY29yZXNpZ2h0LmMg
+Yi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9nb3lhL2dveWFfY29yZXNpZ2h0LmMNCmluZGV4IDM5
+ZjYyY2U3MjY2MC4uZDdlYzdhZDg0Y2M2IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFu
+YWxhYnMvZ295YS9nb3lhX2NvcmVzaWdodC5jDQorKysgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFi
+cy9nb3lhL2dveWFfY29yZXNpZ2h0LmMNCkBAIC00MjUsOCArNDI1LDE4IEBAIHN0YXRpYyBpbnQg
+Z295YV9jb25maWdfZXRyKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsDQogCQlXUkVHMzIoYmFzZV9y
+ZWcgKyAweDI4LCAwKTsNCiAJCVdSRUczMihiYXNlX3JlZyArIDB4MzA0LCAwKTsNCiANCi0JCWlm
+IChwYXJhbXMtPm91dHB1dF9zaXplID49IHNpemVvZih1MzIpKQ0KLQkJCSoodTMyICopIHBhcmFt
+cy0+b3V0cHV0ID0gUlJFRzMyKGJhc2VfcmVnICsgMHgxOCk7DQorCQlpZiAocGFyYW1zLT5vdXRw
+dXRfc2l6ZSA+PSBzaXplb2YodTY0KSkgew0KKwkJCXUzMiByd3AsIHJ3cGhpOw0KKw0KKwkJCS8q
+DQorCQkJICogVGhlIHRyYWNlIGJ1ZmZlciBhZGRyZXNzIGlzIDQwIGJpdHMgd2lkZS4gVGhlIGVu
+ZCBvZg0KKwkJCSAqIHRoZSBidWZmZXIgaXMgc2V0IGluIHRoZSBSV1AgcmVnaXN0ZXIgKGxvd2Vy
+IDMyDQorCQkJICogYml0cyksIGFuZCBpbiB0aGUgUldQSEkgcmVnaXN0ZXIgKHVwcGVyIDggYml0
+cykuDQorCQkJICovDQorCQkJcndwID0gUlJFRzMyKGJhc2VfcmVnICsgMHgxOCk7DQorCQkJcndw
+aGkgPSBSUkVHMzIoYmFzZV9yZWcgKyAweDNjKSAmIDB4ZmY7DQorCQkJKih1NjQgKikgcGFyYW1z
+LT5vdXRwdXQgPSAoKHU2NCkgcndwaGkgPDwgMzIpIHwgcndwOw0KKwkJfQ0KIAl9DQogDQogCXJl
+dHVybiAwOw0KLS0gDQoyLjE3LjENCg0K
