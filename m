@@ -2,78 +2,108 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E053C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7556424A8F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:17:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jfoi2joh"
+	by mail.kernel.org (Postfix) with ESMTP id 33C2224A90
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfFDHRn (ORCPT
+        id S1726937AbfFDHSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:17:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49498 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfFDHRj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:17:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FJORX3JeCyruZ/L/acO0maUXTCoUb/nO5fa3SUQgrYQ=; b=jfoi2joh/mzGfEk7oqOjRTOHD
-        fQCUDoMITayn+YGHm/kNmN0VOvtseeK+mDfRflr4iSKEQ6OZcKPm9BHvlzT65KuEY6P2+H/2WP2zi
-        eManJCcPModmnqLCoKEncNg3xHeP5udk7eKFYhOJIKBqs7cegzYTm2NKbXZAwbCfdzaTMaqjgNeGf
-        ly5O2TI3dwqi0Y8+m24YCrvDGhzgflwRsnWv1hWG1GbMsgITczeW3h/ssQi3KaXvpxxfNkA0YGQxq
-        gqtSvh8l0Mh/2Wbv2KLz03K3vU/Ch8YHaYZV7Vora+ti2qQBTwoyr1cQBQMEinLmojBDOeuxThWE/
-        vlpPMpsQQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hY3hL-0004Jf-RP; Tue, 04 Jun 2019 07:17:31 +0000
-Date:   Tue, 4 Jun 2019 00:17:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
- get_user_pages_fast()
-Message-ID: <20190604071731.GA10044@infradead.org>
-References: <1559543653-13185-1-git-send-email-kernelfans@gmail.com>
- <20190603164206.GB29719@infradead.org>
- <CAFgQCTtUdeq=M=SrVwvggR15Yk+i=ndLkhkw1dxJa7miuDp_AA@mail.gmail.com>
+        Tue, 4 Jun 2019 03:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbfFDHSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 03:18:13 -0400
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582FF24A8F;
+        Tue,  4 Jun 2019 07:18:11 +0000 (UTC)
+Subject: Re: [PATCH] m68k: io: Fix io{read,write}{16,32}be() for Coldfire
+ peripherals
+To:     Angelo Dureghello <angelo@sysam.it>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-m68k@lists.linux-m68k.org,
+        linux-kernel@vger.kernel.org
+References: <20190429081937.7544-1-geert@linux-m68k.org>
+ <20190603122608.GA21347@jerusalem>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <d474e366-cf5f-bbf3-9521-c5ea29bb9c19@linux-m68k.org>
+Date:   Tue, 4 Jun 2019 17:18:08 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTtUdeq=M=SrVwvggR15Yk+i=ndLkhkw1dxJa7miuDp_AA@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190603122608.GA21347@jerusalem>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:13:21PM +0800, Pingfan Liu wrote:
-> Is it a convention? scripts/checkpatch.pl can not detect it. Could you
-> show me some light so later I can avoid it?
+Hi Angelo,
 
-If you look at most kernel code you can see two conventions:
+On 3/6/19 10:26 pm, Angelo Dureghello wrote:
+> couldn't seen any follow up on this patch. I tested it and at least
+> for mcf5441x it works properly and solves all issues.
+> 
+> Do you think it may be accepted as an initial fix ?
 
- - double tabe indent
- - indent to the start of the first agument line
+I'll add it to the m68knommu git tree.
+Seeing as you wrote it Geert I assume you have no problem with that?  :-)
 
-Everything else is rather unusual.
+Regards
+Greg
+
+
+> On Mon, Apr 29, 2019 at 10:19:37AM +0200, Geert Uytterhoeven wrote:
+>> The generic definitions of mmio_{read,write}{16,32}be() in lib/iomap.c
+>> assume that the {read,write}[wl]() I/O accessors always use little
+>> endian accesses, and swap the result.
+>>
+>> However, the Coldfire versions of the {read,write}[wl]() I/O accessors are
+>> special, in that they use native big endian instead of little endian for
+>> accesses to the on-SoC peripheral block, thus violating the assumption.
+>>
+>> Fix this by providing our own variants, using the raw accessors,
+>> reinstating the old behavior.  This is fine on m68k, as no special
+>> barriers are needed, and also avoids swapping data twice.
+>>
+>> Reported-by: Angelo Dureghello <angelo@sysam.it>
+>> Fixes: aecc787c06f4300f ("iomap: Use non-raw io functions for io{read|write}XXbe")
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> ---
+>> This can be reverted later, after this oddity of the Coldfire I/O
+>> support has been fixed, and drivers have been updated.
+>> ---
+>>   arch/m68k/include/asm/io.h | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/m68k/include/asm/io.h b/arch/m68k/include/asm/io.h
+>> index aabe6420ead2a599..d47e7384681ab1cd 100644
+>> --- a/arch/m68k/include/asm/io.h
+>> +++ b/arch/m68k/include/asm/io.h
+>> @@ -8,6 +8,12 @@
+>>   #include <asm/io_mm.h>
+>>   #endif
+>>   
+>> +#define mmio_read16be(addr)		__raw_readw(addr)
+>> +#define mmio_read32be(addr)		__raw_readl(addr)
+>> +
+>> +#define mmio_write16be(val, port)	__raw_writew((val), (port))
+>> +#define mmio_write32be(val, port)	__raw_writel((val), (port))
+>> +
+>>   #include <asm-generic/io.h>
+>>   
+>>   #endif /* _M68K_IO_H */
+>> -- 
+>> 2.17.1
+>>
+> 
