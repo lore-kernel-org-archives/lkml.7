@@ -2,186 +2,151 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478F3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC13EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7F724DB4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A036E24DB4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWLna89W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cgSw4BkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfFDG7q (ORCPT
+        id S1726729AbfFDHB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:59:46 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35633 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfFDG7p (ORCPT
+        Tue, 4 Jun 2019 03:01:59 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39886 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfFDHB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:59:45 -0400
-Received: by mail-vs1-f65.google.com with SMTP id u124so2285802vsu.2;
-        Mon, 03 Jun 2019 23:59:44 -0700 (PDT)
+        Tue, 4 Jun 2019 03:01:59 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so12099031pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ct+dj+TeFGYPRbN7w+7PHPvII+8/Y2dGCES2KKtAHHo=;
-        b=pWLna89WZn7dcM0S/wyEszhw9i4En1+7H46YYKuAiZsyrpQSF3o4COvb5+H5bhIAd1
-         iP2bgFXKrjjs6yPXlyiZ6okRoSYPpvJdYwTuH2wdCNjvwocfgtk9ZMGfEvAnDiP1VFNW
-         /O2yw5GZdYrQmUE5cpUO4BKBzVXtVf9uM+dUwXPEXBT/8lo+MDLC3PalDHY+31PqGNDz
-         e0/czIl1cLqZHj13obzr6w0y+qwTFF22q8Vd7jkfIqL6xofNIwo2dN+XZU25J+Dd/M7F
-         a4IVa2eiXOoPkjj/5f6P4tClh4yMiMNRL8+TW8wLUFV7Txe0vC4S9qNjTW3UOVsjLG+g
-         GX7Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LitjvBr4bQliAtyzrQ3myX1ZLOUmkF/pxyOjBUuK5wI=;
+        b=cgSw4BkYceLudx3qOurpScu2yKys2klZc/YFTk0GmoCddDhw6tOPdNwdDuzpizVmow
+         ulPVFKjwur1S6ghfyYcF6EkKFXwFfbPHFxOJG0TP6S4dLIyOrvPES1hZpgqWIaWQUlUE
+         J8Tl9kUXODEpMtYgiWyG5ntFqhUwDBXqA7SssqczE082P2RojzxjLZb7ARTBKg+jKnwm
+         l6gI4ymR8SisEqbrU8eEW2F2m5KuJ7SvT0FJdmW3YeFeeS7vG4B94tggLkp5XKccloga
+         De68CUivRr3EalYUSnHSXFxJNEzA5CH8hT8TWqgFi1NOCy2OcuRvS/wWiAjJ0PlB+l0J
+         q2UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ct+dj+TeFGYPRbN7w+7PHPvII+8/Y2dGCES2KKtAHHo=;
-        b=qoqp4sv0/j0x2tokI4Zo1RSP6tF5jy4MwfXo6QScca1WszbcuJGVQKw5qcZMJ5oYKO
-         kNdWyId+b/R1rF1tC3hXziCqI9NrBd87jHoiGasFIwlh5k6+7qPTV1zAhOCqxjNiOhNV
-         xdEmncMntXLj99Czi3mSu0wWJIt0lmp+BL97trIFs/0rsLjn6dLPCQYrurufE69nMHHB
-         Y0JubO3v9hPWPga1OVXQGn3dkFe5Nfa4gX6vCTesaI3VC0LrIcWrdEUfH6MyP72UIl02
-         xZ690q5veSzIseXg1NkAsHclwVjsFXSi93emIgx0EJixyUmRCxnf83D8tXsA0Iundbl6
-         iaOA==
-X-Gm-Message-State: APjAAAVIWSdMVxdZm5yPnr7Jy/B0H0Ucy2vwZ7Km4NzMuIvVM+Ao6zxe
-        +JP3IsN/l2Mgb8V5H7PofOEylu4eM5/e83o39veqPjrVBC0xfA==
-X-Google-Smtp-Source: APXvYqxa/N1nMMBMS9cabavZ6JMxqjs1SSh6Vq4tbZKCgVAu/WWNEdbNxTR+bMGuY3wG6/Yu5dot4rhSHeeMb8IL4ns=
-X-Received: by 2002:a67:ce10:: with SMTP id s16mr4055803vsl.74.1559631584400;
- Mon, 03 Jun 2019 23:59:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LitjvBr4bQliAtyzrQ3myX1ZLOUmkF/pxyOjBUuK5wI=;
+        b=tficY7qNQsfAE1Isy9zLil85AczMsRo5nbeKig+yHHyMqukW7QBZKVYznclq2yr8El
+         hgmY+oPu410guZBJTqI29qRciThQgJ2547Y00oJ1n3OqBgMQXpWAAe6Sc3mK6hhTzLw3
+         S794oVHWjnWnvHW0kjCSZUI5QbN3wbIMUgz7c0B3Pe032cCBJer6rrgb3lZB7v9B9CMv
+         iYhulZ0FxH0HVGRwHbHw2XVw7rAz1eHCM9lDVsvjUQqXjejfBe6tJr/0Be0A8D+G84m8
+         VZNIZWNCZ8yx6+G5h3JFBfaXxhdd/PXLge+kzDhqDjtCTqhCdIyl8lcTlsEcB9TMXyfE
+         WHqg==
+X-Gm-Message-State: APjAAAXJLfsErfICXR6cVkdSf+a7FPIOpkhZk3m9cAkAAeLCTcfuhPyb
+        2BFqG61FuhT0B0LxJCRjXgtlzA==
+X-Google-Smtp-Source: APXvYqyfT6zbyWhetjWpj8Uf27dOsluS9TMwvJIH4RqSf5LpM/UoWBdN7dK4F96ERPVaRxF6IaQzgg==
+X-Received: by 2002:a63:144e:: with SMTP id 14mr33175907pgu.304.1559631718309;
+        Tue, 04 Jun 2019 00:01:58 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id h12sm8007109pfr.38.2019.06.04.00.01.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 00:01:57 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair: Introduce fits_capacity()
+Date:   Tue,  4 Jun 2019 12:31:52 +0530
+Message-Id: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
- <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com> <CAKgHYH1=aqmOEsbH-OuSjK4CJ=9FmocjuOg6tsyJNPLEOWVB-g@mail.gmail.com>
- <a0f08b20-41ef-db53-48df-4d8f5333b6af@gmail.com>
-In-Reply-To: <a0f08b20-41ef-db53-48df-4d8f5333b6af@gmail.com>
-From:   Yang Xiao <92siuyang@gmail.com>
-Date:   Tue, 4 Jun 2019 14:59:03 +0800
-Message-ID: <CAKgHYH0pH3Otj2izYwdcGKhJhjfovi1C-Ez1g2f7P5ahzQEfyw@mail.gmail.com>
-Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I don't get your point. Why is xfrm6_transport_output() buggy?
-The point is that there would be out-of-bound access in
-mip6_destopt_offset() and mip6_destopt_offset(), since there is no
-sanity check for offset.
+The same formula to check utilization against capacity (after
+considering capacity_margin) is already used at 5 different locations.
 
-There is chance that offset + sizeof(struct ipv6_opt_hdr) > packet_len.
+This patch creates a new macro, fits_capacity(), which can be used from
+all these locations without exposing the details of it and hence
+simplify code.
 
-As described in CVE-2017-9074:  "The IPv6 fragmentation implementation
-in the Linux kernel through 4.11.1 does not consider that the nexthdr
-field may be associated with an invalid option, which allows local
-users to cause a denial of service (out-of-bounds read and BUG)".
+All the 5 code locations are updated as well to use it..
 
-At the same time, there are bugs in  mip6_destopt_offset() and
-mip6_destopt_offset(), which is similar to CVE-2017-7542.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ kernel/sched/fair.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-On Sat, Jun 1, 2019 at 1:35 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 5/30/19 8:04 PM, Yang Xiao wrote:
-> > On Fri, May 31, 2019 at 1:17 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >>
-> >>
-> >>
-> >> On 5/30/19 8:28 AM, Young Xiao wrote:
-> >>> The fragmentation code tries to parse the header options in order
-> >>> to figure out where to insert the fragment option.  Since nexthdr points
-> >>> to an invalid option, the calculation of the size of the network header
-> >>> can made to be much larger than the linear section of the skb and data
-> >>> is read outside of it.
-> >>>
-> >>> This vulnerability is similar to CVE-2017-9074.
-> >>>
-> >>> Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> >>> ---
-> >>>  net/ipv6/mip6.c | 24 ++++++++++++++----------
-> >>>  1 file changed, 14 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
-> >>> index 64f0f7b..30ed1c5 100644
-> >>> --- a/net/ipv6/mip6.c
-> >>> +++ b/net/ipv6/mip6.c
-> >>> @@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
-> >>>                              u8 **nexthdr)
-> >>>  {
-> >>>       u16 offset = sizeof(struct ipv6hdr);
-> >>> -     struct ipv6_opt_hdr *exthdr =
-> >>> -                                (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
-> >>>       const unsigned char *nh = skb_network_header(skb);
-> >>>       unsigned int packet_len = skb_tail_pointer(skb) -
-> >>>               skb_network_header(skb);
-> >>> @@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
-> >>>
-> >>>       *nexthdr = &ipv6_hdr(skb)->nexthdr;
-> >>>
-> >>> -     while (offset + 1 <= packet_len) {
-> >>> +     while (offset <= packet_len) {
-> >>> +             struct ipv6_opt_hdr *exthdr;
-> >>>
-> >>>               switch (**nexthdr) {
-> >>>               case NEXTHDR_HOP:
-> >>> @@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
-> >>>                       return offset;
-> >>>               }
-> >>>
-> >>> +             if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
-> >>> +                     return -EINVAL;
-> >>> +
-> >>> +             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
-> >>>               offset += ipv6_optlen(exthdr);
-> >>>               *nexthdr = &exthdr->nexthdr;
-> >>> -             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
-> >>>       }
-> >>>
-> >>> -     return offset;
-> >>> +     return -EINVAL;
-> >>>  }
-> >>>
-> >>
-> >>
-> >> Ok, but have you checked that callers have been fixed ?
-> >
-> > I've checked the callers. There are two callers:
-> > xfrm6_transport_output() and xfrm6_ro_output(). There are checks in
-> > both function.
-> >
-> > ------------------------------------------------------------------------------
-> >         hdr_len = x->type->hdr_offset(x, skb, &prevhdr);
-> >         if (hdr_len < 0)
-> >                 return hdr_len;
-> > ------------------------------------------------------------------------------
-> >>
-> >> xfrm6_transport_output() seems buggy as well,
-> >> unless the skbs are linearized before entering these functions ?
-> > I can not understand what you mean about this comment.
-> > Could you explain it in more detail.
->
->
-> If we had a problem, then the memmove(ipv6_hdr(skb), iph, hdr_len);
->  in xfrm6_transport_output() would be buggy, since iph could also point to freed memory.
->
->
->
-
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7f8d477f90fe..db3a218b7928 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -102,6 +102,8 @@ int __weak arch_asym_cpu_priority(int cpu)
+  * (default: ~20%)
+  */
+ static unsigned int capacity_margin			= 1280;
++
++#define fits_capacity(cap, max)	((cap) * capacity_margin < (max) * 1024)
+ #endif
+ 
+ #ifdef CONFIG_CFS_BANDWIDTH
+@@ -3727,7 +3729,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 
+ static inline int task_fits_capacity(struct task_struct *p, long capacity)
+ {
+-	return capacity * 1024 > task_util_est(p) * capacity_margin;
++	return fits_capacity(task_util_est(p), capacity);
+ }
+ 
+ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+@@ -5143,7 +5145,7 @@ static inline unsigned long cpu_util(int cpu);
+ 
+ static inline bool cpu_overutilized(int cpu)
+ {
+-	return (capacity_of(cpu) * 1024) < (cpu_util(cpu) * capacity_margin);
++	return !fits_capacity(cpu_util(cpu), capacity_of(cpu));
+ }
+ 
+ static inline void update_overutilized_status(struct rq *rq)
+@@ -6304,7 +6306,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 			/* Skip CPUs that will be overutilized. */
+ 			util = cpu_util_next(cpu, p, cpu);
+ 			cpu_cap = capacity_of(cpu);
+-			if (cpu_cap * 1024 < util * capacity_margin)
++			if (!fits_capacity(util, cpu_cap))
+ 				continue;
+ 
+ 			/* Always use prev_cpu as a candidate. */
+@@ -7853,8 +7855,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
+ static inline bool
+ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+ {
+-	return sg->sgc->min_capacity * capacity_margin <
+-						ref->sgc->min_capacity * 1024;
++	return fits_capacity(sg->sgc->min_capacity, ref->sgc->min_capacity);
+ }
+ 
+ /*
+@@ -7864,8 +7865,7 @@ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+ static inline bool
+ group_smaller_max_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+ {
+-	return sg->sgc->max_capacity * capacity_margin <
+-						ref->sgc->max_capacity * 1024;
++	return fits_capacity(sg->sgc->max_capacity, ref->sgc->max_capacity);
+ }
+ 
+ static inline enum
 -- 
-Best regards!
+2.21.0.rc0.269.g1a574e7a288b
 
-Young
------------------------------------------------------------
