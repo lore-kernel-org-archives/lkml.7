@@ -2,103 +2,80 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97FCC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE2AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A45245BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/j965oT"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9302490C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfFDLrK (ORCPT
+        id S1727538AbfFDLrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:47:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45791 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfFDLrI (ORCPT
+        Tue, 4 Jun 2019 07:47:37 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46666 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfFDLrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:47:08 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x7so7260021plr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dqp69e2uVFEsGCK8JhiQUI0eIhdoGk5h13T4mTC3vdY=;
-        b=l/j965oTYVXJlxTYWvckE8VTMI089RUFBuoqrrqtaXuZS/XGL2imWUR4Yj62ofLJ5B
-         DgxG1n0xNvR+Z1Q2WKLjXP4Ic6bW7ST7vC/dzKmyj0IUR6vTT0z9AontN1QI8ObMfrqT
-         YfQOny7N2gMtvrAIhPa+UYF2M069gzxKv7PwiRWZjJ1iI6LDinGjOYSS+sjqs5grnF0B
-         e9aJoVfdsnL4PaWC5CyQ3SVTmBWLITUXFdUA/VEb4rquThulv4tr3tFv4LY7s8DA7Ygg
-         QJSsuhRnspRaLycykpAiwScHW5uSOeCZARUrOt7CO58SxO5d7ZxzOztZ8o9JgluM7fHh
-         Jptw==
+        Tue, 4 Jun 2019 07:47:36 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a132so2546723qkb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:47:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Dqp69e2uVFEsGCK8JhiQUI0eIhdoGk5h13T4mTC3vdY=;
-        b=YgD7pnU/KxeL54kZnMDhhsaB9ildDBz810j7XT/WIuBw46IJKH2Ov0emUixczyG3KB
-         qB5HTXXp3s0Xu9HOyZpHc9CLWPSKvhQiHLOhqiZ1Y8Y5Whlg7JKVPgmdexrjNE6AaHEl
-         bUpKY6Zdwgud19FMltHzcQpwnP4dbFo0MRiR6asChzonyARHnjKJWNx1l8BIwLtZqzOH
-         oWNspmSqmtYsiXWZHpSMKbqtyibADS8NEO1CHEXNQHtPYgtyVBPj4qYP8HeeNjtsw+CH
-         Gx3Gz3fRtvw1PV3SMdiW6oz3UqXKqNdCExugKcQfL/e8ms60is8spC4/Owq48MUZeTdO
-         VX2g==
-X-Gm-Message-State: APjAAAVsc55WOmoH9jX/Xvyvc2z4Vg6UEacWf3xJFqi7TMX637sJ7aDB
-        DqWpJJuElCiCQMkWBv914Cj7SydiRWE1dmrXlWJA8g==
-X-Google-Smtp-Source: APXvYqxxKCotfIzPUp2KWeKyy9ei43iIKcJ+7sjPmxGSimbHW7NgNBX2aQnmBFtOckHX4w3Dtt0BdqhA9Y8aOzwYWxs=
-X-Received: by 2002:a17:902:1566:: with SMTP id b35mr36931113plh.147.1559648827583;
- Tue, 04 Jun 2019 04:47:07 -0700 (PDT)
+        bh=tHJKK/e2WXQfGPq6JPvdmsZx/GKDlBLCBewwqbRa8t0=;
+        b=mRTXNZDrg0ccXje7rLOf/v1JwqliCqZyexwqSesoU6lBE38JNDicI89K581EVjleqf
+         3TimPptz33rqSWsBDiRYehbZUgrU++ZaNLJfrxkAN4I7nSm7C/Dg4gS1/D4icSLdeKW4
+         pe5nfpZ4u9y/FqkJjdVp3YrbAaUUbl1M2Nhwxqrz/afXK0kQUPXpDzXs8h1xsqP6TA2P
+         dLyA7zQjCrb2+o6FE6dsDTmzhb7LJtVXjTwaUMj7N757HbuuU6z58FF+bGhN7zh1acxg
+         qpLQ87saJi72ZdiuHHrruxud+Tc4rEG7Z8fHnhIlaX6gI4ils0ThCbJr0dI7y40pZQSb
+         kLaw==
+X-Gm-Message-State: APjAAAXC/k2iE20jn0uL0yItjdYryyLXAYrUJmBrhAdbGVZrj0SjkNc1
+        IM+UisndEZXsfsETLlsRCA8BNNIgReK6ixCcec+moFA31+g=
+X-Google-Smtp-Source: APXvYqz26FtG/SH7XiAsK7EtNGdeNSlNJbMOl+fdyYLLgTPiH1vCfPqC9Be/usikzvB6Rd8DYozJAXMz99g2s4ugwpI=
+X-Received: by 2002:a05:620a:16c1:: with SMTP id a1mr26496328qkn.269.1559648855749;
+ Tue, 04 Jun 2019 04:47:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190601074959.14036-1-hch@lst.de> <20190601074959.14036-2-hch@lst.de>
- <431c7395-2327-2f7c-cc8f-b01412b74e10@oracle.com> <20190604072706.GF15680@lst.de>
-In-Reply-To: <20190604072706.GF15680@lst.de>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 4 Jun 2019 13:46:56 +0200
-Message-ID: <CAAeHK+xtFwY+S0VY-yyb+i_+GnSjYHfgYHB9Ss=r9xxZZvsKFw@mail.gmail.com>
-Subject: Re: [PATCH 01/16] uaccess: add untagged_addr definition for other arches
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Khalid Aziz <khalid.aziz@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-48-git-send-email-suzuki.poulose@arm.com> <CAK8P3a22Uo9mLh7cLpZQQpxRFd=XJ1uKu66eu1c6_AMNzW8etg@mail.gmail.com>
+ <ae7c07c5-f223-dec4-b8e4-c49d08a76fd7@arm.com>
+In-Reply-To: <ae7c07c5-f223-dec4-b8e4-c49d08a76fd7@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 4 Jun 2019 13:47:19 +0200
+Message-ID: <CAK8P3a3Wc44JtMhrMSqFy3d5CiESm6iO64kGDdhGygXN9AvowQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 47/57] drivers: mfd: Use driver_find_device_by_name helper
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:27 AM Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Jun 4, 2019 at 1:42 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> On 04/06/2019 10:45, Arnd Bergmann wrote:
+> > On Mon, Jun 3, 2019 at 5:52 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >>
+> >> Use the new driver_find_device_by_name() helper.
+> >>
+> >> Cc: Lee Jones <lee.jones@linaro.org>
+> >> Cc: Arnd Bergmann <arnd@arndb.de>
+> >> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >
+> > I see that there are currently no callers of this function, and I never
+> > liked the interface anyway, so how about just removing
+> > syscon_regmap_lookup_by_pdevname instead?
 >
-> On Mon, Jun 03, 2019 at 09:16:08AM -0600, Khalid Aziz wrote:
-> > Could you reword above sentence? We are already starting off with
-> > untagged_addr() not being no-op for arm64 and sparc64. It will expand
-> > further potentially. So something more along the lines of "Define it as
-> > noop for architectures that do not support memory tagging". The first
-> > paragraph in the log can also be rewritten to be not specific to arm64.
->
-> Well, as of this patch this actually is a no-op for everyone.
->
-> Linus, what do you think of applying this patch (maybe with a slightly
-> fixed up commit log) to 5.2-rc so that we remove a cross dependency
-> between the series?
+> If that works for you, sure. I can send in a patch separately
+> and hopefully I can remove this patch depending when the said
+> change lands.
 
-(I have adjusted the patch description and have just sent it out
-separately from the series).
+Sounds good, thanks.
+
+      Arnd
