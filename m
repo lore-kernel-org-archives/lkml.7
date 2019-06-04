@@ -2,161 +2,100 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1CEC46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB077C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468F824C1B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937BD23BC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfFDGYo (ORCPT
+        id S1726721AbfFDG3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:24:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:13319 "EHLO pegase1.c-s.fr"
+        Tue, 4 Jun 2019 02:29:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36626 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfFDGYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:24:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45J22c6Rwqz9vDbl;
-        Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id bLXlcgVXjjBG; Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45J22c5XHVz9vDbk;
-        Tue,  4 Jun 2019 08:24:40 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id B90D1843; Tue,  4 Jun 2019 08:24:39 +0200 (CEST)
-Received: from 37-165-91-81.coucou-networks.fr
- (37-165-91-81.coucou-networks.fr [37.165.91.81]) by messagerie.c-s.fr (Horde
- Framework) with HTTP; Tue, 04 Jun 2019 08:24:39 +0200
-Date:   Tue, 04 Jun 2019 08:24:39 +0200
-Message-ID: <20190604082439.Horde.tWsSNlWiTjwbZIMIFhnFcQ5@messagerie.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-In-Reply-To: <20190603174323.48251-1-natechancellor@gmail.com>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        id S1726595AbfFDG3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:29:41 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A49583F42;
+        Tue,  4 Jun 2019 06:29:41 +0000 (UTC)
+Received: from xz-x1 (dhcp-15-205.nay.redhat.com [10.66.15.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4DDE9648A9;
+        Tue,  4 Jun 2019 06:29:34 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 14:29:31 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Haris Okanovic <haris.okanovic@ni.com>
+Subject: Re: [patch 2/3] timers: do not raise softirq unconditionally
+ (spinlockless version)
+Message-ID: <20190604062931.GC15459@xz-x1>
+References: <20190415201213.600254019@amt.cnet>
+ <20190415201429.427759476@amt.cnet>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20190415201429.427759476@amt.cnet>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 04 Jun 2019 06:29:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Quoting Nathan Chancellor <natechancellor@gmail.com>:
-
-> When building with -Wsometimes-uninitialized, clang warns:
->
-> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-> used uninitialized whenever 'for' loop exits because its condition is
-> false [-Wsometimes-uninitialized]
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-> here
->         if (fndit)
->             ^~~~~
-> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-> it is always true
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-> 'fndit' to silence this warning
->         int j, fndit;
->                     ^
->                      = 0
->
-> Looking at the loop in a vacuum as clang would, fndit could be
-> uninitialized if entries was ever zero or the if statement was
-> always true within the loop. Regardless of whether or not this
-> warning is a problem in practice, "found" variables should always
-> be initialized to false so that there is no possibility of
-> undefined behavior.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/504
-> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search  
-> ibm,drc-info property")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Mon, Apr 15, 2019 at 05:12:15PM -0300, Marcelo Tosatti wrote:
+> Check base->pending_map locklessly and skip raising timer softirq 
+> if empty.
+> 
+> What allows the lockless (and potentially racy against mod_timer) 
+> check is that mod_timer will raise another timer softirq after
+> modifying base->pending_map.
+> 
+> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> 
 > ---
->  drivers/pci/hotplug/rpaphp_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c  
-> b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..07b56bf2886f 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct  
-> device_node *dn, char *drc_name,
->  	struct of_drc_info drc;
->  	const __be32 *value;
->  	char cell_drc_name[MAX_DRC_NAME_LEN];
-> -	int j, fndit;
-> +	int j, fndit = 0;
+>  kernel/time/timer.c |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> Index: linux-rt-devel/kernel/time/timer.c
+> ===================================================================
+> --- linux-rt-devel.orig/kernel/time/timer.c	2019-04-15 14:21:02.788704354 -0300
+> +++ linux-rt-devel/kernel/time/timer.c	2019-04-15 14:22:56.755047354 -0300
+> @@ -1776,6 +1776,24 @@
+>  		if (time_before(jiffies, base->clk))
+>  			return;
+>  	}
+> +
+> +#ifdef CONFIG_PREEMPT_RT_FULL
+> +/* On RT, irq work runs from softirq */
+> +	if (irq_work_needs_cpu())
+> +		goto raise;
+> +#endif
+> +	base = this_cpu_ptr(&timer_bases[BASE_STD]);
+> +	if (!housekeeping_cpu(base->cpu, HK_FLAG_TIMER)) {
+> +		if (!bitmap_empty(base->pending_map, WHEEL_SIZE))
+> +			goto raise;
+> +		base++;
 
-Not sure fndit is needed at all. Looking into the full function code,  
-fndit only serves as doing a single action. That action could be done  
-in the loop directly, see below
+Shall we check against CONFIG_NO_HZ_COMMON?  Otherwise the base could
+point to something else rather tha the deferred base (NR_BASES==1 if
+without nohz-common).
 
-And while you are at it, I guess you should also handle the  
-initialisation of cell_drc_name.
-In the current code, it looks like content of cell_drc_name is  
-undefined when doing the strcmp when fndit is not 1.
+I see that run_local_timers() has similar pattern, actually I'm
+thinking whether we can put things like "base++" to be inside some
+"if"s of CONFIG_NO_HZ_COMMON to be clear.
 
->
->  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
->  	if (info == NULL)
-> --
-> 2.22.0.rc2
+Thanks,
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c  
-b/drivers/pci/hotplug/rpaphp_core.c
-index bcd5d357ca23..87113419a44f 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct  
-device_node *dn, char *drc_name,
-  	struct of_drc_info drc;
-  	const __be32 *value;
-  	char cell_drc_name[MAX_DRC_NAME_LEN];
--	int j, fndit;
-+	int j;
-
-  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
-  	if (info == NULL)
-@@ -248,14 +248,10 @@ static int rpaphp_check_drc_props_v2(struct  
-device_node *dn, char *drc_name,
-  		if (my_index > drc.last_drc_index)
-  			continue;
-
--		fndit = 1;
-+		/* Found it */
-+		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, my_index);
-  		break;
-  	}
--	/* Found it */
--
--	if (fndit)
--		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--			my_index);
-
-  	if (((drc_name == NULL) ||
-  	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
-
-Christophe
+-- 
+Peter Xu
