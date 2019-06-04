@@ -2,127 +2,142 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37868C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDF4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABEE2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="m3ngXj4q"
+	by mail.kernel.org (Postfix) with ESMTP id 894CA218D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfFDPl0 (ORCPT
+        id S1728194AbfFDPlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:41:26 -0400
-Received: from vps.xff.cz ([195.181.215.36]:36274 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfFDPlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:41:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559662884; bh=QKcBPWY3CbkjfYN89rLEZysY97rw4wPAuVtD6U6xPrg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m3ngXj4qq1GciQjkwDqUoYqSmjqED0N54diMTYXwe3lWOM52GaID2qkX7+cE/wroZ
-         KD+HABGKCwc431teBRH27R/UH8Yj2NZa2otOhUErymlHORylXTsDPB5gjmYltRSfVL
-         vqIlAry4sXUPqEW7ue6gnlmOHvTEkIC1u3qYXZKs=
-Date:   Tue, 4 Jun 2019 17:41:24 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: sun50i-h6-r: Fix incorrect
- W1 clock gate register
-Message-ID: <20190604154124.lalh3uhshx43l3rs@core.my.home>
-Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
-References: <20190604150054.17683-1-megous@megous.com>
- <20522585.shqbOC0eQD@jernej-laptop>
- <20190604153120.zcxfn4kh2qjfktgo@core.my.home>
- <2504206.OUqqUFhxAD@jernej-laptop>
+        Tue, 4 Jun 2019 11:41:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53058 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728115AbfFDPlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:41:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F140AE8A;
+        Tue,  4 Jun 2019 15:41:49 +0000 (UTC)
+Subject: Re: bcache: oops when writing to writeback_percent without a cache
+ device
+From:   Coly Li <colyli@suse.de>
+To:     =?UTF-8?Q?Bj=c3=b8rn_Forsman?= <bjorn.forsman@gmail.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
+ <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Labs
+Message-ID: <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
+Date:   Tue, 4 Jun 2019 23:41:43 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2504206.OUqqUFhxAD@jernej-laptop>
+In-Reply-To: <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de>
+Content-Type: multipart/mixed;
+ boundary="------------102620AF45697B91F3AE3BB5"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jernej,
+This is a multi-part message in MIME format.
+--------------102620AF45697B91F3AE3BB5
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2019 at 05:35:48PM +0200, Jernej Škrabec wrote:
-> Hi!
+On 2019/6/4 10:59 下午, Coly Li wrote:
+> On 2019/6/4 7:00 下午, Bjørn Forsman wrote:
+>> Hi all,
+>>
+>> I get a kernel oops from bcache when writing to
+>> /sys/block/bcache0/bcache/writeback_percent and there is no attached
+>> cache device. See the oops itself below my signature.
+>>
+>> This is on Linux 4.19.46. I looked in git and see many commits to
+>> bcache lately, but none seem to address this particular issue.
+>>
+>> Background: I'm writing to .../writeback_percent with
+>> systemd-tmpfiles. I'd rather not replace it with a script that figures
+>> out whether or not the kernel will oops if writing to the sysfs file
+>> -- the kernel should not oops in the first place.
 > 
-> Dne torek, 04. junij 2019 ob 17:31:20 CEST je 'Ondřej Jirman' via linux-sunxi 
-> napisal(a):
-> > Hi Jernej,
-> > 
-> > On Tue, Jun 04, 2019 at 05:03:55PM +0200, Jernej Škrabec wrote:
-> > > Dne torek, 04. junij 2019 ob 17:00:54 CEST je megous via linux-sunxi
-> > > 
-> > > napisal(a):
-> > > > From: Ondrej Jirman <megous@megous.com>
-> > > > 
-> > > > The current code defines W1 clock gate to be at 0x1cc, overlaying it
-> > > > with the IR gate.
-> > > > 
-> > > > Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
-> > > > causing interrupt floods on H6 (because interrupt flags can't be
-> > > > cleared,
-> > > > due to IR module's bus being disabled).
-> > > > 
-> > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > 
-> > > You should add Fixes tag and CC stable with this.
-> > 
-> > Not necessary, since H6 IR is not yet supported on mainline.
+> Hi Bjorn,
 > 
-> Well, CCing stable is probably really not necessary, but you are fixing bug in 
-> existing driver (clk), fixes tag still apply.
+> Thank you for the reporting. I believe this is a case we missed in
+> testings. When a bcache device is not attached, it does not make sense
+> to update the writeback rate in period by the changing of writeback_percent.
+> 
+> I will post a patch for your testing soon.
 
-Right, resent v2.
+Hi Bjorn,
 
-thank you and regards,
-	o.
+Could you please to try this patch ? Hope it may help a bit.
 
-> Best regards,
-> Jernej
-> 
-> > 
-> > regards,
-> > 	o.
-> > 
-> > > Best regards,
-> > > Jernej
-> > > 
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks.
+
+Coly Li
+
+
+>>
+>> Jun 04 12:35:42 kernel: BUG: unable to handle kernel NULL pointer
+>> dereference at 0000000000000340
+>> Jun 04 12:35:42 kernel: PGD 0 P4D 0
+>> Jun 04 12:35:42 kernel: Oops: 0000 [#1] SMP PTI
+>> Jun 04 12:35:42 kernel: CPU: 6 PID: 20266 Comm: kworker/6:220 Not
+>> tainted 4.19.46 #1-NixOS
+>> Jun 04 12:35:42 kernel: Hardware name: To Be Filled By O.E.M. To Be
+>> Filled By O.E.M./X99 Extreme4/3.1, BIOS P3.60 04/06/2018
+>> Jun 04 12:35:42 kernel: Workqueue: events update_writeback_rate [bcache]
+>> Jun 04 12:35:42 kernel: RIP: 0010:update_writeback_rate+0x2f/0x2e0 [bcache]
+[snipped]
+
+--------------102620AF45697B91F3AE3BB5
+Content-Type: text/plain; charset=UTF-8; x-mac-type="0"; x-mac-creator="0";
+ name="0001-bcache-only-set-BCACHE_DEV_WB_RUNNING-when-cached-de.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename*0="0001-bcache-only-set-BCACHE_DEV_WB_RUNNING-when-cached-de.pa";
+ filename*1="tch"
+
+RnJvbSA5ZGVhMWU2YWQwZTZjNDBlM2JjNmVlNmNmNGFkMjQzYzA3Y2E2Y2E5IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBDb2x5IExpIDxjb2x5bGlAc3VzZS5kZT4KRGF0ZTog
+VHVlLCA0IEp1biAyMDE5IDIzOjI0OjA5ICswODAwClN1YmplY3Q6IFtQQVRDSF0gYmNhY2hl
+OiBvbmx5IHNldCBCQ0FDSEVfREVWX1dCX1JVTk5JTkcgd2hlbiBjYWNoZWQgZGV2aWNlCiBh
+dHRhY2hlZAoKV2hlbiBwZW9wbGUgc2V0IGEgd3JpdGViYWNrIHBlcmNlbnQgdmlhIHN5c2Zz
+IGZpbGUsCiAgL3N5cy9ibG9jay9iY2FjaGU8Tj4vYmNhY2hlL3dyaXRlYmFja19wZXJjZW50
+CmN1cnJlbnQgY29kZSBkaXJlY3RseSBzZXRzIEJDQUNIRV9ERVZfV0JfUlVOTklORyB0byBk
+Yy0+ZGlzay5mbGFncwphbmQgc2NoZWR1bGVzIGt3b3JrZXIgZGMtPndyaXRlYmFja19yYXRl
+X3VwZGF0ZS4KCklmIHRoZXJlIGlzIG5vIGNhY2hlIHNldCBhdHRhY2hlZCB0bywgdGhlIHdy
+aXRlYmFjIGtlcm5lbCB0aHJlYWQgaXMKbm90IHJ1bm5pbmcgaW5kZWVkLCBydW5uaW5nIGRj
+LT53cml0ZWJhY2tfcmF0ZV91cGRhdGUgZG9lcyBub3QgbWFrZQpzZW5zZSBhbmQgbWF5IGNh
+dXNlIE5VTEwgcG9pbnRlciBkZWZlcmVuY2Ugd2hlbiByZWZlcmVuY2UgY2FjaGUgc2V0CnBv
+aW50ZXIgaW5zaWRlIHVwZGF0ZV93cml0ZWJhY2tfcmF0ZSgpLgoKVGhpcyBwYXRjaCBjaGVj
+a3Mgd2hldGhlciB0aGUgY2FjaGUgc2V0IHBvaW50IChkYy0+ZGlzay5jKSBpcyBOVUxMIGlu
+CnN5c2ZzIGludGVyZmFjZSBoYW5kbGVyLCBhbmQgb25seSBzZXQgQkNBQ0hFX0RFVl9XQl9S
+VU5OSU5HIGFuZApzY2hlZHVsZSBkYy0+d3JpdGViYWNrX3JhdGVfdXBkYXRlIHdoZW4gZGMt
+PmRpc2suYyBpcyBub3QgTlVMTCAoaXQKbWVhbnMgdGhlIGNhY2hlIGRldmljZSBpcyBhdHRh
+Y2hlZCB0byBhIGNhY2hlIHNldCkuCgpSZXBvcnRlZC1ieTogQmrDuHJuIEZvcnNtYW4gPGJq
+b3JuLmZvcnNtYW5AZ21haWwuY29tPgpTaWduZWQtb2ZmLWJ5OiBDb2x5IExpIDxjb2x5bGlA
+c3VzZS5kZT4KLS0tCiBkcml2ZXJzL21kL2JjYWNoZS9zeXNmcy5jIHwgNyArKysrKystCiAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9tZC9iY2FjaGUvc3lzZnMuYyBiL2RyaXZlcnMvbWQvYmNhY2hlL3N5
+c2ZzLmMKaW5kZXggMTI5MDMxNjYzY2M4Li5lYjY3OGU0M2FjMDAgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvbWQvYmNhY2hlL3N5c2ZzLmMKKysrIGIvZHJpdmVycy9tZC9iY2FjaGUvc3lzZnMu
+YwpAQCAtNDMwLDggKzQzMCwxMyBAQCBTVE9SRShiY2hfY2FjaGVkX2RldikKIAkJCWJjaF93
+cml0ZWJhY2tfcXVldWUoZGMpOwogCX0KIAorCS8qCisJICogT25seSBzZXQgQkNBQ0hFX0RF
+Vl9XQl9SVU5OSU5HIHdoZW4gY2FjaGVkIGRldmljZSBhdHRhY2hlZCB0bworCSAqIGEgY2Fj
+aGUgc2V0LCBvdGhlcndpc2UgaXQgZG9lc24ndCBtYWtlIHNlbnNlLgorCSAqLwogCWlmIChh
+dHRyID09ICZzeXNmc193cml0ZWJhY2tfcGVyY2VudCkKLQkJaWYgKCF0ZXN0X2FuZF9zZXRf
+Yml0KEJDQUNIRV9ERVZfV0JfUlVOTklORywgJmRjLT5kaXNrLmZsYWdzKSkKKwkJaWYgKChk
+Yy0+ZGlzay5jICE9IE5VTEwpICYmCisJCSAgICAoIXRlc3RfYW5kX3NldF9iaXQoQkNBQ0hF
+X0RFVl9XQl9SVU5OSU5HLCAmZGMtPmRpc2suZmxhZ3MpKSkKIAkJCXNjaGVkdWxlX2RlbGF5
+ZWRfd29yaygmZGMtPndyaXRlYmFja19yYXRlX3VwZGF0ZSwKIAkJCQkgICAgICBkYy0+d3Jp
+dGViYWNrX3JhdGVfdXBkYXRlX3NlY29uZHMgKiBIWik7CiAKLS0gCjIuMTYuNAoK
+--------------102620AF45697B91F3AE3BB5--
