@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85E3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA18C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBCF24A31
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB7324F01
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruGY8pLR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="syhAi71I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfFDEWJ (ORCPT
+        id S1726600AbfFDEWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 00:22:09 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33906 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFDEWI (ORCPT
+        Tue, 4 Jun 2019 00:22:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42030 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFDEWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 00:22:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h2so6308394pgg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:22:08 -0700 (PDT)
+        Tue, 4 Jun 2019 00:22:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so1644105pff.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ENLiHSDk/br0xoKT0numiTuJUHrTL0/MjClfpbchOcw=;
-        b=ruGY8pLRmgtWQudDGgTiSOCqKOtRUb0BKOprW+HnYbBrQ47c9MwNgH3eJ+ypOOuZ0e
-         9IYAxS6A2DIg32DSifbHodAajnYvpz/l8pZtsrjNIGj8rlfa6h4ohzDea432a8JADQ2p
-         LA0trgiJ55D4n0uEFf1AcV+NSYKUDJBs5l5AuCdFdgsJuE8pgoUugQ5Z4kDFWtmU8t2C
-         7KeKDEvDEEdgzO2FzBX1ViXkZXT3cY0xuUAvWpncqQdsGRaV6nyOlC2FRFw0G4iFntmW
-         A4Hj6Fv/jtBc5sxyrNYiZmbVMwSezh2tkvIAcKdhlYutKM2Vhdv03bj3UMIcRF2/eM66
-         f1TA==
+        bh=D3kQL1r2zp6sBTv5pff2+Q6QbH2XGHYt9yhid3mUcus=;
+        b=syhAi71IwNs+OTvhm18JnsNKT/Z8XCCGGpHDsV9D1mlPpY3CTzaCnWyru983dJi+dT
+         B1IdFmkoAKqThBXOS2A1cTub9Gq4dMIyPSlhXxAaa0dDjYz2HHpJLIrv/ScSUtR1k89J
+         zJn0BgNHAtyDHffEkqT1+U8e6FTEf8lHkAhE32nRJ9JAwh+i3or+qWp8uHmZ1TpjRvwZ
+         EWJUD47HL/QAZa4wRYA9ztmo50b7yRs5DB+jSbiwLlE283265pLx+3SR0PegztXkoP9B
+         jS7oMzeFDeEW+f2hYj16fpo2sOasRKmEeC3SPkFveo894gDHpawjLKF1RtduJdZEqkNZ
+         eKRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ENLiHSDk/br0xoKT0numiTuJUHrTL0/MjClfpbchOcw=;
-        b=kcHKIemf1RSA9OOIFC/0fgmNrJg7jA10Bszv+272ML22bwY273qTOXOOMbnLD95VkM
-         SwnQrgy/TAvbhlko13uuA9do5o1lI6Al7FMl9/mHW46lVsqYoNmqQlFTbmTUB1XqWnsz
-         zCs1RupyHFmdcWeGdt1ppCdktFxdK0IfTpcxqX7vzMdgG4m8vZ15cwJBHMCfnmjjTtWm
-         z46DlqJibJ0KMWLRUrhor0h2n9VCIaY6UMoT/EdGB1BAlcBieyNi/UcAqTkQMTUogg5h
-         f0C9LesHFRnq3dS40M0J/MQn2N8Huvr31tUT2RYzphHLiGMsFrMant/BX+9bj8OPPBao
-         Jk6g==
-X-Gm-Message-State: APjAAAUv3aPT0ogmWi4auYK+9kpH9Xcye6MMjbCAba22sRCNUPa3hyBI
-        ffgvNYLgGq42ADSFKgacNQa5Ut8+
-X-Google-Smtp-Source: APXvYqx7dxOXERucqXGRvIpcIGo1B6ynZ/B7PGsp11/3RFCpVE+ojb8SOHFS1LK7Eh/2uiPPfE6f0Q==
-X-Received: by 2002:a63:b1d:: with SMTP id 29mr32938337pgl.103.1559622127307;
-        Mon, 03 Jun 2019 21:22:07 -0700 (PDT)
+        bh=D3kQL1r2zp6sBTv5pff2+Q6QbH2XGHYt9yhid3mUcus=;
+        b=prGrDcOXj1+qo7pw1FalVtqh/ndZ0tFDr7uj7m1aIcStFx2sgaY9yrTgnwDAYTmORI
+         tBXGMk/UktwPstCaHHV4gPdy04cvjQLL0bebgyuzD1YY6s7tg04RV0WPBYFvqCV4GaNB
+         ztL5g/jyCKhmCtqrugROZnjXFX/5L1Qms79YaBlMXuRQi4oYcI09QMRp3f4iLi2+RKZ/
+         2MhphNOPXuWG/g4uRzLQXYolCC9GG+lBqs/8CB8oLGgraTFT+jNCpitgTzAZnPxJ1cB2
+         cQGsiWt8v+2ekFnKDxRc8N27fa8Yf35HHK+0cNiNiPGyz0yAmNBd+0QikUsPEb65s/8E
+         JKIw==
+X-Gm-Message-State: APjAAAX0BCuaKcbKtBVJrwLnZq6r9dOTIUe1/AjUcawYoHpHCGyq6lcL
+        YBHUwNTn2Pm6Ew7Txj9RclPUYMDx
+X-Google-Smtp-Source: APXvYqyrTy9Yke/mTuE5keF1FQb8bverPzDJYyusRUGV2iAiYt07XeoaPBub+Z+YHA+6hPGycj4BCg==
+X-Received: by 2002:a63:e358:: with SMTP id o24mr2630202pgj.78.1559622129872;
+        Mon, 03 Jun 2019 21:22:09 -0700 (PDT)
 Received: from localhost.localdomain ([117.192.17.118])
-        by smtp.googlemail.com with ESMTPSA id q3sm14382390pgv.21.2019.06.03.21.22.04
+        by smtp.googlemail.com with ESMTPSA id q3sm14382390pgv.21.2019.06.03.21.22.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 21:22:06 -0700 (PDT)
+        Mon, 03 Jun 2019 21:22:09 -0700 (PDT)
 From:   Deepak Mishra <linux.dkm@gmail.com>
 To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
 Cc:     joe@perches.com, Larry.Finger@lwfinger.net,
         florian.c.schilhabel@googlemail.com, linux.dkm@gmail.com
-Subject: [PATCH v3 1/4] staging: rtl8712: Fixed CamelCase for EepromAddressSize and removed unused variable
-Date:   Tue,  4 Jun 2019 09:51:33 +0530
-Message-Id: <23fdeda6601c9a40e90882ea52171ae43079e012.1559615579.git.linux.dkm@gmail.com>
+Subject: [PATCH v3 2/4] staging: rtl8712: Fixed CamelCase cmdThread rename to cmd_thread
+Date:   Tue,  4 Jun 2019 09:51:34 +0530
+Message-Id: <2fd1b5a477158e8f308c5a74e0b432389d1a9491.1559615579.git.linux.dkm@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1559615579.git.linux.dkm@gmail.com>
 References: <cover.1559615579.git.linux.dkm@gmail.com>
@@ -74,109 +74,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames CamelCase EepromAddressSizefrom to eeprom_address_size in
-struct _adapter and in related files drv_types.h, rtl871x_eeprom.c, usb_intf.c
-
-CHECK: Avoid CamelCase: <EepromAddressSize>
-
-This patch removed unused variable ImrContent from struct _adapter and
-struct pwrctrl_priv and redundant lines from rtl871x_mp_ioctl.c
+This patch renames CamelCase cmdThread to cmd_thread in struct _adapter and related
+files drv_types.h,os_intfs.c
+CHECK: Avoid CamelCase: <cmdThread>
 
 Signed-off-by: Deepak Mishra <linux.dkm@gmail.com>
 ---
- drivers/staging/rtl8712/drv_types.h        | 3 +--
- drivers/staging/rtl8712/rtl871x_eeprom.c   | 6 +++---
- drivers/staging/rtl8712/rtl871x_mp_ioctl.c | 5 -----
- drivers/staging/rtl8712/rtl871x_pwrctrl.h  | 1 -
- drivers/staging/rtl8712/usb_intf.c         | 2 +-
- 5 files changed, 5 insertions(+), 12 deletions(-)
+ drivers/staging/rtl8712/drv_types.h | 2 +-
+ drivers/staging/rtl8712/os_intfs.c  | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
-index 9ae86631fa8b..9fbd19f03ca9 100644
+index 9fbd19f03ca9..0c722e9c2410 100644
 --- a/drivers/staging/rtl8712/drv_types.h
 +++ b/drivers/staging/rtl8712/drv_types.h
-@@ -149,8 +149,7 @@ struct _adapter {
- 	bool	surprise_removed;
- 	bool	suspended;
+@@ -151,7 +151,7 @@ struct _adapter {
  	u32	IsrContent;
--	u32	ImrContent;
--	u8	EepromAddressSize;
-+	u8	eeprom_address_size;
+ 	u8	eeprom_address_size;
  	u8	hw_init_completed;
- 	struct task_struct *cmdThread;
+-	struct task_struct *cmdThread;
++	struct task_struct *cmd_thread;
  	pid_t evtThread;
-diff --git a/drivers/staging/rtl8712/rtl871x_eeprom.c b/drivers/staging/rtl8712/rtl871x_eeprom.c
-index 0027d8eb22fa..221bf92e1b1c 100644
---- a/drivers/staging/rtl8712/rtl871x_eeprom.c
-+++ b/drivers/staging/rtl8712/rtl871x_eeprom.c
-@@ -150,7 +150,7 @@ void r8712_eeprom_write16(struct _adapter *padapter, u16 reg, u16 data)
- 	x |= _EEM1 | _EECS;
- 	r8712_write8(padapter, EE_9346CR, x);
- 	shift_out_bits(padapter, EEPROM_EWEN_OPCODE, 5);
--	if (padapter->EepromAddressSize == 8)	/*CF+ and SDIO*/
-+	if (padapter->eeprom_address_size == 8)	/*CF+ and SDIO*/
- 		shift_out_bits(padapter, 0, 6);
- 	else	/* USB */
- 		shift_out_bits(padapter, 0, 4);
-@@ -165,7 +165,7 @@ void r8712_eeprom_write16(struct _adapter *padapter, u16 reg, u16 data)
- 	 */
- 	shift_out_bits(padapter, EEPROM_WRITE_OPCODE, 3);
- 	/* select which word in the EEPROM that we are writing to. */
--	shift_out_bits(padapter, reg, padapter->EepromAddressSize);
-+	shift_out_bits(padapter, reg, padapter->eeprom_address_size);
- 	/* write the data to the selected EEPROM word. */
- 	shift_out_bits(padapter, data, 16);
- 	if (wait_eeprom_cmd_done(padapter)) {
-@@ -207,7 +207,7 @@ u16 r8712_eeprom_read16(struct _adapter *padapter, u16 reg) /*ReadEEprom*/
- 	 * The opcode is 3bits in length, reg is 6 bits long
- 	 */
- 	shift_out_bits(padapter, EEPROM_READ_OPCODE, 3);
--	shift_out_bits(padapter, reg, padapter->EepromAddressSize);
-+	shift_out_bits(padapter, reg, padapter->eeprom_address_size);
- 	/* Now read the data (16 bits) in from the selected EEPROM word */
- 	data = shift_in_bits(padapter);
- 	eeprom_clean(padapter);
-diff --git a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-index 588346da1412..add6c18195d6 100644
---- a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-+++ b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-@@ -661,11 +661,6 @@ uint oid_rt_pro_write_register_hdl(struct oid_par_priv *poid_par_priv)
- 			status = RNDIS_STATUS_NOT_ACCEPTED;
- 			break;
- 		}
--
--		if ((status == RNDIS_STATUS_SUCCESS) &&
--		    (RegRWStruct->offset == HIMR) &&
--		    (RegRWStruct->width == 4))
--			Adapter->ImrContent = RegRWStruct->value;
- 	}
- 	return status;
+ 	struct task_struct *xmitThread;
+ 	pid_t recvThread;
+diff --git a/drivers/staging/rtl8712/os_intfs.c b/drivers/staging/rtl8712/os_intfs.c
+index c962696c9822..1653b36c4bfd 100644
+--- a/drivers/staging/rtl8712/os_intfs.c
++++ b/drivers/staging/rtl8712/os_intfs.c
+@@ -221,9 +221,9 @@ struct net_device *r8712_init_netdev(void)
+ 
+ static u32 start_drv_threads(struct _adapter *padapter)
+ {
+-	padapter->cmdThread = kthread_run(r8712_cmd_thread, padapter, "%s",
++	padapter->cmd_thread = kthread_run(r8712_cmd_thread, padapter, "%s",
+ 					  padapter->pnetdev->name);
+-	if (IS_ERR(padapter->cmdThread))
++	if (IS_ERR(padapter->cmd_thread))
+ 		return _FAIL;
+ 	return _SUCCESS;
  }
-diff --git a/drivers/staging/rtl8712/rtl871x_pwrctrl.h b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-index 11b5034f203d..2dd9f558d351 100644
---- a/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-+++ b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-@@ -88,7 +88,6 @@ struct	pwrctrl_priv {
- 	uint pwr_mode;
- 	uint smart_ps;
- 	uint alives;
--	uint ImrContent;	/* used to store original imr. */
- 	uint bSleep; /* sleep -> active is different from active -> sleep. */
+@@ -235,7 +235,7 @@ void r8712_stop_drv_threads(struct _adapter *padapter)
  
- 	struct work_struct SetPSModeWorkItem;
-diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
-index 7478bbd3de78..200a271c28e1 100644
---- a/drivers/staging/rtl8712/usb_intf.c
-+++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -246,7 +246,7 @@ static uint r8712_usb_dvobj_init(struct _adapter *padapter)
- 	struct usb_device *pusbd = pdvobjpriv->pusbdev;
- 
- 	pdvobjpriv->padapter = padapter;
--	padapter->EepromAddressSize = 6;
-+	padapter->eeprom_address_size = 6;
- 	phost_iface = &pintf->altsetting[0];
- 	piface_desc = &phost_iface->desc;
- 	pdvobjpriv->nr_endpoint = piface_desc->bNumEndpoints;
+ 	/*Below is to terminate r8712_cmd_thread & event_thread...*/
+ 	complete(&padapter->cmdpriv.cmd_queue_comp);
+-	if (padapter->cmdThread)
++	if (padapter->cmd_thread)
+ 		wait_for_completion_interruptible(completion);
+ 	padapter->cmdpriv.cmd_seq = 1;
+ }
 -- 
 2.19.1
 
