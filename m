@@ -2,147 +2,162 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E1CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFCAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD66023CBD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559667794;
-	bh=/tTVwesCvaGOAma715+k0fTCF9Xt7CfZcwKpVI/vcmQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vTpuk2hlVWpLqx5bwRXVD9YFKVRbjsV3KUpQyKO8mnXTDzUmNztMhljbXO9NDXrWg
-	 xMr2ep1q+gedZpLJkfCbdhiQDlAzXTyh5fs7GfzE96IV1AVDqdN6iwkeWSWWxLmBoW
-	 oF9oP2UEpVDD63grMPyPwvPHFHcjpTV1TqgyrtJw=
+	by mail.kernel.org (Postfix) with ESMTP id EA94123CB9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfFDRDO (ORCPT
+        id S1727948AbfFDREI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 13:04:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27906 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727716AbfFDRDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:03:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07410207E0;
-        Tue,  4 Jun 2019 17:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559667792;
-        bh=/tTVwesCvaGOAma715+k0fTCF9Xt7CfZcwKpVI/vcmQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PY0d86cXpYMd8mfBRikp/LO6Ph71/9Du6X/VxS40dosZpfUJLXocGWUbdrMhM2Mja
-         B1+IAtSDugHeLvRBWuSk8qTepeDY0hjK5p3EjSvtXTEmB84JUt6UsogJphjuew0Ab1
-         ScjeW89+usqBVWhlXhD2ueM9TPfwQc5a2IIbqjcM=
-Date:   Tue, 4 Jun 2019 19:03:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Richard Gong <richard.gong@linux.intel.com>
-Cc:     Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
-Subject: Re: A potential broken at platform driver?
-Message-ID: <20190604170310.GC14605@kroah.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
- <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
- <20190603180255.GA18054@kroah.com>
- <20190604103241.GA4097@5WDYG62>
- <20190604142803.GA28355@kroah.com>
- <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
+        id S1726532AbfFDREH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:04:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 10:04:07 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2019 10:04:04 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hYCqy-0001Dt-19; Tue, 04 Jun 2019 20:04:04 +0300
+Date:   Tue, 4 Jun 2019 20:04:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
+        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v3 4/6] i2c: core: Move ACPI IRQ handling to probe time
+Message-ID: <20190604170404.GR9224@smile.fi.intel.com>
+References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
+ <20190528142900.24147-4-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190528142900.24147-4-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
+On Tue, May 28, 2019 at 03:28:58PM +0100, Charles Keepax wrote:
+> Bring the ACPI path in sync with the device tree path and handle all the
+> IRQ fetching at probe time. This leaves the only IRQ handling at device
+> registration time being that which is passed directly through the board
+> info as either a resource or an actual IRQ number.
 > 
-> Hi Greg,
+
+It seems my comments weren't addressed by one or another reason.
+This one I would rather to split with exporting function as a separate patch.
+
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
 > 
-> On 6/4/19 9:28 AM, Greg KH wrote:
-> > On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
-> > > On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
-> > > > > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
-> > > > >   	.remove = stratix10_rsu_remove,
-> > > > >   	.driver = {
-> > > > >   		.name = "stratix10-rsu",
-> > > > > -		.groups = rsu_groups,
-> > > > > +//		.groups = rsu_groups,
-> > > > 
-> > > > Are you sure this is the correct pointer?  I think that might be
-> > > > pointing to the driver's attributes, not the device's attributes.
-> > > > 
-> > > > If platform drivers do not have a way to register groups properly, then
-> > > > that really needs to be fixed, as trying to register it by yourself as
-> > > > you are doing, is ripe for racing with userspace.
-> > > This is a very common issue with platform drivers, and it seems to me that
-> > > it is not possible to add device attributes when binding a device to a
-> > > driver without entering the race condition.
-> > > 
-> > > My understanding is the following one:
-> > > 
-> > > The root cause is that the device has already been created and reported
-> > > to the userspace with a KOBJ_ADD uevent before the device and the driver
-> > > are bound together. On receiving this event, userspace will react, and
-> > > it will try to read the device's attributes. In parallel the kernel will
-> > > try to find a matching driver. If a driver is found, the kernel will
-> > > call the probe function from the driver with the device as a parameter,
-> > > and if successful a KOBJ_BIND uevent will be sent to userspace, but this
-> > > is a recent addition.
-> > > 
-> > > Unfortunately, not all created devices will be bound to a driver, and the
-> > > existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
-> > > If new per-device attributes have been added to the device during the
-> > > binding stage userspace may or may not see them, depending on when userspace
-> > > tries to read the device's attributes.
-> > > 
-> > > I have this possible workaround, but I do not know if it is a good solution:
-> > > 
-> > > When binding the device and the driver together, create a new device as a
-> > > child to the current device, and fill its "groups" member to point to the
-> > > per-device attributes' group. As the device will be created with all the
-> > > attributes, it will not be affected by the race issues. The functions
-> > > handling the attributes will need to be modified to use the parents of their
-> > > "device" parameter, instead of the device itself. Additionnaly, the sysfs
-> > > location of the attributes will be different, as the child device will show
-> > > up in the sysfs path. But for a newly introduced device this will not be
-> > > a problem.
-> > > 
-> > > Is this a good compromise ?
-> > 
-> > Not really.  You just want the attributes on the platform device itself.
-> > 
-> > Given the horrible hack that platform devices are today, what's one more
-> > hack!
-> > 
-> > Here's a patch below of what should probably be done here.  Richard, can
-> > you change your code to use the new dev_groups pointer in the struct
-> > platform_driver and this patch and let me know if that works or not?
-> > 
-> > Note, I've only compiled this code, not tested it...
-> > 
+> Changes since v2:
+>  - Add kernel doc for i2c_acpi_get_irq
 > 
-> Your patch works.
+> Thanks,
+> Charles
 > 
-> Many thanks for your help!
+>  drivers/i2c/i2c-core-acpi.c | 16 ++++++++++------
+>  drivers/i2c/i2c-core-base.c |  5 ++++-
+>  drivers/i2c/i2c-core.h      |  7 +++++++
+>  3 files changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index c107f260e252f..62a938c17cbd2 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -148,8 +148,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+>  	return 1; /* No need to add resource to the list */
+>  }
+>  
+> -static int i2c_acpi_get_irq(struct acpi_device *adev)
+> +/**
+> + * i2c_acpi_get_irq - get device IRQ number from ACPI
+> + * @client: Pointer to the I2C client device
+> + *
+> + * Find the IRQ number used by a specific client device.
+> + *
+> + * Return: The IRQ number or an error code.
+> + */
+> +int i2c_acpi_get_irq(struct i2c_client *client)
+>  {
+> +	struct acpi_device *adev = ACPI_COMPANION(&client->adapter->dev);
+>  	struct list_head resource_list;
+>  	int irq = -ENOENT;
+>  	int ret;
+> @@ -201,11 +210,6 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+>  	if (adapter_handle)
+>  		*adapter_handle = lookup.adapter_handle;
+>  
+> -	/* Then fill IRQ number if any */
+> -	ret = i2c_acpi_get_irq(adev);
+> -	if (ret > 0)
+> -		info->irq = ret;
+> -
+>  	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+>  			  sizeof(info->type));
+>  
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 84bf11b25a120..b6b009bfe842b 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -335,7 +335,10 @@ static int i2c_device_probe(struct device *dev)
+>  			if (irq == -EINVAL || irq == -ENODATA)
+>  				irq = of_irq_get(dev->of_node, 0);
+>  		} else if (ACPI_COMPANION(dev)) {
+> -			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+> +			irq = i2c_acpi_get_irq(client);
+> +
+> +			if (irq == -ENOENT)
+> +				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+>  		}
+>  		if (irq == -EPROBE_DEFER)
+>  			return irq;
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 8f3a08dc73a25..15c1411f35f07 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -72,6 +72,8 @@ const struct acpi_device_id *
+>  i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  		      struct i2c_client *client);
+>  void i2c_acpi_register_devices(struct i2c_adapter *adap);
+> +
+> +int i2c_acpi_get_irq(struct i2c_client *client);
+>  #else /* CONFIG_ACPI */
+>  static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+>  static inline const struct acpi_device_id *
+> @@ -80,6 +82,11 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline int i2c_acpi_get_irq(struct i2c_client *client)
+> +{
+> +	return 0;
+> +}
+>  #endif /* CONFIG_ACPI */
+>  extern struct notifier_block i2c_acpi_notifier;
+>  
+> -- 
+> 2.11.0
+> 
 
-Nice!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I guess I need to turn it into a real patch now.  Let me do that tonight
-and see if I can convert some existing drivers to use it as well...
 
-thanks,
-
-greg k-h
