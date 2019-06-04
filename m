@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195C3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78606C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9BB24C78
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896524C78
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559622231;
-	bh=VYtcvA3wowRbQVxy9lVDS7Qdt8923RidXJkN2GiPjNU=;
+	s=default; t=1559622235;
+	bh=TA3ORGPusOAVXEJ7tR/bGFjdPY1t0Xg2lFwT8zhNkb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AnflJrGa41omCrk3D9VlRiFQIYv5uMpayszChTQiqrEge30ZpyI/sUwSFfrZeZ+b0
-	 xjrxhGqLGHATgX4N9HMOc4BG5CawEl6kYwpmMTYJetJVie1vdSUfQRslSiAZXGRIgY
-	 8BQz3lUCzR9KFE8BOQZluVmRgZn+Exzw9ntA646E=
+	b=DN3lErjZ+JzKTBnAOVFZMmWfYa3LHwlZlZYG0IqojZLAfC5cKK+09ncoIfjci9/hV
+	 exY/C61dpcT27H5fhum+SFlzOa3C2BbX1StvFCrgMMcuwrP7K8wo1AcX+IX96jDchL
+	 rj2nFhYGuHkBE7Vw1q3GjJdXBKWAaDfBJZGb4154=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFDEXr (ORCPT
+        id S1726700AbfFDEXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 00:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38444 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 00:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfFDEXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726078AbfFDEXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 00:23:47 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 937A324816;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8955D23D8E;
         Tue,  4 Jun 2019 04:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559622226;
-        bh=VYtcvA3wowRbQVxy9lVDS7Qdt8923RidXJkN2GiPjNU=;
+        bh=TA3ORGPusOAVXEJ7tR/bGFjdPY1t0Xg2lFwT8zhNkb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2w2CTySlmeFLqYTfQqwzXF+cyaN4lSifCfVRBMfgAOsdzJTwKbRQBYmTRTiEKute
-         BgPzXbzJKmdNg9YxeGopYySVpBQYW36b8jdND1tLPSL3PGOdlq+5SxNOfvGE69PMaq
-         jxSicoEVAYvfLxbKNcYhxxklPU5DoZyUDCI5SbTI=
+        b=svMGH/MF4gDI8GSS9P8qsFor88Pdh0Nye0AT1FhYmBF2EmCf9Xj7cc26EojX/NLF6
+         E+bz9AkmBIczle8sjjt/cgLKKndk3KSwRVTSH1edmYiXENR+QcipT4nQ/9UJmFF3d/
+         ZforGa8bb/j7LwPHiHr0XblHFo9XOrxFnJg0CpRQ=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 8698D5FD46; Tue,  4 Jun 2019 12:23:43 +0800 (CST)
+        id 7371E5F80C; Tue,  4 Jun 2019 12:23:43 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Alessandro Zummo <a.zummo@towertech.it>,
@@ -50,9 +50,9 @@ Cc:     Chen-Yu Tsai <wens@kernel.org>,
         linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 3/3] arm64: dts: allwinner: h6: Pine H64: Add interrupt line for RTC
-Date:   Tue,  4 Jun 2019 12:23:37 +0800
-Message-Id: <20190604042337.26129-4-wens@kernel.org>
+Subject: [PATCH 1/3] rtc: pcf8563: Fix interrupt trigger method
+Date:   Tue,  4 Jun 2019 12:23:35 +0800
+Message-Id: <20190604042337.26129-2-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604042337.26129-1-wens@kernel.org>
 References: <20190604042337.26129-1-wens@kernel.org>
@@ -65,30 +65,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The external PCF8563 RTC chip's interrupt line is connected to the NMI
-line on the SoC.
+The PCF8563 datasheet says the interrupt line is active low and stays
+active until the events are cleared, i.e. a level trigger interrupt.
 
-Add the interrupt line to the device tree.
+Fix the flags used to request the interrupt.
 
-Fixes: 17ebc33afc35 ("arm64: allwinner: h6: add PCF8563 RTC on Pine H64 board")
+Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 9e464d40cbff..189834518391 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -249,6 +249,8 @@
- 	pcf8563: rtc@51 {
- 		compatible = "nxp,pcf8563";
- 		reg = <0x51>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		#clock-cells = <0>;
- 	};
- };
+Not sure if this would cause issues for other platforms. Ideally we'd
+take the flags from the device tree, but it seems not all platforms
+support this.
+
+---
+ drivers/rtc/rtc-pcf8563.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index 3efc86c25d27..e358313466f1 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -605,7 +605,7 @@ static int pcf8563_probe(struct i2c_client *client,
+ 	if (client->irq > 0) {
+ 		err = devm_request_threaded_irq(&client->dev, client->irq,
+ 				NULL, pcf8563_irq,
+-				IRQF_SHARED|IRQF_ONESHOT|IRQF_TRIGGER_FALLING,
++				IRQF_SHARED | IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+ 				pcf8563_driver.driver.name, client);
+ 		if (err) {
+ 			dev_err(&client->dev, "unable to request IRQ %d\n",
 -- 
 2.20.1
 
