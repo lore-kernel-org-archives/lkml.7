@@ -2,107 +2,103 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADC2C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C374CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A01204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ED121873
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jxJdMBDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfFDJaf (ORCPT
+        id S1727090AbfFDJb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:30:35 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:34386 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbfFDJaf (ORCPT
+        Tue, 4 Jun 2019 05:31:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40401 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfFDJb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:30:35 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 00F4680302; Tue,  4 Jun 2019 11:30:22 +0200 (CEST)
-Date:   Tue, 4 Jun 2019 11:30:32 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 4.19 29/32] jump_label: move asm goto support test to
- Kconfig
-Message-ID: <20190604093032.GA2689@amd>
-References: <20190603090308.472021390@linuxfoundation.org>
- <20190603090315.474902271@linuxfoundation.org>
+        Tue, 4 Jun 2019 05:31:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d30so10008529pgm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MimY8E6RzMP+Xm09/RStVcP0kJblyDIRLMNiKjGKR1U=;
+        b=jxJdMBDIJRCbNIZuMnUELhdpEn41VADNgzlplcmAXJynP+m5d5YB4HbguZiv5hotqh
+         l9w0GY8FrukKhQunBoGC3tAk0TlFur1DY+UTBOFMtEibcehQBzR0/478UnelnBdK/V6A
+         civ0aWuPhTj2Lwrl6dlU8QQhiKIrTdiBTJx5LpmBsvNbpvea8RzLiWd+RM62SI1//lOZ
+         yUk4JVITz3zKEWBmVqO8Y91afvJI7gLRH7sNlStVxUs/iSwo5FYEqRV3GrEhSEkLmf7U
+         pI79hFjf/o2dlic8f0PYj/PwMYEMLQwYNb+R9/B1m1R3PcNiX5lysTh/prELjaTBLH7G
+         7OvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MimY8E6RzMP+Xm09/RStVcP0kJblyDIRLMNiKjGKR1U=;
+        b=boxDhVcE6HTvqJUCCZtxBDBN3LKJQUD63dWcAHzv72f1RVS6EOIfHyHRFd15NW9wRA
+         +5Q/Z2eKXQmpA8YKMtUQuwJpd7c50G0fsXV9VRKDm3RPq1xoYhgt/2SK4imLufQk5k8D
+         ec7WTLrdEVv9sW9pUQfapFTUcAzDbmlzTxQcPq1eODhZknNAEJuxOrjp1H7caI0Ym2T8
+         MDiFQ2KPc1Eh9olCSMKNfpNAa19bHCaocmcGLLbO1RyTTh5BKV6M0cuiv2IpT67lEIU3
+         eJpwt2HhZu7F1peKrYs81qFsOnNMW/AFcnYqUbDAITQvPrZh5gAhQ5jh1ebV1bEnetwJ
+         +5lw==
+X-Gm-Message-State: APjAAAWKvt93IKZs2ZWanxJAJwTJxKWT0Oqa1xxT5m/3GQzL9G1Vt3dd
+        dCmBQw2V7d0VbSJBCnZaXF+bTq0INkk=
+X-Google-Smtp-Source: APXvYqzkBCd15WCdDavN2+OthVD2LAb86dzXlH0Ye+ZreCxe0UdK/8MuhKMRME3oQVp6Fs1Cw+s2oQ==
+X-Received: by 2002:aa7:92da:: with SMTP id k26mr36714866pfa.70.1559640716355;
+        Tue, 04 Jun 2019 02:31:56 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id b16sm17600287pfd.12.2019.06.04.02.31.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 02:31:55 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 15:01:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] KVM: arm64: Drop 'const' from argument of vq_present()
+Message-ID: <20190604093153.2pzv55knl6axugrv@vireshk-i7>
+References: <699121e5c938c6f4b7b14a7e2648fa15af590a4a.1559623368.git.viresh.kumar@linaro.org>
+ <20190604084349.prnnvjvjaeuhsmgs@mbp>
+ <20190604085545.hsmxfqkpt2cbrhtw@vireshk-i7>
+ <20190604092639.GS28398@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190603090315.474902271@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190604092639.GS28398@e103592.cambridge.arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04-06-19, 10:26, Dave Martin wrote:
+> I'm in two minds about whether this is worth fixing, but if you want to
+> post a patch to remove the extra const (or convert vq_present() to a
+> macro), I'll take a look at it.
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch already does what you are asking for (remove the extra
+const), isn't it ?
 
-On Mon 2019-06-03 11:08:23, Greg Kroah-Hartman wrote:
-> From: Masahiro Yamada <yamada.masahiro@socionext.com>
->=20
-> commit e9666d10a5677a494260d60d1fa0b73cc7646eb3 upstream.
->=20
-> Currently, CONFIG_JUMP_LABEL just means "I _want_ to use jump label".
->=20
-> The jump label is controlled by HAVE_JUMP_LABEL, which is defined
-> like this:
->=20
->   #if defined(CC_HAVE_ASM_GOTO) && defined(CONFIG_JUMP_LABEL)
->   # define HAVE_JUMP_LABEL
->   #endif
->=20
-> We can improve this by testing 'asm goto' support in Kconfig, then
-> make JUMP_LABEL depend on CC_HAS_ASM_GOTO.
->=20
-> Ugly #ifdef HAVE_JUMP_LABEL will go away, and CONFIG_JUMP_LABEL will
-> match to the real kernel capability.
->=20
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> [nc: Fix trivial conflicts in 4.19
->      arch/xtensa/kernel/jump_label.c doesn't exist yet
->      Ensured CC_HAVE_ASM_GOTO and HAVE_JUMP_LABEL were sufficiently
->      eliminated]
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I looked at my textbook (The C programming Language, By Brian W.
+Kernighan and Dennis M. Ritchie.) and it says:
 
-This does not matche stable-kernel rules. It is nice cleanup, but it
-does not really fix any bug (does it?), and resulting patch is too
-big.
+"
+The const declaration can also be used with array arguments, to
+indicate that the function does not change that array:
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+int strlen(const char[]);
+"
 
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+and so this patch isn't necessary for sure.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz2OjgACgkQMOfwapXb+vJg6ACfTJHn2/dpEQHUJGSjB7L709iu
-ob4An3gjfbXgf03/ZaByt6D+YOfo0kYZ
-=grxE
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
+-- 
+viresh
