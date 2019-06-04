@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D5C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77003C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A126824873
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34324873
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559646355;
-	bh=4wJAWudpE4ep1kaTxjl+dxZpkZ4VQfAFbKRM2WEW4lM=;
+	s=default; t=1559646359;
+	bh=QCciAXZOWSYqp12nDOySk0Dfu903DAThXA8VOOFo/O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/dqMNrlPWw/UA/3Ze4NGafV35lGuxk26i8l2pA34LtzyNpmHxwDKxaAwB/rT/3T4
-	 c4RLkZ/Pp2KGid6D1eYqqjV2/M++3uDuSRN0PSKU2p91rLkhlT18yrMq2Iu9li44t7
-	 g7YNK/FsYrrFyCa0Mm9s7d713JMExdjT8FWheycs=
+	b=0GepxTjf9f5c/tGrfWn422fhc9OQPG0cWzM7igW4KIrzcqNBChKd0BWt4v50ZgRT6
+	 W/08FHpadlD+dxFr4/yGPfM7oPfhVFXgF9eBLfclRxEBVjAUYLC4Nki0Xue/rP8f1y
+	 Beb5hIQrEeJHT1onZRBJxOwPQLcAk++1ZRP60r6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfFDLFy (ORCPT
+        id S1727608AbfFDLF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60672 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 07:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfFDLFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:05:53 -0400
+        id S1727242AbfFDLF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:05:56 -0400
 Received: from localhost.localdomain (unknown [223.93.147.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B6B6247B8;
-        Tue,  4 Jun 2019 11:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7E9247FC;
+        Tue,  4 Jun 2019 11:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559646353;
-        bh=4wJAWudpE4ep1kaTxjl+dxZpkZ4VQfAFbKRM2WEW4lM=;
+        s=default; t=1559646356;
+        bh=QCciAXZOWSYqp12nDOySk0Dfu903DAThXA8VOOFo/O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YAl9EMAwwyUVIHqJWJ7OHDn8K9OFo2h/zvw4sA7k88rdbqeeTCWcxy6QetVZ4EktZ
-         ggIPRNiohKx1c58/NYvuQceTilDUO8mKCbIlz2ZkJ8KnvvSF6bMmdyKuCttB0S98Yg
-         eqRclJoFYTli2AYxSgreLc6fP1UFBIhgiz90MVmY=
+        b=G18gyFNIj3nVOkLmOnLE4/LHinmOO9jGBJSCia8IiXmo/ZDmlkFGLVzdtND19AVr4
+         3Ps9CVq+rNe9IUrWdxCFdNdXn+fTfS+jgTvMjCbjHKlZ17ShbjAL3MXb28x2KMWUkC
+         vs4gnF9H882dSDdwI1l5cE31rB5G3zgSbgtx8V68=
 From:   guoren@kernel.org
 To:     marc.zyngier@arm.com, mark.rutland@arm.com, tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, jason@lakedaemon.net,
         guoren@kernel.org, linux-csky@vger.kernel.org,
         Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V4 3/4] irqchip/irq-csky-mpintc: Support auto irq deliver to all cpus
-Date:   Tue,  4 Jun 2019 19:05:05 +0800
-Message-Id: <1559646306-18860-4-git-send-email-guoren@kernel.org>
+Subject: [PATCH V4 4/4] irqchip/irq-csky-mpintc: Remove unnecessary loop in interrupt handler
+Date:   Tue,  4 Jun 2019 19:05:06 +0800
+Message-Id: <1559646306-18860-5-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559646306-18860-1-git-send-email-guoren@kernel.org>
 References: <1559646306-18860-1-git-send-email-guoren@kernel.org>
@@ -57,45 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <ren_guo@c-sky.com>
 
-The csky,mpintc could deliver a external irq to one cpu or all cpus, but
-it couldn't deliver a external irq to a group of cpus with cpu_mask. So
-we only use auto deliver mode when affinity mask_val is equal to
-cpu_present_mask.
+csky_mpintc_handler()
+  ->handle_domain_irq()
+    ->irq_exit()
+      ->invoke_softirq()
+        ->__do_softirq()
+          ->local_irq_enable()
 
-There is no limitation for only two cpus in SMP system.
+If new interrupt coming, it'll get into interrupt trap before return to
+csky_mpintc_handler(). So there is no need loop in csky_mpintc_handler.
 
 Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 Cc: Marc Zyngier <marc.zyngier@arm.com>
 ---
- drivers/irqchip/irq-csky-mpintc.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-csky-mpintc.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-index a451a07..2740dd5 100644
+index 2740dd5..122cd43 100644
 --- a/drivers/irqchip/irq-csky-mpintc.c
 +++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -143,8 +143,19 @@ static int csky_irq_set_affinity(struct irq_data *d,
- 	if (cpu >= nr_cpu_ids)
- 		return -EINVAL;
+@@ -75,11 +75,8 @@ static void csky_mpintc_handler(struct pt_regs *regs)
+ {
+ 	void __iomem *reg_base = this_cpu_read(intcl_reg);
  
--	/* Enable interrupt destination */
--	cpu |= BIT(31);
-+	/*
-+	 * The csky,mpintc could support auto irq deliver, but it only
-+	 * could deliver external irq to one cpu or all cpus. So it
-+	 * doesn't support deliver external irq to a group of cpus
-+	 * with cpu_mask.
-+	 * SO we only use auto deliver mode when affinity mask_val is
-+	 * equal to cpu_present_mask.
-+	 *
-+	 */
-+	if (cpumask_equal(mask_val, cpu_present_mask))
-+		cpu = 0;
-+	else
-+		cpu |= BIT(31);
+-	do {
+-		handle_domain_irq(root_domain,
+-				  readl_relaxed(reg_base + INTCL_RDYIR),
+-				  regs);
+-	} while (readl_relaxed(reg_base + INTCL_HPPIR) & BIT(31));
++	handle_domain_irq(root_domain,
++		readl_relaxed(reg_base + INTCL_RDYIR), regs);
+ }
  
- 	writel_relaxed(cpu, INTCG_base + INTCG_CIDSTR + offset);
- 
+ static void csky_mpintc_enable(struct irq_data *d)
 -- 
 2.7.4
 
