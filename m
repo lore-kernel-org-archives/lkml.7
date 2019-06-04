@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B81C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854EFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8672084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE8F20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjRO/5G+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtWAy/s+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfFDQa0 (ORCPT
+        id S1728023AbfFDQa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:30:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34931 "EHLO
+        Tue, 4 Jun 2019 12:30:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41497 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbfFDQaV (ORCPT
+        with ESMTP id S1727883AbfFDQaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:30:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so698594wrv.2;
-        Tue, 04 Jun 2019 09:30:19 -0700 (PDT)
+        Tue, 4 Jun 2019 12:30:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so16527284wrm.8;
+        Tue, 04 Jun 2019 09:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=njnjG6a7jdrYLSKYX++HVTkLLSLz4gvoHp7YU4YYSHc=;
-        b=hjRO/5G+35x3CtsnItSo0oEhpihExukJxRz38P34BJFVsCWjmfCgVq669GLHPmTu63
-         +Td9MCqpm903OMRnobhlEySB4BaoYn/pKaVbrcdroRrnkYZrLRCAyY47rQVzMYSG9hS4
-         tOP9cLOBdwkRdKWwDOy1QJnqcfasCZI5Epx0VXQd+n4JmaV0Rm76h3n0gpap544V5EX6
-         towlwcb5mD0TBfKcT+WgfSjE4SnSNz7gzXMEVuV8p8RUTl3Px2Bf8MmR3+ApI7w9rM8u
-         btAHqLoxcVEPNCnB0NWPMHpvzPVOSZYm8PFdlL6m7EZZl7kMLDqxsFepS7c4afXfenRj
-         QJxA==
+        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
+        b=UtWAy/s+q+oOrOGO9ddEb8t2OEIfKzvD69ZeZVZ5v/jTkNNG0s2Fv02hKMNkhfmLEB
+         nEJSyqLMvoCfJr5kOm2zxQ1dxurFm99V33Ti0NLVgqHvJjKkmCZDGe3ty5Jde3wIRNhD
+         ubh3UALjiGOSUot57QvMF9tYkCT+mu3GA1xBjBHtQY5IDnOVAreEB1iX9E55C+A9l9vG
+         Crny42MKSkmkPxFGyi+TlsxgVevgXY8NmcQeRtJftAYgGcl+nZRTenDf4lqV1q+Re4KL
+         TRPzTOazfppgw4xKjQMCPgSXlRmnCvMcu0pFKiQ1YmGwm3C8HSiRDU8lwuIvz/vJb0Xu
+         omyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=njnjG6a7jdrYLSKYX++HVTkLLSLz4gvoHp7YU4YYSHc=;
-        b=G8Kr2L1IhgHBo8SCIFxZMjE82i6PC6P2NNT864xP7PnAIrgzFEfAm8qbcsjROh9Dju
-         dVgQaqJqqzImmBJNHnmD7Jn1znnanQ3R+0YkyFUgTCg41+S+uiA1o2dVrRkNWY1i7OfI
-         fDk1LwzRxY6cz6Uq0nj0zOmMIAqHkrg/+vVO94xBnpF3cDP4VfEE/+SGYfAl4q/zhC+0
-         gQZ4UKTMLrM4jPpYh+G7fyX1u7xMRvmV8ydfMXcYp3+qq5vDJ9Zk93W3X+nbupFtNCaq
-         B2KAGnCfL+V3+7rA1WuElMuy2dX1r1uZoK7QjGSbnvlHuLxWXsHiO4pQsLURYso8IQdA
-         b+Sg==
-X-Gm-Message-State: APjAAAXl7W5uSvuPVullTyEWIN9hzjLKT80BRsq9sQEXvtE5AOW2LJNY
-        On+NmGQ6IV2D5Z7d5cgnTak=
-X-Google-Smtp-Source: APXvYqysS9M3ppquDw2c5HMbHi5hNJ8JqiIA9np0vOWzotvcTepc7ZINfKGMWQ1aLcdglS57gxLIuA==
-X-Received: by 2002:a05:6000:124b:: with SMTP id j11mr901402wrx.157.1559665818860;
-        Tue, 04 Jun 2019 09:30:18 -0700 (PDT)
+        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
+        b=fwZtJiJG8gwXnL7m49FzBbR81KLCiqKpowV93JKT26tmJDGRGp8t9JHdwy/UPofouN
+         HJv+QaQcHcif4JdHJvLPWd96BGbkNQTPc1dcvR+LAOIu7qtdM3jI8PICTS4B5Ipqz0d5
+         UAaNtivSXcvu53tISSx46RpUM+aaTWXVFgVPI5UrLYFxgubEdJc1surCygI8cMBJHyUP
+         GBKD2krwCHfYXwwVi0LvnEKl7f9ndJ7/h9llsyaaWTUyPb0wOIr6y/Vt7OSuWIPWajEV
+         bqqW2A1Y5OK71aqVxEZ6wqSaW9QiYmQglPnXpfMXhNFYOmbKcDZyKFbPH26yJdoGTOtU
+         en3w==
+X-Gm-Message-State: APjAAAW0Tz5Bzuyw6hl/HguQoZ/FOBqoceucKCFdVHoU/ZY8nzYDVhPk
+        bSQUMSFNFjkNG4YmApDbiu8=
+X-Google-Smtp-Source: APXvYqxN5FxMq3dstg70O5Vq9/ZTLRvXIVMei8vJ5wsTOXTBnMS5w/jM6SkXPVj8JCNy1EBZfeqFwA==
+X-Received: by 2002:a5d:6acc:: with SMTP id u12mr12031486wrw.349.1559665820930;
+        Tue, 04 Jun 2019 09:30:20 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id y12sm15108176wrh.40.2019.06.04.09.30.17
+        by smtp.gmail.com with ESMTPSA id y12sm15108176wrh.40.2019.06.04.09.30.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 09:30:18 -0700 (PDT)
+        Tue, 04 Jun 2019 09:30:20 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
         Sean Young <sean@mess.org>
-Subject: [PATCH v4 11/13] arm64: dts: allwinner: h6: Add IR receiver node
-Date:   Tue,  4 Jun 2019 18:29:57 +0200
-Message-Id: <20190604162959.29199-12-peron.clem@gmail.com>
+Subject: [PATCH v4 13/13] arm64: defconfig: Enable IR SUNXI option
+Date:   Tue,  4 Jun 2019 18:29:59 +0200
+Message-Id: <20190604162959.29199-14-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604162959.29199-1-peron.clem@gmail.com>
 References: <20190604162959.29199-1-peron.clem@gmail.com>
@@ -82,46 +82,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 IR is similar to A31 and can use same driver.
-
-Add support for it.
+Enable CONFIG_IR_SUNXI option for ARM64, so that Allwinner A64/H6 SoCs
+can use their IR receiver controller.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 Acked-by: Sean Young <sean@mess.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 16c5c3d0fd81..649cbdfe452e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -647,6 +647,25 @@
- 				pins = "PL0", "PL1";
- 				function = "s_i2c";
- 			};
-+
-+			r_ir_rx_pin: r-ir-rx-pin {
-+				pins = "PL9";
-+				function = "s_cir_rx";
-+			};
-+		};
-+
-+		r_ir: ir@7040000 {
-+				compatible = "allwinner,sun50i-h6-ir",
-+					     "allwinner,sun6i-a31-ir";
-+				reg = <0x07040000 0x400>;
-+				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&r_ccu CLK_R_APB1_IR>,
-+					 <&r_ccu CLK_IR>;
-+				clock-names = "apb", "ir";
-+				resets = <&r_ccu RST_R_APB1_IR>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&r_ir_rx_pin>;
-+				status = "disabled";
- 		};
- 
- 		r_i2c: i2c@7081400 {
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4d583514258c..5128029100d2 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -460,6 +460,7 @@ CONFIG_RC_CORE=m
+ CONFIG_RC_DECODERS=y
+ CONFIG_RC_DEVICES=y
+ CONFIG_IR_MESON=m
++CONFIG_IR_SUNXI=m
+ CONFIG_MEDIA_SUPPORT=m
+ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
 -- 
 2.20.1
 
