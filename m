@@ -2,92 +2,136 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277E3C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4359AC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C30820883
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF5A23CEB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:42:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwpWwJdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfFDQho (ORCPT
+        id S1727827AbfFDQmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:37:44 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36792 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfFDQho (ORCPT
+        Tue, 4 Jun 2019 12:42:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43848 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727463AbfFDQmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:37:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g18so3262506qkl.3;
-        Tue, 04 Jun 2019 09:37:43 -0700 (PDT)
+        Tue, 4 Jun 2019 12:42:09 -0400
+Received: by mail-io1-f65.google.com with SMTP id k20so17844409ios.10;
+        Tue, 04 Jun 2019 09:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3JDY6OHGY+NE0N4DeZuVbYe18iFYfWNpGGDsycjMC2g=;
+        b=UwpWwJdg390UZHtTns/rfTWthrTcGew4Fy9tGkbLx8KjLIFbnCG9jwC8uKqME2sGrF
+         bxK/yRBAq3MGq7d1fhd/UrFby6JZmilGdyMximDEXCMVeehCUbNaUOm8LQT8kJu7s9jl
+         1WBXFxHNJq+D35c04YNdcAxDDW5UA3m+yRtaJmCoJDarasrjCIw/srfNIg3AIrVVX2Q+
+         jmxRZDxLSIQDXFYJQPRuRboIHhDGSkMXfmW6qRkdZuUFkpAhHgKYEsT5Gqa/rmEtt2/a
+         Laf/J7G/1bnGOtKjkGb2owo6yrha7zJpq3OuHs7INOAiXZycoThXwcx5v4X1AIukhP+B
+         z5Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aE1/cHd8DzTD9FjBXgqCGhUsUZ/Ac0/w2Hl806C0EWM=;
-        b=gBZi01V6we8APcZYiBHBU8npGyh1ko7XZA+weiRBOCKEk6+rZUepKd7at1Y1GJUzXI
-         0HjNgHij9va6VYS6Hd7y37zamsi2pCQftku47zA4pPT/IA1BwWv4Jwt8LLbZ9YB1IpeP
-         u2ZWC9zaVaEiLyfYg5WViwQ0zSesnalr2ivIzzNx2EWnkGSjZKf7EWnGPEFihd6L2w9K
-         qr8vfx9F64jUyMeWhJlD3hcqsbYXT5Iq7S2HRGAg3+u53HnbzvE/10nYD66IYTYjGv1S
-         3lsvpvcoCXM0HI7ffmV//7oFe1/R+FM0fuN8xK7J381tTD6uO987VkqT6rVGC9OPNIOx
-         BFww==
-X-Gm-Message-State: APjAAAWkIaBx2izAtaO3FH0O8D+0u4Tng1tKUTJkjsMFa9IE94swWuKQ
-        +l2/L57qr0WMZLcwA9vOJ98P+cWZqg1xB2+3+ho=
-X-Google-Smtp-Source: APXvYqzfmP62dYOeVk1OlzWSMTrM9bPNziXx52FwlTOC/Ho6r8b/7WoZJpMUG9U+NaP2WQiW5cUyXhoGL5f0SB1c034=
-X-Received: by 2002:a37:a4d3:: with SMTP id n202mr27466154qke.84.1559666262799;
- Tue, 04 Jun 2019 09:37:42 -0700 (PDT)
+        bh=3JDY6OHGY+NE0N4DeZuVbYe18iFYfWNpGGDsycjMC2g=;
+        b=A8QFD7mR92WJn7zIfFPIO9tHbe/zphCvTX1NIzhve1bpnh0/tK11aNx1VRiTe/Z2ho
+         fZtDIe9x0emNGkoZxyEahb17RTSadUnDskAo6nLlu00IscPwBIyzQf21Y0uD6ozDmNR0
+         H/cNYJjW8iCTTmLToJsTBYQtljGQGdU4IOuQ6maPcAkZfsrE9lyJJOjszRKILlpNjS/z
+         0DV7cgweUaWyrHlSOOf7CHpefjJHbf59DmI/+fsyHh/RBY/YPc4H/VHZJrWqn3BjQhcE
+         r92LRVxkpFgxgyFpEBCEIHIbm1L5FQqmZly9W1PQv7eR2CZ1nRF/RnSEvdSWCEzASxbx
+         VYTg==
+X-Gm-Message-State: APjAAAVCUVT1kRLggMiLsjUJRT5FY9K3Wo2RGiGPr7Z05UOfi5qupHVH
+        pTTBHFtWEEux/xSBprUhU8iBa7tfH/axur41t6A=
+X-Google-Smtp-Source: APXvYqzcpmp0gznwMtOQmK24TPSREyjaVEIx3jTVWsSszTjRWj0MU/DJg3bP7iAb59r6WIoIIpPgJaT3Hvtj1qgxSog=
+X-Received: by 2002:a5d:8f86:: with SMTP id l6mr16490098iol.97.1559666527982;
+ Tue, 04 Jun 2019 09:42:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
-In-Reply-To: <20190604134117.GA29963@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 4 Jun 2019 18:37:26 +0200
-Message-ID: <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dbueso@suse.de, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>
+References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170432.1195-1-nitesh@redhat.com>
+In-Reply-To: <20190603170432.1195-1-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 4 Jun 2019 09:41:56 -0700
+Message-ID: <CAKgT0UeRzF24WeVkTN2WW41iKSUpXpZbpD55-g=MBHf814RV+A@mail.gmail.com>
+Subject: Re: [QEMU PATCH] KVM: Support for page hinting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 3:41 PM Oleg Nesterov <oleg@redhat.com> wrote:
+On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 >
-> This is the minimal fix for stable, I'll send cleanups later.
+> Enables QEMU to call madvise on the pages which are reported
+> by the guest kernel.
 >
-> The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
-> restore_user_sigmask()") introduced the visible change which breaks
-> user-space: a signal temporary unblocked by set_user_sigmask() can
-> be delivered even if the caller returns success or timeout.
->
-> Change restore_user_sigmask() to accept the additional "interrupted"
-> argument which should be used instead of signal_pending() check, and
-> update the callers.
->
-> Reported-by: Eric Wong <e@80x24.org>
-> Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
-> cc: stable@vger.kernel.org (v5.0+)
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  hw/virtio/trace-events                        |  1 +
+>  hw/virtio/virtio-balloon.c                    | 85 +++++++++++++++++++
+>  include/hw/virtio/virtio-balloon.h            |  2 +-
+>  include/qemu/osdep.h                          |  7 ++
+>  .../standard-headers/linux/virtio_balloon.h   |  1 +
+>  5 files changed, 95 insertions(+), 1 deletion(-)
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+<snip>
 
-I hope Eric can test this with the original reproducer, or maybe someone
-could create a test case that can be added into LTP.
+> diff --git a/include/qemu/osdep.h b/include/qemu/osdep.h
+> index 840af09cb0..4d632933a9 100644
+> --- a/include/qemu/osdep.h
+> +++ b/include/qemu/osdep.h
+> @@ -360,6 +360,11 @@ void qemu_anon_ram_free(void *ptr, size_t size);
+>  #else
+>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
+>  #endif
+> +#ifdef MADV_FREE
+> +#define QEMU_MADV_FREE MADV_FREE
+> +#else
+> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
+> +#endif
 
-      Arnd
+Is there a specific reason for making this default to INVALID instead
+of just using DONTNEED? I ran into some issues as my host kernel
+didn't have support for MADV_FREE in the exported kernel headers
+apparently so I was getting no effect. It seems like it would be
+better to fall back to doing DONTNEED instead of just disabling the
+functionality all together.
+
+>  #elif defined(CONFIG_POSIX_MADVISE)
+>
+> @@ -373,6 +378,7 @@ void qemu_anon_ram_free(void *ptr, size_t size);
+>  #define QEMU_MADV_HUGEPAGE  QEMU_MADV_INVALID
+>  #define QEMU_MADV_NOHUGEPAGE  QEMU_MADV_INVALID
+>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
+> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
+
+Same here. If you already have MADV_DONTNEED you could just use that
+instead of disabling the functionality.
+
+>  #else /* no-op */
+>
+> @@ -386,6 +392,7 @@ void qemu_anon_ram_free(void *ptr, size_t size);
+>  #define QEMU_MADV_HUGEPAGE  QEMU_MADV_INVALID
+>  #define QEMU_MADV_NOHUGEPAGE  QEMU_MADV_INVALID
+>  #define QEMU_MADV_REMOVE QEMU_MADV_INVALID
+> +#define QEMU_MADV_FREE QEMU_MADV_INVALID
+>
+>  #endif
+>
