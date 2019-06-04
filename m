@@ -2,93 +2,136 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E89C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115E7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56ABE24A77
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE59724A33
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="geEmGUHA"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IotSr3Ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfFDJGQ (ORCPT
+        id S1727086AbfFDJGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:06:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:36531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfFDJGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:06:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45J5d11K1xz9s1c;
-        Tue,  4 Jun 2019 19:06:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559639173;
-        bh=N+BhgzywXpF8QslLt1YNKo69yW/kJWxEUh46lI8jpew=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=geEmGUHAQ1QE38V81v1F3GUvOO+k20lieIAOEThl+cRwoAQGfzQ5EJuQ74anEdRDv
-         2PRctAqJHvuwaZhjcMb590qaGayCZhYkBc4rQdgqQnt6vU62RCh8x8TaUW77vFTk3R
-         l19y2wnZN0+r0OzRGRLyOebWzvl89Rhz194HMeYv7D6UndIOuResCYBdFhYbyrifGp
-         JZCoBJUOBzPv9P/EGC96s0JNhts18sd95wXcbyNzpvsgliuGspMkK/QH4KBu8yZqxF
-         672GsT9ddA+Oa0+rOuPRJ4/lYPqFAT6nKNP4wZTNm8ltD/uTa5s9TNjGTK4rWpbADz
-         3lfzt9cbsTjjQ==
-Date:   Tue, 4 Jun 2019 19:05:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
-Subject: Re: [XArray] fa858b6eec: BUG:Bad_page_state_in_process
-Message-ID: <20190604190559.1bcabf98@canb.auug.org.au>
-In-Reply-To: <20190604083057.GF6576@shao2-debian>
-References: <20190604083057.GF6576@shao2-debian>
+        Tue, 4 Jun 2019 05:06:35 -0400
+Received: from mail-eopbgr30062.outbound.protection.outlook.com ([40.107.3.62]:54496
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727033AbfFDJGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 05:06:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6uNPxmYFIOIIV+VBRJ1Y41oLlIBoV6G13kNU0BZbpj4=;
+ b=IotSr3Tia4Ds1dHIRbm2oOVTuY8anbmc4RjrIinQr0zFvIgipxRL9mcPRqXVQeyMrNW/bdJE/i3k6YEUIUS6GQXfHxdj9NrMf/quEPJJKvlOQmCfyxGs2S+Hn09GxqpkDdLLZb/2L5tHifO4Q+fPhaqw6ZIZ/EGsEwepoGDpRQg=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3723.eurprd04.prod.outlook.com (52.134.72.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Tue, 4 Jun 2019 09:06:28 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
+ 09:06:28 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+ into scu node
+Thread-Topic: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+ into scu node
+Thread-Index: AQHVCKrxek0Xatu7SEyE08ZoyZ0h7KaLV72w
+Date:   Tue, 4 Jun 2019 09:06:28 +0000
+Message-ID: <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
+ <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dbab2455-9e5b-45cb-ffc2-08d6e8cbede3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3723;
+x-ms-traffictypediagnostic: DB3PR0402MB3723:
+x-microsoft-antispam-prvs: <DB3PR0402MB3723941990C3EBC54480B5FBF5150@DB3PR0402MB3723.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(396003)(136003)(346002)(376002)(13464003)(189003)(199004)(186003)(2201001)(2501003)(6506007)(53546011)(102836004)(316002)(26005)(110136005)(6246003)(86362001)(256004)(478600001)(55016002)(53936002)(7416002)(76116006)(11346002)(446003)(68736007)(6436002)(9686003)(66446008)(66556008)(66476007)(66946007)(73956011)(64756008)(3846002)(66066001)(52536014)(5660300002)(71190400001)(229853002)(33656002)(476003)(6116002)(71200400001)(44832011)(76176011)(8676002)(25786009)(7696005)(74316002)(81156014)(99286004)(4326008)(7736002)(8936002)(2906002)(305945005)(486006)(81166006)(14454004)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3723;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: W/J5pFkoTqq6PAbsMjsZVlo0Xgbq93u0w1T9trf07gkC5N+J+tT+YL99mFPnzCr68369DtWx6xAu5udjHHdZggj0kB890c00Ea/S0Woj4N8Y1nJZapL9TK1FQBWmQ9qX+bUFHMAADy5Zy0O4I0tM+hoSaoGMS/72zJzrAKoTl1MIha2DI1Azq1TGekdkQGG2jwvVY21lXGfi/qxWCwxIXLAgtJ7mP74l/a4qFEPT5jxgWZbj5Ef7y+uSE3WuriczVz/hE+2J8dNZ72fbAXFqMQsjDnmxDQCjmLRmrian6F8KPNsrgVOk4sYCoG91IzFq3DNCIZt/w6YPkzfa0sEIfgOCdyo7QTTl9DPKXOuEeqV20WCMrFHsM7BPWm44XLsDwZ7Oc4lds72PymW0HTr8zf5ABi95zDD5e6CTdaiN6ZA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ZOVWcksKa9OaThGZ75tcGmM"; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbab2455-9e5b-45cb-ffc2-08d6e8cbede3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 09:06:28.5012
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3723
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZOVWcksKa9OaThGZ75tcGmM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 4 Jun 2019 16:30:57 +0800 kernel test robot <lkp@intel.com> wrote:
->
-> FYI, we noticed the following commit (built with gcc-7):
->=20
-> commit: fa858b6eec3f4908973131b1d5a3f2e35c4182cd ("XArray: Add xas_replac=
-e")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-
-That commit has been removed from linux-next today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ZOVWcksKa9OaThGZ75tcGmM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz2NHcACgkQAVBC80lX
-0GwWJAf/U7d17osO2B7PxJvNyBOw2BykRGtpWHNwDIJFrhDAXfOtc0lHI8eyPFBf
-3nRJ8XJ0maHRYg8X3aMRmpw1SmUnF8xYwqOQt7D1g8i+LCHq+ur3RrFkP1UuTLC5
-FXvY8KyYrKkAaVMKKI0vwIYVdLmepBQa/i8EtWNZpdUNAaX7N5aksS5O7hUxUHxp
-5yYx2t4rdM4oyLYC6ibis0u0exmEvptCVKHiuSDWq6VGyxYUJlWiKZMtUDsoCLYr
-nr13XpfxM0Tndt5w4xyy83JAKvYu20eqbeClxeAN6GbrN7h4LvF6QvKzZWvfqc6s
-Q/leZVOw1IZr+u/vwRZaAJ6Hlu5W/w==
-=rpb6
------END PGP SIGNATURE-----
-
---Sig_/ZOVWcksKa9OaThGZ75tcGmM--
+SGksIFNoYXduDQoJVGhlIGRyaXZlciBhbmQgYmluZGluZyBkb2MgYXJlIGFscmVhZHkgcmV2aWV3
+ZWQgYW5kIHdhaXRpbmcgZm9yIERUIHBhdGNoLCB3aWxsIHlvdSBoZWxwIHJldmlldyB0aGlzIERU
+IHBhdGNoPw0KDQpUaGFua3MsDQpBbnNvbg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+IEZyb206IEFuc29uIEh1YW5nDQo+IFNlbnQ6IFN1bmRheSwgTWF5IDEyLCAyMDE5IDY6MTEg
+UE0NCj4gVG86IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHdpbUBs
+aW51eC13YXRjaGRvZy5vcmc7DQo+IGxpbnV4QHJvZWNrLXVzLm5ldDsgc2hhd25ndW9Aa2VybmVs
+Lm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBm
+ZXN0ZXZhbUBnbWFpbC5jb207IEFpc2hlbmcgRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+
+OyB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBEYW5pZWwgQmFsdXRhDQo+IDxkYW5pZWwuYmFsdXRh
+QG54cC5jb20+OyBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47DQo+IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gd2F0
+Y2hkb2dAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQ
+QVRDSCBSRVNFTkQgVjQgMi8zXSBhcm02NDogZHRzOiBpbXg4cXhwOiBNb3ZlIHdhdGNoZG9nIG5v
+ZGUNCj4gaW50byBzY3Ugbm9kZQ0KPiANCj4gaS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRv
+ZyBoYXMgcHJldGltZW91dCBmdW5jdGlvbiB3aGljaCBkZXBlbmRzIG9uDQo+IGkuTVggU0NVIGRy
+aXZlciwgc28gaXQgc2hvdWxkIGJlIGEgc3Vibm9kZSBvZiBTQ1UuDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gLS0tDQo+IE5vIGNoYW5n
+ZSwganVzdCByZXNlbmQgcGF0Y2ggd2l0aCBjb3JyZWN0IGVuY29kaW5nLg0KPiAtLS0NCj4gIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaSB8IDEwICsrKysrLS0tLS0N
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNp
+DQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+IGluZGV4
+IDA2ODNlZTIuLmIxN2MyMmUgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
+ZS9pbXg4cXhwLmR0c2kNCj4gQEAgLTE0OSw2ICsxNDksMTEgQEANCj4gIAkJcnRjOiBydGMgew0K
+PiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zYy1ydGMiOw0KPiAgCQl9Ow0KPiArDQo+
+ICsJCXdhdGNoZG9nIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAtc2Mtd2R0Iiwg
+ImZzbCxpbXgtc2Mtd2R0IjsNCj4gKwkJCXRpbWVvdXQtc2VjID0gPDYwPjsNCj4gKwkJfTsNCj4g
+IAl9Ow0KPiANCj4gIAl0aW1lciB7DQo+IEBAIC01MTcsOSArNTIyLDQgQEANCj4gIAkJCXBvd2Vy
+LWRvbWFpbnMgPSA8JnBkIElNWF9TQ19SX0dQSU9fNz47DQo+ICAJCX07DQo+ICAJfTsNCj4gLQ0K
+PiAtCXdhdGNoZG9nIHsNCj4gLQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zYy13ZHQiLCAi
+ZnNsLGlteC1zYy13ZHQiOw0KPiAtCQl0aW1lb3V0LXNlYyA9IDw2MD47DQo+IC0JfTsNCj4gIH07
+DQo+IC0tDQo+IDIuNy40DQoNCg==
