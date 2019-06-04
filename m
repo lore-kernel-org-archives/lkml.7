@@ -2,131 +2,178 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FCC04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539B4C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4AD024ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227A1257B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 00:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IX/8FEV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfFDAoC (ORCPT
+        id S1726528AbfFDAsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 20:44:02 -0400
-Received: from www62.your-server.de ([213.133.104.62]:56690 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfFDAoC (ORCPT
+        Mon, 3 Jun 2019 20:48:02 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:22769 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfFDAsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 20:44:02 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXxYV-0005OB-Ic; Tue, 04 Jun 2019 02:43:59 +0200
-Received: from [178.197.249.21] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hXxYV-000IJG-9e; Tue, 04 Jun 2019 02:43:59 +0200
-Subject: Re: [PATCH bpf v2] bpf: preallocate a perf_sample_data per event fd
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Matt Mullins <mmullins@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Andrew Hall <hall@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-References: <20190531223735.4998-1-mmullins@fb.com>
- <6c6a4d47-796a-20e2-eb12-503a00d1fa0b@iogearbox.net>
- <68841715-4d5b-6ad1-5241-4e7199dd63da@iogearbox.net>
- <05626702394f7b95273ab19fef30461677779333.camel@fb.com>
- <CAADnVQKAPTao3nE1AC5dvYtCKFhDHu9VeCnVE04TLjGpY6yANw@mail.gmail.com>
- <70b9a1b2-c960-b810-96f9-1fb5f4a4061b@iogearbox.net>
- <CAADnVQKfZj5hDhyP6A=2tWAGJ2u7Fyx5d_rOTZ-ZyH1xBXtB3w@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <71c96268-7779-6e34-3078-5532d9f8fa55@iogearbox.net>
-Date:   Tue, 4 Jun 2019 02:43:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 3 Jun 2019 20:48:01 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190604004758epoutp037ef8a5ae9c3f2f8da7474054997906a5~k2GANFz8d1828918289epoutp03o
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 00:47:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190604004758epoutp037ef8a5ae9c3f2f8da7474054997906a5~k2GANFz8d1828918289epoutp03o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559609278;
+        bh=UVoVZsEOgg1NnZlddSvqw+nOBKf/TPyZq+/XKx68wrM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=IX/8FEV9jOt8paA8NiUO+re9+Ws/0wC/qp40poNh83a6NdYlLY4yGDvKQAgsv29F+
+         4jhlFFAY/5A+yyIJ1f2kd+Li2EKb0gUtp9QpYM17DL1IkvdNoZKCvmqsJu79/BqdAm
+         o/sM8fNyCEU7LU3MnuUp6T4ikfW7vcOsi2Wp+yos=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.154]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190604004755epcas1p415ce6d1486bdb02719fa2b61ea7f27ba~k2F_Id_1w0371903719epcas1p42;
+        Tue,  4 Jun 2019 00:47:55 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7B.B7.04139.9BFB5FC5; Tue,  4 Jun 2019 09:47:53 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190604004752epcas1p250835a92cd7f9c97ecbb7d160a8ad02f~k2F7aLrlA1566915669epcas1p2h;
+        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190604004752epsmtrp2126b0c96c6730aeeac34076d3ec447ea~k2F7ZXgHE1748017480epsmtrp2i;
+        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
+X-AuditID: b6c32a35-98bff7000000102b-eb-5cf5bfb98560
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        66.5F.03692.8BFB5FC5; Tue,  4 Jun 2019 09:47:52 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190604004752epsmtip27e6014869c6d24518822cd757b00ba96~k2F7Lw_4d1715317153epsmtip2_;
+        Tue,  4 Jun 2019 00:47:52 +0000 (GMT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and
+ Tegra20/30 support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
+Date:   Tue, 4 Jun 2019 09:49:58 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQKfZj5hDhyP6A=2tWAGJ2u7Fyx5d_rOTZ-ZyH1xBXtB3w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25469/Mon Jun  3 09:59:22 2019)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDHfd1lu6jVtVxjP2hdjQkkQBcorgfGK6ZGQzAkaExN3dC1JfRK
+        t3hrQPAC64kHFdGIBsUoSsC0DdAIRMIHDUJIFIKKVwwiHoCKROO2i5Fvv5n5v/nPvPdITFlD
+        qMgcm4t32jgLTUzFH7TEJsT7AqN6jbs/gr399Q1iizzXcPbxwUE52+UvJ9hhdytij414CLa3
+        4CbBjvkrcPbEnU5iRbjO23cd6XyePrnOXThE6E7UVSPdcO2cjLAtucvMPGfknWrelm035thM
+        afT6TMNqgzZVw8Qzi9lFtNrGWfk0es2GjPi1ORZxIFq9g7PkiakMThDoxOXLnPY8F6822wVX
+        Gs07jBbHYkeCwFmFPJspIdtuXcJoNElaUbgt1zxY2o87GqhdX140EfmoWFGMwkmgUqBk7DsR
+        ZCXlReDPNxSjqSJ/Q+A+U4VLwXcEvd6L6N+JT94iuVRoRPCnvHEi+IzgfmmnPKiKoDbDwLW7
+        WJAjqY0w9L4JC4ow6rAMjjz9LQsWCCoOAh+ehcxnUvOg++ebkIWCWg5j/vFQI5xaAOcfPg41
+        ihKbjvhqJzSzoL3sLR7kcCoNOk8Wh/IYFQM9b6/IJJ4LhfWXMGnsQjm8uzhH4jVQ9mtgYp0I
+        GGirk0usguGhRkLivXCrvZUIDg3UUQR1gY4wqZAMgRtnRQNSNIiFGn+ilJ4HvvHLEzPMgKHR
+        42FBCVAKOHpYKUnmQ9erPpnEs6HyyDHiFKI9k7bxTNrAM2kDz3+zqwivRtG8Q7CaeIFxMJNf
+        uxaFPmuc1otKn2xoRhSJ6OmKXTGjemUYt0PYbW1GQGJ0pILrHdErFUZu9x7eaTc48yy80Iy0
+        4mWfxlRR2Xbx69tcBkablJyczKYwqVqGoWMUhmnP9UrKxLn4XJ538M5/52RkuCofVUZ3v2yv
+        u9cxRVnBflvX2cRv3//IeeWjaZ26+sO+1tSehlec+fghzdfN5EEUM7xw/GfJ2jaL+t3ryMqe
+        swcSGF989MpzP8oSzXp1SRvaviK2KCugc1wocFszlxrLGNXdTa1fBtSr0ke3VpmU9WT6zoLB
+        pKyKKbbBzI+qVflkSx+NC2aOicOcAvcXlfS/OsIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvO6O/V9jDHYc0rNY/fExo0XLrEUs
+        Fmeb3rBbXN41h83ic+8RRovOL7PYLG43rmCz+LlrHotF39pLbA6cHjvuLmH02DnrLrtHb/M7
+        No++LasYPT5vkgtgjeKySUnNySxLLdK3S+DKeDPlIUvBHoGKD/f2sTUwdvF2MXJySAiYSLzd
+        0cLexcjFISSwm1FiztTZTBAJSYlpF48ydzFyANnCEocPF0PUvGWU2PpjLSNIjbBAhMT8C5fA
+        6kUEAiVOP9jKCFLELNDBJPFk/U+wIiGBJUwSu58rgdhsAloS+1/cYAOx+QUUJa7+eAxWwytg
+        J/Fz1292EJtFQEVi2sGzzCC2KNCC2bsaWCBqBCVOznwCZnMK2Epc6u8C62UWUJf4M+8SM4Qt
+        LnHryXwmCFteonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOallusVJ+YW
+        l+al6yXn525iBMeYluYOxstL4g8xCnAwKvHwVoh/jRFiTSwrrsw9xCjBwawkwpt4+0uMEG9K
+        YmVValF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYxpl3Mnbmo5oWh8
+        4bsvS92JafzrfK86/kladvud3KZX/GXie2fPY37M8rb4eL6ZsrjuZRkb3uR4/UveX5zqds+d
+        wsV3fq3KPtN1U19PK+oWspoz7QbDKxuRwKTLL1+YibaZvLnBW+VodiMzt0DDQTAyMoDx5c2T
+        D7tYlq4/7BLvyCq9cnYLE78SS3FGoqEWc1FxIgD99jm2rQIAAA==
+X-CMS-MailID: 20190604004752epcas1p250835a92cd7f9c97ecbb7d160a8ad02f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+        <20190501233815.32643-1-digetx@gmail.com>
+        <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+        <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+        <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 01:54 AM, Alexei Starovoitov wrote:
-> On Mon, Jun 3, 2019 at 4:48 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->> On 06/04/2019 01:27 AM, Alexei Starovoitov wrote:
->>> On Mon, Jun 3, 2019 at 3:59 PM Matt Mullins <mmullins@fb.com> wrote:
->>>>
->>>> If these are invariably non-nested, I can easily keep bpf_misc_sd when
->>>> I resubmit.  There was no technical reason other than keeping the two
->>>> codepaths as similar as possible.
->>>>
->>>> What resource gives you worry about doing this for the networking
->>>> codepath?
+On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
+> 03.05.2019 3:52, Dmitry Osipenko пишет:
+>> 03.05.2019 3:31, Chanwoo Choi пишет:
+>>> Hi Dmitry,
 >>>
->>> my preference would be to keep tracing and networking the same.
->>> there is already minimal nesting in networking and probably we see
->>> more when reuseport progs will start running from xdp and clsbpf
->>>
->>>>> Aside from that it's also really bad to miss events like this as exporting
->>>>> through rb is critical. Why can't you have a per-CPU counter that selects a
->>>>> sample data context based on nesting level in tracing? (I don't see a discussion
->>>>> of this in your commit message.)
+>>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>>>> Changelog:
 >>>>
->>>> This change would only drop messages if the same perf_event is
->>>> attempted to be used recursively (i.e. the same CPU on the same
->>>> PERF_EVENT_ARRAY map, as I haven't observed anything use index !=
->>>> BPF_F_CURRENT_CPU in testing).
+>>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
 >>>>
->>>> I'll try to accomplish the same with a percpu nesting level and
->>>> allocating 2 or 3 perf_sample_data per cpu.  I think that'll solve the
->>>> same problem -- a local patch keeping track of the nesting level is how
->>>> I got the above stack trace, too.
+>>>>     - changed the driver removal order to match the probe exactly
+>>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>>>
+>>>>     Chanwoo, please also note that the clk patch that should fix
+>>>>     compilation problem that was reported the kbuild-test-robot is already
+>>>>     applied and available in the recent linux-next.
 >>>
->>> I don't think counter approach works. The amount of nesting is unknown.
->>> imo the approach taken in this patch is good.
->>> I don't see any issue when event_outputs will be dropped for valid progs.
->>> Only when user called the helper incorrectly without BPF_F_CURRENT_CPU.
->>> But that's an error anyway.
+>>> I knew that Stephen picked up your path about clock.
 >>
->> My main worry with this xchg() trick is that we'll miss to export crucial
->> data with the EBUSY bailing out especially given nesting could increase in
->> future as you state, so users might have a hard time debugging this kind of
->> issue if they share the same perf event map among these programs, and no
->> option to get to this data otherwise. Supporting nesting up to a certain
->> level would still be better than a lost event which is also not reported
->> through the usual way aka perf rb.
+>> Hi Chanwoo,
+>>
+>> Okay, good. Thank you very much for reviewing this series! I assume it's
+>> too late now for v5.2, but it should be good to go for v5.3.
+>>
 > 
-> I simply don't see this 'miss to export data' in all but contrived conditions.
-> Say two progs share the same perf event array.
-> One prog calls event_output and while rb logic is working
-> another prog needs to start executing and use the same event array
+> Hello Chanwoo,
+> 
+> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
+> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
+> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
+> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
+> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
+> we'll be able to work out that with Thierry and Jon if necessary.
+> 
+> 
 
-Correct.
+Hi Dmitry,
+I think that it is enough for applying to mainline branch.
+The devfreq.git is maintained by Myungjoo. He will be merged or
+reviewed if there are th remained review point.
 
-> slot. Today it's only possible for tracing prog combined with networking,
-> but having two progs use the same event output array is pretty much
-> a user bug. Just like not passing BPF_F_CURRENT_CPU.
 
-I don't see the user bug part, why should that be a user bug? It's the same
-as if we would say that sharing a BPF hash map between networking programs
-attached to different hooks or networking and tracing would be a user bug
-which it is not. One concrete example would be cilium monitor where we
-currently expose skb trace and drop events a well as debug data through
-the same rb. This should be usable from any type that has perf_event_output
-helper enabled (e.g. XDP and tc/BPF) w/o requiring to walk yet another per
-cpu mmap rb from user space.
+Hi Myungjoo,
+I reviewed the Dmitry's patches from v1 to v4 patches.
+And then I tested them on my testing branch[1] for catching
+the build warning and error. In result, it is clean.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
+
+Please review or apply these patches for v5.3.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
