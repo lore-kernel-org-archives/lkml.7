@@ -2,141 +2,107 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB82C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD162C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC2923AC8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:57:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brw7YOIl"
+	by mail.kernel.org (Postfix) with ESMTP id 871FB24483
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfFDN5z (ORCPT
+        id S1727506AbfFDN7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:57:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43972 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFDN5z (ORCPT
+        Tue, 4 Jun 2019 09:59:04 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37277 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFDN7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:57:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so6197006ljv.10;
-        Tue, 04 Jun 2019 06:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uO7ACXZXkd2KsXzvU0+8u9VcZLTMopWk+AwbiaYSy3w=;
-        b=brw7YOIllqDxC44Sb+iF+vklndo1xYrwejtr8CEPl2cmCVg+RNvKXy/hLQVGOXxjOP
-         CxYD17dYn78eFZpCuuC1j4DC/eZcw6S8XhjRGKasNPidwAcfF6yNVU9i4nn5i8V00FVg
-         rcUpcGKIJKkQmPCDLvzc4y/hiw5roCvsQG+RLP5MjlCXktirwk9zhikbChITmhfUiFq0
-         KZcl0O89I3kVyiCcOih2gNttpgTg34lDhdv9KRzeFqWwGG4NastJAOmHOmPp8PEuXVWV
-         IRgdJrS3le0Tb5sBxfdk7ErXdghXL5Z57G3cABekl5ylXumFsfeW0nB07mdNMLMZ8DO5
-         dXTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uO7ACXZXkd2KsXzvU0+8u9VcZLTMopWk+AwbiaYSy3w=;
-        b=oXLLF81g4H4mSUt/PLXTBpja/mkbf6ZjQepGKBT2ELWNeTTt6r4UeEhnVms0B3ePCS
-         jFWiaSoTLaEaUxTWEVPE9t87rBtwXeEpr7VtHDYJZL7Z5/GDbYE5xmYyLOsK9DM841G2
-         cd9/CobXhfjlKrSmJ+oDQ+/e0qucUbETESCYss8F9ADcXiVwH+qXpE6yqh44RbocijxP
-         3Ot7iPx4F13i6WYQtfDWIl9vazVU3z65iZOpzyDzcV6x47epsWd8O+oJagDZ7Jyf8sFT
-         j26+Rl6eO3J339eXiN/1UqJZCS0PWnPa/gxa4JO+lY2lmILqAJdYPqnIpo/fQf831Drl
-         MvWQ==
-X-Gm-Message-State: APjAAAVVMFhhKmItjjVpNlYR5m2xQfK+JQiqpqPYnBXacejZ9Bn0gvpH
-        w+3INmdTHtFolGvcxGysRMWMIU/K
-X-Google-Smtp-Source: APXvYqz7McG766r/nRCvSkKfbU6978oXMYiS0JDOH1aTn1x7cBmbB/HCXt/mEUWTBY04bME3INAqsQ==
-X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr3227596lji.64.1559656673189;
-        Tue, 04 Jun 2019 06:57:53 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id a29sm1675517lfi.23.2019.06.04.06.57.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 06:57:52 -0700 (PDT)
-Subject: Re: [PATCH v4 16/16] PM / devfreq: Introduce driver for NVIDIA
- Tegra20
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-17-digetx@gmail.com> <20190604112524.GP16519@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ca0930ed-bf06-508b-31a4-82229bdb1e81@gmail.com>
-Date:   Tue, 4 Jun 2019 16:57:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 09:59:04 -0400
+Received: from [192.168.1.110] ([95.118.47.44]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N2Dgk-1gZ99F0Wxa-013hyP; Tue, 04 Jun 2019 15:59:03 +0200
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: RFC: use of_match_ptr() and conditional of match table declaration
+Organization: metux IT consult
+Message-ID: <293b771e-252c-d376-1347-1e6570758be9@metux.net>
+Date:   Tue, 4 Jun 2019 13:59:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190604112524.GP16519@ulmo>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:udZWyoJrYZ44zOAntaBgdJjWFU+mmriA+Px9COjKpx2qEYsyPTT
+ HDRBb20EHG/bCCZhHEmui9tcHA34ZGp8WW39pySt9PU6GUcYoJE3zVAR6jz30CyV5c0i5xT
+ z2SI2Vgnenw7f8DctCruXoVk/H58FhVJwSLsUi2oa6HxIcIjgQcH77QSjrvmQxtE/RkUpyF
+ DnTLOVkzT2CIWSYyEGr6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bGfkRfbFDeE=:gxyinuRReu0ha4ZO3q5urt
+ zNz66nreAcPyzosIk7EQHkaStIK0vz68/0TwUB+IuK29uqnugX09+L3AEOjTO+4BMJY/pUKIZ
+ H+ZKzOS03oZ79C9EKqJCR/MxFy6SAOBN56qRJDygEdmCi3DOa4y9KejGr6nwFIBCOrIU8yMwP
+ qJ8RwZSxKH3HRmrF1IW+vIO4y5lUMLkoxXuDzEolRJGLcECe7tpv+BeBoqDPitXwUSCe4q5hO
+ wXFDXtCUA8TJpMy5O93B2NrvcTccFClMwu/KVoIpW5Cx3P/PISXCfu4v8jVRNtve1TidkFjxT
+ Ox+H9u8OFC+zqahoPPLgkJIyIeFCF9+JnU+J+/huxLGGwT6e8QIGSOqgixruyCdLizNi9jfO8
+ 4ryvEA8J2nJItCL0I90elqmAUl5AvS9wEhb8rb6mMku7SwUrFHrTRH/09TsHX0UmgJ3dURJ8Y
+ jEARHzwoFPHyqIVvPZE+stLyXdBMrl/1tx89QfA9S+rlwsF0UWgmNRkFKhVG9gmd3XLPOp4pD
+ PY7ivVu7f1DRaKbIzfD91yLVXcwLZlpBzBqklwvTAUwl1WiwtKZOY8S5QuKoED05uuXPJQkUo
+ xKi6vRkddEqjCnBM6ROkLFKHKkXky/8KwFIhqXsnqd6JuvMOExJXr7bX7yo/9AJ1Uwp4OrABr
+ kjr0OJAc6q1n6+2pu32cZZfXGGBObXfzaOVbxnB1EjZYSJVYX4CA8w1w82/7BcpgiPCq2RHpp
+ U1L1VD8GMZGBoLq4BxykkupC6In5rG1Dobvqywsvz0CPMZN+vTOpnziTRs4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.06.2019 14:25, Thierry Reding пишет:
-> On Thu, May 02, 2019 at 02:38:15AM +0300, Dmitry Osipenko wrote:
->> Add devfreq driver for NVIDIA Tegra20 SoC's. The driver periodically
->> reads out Memory Controller counters and adjusts memory frequency based
->> on the memory clients activity.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  MAINTAINERS                       |   8 ++
->>  drivers/devfreq/Kconfig           |  10 ++
->>  drivers/devfreq/Makefile          |   1 +
->>  drivers/devfreq/tegra20-devfreq.c | 212 ++++++++++++++++++++++++++++++
->>  4 files changed, 231 insertions(+)
->>  create mode 100644 drivers/devfreq/tegra20-devfreq.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 98edc38bfd7b..e7e434f74038 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -10098,6 +10098,14 @@ F:	include/linux/memblock.h
->>  F:	mm/memblock.c
->>  F:	Documentation/core-api/boot-time-mm.rst
->>  
->> +MEMORY FREQUENCY SCALING DRIVER FOR NVIDIA TEGRA20
->> +M:	Dmitry Osipenko <digetx@gmail.com>
->> +L:	linux-pm@vger.kernel.org
->> +L:	linux-tegra@vger.kernel.org
->> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
->> +S:	Maintained
->> +F:	drivers/devfreq/tegra20-devfreq.c
->> +
->>  MEMORY MANAGEMENT
->>  L:	linux-mm@kvack.org
->>  W:	http://www.linux-mm.org
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index a6bba6e1e7d9..1530dbefa31f 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -100,6 +100,16 @@ config ARM_TEGRA_DEVFREQ
->>  	  It reads ACTMON counters of memory controllers and adjusts the
->>  	  operating frequencies and voltages with OPP support.
->>  
->> +config ARM_TEGRA20_DEVFREQ
->> +	tristate "NVIDIA Tegra20 DEVFREQ Driver"
->> +	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
->> +	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> +	select PM_OPP
-> 
-> Again, I'm not sure the COMPILE_TEST will work here unless you add a few
-> more dependencies.
+Hi folks,
 
-I have the same answer as I made in the comment to "Enable COMPILE_TEST
-for the driver" patch. I think there is no real need to be overreactive
-here as well, ACK?
+
+we have a dozen drivers that can be built w/ and w/o oftree support.
+In those cases we need conditional compiling (check for CONFIG_OF).
+Some already use the of_match_ptr() macro, others still are cluttered
+w/ ifdef's.
+
+I've converted some of them to using of_match_ptr(), but I'm curious
+whether we also should convert all drivers and make this the standard
+policy (also let checkpatch check for it).
+
+Most of that can be done automatically, few cases need some manual
+intervention. (already have queue here, which just needs to be a bit
+sorted and posted to the individual maintainers)
+
+How do you think about this idea ?
+
+Are there some good reasons for not using this macro ?
+
+
+By the way: I'm also experimenting w/ using a macro for declaring the
+match tables conditionally, so we can reduce the boilerplate a bit.
+It then looks like that:
+
+    MODULE_DECLARE_OF_TABLE(foo, { first entry }, { second entry }, ...)
+
+This macro declares a static const struct of_device_id
+array by given name, initializes with the given parameters adds the
+sentinel (so no chance for forgetting it anymore ;-)), and finally calls
+MODULE_DEVICE_TABLE(of, foo)  - but only if CONFIG_OF is enabled.
+
+What I haven't sorted out yet: what exactly to do in !CONFIG_OF case ?
+
+a) if we're always using of_match_ptr() - don't need to do anything
+b) declare a static const *pointer* variable, initialized to NULL,
+    so the variable name can be used as before - hoping the compiler
+    is clever enough to just optimize it away.
+
+What's your oppinion on that ?
+
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
