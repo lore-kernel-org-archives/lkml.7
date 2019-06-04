@@ -2,143 +2,358 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D773C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D7FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408D420862
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RtHIB50u"
+	by mail.kernel.org (Postfix) with ESMTP id 83B1E20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559690567;
+	bh=f0Z6bE4pslfnLYWKV/JkyfCCbL7lTs4u6EJu/2wz1DI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EIrRJ4lOmz22Q3s3MByNzrSDnfH57PP1EgCnGamaE8aLUbrsZYCDvZQ2KsRfVooJl
+	 Go+3x5h/L8nYq5WwaCUmVO2AlP4IsSRCPdl8bL4aPOozkXnDEkyb+k2McVeCJ7aWNI
+	 ota8MknqQLYu5UuDrBlmsYej9w7RixKpgDsOHyIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfFDXWn (ORCPT
+        id S1726984AbfFDXWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57700 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfFDXWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54NE9sa117761;
-        Tue, 4 Jun 2019 23:21:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=YXvYIW/TW5gVwJgPNuplVdUZS0b4Nt48gIxbsBj1q/A=;
- b=RtHIB50u7sCZX9RPoLJf0ZHJkpch7IXBg43GqRPBZNwQNAKIZ1Fe1PhgpNlRK+DGJQo8
- lSVGhzJjuIVibp+vRd2n7xvFHcA0mUp+yl6zRpu/O1SdhEbRN8KVPNzg3MuJ665wOt8D
- OXBjmWQJtRpmguu4bIch0Rtht6EHlilGvOM6jgxv+O/87WyMCwGCZo6Xse+EXPa8teDX
- rjR995hOuZyKMICZD2fQse9ORiTlNsim1r28tHpjiESTwKW8UAdpG+JsMg+tDWtWmsBh
- 96TEzBexMUmmKxxluIaxbJWn0djN0qPyA3q+05GNXykuOBeveW8FJpcOUIDfWQCPvZxz Pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2suj0qfuae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Jun 2019 23:21:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54NKbcE183651;
-        Tue, 4 Jun 2019 23:21:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2swnhbvdnw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Jun 2019 23:21:28 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x54NLFRu018591;
-        Tue, 4 Jun 2019 23:21:15 GMT
-Received: from [172.16.8.192] (/206.166.194.194)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Jun 2019 16:21:15 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20190403160112.GK4038@hirez.programming.kicks-ass.net>
-Date:   Tue, 4 Jun 2019 19:21:13 -0400
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906040147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906040147
+        Tue, 4 Jun 2019 19:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbfFDXWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2536B208C3;
+        Tue,  4 Jun 2019 23:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559690563;
+        bh=f0Z6bE4pslfnLYWKV/JkyfCCbL7lTs4u6EJu/2wz1DI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pb6xrF07LANPu5Io0Ahtwv+pKbvCAK/LU3ZRHk4evbu0oY79EvVD1BHJEDQ9QMvCY
+         MOa34d6TXUvdS+SRlI/XwW5nzeCY7Gf4Kx1qnugZJn5zwc9UuTd5ptD+/XkODRchMv
+         oy9Xe0kJZNwirUj9TdxcqWghP1uwA6lG1x1gw1W8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 18/60] scsi: lpfc: resolve lockdep warnings
+Date:   Tue,  4 Jun 2019 19:21:28 -0400
+Message-Id: <20190604232212.6753-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
+References: <20190604232212.6753-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter, Longman,=20
+From: James Smart <jsmart2021@gmail.com>
 
-> On Apr 3, 2019, at 12:01 PM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->=20
-> On Wed, Apr 03, 2019 at 11:39:09AM -0400, Alex Kogan wrote:
->=20
->>>> The patch that I am looking for is to have a separate
->>>> numa_queued_spinlock_slowpath() that coexists with
->>>> native_queued_spinlock_slowpath() and
->>>> paravirt_queued_spinlock_slowpath(). At boot time, we select the =
-most
->>>> appropriate one for the system at hand.
->> Is this how this selection works today for paravirt?
->> I see a PARAVIRT_SPINLOCKS config option, but IIUC you are talking =
-about a different mechanism here.
->> Can you, please, elaborate or give me a link to a page that explains =
-that?
->=20
-> Oh man, you ask us to explain how paravirt patching works... that's
-> magic :-)
->=20
-> Basically, the compiler will emit a bunch of indirect calls to the
-> various pv_ops.*.* functions.
->=20
-> Then, at alternative_instructions() <- apply_paravirt() it will =
-rewrite
-> all these indirect calls to direct calls to the function pointers that
-> are in the pv_ops structure at that time (+- more magic).
-Trying to resume this work, I am looking for concrete steps required to =
-integrate CNA with the paravirt patching.
+[ Upstream commit e2a8be5696e706a2fce6edd11e5c74ce14cffec0 ]
 
-Looking at alternative_instructions(), I wonder if I need to add another =
-call, something like apply_numa() similar to apply_paravirt(), and do =
-the patch work there.
-Or perhaps I should =E2=80=9Cjust" initialize the pv_ops structure with =
-the corresponding numa_queued_spinlock_slowpath() in paravirt.c?
+There were a number of erroneous comments and incorrect older lockdep
+checks that were causing a number of warnings.
 
-Also, the paravirt code is under arch/x86, while CNA is generic (not =
-x86-specific).
-Do you still want to see CNA-related patching residing under arch/x86?
+Resolve the following:
 
-We still need a config option (something like NUMA_AWARE_SPINLOCKS) to =
-enable CNA patching under this config only, correct?
+ - Inconsistent lock state warnings in lpfc_nvme_info_show().
 
-Thanks in advance,
-=E2=80=94 Alex
+ - Fixed comments and code on sequences where ring lock is now held instead
+   of hbalock.
+
+ - Reworked calling sequences around lpfc_sli_iocbq_lookup(). Rather than
+   locking prior to the routine and have routine guess on what lock, take
+   the lock within the routine. The lockdep check becomes unnecessary.
+
+ - Fixed comments and removed erroneous hbalock checks.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+CC: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/lpfc/lpfc_attr.c |  5 ++-
+ drivers/scsi/lpfc/lpfc_sli.c  | 84 ++++++++++++++++++++++-------------
+ 2 files changed, 56 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index a09a742d7ec1..f30cb0fb9a82 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -159,6 +159,7 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
+ 	int i;
+ 	int len = 0;
+ 	char tmp[LPFC_MAX_NVME_INFO_TMP_LEN] = {0};
++	unsigned long iflags = 0;
+ 
+ 	if (!(vport->cfg_enable_fc4_type & LPFC_ENABLE_NVME)) {
+ 		len = scnprintf(buf, PAGE_SIZE, "NVME Disabled\n");
+@@ -357,11 +358,11 @@ lpfc_nvme_info_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	list_for_each_entry(ndlp, &vport->fc_nodes, nlp_listp) {
+ 		nrport = NULL;
+-		spin_lock(&vport->phba->hbalock);
++		spin_lock_irqsave(&vport->phba->hbalock, iflags);
+ 		rport = lpfc_ndlp_get_nrport(ndlp);
+ 		if (rport)
+ 			nrport = rport->remoteport;
+-		spin_unlock(&vport->phba->hbalock);
++		spin_unlock_irqrestore(&vport->phba->hbalock, iflags);
+ 		if (!nrport)
+ 			continue;
+ 
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index dc933b6d7800..363b21c4255e 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -994,15 +994,14 @@ lpfc_cleanup_vports_rrqs(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+  * @ndlp: Targets nodelist pointer for this exchange.
+  * @xritag the xri in the bitmap to test.
+  *
+- * This function is called with hbalock held. This function
+- * returns 0 = rrq not active for this xri
+- *         1 = rrq is valid for this xri.
++ * This function returns:
++ * 0 = rrq not active for this xri
++ * 1 = rrq is valid for this xri.
+  **/
+ int
+ lpfc_test_rrq_active(struct lpfc_hba *phba, struct lpfc_nodelist *ndlp,
+ 			uint16_t  xritag)
+ {
+-	lockdep_assert_held(&phba->hbalock);
+ 	if (!ndlp)
+ 		return 0;
+ 	if (!ndlp->active_rrqs_xri_bitmap)
+@@ -1105,10 +1104,11 @@ lpfc_set_rrq_active(struct lpfc_hba *phba, struct lpfc_nodelist *ndlp,
+  * @phba: Pointer to HBA context object.
+  * @piocb: Pointer to the iocbq.
+  *
+- * This function is called with the ring lock held. This function
+- * gets a new driver sglq object from the sglq list. If the
+- * list is not empty then it is successful, it returns pointer to the newly
+- * allocated sglq object else it returns NULL.
++ * The driver calls this function with either the nvme ls ring lock
++ * or the fc els ring lock held depending on the iocb usage.  This function
++ * gets a new driver sglq object from the sglq list. If the list is not empty
++ * then it is successful, it returns pointer to the newly allocated sglq
++ * object else it returns NULL.
+  **/
+ static struct lpfc_sglq *
+ __lpfc_sli_get_els_sglq(struct lpfc_hba *phba, struct lpfc_iocbq *piocbq)
+@@ -1118,9 +1118,15 @@ __lpfc_sli_get_els_sglq(struct lpfc_hba *phba, struct lpfc_iocbq *piocbq)
+ 	struct lpfc_sglq *start_sglq = NULL;
+ 	struct lpfc_io_buf *lpfc_cmd;
+ 	struct lpfc_nodelist *ndlp;
++	struct lpfc_sli_ring *pring = NULL;
+ 	int found = 0;
+ 
+-	lockdep_assert_held(&phba->hbalock);
++	if (piocbq->iocb_flag & LPFC_IO_NVME_LS)
++		pring =  phba->sli4_hba.nvmels_wq->pring;
++	else
++		pring = lpfc_phba_elsring(phba);
++
++	lockdep_assert_held(&pring->ring_lock);
+ 
+ 	if (piocbq->iocb_flag &  LPFC_IO_FCP) {
+ 		lpfc_cmd = (struct lpfc_io_buf *) piocbq->context1;
+@@ -1563,7 +1569,8 @@ lpfc_sli_ring_map(struct lpfc_hba *phba)
+  * @pring: Pointer to driver SLI ring object.
+  * @piocb: Pointer to the driver iocb object.
+  *
+- * This function is called with hbalock held. The function adds the
++ * The driver calls this function with the hbalock held for SLI3 ports or
++ * the ring lock held for SLI4 ports. The function adds the
+  * new iocb to txcmplq of the given ring. This function always returns
+  * 0. If this function is called for ELS ring, this function checks if
+  * there is a vport associated with the ELS command. This function also
+@@ -1573,7 +1580,10 @@ static int
+ lpfc_sli_ringtxcmpl_put(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 			struct lpfc_iocbq *piocb)
+ {
+-	lockdep_assert_held(&phba->hbalock);
++	if (phba->sli_rev == LPFC_SLI_REV4)
++		lockdep_assert_held(&pring->ring_lock);
++	else
++		lockdep_assert_held(&phba->hbalock);
+ 
+ 	BUG_ON(!piocb);
+ 
+@@ -2970,8 +2980,8 @@ lpfc_sli_process_unsol_iocb(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+  *
+  * This function looks up the iocb_lookup table to get the command iocb
+  * corresponding to the given response iocb using the iotag of the
+- * response iocb. This function is called with the hbalock held
+- * for sli3 devices or the ring_lock for sli4 devices.
++ * response iocb. The driver calls this function with the hbalock held
++ * for SLI3 ports or the ring lock held for SLI4 ports.
+  * This function returns the command iocb object if it finds the command
+  * iocb else returns NULL.
+  **/
+@@ -2982,8 +2992,15 @@ lpfc_sli_iocbq_lookup(struct lpfc_hba *phba,
+ {
+ 	struct lpfc_iocbq *cmd_iocb = NULL;
+ 	uint16_t iotag;
+-	lockdep_assert_held(&phba->hbalock);
++	spinlock_t *temp_lock = NULL;
++	unsigned long iflag = 0;
+ 
++	if (phba->sli_rev == LPFC_SLI_REV4)
++		temp_lock = &pring->ring_lock;
++	else
++		temp_lock = &phba->hbalock;
++
++	spin_lock_irqsave(temp_lock, iflag);
+ 	iotag = prspiocb->iocb.ulpIoTag;
+ 
+ 	if (iotag != 0 && iotag <= phba->sli.last_iotag) {
+@@ -2993,10 +3010,12 @@ lpfc_sli_iocbq_lookup(struct lpfc_hba *phba,
+ 			list_del_init(&cmd_iocb->list);
+ 			cmd_iocb->iocb_flag &= ~LPFC_IO_ON_TXCMPLQ;
+ 			pring->txcmplq_cnt--;
++			spin_unlock_irqrestore(temp_lock, iflag);
+ 			return cmd_iocb;
+ 		}
+ 	}
+ 
++	spin_unlock_irqrestore(temp_lock, iflag);
+ 	lpfc_printf_log(phba, KERN_ERR, LOG_SLI,
+ 			"0317 iotag x%x is out of "
+ 			"range: max iotag x%x wd0 x%x\n",
+@@ -3012,8 +3031,8 @@ lpfc_sli_iocbq_lookup(struct lpfc_hba *phba,
+  * @iotag: IOCB tag.
+  *
+  * This function looks up the iocb_lookup table to get the command iocb
+- * corresponding to the given iotag. This function is called with the
+- * hbalock held.
++ * corresponding to the given iotag. The driver calls this function with
++ * the ring lock held because this function is an SLI4 port only helper.
+  * This function returns the command iocb object if it finds the command
+  * iocb else returns NULL.
+  **/
+@@ -3022,8 +3041,15 @@ lpfc_sli_iocbq_lookup_by_tag(struct lpfc_hba *phba,
+ 			     struct lpfc_sli_ring *pring, uint16_t iotag)
+ {
+ 	struct lpfc_iocbq *cmd_iocb = NULL;
++	spinlock_t *temp_lock = NULL;
++	unsigned long iflag = 0;
+ 
+-	lockdep_assert_held(&phba->hbalock);
++	if (phba->sli_rev == LPFC_SLI_REV4)
++		temp_lock = &pring->ring_lock;
++	else
++		temp_lock = &phba->hbalock;
++
++	spin_lock_irqsave(temp_lock, iflag);
+ 	if (iotag != 0 && iotag <= phba->sli.last_iotag) {
+ 		cmd_iocb = phba->sli.iocbq_lookup[iotag];
+ 		if (cmd_iocb->iocb_flag & LPFC_IO_ON_TXCMPLQ) {
+@@ -3031,10 +3057,12 @@ lpfc_sli_iocbq_lookup_by_tag(struct lpfc_hba *phba,
+ 			list_del_init(&cmd_iocb->list);
+ 			cmd_iocb->iocb_flag &= ~LPFC_IO_ON_TXCMPLQ;
+ 			pring->txcmplq_cnt--;
++			spin_unlock_irqrestore(temp_lock, iflag);
+ 			return cmd_iocb;
+ 		}
+ 	}
+ 
++	spin_unlock_irqrestore(temp_lock, iflag);
+ 	lpfc_printf_log(phba, KERN_ERR, LOG_SLI,
+ 			"0372 iotag x%x lookup error: max iotag (x%x) "
+ 			"iocb_flag x%x\n",
+@@ -3068,17 +3096,7 @@ lpfc_sli_process_sol_iocb(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	int rc = 1;
+ 	unsigned long iflag;
+ 
+-	/* Based on the iotag field, get the cmd IOCB from the txcmplq */
+-	if (phba->sli_rev == LPFC_SLI_REV4)
+-		spin_lock_irqsave(&pring->ring_lock, iflag);
+-	else
+-		spin_lock_irqsave(&phba->hbalock, iflag);
+ 	cmdiocbp = lpfc_sli_iocbq_lookup(phba, pring, saveq);
+-	if (phba->sli_rev == LPFC_SLI_REV4)
+-		spin_unlock_irqrestore(&pring->ring_lock, iflag);
+-	else
+-		spin_unlock_irqrestore(&phba->hbalock, iflag);
+-
+ 	if (cmdiocbp) {
+ 		if (cmdiocbp->iocb_cmpl) {
+ 			/*
+@@ -3409,8 +3427,10 @@ lpfc_sli_handle_fast_ring_event(struct lpfc_hba *phba,
+ 				break;
+ 			}
+ 
++			spin_unlock_irqrestore(&phba->hbalock, iflag);
+ 			cmdiocbq = lpfc_sli_iocbq_lookup(phba, pring,
+ 							 &rspiocbq);
++			spin_lock_irqsave(&phba->hbalock, iflag);
+ 			if (unlikely(!cmdiocbq))
+ 				break;
+ 			if (cmdiocbq->iocb_flag & LPFC_DRIVER_ABORTED)
+@@ -3604,9 +3624,12 @@ lpfc_sli_sp_handle_rspiocb(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 
+ 		case LPFC_ABORT_IOCB:
+ 			cmdiocbp = NULL;
+-			if (irsp->ulpCommand != CMD_XRI_ABORTED_CX)
++			if (irsp->ulpCommand != CMD_XRI_ABORTED_CX) {
++				spin_unlock_irqrestore(&phba->hbalock, iflag);
+ 				cmdiocbp = lpfc_sli_iocbq_lookup(phba, pring,
+ 								 saveq);
++				spin_lock_irqsave(&phba->hbalock, iflag);
++			}
+ 			if (cmdiocbp) {
+ 				/* Call the specified completion routine */
+ 				if (cmdiocbp->iocb_cmpl) {
+@@ -13070,13 +13093,11 @@ lpfc_sli4_els_wcqe_to_rspiocbq(struct lpfc_hba *phba,
+ 		return NULL;
+ 
+ 	wcqe = &irspiocbq->cq_event.cqe.wcqe_cmpl;
+-	spin_lock_irqsave(&pring->ring_lock, iflags);
+ 	pring->stats.iocb_event++;
+ 	/* Look up the ELS command IOCB and create pseudo response IOCB */
+ 	cmdiocbq = lpfc_sli_iocbq_lookup_by_tag(phba, pring,
+ 				bf_get(lpfc_wcqe_c_request_tag, wcqe));
+ 	if (unlikely(!cmdiocbq)) {
+-		spin_unlock_irqrestore(&pring->ring_lock, iflags);
+ 		lpfc_printf_log(phba, KERN_WARNING, LOG_SLI,
+ 				"0386 ELS complete with no corresponding "
+ 				"cmdiocb: 0x%x 0x%x 0x%x 0x%x\n",
+@@ -13086,6 +13107,7 @@ lpfc_sli4_els_wcqe_to_rspiocbq(struct lpfc_hba *phba,
+ 		return NULL;
+ 	}
+ 
++	spin_lock_irqsave(&pring->ring_lock, iflags);
+ 	/* Put the iocb back on the txcmplq */
+ 	lpfc_sli_ringtxcmpl_put(phba, pring, cmdiocbq);
+ 	spin_unlock_irqrestore(&pring->ring_lock, iflags);
+@@ -13856,9 +13878,9 @@ lpfc_sli4_fp_handle_fcp_wcqe(struct lpfc_hba *phba, struct lpfc_queue *cq,
+ 	/* Look up the FCP command IOCB and create pseudo response IOCB */
+ 	spin_lock_irqsave(&pring->ring_lock, iflags);
+ 	pring->stats.iocb_event++;
++	spin_unlock_irqrestore(&pring->ring_lock, iflags);
+ 	cmdiocbq = lpfc_sli_iocbq_lookup_by_tag(phba, pring,
+ 				bf_get(lpfc_wcqe_c_request_tag, wcqe));
+-	spin_unlock_irqrestore(&pring->ring_lock, iflags);
+ 	if (unlikely(!cmdiocbq)) {
+ 		lpfc_printf_log(phba, KERN_WARNING, LOG_SLI,
+ 				"0374 FCP complete with no corresponding "
+-- 
+2.20.1
 
