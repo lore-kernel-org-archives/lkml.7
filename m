@@ -2,153 +2,188 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41BAC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B918C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C982053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="RfsnL1Cb"
+	by mail.kernel.org (Postfix) with ESMTP id 277BA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfFDP7l (ORCPT
+        id S1728231AbfFDQAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:59:41 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39169 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbfFDP7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:59:40 -0400
-Received: by mail-vs1-f66.google.com with SMTP id n2so5432779vso.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pNSmlxy+hHS9DdorXvCYVqoqTtmJb7A32aLQZ8rGLog=;
-        b=RfsnL1Cbm3++1fTT2oGbQiSR45EERV453FCrAn8rOCd28WFS7LG/EAeJ2yCFN2XybD
-         XI8/icvh2H2QI6+HRCPUlTjo4pZVdlgKgMQGLdWd/jG/oLKHWp2/lZGEBzUGqtLQRxh3
-         FG0t4K2f7GbVj8ORugI7RNhutqiBPT3PXLsLWQwdWj7jSwutVlADqPYeWTb39h6z689z
-         5XoNsGqZZAlEMLOLskrBAOx+0Zj06NIaRHTlXl+WEmjPcnO/K3p+oa7Me394MngtPSjm
-         QWTSLWFF7YZmdOGLaJzrQf6c6T/n//nr51idY2+OMa4CUH5fYUxP7EPaptsRdVt6c1j1
-         5hMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pNSmlxy+hHS9DdorXvCYVqoqTtmJb7A32aLQZ8rGLog=;
-        b=lCEVnSVq5frlRMx55l+ubU7f/j1VKCVViGU8ho/VwX6IUbogcWjOxkiFjOlfv0MZ9i
-         2l5SM2z/t3e1xMcjWNYUtUXqPYSkYmaUBsvYR6UIcDwdDgzQCIaZhot+Uv7PtR5uUjNJ
-         YgdVQuMcer5F7z5HOj0tIgIHgRrfSxm8hpNIhv1hFvhT8S96/6AmrF5vPf6mWPjstCgU
-         SlqZBzP2bXHsOt5JRaj0x1o0WpK6b6q/0sGXvDO1LRhHtf8C7CgEgSBZA/+0m4wZRPHE
-         UxjOx3G+m1Ih6t/izkGky0EQsQYC5pA7RChF+3mxK6Pss2k3TUAg6WJXGL7k/OYg04oM
-         FXSQ==
-X-Gm-Message-State: APjAAAVtru1ri+LfYV1KO2ihQIFKT65csj868BTlc9SuWjcJ3oZooAZY
-        jKirJq82qiF5BYkn6jTFuYTEdXfeXP3XyuMr6gooxQ==
-X-Google-Smtp-Source: APXvYqzmEbcEQLzsKI5Mr/6AhhWgZhi9tfoIoQbe0F5ZUEaJn8TCq8CL+QBWe3VBgS7UmzAm/55bL9ZC3B5I5usQkPs=
-X-Received: by 2002:a67:ea58:: with SMTP id r24mr16770160vso.60.1559663979613;
- Tue, 04 Jun 2019 08:59:39 -0700 (PDT)
+        Tue, 4 Jun 2019 12:00:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48465 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727422AbfFDQAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:00:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:00:45 -0700
+X-ExtLoop1: 1
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 09:00:45 -0700
+Subject: Re: A potential broken at platform driver?
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Romain Izard <romain.izard.pro@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sen.li@intel.com,
+        Richard Gong <richard.gong@intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com> <20190604103241.GA4097@5WDYG62>
+ <20190604142803.GA28355@kroah.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
+Date:   Tue, 4 Jun 2019 11:13:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
-In-Reply-To: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
-From:   Peter Oskolkov <posk@posk.io>
-Date:   Tue, 4 Jun 2019 08:59:28 -0700
-Message-ID: <CAFTs51WUXwJbgsFCRbOwdUWnv55Mbt55-hmoMyETPGC5yMDSCQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Introduce fits_capacity()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190604142803.GA28355@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 12:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> The same formula to check utilization against capacity (after
-> considering capacity_margin) is already used at 5 different locations.
->
-> This patch creates a new macro, fits_capacity(), which can be used from
-> all these locations without exposing the details of it and hence
-> simplify code.
->
-> All the 5 code locations are updated as well to use it..
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  kernel/sched/fair.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 7f8d477f90fe..db3a218b7928 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -102,6 +102,8 @@ int __weak arch_asym_cpu_priority(int cpu)
->   * (default: ~20%)
->   */
->  static unsigned int capacity_margin                    = 1280;
-> +
-> +#define fits_capacity(cap, max)        ((cap) * capacity_margin < (max) * 1024)
 
-Any reason to have this as a macro and not as an inline function?
+Hi Greg,
 
->  #endif
+On 6/4/19 9:28 AM, Greg KH wrote:
+> On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
+>> On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+>>>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+>>>>   	.remove = stratix10_rsu_remove,
+>>>>   	.driver = {
+>>>>   		.name = "stratix10-rsu",
+>>>> -		.groups = rsu_groups,
+>>>> +//		.groups = rsu_groups,
+>>>
+>>> Are you sure this is the correct pointer?  I think that might be
+>>> pointing to the driver's attributes, not the device's attributes.
+>>>
+>>> If platform drivers do not have a way to register groups properly, then
+>>> that really needs to be fixed, as trying to register it by yourself as
+>>> you are doing, is ripe for racing with userspace.
+>>   
+>> This is a very common issue with platform drivers, and it seems to me that
+>> it is not possible to add device attributes when binding a device to a
+>> driver without entering the race condition.
+>>
+>> My understanding is the following one:
+>>
+>> The root cause is that the device has already been created and reported
+>> to the userspace with a KOBJ_ADD uevent before the device and the driver
+>> are bound together. On receiving this event, userspace will react, and
+>> it will try to read the device's attributes. In parallel the kernel will
+>> try to find a matching driver. If a driver is found, the kernel will
+>> call the probe function from the driver with the device as a parameter,
+>> and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+>> is a recent addition.
+>>
+>> Unfortunately, not all created devices will be bound to a driver, and the
+>> existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+>> If new per-device attributes have been added to the device during the
+>> binding stage userspace may or may not see them, depending on when userspace
+>> tries to read the device's attributes.
+>>
+>> I have this possible workaround, but I do not know if it is a good solution:
+>>
+>> When binding the device and the driver together, create a new device as a
+>> child to the current device, and fill its "groups" member to point to the
+>> per-device attributes' group. As the device will be created with all the
+>> attributes, it will not be affected by the race issues. The functions
+>> handling the attributes will need to be modified to use the parents of their
+>> "device" parameter, instead of the device itself. Additionnaly, the sysfs
+>> location of the attributes will be different, as the child device will show
+>> up in the sysfs path. But for a newly introduced device this will not be
+>> a problem.
+>>
+>> Is this a good compromise ?
+> 
+> Not really.  You just want the attributes on the platform device itself.
+> 
+> Given the horrible hack that platform devices are today, what's one more
+> hack!
+> 
+> Here's a patch below of what should probably be done here.  Richard, can
+> you change your code to use the new dev_groups pointer in the struct
+> platform_driver and this patch and let me know if that works or not?
+> 
+> Note, I've only compiled this code, not tested it...
 >
->  #ifdef CONFIG_CFS_BANDWIDTH
-> @@ -3727,7 +3729,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
->
->  static inline int task_fits_capacity(struct task_struct *p, long capacity)
->  {
-> -       return capacity * 1024 > task_util_est(p) * capacity_margin;
-> +       return fits_capacity(task_util_est(p), capacity);
->  }
->
->  static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
-> @@ -5143,7 +5145,7 @@ static inline unsigned long cpu_util(int cpu);
->
->  static inline bool cpu_overutilized(int cpu)
->  {
-> -       return (capacity_of(cpu) * 1024) < (cpu_util(cpu) * capacity_margin);
-> +       return !fits_capacity(cpu_util(cpu), capacity_of(cpu));
->  }
->
->  static inline void update_overutilized_status(struct rq *rq)
-> @@ -6304,7 +6306,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->                         /* Skip CPUs that will be overutilized. */
->                         util = cpu_util_next(cpu, p, cpu);
->                         cpu_cap = capacity_of(cpu);
-> -                       if (cpu_cap * 1024 < util * capacity_margin)
-> +                       if (!fits_capacity(util, cpu_cap))
->                                 continue;
->
->                         /* Always use prev_cpu as a candidate. */
-> @@ -7853,8 +7855,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
->  static inline bool
->  group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
->  {
-> -       return sg->sgc->min_capacity * capacity_margin <
-> -                                               ref->sgc->min_capacity * 1024;
-> +       return fits_capacity(sg->sgc->min_capacity, ref->sgc->min_capacity);
->  }
->
->  /*
-> @@ -7864,8 +7865,7 @@ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
->  static inline bool
->  group_smaller_max_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
->  {
-> -       return sg->sgc->max_capacity * capacity_margin <
-> -                                               ref->sgc->max_capacity * 1024;
-> +       return fits_capacity(sg->sgc->max_capacity, ref->sgc->max_capacity);
->  }
->
->  static inline enum
-> --
-> 2.21.0.rc0.269.g1a574e7a288b
->
+
+Your patch works.
+
+Many thanks for your help!
+
+Regards,
+Richard
+
+> thanks,
+> 
+> greg k-h
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 4d1729853d1a..3dd4b73a9b30 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -598,6 +598,7 @@ struct platform_device *platform_device_register_full(
+>   }
+>   EXPORT_SYMBOL_GPL(platform_device_register_full);
+>   
+> +static int platform_drv_remove(struct device *_dev);
+>   static int platform_drv_probe(struct device *_dev)
+>   {
+>   	struct platform_driver *drv = to_platform_driver(_dev->driver);
+> @@ -614,8 +615,18 @@ static int platform_drv_probe(struct device *_dev)
+>   
+>   	if (drv->probe) {
+>   		ret = drv->probe(dev);
+> -		if (ret)
+> +		if (ret) {
+>   			dev_pm_domain_detach(_dev, true);
+> +			goto out;
+> +		}
+> +	}
+> +	if (drv->dev_groups) {
+> +		ret = device_add_groups(_dev, drv->dev_groups);
+> +		if (ret) {
+> +			platform_drv_remove(_dev);
+> +			return ret;
+> +		}
+> +		kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
+>   	}
+>   
+>   out:
+> @@ -640,6 +651,8 @@ static int platform_drv_remove(struct device *_dev)
+>   
+>   	if (drv->remove)
+>   		ret = drv->remove(dev);
+> +	if (drv->dev_groups)
+> +		device_remove_groups(_dev, drv->dev_groups);
+>   	dev_pm_domain_detach(_dev, true);
+>   
+>   	return ret;
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index cc464850b71e..027f1e1d7af8 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -190,6 +190,7 @@ struct platform_driver {
+>   	int (*resume)(struct platform_device *);
+>   	struct device_driver driver;
+>   	const struct platform_device_id *id_table;
+> +	const struct attribute_group **dev_groups;
+>   	bool prevent_deferred_probe;
+>   };
+>   
+> 
