@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE701C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1FCC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECF3206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DBB206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690785;
-	bh=bxPVqEV9wO4+2nhR1ulIniT7wJTey7yUOQFdUmgGE/0=;
+	s=default; t=1559690797;
+	bh=uz4++qtTPat8tHaKuxoRBw6ki8KVpq1T90My55tKfHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkovhkhakHnf9bvZaZNGmpa5N6nFvIGRn15mtCEzP8b+piOuupMb3pm02FoNJi6i/
-	 5IXzt1IHmWqAgGeeHnfe1HZiOV7PzLIk7Of7rkJx1TSdKnG5hxWJxVLrGMtmwmWDEw
-	 fNTakvww0fs2jSyW8zqWpquEMj/FFvbwnUx0Me2Y=
+	b=ChrOTuKVguf6OJwOBcgfFo9Z5ZMmfM0bAGsct9u7kPiHG7gpnjXr7UApTWSXMNb0B
+	 zET32rW1prNPxn8dLRXn5pAZmutKwJ5f1MX+cfBYhyjb9CMnEqPKY+oGl7J4k+3llX
+	 Q3aD1Irto1KJ8aWd/bjGtRAZZ9EBnWTkERBEv2vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfFDX0Y (ORCPT
+        id S1727579AbfFDX0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbfFDXZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:43 -0400
+        id S1728072AbfFDXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8C920862;
-        Tue,  4 Jun 2019 23:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC3120862;
+        Tue,  4 Jun 2019 23:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690742;
-        bh=bxPVqEV9wO4+2nhR1ulIniT7wJTey7yUOQFdUmgGE/0=;
+        s=default; t=1559690735;
+        bh=uz4++qtTPat8tHaKuxoRBw6ki8KVpq1T90My55tKfHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QgZZno6enpRx1ZuWwCwkD5rNZr5LzaLEAl/tOKmxt11BinaFfqDLx1HSvP4hHn7BT
-         U3V2FQ8ETijIIZZZY8gDfC2jZUsy72MSq2KFTgqbvpy3XkchOCaniwvLqIUepKZ0Bz
-         +bsOheYDZjwzsBPXU5UNUySfRw6GD2Y0ZFX+1p48=
+        b=w1hVyGrhaEAjuKODHChwKlGg5oZyDic7J7bIkC21+cw1sIoV618J88EH1RljhFBeK
+         h28xzpcQSa/Wo274cwAQXXAol073yqtstO64hGn7ibAUZLCBar1lfABTXNDBBPZYN/
+         VrIpDSpdDmUbjPzTG9hJAaInByxn3AXM8S+czZwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/10] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
-Date:   Tue,  4 Jun 2019 19:25:27 -0400
-Message-Id: <20190604232532.7953-6-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/10] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Tue,  4 Jun 2019 19:25:23 -0400
+Message-Id: <20190604232532.7953-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
 References: <20190604232532.7953-1-sashal@kernel.org>
@@ -60,37 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-Currently an int is being shifted and the result is being cast to a u64
-which leads to undefined behaviour if the shift is more than 31 bits. Fix
-this by casting the integer value 1 to u64 before the shift operation.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+use-after-free instance:
+
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
+
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-index 28c671b609b2..0c71b69b9f88 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-@@ -829,7 +829,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
- 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
- 			(u64)err_entry->data.err_warn_bitmap_lo;
- 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
--			if (err_warn_bit_map & (u64) (1 << i)) {
-+			if (err_warn_bit_map & ((u64)1 << i)) {
- 				err_warn = i;
- 				break;
- 			}
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 065fcc4be263..071dd053a917 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -796,7 +796,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
+ 
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -872,7 +872,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -881,7 +881,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -925,7 +925,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
