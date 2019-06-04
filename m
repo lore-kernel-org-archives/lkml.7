@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C782C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B61C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4620206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D86206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690963;
-	bh=J3nyFuGnEa5w2fuQA0OpQgebd1UylOzzEaeNayGHIyY=;
+	s=default; t=1559690965;
+	bh=JuCL/V95sAY2uK9l+vLc6ZVaQuJ16tz1rO39sWszk3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OHxFKx/2XU+v/BV8PU4JqloHjYs81ACrVN3S2bbumDZ4ajf3svwEwS1B4Kt2HmJyb
-	 /j2Oql2blTxT1ZUoCDUwUNdm3sI1ZEwW3557qM6qYPBYVN/XIxb2RAODweecRtywhT
-	 e1gsPv26P3GDuRP/MrSOSid6+gCr6iaszlwfbzn4=
+	b=2hDgWiIb/dE05gFK4DrqER9aO64WWD7y13oHptRXtHV62QAssVHOVX6UWwRYL8ewD
+	 GqHbZP6zv6gHhkWy6RNcDCTMqZgRWDiuBeUbTH17kArph4t3psCD099bjX+Kysp+cQ
+	 JxWkFEQZDlYxyw/oNE7CrrDeX2WAKrFlhITqR38M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfFDXYO (ORCPT
+        id S1727736AbfFDX3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfFDXYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:24:06 -0400
+        id S1727545AbfFDXYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:24:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1B6206C1;
-        Tue,  4 Jun 2019 23:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F158208E3;
+        Tue,  4 Jun 2019 23:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690646;
-        bh=J3nyFuGnEa5w2fuQA0OpQgebd1UylOzzEaeNayGHIyY=;
+        s=default; t=1559690654;
+        bh=JuCL/V95sAY2uK9l+vLc6ZVaQuJ16tz1rO39sWszk3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmVCElgy28AG/sluSgVecHD8XAo8DDdQCvXlbSCiX9+f7/G25hvde7srQAiLYS2hZ
-         leusTIfdtPbqkgh56IbN+hMIE5rpdgc2ej4zKTykyPQ+ByuTAjG2XB0s5em+VecyuJ
-         OzWjJV9bBvaTZxItLkgof7Ydqy+3RqDA5CaxkUgw=
+        b=vkebFTFoI0vndtYsT8vM0IBJQBJIx70thNRQmI7rC66MLLbrmtNMcj5wy4UDGE12e
+         JG+nDsyRJS3d8J2BFc6hwlKZJLL455GYEFesWluNGggYaRJZfQj1Q2NcJVYiX0+g0v
+         kOfLmoUwoL2UQSTNPUIFVHnJxdnlC+3+64j81HOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 19/36] nvme: merge nvme_ns_ioctl into nvme_ioctl
-Date:   Tue,  4 Jun 2019 19:23:14 -0400
-Message-Id: <20190604232333.7185-19-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/36] selftests: fib_rule_tests: fix local IPv4 address typo
+Date:   Tue,  4 Jun 2019 19:23:21 -0400
+Message-Id: <20190604232333.7185-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
 References: <20190604232333.7185-1-sashal@kernel.org>
@@ -60,89 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 90ec611adcf20b96d0c2b7166497d53e4301a57f ]
+[ Upstream commit fc82d93e57e3d41f79eff19031588b262fc3d0b6 ]
 
-Merge the two functions to make future changes a little easier.
+The IPv4 testing address are all in 192.51.100.0 subnet. It doesn't make
+sense to set a 198.51.100.1 local address. Should be a typo.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 47 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+ tools/testing/selftests/net/fib_rule_tests.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 1cdfea3c094a..82f5f1d030d4 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1298,32 +1298,11 @@ static void nvme_put_ns_from_disk(struct nvme_ns_head *head, int idx)
- 		srcu_read_unlock(&head->srcu, idx);
- }
+diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
+index d84193bdc307..dbd90ca73e44 100755
+--- a/tools/testing/selftests/net/fib_rule_tests.sh
++++ b/tools/testing/selftests/net/fib_rule_tests.sh
+@@ -55,7 +55,7 @@ setup()
  
--static int nvme_ns_ioctl(struct nvme_ns *ns, unsigned cmd, unsigned long arg)
--{
--	switch (cmd) {
--	case NVME_IOCTL_ID:
--		force_successful_syscall_return();
--		return ns->head->ns_id;
--	case NVME_IOCTL_ADMIN_CMD:
--		return nvme_user_cmd(ns->ctrl, NULL, (void __user *)arg);
--	case NVME_IOCTL_IO_CMD:
--		return nvme_user_cmd(ns->ctrl, ns, (void __user *)arg);
--	case NVME_IOCTL_SUBMIT_IO:
--		return nvme_submit_io(ns, (void __user *)arg);
--	default:
--		if (ns->ndev)
--			return nvme_nvm_ioctl(ns, cmd, arg);
--		if (is_sed_ioctl(cmd))
--			return sed_ioctl(ns->ctrl->opal_dev, cmd,
--					 (void __user *) arg);
--		return -ENOTTY;
--	}
--}
--
- static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 		unsigned int cmd, unsigned long arg)
- {
- 	struct nvme_ns_head *head = NULL;
-+	void __user *argp = (void __user *)arg;
- 	struct nvme_ns *ns;
- 	int srcu_idx, ret;
+ 	$IP link add dummy0 type dummy
+ 	$IP link set dev dummy0 up
+-	$IP address add 198.51.100.1/24 dev dummy0
++	$IP address add 192.51.100.1/24 dev dummy0
+ 	$IP -6 address add 2001:db8:1::1/64 dev dummy0
  
-@@ -1331,7 +1310,29 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	if (unlikely(!ns))
- 		return -EWOULDBLOCK;
- 
--	ret = nvme_ns_ioctl(ns, cmd, arg);
-+	switch (cmd) {
-+	case NVME_IOCTL_ID:
-+		force_successful_syscall_return();
-+		ret = ns->head->ns_id;
-+		break;
-+	case NVME_IOCTL_ADMIN_CMD:
-+		ret = nvme_user_cmd(ns->ctrl, NULL, argp);
-+		break;
-+	case NVME_IOCTL_IO_CMD:
-+		ret = nvme_user_cmd(ns->ctrl, ns, argp);
-+		break;
-+	case NVME_IOCTL_SUBMIT_IO:
-+		ret = nvme_submit_io(ns, argp);
-+		break;
-+	default:
-+		if (ns->ndev)
-+			ret = nvme_nvm_ioctl(ns, cmd, arg);
-+		else if (is_sed_ioctl(cmd))
-+			ret = sed_ioctl(ns->ctrl->opal_dev, cmd, argp);
-+		else
-+			ret = -ENOTTY;
-+	}
-+
- 	nvme_put_ns_from_disk(head, srcu_idx);
- 	return ret;
- }
+ 	set +e
 -- 
 2.20.1
 
