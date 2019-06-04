@@ -2,145 +2,83 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD27C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FCFC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7135020693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/L7XlWa"
+	by mail.kernel.org (Postfix) with ESMTP id D989020693
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfFDQZ3 (ORCPT
+        id S1727776AbfFDQ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:25:29 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53286 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfFDQZ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:25:29 -0400
-Received: by mail-it1-f193.google.com with SMTP id m187so1098397ite.3;
-        Tue, 04 Jun 2019 09:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=keUx6OuTtnNnS8af2D8MRcezvwV9OMJ0K5kA2b/Onj8=;
-        b=W/L7XlWaFAFC25Fsz4CXjMTrwc8PsTmaQ8HGbUAYsAo60RiR9fODX6dyVe9/QY2ZPe
-         kcWVcaBcvoM3Te+G8UuxrDWK305KGBkb1QlFNgoTOUwmB+ySljpLY/LNOkHUVfyNof5Y
-         RWu7BSCU1KTy8xhog0NHEaML4VIAPY9wEs13EyeiRTVcW4HQ+i43ncoyTxb18LtXyoba
-         s3ClM75/YGscb0IR39VRwOcvsCp/wc+Cl4w4GI4e1I/Xc6JGJtjCga77WcgnCTSYxXi3
-         xSGoOldTC1VSI6zCOg8zXg51veJ3U2NQOIATn6cfOFQzWuzsWsENpwwbGLogs8uow04Y
-         Bt4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=keUx6OuTtnNnS8af2D8MRcezvwV9OMJ0K5kA2b/Onj8=;
-        b=CjP1GWtYsURk6o5VjeuFiYnqWXTz9WW2tG6BZdn675qimLYBI/GftCQmzAkAF0gvvu
-         tLu5DVNrl1KwQCRi12hWI8QXlfo255UWttlpwMMJWeUXz9Xye/0qkuCGn/lJ32BV4pCS
-         tPp+aBTdYSjeEni62PBmxGDRrUMcdXnKmK6jTSYh38/FiUNBU/GlBYUXBcg4t0nWlZ7B
-         yYRbFwyWX4tskKkkHlUPWabErFfM51KE83mLi7r+nASnoyXKaqKglM1sGlXIgPaV2RyW
-         lyl2SMIRir1XVnd+QCQbBosYc8WhQbICnhMXyZVguB/x9rCwmL53NP6LyvKM1cyhJ6JF
-         8z7w==
-X-Gm-Message-State: APjAAAW1Xug2a8qrMwH8UKPvKSGSEBji8+XoUObEzdqSP9PENCgAYrAC
-        pP1VsrS9dV6t5vyuNW6q63GxSwnvbqxbOGH8+t4=
-X-Google-Smtp-Source: APXvYqx/4rCisoqpGnzzw0zsbZQJzp6XnK7vklgy6SJ5670sERpis86AGb6uijJLfZA5p9whZRyv+dcYdZCQul/rIyg=
-X-Received: by 2002:a02:5b05:: with SMTP id g5mr20735653jab.114.1559665528083;
- Tue, 04 Jun 2019 09:25:28 -0700 (PDT)
+        Tue, 4 Jun 2019 12:26:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:20667 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727385AbfFDQ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:26:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:26:10 -0700
+X-ExtLoop1: 1
+Received: from tvuori-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.93.210])
+  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2019 09:25:56 -0700
+Date:   Tue, 4 Jun 2019 19:25:55 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 7/9] x86/sgx: Enforce noexec filesystem restriction
+ for enclaves
+Message-ID: <20190604162555.GC3811@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-8-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-2-nitesh@redhat.com>
- <CAKgT0Udnc_cmgBLFEZ5udexsc1cfjX1rJR3qQFOW-7bfuFh6gQ@mail.gmail.com>
- <4cdfee20-126e-bc28-cf1c-2cfd484ca28e@redhat.com> <CAKgT0Ud6uKpcj9HFHYOThCY=0_P0=quBLbsDR7uUMdbwcYeSTw@mail.gmail.com>
- <09e6caea-7000-b3e4-d297-df6bea78e127@redhat.com>
-In-Reply-To: <09e6caea-7000-b3e4-d297-df6bea78e127@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 4 Jun 2019 09:25:16 -0700
-Message-ID: <CAKgT0UeMpcckGpT6OnC2kqgtyT2p9bvNgE2C0eqW1GOJTU-DHA@mail.gmail.com>
-Subject: Re: [RFC][Patch v10 1/2] mm: page_hinting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531233159.30992-8-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:08 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
->
-> On 6/4/19 11:14 AM, Alexander Duyck wrote:
-> > On Tue, Jun 4, 2019 at 5:55 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>
-> >> On 6/3/19 3:04 PM, Alexander Duyck wrote:
-> >>> On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>> This patch introduces the core infrastructure for free page hinting in
-> >>>> virtual environments. It enables the kernel to track the free pages which
-> >>>> can be reported to its hypervisor so that the hypervisor could
-> >>>> free and reuse that memory as per its requirement.
-> >>>>
-> >>>> While the pages are getting processed in the hypervisor (e.g.,
-> >>>> via MADV_FREE), the guest must not use them, otherwise, data loss
-> >>>> would be possible. To avoid such a situation, these pages are
-> >>>> temporarily removed from the buddy. The amount of pages removed
-> >>>> temporarily from the buddy is governed by the backend(virtio-balloon
-> >>>> in our case).
-> >>>>
-> >>>> To efficiently identify free pages that can to be hinted to the
-> >>>> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
-> >>>> chunks are reported to the hypervisor - especially, to not break up THP
-> >>>> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
-> >>>> in the bitmap are an indication whether a page *might* be free, not a
-> >>>> guarantee. A new hook after buddy merging sets the bits.
-> >>>>
-> >>>> Bitmaps are stored per zone, protected by the zone lock. A workqueue
-> >>>> asynchronously processes the bitmaps, trying to isolate and report pages
-> >>>> that are still free. The backend (virtio-balloon) is responsible for
-> >>>> reporting these batched pages to the host synchronously. Once reporting/
-> >>>> freeing is complete, isolated pages are returned back to the buddy.
-> >>>>
-> >>>> There are still various things to look into (e.g., memory hotplug, more
-> >>>> efficient locking, possible races when disabling).
-> >>>>
-> >>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> >>> So one thing I had thought about, that I don't believe that has been
-> >>> addressed in your solution, is to determine a means to guarantee
-> >>> forward progress. If you have a noisy thread that is allocating and
-> >>> freeing some block of memory repeatedly you will be stuck processing
-> >>> that and cannot get to the other work. Specifically if you have a zone
-> >>> where somebody is just cycling the number of pages needed to fill your
-> >>> hinting queue how do you get around it and get to the data that is
-> >>> actually code instead of getting stuck processing the noise?
-> >> It should not matter. As every time the memory threshold is met, entire
-> >> bitmap
-> >> is scanned and not just a chunk of memory for possible isolation. This
-> >> will guarantee
-> >> forward progress.
-> > So I think there may still be some issues. I see how you go from the
-> > start to the end, but how to you loop back to the start again as pages
-> > are added? The init_hinting_wq doesn't seem to have a way to get back
-> > to the start again if there is still work to do after you have
-> > completed your pass without queue_work_on firing off another thread.
-> >
-> That will be taken care as the part of a new job, which will be
-> en-queued as soon
-> as the free memory count for the respective zone will reach the threshold.
+On Fri, May 31, 2019 at 04:31:57PM -0700, Sean Christopherson wrote:
+> Do not allow an enclave page to be mapped with PROT_EXEC if the source
+> page is backed by a file on a noexec file system.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-So does that mean that you have multiple threads all calling
-queue_work_on until you get below the threshold? If so it seems like
-that would get expensive since that is an atomic test and set
-operation that would be hammered until you get below that threshold.
+Why don't you just check in sgx_encl_add_page() that whether the path
+comes from noexec and deny if SECINFO contains X?
+
+/Jarkko
