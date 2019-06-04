@@ -2,217 +2,96 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95E3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD65BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902F42075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4A20859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:19:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pnah5gSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfFDRRx (ORCPT
+        id S1726399AbfFDRTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:17:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52897 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFDRRx (ORCPT
+        Tue, 4 Jun 2019 13:19:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41312 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfFDRTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:17:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so888539wms.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:17:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A/EDhzrByl8EmK23RXYavhkj6RV6VhNBEEWmOK2O4oc=;
-        b=Ahz7Onwpb+e18nWvXZkXvYCSJwaGFtt/apo1Q87xxWOVcN6QKCExSxEYa+lkDojlut
-         yJu4S8QC5LmVmE0w6uitEQlMFbA4jL/BEfWA4ZiM3ZbLINqcRVpGW3f6mJC7um44d/Tl
-         7UZCv+HZuxJf/BNcBlaoPx+3Cewx0aRFxGXGiHsrcamICL8Ei5uiWylIjvlrj6BsMZGC
-         zILokUrJ641Oltdok/0SVVI6Z5R+/6A14O8dElpZ8SDUwu5KWdpoT797S45WEkh9OXk7
-         MGOBHviyohv20SqLy5FTXMA+oqJQdHoxhYhGmTXKA3TMgjTKiDl793fC6lOhlY569/7S
-         epjA==
-X-Gm-Message-State: APjAAAWciO9528zO7KMdclb1vf3mb9z+WYruVlgbYMwy3BdElUZQaX2R
-        6l36/rTIOYevpYxbTaCZyFibCw==
-X-Google-Smtp-Source: APXvYqx+np2IkHDkhaheW56dj7UzGI3V8HfcXIRPNsM16CncIwMSIOta7YXPQ2f8Kt7odr80mUAbNQ==
-X-Received: by 2002:a1c:b782:: with SMTP id h124mr6812624wmf.20.1559668671392;
-        Tue, 04 Jun 2019 10:17:51 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id s11sm13805336wro.17.2019.06.04.10.17.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:17:50 -0700 (PDT)
-Subject: Re: [PATCH] KVM: Remove obsolete address of the FSF
-To:     Thomas Huth <thuth@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-References: <20190527165606.28295-1-thuth@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <77810fca-3492-2170-c350-bad35cfdc5e6@redhat.com>
-Date:   Tue, 4 Jun 2019 19:17:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 13:19:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gWGjWzmCxsyuXIXCpCZydRWI4/aqXORiJ7KdqIf6h8A=; b=pnah5gSItygt61ykCf1GYTq/j
+        uUzMYF9hlIKA/l8FEHyURRElzRnkJ3zAL8SYH+lB2itn68gHmROydqhB3TsGGgNmXEPiCM3FRdZnK
+        Mo1CYz+qCywwBDt24sgh7vU9aTS1N1dUGOAWxUY52r7iRl+hthks2u3ExihCj3H+2JzCgY6vqEwi5
+        5jLS6HaSLouyyumMm8KqkeDgkMDf0gWWebCelraH/QANcLXMTq+1A4fXAfk52wSZHcgNJshvqccCb
+        HuYI8iiOsa/8HPh6pfjJo+pAmOjDksq46njBnXFh23fqWsySS66krfqiPRK9/MuBh/vJeMMcnrg4T
+        Ln7EAfnjA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYD5B-0007jT-Mr; Tue, 04 Jun 2019 17:18:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4A82B2008D9D7; Tue,  4 Jun 2019 19:18:44 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 19:18:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 17/19] locking/rwsem: Merge owner into count on x86-64
+Message-ID: <20190604171844.GF3419@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-18-longman@redhat.com>
+ <20190604094537.GK3402@hirez.programming.kicks-ass.net>
+ <d03f319a-790c-3084-2908-76f44d3f41f5@redhat.com>
+ <20190604170218.GE3419@hirez.programming.kicks-ass.net>
+ <28a6c7b5-c40e-1c89-03e2-688c1135f3b5@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190527165606.28295-1-thuth@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28a6c7b5-c40e-1c89-03e2-688c1135f3b5@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/19 18:56, Thomas Huth wrote:
-> The FSF moved from the "Temple Place" to "51 Franklin Street" quite
-> a while ago already, so we should not refer to the old address in
-> the source code anymore. Anyway, instead of replacing it with the
-> new address, let's rather add proper SPDX identifiers here instead.
+On Tue, Jun 04, 2019 at 01:06:11PM -0400, Waiman Long wrote:
+> On 6/4/19 1:02 PM, Peter Zijlstra wrote:
+> > On Tue, Jun 04, 2019 at 11:47:21AM -0400, Waiman Long wrote:
+> >> On 6/4/19 5:45 AM, Peter Zijlstra wrote:
+> >>> On Mon, May 20, 2019 at 04:59:16PM -0400, Waiman Long wrote:
+> >>>> With separate count and owner, there are timing windows where the two
+> >>>> values are inconsistent. That can cause problem when trying to figure
+> >>>> out the exact state of the rwsem. For instance, a RT task will stop
+> >>>> optimistic spinning if the lock is acquired by a writer but the owner
+> >>>> field isn't set yet. That can be solved by combining the count and
+> >>>> owner together in a single atomic value.
+> >>> I just realized we can use cmpxchg_double() here (where available of
+> >>> course).
+> >> Does the 2 doubles need to be 128-bit aligned to use cmpxchg_double()? I
+> >> don't think we can guarantee that unless we explicitly set this alignment.
+> > It does :/ and yes, we'd need to play games with __align(2*sizeof(long))
+> > and such.
 > 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  arch/x86/kvm/irq.c        | 10 +---------
->  arch/x86/kvm/irq.h        | 10 +---------
->  arch/x86/kvm/irq_comm.c   |  9 +--------
->  virt/kvm/arm/arch_timer.c | 10 +---------
->  virt/kvm/irqchip.c        | 10 +---------
->  5 files changed, 5 insertions(+), 44 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-> index 007bc654f928..4b7b8e44df0f 100644
-> --- a/arch/x86/kvm/irq.c
-> +++ b/arch/x86/kvm/irq.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * irq.c: API for in kernel interrupt controller
->   * Copyright (c) 2007, Intel Corporation.
-> @@ -7,17 +8,8 @@
->   * under the terms and conditions of the GNU General Public License,
->   * version 2, as published by the Free Software Foundation.
->   *
-> - * This program is distributed in the hope it will be useful, but WITHOUT
-> - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> - * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> - * more details.
-> - *
-> - * You should have received a copy of the GNU General Public License along with
-> - * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> - * Place - Suite 330, Boston, MA 02111-1307 USA.
->   * Authors:
->   *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
-> - *
->   */
->  
->  #include <linux/export.h>
-> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-> index fd210cdd4983..a904c9b3b76a 100644
-> --- a/arch/x86/kvm/irq.h
-> +++ b/arch/x86/kvm/irq.h
-> @@ -1,3 +1,4 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
->  /*
->   * irq.h: in kernel interrupt controller related definitions
->   * Copyright (c) 2007, Intel Corporation.
-> @@ -6,17 +7,8 @@
->   * under the terms and conditions of the GNU General Public License,
->   * version 2, as published by the Free Software Foundation.
->   *
-> - * This program is distributed in the hope it will be useful, but WITHOUT
-> - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> - * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> - * more details.
-> - *
-> - * You should have received a copy of the GNU General Public License along with
-> - * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> - * Place - Suite 330, Boston, MA 02111-1307 USA.
->   * Authors:
->   *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
-> - *
->   */
->  
->  #ifndef __IRQ_H
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index 3cc3b2d130a0..ff95fd893e04 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * irq_comm.c: Common API for in kernel interrupt controller
->   * Copyright (c) 2007, Intel Corporation.
-> @@ -6,14 +7,6 @@
->   * under the terms and conditions of the GNU General Public License,
->   * version 2, as published by the Free Software Foundation.
->   *
-> - * This program is distributed in the hope it will be useful, but WITHOUT
-> - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> - * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> - * more details.
-> - *
-> - * You should have received a copy of the GNU General Public License along with
-> - * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> - * Place - Suite 330, Boston, MA 02111-1307 USA.
->   * Authors:
->   *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
->   *
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index 7fc272ecae16..151495d7dec7 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * Copyright (C) 2012 ARM Ltd.
->   * Author: Marc Zyngier <marc.zyngier@arm.com>
-> @@ -5,15 +6,6 @@
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
-> - *
-> - * You should have received a copy of the GNU General Public License
-> - * along with this program; if not, write to the Free Software
-> - * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
->   */
->  
->  #include <linux/cpu.h>
-> diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
-> index 79e59e4fa3dc..bcc3fc5d018a 100644
-> --- a/virt/kvm/irqchip.c
-> +++ b/virt/kvm/irqchip.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * irqchip.c: Common API for in kernel interrupt controllers
->   * Copyright (c) 2007, Intel Corporation.
-> @@ -8,15 +9,6 @@
->   * under the terms and conditions of the GNU General Public License,
->   * version 2, as published by the Free Software Foundation.
->   *
-> - * This program is distributed in the hope it will be useful, but WITHOUT
-> - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> - * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> - * more details.
-> - *
-> - * You should have received a copy of the GNU General Public License along with
-> - * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> - * Place - Suite 330, Boston, MA 02111-1307 USA.
-> - *
->   * This file is derived from virt/kvm/irq_comm.c.
->   *
->   * Authors:
-> 
+> So do you want this as an option now as it will be x86 specific? Or we
+> can do that as a follow-up if we want to.
 
-Queued, thanks.
+x86, s390 and arm64 have cmpxchg_double().
 
-Paolo
+I was going to have a look (but like I wrote, I'm pretty useless today
+so i didn't actually get anywhere) at the exact race that's a problem
+here and see if there's not another solution too.
+
