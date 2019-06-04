@@ -2,143 +2,109 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D823C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED68C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61ABB20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CEC23CBA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g99hBXdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfFDRA5 (ORCPT
+        id S1727895AbfFDRCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:00:57 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51030 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfFDRA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:00:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 10:00:55 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 10:00:52 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hYCns-0001CA-D9; Tue, 04 Jun 2019 20:00:52 +0300
-Date:   Tue, 4 Jun 2019 20:00:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
-        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v3 2/6] i2c: acpi: Use available IRQ helper functions
-Message-ID: <20190604170052.GQ9224@smile.fi.intel.com>
-References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
- <20190528142900.24147-2-ckeepax@opensource.cirrus.com>
+        Tue, 4 Jun 2019 13:02:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52830 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFDRCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:02:00 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54H1rIA084228;
+        Tue, 4 Jun 2019 12:01:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559667713;
+        bh=tJUbaYS3PXeCQDqLVzPk13j5W5PyU3RKgopVrDFEeQg=;
+        h=From:To:CC:Subject:Date;
+        b=g99hBXdJ5Ku+pEdJSxXzrA8vje66HcnNOeFGe0pg44GMPt6l8TFdgsRYkfeaND30G
+         RjY+YinDO2YOj+qvZze9b4cX1w4o9scy+3fZqMD7VW0gIYTvaY9OoQFMckdIvCHYVt
+         O5u8a7GBMU4UEiXdbNyHF5o+0G8s8BfKwrY1cU0Y=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54H1qAO055469
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jun 2019 12:01:52 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
+ 2019 12:01:52 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 4 Jun 2019 12:01:52 -0500
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54H1qr7052476;
+        Tue, 4 Jun 2019 12:01:52 -0500
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x54H1pm17287;
+        Tue, 4 Jun 2019 12:01:51 -0500 (CDT)
+From:   Suman Anna <s-anna@ti.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] Add Mailbox support for TI K3 SoCs
+Date:   Tue, 4 Jun 2019 12:01:44 -0500
+Message-ID: <20190604170146.12205-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528142900.24147-2-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 03:28:56PM +0100, Charles Keepax wrote:
-> Use the available IRQ helper functions, most of the functions have
-> additional helpful side affects like configuring the trigger type of the
-> IRQ.
-> 
+Hi Jassi,
 
-You do here two things, i.e.
-- splitting out helper function
-- converting it to use helpers
+The following series adds the support for the Mailbox IP present
+within the Main NavSS module on the newer TI K3 AM65x and J721E SoCs.
 
-I would split the patch to do exact these steps separately, e.g.:
-- splitting out to a local helper
-- replacing open coded stuff with existing helpers
+The Mailbox IP is similar to the previous generation IP on OMAP SoCs
+with a few differences:
+ - Multiple IP instances from previous DRA7/AM57 family each form a
+   cluster and are part of the same IP. The driver support will continue
+   to be based on a cluster.
+ - The IP is present within a Main NaVSS, and interrupts have to go
+   through an Interrupt Router within Main NavSS before they reach the
+   respective processor sub-system's interrupt controllers.
+ - The register layout is mostly same, with difference in two registers
 
+Support is added by enhancing the existing OMAP Mailbox driver to 
+support the K3 IP using a new compatible. The driver also has to be
+adjusted to deal with the 32-bit mailbox payloads vs the 64-bit 
+pointers used by the Mailbox API on these Arm v8 platforms.
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> Changes since v2:
->  - Don't consider zero to be a valid IRQ number
-> 
-> Thanks,
-> Charles
-> 
->  drivers/i2c/i2c-core-acpi.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 2728006920888..bc82b44f85860 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -137,14 +137,25 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
->  	return 0;
->  }
->  
-> +static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
-> +{
-> +	int *irq = data;
-> +	struct resource r;
-> +
-> +	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
-> +		*irq = i2c_dev_irq_from_resources(&r, 1);
-> +
-> +	return 1; /* No need to add resource to the list */
-> +}
-> +
->  static int i2c_acpi_get_info(struct acpi_device *adev,
->  			     struct i2c_board_info *info,
->  			     struct i2c_adapter *adapter,
->  			     acpi_handle *adapter_handle)
->  {
->  	struct list_head resource_list;
-> -	struct resource_entry *entry;
->  	struct i2c_acpi_lookup lookup;
-> +	int irq = -ENOENT;
->  	int ret;
->  
->  	memset(&lookup, 0, sizeof(lookup));
-> @@ -176,16 +187,13 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
->  
->  	/* Then fill IRQ number if any */
->  	INIT_LIST_HEAD(&resource_list);
-> -	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-> +	ret = acpi_dev_get_resources(adev, &resource_list,
-> +				     i2c_acpi_add_resource, &irq);
->  	if (ret < 0)
->  		return -EINVAL;
->  
-> -	resource_list_for_each_entry(entry, &resource_list) {
-> -		if (resource_type(entry->res) == IORESOURCE_IRQ) {
-> -			info->irq = entry->res->start;
-> -			break;
-> -		}
-> -	}
-> +	if (irq > 0)
-> +		info->irq = irq;
->  
->  	acpi_dev_free_resource_list(&resource_list);
->  
-> -- 
-> 2.11.0
-> 
+DT nodes will be posted separately once the binding is acked.
+
+regards
+Suman
+
+Suman Anna (2):
+  dt-bindings: mailbox: omap: Update bindings for TI K3 SoCs
+  mailbox/omap: Add support for TI K3 SoCs
+
+ .../bindings/mailbox/omap-mailbox.txt         | 59 ++++++++++++++++---
+ drivers/mailbox/Kconfig                       |  2 +-
+ drivers/mailbox/omap-mailbox.c                | 43 ++++++++------
+ include/linux/omap-mailbox.h                  |  4 +-
+ 4 files changed, 80 insertions(+), 28 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.21.0
 
