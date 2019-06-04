@@ -2,66 +2,144 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A9C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4050C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9183324A02
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559650188;
-	bh=aW5xWIlY9u6kIytF67/XU943TuWwFqg6v4drQua6ZoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E00K346lSjSWpCUyudQ4lyNYoA0S1+390JTFLavG2GfVaRWVQi0ufRLlmZ7bn505Q
-	 zp6JByrLAiQa/Y0ybFMOQdjjS/LTNsCCeSTUwOM9Rosglq3MbUYrBoRPgFY6XNNbWg
-	 f+TJnJy9Ps0a1IgCvOjCgxLGEEhjpVqJ4wfNqZlE=
+	by mail.kernel.org (Postfix) with ESMTP id 9580523CA2
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALgMXYSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfFDMJr (ORCPT
+        id S1727652AbfFDMKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfFDMJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:09:47 -0400
-Received: from localhost (unknown [117.99.94.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D571323CA2;
-        Tue,  4 Jun 2019 12:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559650186;
-        bh=aW5xWIlY9u6kIytF67/XU943TuWwFqg6v4drQua6ZoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jpyjucptM/P1GGfu71jWsXkFxxOOfF9T4LIZ9A6SvEAk9HexpCTTz55slvxV2PxKB
-         U37CCYsWVIgpS9O84SBVwx2EaFatDOGFnlyJwcqKcNsM2kYnhlbWIPhFSto6ELi6ZR
-         rx3NMS9+MUHQDPzmPxSacdTpDpX0wSAqpblx4O2I=
-Date:   Tue, 4 Jun 2019 17:36:38 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        Tue, 4 Jun 2019 08:10:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44643 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfFDMKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:10:30 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n2so10237829pgp.11;
+        Tue, 04 Jun 2019 05:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EwJYsf92ydp+RtKiuVnWST5ck78zmLqyjDy58wjkNzk=;
+        b=ALgMXYShkAFuscaf0G46Fe8IyL9l9sUJz35RiyTWOUtl+VQsGb3VE5G+kAFvWHJ989
+         PzhD5ZvYnLcVx7VNy5G7ZxMWsPJ/EA4GdjGBTj1eyxgm7wi0fDim3GgYKIWP/UAlIHcK
+         by1KonlJQhDWsjNTw4RJeeVd5uhcc9sFoTQe7jao13cWC/Lt2s6+rj4QdFK+EsLmCjsh
+         Q9+fhsv77zWy4VweL+38l6VUado93b+f40sn8S2SE7dd8s1QPImSyoLhsooGIbYugyVS
+         NNWrMuWwmz/yqigNzN2eRjfMiBv82P35nWrrgwBObfCb4jilxaFSQvDH0Pq3pLG/mElZ
+         1hDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EwJYsf92ydp+RtKiuVnWST5ck78zmLqyjDy58wjkNzk=;
+        b=fEvvYOCdPKfih0B/zLavoAx9/khF/4apjKuFyimkfam3BTSFJF4vgAIx9JklsOdeP5
+         TJ0LxnNbhwhmmX1rrvnd+rfAwGA4+15opld29ChdLrQCikHgniapZHplDRz3RU+r55VC
+         T5YUcP9ZD4r0oHMMxmdAjqNuh/vxc2PoecV9MCPgOtGvDCK+z09k2/j0hv9fENa+e5F7
+         LXDsmdxoCcub0PoL9E0SnsSEJ6OvvrZJwhKkYkCGSg78iwNCd3dGjVMpELpiuTbid7rJ
+         Ym+iq7olOUFHcfHWNM2YV/arYPZAJjWN+Z0lBhk+yeYpN51UDvN4GWG/CpDFjfXdR9j4
+         JuJA==
+X-Gm-Message-State: APjAAAUOGZHtEtpRMshMYS0L5Et3/29BxeSo3jUYxBuWzBO6xQ7ierYl
+        I8pKliTYgtRbLb133dM494BIuIdSf1asFQ==
+X-Google-Smtp-Source: APXvYqw5pE1KuL3N0NnrEDYlsEeAPn8xPJJRq+laPDZyZTkLXt4pZDqinvcFRcOBNQeq0UQqQktwtQ==
+X-Received: by 2002:a63:5d45:: with SMTP id o5mr35305514pgm.40.1559650229927;
+        Tue, 04 Jun 2019 05:10:29 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id s1sm14168708pgp.94.2019.06.04.05.10.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 04 Jun 2019 05:10:28 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     ralf@linux-mips.org, davem@davemloft.net,
+        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [V3 1/2] dmaengine: fsl-qdma: fixed the source/destination
- descriptor format
-Message-ID: <20190604120638.GU15118@vkoul-mobl>
-References: <20190522032103.13713-1-peng.ma@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522032103.13713-1-peng.ma@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] rose: af_rose: avoid overflows in rose_setsockopt()
+Date:   Tue,  4 Jun 2019 20:11:30 +0800
+Message-Id: <1559650290-17054-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-05-19, 03:21, Peng Ma wrote:
-> CMD of Source/Destination descriptor format should be lower of
-> struct fsl_qdma_engine number data address.
+Check setsockopt arguments to avoid overflows and return -EINVAL for
+too large arguments.
 
-Applied, thanks
+See commit 32288eb4d940 ("netrom: avoid overflows in nr_setsockopt()")
+for details.
 
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ net/rose/af_rose.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/net/rose/af_rose.c b/net/rose/af_rose.c
+index e274bc6..af831ee9 100644
+--- a/net/rose/af_rose.c
++++ b/net/rose/af_rose.c
+@@ -372,15 +372,15 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
+ {
+ 	struct sock *sk = sock->sk;
+ 	struct rose_sock *rose = rose_sk(sk);
+-	int opt;
++	unsigned long opt;
+ 
+ 	if (level != SOL_ROSE)
+ 		return -ENOPROTOOPT;
+ 
+-	if (optlen < sizeof(int))
++	if (optlen < sizeof(unsigned int))
+ 		return -EINVAL;
+ 
+-	if (get_user(opt, (int __user *)optval))
++	if (get_user(opt, (unsigned int __user *)optval))
+ 		return -EFAULT;
+ 
+ 	switch (optname) {
+@@ -389,31 +389,31 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
+ 		return 0;
+ 
+ 	case ROSE_T1:
+-		if (opt < 1)
++		if (opt < 1 || opt > ULONG_MAX / HZ)
+ 			return -EINVAL;
+ 		rose->t1 = opt * HZ;
+ 		return 0;
+ 
+ 	case ROSE_T2:
+-		if (opt < 1)
++		if (opt < 1 || opt > ULONG_MAX / HZ)
+ 			return -EINVAL;
+ 		rose->t2 = opt * HZ;
+ 		return 0;
+ 
+ 	case ROSE_T3:
+-		if (opt < 1)
++		if (opt < 1 || opt > ULONG_MAX / HZ)
+ 			return -EINVAL;
+ 		rose->t3 = opt * HZ;
+ 		return 0;
+ 
+ 	case ROSE_HOLDBACK:
+-		if (opt < 1)
++		if (opt < 1 || opt > ULONG_MAX / HZ)
+ 			return -EINVAL;
+ 		rose->hb = opt * HZ;
+ 		return 0;
+ 
+ 	case ROSE_IDLE:
+-		if (opt < 0)
++		if (opt < 0 || opt > ULONG_MAX / HZ)
+ 			return -EINVAL;
+ 		rose->idle = opt * 60 * HZ;
+ 		return 0;
 -- 
-~Vinod
+2.7.4
+
