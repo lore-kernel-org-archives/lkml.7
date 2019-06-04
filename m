@@ -2,156 +2,119 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC28C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC64DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD05207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ge1KY/Qo"
+	by mail.kernel.org (Postfix) with ESMTP id AC9DD2085A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559679379;
+	bh=UUD8js2GAwr4II2RKampxullfYCdUCEzAhpMSNle0/Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uz0PFRwsiTE26bKztaSqyFxTcMKeozhqs3Rq8ug9BynbtaBPhg//gFfkmybxfqfk/
+	 jU2nMhi6mHjkNjkGdmR/6N9u7lDhglF6PlkVmjm/982O1KaG1f1NM1tjGpgI1S6PAS
+	 PYlgc4JSyqhIAdfAU3bBCIyvV/78/eGPR5dHRuoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfFDUN3 (ORCPT
+        id S1726559AbfFDUQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:13:29 -0400
-Received: from mail-eopbgr50050.outbound.protection.outlook.com ([40.107.5.50]:38629
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfFDUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:13:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cQgKmCxWL5uhQ45PzO7xtWZM46pb7Q/3ek6oP6HpdLE=;
- b=Ge1KY/QopbO+9dx3fpfw4kheoxlYFGetUaPH6en5wddTmcGTHqfRyHqhkzzlE4SGEtaa5DitdxkNdLyjpytRNhpCj2rl+WAkUEbI8YLgwL37LO5w2fJWKz9W+NGceTCsW/n3SeO/gxZTGn8MTTuYjoxWQVWnw0QTWHMAKJSdPv8=
-Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
- VI1PR04MB5919.eurprd04.prod.outlook.com (20.178.205.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Tue, 4 Jun 2019 20:13:18 +0000
-Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
- ([fe80::9577:379c:2078:19a1]) by VI1PR04MB5055.eurprd04.prod.outlook.com
- ([fe80::9577:379c:2078:19a1%7]) with mapi id 15.20.1965.011; Tue, 4 Jun 2019
- 20:13:18 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Patrick Titiano <ptitiano@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Emilio Lopez <emilio@elopez.com.ar>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Zening Wang <zening.wang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 0/3] Add support of busfreq
-Thread-Topic: [RFC PATCH 0/3] Add support of busfreq
-Thread-Index: AQHU2dO+g7FtRU5+MUaLzLMJn01eLA==
-Date:   Tue, 4 Jun 2019 20:13:18 +0000
-Message-ID: <VI1PR04MB5055E9AB9BD3D68BB6C1F6C2EE150@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190313193408.23740-1-abailon@baylibre.com>
- <CAEG3pNA+U1tw4sWq9i2cTni6QKQkLyd3qyZXd2i8M7WFDF4ZsQ@mail.gmail.com>
- <8af96425-a6f5-0114-7abb-c2a67b952e1b@baylibre.com>
- <AM0PR04MB643434FB6A26B4D70F52F350EE080@AM0PR04MB6434.eurprd04.prod.outlook.com>
- <DB3PR0402MB39167B9EAE9A741AB0F20E30F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fc6a45d7-1d39-4d95-c153-08d6e92915a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5919;
-x-ms-traffictypediagnostic: VI1PR04MB5919:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR04MB59193C94A656BCAFBD65F5A3EE150@VI1PR04MB5919.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0058ABBBC7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(396003)(39860400002)(366004)(199004)(189003)(52084003)(5660300002)(6436002)(486006)(6506007)(53546011)(110136005)(54906003)(74316002)(33656002)(44832011)(7696005)(7416002)(476003)(186003)(6306002)(71200400001)(71190400001)(55016002)(26005)(9686003)(66946007)(73956011)(102836004)(66556008)(76116006)(446003)(64756008)(66446008)(66476007)(52536014)(91956017)(76176011)(3846002)(2906002)(68736007)(316002)(7736002)(14444005)(66066001)(256004)(6116002)(478600001)(305945005)(966005)(6246003)(4326008)(8936002)(53936002)(229853002)(25786009)(81156014)(81166006)(14454004)(86362001)(8676002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5919;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7OLi5rOxRkW0300175HB9h8BZ5hRv16J792FSldcyWlvMol3t6WpiUHs36sfW5JIxJHE/29sM0upHznrxcuSWVuRXPGBeyR3dyR3zTiE2c/Nlz/aOKtokL3ZQ/wEykn342jZIPGLH8pRUv9VodSjjdspHjwh16Ikb7JFU58OEgY+fV19kVDZ3+/IKa4RzIJ3hwU0esnB8IVmf/xGqVtHrZ/xbS02Ljy2TDgTfzgNAh28PdDtT1yM0BeuVMGEKaxUotnGHIeJ/60XdVyt+TrBOibWVbuEzucUkiSY9livj83VohG5HvUVUT/VKNDQG9QKRdNaX0E0DryGTQvtRqL/W29P0ZEs+J8yLJReIXaiDh5mlH6mVTfvUzKmPoCI2FmnhYeAT7t5YNr1t39bfGF9+wrPJL2ekzBNjcmHFwHnVKU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Jun 2019 16:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfFDUQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:16:18 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 468822133D
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559679377;
+        bh=UUD8js2GAwr4II2RKampxullfYCdUCEzAhpMSNle0/Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RGzP2rSxHLkPNvO6s5zF9RmhMr7ron36rvZeXufXGabhAl0HSmZSVK6VEGGL94SxR
+         JSGRwOIr5m3QWD+LmSqNETKHpFBN+ZXFxG9AvOUE4/QVjjDZ8s6FBraiWEYrwtUWL8
+         DezGQaioxI4qhrTSbuv0eYVn7NjF5biPe7ZXpPBo=
+Received: by mail-wm1-f54.google.com with SMTP id v19so31819wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:16:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAXyKQR7jXQ7BK12iwkRnSuvMD1chz6n4L/5sn07oa0EiLFz6Lwt
+        thNh5bCvkvBtDqPsETbRCo3N7fAF7cgUPuLYnnTHug==
+X-Google-Smtp-Source: APXvYqxKLARYLnWrB9GjRsqdH0CB/G7w6TKwEtytC9EXxuJZ2IVSsZsrGcb61zvu/E7Rk143AaRVLPJumcYr3E2cHZg=
+X-Received: by 2002:a1c:6242:: with SMTP id w63mr15836829wmb.161.1559679375566;
+ Tue, 04 Jun 2019 13:16:15 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc6a45d7-1d39-4d95-c153-08d6e92915a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 20:13:18.4216
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5919
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-3-sean.j.christopherson@intel.com> <20190604114951.GC30594@linux.intel.com>
+In-Reply-To: <20190604114951.GC30594@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 13:16:04 -0700
+X-Gmail-Original-Message-ID: <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+Message-ID: <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/2019 11:44 AM, Anson Huang wrote:=0A=
->>>>> As exemple, this series implements busfreq for i.MX8MM whose=0A=
->>>>> upstreaming is in progress. Because this relies on ATF to do the=0A=
->>>>> frequency scaling, it won't be hard make it work.=0A=
-> =0A=
-> I have similar question as previous reviewer, is there any branch that we=
- can test=0A=
-> this series?=0A=
-=0A=
-I've been looking at this and pushed a fixed-up functional variant to my =
-=0A=
-personal github:=0A=
-=0A=
-     https://github.com/cdleonard/linux/commits/next_imx8mm_busfreq=0A=
-=0A=
-It builds and probes and switches DRAM freq between low and high based =0A=
-on whether ethernet is down or up (for testing purposes). The pile of =0A=
-out-of-tree patches required to get this work is quite small.=0A=
-=0A=
-The DRAM freq switch is done via a clk wrapper previously sent as RFC:=0A=
-=0A=
-     https://patchwork.kernel.org/patch/10968303/=0A=
-=0A=
-That part needs more work but it could serve as a neat encapsulation =0A=
-similar to imx_cpu clk used for cpufreq-dt.=0A=
-=0A=
-> And, from the patch, it has multiple levels description of fabric arch, w=
-hile we ONLY=0A=
-> intend to scale "bus" frequency per devices' request, here "bus" includes=
- DRAM, NOC and=0A=
-> AHB, AXI, should we make it more flatter, such as just a virtual fabric a=
-s a single provider, and then=0A=
-> all other devices as nodes under this provider?=0A=
-=0A=
-The imx8mm interconnect bindings describe many bus endpoints but all =0A=
-requests are aggregated to a single platform-level OPP which is =0A=
-equivalent to "low/audio/high mode" from NXP tree.=0A=
-=0A=
-It might be better to associate clks to several ICC nodes and this way =0A=
-scale NOC and DRAM separately? As far as I understand an interconnect =0A=
-provider is free to decide on granularity.=0A=
-=0A=
-As a wilder idea it might even be possible to use a stanard =0A=
-"devfreq-with-perfmon" for DDRC and have interconnect request a min freq =
-=0A=
-to that instead of doing clk_set_rate on dram directly. That could bring =
-=0A=
-features from both worlds, scaling both proactively and reactively.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+On Tue, Jun 4, 2019 at 4:50 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Fri, May 31, 2019 at 04:31:52PM -0700, Sean Christopherson wrote:
+> > SGX enclaves have an associated Enclave Linear Range (ELRANGE) that is
+> > tracked and enforced by the CPU using a base+mask approach, similar to
+> > how hardware range registers such as the variable MTRRs.  As a result,
+> > the ELRANGE must be naturally sized and aligned.
+> >
+> > To reduce boilerplate code that would be needed in every userspace
+> > enclave loader, the SGX driver naturally aligns the mmap() address and
+> > also requires the range to be naturally sized.  Unfortunately, SGX fails
+> > to grant a waiver to the MAP_FIXED case, e.g. incorrectly rejects mmap()
+> > if userspace is attempting to map a small slice of an existing enclave.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> Why you want to allow mmap() to be called multiple times? mmap() could
+> be allowed only once with PROT_NONE and denied afterwards. Is this for
+> sending fd to another process that would map already existing enclave?
+>
+> I don't see any checks for whether the is enclave underneath. Also, I
+> think that in all cases mmap() callback should allow only PROT_NONE
+> as permissions for clarity even if it could called multiple times.
+>
+
+What's the advantage to only allowing PROT_NONE?  The idea here is to
+allow a PROT_NONE map followed by some replacemets that overlay it for
+the individual segments.  Admittedly, mprotect() can do the same
+thing, but disallowing mmap() seems at least a bit surprising.
