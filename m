@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8884C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8B1C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D2E2473C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E182473C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559657898;
-	bh=8eMBRwayjWqUUqiQlJ7vkQ9Y6Iu0YEQ61LWuwgzmncQ=;
+	s=default; t=1559657900;
+	bh=48XGtTc0lTxanYsIUhRC88FUvVDLfp3UqQDfLE6hKn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNT6tQz/HPT5Njcyl4VcUQUy1XlDGHTTQQ3kJQIVRncTXzKymuz5S4FdwvNNklM5Y
-	 Q0Bk/Q8w3II9ki9onm/Pf9Y2XtgPs1MV3CxxLGGR9Sxw9LrzAYI/jCU686Us6mHkjF
-	 c3sfCkPOjwx4Zkb6UIqRa8CTh0djcREI+r7kDMmY=
+	b=SC7GkdtQFcza58iFLZiIU0bWvuQOVDBqqv9cUyBGVKwkx0p8m80zcT2Jr5+//wdQq
+	 sbqhaxo3XG7wb2p0YgdO9RQVaOLSHUVKGuu3/0S9aZl1H0hihrlb4HJ6AcLtimMgwj
+	 ikpX8SBTL43a6nuHEEKxslFXvfRg1I9pdlWw9mC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfFDOSR (ORCPT
+        id S1727908AbfFDOSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:18:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52618 "EHLO
+        Tue, 4 Jun 2019 10:18:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52526 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727732AbfFDOSD (ORCPT
+        with ESMTP id S1727602AbfFDOSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 10:18:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,44 +34,32 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dqaD3wghyI6IWFrArZRMjNM4vtEr+hqHLagvjFWdfkg=; b=Zs3KQXTOPjmcHFgUgxG5qH+gKO
-        o8BJz6y3IPantgcA/Voyx6kH/hrE9ccQ3FZi6STf8TVmNX3mkcfsoh0ZxT3ZI3w1tG56iFWPGuiay
-        fHK+QOmvCUpgAVnSPhpqFd56jlL0V6NoAZHlFCbPi8/Ejej/f3oBNuy1f6sslmGARdoNvQfDBV2Da
-        h+mmNSzuadqqucttR9O4Ayry8wEzO+MptxTN7giKFVJvtiAXHfibZ5j1TmziUWXZ5eJ0O3mTu3oE0
-        BcBjLpRasxpfI2PClkJKdwUgtAW+p0SZt3CqGsdTKTJzh139ngqBGbIlL6s77zCzADuP5DTAD5j8B
-        OoIbhHLQ==;
+        bh=WyA/RRUzEMCNSDUX0J/2kOmsPoE/y5/FaiFLeEY8Z7g=; b=b+jGFR+FqWUUKyYHiwJnW2zNxG
+        AQHjUBqohGyiKmiM8QJtfzgadwn5knHuqTTQyOI4jg71iS/obQc6K16soiuTxMaam488022zBsNI9
+        MnZeXMnsxG7Vo1gPsRqFv2yTOck32RwAe2pknIhnS3T5PhujxscxysQ1vUF/grkkg7CnaHGlHo2wT
+        AxbMWEV4mLaVmjGUnydXYeARNse9IeDmMNbMyw6Urfs7bz+3TEd2WOiC2gGEi+tjBStnpHX21AjoQ
+        u1K/LJ9CSk/wkGLTjQ1yNYMOur/rpovICKiqjLKFlwZFUDF4zvN5jU+4Fzk2BCq1dCWRSWQpHhIwr
+        MDP4MUmg==;
 Received: from [179.182.172.34] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYAGH-0001Rw-UE; Tue, 04 Jun 2019 14:18:01 +0000
+        id 1hYAGH-0001Rv-Um; Tue, 04 Jun 2019 14:18:01 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hYAGE-0002kz-LE; Tue, 04 Jun 2019 11:17:58 -0300
+        id 1hYAGE-0002lg-TI; Tue, 04 Jun 2019 11:17:58 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 06/22] docs: mark orphan documents as such
-Date:   Tue,  4 Jun 2019 11:17:40 -0300
-Message-Id: <4afa83787acec906c383978dc01f286940e28616.1559656538.git.mchehab+samsung@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org
+Subject: [PATCH v2 16/22] docs: net: dpio-driver.rst: fix two codeblock warnings
+Date:   Tue,  4 Jun 2019 11:17:50 -0300
+Message-Id: <f5e4bcdb6cc89c270d4ec8ae6cfb932146a834ca.1559656538.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559656538.git.mchehab+samsung@kernel.org>
 References: <cover.1559656538.git.mchehab+samsung@kernel.org>
@@ -82,154 +70,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx doesn't like orphan documents:
-
-    Documentation/accelerators/ocxl.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f429-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f746-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f769-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32h743-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32mp157-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/gpu/msm-crash-dump.rst: WARNING: document isn't included in any toctree
-    Documentation/interconnect/interconnect.rst: WARNING: document isn't included in any toctree
-    Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
-    Documentation/powerpc/isa-versions.rst: WARNING: document isn't included in any toctree
-    Documentation/virtual/kvm/amd-memory-encryption.rst: WARNING: document isn't included in any toctree
-    Documentation/virtual/kvm/vcpu-requests.rst: WARNING: document isn't included in any toctree
-
-So, while they aren't on any toctree, add :orphan: to them, in order
-to silent this warning.
+    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:43: WARNING: Definition list ends without a blank line; unexpected unindent.
+    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:63: WARNING: Unexpected indentation. looking for now-outdated files... none found
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/accelerators/ocxl.rst             | 2 ++
- Documentation/arm/stm32/overview.rst            | 2 ++
- Documentation/arm/stm32/stm32f429-overview.rst  | 2 ++
- Documentation/arm/stm32/stm32f746-overview.rst  | 2 ++
- Documentation/arm/stm32/stm32f769-overview.rst  | 2 ++
- Documentation/arm/stm32/stm32h743-overview.rst  | 2 ++
- Documentation/arm/stm32/stm32mp157-overview.rst | 2 ++
- Documentation/gpu/msm-crash-dump.rst            | 2 ++
- Documentation/interconnect/interconnect.rst     | 2 ++
- Documentation/laptops/lg-laptop.rst             | 2 ++
- Documentation/powerpc/isa-versions.rst          | 2 ++
- 11 files changed, 22 insertions(+)
+ .../networking/device_drivers/freescale/dpaa2/dpio-driver.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/accelerators/ocxl.rst
-index 14cefc020e2d..b1cea19a90f5 100644
---- a/Documentation/accelerators/ocxl.rst
-+++ b/Documentation/accelerators/ocxl.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- ========================================================
- OpenCAPI (Open Coherent Accelerator Processor Interface)
- ========================================================
-diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
-index 85cfc8410798..f7e734153860 100644
---- a/Documentation/arm/stm32/overview.rst
-+++ b/Documentation/arm/stm32/overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- ========================
- STM32 ARM Linux Overview
- ========================
-diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
-index 18feda97f483..65bbb1c3b423 100644
---- a/Documentation/arm/stm32/stm32f429-overview.rst
-+++ b/Documentation/arm/stm32/stm32f429-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F429 Overview
- ==================
+diff --git a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
+index 5045df990a4c..17dbee1ac53e 100644
+--- a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
++++ b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
+@@ -39,8 +39,7 @@ The Linux DPIO driver consists of 3 primary components--
  
-diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
-index b5f4b6ce7656..42d593085015 100644
---- a/Documentation/arm/stm32/stm32f746-overview.rst
-+++ b/Documentation/arm/stm32/stm32f746-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F746 Overview
- ==================
+    DPIO service-- provides APIs to other Linux drivers for services
  
-diff --git a/Documentation/arm/stm32/stm32f769-overview.rst b/Documentation/arm/stm32/stm32f769-overview.rst
-index 228656ced2fe..f6adac862b17 100644
---- a/Documentation/arm/stm32/stm32f769-overview.rst
-+++ b/Documentation/arm/stm32/stm32f769-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F769 Overview
- ==================
+-   QBman portal interface-- sends portal commands, gets responses
+-::
++   QBman portal interface-- sends portal commands, gets responses::
  
-diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
-index 3458dc00095d..c525835e7473 100644
---- a/Documentation/arm/stm32/stm32h743-overview.rst
-+++ b/Documentation/arm/stm32/stm32h743-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32H743 Overview
- ==================
+           fsl-mc          other
+            bus           drivers
+@@ -60,6 +59,7 @@ The Linux DPIO driver consists of 3 primary components--
  
-diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
-index 62e176d47ca7..2c52cd020601 100644
---- a/Documentation/arm/stm32/stm32mp157-overview.rst
-+++ b/Documentation/arm/stm32/stm32mp157-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
+ The diagram below shows how the DPIO driver components fit with the other
+ DPAA2 Linux driver components::
 +
- STM32MP157 Overview
- ===================
- 
-diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
-index 757cd257e0d8..240ef200f76c 100644
---- a/Documentation/gpu/msm-crash-dump.rst
-+++ b/Documentation/gpu/msm-crash-dump.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- =====================
- MSM Crash Dump Format
- =====================
-diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/interconnect/interconnect.rst
-index c3e004893796..56e331dab70e 100644
---- a/Documentation/interconnect/interconnect.rst
-+++ b/Documentation/interconnect/interconnect.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
-+:orphan:
-+
- =====================================
- GENERIC SYSTEM INTERCONNECT SUBSYSTEM
- =====================================
-diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
-index aa503ee9b3bc..f2c2ffe31101 100644
---- a/Documentation/laptops/lg-laptop.rst
-+++ b/Documentation/laptops/lg-laptop.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0+
- 
-+:orphan:
-+
- LG Gram laptop extra features
- =============================
- 
-diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
-index 812e20cc898c..66c24140ebf1 100644
---- a/Documentation/powerpc/isa-versions.rst
-+++ b/Documentation/powerpc/isa-versions.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- CPU to ISA Version Mapping
- ==========================
- 
+                                                    +------------+
+                                                    | OS Network |
+                                                    |   Stack    |
 -- 
 2.21.0
 
