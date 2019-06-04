@@ -2,159 +2,92 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDEEC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277E3C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDB52075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qei4RrI/"
+	by mail.kernel.org (Postfix) with ESMTP id 0C30820883
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfFDQhM (ORCPT
+        id S1727875AbfFDQho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:37:12 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:32902 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfFDQhM (ORCPT
+        Tue, 4 Jun 2019 12:37:44 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36792 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfFDQho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:37:12 -0400
-Received: by mail-yb1-f195.google.com with SMTP id w127so8205161yba.0;
-        Tue, 04 Jun 2019 09:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=6EnQflcPAKJYTyCzJ+zEujJYDVfKA0owpr+lk17ZNW8=;
-        b=Qei4RrI/1FCqlNMNuhbQrfUb1HMjOhIUyjvKVZF2uPzdKh6tdkXxbjqLHfEMjZwu9d
-         Vm9H0kLW0GqY6JojRiyBTYzXjLNlZ1b5CuD39bY3lRPCG72qqkPnrEO7dsSzKq8DGw0c
-         +r0iYtAKCAvZcv3rsj77bBlBEdbHuJ8B+Qa2CoKbkXU+m+m+Ynz9Lqb/gwuGSbb0v9XN
-         dUREDZfu+7/NXFXdz2MUT+cLZ9rprUg9i9EZsmJNe6zYk4ZjiJsG2vIu63FzzqKmzMvp
-         rw4nij6HCqXcM2F9RaH2tKkGrR7fQoEci8oFC/m7tVlj6wiFSsiCVLoi2EBZIjUclhjT
-         zN8w==
+        Tue, 4 Jun 2019 12:37:44 -0400
+Received: by mail-qk1-f196.google.com with SMTP id g18so3262506qkl.3;
+        Tue, 04 Jun 2019 09:37:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=6EnQflcPAKJYTyCzJ+zEujJYDVfKA0owpr+lk17ZNW8=;
-        b=UoxQjoZuJpKlW+abcWgvJpjW6apB+yogqt2w/q9zTq7wHXhZZTkXOEM/LRy5BsHvFO
-         wDEUDW7+G1+yMRMBB9aNq0uXnV4HVbma+ZzfBKLG2SYHlTBXTLxFmbDmi1o6lB0qx9IF
-         KucFPsj0P86mSsFCHwYOO9I1Gqcazz05mCwALhihOp6/9I/NeARhcNpMpCUAFgmP+JPg
-         7ARrqnsWFORCNPp7CqfrUAovV20dQQN8GdBecK4N5aSqakjbIEjX7Fm2GUJt7DtPnHaI
-         T6q08lZibce2qXzAV2sZt1ns12Yd9q2psvJjB6koyCv8FmwICuLsI0+dNn9DFhqddmQb
-         RY7A==
-X-Gm-Message-State: APjAAAVwffdfls00K+1pwKYW6yuqJRPdWHfYNofv51Hqfg6rhP6t1TTf
-        ZIUuokA5EHQYD6YgZV+l07nXOJVoQdXBxUgSIlE=
-X-Google-Smtp-Source: APXvYqxwJuhFrohaMgLvCY52gUSasNGBItGgFchTeFYNUqKjkBF/kQzQ+7oFlK+HaW6p2xRHlixagQcen2pn3bUa/2o=
-X-Received: by 2002:a25:6148:: with SMTP id v69mr13936600ybb.401.1559666231415;
- Tue, 04 Jun 2019 09:37:11 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=aE1/cHd8DzTD9FjBXgqCGhUsUZ/Ac0/w2Hl806C0EWM=;
+        b=gBZi01V6we8APcZYiBHBU8npGyh1ko7XZA+weiRBOCKEk6+rZUepKd7at1Y1GJUzXI
+         0HjNgHij9va6VYS6Hd7y37zamsi2pCQftku47zA4pPT/IA1BwWv4Jwt8LLbZ9YB1IpeP
+         u2ZWC9zaVaEiLyfYg5WViwQ0zSesnalr2ivIzzNx2EWnkGSjZKf7EWnGPEFihd6L2w9K
+         qr8vfx9F64jUyMeWhJlD3hcqsbYXT5Iq7S2HRGAg3+u53HnbzvE/10nYD66IYTYjGv1S
+         3lsvpvcoCXM0HI7ffmV//7oFe1/R+FM0fuN8xK7J381tTD6uO987VkqT6rVGC9OPNIOx
+         BFww==
+X-Gm-Message-State: APjAAAWkIaBx2izAtaO3FH0O8D+0u4Tng1tKUTJkjsMFa9IE94swWuKQ
+        +l2/L57qr0WMZLcwA9vOJ98P+cWZqg1xB2+3+ho=
+X-Google-Smtp-Source: APXvYqzfmP62dYOeVk1OlzWSMTrM9bPNziXx52FwlTOC/Ho6r8b/7WoZJpMUG9U+NaP2WQiW5cUyXhoGL5f0SB1c034=
+X-Received: by 2002:a37:a4d3:: with SMTP id n202mr27466154qke.84.1559666262799;
+ Tue, 04 Jun 2019 09:37:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604154036.23211-1-megous@megous.com> <CAJiuCcda0ZDDrbdOF7TpTeoUOgt7GeS6wcgy45DRCo_U2XX6bQ@mail.gmail.com>
- <20190604162144.hba5bmkdnidco7pf@core.my.home>
-In-Reply-To: <20190604162144.hba5bmkdnidco7pf@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 4 Jun 2019 18:36:59 +0200
-Message-ID: <CAJiuCcddcf=pPByV+=2+QOfEKwuT03EkgFe97nPV7qKX35t6KQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2] clk: sunxi-ng: sun50i-h6-r: Fix
- incorrect W1 clock gate register
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
+In-Reply-To: <20190604134117.GA29963@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 4 Jun 2019 18:37:26 +0200
+Message-ID: <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
+Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dbueso@suse.de, Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+On Tue, Jun 4, 2019 at 3:41 PM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> This is the minimal fix for stable, I'll send cleanups later.
+>
+> The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
+> restore_user_sigmask()") introduced the visible change which breaks
+> user-space: a signal temporary unblocked by set_user_sigmask() can
+> be delivered even if the caller returns success or timeout.
+>
+> Change restore_user_sigmask() to accept the additional "interrupted"
+> argument which should be used instead of signal_pending() check, and
+> update the callers.
+>
+> Reported-by: Eric Wong <e@80x24.org>
+> Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+> cc: stable@vger.kernel.org (v5.0+)
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-On Tue, 4 Jun 2019 at 18:21, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hi Cl=C3=A9ment,
->
-> On Tue, Jun 04, 2019 at 06:14:15PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Ondrej,
-> >
-> > On Tue, 4 Jun 2019 at 17:40, megous via linux-sunxi
-> > <linux-sunxi@googlegroups.com> wrote:
-> > >
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > The current code defines W1 clock gate to be at 0x1cc, overlaying it
-> > > with the IR gate.
-> > >
-> > > Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR recei=
-ver
-> > > causing interrupt floods on H6 (because interrupt flags can't be clea=
-red,
-> > > due to IR module's bus being disabled).
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU"=
-)
-> > > ---
-> > >  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sun=
-xi-ng/ccu-sun50i-h6-r.c
-> > > index 27554eaf6929..8d05d4f1f8a1 100644
-> > > --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-> > > +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-> > > @@ -104,7 +104,7 @@ static SUNXI_CCU_GATE(r_apb2_i2c_clk,       "r-ap=
-b2-i2c",   "r-apb2",
-> > >  static SUNXI_CCU_GATE(r_apb1_ir_clk,   "r-apb1-ir",    "r-apb1",
-> > >                       0x1cc, BIT(0), 0);
-> > >  static SUNXI_CCU_GATE(r_apb1_w1_clk,   "r-apb1-w1",    "r-apb1",
-> > > -                     0x1cc, BIT(0), 0);
-> > > +                     0x1ec, BIT(0), 0);
-> > Just for information where did you find this information?
-> > Using the vendor kernel or user manual?
->
-> Informed guess. All gates and resets are in the same register. And
-> you can see below that reset register for w1 is 0x1ec. (reset register
-> for ir is 0x1cc)
-Ok, I thinks this can confirm the value:
-https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/drivers=
-/clk/sunxi/clk-sun50iw6.h#L161
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Acked-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+I hope Eric can test this with the original reproducer, or maybe someone
+could create a test case that can be added into LTP.
 
-Regards,
-Cl=C3=A9ment
->
-> regards,
->         o.
->
-> > Thanks,
-> > Cl=C3=A9ment
-> >
-> > >
-> > >  /* Information of IR(RX) mod clock is gathered from BSP source code =
-*/
-> > >  static const char * const r_mod0_default_parents[] =3D { "osc32k", "=
-osc24M" };
-> > > --
-> > > 2.21.0
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Gr=
-oups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, sen=
-d an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web, visit https://groups.google.com/d=
-/msgid/linux-sunxi/20190604154036.23211-1-megous%40megous.com.
-> > > For more options, visit https://groups.google.com/d/optout.
+      Arnd
