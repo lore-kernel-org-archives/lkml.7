@@ -2,347 +2,183 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6AEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C595EC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638C621901
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B362190D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfFDPbz (ORCPT
+        id S1728178AbfFDPc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:31:55 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:34542 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfFDPbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:31:55 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hYBPj-0002XI-4f; Tue, 04 Jun 2019 09:31:51 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hYBPh-0007V2-Fr; Tue, 04 Jun 2019 09:31:50 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
-        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        omar.kilani@gmail.com, tglx@linutronix.de, stable@vger.kernel.org,
-        Al Viro <viro@ZenIV.linux.org.uk>,
+        Tue, 4 Jun 2019 11:32:27 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2019 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727972AbfFDPc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:32:26 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 08:32:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,550,1549958400"; 
+   d="scan'208";a="181589010"
+Received: from tvuori-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.93.210])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Jun 2019 08:32:16 -0700
+Date:   Tue, 4 Jun 2019 18:32:15 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        <linux-api@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>
-        <20190604134117.GA29963@redhat.com>
-Date:   Tue, 04 Jun 2019 10:31:41 -0500
-In-Reply-To: <20190604134117.GA29963@redhat.com> (Oleg Nesterov's message of
-        "Tue, 4 Jun 2019 15:41:17 +0200")
-Message-ID: <87tvd5nz8i.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 5/9] x86/sgx: Restrict mapping without an enclave
+ page to PROT_NONE
+Message-ID: <20190604153201.GA3811@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-6-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hYBPh-0007V2-Fr;;;mid=<87tvd5nz8i.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18JqAu4Gol4nYpDPJY9T1kkLCifzkJMxgQ=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531233159.30992-6-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+On Fri, May 31, 2019 at 04:31:55PM -0700, Sean Christopherson wrote:
+> To support LSM integration, SGX will require userspace to explicitly
+> specify the allowed protections for each page.  The allowed protections
+> will be supplied to and modified by LSMs (based on their policies).
 
-> This is the minimal fix for stable, I'll send cleanups later.
->
-> The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
-> restore_user_sigmask()") introduced the visible change which breaks
-> user-space: a signal temporary unblocked by set_user_sigmask() can
-> be delivered even if the caller returns success or timeout.
->
-> Change restore_user_sigmask() to accept the additional "interrupted"
-> argument which should be used instead of signal_pending() check, and
-> update the callers.
->
-> Reported-by: Eric Wong <e@80x24.org>
-> Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
-> cc: stable@vger.kernel.org (v5.0+)
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+How the allowed protections are modified by LSMs? AFAIK they don't touch
+the PROT_* flags but I could be wrong too.
 
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-I have read through the patch and it looks good.
-
-For clarity.  I don't think this is required by posix, or fundamentally
-to remove the races in select.  It is what linux has always done and
-we have applications who care so I agree this fix is needed.
-
-Further in any case where the semantic change that this patch rolls back
-(aka where allowing a signal to be delivered and the select like call to
-complete) would be advantage we can do as well if not better by using
-signalfd.
-
-Michael is there any chance we can get this guarantee of the linux
-implementation of pselect and friends clearly documented.  The guarantee
-that if the system call completes successfully we are guaranteed that
-no signal that is unblocked by using sigmask will be delivered?
-
-Eric
-
+> To prevent userspace from circumventing the allowed protections, do not
+> allow PROT_{READ,WRITE,EXEC} mappings to an enclave without an
+> associated enclave page (which will track the allowed protections).
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  fs/aio.c               | 28 ++++++++++++++++++++--------
->  fs/eventpoll.c         |  4 ++--
->  fs/io_uring.c          |  7 ++++---
->  fs/select.c            | 18 ++++++------------
->  include/linux/signal.h |  2 +-
->  kernel/signal.c        |  5 +++--
->  6 files changed, 36 insertions(+), 28 deletions(-)
->
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 3490d1f..c1e581d 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -2095,6 +2095,7 @@ SYSCALL_DEFINE6(io_pgetevents,
->  	struct __aio_sigset	ksig = { NULL, };
->  	sigset_t		ksigmask, sigsaved;
->  	struct timespec64	ts;
-> +	bool interrupted;
->  	int ret;
->  
->  	if (timeout && unlikely(get_timespec64(&ts, timeout)))
-> @@ -2108,8 +2109,10 @@ SYSCALL_DEFINE6(io_pgetevents,
->  		return ret;
->  
->  	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
-> -	restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -	if (signal_pending(current) && !ret)
-> +
-> +	interrupted = signal_pending(current);
-> +	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> +	if (interrupted && !ret)
->  		ret = -ERESTARTNOHAND;
->  
->  	return ret;
-> @@ -2128,6 +2131,7 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
->  	struct __aio_sigset	ksig = { NULL, };
->  	sigset_t		ksigmask, sigsaved;
->  	struct timespec64	ts;
-> +	bool interrupted;
->  	int ret;
->  
->  	if (timeout && unlikely(get_old_timespec32(&ts, timeout)))
-> @@ -2142,8 +2146,10 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
->  		return ret;
->  
->  	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
-> -	restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -	if (signal_pending(current) && !ret)
-> +
-> +	interrupted = signal_pending(current);
-> +	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> +	if (interrupted && !ret)
->  		ret = -ERESTARTNOHAND;
->  
->  	return ret;
-> @@ -2193,6 +2199,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
->  	struct __compat_aio_sigset ksig = { NULL, };
->  	sigset_t ksigmask, sigsaved;
->  	struct timespec64 t;
-> +	bool interrupted;
->  	int ret;
->  
->  	if (timeout && get_old_timespec32(&t, timeout))
-> @@ -2206,8 +2213,10 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
->  		return ret;
->  
->  	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
-> -	restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -	if (signal_pending(current) && !ret)
-> +
-> +	interrupted = signal_pending(current);
-> +	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> +	if (interrupted && !ret)
->  		ret = -ERESTARTNOHAND;
->  
->  	return ret;
-> @@ -2226,6 +2235,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
->  	struct __compat_aio_sigset ksig = { NULL, };
->  	sigset_t ksigmask, sigsaved;
->  	struct timespec64 t;
-> +	bool interrupted;
->  	int ret;
->  
->  	if (timeout && get_timespec64(&t, timeout))
-> @@ -2239,8 +2249,10 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
->  		return ret;
->  
->  	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
-> -	restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -	if (signal_pending(current) && !ret)
-> +
-> +	interrupted = signal_pending(current);
-> +	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> +	if (interrupted && !ret)
->  		ret = -ERESTARTNOHAND;
->  
->  	return ret;
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index c6f5131..4c74c76 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -2325,7 +2325,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
->  
->  	error = do_epoll_wait(epfd, events, maxevents, timeout);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> +	restore_user_sigmask(sigmask, &sigsaved, error == -EINTR);
->  
->  	return error;
->  }
-> @@ -2350,7 +2350,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
->  
->  	err = do_epoll_wait(epfd, events, maxevents, timeout);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> +	restore_user_sigmask(sigmask, &sigsaved, err == -EINTR);
->  
->  	return err;
->  }
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 0fbb486..1147c5d 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2201,11 +2201,12 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
->  	}
->  
->  	ret = wait_event_interruptible(ctx->wait, io_cqring_events(ring) >= min_events);
-> -	if (ret == -ERESTARTSYS)
-> -		ret = -EINTR;
->  
->  	if (sig)
-> -		restore_user_sigmask(sig, &sigsaved);
-> +		restore_user_sigmask(sig, &sigsaved, ret == -ERESTARTSYS);
-> +
-> +	if (ret == -ERESTARTSYS)
-> +		ret = -EINTR;
->  
->  	return READ_ONCE(ring->r.head) == READ_ONCE(ring->r.tail) ? ret : 0;
->  }
-> diff --git a/fs/select.c b/fs/select.c
-> index 6cbc9ff..a4d8f6e 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -758,10 +758,9 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
->  		return ret;
->  
->  	ret = core_sys_select(n, inp, outp, exp, to);
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
->  	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
->  	return ret;
->  }
->  
-> @@ -1106,8 +1105,7 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
->  
->  	ret = do_sys_poll(ufds, nfds, to);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
->  	/* We can restart this syscall, usually */
->  	if (ret == -EINTR)
->  		ret = -ERESTARTNOHAND;
-> @@ -1142,8 +1140,7 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
->  
->  	ret = do_sys_poll(ufds, nfds, to);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
->  	/* We can restart this syscall, usually */
->  	if (ret == -EINTR)
->  		ret = -ERESTARTNOHAND;
-> @@ -1350,10 +1347,9 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
->  		return ret;
->  
->  	ret = compat_core_sys_select(n, inp, outp, exp, to);
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
->  	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
->  	return ret;
->  }
->  
-> @@ -1425,8 +1421,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
->  
->  	ret = do_sys_poll(ufds, nfds, to);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
->  	/* We can restart this syscall, usually */
->  	if (ret == -EINTR)
->  		ret = -ERESTARTNOHAND;
-> @@ -1461,8 +1456,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
->  
->  	ret = do_sys_poll(ufds, nfds, to);
->  
-> -	restore_user_sigmask(sigmask, &sigsaved);
-> -
-> +	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
->  	/* We can restart this syscall, usually */
->  	if (ret == -EINTR)
->  		ret = -ERESTARTNOHAND;
-> diff --git a/include/linux/signal.h b/include/linux/signal.h
-> index 9702016..78c2bb3 100644
-> --- a/include/linux/signal.h
-> +++ b/include/linux/signal.h
-> @@ -276,7 +276,7 @@ extern int sigprocmask(int, sigset_t *, sigset_t *);
->  extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
->  	sigset_t *oldset, size_t sigsetsize);
->  extern void restore_user_sigmask(const void __user *usigmask,
-> -				 sigset_t *sigsaved);
-> +				 sigset_t *sigsaved, bool interrupted);
->  extern void set_current_blocked(sigset_t *);
->  extern void __set_current_blocked(const sigset_t *);
->  extern int show_unhandled_signals;
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 328a01e..aa6a6f1 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2912,7 +2912,8 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
->   * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
->   * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
->   */
-> -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> +void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved,
-> +				bool interrupted)
+>  arch/x86/kernel/cpu/sgx/driver/main.c |  5 +++++
+>  arch/x86/kernel/cpu/sgx/encl.c        | 30 +++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/encl.h        |  3 +++
+>  3 files changed, 38 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/driver/main.c b/arch/x86/kernel/cpu/sgx/driver/main.c
+> index 129d356aff30..65a87c2fdf02 100644
+> --- a/arch/x86/kernel/cpu/sgx/driver/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/driver/main.c
+> @@ -63,6 +63,11 @@ static long sgx_compat_ioctl(struct file *filep, unsigned int cmd,
+>  static int sgx_mmap(struct file *file, struct vm_area_struct *vma)
 >  {
+>  	struct sgx_encl *encl = file->private_data;
+> +	int ret;
+> +
+> +	ret = sgx_map_allowed(encl, vma->vm_start, vma->vm_end, vma->vm_flags);
+> +	if (ret)
+> +		return ret;
 >  
->  	if (!usigmask)
-> @@ -2922,7 +2923,7 @@ void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
->  	 * Restoring sigmask here can lead to delivering signals that the above
->  	 * syscalls are intended to block because of the sigmask passed in.
->  	 */
-> -	if (signal_pending(current)) {
-> +	if (interrupted) {
->  		current->saved_sigmask = *sigsaved;
->  		set_restore_sigmask();
->  		return;
+>  	vma->vm_ops = &sgx_vm_ops;
+>  	vma->vm_flags |= VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP | VM_IO;
+> diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
+> index f23ea0fbaa47..955d4f430adc 100644
+> --- a/arch/x86/kernel/cpu/sgx/encl.c
+> +++ b/arch/x86/kernel/cpu/sgx/encl.c
+> @@ -235,6 +235,35 @@ static void sgx_vma_close(struct vm_area_struct *vma)
+>  	kref_put(&encl->refcount, sgx_encl_release);
+>  }
+>  
+> +int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
+> +		    unsigned long end, unsigned long prot)
+
+Documentation missing.
+
+> +{
+> +	struct sgx_encl_page *page;
+> +	unsigned long addr;
+> +
+> +	prot &= (VM_READ | VM_WRITE | VM_EXEC);
+> +	if (!prot || !encl)
+> +		return 0;
+> +
+> +	mutex_lock(&encl->lock);
+> +
+> +	for (addr = start; addr < end; addr += PAGE_SIZE) {
+> +		page = radix_tree_lookup(&encl->page_tree, addr >> PAGE_SHIFT);
+> +		if (!page)
+> +			return -EACCES;
+> +	}
+> +
+> +	mutex_unlock(&encl->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sgx_vma_mprotect(struct vm_area_struct *vma, unsigned long start,
+> +			    unsigned long end, unsigned long prot)
+> +{
+> +	return sgx_map_allowed(vma->vm_private_data, start, end, prot);
+> +}
+> +
+>  static unsigned int sgx_vma_fault(struct vm_fault *vmf)
+>  {
+>  	unsigned long addr = (unsigned long)vmf->address;
+> @@ -372,6 +401,7 @@ static int sgx_vma_access(struct vm_area_struct *vma, unsigned long addr,
+>  const struct vm_operations_struct sgx_vm_ops = {
+>  	.close = sgx_vma_close,
+>  	.open = sgx_vma_open,
+> +	.mprotect = sgx_vma_mprotect,
+>  	.fault = sgx_vma_fault,
+>  	.access = sgx_vma_access,
+>  };
+> diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
+> index c557f0374d74..6e310e3b3fff 100644
+> --- a/arch/x86/kernel/cpu/sgx/encl.h
+> +++ b/arch/x86/kernel/cpu/sgx/encl.h
+> @@ -106,6 +106,9 @@ static inline unsigned long sgx_pcmd_offset(pgoff_t page_index)
+>  	       sizeof(struct sgx_pcmd);
+>  }
+>  
+> +int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
+> +		    unsigned long end, unsigned long prot);
+> +
+>  enum sgx_encl_mm_iter {
+>  	SGX_ENCL_MM_ITER_DONE		= 0,
+>  	SGX_ENCL_MM_ITER_NEXT		= 1,
+> -- 
+> 2.21.0
+
+This is missing explanation why it is OK to have a mismatch between
+the SECINFO flags and VM_* flags. Maybe that could be explained in
+sgx_map_allowed() documentation.
+
+/Jarkko
