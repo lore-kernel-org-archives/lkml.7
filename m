@@ -2,85 +2,46 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4747AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D65DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1587D24BF6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cX5NyM5y"
+	by mail.kernel.org (Postfix) with ESMTP id 0182E24BF6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfFDLdZ (ORCPT
+        id S1727538AbfFDLd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:33:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42570 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfFDLdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:33:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e6so8934592pgd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EUprF+8/pHWVdRSsm+gYg6Nl/I7GuQYxpR2PKTuS704=;
-        b=cX5NyM5ycgQOuk4IAmaDphsDa6H1d8CV7lcsQ4WAlb3RMe7FRqEdFwUIy/zUw8PT8H
-         Haqw45ol2rk0FawObSUduoqdJamkzKEihgKpPg8h/L/kNvLP5+HNu60rp64HSLBJfQpF
-         3HigbEfhYLItfyDMYlI5C8j8tpV6TYxxSik3E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EUprF+8/pHWVdRSsm+gYg6Nl/I7GuQYxpR2PKTuS704=;
-        b=NGk3A2BL5SVoGjBwf9kR49hu1PvBU3GwoBYm9b1y/+nZE/Svh+7UTn5bq2fjZF3DNa
-         oUdP6wpdUGbI9BeGo9BN3M4mJ1w62QgOBZLV2iW1Kkfkp8UXDc+9LJCciuCZ9iddtf1c
-         eSnn5AL/xf6IuOxHiU2UvqMdrdC8MZZLBZ+7Bi8BAzRXYS4cDdt5ZjXtshdskQQN2st5
-         bUcQ/6w0WfM96pnHKsLLqIdvzBwoXCM8/Si6ggVnt2nsqECUOHEe6hUm+Czsu85oKh/b
-         OjUiQkxshgzHDjKqoX6kYeJN83trN4SBK4aK6bgvX/CO7iltnDHbTPGzSDUlAXVKNZrN
-         1mHg==
-X-Gm-Message-State: APjAAAUYj9HO8wT0cKIJYNCcTjALLhStLopZb/hhTAIcjqL2j62Bmf3w
-        AeFd2AM++mw8i5dZB8fhs6KOOw==
-X-Google-Smtp-Source: APXvYqxvTH3i5lfqNDE1vh1a5Z/iOkSgOFTEfkO87DUgwW2C+aCSxKKDsoC0hUv5/Gdl7rHPksKKEw==
-X-Received: by 2002:a62:ea04:: with SMTP id t4mr36483301pfh.47.1559648003307;
-        Tue, 04 Jun 2019 04:33:23 -0700 (PDT)
-Received: from [10.176.68.125] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id u4sm17314721pfu.26.2019.06.04.04.33.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 04:33:22 -0700 (PDT)
-Subject: Re: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc:
- sdhci: queue work after sdhci_defer_done())
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Brian Masney <masneyb@onstation.org>
-Cc:     Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>, ulf.hansson@linaro.org,
-        faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-References: <20190524111053.12228-1-masneyb@onstation.org>
- <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
- <20190524154958.GB16322@basecamp> <20190526122136.GA26456@basecamp>
- <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
- <20190526195819.GA29665@basecamp> <20190527093711.GA853@basecamp>
- <ead7f268-b730-3541-31f7-4499556efec0@intel.com>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <af4d6703-8506-dad7-c2ed-13fa8b2e390d@broadcom.com>
-Date:   Tue, 4 Jun 2019 13:33:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 4 Jun 2019 07:33:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41793 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727287AbfFDLd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:33:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 04:33:28 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2019 04:33:26 -0700
+Subject: Re: [PATCH 01/22] perf intel-pt: Fix itrace defaults for perf script
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190520113728.14389-1-adrian.hunter@intel.com>
+ <20190520113728.14389-2-adrian.hunter@intel.com>
+ <20190520144516.GL8945@kernel.org> <20190531164547.GC20408@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <7f73ed6e-7935-b325-14af-0b9e43144ed4@intel.com>
+Date:   Tue, 4 Jun 2019 14:32:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <ead7f268-b730-3541-31f7-4499556efec0@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20190531164547.GC20408@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,29 +49,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/2019 2:08 PM, Adrian Hunter wrote:
-> On 27/05/19 12:37 PM, Brian Masney wrote:
->> On Sun, May 26, 2019 at 03:58:19PM -0400, Brian Masney wrote:
->>> I attached a patch that shows how I was able to determine what had
->>> already claimed the host.
->> On Mon, May 27, 2019 at 10:48:24AM +0300, Adrian Hunter wrote:
->>> This is because SDHCI is using the IRQ thread to process the SDIO card
->>> interrupt (sdio_run_irqs()).  When the card driver tries to use the card, it
->>> causes interrupts which deadlocks since c07a48c26519 ("mmc: sdhci: Remove
->>> finish_tasklet") has moved the tasklet processing to the IRQ thread.
+On 31/05/19 7:45 PM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 20, 2019 at 11:45:16AM -0300, Arnaldo Carvalho de Melo escreveu:
+>> Em Mon, May 20, 2019 at 02:37:07PM +0300, Adrian Hunter escreveu:
+>>> Commit 4eb068157121 ("perf script: Make itrace script default to all
+>>> calls") does not work because 'use_browser' is being used to determine
+>>> whether to default to periodic sampling (i.e. better for perf report).
+>>> The result is that nothing but CBR events display for perf script
+>>> when no --itrace option is specified.
 >>>
->>> I would expect to be able to use the IRQ thread to complete requests, and it
->>> is desirable to do so because it is lower latency.
->>>
->>> Probably, SDHCI should use sdio_signal_irq() which queues a work item, and
->>> is what other drivers are doing.
->>>
->>> I will investigate some more and send a patch.
+>>> Fix by using 'default_no_sample' and 'inject' instead.
+>>
+>> Applied 1-3 for now, concentrating on fixes, will process 4-22 later.
 > 
-> Please try the patch below:
+> Tested the ones that affect sqlite databases an the GUI, all look good,
+> added committer notes and text screenshots as committer notes, thanks!
 
-Finally got time to update my kernel to 5.2-rc2. This patch indeed 
-resolves the issue.
-
-Thanks,
-Arend
+Thanks for applying!  Are patches 11-22 in your tree?
