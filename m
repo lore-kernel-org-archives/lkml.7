@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C19C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A16C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58DB206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B53F206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691094;
-	bh=qqAkKaDS4lL6uII4veNn02iHkQ8Wsm4Bb8JZWisIFWc=;
+	s=default; t=1559691099;
+	bh=v37XWTXYLOMMk+Eg1kuGeq+Ikko11JiXlRFcLmbIr8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+u6R0pp07mghqaNmWYjjg6jAwnoTJkpLxyruLUfaBOUG7QcNHBcH3bC71feQxrcv
-	 VZBmN3Xr2G1RE+DCEU8pQZiibJyyHpTz36ehgs2Cp9GayET2hlo5dqXjiJOirYAvlD
-	 L9RUYXo3Nxsk9KEtOyboxsqrY+hv7DPWrhBe98Ek=
+	b=m5JE/cqK1+Py/WUWEjxq5RTeYmfpqUWW1WGOPtAYBV7f9LWdQDj0+ntThkRGzrVRa
+	 AGOPvqz+YWK0usExhC5QwRBRAOD+7csPPBQsIru/tieNKwNUhHAJlmOxXWvIdbtRKN
+	 LOjawD+n3qUPHoA3TZSBA7TmVxhN2Gom8Kt5m6aM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfFDXbd (ORCPT
+        id S1727080AbfFDXW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfFDXW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:58 -0400
+        id S1727049AbfFDXWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635AD208E3;
-        Tue,  4 Jun 2019 23:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E3420866;
+        Tue,  4 Jun 2019 23:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690578;
-        bh=qqAkKaDS4lL6uII4veNn02iHkQ8Wsm4Bb8JZWisIFWc=;
+        s=default; t=1559690573;
+        bh=v37XWTXYLOMMk+Eg1kuGeq+Ikko11JiXlRFcLmbIr8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0pmrcFendHX3htXDFA1yQHlTbIQBjBqmek0B22g3D8hxHH/ubZGqrtNL29wdEYhsL
-         NON3mqlIplypbSlEkVzyv/MRZcH/Yl1160+NeiY5i/cbsdDFJIDx6dWBlrvbiF+QuI
-         awS1GS65XbRpmMMnSbkuWdfndw/4Ck9KjqXbz38Y=
+        b=GVtnRYzaU6u95CMAqhdYpyaKi8ytZSeS9/bduAHvC8tIsm3L/VTljZROE9Wu9zJRa
+         n2X0ZdvF/RYB8JIAHEJ5z1nGWg9DL+H/2lahIVANUwlKMVEvxGBWGVHIjyP6VYZSDf
+         PFAcwzxrXqZ+Sju5yuD7xrbW0uCDjSmnMqoNbA5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 28/60] nvme-pci: Fix controller freeze wait disabling
-Date:   Tue,  4 Jun 2019 19:21:38 -0400
-Message-Id: <20190604232212.6753-28-sashal@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 25/60] arm64/mm: Inhibit huge-vmap with ptdump
+Date:   Tue,  4 Jun 2019 19:21:35 -0400
+Message-Id: <20190604232212.6753-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -59,59 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit e43269e6e5c49d7fec599e6bba71963935b0e4ba ]
+[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
 
-If a controller disabling didn't start a freeze, don't wait for the
-operation to complete.
+The arm64 ptdump code can race with concurrent modification of the
+kernel page tables. At the time this was added, this was sound as:
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
+* Modifications to leaf entries could result in stale information being
+  logged, but would not result in a functional problem.
+
+* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
+  were performed when the ptdump code cannot be invoked.
+
+* At runtime, modifications to non-leaf entries only occurred in the
+  vmalloc region, and these were strictly additive, as intermediate
+  entries were never freed.
+
+However, since commit:
+
+  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
+
+... it has been possible to create huge mappings in the vmalloc area at
+runtime, and as part of this existing intermediate levels of table my be
+removed and freed.
+
+It's possible for the ptdump code to race with this, and continue to
+walk tables which have been freed (and potentially poisoned or
+reallocated). As a result of this, the ptdump code may dereference bogus
+addresses, which could be fatal.
+
+Since huge-vmap is a TLB and memory optimization, we can disable it when
+the runtime ptdump code is in use to avoid this problem.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
+Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/mm/mmu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a90cf5d63aac..4e064aad2b1a 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2397,7 +2397,7 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index e97f018ff740..ece9490e3018 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -936,13 +936,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
  
- static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ int __init arch_ioremap_pud_supported(void)
  {
--	bool dead = true;
-+	bool dead = true, freeze = false;
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+-	/* only 4k granule supports level 1 block mappings */
+-	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
++	/*
++	 * Only 4k granule supports level 1 block mappings.
++	 * SW table walks can't handle removal of intermediate entries.
++	 */
++	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
++	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
  
- 	mutex_lock(&dev->shutdown_lock);
-@@ -2405,8 +2405,10 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 		u32 csts = readl(dev->bar + NVME_REG_CSTS);
+ int __init arch_ioremap_pmd_supported(void)
+ {
+-	return 1;
++	/* See arch_ioremap_pud_supported() */
++	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
  
- 		if (dev->ctrl.state == NVME_CTRL_LIVE ||
--		    dev->ctrl.state == NVME_CTRL_RESETTING)
-+		    dev->ctrl.state == NVME_CTRL_RESETTING) {
-+			freeze = true;
- 			nvme_start_freeze(&dev->ctrl);
-+		}
- 		dead = !!((csts & NVME_CSTS_CFS) || !(csts & NVME_CSTS_RDY) ||
- 			pdev->error_state  != pci_channel_io_normal);
- 	}
-@@ -2415,10 +2417,8 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	 * Give the controller a chance to complete all entered requests if
- 	 * doing a safe shutdown.
- 	 */
--	if (!dead) {
--		if (shutdown)
--			nvme_wait_freeze_timeout(&dev->ctrl, NVME_IO_TIMEOUT);
--	}
-+	if (!dead && shutdown && freeze)
-+		nvme_wait_freeze_timeout(&dev->ctrl, NVME_IO_TIMEOUT);
- 
- 	nvme_stop_queues(&dev->ctrl);
- 
+ int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
 -- 
 2.20.1
 
