@@ -2,83 +2,101 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C03C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5F3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5C223C14
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A75F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfFDIdw (ORCPT
+        id S1727066AbfFDIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:33:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17663 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726735AbfFDIdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:33:51 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C46289A8C6DCB0E85411;
-        Tue,  4 Jun 2019 16:33:48 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
- 16:33:46 +0800
-Subject: Re: [PATCH] arm64: arch_k3: Fix kconfig dependency warning
-To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <marc.zyngier@arm.com>, <lokeshvutla@ti.com>, <tony@atomide.com>,
-        <t-kristo@ti.com>, <lokeshvutla@ti.com>
-References: <20190510035255.27568-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <a9ea9cf2-71d0-d8f8-3139-33f1945520c5@huawei.com>
-Date:   Tue, 4 Jun 2019 16:33:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 4 Jun 2019 04:34:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40682 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfFDIe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 04:34:26 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 843A228527C;
+        Tue,  4 Jun 2019 09:34:24 +0100 (BST)
+Date:   Tue, 4 Jun 2019 10:34:22 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 1/5] drm/rockchip: fix fb references in async update
+Message-ID: <20190604103422.63a61f46@collabora.com>
+In-Reply-To: <aecadca2-f67b-5d9d-550e-f90cbca5fd3f@collabora.com>
+References: <20190603165610.24614-1-helen.koike@collabora.com>
+        <20190603165610.24614-2-helen.koike@collabora.com>
+        <aecadca2-f67b-5d9d-550e-f90cbca5fd3f@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190510035255.27568-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, 3 Jun 2019 17:13:34 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-Friendly ping:
+> On 6/3/19 1:56 PM, Helen Koike wrote:
+> > In the case of async update, modifications are done in place, i.e. in the
+> > current plane state, so the new_state is prepared and the new_state is
+> > cleaned up (instead of the old_state, unlike what happens in a
+> > normal sync update).
+> > To cleanup the old_fb properly, it needs to be placed in the new_state
+> > in the end of async_update, so cleanup call will unreference the old_fb
+> > correctly.
+> > 
+> > Also, the previous code had a:
+> > 
+> > 	plane_state = plane->funcs->atomic_duplicate_state(plane);
+> > 	...
+> > 	swap(plane_state, plane->state);
+> > 
+> > 	if (plane->state->fb && plane->state->fb != new_state->fb) {
+> > 	...
+> > 	}
+> > 
+> > Which was wrong, as the fb were just assigned to be equal, so this if
+> > statement nevers evaluates to true.
+> > 
+> > Another details is that the function drm_crtc_vblank_get() can only be
+> > called when vop->is_enabled is true, otherwise it has no effect and
+> > trows a WARN_ON().
+> > 
+> > Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
+> > fb and pus the old fb) is not required, as it is taken care by
+> > drm_mode_cursor_universal() when calling
+> > drm_atomic_helper_update_plane().
+> > 
+> > Signed-off-by: Helen Koike <helen.koike@collabora.com>  
+> 
+> Cc: <stable@vger.kernel.org> # v4.20+
+> Fixes: 15609559a834 ("drm/rockchip: update cursors asynchronously
+> through atomic.")
 
-Who can take this?
-
-On 2019/5/10 11:52, YueHaibing wrote:
-> Fix Kbuild warning when SOC_TI is not set
-> 
-> WARNING: unmet direct dependencies detected for TI_SCI_INTA_IRQCHIP
->   Depends on [n]: TI_SCI_PROTOCOL [=y] && SOC_TI [=n]
->   Selected by [y]:
->   - ARCH_K3 [=y]
-> 
-> Fixes: 009669e74813 ("arm64: arch_k3: Enable interrupt controller drivers")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  arch/arm64/Kconfig.platforms | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 42eca65..9d1292f 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -88,6 +88,7 @@ config ARCH_K3
->  	bool "Texas Instruments Inc. K3 multicore SoC architecture"
->  	select PM_GENERIC_DOMAINS if PM
->  	select MAILBOX
-> +	select SOC_TI
->  	select TI_MESSAGE_MANAGER
->  	select TI_SCI_PROTOCOL
->  	select TI_SCI_INTR_IRQCHIP
-> 
-
+One comment for next time you have to add such tags after the fact:
+please try to keep lines unwrapped, otherwise patchwork only gets what's
+on the first line.
