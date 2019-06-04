@@ -2,182 +2,196 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB1CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0042CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C4823A6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695FE24BC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rtKVVYO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfFDN4H (ORCPT
+        id S1727735AbfFDN44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:56:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55539 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfFDN4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:56:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id f22so16480394ioh.22
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 06:56:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=LCdbntvhYYZKRFof+Yh6ukzQ5F55ULY7kbPPhoeYtys=;
-        b=ZfpRssyUiYXytIj0qE4eBHfQ1kC0U1VXUa7xUosZ3jOVdNNH8Nzt0tBecIodTXJW/K
-         6zzO01ThRcyfiW+cBJ9EcWGtpjjhMOwFEmk6kLOKFAdXhgMb1R8V7xFR29r0CkWcy80w
-         iJ14NjHzlgKehvnO+6UwYeAfPoF14rcN4mJyD8eU8ixgl5Njvl01byxXjHxpKSZES1ib
-         53gqB2iRe2ccuWMIGaEypSfmFZN86SoSDxL3odiJLjvfGXMz9YMVfXacSsi00FRvMEFU
-         ZSXMopysh0XD2lg9eTa9xTmg3k5DGaOgLyZSvJ9S2GKlxEjlXBW6AS3DudZLe07uGQpQ
-         UPwQ==
-X-Gm-Message-State: APjAAAWP4nQnXnH0R9/nZTuOIoTn7fmRn7TU5EhT0WWrFbQqUjrP1nzp
-        0X23xakKP6ApvMi+bFJjiFH2lbkcBs6eTqeMK2PROcP9xvyD
-X-Google-Smtp-Source: APXvYqx8CytJgHtRoktHUU2J1oDCyXLYUV8bPq8r3+mr2+5Ym9d9ysvUSJwqeGwsF4dYnASG9SHlZMgmViBDfPpQiF6QK3loO23s
+        Tue, 4 Jun 2019 09:56:56 -0400
+Received: from mail-eopbgr710041.outbound.protection.outlook.com ([40.107.71.41]:40928
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727149AbfFDN44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:56:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q3Iygo/ncemIGGHPeGIjb1WGfS9hiw/B9ZUHoA1GHJM=;
+ b=rtKVVYO9Bv0f9ZLmAa+LjumU7TOUqWPAV1kqeA35FTOuLop0GlE4PUaqb//ZPhqRDKwqB0gZhQjMZz1Php6Wo/agEd/hOsMjxc1FAqtbnJRcOJRpuQeCMOyfOVMkOb60TmhrpAMS8EV9rFRqnysEerHRnEdprylLO/sVS+1Ei4Q=
+Received: from DM6PR02CA0089.namprd02.prod.outlook.com (2603:10b6:5:1f4::30)
+ by DM6PR02MB4939.namprd02.prod.outlook.com (2603:10b6:5:11::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.21; Tue, 4 Jun
+ 2019 13:56:53 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by DM6PR02CA0089.outlook.office365.com
+ (2603:10b6:5:1f4::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.18 via Frontend
+ Transport; Tue, 4 Jun 2019 13:56:53 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1943.19
+ via Frontend Transport; Tue, 4 Jun 2019 13:56:53 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:59406 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1hY9vo-0008Ce-SP; Tue, 04 Jun 2019 06:56:52 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1hY9vj-00057J-P1; Tue, 04 Jun 2019 06:56:47 -0700
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x54Dug3d029058;
+        Tue, 4 Jun 2019 06:56:42 -0700
+Received: from [172.23.62.223] (helo=xhdrdevl203.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1hY9ve-00054P-3H; Tue, 04 Jun 2019 06:56:42 -0700
+From:   Vishal Sagar <vishal.sagar@xilinx.com>
+To:     Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH 0/2] Add support for Xilinx UHD-SDI Receiver subsystem
+Date:   Tue,  4 Jun 2019 19:25:54 +0530
+Message-Id: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+X-Mailer: git-send-email 1.8.3.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(376002)(346002)(2980300002)(199004)(189003)(7696005)(81166006)(5660300002)(8936002)(110136005)(50226002)(8676002)(51416003)(14444005)(81156014)(70586007)(316002)(47776003)(86362001)(336012)(2616005)(476003)(63266004)(54906003)(426003)(70206006)(486006)(44832011)(26005)(77096007)(186003)(126002)(106002)(305945005)(9786002)(2906002)(107886003)(36756003)(16586007)(36386004)(6666004)(356004)(4720700003)(50466002)(4326008)(478600001)(48376002)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4939;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:38f:: with SMTP id y15mr21667600jap.143.1559656565809;
- Tue, 04 Jun 2019 06:56:05 -0700 (PDT)
-Date:   Tue, 04 Jun 2019 06:56:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000093abc2058a7fd715@google.com>
-Subject: KASAN: use-after-free Read in css_task_iter_advance
-From:   syzbot <syzbot+678796542f88f534c79e@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
-        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f412097d-5a5d-4e6c-0cb9-08d6e8f48004
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM6PR02MB4939;
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4939:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB4939D3B9F8E955C40828FBCAF6150@DM6PR02MB4939.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0058ABBBC7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: Pc9kvjFIEV9XnbZuB448WcAFGUjlVOPygGyNVejBza5R4MJ4epogPakB4fHuu5Bn2pN9OIAI9poqGSWVz6aTZotpfZ2kezebYxtMXlq6KiNFk9cU+nO98U6W/3tRWxTy/mj+oFTH5lYDkVCeEWOr62S/Y2QzlN9goeXWWZIDk93cy17lJfUghhhnr7Dg7JRxPcKpE2hewekAAPAQdNM3C98Feacl4/O6C0HoSH22F9xdYUrhXMVDXSn91EGw+uxVeWSdOtrlf8Dz6tVgtVFaVAtv3m9l+2ALQIUl5fxX8bVDF8KOL+ID4Tphq+ZbKJX75DnqInI2LZPcwIVcXvl8J+KDihUDyavRvndB0yafApSGNFC4BP4EnH9t6GKj2P57/WLfMNp0Cg9NS0jChk0llXj0BRgU7t10J8XIbXdh6Mw=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2019 13:56:53.4535
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f412097d-5a5d-4e6c-0cb9-08d6e8f48004
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Xilinx SMPTE UHD-SDI Receiver Subsystem
+----------------------------------------
 
-syzbot found the following crash on:
+The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create
+systems based on SMPTE SDI protocols. It receives unaligned native SDI
+streams from the SDI GT PHY and outputs an AXI4-Stream video stream,
+native video, or native SDI using Xilinx transceivers as the physical
+layer.
 
-HEAD commit:    56b697c6 Add linux-next specific files for 20190604
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1310e25aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
-dashboard link: https://syzkaller.appspot.com/bug?extid=678796542f88f534c79e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+                SMPTE UHD-SDI Rx Subsystem AXI4-Stream Architecture
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+678796542f88f534c79e@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in css_task_iter_advance+0x49b/0x540  
-kernel/cgroup/cgroup.c:4507
-Read of size 4 at addr ffff888096f20fe4 by task syz-executor.4/24150
-
-CPU: 1 PID: 24150 Comm: syz-executor.4 Not tainted 5.2.0-rc3-next-20190604  
-#8
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  css_task_iter_advance+0x49b/0x540 kernel/cgroup/cgroup.c:4507
-  css_task_iter_start+0x18b/0x230 kernel/cgroup/cgroup.c:4543
-  __cgroup_procs_start.isra.0+0x32f/0x400 kernel/cgroup/cgroup.c:4634
-  cgroup_threads_start+0x23/0x30 kernel/cgroup/cgroup.c:4741
-  cgroup_seqfile_start+0xa4/0xd0 kernel/cgroup/cgroup.c:3752
-  kernfs_seq_start+0xdc/0x190 fs/kernfs/file.c:118
-  traverse fs/seq_file.c:108 [inline]
-  traverse+0x165/0x740 fs/seq_file.c:91
-  seq_read+0x8dd/0x1110 fs/seq_file.c:188
-  kernfs_fop_read+0xed/0x560 fs/kernfs/file.c:252
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_loop_readv_writev fs/read_write.c:701 [inline]
-  do_iter_read+0x4a4/0x660 fs/read_write.c:935
-  vfs_readv+0xf0/0x160 fs/read_write.c:997
-  do_preadv+0x1c4/0x280 fs/read_write.c:1089
-  __do_sys_preadv fs/read_write.c:1139 [inline]
-  __se_sys_preadv fs/read_write.c:1134 [inline]
-  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459279
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f55b7e66c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459279
-RDX: 0000000000000001 RSI: 0000000020000b40 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000002 R11: 0000000000000246 R12: 00007f55b7e676d4
-R13: 00000000004c614c R14: 00000000004da9a8 R15: 00000000ffffffff
-
-Allocated by task 8993:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
-  slab_post_alloc_hook mm/slab.h:444 [inline]
-  slab_alloc mm/slab.c:3320 [inline]
-  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3482
-  getname_flags fs/namei.c:138 [inline]
-  getname_flags+0xd6/0x5b0 fs/namei.c:128
-  getname+0x1a/0x20 fs/namei.c:209
-  do_sys_open+0x2c9/0x5d0 fs/open.c:1064
-  __do_sys_open fs/open.c:1088 [inline]
-  __se_sys_open fs/open.c:1083 [inline]
-  __x64_sys_open+0x7e/0xc0 fs/open.c:1083
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8993:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3426 [inline]
-  kmem_cache_free+0x86/0x320 mm/slab.c:3692
-  putname+0xef/0x130 fs/namei.c:259
-  do_sys_open+0x318/0x5d0 fs/open.c:1079
-  __do_sys_open fs/open.c:1088 [inline]
-  __se_sys_open fs/open.c:1083 [inline]
-  __x64_sys_open+0x7e/0xc0 fs/open.c:1083
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff888096f20d40
-  which belongs to the cache names_cache of size 4096
-The buggy address is located 676 bytes inside of
-  4096-byte region [ffff888096f20d40, ffff888096f21d40)
-The buggy address belongs to the page:
-page:ffffea00025bc800 refcount:1 mapcount:0 mapping:ffff8880aa593ac0  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002a01388 ffffea0002315988 ffff8880aa593ac0
-raw: 0000000000000000 ffff888096f20d40 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888096f20e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888096f20f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888096f20f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff888096f21000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888096f21080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+          +============================================================+
+	  |           Native SDI           Native Video                |
+SDI	  |   +=========+   |   +============+  |   +=============+    |AXI4
+Stream	  |   |  SMPTE  |   V   |   SDI Rx   |  V   | Video In    |    |Stream
+--------->|-->| UHD-SDI |------>|    to      |----->|   to        |--->|------->
+	  |   |   RX    |       |  Native    |      | AXI4-Stream |    |
+	  |   +=========+       |Video Bridge|      +=============+    |
+	  |      |  ^           +============+                         |
+   <------|------+  |                                                  |
+sdi_rx_irq|         |                                                  |
+	  +=====+===+==================================================+
+                    |                            ^              ^
+                    |                            |              |
+                 s_axi_aclk                   sdi_rx_clk   video_out_clk
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+The subsystem consists of the following subcores:
+- SMPTE UHD-SDI (RX)
+- SDI RX to Video Bridge
+- Video In to AXI4-Stream
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+At design time, this subsystem can be configured in 3Gbps, 6Gbps or
+12Gbps mode. It can also be configured to output
+- SDI Native stream
+- Native Video
+- AXI4-Stream
+
+This driver only supports the AXI4-Stream configuration as there is a
+corresponding media bus format for YUV 422 10 bits per component in
+MEDIA_BUS_FMT_UYVY10_1X20.
+
+Though the core also supports YUV 420 10 bits per component, this is
+not supported in driver due to lack of corresponding media bus format
+currently.
+
+The SDI core has detection modes where in it can be configured to detect
+one or more modes from SD (Standard Definition), HD (High Definition),
+3GA, 3GB, 6G and 12G modes. When the core has detected the format, it
+generates a video lock. In case the source is removed or there is data
+corruption, the video may unlock. This is intimated to the application
+via a V4L2 event. Other events which application can subscribe are for
+overflow and underflow of the video bridges.
+
+The driver gives out the stream properties like width, height, colorformat,
+frame interval and progressive/interlaced based on the ST352 packet in SDI
+stream. If the ST352 packet is absent, then the values detected by the
+SMPTE UHD-SDI Rx core are used.
+
+The SDI core detection modes and detected mode, errors, etc are all
+accessible via v4l controls. This driver has been tested with Omnitek
+Ultra4K HD, Phabrix Qx and Blackmagic SDI-HDMI convertors.
+
+This patch set is being sent on top of v8 of Xilinx MIPI CSI2-Rx Subsystem
+driver patches.
+
+Vishal Sagar (2):
+  media: dt-bindings: media: xilinx: Add Xilinx UHD-SDI Receiver
+    Subsystem
+  media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem driver
+
+ .../bindings/media/xilinx/xlnx,sdirxss.txt         |   80 +
+ drivers/media/platform/xilinx/Kconfig              |   11 +
+ drivers/media/platform/xilinx/Makefile             |    1 +
+ drivers/media/platform/xilinx/xilinx-sdirxss.c     | 1846 ++++++++++++++++++++
+ include/uapi/linux/xilinx-sdirxss.h                |   63 +
+ include/uapi/linux/xilinx-v4l2-controls.h          |   30 +
+ include/uapi/linux/xilinx-v4l2-events.h            |    9 +
+ 7 files changed, 2040 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+ create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+
+-- 
+1.8.3.1
+
