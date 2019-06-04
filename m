@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5090C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6930C28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD75E23BA7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82052229F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bbpYgPT7"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pHvc2lxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfFDKPk (ORCPT
+        id S1727356AbfFDKPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:15:40 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:39195 "EHLO
+        Tue, 4 Jun 2019 06:15:44 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:39318 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfFDKPk (ORCPT
+        with ESMTP id S1727107AbfFDKPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:15:40 -0400
+        Tue, 4 Jun 2019 06:15:43 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC7H032511;
-        Tue, 4 Jun 2019 19:14:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7H032511
+        by conuserg-08.nifty.com with ESMTP id x54AEC7A032511;
+        Tue, 4 Jun 2019 19:14:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7A032511
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643264;
-        bh=ZW8oJHHCyujAucqOHf5owysxupf7VvOq0sufCbzCWAs=;
+        s=dec2015msa; t=1559643258;
+        bh=UUUjFRogbBACivTlFc6RgzhbVkPaCnIYQJXNtS0Cn2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbpYgPT74iM32GjIo997UUOMQ9vWoTSw0PoW8PZguSq4D/k4Va2cIhN41x4E1gqUs
-         TyHDXxYIBw3dMAdm680pEiOiWDdi6V3+qS1+xCwR+mYrtpQrppDU92JOzHssuABdV0
-         8mI/ysv69ZyRQoCZtdqeDFvHMnBRtjSyz0CEj9KWEc8CFZZsiCK2IaIF0WcZ9m1BYs
-         Gfn2gx5QOX8qnqhtGKPXgyJ0Em7H+AT95vylOg8HAVkgjXLsWsUcFTi/1GHlvJbMEb
-         sygylFj+vTiTtZQCbfEOTVMKaf73xjlVnE2MPUQc7Ya5gm+lnZpVvPPXR2OsvZBYaj
-         ittJ4YlSEshHw==
+        b=pHvc2lxavg4I4Q3qoMUzW+SXQ01lTpJbEksIGn94RMsh+7NKYUWzu/3ELUBMZdrWx
+         4u0ldaTSyoez+pXhB7SzlMB5Hig069bPACKP76bGaeiVEyVIdsdt3o4KXykw7R+sMK
+         KhtNOE1cED0YSHV/Xc+YMKFHPpJXe0un5tB9tC8xaHA+qCuzqqtbMhrlJhAvugkBoG
+         vMM+sYS6IuYgadmgW1lKC8HBXgUGlaDEufXu8Urh4mb3OGmSr/eu4hrNOeyKrD4VaS
+         MmA2sW32rC+eKVvBg5mQiYSN1cFEuSiXgA9Av/r5mKniEfMn7flHVowjSuZsNd1sr0
+         Ew8hewIOFKrUw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -46,11 +46,10 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         Jani Nikula <jani.nikula@intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/15] kbuild: simplify scripts/headers_install.sh
-Date:   Tue,  4 Jun 2019 19:14:05 +0900
-Message-Id: <20190604101409.2078-12-yamada.masahiro@socionext.com>
+Subject: [PATCH 04/15] kbuild: fix Kconfig prompt of CONFIG_HEADERS_CHECK
+Date:   Tue,  4 Jun 2019 19:13:58 +0900
+Message-Id: <20190604101409.2078-5-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
@@ -59,101 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that headers_install.sh is invoked per file, remove the for-loop
-in the shell script.
+Prior to commit 257edce66d31 ("kbuild: exploit parallel building for
+CONFIG_HEADERS_CHECK"), the sanity check of exported headers was done
+as a side-effect of build rule of vmlinux.
+
+That commit is good, but I missed to update the prompt of the Kconfig
+entry. For the sake of preciseness, lets' say "when building 'all'".
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/Makefile.headersinst |  2 +-
- scripts/headers_install.sh   | 48 +++++++++++++++---------------------
- 2 files changed, 21 insertions(+), 29 deletions(-)
+ lib/Kconfig.debug | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/Makefile.headersinst b/scripts/Makefile.headersinst
-index c96c4c26e240..d2b572a7a628 100644
---- a/scripts/Makefile.headersinst
-+++ b/scripts/Makefile.headersinst
-@@ -58,7 +58,7 @@ $(if $(new-dirs), $(shell mkdir -p $(new-dirs)))
- ifndef HDRCHECK
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index cbdfae379896..7cdcb962358c 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -306,11 +306,11 @@ config DEBUG_FS
+ 	  If unsure, say N.
  
- quiet_cmd_install = HDRINST $@
--      cmd_install = $(CONFIG_SHELL) $(srctree)/scripts/headers_install.sh $(@D) $(<D) $(@F)
-+      cmd_install = $(CONFIG_SHELL) $(srctree)/scripts/headers_install.sh $< $@
+ config HEADERS_CHECK
+-	bool "Run 'make headers_check' when building vmlinux"
++	bool "Run sanity checks on uapi headers when building 'all'"
+ 	depends on !UML
+ 	help
+-	  This option will extract the user-visible kernel headers whenever
+-	  building the kernel, and will run basic sanity checks on them to
++	  This option will extract the user-visible kernel headers when
++	  building the 'all' target, and will run basic sanity checks on them to
+ 	  ensure that exported files do not attempt to include files which
+ 	  were not exported, etc.
  
- $(src-headers): $(dst)/%.h: $(src)/%.h $(srctree)/scripts/headers_install.sh FORCE
- 	$(call if_changed,install)
-diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-index 593f8879c641..47f6f3ea0771 100755
---- a/scripts/headers_install.sh
-+++ b/scripts/headers_install.sh
-@@ -1,47 +1,39 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- 
--if [ $# -lt 2 ]
-+if [ $# -ne 2 ]
- then
--	echo "Usage: headers_install.sh OUTDIR SRCDIR [FILES...]"
-+	echo "Usage: headers_install.sh INFILE OUTFILE"
- 	echo
- 	echo "Prepares kernel header files for use by user space, by removing"
- 	echo "all compiler.h definitions and #includes, removing any"
- 	echo "#ifdef __KERNEL__ sections, and putting __underscores__ around"
- 	echo "asm/inline/volatile keywords."
- 	echo
--	echo "OUTDIR: directory to write each userspace header FILE to."
--	echo "SRCDIR: source directory where files are picked."
--	echo "FILES:  list of header files to operate on."
-+	echo "INFILE: header file to operate on"
-+	echo "OUTFILE: output file which the processed header is writen to"
- 
- 	exit 1
- fi
- 
- # Grab arguments
-+INFILE=$1
-+OUTFILE=$2
-+TMPFILE=$OUTFILE.tmp
- 
--OUTDIR="$1"
--shift
--SRCDIR="$1"
--shift
-+trap 'rm -f $OUTFILE $TMPFILE' EXIT
- 
--# Iterate through files listed on command line
-+sed -E -e '
-+	s/([[:space:](])(__user|__force|__iomem)[[:space:]]/\1/g
-+	s/__attribute_const__([[:space:]]|$)/\1/g
-+	s@^#include <linux/compiler(|_types).h>@@
-+	s/(^|[^a-zA-Z0-9])__packed([^a-zA-Z0-9_]|$)/\1__attribute__((packed))\2/g
-+	s/(^|[[:space:](])(inline|asm|volatile)([[:space:](]|$)/\1__\2__\3/g
-+	s@#(ifndef|define|endif[[:space:]]*/[*])[[:space:]]*_UAPI@#\1 @
-+' $INFILE > $TMPFILE || exit 1
- 
--FILE=
--trap 'rm -f "$OUTDIR/$FILE" "$OUTDIR/$FILE.sed"' EXIT
--for i in "$@"
--do
--	FILE="$(basename "$i")"
--	sed -E \
--		-e 's/([[:space:](])(__user|__force|__iomem)[[:space:]]/\1/g' \
--		-e 's/__attribute_const__([[:space:]]|$)/\1/g' \
--		-e 's@^#include <linux/compiler(|_types).h>@@' \
--		-e 's/(^|[^a-zA-Z0-9])__packed([^a-zA-Z0-9_]|$)/\1__attribute__((packed))\2/g' \
--		-e 's/(^|[[:space:](])(inline|asm|volatile)([[:space:](]|$)/\1__\2__\3/g' \
--		-e 's@#(ifndef|define|endif[[:space:]]*/[*])[[:space:]]*_UAPI@#\1 @' \
--		"$SRCDIR/$i" > "$OUTDIR/$FILE.sed" || exit 1
--	scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ "$OUTDIR/$FILE.sed" \
--		> "$OUTDIR/$FILE"
--	[ $? -gt 1 ] && exit 1
--	rm -f "$OUTDIR/$FILE.sed"
--done
-+scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ $TMPFILE > $OUTFILE
-+[ $? -gt 1 ] && exit 1
-+
-+rm -f $TMPFILE
- trap - EXIT
 -- 
 2.17.1
 
