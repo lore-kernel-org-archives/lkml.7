@@ -2,142 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49F2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADC824BBB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F4524BBB
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ7xH7Eq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qorJynVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfFDLUa (ORCPT
+        id S1727557AbfFDLUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:20:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38607 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfFDLUa (ORCPT
+        Tue, 4 Jun 2019 07:20:37 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36706 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfFDLUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:20:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so15389510wrs.5;
-        Tue, 04 Jun 2019 04:20:29 -0700 (PDT)
+        Tue, 4 Jun 2019 07:20:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so12352460wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3tUtjfLhbYiyXntb/3Ods4ivrBXswZB5toMPB77+VDk=;
-        b=cJ7xH7EqPcxzkggsSnyNm/GhMn+l4djlTZEfYna6R9ODrkBvcss6zWeNV1vZnE5kF6
-         pnJUOXGP8C69tSvxvs0bc/dmH3lGKlvuB9eUQCvlX+z3Sx4j+Fl2X8LYF3998SV9PiqS
-         WYnO7xB10SNjC4yO4//Wen/wL50dI8wPj4FkOT8cO5Oqzt3+ub1o49FKLz7+B0uDzJEL
-         +L4LZx9LiYG9cwwxMtfxx+H/A+Z6Q6926XAnlVvB/algbC3MJ2FDWEbFfHt5TjmfX0iv
-         Nd7Ih6VhdwDdQRuTukIxkIytG1aQ3T7xuRE6vntdkmq9dcal2bKc9n2dyviKO75c8unf
-         /pnA==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dxpNRThISdlm9cH6wVLDT0m23cE+WD+Qwgx9Y+V0kcw=;
+        b=qorJynVwLuvik3sbivI5IjQKek7vzUdZCZszNNGbzCEeBlZEduEh2WwFFpZ/9QsRvX
+         dJo3sXn9omTqzoQsBnwRHnllGRB6Cpdta98FFXlEUnaSG6o4pHkMTpLoSi3RPlfQho2C
+         4WLeCFj8l5xQK3C3wHKfEal2QZBExg/+JgckPRQ5BHqAFRmwOOoJFWd7cGw8UvFvyp5g
+         uGO2Glimu1ul6j/1P3D9R0Qa0fmuG2vSRZnUDAoAVVRuDCPyTqBSDYUKUqZ3AGKur7wh
+         vZUUU5qmtE7i6K0e/WLrfW9WvlVX4FTuldY7y3IFU8yCEL0LAXzdwoiU9+lBCwnlraB9
+         BVtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3tUtjfLhbYiyXntb/3Ods4ivrBXswZB5toMPB77+VDk=;
-        b=Q8nRBATniRZ7t/+Zom94NpEAI9eMgAwvxj1EfTNs5M0LIz9JUCUSH2Sg9mBmRA15Zi
-         /V/57XSSVtzD5zIQhMpKCCjDDPx7hOXRng4jRUZMYnX7nuGqVo01xDKmOv4SuOVHtrJj
-         Yu5b9jHI1MoK0isDxlM9qgI0ESpEsIRO2cn4JLZ6dBmz7loAjBO1bxo6TDx5l2EWObEl
-         ohVArTEd8/Qf1X5dTiQJYmytFczFnDn36KOyan2mdmaRCUwHNYcF0cFyOIUtAHgruFV1
-         oMERQAzDlXSCO1fPUo9/h3W0LEq1eYmjVUW9P+C2ZJ0SnQkzGk+etQMAqWBV+IvEMMCk
-         sksw==
-X-Gm-Message-State: APjAAAUmXeCs5f+aZfHNL1YPYPYhzW9zEtMjMmwJhxIITXN4J8xdV637
-        7uqnGk4Rs05kilT4k9aSWWk=
-X-Google-Smtp-Source: APXvYqwenSyNT/QU8/NRwNmKlIHPGw4s+w5yMpF1pckaLKGi1eJlxgyLfh7BlhjMnVmjPi4soLuziA==
-X-Received: by 2002:a5d:4f0b:: with SMTP id c11mr6168872wru.35.1559647228499;
-        Tue, 04 Jun 2019 04:20:28 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id y184sm11165178wmg.14.2019.06.04.04.20.27
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=dxpNRThISdlm9cH6wVLDT0m23cE+WD+Qwgx9Y+V0kcw=;
+        b=CWuqlefW1PYUx7N0yXnnXhNttIANWBN9HMy4n9cbuRirzW+wJ8GMkuOQ1JeeylyMbM
+         6CD+PH3abPZD0Hxs4kRh80ugWqeOxb8MgprTc9zB/5RS0j+bZ//dW2QWvyrSqvMizfas
+         JfhAw+cS27Cc31g2tq92a8mD/1vrQuSSXeRqrLWy3WXE0BR9kJi6+4pcQDMmnOVR/UJV
+         MmZdNCp97oP+7jeLmJCoPRGQeDVc0bVeCIKv6s6fLxis/dqAYlfvu0vmu92wdTWrOHn6
+         yCfiWBMLXBtxc0N/Lgr38e0LVLU2JonbvvbSfFZvTj0mm+jeN2oT0fXEflBVx051VzGz
+         y3cQ==
+X-Gm-Message-State: APjAAAVP7AuJSyjNw5sNTKxfOEpXCX4FkgFGuKrQS3nS0jPxCfyhIc8a
+        KqjBo1g1PlOo2Q9XeOo/EpF82G7w
+X-Google-Smtp-Source: APXvYqwNC0MkswzFShHt3yQldVkSXUz1KfIAJTRcaMCLUjOMO/ePNMi5n6kd/8vEPzhgHcOwyWftYQ==
+X-Received: by 2002:a5d:4a82:: with SMTP id o2mr3321183wrq.154.1559647234597;
+        Tue, 04 Jun 2019 04:20:34 -0700 (PDT)
+Received: from cizrna.lan ([109.72.12.213])
+        by smtp.gmail.com with ESMTPSA id g5sm20580044wrp.29.2019.06.04.04.20.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 04:20:27 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:20:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for
- the driver
-Message-ID: <20190604112026.GN16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-15-digetx@gmail.com>
+        Tue, 04 Jun 2019 04:20:33 -0700 (PDT)
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     arm@kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Olof Johansson <olof@lixom.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT)
+Subject: [PATCH 1/2] ARM: multi_v7_defconfig: add Panfrost driver
+Date:   Tue,  4 Jun 2019 13:20:01 +0200
+Message-Id: <20190604112003.31813-1-tomeu.vizoso@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="U6leaJ20qZQc29iB"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-15-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With the goal of making it easier for CI services such as KernelCI to
+run tests for it.
 
---U6leaJ20qZQc29iB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, May 02, 2019 at 02:38:13AM +0300, Dmitry Osipenko wrote:
-> The driver's compilation doesn't have any specific dependencies, hence
-> the COMPILE_TEST option can be supported in Kconfig.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 56db9dc05edb..a6bba6e1e7d9 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
-> =20
->  config ARM_TEGRA_DEVFREQ
->  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
-> -	depends on ARCH_TEGRA
-> +	depends on ARCH_TEGRA || COMPILE_TEST
->  	select PM_OPP
->  	help
->  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 6b748f214eae..952dff9d39f2 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -656,6 +656,7 @@ CONFIG_DRM_VC4=m
+ CONFIG_DRM_ETNAVIV=m
+ CONFIG_DRM_MXSFB=m
+ CONFIG_DRM_PL111=m
++CONFIG_DRM_PANFROST=m
+ CONFIG_FB_EFI=y
+ CONFIG_FB_WM8505=y
+ CONFIG_FB_SH_MOBILE_LCDC=y
+-- 
+2.20.1
 
-You need to be careful with these. You're using I/O register accessors,
-which are not supported on the UM architecture, for example.
-
-This may end up getting flagged during build testing.
-
-Thierry
-
---U6leaJ20qZQc29iB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2U/oACgkQ3SOs138+
-s6FAvw//dyUsGtKs5mTTMtrTOsyA/yTph5TFbQxj6Ldz0Qe+yvt8q9UhJQrZ8Otr
-fGKRedThgT/kV3BsBtgyy1KaPNRncN4unwk5X3maqZAL11pHfTTt8gKqWvEa3qvt
-WdaZNZRzL6ltGvazChtYHgnJy/+U0CNEVpb2JdXKsns0WapnLfABvjS2nYzcNmYm
-F6AqZjwSXF4uFyXUfzDiRLC6he8Ttgmrwrsz2OLdVNTRiGc1AMxd7NclevjxyHPA
-NkjEjSIEI95DjCTqTzXynnFAPUPQmXoUo38Fa0eM/hBe02YzESE1W+MFXGYxWx7o
-SGgRqvNPa3bH/bVs1o7izQtvAfNbIDqMEJGU/DXu058xy3ChZ/v9ANI/E3Yf0O8y
-Kg0ux0lbTfx9B/Lju2nXYAQF1edjpdfSYKDvwRARZsWlsOsfjjc678S1jHRZ8P1u
-8giEjfWwFRFgpZfq5cWBeO0i70Z/zBnl7osKKkMGRkaaWSepdR1gX+49vFXmCwjs
-UAvcKMGYIr5OK3zi+WS5eZ3YtYQKmOzzSvgCMQn5W5nCi3T5k5pQ/hspX4ibu9w4
-75BYN5E0NV0dVadCdNxI+C/v/5z3rsKUzf5oMxz4VTW/esqR8UZ/wS8T47LpAFIG
-GFOoUzbeumE50C6Vch4QI90MqJiKr3CYhcmQe6r4Mbqhg787rtw=
-=Fb77
------END PGP SIGNATURE-----
-
---U6leaJ20qZQc29iB--
