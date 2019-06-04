@@ -2,107 +2,101 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A6C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525A1C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAE520693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A9720693
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xd+W/Ugd"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0RCS61bP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfFDRoU (ORCPT
+        id S1726831AbfFDRog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:44:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44320 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfFDRny (ORCPT
+        Tue, 4 Jun 2019 13:44:36 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:27715 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfFDRof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:43:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54HhlH4058566;
-        Tue, 4 Jun 2019 12:43:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559670228;
-        bh=HtfMt2uOW+klYRskuwW/3O5vVBGnGwm8wRY2nAEaw3I=;
-        h=From:To:CC:Subject:Date;
-        b=Xd+W/Ugd8scVYteI97TYB1W+ZW/PCqDr6rotKP0wrB+q40QfaEnIkqkN6viWJg7dP
-         Xm1/zlB/bh3Z2gbJg/lYU42drisKZ/Rfiv69iWJFeI4dSklqg/9OZgq00yjlV8Rq54
-         FS5fzMKlceTyIsdSplGNtlveVstTCBEEXrUV4zqg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54Hhlc8064375
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 12:43:47 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 12:43:47 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 12:43:47 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54Hhlti110641;
-        Tue, 4 Jun 2019 12:43:47 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 0/6] LM36274 Introduction
-Date:   Tue, 4 Jun 2019 12:43:39 -0500
-Message-ID: <20190604174345.14841-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 4 Jun 2019 13:44:35 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x54HiGwD019946;
+        Wed, 5 Jun 2019 02:44:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x54HiGwD019946
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559670256;
+        bh=hfYqstATMxMwoXJHu8Wkpjvj39D6WWogH7gu86RCn1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0RCS61bPD/YYo8BxOT1uO7oS/UEQVBA6xBU23hhs7oqIerqoN5+lMvG9gS42QNDRU
+         Tzr/7eej23xlc3nbmGxQpFhVlPM5vP6+Ep2KPD7Urm6SVsDC5MEAZ/gTXi17nYtXM4
+         vZMSGLpKZ1GnCYvUEMB/OakehOT4dLVvb73o1OClRKu76zLPYYFJxUrgbRvAM5Sl6/
+         ECinsXWTx/Sw0xdXz0Ksk+4aYyG0A7WDslL8bbozmSIovF+PkOhnlNAxhn15/BSGqv
+         /pJQwzyf/ipj1B4EWvCaHuQOu5O5KhYiz1D4zws8F53epqiWmiLGYd40BAB1HiFqmI
+         B82PIMDkjnWaA==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] kobject: return -ENOSPC when add_uevent_var() fails
+Date:   Wed,  5 Jun 2019 02:44:12 +0900
+Message-Id: <20190604174412.13324-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+This function never attempts to allocate memory, so returning -ENOMEM
+looks weird to me. The reason of the failure is there is no more space
+in the given kobj_uevent_env structure.
 
-This is v5 of the patchset.  There is only one patch that has changed in the
-series and that is the regulator: lm363x: Add support for LM36274 patch.  This
-patch was updated to add flexibility in setting the bit to enable GPIO regulator
-control.
+No caller of this function relies on this functing returning a specific
+error code, so just change it to return -ENOSPC. The intended change,
+if any, is the error number displayed in log messages.
 
-This change was made on top of the branch
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-repo: https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
-branch: ti-lmu-led-drivers
+ lib/kobject_uevent.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Dan
-
-Dan Murphy (6):
-  regulator: lm363x: Make the gpio register enable flexible
-  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-  mfd: ti-lmu: Add LM36274 support to the ti-lmu
-  regulator: lm363x: Add support for LM36274
-  dt-bindings: leds: Add LED bindings for the LM36274
-  leds: lm36274: Introduce the TI LM36274 LED driver
-
- .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
- drivers/leds/Kconfig                          |   8 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
- drivers/mfd/Kconfig                           |   5 +-
- drivers/mfd/ti-lmu.c                          |  14 ++
- drivers/regulator/Kconfig                     |   2 +-
- drivers/regulator/lm363x-regulator.c          |  56 +++++-
- include/linux/mfd/ti-lmu-register.h           |  23 +++
- include/linux/mfd/ti-lmu.h                    |   4 +
- 11 files changed, 417 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
- create mode 100644 drivers/leds/leds-lm36274.c
-
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7998affa45d4..5ffd44bf4aad 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -647,7 +647,7 @@ EXPORT_SYMBOL_GPL(kobject_uevent);
+  * @env: environment buffer structure
+  * @format: printf format for the key=value pair
+  *
+- * Returns 0 if environment variable was added successfully or -ENOMEM
++ * Returns 0 if environment variable was added successfully or -ENOSPC
+  * if no space was available.
+  */
+ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
+@@ -657,7 +657,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
+ 
+ 	if (env->envp_idx >= ARRAY_SIZE(env->envp)) {
+ 		WARN(1, KERN_ERR "add_uevent_var: too many keys\n");
+-		return -ENOMEM;
++		return -ENOSPC;
+ 	}
+ 
+ 	va_start(args, format);
+@@ -668,7 +668,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
+ 
+ 	if (len >= (sizeof(env->buf) - env->buflen)) {
+ 		WARN(1, KERN_ERR "add_uevent_var: buffer size too small\n");
+-		return -ENOMEM;
++		return -ENOSPC;
+ 	}
+ 
+ 	env->envp[env->envp_idx++] = &env->buf[env->buflen];
 -- 
-2.21.0.5.gaeb582a983
+2.17.1
 
