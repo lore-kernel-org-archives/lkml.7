@@ -2,94 +2,177 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734C9C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C858EC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F39320B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="gr/cp8Ek"
+	by mail.kernel.org (Postfix) with ESMTP id AD2E82070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFDRWO (ORCPT
+        id S1726522AbfFDRXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:22:14 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:49678 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbfFDRWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:22:12 -0400
-Received: from localhost.localdomain (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 1AB48C637C;
-        Tue,  4 Jun 2019 17:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1559668930; bh=BiJVO+igEvB/BvDV1guw1BMUA9XYdzPpn3R1VKC8Wmg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=gr/cp8Ekax3nNSNz0bYu9BJ8eO9tpM8CvlbQwKB5VZRzVNIpTf7cplSa6bXNIlcEG
-         pgYfG0wmJ6UWmXgkjMEM/t4z79l/gyzQvwseGu815a2FD7la7THMd3kMg9wGRWQE/z
-         WOqPbWGEd/i3o5v7M6C6qxKuwZpyg1ksnkW5MDZM=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Cc:     Luca Weiss <luca@z3ntu.xyz>, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-input@vger.kernel.org (open list:SUN4I LOW RES ADC ATTACHED
-        TABLET KEYS DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list),
-        ~martijnbraam/pmos-upstream@lists.sr.ht
-Subject: [PATCH v2 2/2] arm64: dts: allwinner: a64: Add lradc node
-Date:   Tue,  4 Jun 2019 19:21:54 +0200
-Message-Id: <20190604172154.25472-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190604172154.25472-1-luca@z3ntu.xyz>
-References: <20190604172154.25472-1-luca@z3ntu.xyz>
+        Tue, 4 Jun 2019 13:23:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48490 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfFDRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:23:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A407315A2;
+        Tue,  4 Jun 2019 10:23:18 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C4FD3F5AF;
+        Tue,  4 Jun 2019 10:23:17 -0700 (PDT)
+Subject: Re: [PATCH] EDAC/altera: Warm Reset option for Stratix10 peripheral
+ DBE
+To:     thor.thayer@linux.intel.com
+Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
+Date:   Tue, 4 Jun 2019 18:23:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a node describing the KEYADC on the A64.
+Hi Thor,
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes since v1:
- - Use a a64 compatible with a fallback to the a83t one (the A64 also
-   uses a 3/4 voltage divider, as is the case with the A83T)
- - Correct the reg property (size 0x100 => 0x400)
+(CC: +Mark, Lorenzo and Sudeep for PSCI.
+How should SYSTEM_RESET2 be used for a vendor-specific reset?
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The original patch is:
+lore.kernel.org/r/1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com
+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8c5b521e6389..ba0ab1045e00 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -730,6 +730,14 @@
- 			status = "disabled";
- 		};
- 
-+		lradc: lradc@1c21800 {
-+			compatible = "allwinner,sun50i-a64-lradc",
-+				     "allwinner,sun8i-a83t-r-lradc";
-+			reg = <0x01c21800 0x400>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		i2s0: i2s@1c22000 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-a64-i2s",
--- 
-2.21.0
+On 03/06/2019 21:37, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> The Stratix10 peripheral FIFO memories can recover from double
+> bit errors with a warm reset instead of a cold reset.
+> Add the option of a warm reset for peripheral (USB, Ethernet)
+> memories.
+> 
+> CPU memories such as SDRAM and OCRAM require a cold reset for
+> DBEs.
+> Filter on whether the error is a SDRAM/OCRAM or a peripheral
+> FIFO memory to determine which reset to use when the warm
+> reset option is configured.
 
+... so you want to make different SMC calls on each CPU after panic()?
+
+
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index 8816f74a22b4..179601f14b48 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -2036,6 +2036,19 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
+>  /* panic routine issues reboot on non-zero panic_timeout */
+>  extern int panic_timeout;
+>  
+> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
+> +/* EL3 SMC call to setup CPUs for warm reset */
+> +void panic_smp_self_stop(void)
+> +{
+> +	struct arm_smccc_res result;
+> +
+> +	__cpu_disable();
+> +	cpu_relax();
+> +	arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, S10_WARM_RESET_WFI_FLAG,
+> +		      S10_WARM_RESET_WFI_FLAG, 0, 0, 0, 0, 0, &result);
+> +}
+> +#endif
+
+Oooer!
+
+panic_smp_self_stop() isn't for drivers to override: only the arch code.
+__cpu_disable() is only for the cpu-hotplug machinery. Nothing else should touch it.
+
+Isn't this thing only called if another CPU out there is panic()ing too?
+
+
+I think one of the problems here is arm64 leaves secondary CPUs running after panic().
+This would be better fixed by using the appropriate cpu_ops[]->cpu_die() call in arm64's
+ipi_cpu_stop().
+
+
+As for passing platform-specific options, PSCI[0] has a 'reset_type' for SYSTEM_RESET2,
+which looks suspiciously like what you want here. I'm not sure how its expected to be
+used... hopefully the PSCI maintainers can give us some pointers.
+
+(The existing support is commit 4302e381a870 ("firmware/psci: add support for SYSTEM_RESET2"))
+
+
+Is it possible for firmware to do both the cold/warm reset work when SYSTEM_RESET is
+called? This would mean you don't have to care here and there are fewer choices to be made
+overall.
+If not, is there anything left behind that can give it the hint? Like non-zero error
+counters for the USB/Ethernet devices?
+
+
+> @@ -2067,14 +2080,28 @@ static int s10_edac_dberr_handler(struct notifier_block *this,
+>  			regmap_write(edac->ecc_mgr_map,
+>  				     S10_SYSMGR_UE_ADDR_OFST, err_addr);
+>  			edac_printk(KERN_ERR, EDAC_DEVICE,
+> -				    "EDAC: [Fatal DBE on %s @ 0x%08X]\n",
+> -				    ed->edac_dev_name, err_addr);
+> +				    "EDAC: [Fatal DBE on %s [CPU=%d] @ 0x%08X]\n",
+> +				    ed->edac_dev_name, raw_smp_processor_id(),
+> +				    err_addr);
+>  			break;
+>  		}
+>  		/* Notify the System through SMC. Reboot delay = 1 second */
+> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
+> +		/* Handle peripheral FIFO DBE as Warm Resets */
+> +		if (dberror & S10_COLD_RESET_MASK) {
+
+
+> +			panic_timeout = 1;
+
+Isn't this value supposed to be provided on the kernel commandline? Surely this prevents
+debug using the commandline option to increase the delay?
+
+(I see you already change it)
+
+
+> +			arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, dberror, 0, 0, 0,
+> +				      0, 0, 0, &result);
+> +		} else {
+> +			arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE,
+> +				      S10_WARM_RESET_WFI_FLAG | dberror, 0, 0,
+> +				      0, 0, 0, 0, &result);
+> +		}
+> +#else
+>  		panic_timeout = 1;
+>  		arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, dberror, 0, 0, 0, 0,
+>  			      0, 0, &result);
+> +#endif
+>  	}
+>  
+>  	return NOTIFY_DONE;
+
+What do these SMC do? Are they equivalent to the PSCI CPU online/offline calls?
+
+panic() notifiers aren't robust as they can be skipped if kdump is loaded.
+
+
+Thanks,
+
+James
+
+
+[0]
+https://static.docs.arm.com/den0022/d/Power_State_Coordination_Interface_PDD_v1_1_DEN0022D.pdf
