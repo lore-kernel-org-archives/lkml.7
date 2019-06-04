@@ -2,105 +2,186 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E414AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478F3C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA04624DB4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7F724DB4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mVr5fzjs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWLna89W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfFDG6z (ORCPT
+        id S1726939AbfFDG7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:58:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37259 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfFDG6x (ORCPT
+        Tue, 4 Jun 2019 02:59:46 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35633 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfFDG7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:58:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 131so6039843ljf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 23:58:52 -0700 (PDT)
+        Tue, 4 Jun 2019 02:59:45 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u124so2285802vsu.2;
+        Mon, 03 Jun 2019 23:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=miy+F0UoMi0lHDhsda5tGypnZkgAe9GPxZhd/GwR4u4=;
-        b=mVr5fzjsLR1nkrv+kdyuXyQZYPVgVYh780mkZNBtzql5tdvV6xYIXziep7mAHvlpgr
-         wgVyucCn9Q+gRs9xdpx5DDJBkgsWgpVO758qfmyjDY+nq/AGEVHSIj6TD8fqoVO6NuB2
-         gmN9XNCHZemMWo7MBLZf9LlwZdrVYmZpT4HX/YhK8tgItVFx1+9PVUn4axVECn2cPbiR
-         xaZ9JlI8wU4yhQ5NKlasEhRA9N5TlsYY08c9dTH9lwSnisaGNESI7RSrQuR+URHoqolU
-         7sWzDFpg5l+yS+IUyV3P5ZwDTQ9RdxIoM9FShhqodspBm7i0OQ2BQQ+n7YVmD1emI5gi
-         c3RA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ct+dj+TeFGYPRbN7w+7PHPvII+8/Y2dGCES2KKtAHHo=;
+        b=pWLna89WZn7dcM0S/wyEszhw9i4En1+7H46YYKuAiZsyrpQSF3o4COvb5+H5bhIAd1
+         iP2bgFXKrjjs6yPXlyiZ6okRoSYPpvJdYwTuH2wdCNjvwocfgtk9ZMGfEvAnDiP1VFNW
+         /O2yw5GZdYrQmUE5cpUO4BKBzVXtVf9uM+dUwXPEXBT/8lo+MDLC3PalDHY+31PqGNDz
+         e0/czIl1cLqZHj13obzr6w0y+qwTFF22q8Vd7jkfIqL6xofNIwo2dN+XZU25J+Dd/M7F
+         a4IVa2eiXOoPkjj/5f6P4tClh4yMiMNRL8+TW8wLUFV7Txe0vC4S9qNjTW3UOVsjLG+g
+         GX7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=miy+F0UoMi0lHDhsda5tGypnZkgAe9GPxZhd/GwR4u4=;
-        b=cYnIHcX3bDD5TB9nbvCaZbJHO/scJvmzjlpx4WHdTlcJcmlH0TjG90atOosmF/vK3r
-         uJblnkGl4ACqNqfoJ4BK/4fYy4WeiD5/txhqhZYEEJ0Gv0CWx46MgmXb9kX9ni0ZN1Ju
-         uS2ferPFOsZl8zA8E7lGxMa1mbyFw+DKhsQF1FaY9ZaUBUIxsHAnExKGJkyWgq9r6jPk
-         SxM7RFbggbmG78aNgipi7gwERLlfJ66KMuim5UuODx0fQhixJeceCJJVl4uQ+Ymrmt0U
-         91THeEKSAatFLJ+pUfYXefVuZPHXvXJsmA7LKwvP4e5a0Sh38dXFF0wksNQzzZPrWKxB
-         rSog==
-X-Gm-Message-State: APjAAAUFiHTnVmepLUJTJHkVLWMwy/38+s6JcI1hTIBrD9lW8XWo6ruM
-        ftevDhaI22usT7OAR7CE1SPaqg==
-X-Google-Smtp-Source: APXvYqzs6Jwh4UF70YPDT+9ZM8x2yVImFgcqBfuOAwxH86MX/JoTCM2AAKQTK0oKPr9S/2mco/Dh9Q==
-X-Received: by 2002:a2e:9654:: with SMTP id z20mr3491108ljh.52.1559631531818;
-        Mon, 03 Jun 2019 23:58:51 -0700 (PDT)
-Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
-        by smtp.gmail.com with ESMTPSA id r11sm2978344ljh.90.2019.06.03.23.58.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 23:58:51 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     minchan@kernel.org, ngupta@vflare.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] zsmalloc: remove unused variable
-Date:   Tue,  4 Jun 2019 08:58:26 +0200
-Message-Id: <20190604065826.26064-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ct+dj+TeFGYPRbN7w+7PHPvII+8/Y2dGCES2KKtAHHo=;
+        b=qoqp4sv0/j0x2tokI4Zo1RSP6tF5jy4MwfXo6QScca1WszbcuJGVQKw5qcZMJ5oYKO
+         kNdWyId+b/R1rF1tC3hXziCqI9NrBd87jHoiGasFIwlh5k6+7qPTV1zAhOCqxjNiOhNV
+         xdEmncMntXLj99Czi3mSu0wWJIt0lmp+BL97trIFs/0rsLjn6dLPCQYrurufE69nMHHB
+         Y0JubO3v9hPWPga1OVXQGn3dkFe5Nfa4gX6vCTesaI3VC0LrIcWrdEUfH6MyP72UIl02
+         xZ690q5veSzIseXg1NkAsHclwVjsFXSi93emIgx0EJixyUmRCxnf83D8tXsA0Iundbl6
+         iaOA==
+X-Gm-Message-State: APjAAAVIWSdMVxdZm5yPnr7Jy/B0H0Ucy2vwZ7Km4NzMuIvVM+Ao6zxe
+        +JP3IsN/l2Mgb8V5H7PofOEylu4eM5/e83o39veqPjrVBC0xfA==
+X-Google-Smtp-Source: APXvYqxa/N1nMMBMS9cabavZ6JMxqjs1SSh6Vq4tbZKCgVAu/WWNEdbNxTR+bMGuY3wG6/Yu5dot4rhSHeeMb8IL4ns=
+X-Received: by 2002:a67:ce10:: with SMTP id s16mr4055803vsl.74.1559631584400;
+ Mon, 03 Jun 2019 23:59:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
+ <c83f8777-f6be-029b-980d-9f974b4e28ce@gmail.com> <CAKgHYH1=aqmOEsbH-OuSjK4CJ=9FmocjuOg6tsyJNPLEOWVB-g@mail.gmail.com>
+ <a0f08b20-41ef-db53-48df-4d8f5333b6af@gmail.com>
+In-Reply-To: <a0f08b20-41ef-db53-48df-4d8f5333b6af@gmail.com>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Tue, 4 Jun 2019 14:59:03 +0800
+Message-ID: <CAKgHYH0pH3Otj2izYwdcGKhJhjfovi1C-Ez1g2f7P5ahzQEfyw@mail.gmail.com>
+Subject: Re: [PATCH] ipv6: Prevent overrun when parsing v6 header options
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable 'entry' is no longer used and the compiler rightly
-complains that it should be removed.
+Sorry, I don't get your point. Why is xfrm6_transport_output() buggy?
+The point is that there would be out-of-bound access in
+mip6_destopt_offset() and mip6_destopt_offset(), since there is no
+sanity check for offset.
 
-../mm/zsmalloc.c: In function ‘zs_pool_stat_create’:
-../mm/zsmalloc.c:648:17: warning: unused variable ‘entry’ [-Wunused-variable]
-  struct dentry *entry;
-                 ^~~~~
+There is chance that offset + sizeof(struct ipv6_opt_hdr) > packet_len.
 
-Rework to remove the unused variable.
+As described in CVE-2017-9074:  "The IPv6 fragmentation implementation
+in the Linux kernel through 4.11.1 does not consider that the nexthdr
+field may be associated with an invalid option, which allows local
+users to cause a denial of service (out-of-bounds read and BUG)".
 
-Fixes: 4268509a36a7 ("zsmalloc: no need to check return value of debugfs_create functions")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- mm/zsmalloc.c | 2 --
- 1 file changed, 2 deletions(-)
+At the same time, there are bugs in  mip6_destopt_offset() and
+mip6_destopt_offset(), which is similar to CVE-2017-7542.
 
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 1347d7922ea2..db09eb3669c5 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -645,8 +645,6 @@ DEFINE_SHOW_ATTRIBUTE(zs_stats_size);
- 
- static void zs_pool_stat_create(struct zs_pool *pool, const char *name)
- {
--	struct dentry *entry;
--
- 	if (!zs_stat_root) {
- 		pr_warn("no root stat dir, not creating <%s> stat dir\n", name);
- 		return;
+On Sat, Jun 1, 2019 at 1:35 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 5/30/19 8:04 PM, Yang Xiao wrote:
+> > On Fri, May 31, 2019 at 1:17 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >> On 5/30/19 8:28 AM, Young Xiao wrote:
+> >>> The fragmentation code tries to parse the header options in order
+> >>> to figure out where to insert the fragment option.  Since nexthdr points
+> >>> to an invalid option, the calculation of the size of the network header
+> >>> can made to be much larger than the linear section of the skb and data
+> >>> is read outside of it.
+> >>>
+> >>> This vulnerability is similar to CVE-2017-9074.
+> >>>
+> >>> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> >>> ---
+> >>>  net/ipv6/mip6.c | 24 ++++++++++++++----------
+> >>>  1 file changed, 14 insertions(+), 10 deletions(-)
+> >>>
+> >>> diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
+> >>> index 64f0f7b..30ed1c5 100644
+> >>> --- a/net/ipv6/mip6.c
+> >>> +++ b/net/ipv6/mip6.c
+> >>> @@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >>>                              u8 **nexthdr)
+> >>>  {
+> >>>       u16 offset = sizeof(struct ipv6hdr);
+> >>> -     struct ipv6_opt_hdr *exthdr =
+> >>> -                                (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
+> >>>       const unsigned char *nh = skb_network_header(skb);
+> >>>       unsigned int packet_len = skb_tail_pointer(skb) -
+> >>>               skb_network_header(skb);
+> >>> @@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >>>
+> >>>       *nexthdr = &ipv6_hdr(skb)->nexthdr;
+> >>>
+> >>> -     while (offset + 1 <= packet_len) {
+> >>> +     while (offset <= packet_len) {
+> >>> +             struct ipv6_opt_hdr *exthdr;
+> >>>
+> >>>               switch (**nexthdr) {
+> >>>               case NEXTHDR_HOP:
+> >>> @@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+> >>>                       return offset;
+> >>>               }
+> >>>
+> >>> +             if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
+> >>> +                     return -EINVAL;
+> >>> +
+> >>> +             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+> >>>               offset += ipv6_optlen(exthdr);
+> >>>               *nexthdr = &exthdr->nexthdr;
+> >>> -             exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+> >>>       }
+> >>>
+> >>> -     return offset;
+> >>> +     return -EINVAL;
+> >>>  }
+> >>>
+> >>
+> >>
+> >> Ok, but have you checked that callers have been fixed ?
+> >
+> > I've checked the callers. There are two callers:
+> > xfrm6_transport_output() and xfrm6_ro_output(). There are checks in
+> > both function.
+> >
+> > ------------------------------------------------------------------------------
+> >         hdr_len = x->type->hdr_offset(x, skb, &prevhdr);
+> >         if (hdr_len < 0)
+> >                 return hdr_len;
+> > ------------------------------------------------------------------------------
+> >>
+> >> xfrm6_transport_output() seems buggy as well,
+> >> unless the skbs are linearized before entering these functions ?
+> > I can not understand what you mean about this comment.
+> > Could you explain it in more detail.
+>
+>
+> If we had a problem, then the memmove(ipv6_hdr(skb), iph, hdr_len);
+>  in xfrm6_transport_output() would be buggy, since iph could also point to freed memory.
+>
+>
+>
+
+
 -- 
-2.20.1
+Best regards!
 
+Young
+-----------------------------------------------------------
