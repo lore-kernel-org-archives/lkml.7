@@ -2,151 +2,161 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC13EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF47DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A036E24DB4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cgSw4BkY"
+	by mail.kernel.org (Postfix) with ESMTP id 8EE9F22DA8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFDHB7 (ORCPT
+        id S1726820AbfFDHCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:01:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39886 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfFDHB7 (ORCPT
+        Tue, 4 Jun 2019 03:02:25 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40888 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfFDHCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:01:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so12099031pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LitjvBr4bQliAtyzrQ3myX1ZLOUmkF/pxyOjBUuK5wI=;
-        b=cgSw4BkYceLudx3qOurpScu2yKys2klZc/YFTk0GmoCddDhw6tOPdNwdDuzpizVmow
-         ulPVFKjwur1S6ghfyYcF6EkKFXwFfbPHFxOJG0TP6S4dLIyOrvPES1hZpgqWIaWQUlUE
-         J8Tl9kUXODEpMtYgiWyG5ntFqhUwDBXqA7SssqczE082P2RojzxjLZb7ARTBKg+jKnwm
-         l6gI4ymR8SisEqbrU8eEW2F2m5KuJ7SvT0FJdmW3YeFeeS7vG4B94tggLkp5XKccloga
-         De68CUivRr3EalYUSnHSXFxJNEzA5CH8hT8TWqgFi1NOCy2OcuRvS/wWiAjJ0PlB+l0J
-         q2UQ==
+        Tue, 4 Jun 2019 03:02:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so12522573qtn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 00:02:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LitjvBr4bQliAtyzrQ3myX1ZLOUmkF/pxyOjBUuK5wI=;
-        b=tficY7qNQsfAE1Isy9zLil85AczMsRo5nbeKig+yHHyMqukW7QBZKVYznclq2yr8El
-         hgmY+oPu410guZBJTqI29qRciThQgJ2547Y00oJ1n3OqBgMQXpWAAe6Sc3mK6hhTzLw3
-         S794oVHWjnWnvHW0kjCSZUI5QbN3wbIMUgz7c0B3Pe032cCBJer6rrgb3lZB7v9B9CMv
-         iYhulZ0FxH0HVGRwHbHw2XVw7rAz1eHCM9lDVsvjUQqXjejfBe6tJr/0Be0A8D+G84m8
-         VZNIZWNCZ8yx6+G5h3JFBfaXxhdd/PXLge+kzDhqDjtCTqhCdIyl8lcTlsEcB9TMXyfE
-         WHqg==
-X-Gm-Message-State: APjAAAXJLfsErfICXR6cVkdSf+a7FPIOpkhZk3m9cAkAAeLCTcfuhPyb
-        2BFqG61FuhT0B0LxJCRjXgtlzA==
-X-Google-Smtp-Source: APXvYqyfT6zbyWhetjWpj8Uf27dOsluS9TMwvJIH4RqSf5LpM/UoWBdN7dK4F96ERPVaRxF6IaQzgg==
-X-Received: by 2002:a63:144e:: with SMTP id 14mr33175907pgu.304.1559631718309;
-        Tue, 04 Jun 2019 00:01:58 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id h12sm8007109pfr.38.2019.06.04.00.01.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 00:01:57 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched/fair: Introduce fits_capacity()
-Date:   Tue,  4 Jun 2019 12:31:52 +0530
-Message-Id: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZhC1lENrEFgimv6sdeFIBKs72SRqFRtCu7WdaF7Vsso=;
+        b=C3DcycSk052oxTKlRiwURS7n+V1drPQejtIfwDUn0GszBGFKicb65h+Q0N57D1yf7F
+         QJj/x0lAlEDs+FH57WxFVlFY5HdY0EjZvkAjgDPoN/xK+7nuOZGQvJqEoiUdIHIOzvxZ
+         4C8jp9zunWAdH22blGr3fR9s312nYJLDiGZpp/EZ7cUymzlLfGWqzrfTuVOdlb7wjPVj
+         bdYFkrQ0v43GA4bAXXJZwZFxAkA6+qdbsJlC0bnRF3MrUiM6eVRRKpwulRYu8q/RXeEn
+         zkqyXaLVguZh/rbjd55DSiDoEqzbuJFx3rTLowKbWYXTJOkWSTC5CxkB+PNM8SoZx2AH
+         S0fw==
+X-Gm-Message-State: APjAAAUnUNYmu7OMeOUf38WM4evB5FdD9M1SWHwYP1/l7oMf6a3wpM84
+        qtp8clvUhvc33SXin3wUZV9pRW0/aLywLvSHchdh0w==
+X-Google-Smtp-Source: APXvYqznnJVZGIgYwAw/MnqEYckWgjrGh9RH5HIIi/H7SDijmQix/Wxv4jKZIjn/IMTmenEHoFJG0qYhI8EldZqozHo=
+X-Received: by 2002:ac8:2cba:: with SMTP id 55mr10239342qtw.260.1559631744088;
+ Tue, 04 Jun 2019 00:02:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190528162924.32754-1-pedro@pedrovanzella.com>
+ <CAO-hwJ+zAvDizJRpykky+D3pf1M1NhFGWztwyA4mJEv8C+nO-w@mail.gmail.com> <20190603214438.2cnmrx7g2sakjdr4@Fenrir>
+In-Reply-To: <20190603214438.2cnmrx7g2sakjdr4@Fenrir>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 4 Jun 2019 09:02:11 +0200
+Message-ID: <CAO-hwJ+0WEgAvkRsr1oEnR5wCJcGKzhim+=5em1Y-GzC4GowMg@mail.gmail.com>
+Subject: Re: [PATCH] HID: hid-logitech-hidpp: detect wireless lightspeed devices
+To:     Pedro Vanzella <pedro@pedrovanzella.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same formula to check utilization against capacity (after
-considering capacity_margin) is already used at 5 different locations.
+On Mon, Jun 3, 2019 at 11:44 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
+>
+> On 05/28, Benjamin Tissoires wrote:
+> > On Tue, May 28, 2019 at 6:30 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
+> > >
+> > > Send a low device index when the device is connected via the lightspeed
+> > > receiver so that the receiver will pass the message along to the device
+> > > instead of responding. If we don't do that, we end up thinking it's a
+> > > hidpp10 device and miss out on all new features available to newer devices.
+> > >
+> > > This will enable correct detection of the following models:
+> > > G603, GPro, G305, G613, G900 and G903, and possibly others.
+> >
+> > Thanks for the patch.
+> Thanks for reviewing it :)
+>
+> > However, there is already support for this receiver in Linus' tree:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/hid/hid-logitech-dj.c?id=f5fb57a74e88bd1788f57bf77d587c91d4dc9d57
+> >
+> > With kernel 5.2-rc1, the connected device should already be handled by
+> > hid-logitech-hidpp :)
+> Why are the wireless receivers handled by hid-logitech-dj and the wired
+> mice handled by hid-logitech-hidpp? They are, in the end, all hidpp
+> devices, and having them all handled by the -hidpp driver with a quirk
+> class would allow us to check for support for the battery voltage
+> feature, as it seems to be an either-or scenario here.
 
-This patch creates a new macro, fits_capacity(), which can be used from
-all these locations without exposing the details of it and hence
-simplify code.
+Yep, and this is exactly what is happening:
+- the receiver is handled through hid-logitech-dj -> it creates a
+virtual HID device for the wireless physical device
+- the actual wireless device is handled through hid-logitech-hidpp
+(with the virtual HID device created above)
 
-All the 5 code locations are updated as well to use it..
+This has the advantage of presenting the wireless device in the same
+way the wired device is. From hid-logitech-hidpp point of view, both
+are regular HID++ devices.
+Also, this makes sure each physical device gets its own product ID (we
+are relying on the wireless product ID), meaning that userspace can
+differentiate a G900 from a G613 when both are connected to a receiver
+with the same product ID.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- kernel/sched/fair.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Hope that helps.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7f8d477f90fe..db3a218b7928 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -102,6 +102,8 @@ int __weak arch_asym_cpu_priority(int cpu)
-  * (default: ~20%)
-  */
- static unsigned int capacity_margin			= 1280;
-+
-+#define fits_capacity(cap, max)	((cap) * capacity_margin < (max) * 1024)
- #endif
- 
- #ifdef CONFIG_CFS_BANDWIDTH
-@@ -3727,7 +3729,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
- 
- static inline int task_fits_capacity(struct task_struct *p, long capacity)
- {
--	return capacity * 1024 > task_util_est(p) * capacity_margin;
-+	return fits_capacity(task_util_est(p), capacity);
- }
- 
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
-@@ -5143,7 +5145,7 @@ static inline unsigned long cpu_util(int cpu);
- 
- static inline bool cpu_overutilized(int cpu)
- {
--	return (capacity_of(cpu) * 1024) < (cpu_util(cpu) * capacity_margin);
-+	return !fits_capacity(cpu_util(cpu), capacity_of(cpu));
- }
- 
- static inline void update_overutilized_status(struct rq *rq)
-@@ -6304,7 +6306,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 			/* Skip CPUs that will be overutilized. */
- 			util = cpu_util_next(cpu, p, cpu);
- 			cpu_cap = capacity_of(cpu);
--			if (cpu_cap * 1024 < util * capacity_margin)
-+			if (!fits_capacity(util, cpu_cap))
- 				continue;
- 
- 			/* Always use prev_cpu as a candidate. */
-@@ -7853,8 +7855,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
- static inline bool
- group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- {
--	return sg->sgc->min_capacity * capacity_margin <
--						ref->sgc->min_capacity * 1024;
-+	return fits_capacity(sg->sgc->min_capacity, ref->sgc->min_capacity);
- }
- 
- /*
-@@ -7864,8 +7865,7 @@ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- static inline bool
- group_smaller_max_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- {
--	return sg->sgc->max_capacity * capacity_margin <
--						ref->sgc->max_capacity * 1024;
-+	return fits_capacity(sg->sgc->max_capacity, ref->sgc->max_capacity);
- }
- 
- static inline enum
--- 
-2.21.0.rc0.269.g1a574e7a288b
+Cheers,
+Benjamin
 
+
+>
+> - Pedro
+> >
+> > Cheers,
+> > Benjamin
+> >
+> > >
+> > > Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
+> > > ---
+> > >  drivers/hid/hid-logitech-hidpp.c | 10 +++++++++-
+> > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > > index 72fc9c0566db..621fce141d9f 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -62,6 +62,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> > >  #define HIDPP_QUIRK_CLASS_K400                 BIT(2)
+> > >  #define HIDPP_QUIRK_CLASS_G920                 BIT(3)
+> > >  #define HIDPP_QUIRK_CLASS_K750                 BIT(4)
+> > > +#define HIDPP_QUIRK_CLASS_LIGHTSPEED           BIT(5)
+> > >
+> > >  /* bits 2..20 are reserved for classes */
+> > >  /* #define HIDPP_QUIRK_CONNECT_EVENTS          BIT(21) disabled */
+> > > @@ -236,7 +237,11 @@ static int __hidpp_send_report(struct hid_device *hdev,
+> > >          * set the device_index as the receiver, it will be overwritten by
+> > >          * hid_hw_request if needed
+> > >          */
+> > > -       hidpp_report->device_index = 0xff;
+> > > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_LIGHTSPEED) {
+> > > +               hidpp_report->device_index = 0x01;
+> > > +       } else {
+> > > +               hidpp_report->device_index = 0xff;
+> > > +       }
+> > >
+> > >         if (hidpp->quirks & HIDPP_QUIRK_FORCE_OUTPUT_REPORTS) {
+> > >                 ret = hid_hw_output_report(hdev, (u8 *)hidpp_report, fields_count);
+> > > @@ -3753,6 +3758,9 @@ static const struct hid_device_id hidpp_devices[] = {
+> > >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
+> > >         { /* Logitech G900 Gaming Mouse over USB */
+> > >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
+> > > +       { /* Logitech Gaming Mice over Lightspeed Receiver */
+> > > +         HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC539),
+> > > +         .driver_data = HIDPP_QUIRK_CLASS_LIGHTSPEED },
+> > >         { /* Logitech G920 Wheel over USB */
+> > >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G920_WHEEL),
+> > >                 .driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS},
+> > > --
+> > > 2.21.0
+> > >
+>
+> --
+> Pedro Vanzella
+> pedrovanzella.com
+> #include <paranoia.h>
+> Don't Panic
