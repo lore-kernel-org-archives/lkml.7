@@ -2,104 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E95C04AB5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E52C04AB5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8BD255DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA66124A1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 02:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfFDCZc (ORCPT
+        id S1726490AbfFDCbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Jun 2019 22:25:32 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:59681 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726245AbfFDCZK (ORCPT
+        Mon, 3 Jun 2019 22:31:16 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:63666 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726076AbfFDCbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Jun 2019 22:25:10 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07612121|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.45786-0.0201408-0.521999;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Eh7DXAx_1559615107;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.Eh7DXAx_1559615107)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 04 Jun 2019 10:25:07 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
-        Guo Ren <guoren@kernel.org>
-Subject: [PATCH V4 2/6] csky: Add count-width property for csky pmu
-Date:   Tue,  4 Jun 2019 10:23:56 +0800
-Message-Id: <d38f72230b838419a1ef829dcb27373807d697b5.1559614824.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1559614824.git.han_mao@c-sky.com>
-References: <cover.1559614824.git.han_mao@c-sky.com>
-In-Reply-To: <cover.1559614824.git.han_mao@c-sky.com>
-References: <cover.1559614824.git.han_mao@c-sky.com>
+        Mon, 3 Jun 2019 22:31:16 -0400
+X-UUID: f291c6e07a734aa6b35d260fd5e5b799-20190604
+X-UUID: f291c6e07a734aa6b35d260fd5e5b799-20190604
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1956888644; Tue, 04 Jun 2019 10:31:08 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 4 Jun
+ 2019 10:31:06 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 4 Jun 2019 10:31:06 +0800
+Message-ID: <1559615466.24897.106.camel@mhfsdcap03>
+Subject: RE: [v2, PATCH 3/4] net: stmmac: modify default value of tx-frames
+From:   biao huang <biao.huang@mediatek.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
+        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>
+Date:   Tue, 4 Jun 2019 10:31:06 +0800
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B93B6DF@DE02WEMBXB.internal.synopsys.com>
+References: <1559527086-7227-1-git-send-email-biao.huang@mediatek.com>
+         <1559527086-7227-4-git-send-email-biao.huang@mediatek.com>
+         <78EB27739596EE489E55E81C33FEC33A0B93B6DF@DE02WEMBXB.internal.synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The csky pmu counter may have different io width. When the counter is
-smaller then 64 bits and counter value is smaller than the old value, it
-will result to a extremely large delta value. So the sampled value should
-be extend to 64 bits to avoid this, the extension bits base on the
-count-width property from dts.
+On Mon, 2019-06-03 at 11:40 +0000, Jose Abreu wrote:
+> From: Biao Huang <biao.huang@mediatek.com>
+> 
+> > the default value of tx-frames is 25, it's too late when
+> > passing tstamp to stack, then the ptp4l will fail:
+> > 
+> > ptp4l -i eth0 -f gPTP.cfg -m
+> > ptp4l: selected /dev/ptp0 as PTP clock
+> > ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+> > ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+> > ptp4l: port 1: link up
+> > ptp4l: timed out while polling for tx timestamp
+> > ptp4l: increasing tx_timestamp_timeout may correct this issue,
+> >        but it is likely caused by a driver bug
+> > ptp4l: port 1: send peer delay response failed
+> > ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+> > 
+> > ptp4l tests pass when changing the tx-frames from 25 to 1 with
+> > ethtool -C option.
+> > It should be fine to set tx-frames default value to 1, so ptp4l will pass
+> > by default.
+> 
+> I'm not sure if this is the right approach ... What's the timeout value 
+> you have for TX Timestamp ?
+I use the default tx_timestamp_timeout value 1, which represents 1ms.
+do you try ptp4l on your side?
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Guo Ren <guoren@kernel.org>
----
- arch/csky/kernel/perf_event.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+performance test is done in https://lkml.org/lkml/2019/5/30/1617
+and seems no performance degradation.
 
-diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
-index c022acc..36f7f20 100644
---- a/arch/csky/kernel/perf_event.c
-+++ b/arch/csky/kernel/perf_event.c
-@@ -9,6 +9,7 @@
- #include <linux/platform_device.h>
- 
- #define CSKY_PMU_MAX_EVENTS 32
-+#define DEFAULT_COUNT_WIDTH 48
- 
- #define HPCR		"<0, 0x0>"	/* PMU Control reg */
- #define HPCNTENR	"<0, 0x4>"	/* Count Enable reg */
-@@ -18,6 +19,7 @@ static void (*hw_raw_write_mapping[CSKY_PMU_MAX_EVENTS])(uint64_t val);
- 
- struct csky_pmu_t {
- 	struct pmu	pmu;
-+	uint32_t	count_width;
- 	uint32_t	hpcr;
- } csky_pmu;
- 
-@@ -806,7 +808,12 @@ static void csky_perf_event_update(struct perf_event *event,
- 				   struct hw_perf_event *hwc)
- {
- 	uint64_t prev_raw_count = local64_read(&hwc->prev_count);
--	uint64_t new_raw_count = hw_raw_read_mapping[hwc->idx]();
-+	/*
-+	 * Sign extend count value to 64bit, otherwise delta calculation
-+	 * would be incorrect when overflow occurs.
-+	 */
-+	uint64_t new_raw_count = sign_extend64(
-+			hw_raw_read_mapping[hwc->idx](), csky_pmu.count_width);
- 	int64_t delta = new_raw_count - prev_raw_count;
- 
- 	/*
-@@ -1045,6 +1052,11 @@ int csky_pmu_device_probe(struct platform_device *pdev,
- 		ret = init_fn(&csky_pmu);
- 	}
- 
-+	if (!of_property_read_u32(node, "count-width",
-+				  &csky_pmu.count_width)) {
-+		csky_pmu.count_width = DEFAULT_COUNT_WIDTH;
-+	}
-+
- 	if (ret) {
- 		pr_notice("[perf] failed to probe PMU!\n");
- 		return ret;
--- 
-2.7.4
+> 
+> Thanks,
+> Jose Miguel Abreu
+
 
