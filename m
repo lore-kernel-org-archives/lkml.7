@@ -2,287 +2,110 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D6C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21954C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A346A20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E574320717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGhE8dWo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdRxKh1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFDSNx (ORCPT
+        id S1726636AbfFDSOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 14:13:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45498 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFDSNx (ORCPT
+        Tue, 4 Jun 2019 14:14:40 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:51613 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFDSOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 14:13:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id e3so18095568ioc.12;
-        Tue, 04 Jun 2019 11:13:52 -0700 (PDT)
+        Tue, 4 Jun 2019 14:14:40 -0400
+Received: by mail-it1-f194.google.com with SMTP id m3so1680185itl.1;
+        Tue, 04 Jun 2019 11:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dGSsW8Ao/tRLmi/QZzRT3Q7h2dCLCK16CHOjhabkhac=;
-        b=lGhE8dWo78aPDnJJTq2KYG6HTf8jhF3fmAjd1UY65GrQ0xOOyaH2GSz0CXAJIJS6YR
-         5FK2QaGPERBNCBYl5c6C0xtQtWV4avgdm++VzGCHD9a+ntESkIZuyrHrcBmvfmvQwet6
-         B32kmuK6UlqVVDz9ro8CxEs/w5E0o+TW3xVcFkpXZK1kgqBXUulDEb10gh17kXfO+ITt
-         343nLkLsbw6gRIj7nCT9vu6UBv7MtLz/a9B8FZKBz+3JTXWEVhYkLeQ1pQWP4wWP3ieX
-         KVJg19aLCEQnhZk34xXycGHbr/n7W78KqZhkf4rzSN02wskU/Qia4JwseGdLrAyfjmNU
-         OVWQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HCvwaoibVnjg9rjNg5TC6AzleXlhqUmKRsSL5YCF/MY=;
+        b=AdRxKh1JZAxsWtP2YIms4M+pi5FfqgliDRG/gwm4NRjLcFbwmHOZ/qM7oFWJI1Kpml
+         wbC6uLqRcgDx3wCG3+P5x0fSViBTaBtJxUh/fLJ8wztxCJ3ySDLRybYnqltJZYMBDb7Z
+         6kf3NBaSJLh/fi9jn8WgUEQY4II9Ctg4jGHjAvCNDiUuwI/TE7mEJQb7thbqWS7RImCy
+         JCVvQZ1vd6rGcsksQSQIMvX1pHRRN3cUcYbTZT1otg6W03t6WZKf/IdHMdTq1FVGIin5
+         TaNMX0IiqoMs4W0tv0quyrYT7B5tIffjTQtPXl+AkGq69O6jePwzDp3ohuJyR8OkCH8S
+         ZenA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dGSsW8Ao/tRLmi/QZzRT3Q7h2dCLCK16CHOjhabkhac=;
-        b=RmbJ6jsJgaF3SBj4MoUxVqyVk7cnJHAnah7tB1/8b+9WT1wmiVMis1WsvptI/Lliff
-         s7NPbPbK1mo5MTCBu90Wkwk0Ct3mHgDLSU9xGe3anRn22c3Q3uOD2b0PByyKADOGn9+r
-         EXi0ZczHolfNkwNgMOm9bbuHvytCnnQTuJo1xcHb7YaZsqzJ5jT048qcelmjEDse3C4C
-         VEDD6AIT+WBvlGC86kpn/T8+8VQaUaC1WZi4KDTV3lj5RcDCjrLOnAY0knE/8gWyYDgk
-         oURUYHPU0bUIzePgxcif8zZQLdmu0yGS4/GmaVFGUvcGTAoSn7btzVkm+6bum1XOvrAr
-         GSwA==
-X-Gm-Message-State: APjAAAXpRtJovgHXKYkB2nq+AisACggSoiX59EZm2rb1CbdaL79zt8eI
-        0wLTcl7+0Y9pWOiGrdJXkeaxh7DI
-X-Google-Smtp-Source: APXvYqziwAoPHhUTvZK7FN6Gl1lKhpzhnnuaIkaqQv6EsPmDIq5Oczwb73mappcHmQ2XUCVYrfGcHg==
-X-Received: by 2002:a5d:9812:: with SMTP id a18mr8336186iol.289.1559672032130;
-        Tue, 04 Jun 2019 11:13:52 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id p11sm1558265itc.2.2019.06.04.11.13.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 11:13:51 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] pwm: pca9685: fix pwm/gpio inter-operation
-Date:   Tue,  4 Jun 2019 14:13:45 -0400
-Message-Id: <20190604181345.9107-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HCvwaoibVnjg9rjNg5TC6AzleXlhqUmKRsSL5YCF/MY=;
+        b=XbSv7sZb3a+T35UospUJHbwldTXjJ+GRxOp82KZ1HQowEs8YoFOUiDYdp7TUdVYfnk
+         hksm/gRoJ4McZAhN1EU1sqFQfLaJA2pYGcIjzVGacWAHLs654ejIJk6iA7FWIhs1ibFk
+         J/l0DJf3Deg1jwqO637x7t8QzZ9DK4BxXqXAhdv5kC013/HwJ00DWdosWCMosm0HZCFZ
+         NgAay/zlo1M19/GCzlHjl5tshTVuzQq4iiNt7eQiHiTFacnIKfuf/OsxPKNY7XuSeaU1
+         5edoBRfqMTc3Mzg8hDIUxrnCC+ZNtHTIx7q3CayJ+k/0QordBccYd7imuHzYCGF8m9TQ
+         OhKA==
+X-Gm-Message-State: APjAAAVF6Z9I96DSwX9xccZz7XS+7Wr7IP071o7/0QEi+uRfEP7emCX7
+        v3ayLs9088Es4LhyvjlaPWmLnPrjylGIIgZAkPA=
+X-Google-Smtp-Source: APXvYqwV0xjh0/S1wriLBmg1iqt9GRGOckgKE25tw9l5cMgEBO3aUMAmh/VeJfuix7PBi8K0c8yip4jc6vbial5JF7k=
+X-Received: by 2002:a24:8988:: with SMTP id s130mr21613638itd.79.1559672079550;
+ Tue, 04 Jun 2019 11:14:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com> <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
+In-Reply-To: <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 4 Jun 2019 11:14:28 -0700
+Message-ID: <CABeXuvp0c+KSimAWPXoV=5GYJGkAfL2s-a71PFZHFDfm4UykzA@mail.gmail.com>
+Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dbueso@suse.de, Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver allows pwms to be requested as gpios via gpiolib.
-Obviously, it should not be allowed to request a gpio when its
-corresponding pwm is already requested (and vice versa).
-So it requires some exclusion code.
+> On Tue, Jun 4, 2019 at 3:41 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > This is the minimal fix for stable, I'll send cleanups later.
+> >
+> > The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
+> > restore_user_sigmask()") introduced the visible change which breaks
+> > user-space: a signal temporary unblocked by set_user_sigmask() can
+> > be delivered even if the caller returns success or timeout.
+> >
+> > Change restore_user_sigmask() to accept the additional "interrupted"
+> > argument which should be used instead of signal_pending() check, and
+> > update the callers.
+> >
+> > Reported-by: Eric Wong <e@80x24.org>
+> > Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+> > cc: stable@vger.kernel.org (v5.0+)
+> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+>
 
-Given that the pwm and gpio cores are not synchronized with
-respect to each other, this exclusion code will also require
-proper synchronization.
+Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
 
-Such a mechanism was in place, but was inadvertently removed
-by Uwe's clean-up patch.
+The original fix posted:
+https://lore.kernel.org/patchwork/patch/1077355/ would also have been
+a correct fix for this problem. But, given the cleanups that are in
+the pipeline, this is a better fix.
 
-Upon revisiting the synchronization mechanism, we found that
-theoretically, it could allow two threads to successfully
-request conflicting pwms / gpios.
-
-Replace with a bitmap which tracks pwm in-use, plus a mutex.
-As long as pwm and gpio's respective request/free functions
-modify the in-use bitmap while holding the mutex, proper
-synchronization will be guaranteed.
-
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.org/lkml/2019/5/31/963
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
-
-WARNING:
-	Untested on a real system, I do not have any test h/w.
-	This patch should get someone's Tested-by tag.
-
-v1 -> v2:
-	applied suggestions from Mika Westerberg:
-		rename pca9685_pwm_test_set_inuse -> pca9685_pwm_test_and_set_inuse
-		use test_set_inuse and clear_inuse functions for both pwm and gpio
-	improve exclusion policy so "all LEDs" channel cannot conflict with the
-		other channels, for pwm and gpio alike
-
- drivers/pwm/pwm-pca9685.c | 89 +++++++++++++++++++++------------------
- 1 file changed, 48 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 567f5e2771c4..259fd58812ae 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -31,6 +31,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
-+#include <linux/bitmap.h>
- 
- /*
-  * Because the PCA9685 has only one prescaler per chip, changing the period of
-@@ -85,6 +86,7 @@ struct pca9685 {
- #if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct mutex lock;
- 	struct gpio_chip gpio;
-+	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
- #endif
- };
- 
-@@ -94,51 +96,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
- }
- 
- #if IS_ENABLED(CONFIG_GPIOLIB)
--static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
-+	bool is_inuse;
- 
- 	mutex_lock(&pca->lock);
--
--	pwm = &pca->chip.pwms[offset];
--
--	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
--		mutex_unlock(&pca->lock);
--		return -EBUSY;
-+	if (pwm_idx >= PCA9685_MAXCHAN) {
-+		/*
-+		 * "all LEDs" channel:
-+		 * pretend already in use if any of the PWMs are requested
-+		 */
-+		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
-+			is_inuse = true;
-+			goto out;
-+		}
-+	} else {
-+		/*
-+		 * regular channel:
-+		 * pretend already in use if the "all LEDs" channel is requested
-+		 */
-+		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
-+			is_inuse = true;
-+			goto out;
-+		}
- 	}
--
--	pwm_set_chip_data(pwm, (void *)1);
--
-+	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
-+out:
- 	mutex_unlock(&pca->lock);
--	pm_runtime_get_sync(pca->chip.dev);
--	return 0;
-+	return is_inuse;
- }
- 
--static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
-+static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	bool is_gpio = false;
--
- 	mutex_lock(&pca->lock);
-+	clear_bit(pwm_idx, pca->pwms_inuse);
-+	mutex_unlock(&pca->lock);
-+}
- 
--	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
--		unsigned int i;
--
--		/*
--		 * Check if any of the GPIOs are requested and in that case
--		 * prevent using the "all LEDs" channel.
--		 */
--		for (i = 0; i < pca->gpio.ngpio; i++)
--			if (gpiochip_is_requested(&pca->gpio, i)) {
--				is_gpio = true;
--				break;
--			}
--	} else if (pwm_get_chip_data(pwm)) {
--		is_gpio = true;
--	}
-+static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct pca9685 *pca = gpiochip_get_data(gpio);
- 
--	mutex_unlock(&pca->lock);
--	return is_gpio;
-+	if (pca9685_pwm_test_and_set_inuse(pca, offset))
-+		return -EBUSY;
-+	pm_runtime_get_sync(pca->chip.dev);
-+	return 0;
- }
- 
- static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
-@@ -170,13 +172,10 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
--	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
--	mutex_unlock(&pca->lock);
-+	pca9685_pwm_clear_inuse(pca, offset);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
-@@ -228,12 +227,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
- }
- #else
--static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
--				       struct pwm_device *pwm)
-+static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
-+						  int pwm_idx)
- {
- 	return false;
- }
- 
-+static inline void
-+pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
-+{
-+}
-+
- static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- {
- 	return 0;
-@@ -417,7 +421,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct pca9685 *pca = to_pca(chip);
- 
--	if (pca9685_pwm_is_gpio(pca, pwm))
-+	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
- 		return -EBUSY;
- 	pm_runtime_get_sync(chip->dev);
- 
-@@ -426,8 +430,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
-+	struct pca9685 *pca = to_pca(chip);
-+
- 	pca9685_pwm_disable(chip, pwm);
- 	pm_runtime_put(chip->dev);
-+	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
- }
- 
- static const struct pwm_ops pca9685_pwm_ops = {
--- 
-2.17.1
-
+-Deepa
