@@ -2,147 +2,127 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59108C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFDAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D3C207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073BC207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lRxptcyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfFDQ7a (ORCPT
+        id S1727998AbfFDQ7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:59:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42082 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfFDQ7a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:59:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o12so9495597wrj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 09:59:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EKCYTdYUbqcJu9i3EJZirzTD5O2uxQ2U+uZgMVDaR6A=;
-        b=iJZaxQIKV0uzd1SAJQGTCFomNloAbDTJHfPBA9/DVmiVFje/3Zx0efDxdipRo18pTP
-         qQfFhLbdElu0pmdBQ85HefhzcCRKQWYg+p06TrWjGrBWa8IQOCjtabtcLdVed6GIrhmS
-         l2q02CLWPbT1jAFgUt9tH72lbM2iZfFRnLcAblFGn05+Eyw8Z+A+8LbghajgxcaX1Ijy
-         tyqDA+OQrB8OZ4XE8r4M19/62km4lZ6Dp18d3/MBtesDMufwybaKNbtRfXvMWLHiH+2s
-         WZkUWj+8QFBHqfjfzI5iTC0eHKQoPEgoK4X+TAAn0UohcfnR1CYbaodhraTAUw10MJVi
-         8xSA==
-X-Gm-Message-State: APjAAAXdYvHCFPuT8iv53sHIBGY5UaKn35Cl/iNVQ2JpMnuQUv9DaqqD
-        NTEz7u6rlaD91GSUj9zeaOjVuQ==
-X-Google-Smtp-Source: APXvYqz7dlJsNZq75A+mF0pRAPY9uCleP7A20f0COgWbpMWntYayFz1ZRRAPvbfM3AZGnDdUgbVtxw==
-X-Received: by 2002:a5d:404a:: with SMTP id w10mr3205526wrp.177.1559667568398;
-        Tue, 04 Jun 2019 09:59:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id c14sm17740912wrt.45.2019.06.04.09.59.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 09:59:27 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-3-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <501ef28f-7463-7f49-c219-1c3fdd8cc476@redhat.com>
-Date:   Tue, 4 Jun 2019 18:59:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 12:59:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:18925 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfFDQ7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:59:53 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45JJ7V5b3jz9v0FN;
+        Tue,  4 Jun 2019 18:59:50 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lRxptcyc; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id qW66f5xptFAU; Tue,  4 Jun 2019 18:59:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45JJ7V4X7Fz9v0FC;
+        Tue,  4 Jun 2019 18:59:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1559667590; bh=M/gFqK7lNCwKusjAc9u2ML0vs/6IGlCg8EgQMDWaRl4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lRxptcyctzAGCWwul2GIdV7aOB8ReA46oksDDYQi3pzV9AeOgmMt8+fjTTgSkggWX
+         WYpt4JHhHwBc1XCOCFFFDHeoHInHEy+S9f9zprJONpsT4lTON9AvUBnfMZLqDSwTFj
+         RiLWx3ZGLJU2Ytu2/c1p5zcupyEDzbAAGEMON3dA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C27848B99C;
+        Tue,  4 Jun 2019 18:59:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 0mnSeiSXSBB8; Tue,  4 Jun 2019 18:59:51 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6B0A18B98E;
+        Tue,  4 Jun 2019 18:59:51 +0200 (CEST)
+Subject: Re: [PATCH v3 14/16] powerpc/32: implement fast entry for syscalls on
+ BOOKE
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1556627571.git.christophe.leroy@c-s.fr>
+ <3e254178a157e7eaeef48f983880f71f97d1f296.1556627571.git.christophe.leroy@c-s.fr>
+ <20190523061427.GA19655@blackberry>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4f5fa8af-08c2-e71a-dd43-4c1a64018409@c-s.fr>
+Date:   Tue, 4 Jun 2019 18:59:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1558418814-6822-3-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190523061427.GA19655@blackberry>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/19 08:06, Wanpeng Li wrote:
+Paul,
+
+Le 23/05/2019 à 08:14, Paul Mackerras a écrit :
+> On Tue, Apr 30, 2019 at 12:39:03PM +0000, Christophe Leroy wrote:
+>> This patch implements a fast entry for syscalls.
+>>
+>> Syscalls don't have to preserve non volatile registers except LR.
+>>
+>> This patch then implement a fast entry for syscalls, where
+>> volatile registers get clobbered.
+>>
+>> As this entry is dedicated to syscall it always sets MSR_EE
+>> and warns in case MSR_EE was previously off
+>>
+>> It also assumes that the call is always from user, system calls are
+>> unexpected from kernel.
 > 
-> The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
-> CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
-> kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
-> guest visibility.
+> This is now upstream as commit 1a4b739bbb4f.  On the e500mc test
+> config that I use, I'm getting this build failure:
+> 
+> arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
+> arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
+> Makefile:1052: recipe for target 'vmlinux' failed
 
-This needs some adjustment so that the default is backwards-compatible:
+Does my patch (https://patchwork.ozlabs.org/patch/1103909/) fixes the 
+issue for you ?
 
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index e3ae96b52a16..f9b021e16ebc 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -378,11 +378,11 @@ struct kvm_sync_regs {
- 	struct kvm_vcpu_events events;
- };
- 
--#define KVM_X86_QUIRK_LINT0_REENABLED	(1 << 0)
--#define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
--#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
--#define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
--#define KVM_X86_QUIRK_MISC_ENABLE_MWAIT (1 << 4)
-+#define KVM_X86_QUIRK_LINT0_REENABLED	   (1 << 0)
-+#define KVM_X86_QUIRK_CD_NW_CLEARED	   (1 << 1)
-+#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	   (1 << 2)
-+#define KVM_X86_QUIRK_OUT_7E_INC_RIP	   (1 << 3)
-+#define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
- 
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index f54d266fd3b5..bfa1341ce6f1 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -137,10 +137,10 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 		(best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
- 		best->eax &= ~(1 << KVM_FEATURE_PV_UNHALT);
- 
--	if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT)) {
-+	if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT)) {
- 		best = kvm_find_cpuid_entry(vcpu, 0x1, 0);
- 		if (best) {
--			if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT)
-+			if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_NO_MWAIT)
- 				best->ecx |= F(MWAIT);
- 			else
- 				best->ecx &= ~F(MWAIT);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 528935733fe0..0c1498da46c7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2548,17 +2548,15 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	case MSR_IA32_MISC_ENABLE:
--		if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT) &&
--			((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
--			if ((vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT) &&
--				!(data & MSR_IA32_MISC_ENABLE_MWAIT)) {
--				if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
--					return 1;
--			}
-+		if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT) &&
-+		    ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_NO_MWAIT)) {
-+			if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
-+				return 1;
- 			vcpu->arch.ia32_misc_enable_msr = data;
- 			kvm_update_cpuid(vcpu);
-+		} else {
-+			vcpu->arch.ia32_misc_enable_msr = data;
- 		}
--		vcpu->arch.ia32_misc_enable_msr = data;
- 		break;
- 	case MSR_IA32_SMBASE:
- 		if (!msr_info->host_initiated)
+Thanks
+Christophe
 
-Please double check, in the meanwhile I've queued the patch.
-
-Paolo
+> 
+>> +.macro SYSCALL_ENTRY trapno intno
+>> +	mfspr	r10, SPRN_SPRG_THREAD
+>> +#ifdef CONFIG_KVM_BOOKE_HV
+>> +BEGIN_FTR_SECTION
+>> +	mtspr	SPRN_SPRG_WSCRATCH0, r10
+>> +	stw	r11, THREAD_NORMSAVE(0)(r10)
+>> +	stw	r13, THREAD_NORMSAVE(2)(r10)
+>> +	mfcr	r13			/* save CR in r13 for now	   */
+>> +	mfspr	r11, SPRN_SRR1
+>> +	mtocrf	0x80, r11	/* check MSR[GS] without clobbering reg */
+>> +	bf	3, 1975f
+>> +	b	kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
+> 
+> It seems to me that the "_SPRN_SRR1" on the end of this line
+> isn't meant to be there...  However, it still fails to link with that
+> removed.
+> 
+> Paul.
+> 
