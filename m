@@ -2,144 +2,101 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4050C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E63C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9580523CA2
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALgMXYSh"
+	by mail.kernel.org (Postfix) with ESMTP id D789F24A02
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfFDMKb (ORCPT
+        id S1727672AbfFDMKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:10:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44643 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfFDMKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:10:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n2so10237829pgp.11;
-        Tue, 04 Jun 2019 05:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EwJYsf92ydp+RtKiuVnWST5ck78zmLqyjDy58wjkNzk=;
-        b=ALgMXYShkAFuscaf0G46Fe8IyL9l9sUJz35RiyTWOUtl+VQsGb3VE5G+kAFvWHJ989
-         PzhD5ZvYnLcVx7VNy5G7ZxMWsPJ/EA4GdjGBTj1eyxgm7wi0fDim3GgYKIWP/UAlIHcK
-         by1KonlJQhDWsjNTw4RJeeVd5uhcc9sFoTQe7jao13cWC/Lt2s6+rj4QdFK+EsLmCjsh
-         Q9+fhsv77zWy4VweL+38l6VUado93b+f40sn8S2SE7dd8s1QPImSyoLhsooGIbYugyVS
-         NNWrMuWwmz/yqigNzN2eRjfMiBv82P35nWrrgwBObfCb4jilxaFSQvDH0Pq3pLG/mElZ
-         1hDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EwJYsf92ydp+RtKiuVnWST5ck78zmLqyjDy58wjkNzk=;
-        b=fEvvYOCdPKfih0B/zLavoAx9/khF/4apjKuFyimkfam3BTSFJF4vgAIx9JklsOdeP5
-         TJ0LxnNbhwhmmX1rrvnd+rfAwGA4+15opld29ChdLrQCikHgniapZHplDRz3RU+r55VC
-         T5YUcP9ZD4r0oHMMxmdAjqNuh/vxc2PoecV9MCPgOtGvDCK+z09k2/j0hv9fENa+e5F7
-         LXDsmdxoCcub0PoL9E0SnsSEJ6OvvrZJwhKkYkCGSg78iwNCd3dGjVMpELpiuTbid7rJ
-         Ym+iq7olOUFHcfHWNM2YV/arYPZAJjWN+Z0lBhk+yeYpN51UDvN4GWG/CpDFjfXdR9j4
-         JuJA==
-X-Gm-Message-State: APjAAAUOGZHtEtpRMshMYS0L5Et3/29BxeSo3jUYxBuWzBO6xQ7ierYl
-        I8pKliTYgtRbLb133dM494BIuIdSf1asFQ==
-X-Google-Smtp-Source: APXvYqw5pE1KuL3N0NnrEDYlsEeAPn8xPJJRq+laPDZyZTkLXt4pZDqinvcFRcOBNQeq0UQqQktwtQ==
-X-Received: by 2002:a63:5d45:: with SMTP id o5mr35305514pgm.40.1559650229927;
-        Tue, 04 Jun 2019 05:10:29 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id s1sm14168708pgp.94.2019.06.04.05.10.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 04 Jun 2019 05:10:28 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     ralf@linux-mips.org, davem@davemloft.net,
-        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] rose: af_rose: avoid overflows in rose_setsockopt()
-Date:   Tue,  4 Jun 2019 20:11:30 +0800
-Message-Id: <1559650290-17054-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Jun 2019 08:10:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41634 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfFDMKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:10:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D48EF80D;
+        Tue,  4 Jun 2019 05:10:35 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3B43F690;
+        Tue,  4 Jun 2019 05:10:32 -0700 (PDT)
+Subject: Re: [PATCH v6 15/19] arm64: Add vDSO compat support
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-16-vincenzo.frascino@arm.com>
+ <20190601093830.GA13589@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <2027e092-2d76-9350-6c5b-7d3debc6a93f@arm.com>
+Date:   Tue, 4 Jun 2019 13:10:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190601093830.GA13589@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check setsockopt arguments to avoid overflows and return -EINVAL for
-too large arguments.
+Hi Catalin,
 
-See commit 32288eb4d940 ("netrom: avoid overflows in nr_setsockopt()")
-for details.
+thank you for testing my patches and providing the scripts you used to reproduce
+the issue.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- net/rose/af_rose.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+On 01/06/2019 10:38, Catalin Marinas wrote:
+> On Thu, May 30, 2019 at 03:15:27PM +0100, Vincenzo Frascino wrote:
+>> Add vDSO compat support to the arm64 building system.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>> ---
+>>  arch/arm64/Kconfig         |  1 +
+>>  arch/arm64/Makefile        | 23 +++++++++++++++++++++--
+>>  arch/arm64/kernel/Makefile |  6 +++++-
+>>  3 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 952c9f8cf3b8..3e1d4f8347f4 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -108,6 +108,7 @@ config ARM64
+>>  	select GENERIC_STRNLEN_USER
+>>  	select GENERIC_TIME_VSYSCALL
+>>  	select GENERIC_GETTIMEOFDAY
+>> +	select GENERIC_COMPAT_VDSO if !CPU_BIG_ENDIAN
+> 
+> This select needs to also depend on COMPAT (or rather be selected from
+> the COMPAT menuconfig), otherwise, trying to build this series with 64K
+> pages where COMPAT is disabled, I get:
+> 
 
-diff --git a/net/rose/af_rose.c b/net/rose/af_rose.c
-index e274bc6..af831ee9 100644
---- a/net/rose/af_rose.c
-+++ b/net/rose/af_rose.c
-@@ -372,15 +372,15 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
- {
- 	struct sock *sk = sock->sk;
- 	struct rose_sock *rose = rose_sk(sk);
--	int opt;
-+	unsigned long opt;
- 
- 	if (level != SOL_ROSE)
- 		return -ENOPROTOOPT;
- 
--	if (optlen < sizeof(int))
-+	if (optlen < sizeof(unsigned int))
- 		return -EINVAL;
- 
--	if (get_user(opt, (int __user *)optval))
-+	if (get_user(opt, (unsigned int __user *)optval))
- 		return -EFAULT;
- 
- 	switch (optname) {
-@@ -389,31 +389,31 @@ static int rose_setsockopt(struct socket *sock, int level, int optname,
- 		return 0;
- 
- 	case ROSE_T1:
--		if (opt < 1)
-+		if (opt < 1 || opt > ULONG_MAX / HZ)
- 			return -EINVAL;
- 		rose->t1 = opt * HZ;
- 		return 0;
- 
- 	case ROSE_T2:
--		if (opt < 1)
-+		if (opt < 1 || opt > ULONG_MAX / HZ)
- 			return -EINVAL;
- 		rose->t2 = opt * HZ;
- 		return 0;
- 
- 	case ROSE_T3:
--		if (opt < 1)
-+		if (opt < 1 || opt > ULONG_MAX / HZ)
- 			return -EINVAL;
- 		rose->t3 = opt * HZ;
- 		return 0;
- 
- 	case ROSE_HOLDBACK:
--		if (opt < 1)
-+		if (opt < 1 || opt > ULONG_MAX / HZ)
- 			return -EINVAL;
- 		rose->hb = opt * HZ;
- 		return 0;
- 
- 	case ROSE_IDLE:
--		if (opt < 0)
-+		if (opt < 0 || opt > ULONG_MAX / HZ)
- 			return -EINVAL;
- 		rose->idle = opt * 60 * HZ;
- 		return 0;
+This is a very good catch, my bad, will definitely fix in v7.
+
+...
+
 -- 
-2.7.4
-
+Regards,
+Vincenzo
