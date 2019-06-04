@@ -2,279 +2,108 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B8EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB8AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775A223978
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E36206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfFDPDx (ORCPT
+        id S1727969AbfFDPEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:03:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64497 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727586AbfFDPDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:03:52 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 08:03:51 -0700
-X-ExtLoop1: 1
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2019 08:03:49 -0700
-Date:   Tue, 4 Jun 2019 22:47:28 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 16/16] fpga: dfl: fme: add performance reporting
- support
-Message-ID: <20190604144728.GA18051@hao-dev>
-References: <1558934546-12171-1-git-send-email-hao.wu@intel.com>
- <1558934546-12171-17-git-send-email-hao.wu@intel.com>
- <20190530190305.GA2909@kroah.com>
- <20190601091147.GB3743@hao-dev>
- <20190601094219.GA1998@kroah.com>
+        Tue, 4 Jun 2019 11:04:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42690 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727586AbfFDPEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:04:00 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C3D1726C9C8
+Subject: Re: [PATCH] platform/chrome: fix crash during suspend
+To:     "Yang, Hyungwoo" <hyungwoo.yang@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kadam, Rushikesh S" <rushikesh.s.kadam@intel.com>,
+        "jettrink@chromium.org" <jettrink@chromium.org>
+References: <1559189034-11268-1-git-send-email-hyungwoo.yang@intel.com>
+ <8b7a8d63-d9e4-6a9e-1b13-423441416c8a@collabora.com>
+ <7A4F467111FEF64486F40DFE7DF3500A221AEE76@ORSMSX121.amr.corp.intel.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <2fc73fbf-8d30-9aba-c12e-799e6f2a824f@collabora.com>
+Date:   Tue, 4 Jun 2019 17:03:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <7A4F467111FEF64486F40DFE7DF3500A221AEE76@ORSMSX121.amr.corp.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190601094219.GA1998@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 02:42:19AM -0700, Greg KH wrote:
-> On Sat, Jun 01, 2019 at 05:11:47PM +0800, Wu Hao wrote:
-> > On Thu, May 30, 2019 at 12:03:05PM -0700, Greg KH wrote:
-> > > On Mon, May 27, 2019 at 01:22:26PM +0800, Wu Hao wrote:
-> > > > --- /dev/null
-> > > > +++ b/drivers/fpga/dfl-fme-perf.c
-> > > > @@ -0,0 +1,962 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Driver for FPGA Management Engine (FME) Global Performance Reporting
-> > > > + *
-> > > > + * Copyright 2019 Intel Corporation, Inc.
-> > > > + *
-> > > > + * Authors:
-> > > > + *   Kang Luwei <luwei.kang@intel.com>
-> > > > + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> > > > + *   Wu Hao <hao.wu@intel.com>
-> > > > + *   Joseph Grecco <joe.grecco@intel.com>
-> > > > + *   Enno Luebbers <enno.luebbers@intel.com>
-> > > > + *   Tim Whisonant <tim.whisonant@intel.com>
-> > > > + *   Ananda Ravuri <ananda.ravuri@intel.com>
-> > > > + *   Mitchel, Henry <henry.mitchel@intel.com>
-> > > > + */
-> > > > +
-> > > > +#include "dfl.h"
-> > > > +#include "dfl-fme.h"
-> > > > +
-> > > > +/*
-> > > > + * Performance Counter Registers for Cache.
-> > > > + *
-> > > > + * Cache Events are listed below as CACHE_EVNT_*.
-> > > > + */
-> > > > +#define CACHE_CTRL			0x8
-> > > > +#define CACHE_RESET_CNTR		BIT_ULL(0)
-> > > > +#define CACHE_FREEZE_CNTR		BIT_ULL(8)
-> > > > +#define CACHE_CTRL_EVNT			GENMASK_ULL(19, 16)
-> > > > +#define CACHE_EVNT_RD_HIT		0x0
-> > > > +#define CACHE_EVNT_WR_HIT		0x1
-> > > > +#define CACHE_EVNT_RD_MISS		0x2
-> > > > +#define CACHE_EVNT_WR_MISS		0x3
-> > > > +#define CACHE_EVNT_RSVD			0x4
-> > > > +#define CACHE_EVNT_HOLD_REQ		0x5
-> > > > +#define CACHE_EVNT_DATA_WR_PORT_CONTEN	0x6
-> > > > +#define CACHE_EVNT_TAG_WR_PORT_CONTEN	0x7
-> > > > +#define CACHE_EVNT_TX_REQ_STALL		0x8
-> > > > +#define CACHE_EVNT_RX_REQ_STALL		0x9
-> > > > +#define CACHE_EVNT_EVICTIONS		0xa
-> > > > +#define CACHE_EVNT_MAX			CACHE_EVNT_EVICTIONS
-> > > > +#define CACHE_CHANNEL_SEL		BIT_ULL(20)
-> > > > +#define CACHE_CHANNEL_RD		0
-> > > > +#define CACHE_CHANNEL_WR		1
-> > > > +#define CACHE_CHANNEL_MAX		2
-> > > > +#define CACHE_CNTR0			0x10
-> > > > +#define CACHE_CNTR1			0x18
-> > > > +#define CACHE_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-> > > > +#define CACHE_CNTR_EVNT			GENMASK_ULL(63, 60)
-> > > > +
-> > > > +/*
-> > > > + * Performance Counter Registers for Fabric.
-> > > > + *
-> > > > + * Fabric Events are listed below as FAB_EVNT_*
-> > > > + */
-> > > > +#define FAB_CTRL			0x20
-> > > > +#define FAB_RESET_CNTR			BIT_ULL(0)
-> > > > +#define FAB_FREEZE_CNTR			BIT_ULL(8)
-> > > > +#define FAB_CTRL_EVNT			GENMASK_ULL(19, 16)
-> > > > +#define FAB_EVNT_PCIE0_RD		0x0
-> > > > +#define FAB_EVNT_PCIE0_WR		0x1
-> > > > +#define FAB_EVNT_PCIE1_RD		0x2
-> > > > +#define FAB_EVNT_PCIE1_WR		0x3
-> > > > +#define FAB_EVNT_UPI_RD			0x4
-> > > > +#define FAB_EVNT_UPI_WR			0x5
-> > > > +#define FAB_EVNT_MMIO_RD		0x6
-> > > > +#define FAB_EVNT_MMIO_WR		0x7
-> > > > +#define FAB_EVNT_MAX			FAB_EVNT_MMIO_WR
-> > > > +#define FAB_PORT_ID			GENMASK_ULL(21, 20)
-> > > > +#define FAB_PORT_FILTER			BIT_ULL(23)
-> > > > +#define FAB_PORT_FILTER_DISABLE		0
-> > > > +#define FAB_PORT_FILTER_ENABLE		1
-> > > > +#define FAB_CNTR			0x28
-> > > > +#define FAB_CNTR_EVNT_CNTR		GENMASK_ULL(59, 0)
-> > > > +#define FAB_CNTR_EVNT			GENMASK_ULL(63, 60)
-> > > > +
-> > > > +/*
-> > > > + * Performance Counter Registers for Clock.
-> > > > + *
-> > > > + * Clock Counter can't be reset or frozen by SW.
-> > > > + */
-> > > > +#define CLK_CNTR			0x30
-> > > > +
-> > > > +/*
-> > > > + * Performance Counter Registers for IOMMU / VT-D.
-> > > > + *
-> > > > + * VT-D Events are listed below as VTD_EVNT_* and VTD_SIP_EVNT_*
-> > > > + */
-> > > > +#define VTD_CTRL			0x38
-> > > > +#define VTD_RESET_CNTR			BIT_ULL(0)
-> > > > +#define VTD_FREEZE_CNTR			BIT_ULL(8)
-> > > > +#define VTD_CTRL_EVNT			GENMASK_ULL(19, 16)
-> > > > +#define VTD_EVNT_AFU_MEM_RD_TRANS	0x0
-> > > > +#define VTD_EVNT_AFU_MEM_WR_TRANS	0x1
-> > > > +#define VTD_EVNT_AFU_DEVTLB_RD_HIT	0x2
-> > > > +#define VTD_EVNT_AFU_DEVTLB_WR_HIT	0x3
-> > > > +#define VTD_EVNT_DEVTLB_4K_FILL		0x4
-> > > > +#define VTD_EVNT_DEVTLB_2M_FILL		0x5
-> > > > +#define VTD_EVNT_DEVTLB_1G_FILL		0x6
-> > > > +#define VTD_EVNT_MAX			VTD_EVNT_DEVTLB_1G_FILL
-> > > > +#define VTD_CNTR			0x40
-> > > > +#define VTD_CNTR_EVNT			GENMASK_ULL(63, 60)
-> > > > +#define VTD_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-> > > > +#define VTD_SIP_CTRL			0x48
-> > > > +#define VTD_SIP_RESET_CNTR		BIT_ULL(0)
-> > > > +#define VTD_SIP_FREEZE_CNTR		BIT_ULL(8)
-> > > > +#define VTD_SIP_CTRL_EVNT		GENMASK_ULL(19, 16)
-> > > > +#define VTD_SIP_EVNT_IOTLB_4K_HIT	0x0
-> > > > +#define VTD_SIP_EVNT_IOTLB_2M_HIT	0x1
-> > > > +#define VTD_SIP_EVNT_IOTLB_1G_HIT	0x2
-> > > > +#define VTD_SIP_EVNT_SLPWC_L3_HIT	0x3
-> > > > +#define VTD_SIP_EVNT_SLPWC_L4_HIT	0x4
-> > > > +#define VTD_SIP_EVNT_RCC_HIT		0x5
-> > > > +#define VTD_SIP_EVNT_IOTLB_4K_MISS	0x6
-> > > > +#define VTD_SIP_EVNT_IOTLB_2M_MISS	0x7
-> > > > +#define VTD_SIP_EVNT_IOTLB_1G_MISS	0x8
-> > > > +#define VTD_SIP_EVNT_SLPWC_L3_MISS	0x9
-> > > > +#define VTD_SIP_EVNT_SLPWC_L4_MISS	0xa
-> > > > +#define VTD_SIP_EVNT_RCC_MISS		0xb
-> > > > +#define VTD_SIP_EVNT_MAX		VTD_SIP_EVNT_RCC_MISS
-> > > > +#define VTD_SIP_CNTR			0X50
-> > > > +#define VTD_SIP_CNTR_EVNT		GENMASK_ULL(63, 60)
-> > > > +#define VTD_SIP_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-> > > > +
-> > > > +#define PERF_OBJ_ROOT_ID		(~0)
-> > > > +
-> > > > +#define PERF_TIMEOUT			30
-> > > > +
-> > > > +/**
-> > > > + * struct perf_object - object of performance counter
-> > > > + *
-> > > > + * @id: instance id. PERF_OBJ_ROOT_ID indicates it is a parent object which
-> > > > + *      counts performance counters for all instances.
-> > > > + * @attr_groups: the sysfs files are associated with this object.
-> > > > + * @feature: pointer to related private feature.
-> > > > + * @node: used to link itself to parent's children list.
-> > > > + * @children: used to link its children objects together.
-> > > > + * @kobj: generic kobject interface.
-> > > > + *
-> > > > + * 'node' and 'children' are used to construct parent-children hierarchy.
-> > > > + */
-> > > > +struct perf_object {
-> > > > +	int id;
-> > > > +	const struct attribute_group **attr_groups;
-> > > > +	struct dfl_feature *feature;
-> > > > +
-> > > > +	struct list_head node;
-> > > > +	struct list_head children;
-> > > > +	struct kobject kobj;
-> > > 
-> > > Woah, why are you using a "raw" kobject and not a 'struct device' here?
-> > > You just broke userspace and no libraries will see your kobject's
-> > > properties as the "chain" of struct devices is not happening anymore.
-> > > 
-> > > Why can this not just be a 'struct device'?
-> > 
-> > Hi Greg,
-> > 
-> > Many thanks for the review and comments.
-> > 
-> > Actually we are just trying to create sysfs hierarchy for performance
-> > counters using these data structures.
-> > 
-> > If we use 'struct device' instead of kobject, then we have to let userspace
-> > code to deal with device's sysfs (e.g. ignore 'uevent' below). This is the
-> > only concern from my side now, as I know that using 'struct device'
-> > saves code as we don't need to introduce a new perf_obj_attribute then.
-> > 
-> > dfl-fme.0/perf/
-> >  ├── iommu
-> >  │   ├── afu0
-> >  │   │   ├── devtlb_1g_fill
-> >  │   │   ├── devtlb_2m_fill
-> >  │   │   ├── devtlb_4k_fill
-> >  │   │   ├── devtlb_read_hit
-> >  │   │   ├── devtlb_write_hit
-> >  │   │   ├── read_transaction
-> >  │   │   ├── uevent
-> >  │   │   └── write_transaction
-> >  │   ├── freeze
-> >  │   ├── iotlb_1g_hit
-> >  │   ├── iotlb_1g_miss
-> > 	 ...
-> >      └── uevent
-> >  ...
-> > 
-> > Do you think if we could keep it or it's better to use 'struct device'?
-> 
-> What about using the attribute group name?  That gives you a subdir for
-> free.  Doing anything "deeper" than one level means that you really have
-> a child device, and yes, you need to use a 'struct device'.  Make it
-> part of your bus and just have it be a different "type" and all should
-> be good.
-> 
-> Again, NEVER use a raw kobject as a child of a 'struct device', that
-> will break things.
-> 
-> And please cc: me on this series from now on, as you are obviously
-> trying to do complex things with the driver model and sysfs and it is
-> easy to get very wrong.
-> 
-> But wait, step back, why does this one driver have such a "special"
-> user/kernel api that unique to it and nothing else?  That's also a big
-> red flag, why not just use the normal perf api that everyone else uses?
->
+Hi,
 
-Hi Greg,
-
-Actually we just tried to add some interfaces for users to read hardware
-counters, Yes, I fully agree that we should use the existing apis whenever
-possible. I will look into perf api to see if we can use them instead.
-
-Many thanks for the review and comments!
-
-Hao
-
-> thanks,
+On 31/5/19 20:15, Yang, Hyungwoo wrote:
+>> On 30/5/19 6:03, Hyungwoo Yang wrote:
+>>> Kernel crashes during suspend due to wrong conversion in suspend and 
+>>> resume functions.
+>>>
+>>> Use the proper helper to get ishtp_cl_device instance.
+>>>
+>>> Signed-off-by: Hyungwoo Yang <hyungwoo.yang@intel.com>
+>>> ---
+>>>  drivers/platform/chrome/cros_ec_ishtp.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c 
+>>> b/drivers/platform/chrome/cros_ec_ishtp.c
+>>> index e504d25..430731c 100644
+>>> --- a/drivers/platform/chrome/cros_ec_ishtp.c
+>>> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
+>>> @@ -707,7 +707,7 @@ static int cros_ec_ishtp_reset(struct ishtp_cl_device *cl_device)
+>>>   */
+>>>  static int __maybe_unused cros_ec_ishtp_suspend(struct device 
+>>> *device)  {
+>>> -	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
+>>> +	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
+>>>  	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
+>>>  	struct ishtp_cl_data *client_data = 
+>>> ishtp_get_client_data(cros_ish_cl);
+>>>  
+>>> @@ -722,7 +722,7 @@ static int __maybe_unused cros_ec_ishtp_suspend(struct device *device)
+>>>   */
+>>>  static int __maybe_unused cros_ec_ishtp_resume(struct device *device)  
+>>> {
+>>> -	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
+>>> +	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
+>>>  	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
+>>>  	struct ishtp_cl_data *client_data = 
+>> ishtp_get_client_data(cros_ish_cl);
+>>>  
+>>>
+>>
+>> As this patch is a fix for '26a14267aff2 platform/chrome: Add ChromeOS EC ISHTP driver' which is still for-next material, do you mind if I squash both patches?
+>>
+>> If you don't mind I'll add your Signed-off and a small comment saying that you fixed this.
 > 
-> greg k-h
+> I don't mind. please do whatever you want. but it has dependency with https://patchwork.kernel.org/project/linux-input/list/?series=124780
+
+What patches exactly? The link points me to a big list of patches. And do you
+mean that this patch is a fix for a patch that didn't land yet and current code
+is not wrong?
+
+Thanks,
+ Enric
+
+> 
+>>
+>> Thanks,
+>> Enric
+> 
+> 
+> 
