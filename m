@@ -2,101 +2,107 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA47C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C54CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E82206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B45206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559691055;
+	bh=yfyAS/804NSzHyG/cFvbagIkgGYlflnYNBfkE8Ow/MQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RjTwzuA93gSkE3X5u6Xf28+qSJKdpiFWmIyMSdqpaa7OO0vUHm398Zv5oAAEn+P11
+	 H329zFIDbmldbFj9/XgCBVHTiTSp6y8aWAl8h6IDXYMvqxby30++95Oolg4j2VrQUB
+	 TJBOsjs8vmwHwMm8yD0Yu27iP8eG0pjjUVES78oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfFDXaq (ORCPT
+        id S1727656AbfFDXay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:30:46 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.130]:15907 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727347AbfFDXXq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:46 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 391F269465
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 18:23:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YImPh6yqsdnCeYImPhkaKr; Tue, 04 Jun 2019 18:23:45 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=46184 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYImO-000iEN-4v; Tue, 04 Jun 2019 18:23:44 -0500
-Date:   Tue, 4 Jun 2019 18:23:43 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] kernel: module: Use struct_size() helper
-Message-ID: <20190604232343.GA2475@embeddedor>
+        Tue, 4 Jun 2019 19:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727336AbfFDXXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD40620859;
+        Tue,  4 Jun 2019 23:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559690623;
+        bh=yfyAS/804NSzHyG/cFvbagIkgGYlflnYNBfkE8Ow/MQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tVfpB0T4uIfXfLTuO0SZw12ODvWkk4U1SbSOd/VBOEpov7VkJjaNny5uIpU4R0DH3
+         LqeymtRL+Gp/oe+bO58CKYQ53S1ulhke+Oq08rWNUcAFmWcLgMtxBvPN2w2eQvyKu5
+         m0LxRmd6keKE82+Vb1AYA4u1MjHusnYm0834uvC0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/36] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
+Date:   Tue,  4 Jun 2019 19:22:59 -0400
+Message-Id: <20190604232333.7185-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
+References: <20190604232333.7185-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYImO-000iEN-4v
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:46184
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+From: Takashi Iwai <tiwai@suse.de>
 
-So, replace the following form:
+[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
 
-sizeof(*sect_attrs) + nloaded * sizeof(sect_attrs->attrs[0]
+This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
 
-with:
+The fix attempt was incorrect, leading to the mutex deadlock through
+the close of OSS sequencer client.  The proper fix needs more
+consideration, so let's revert it now.
 
-struct_size(sect_attrs, attrs, nloaded)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
+Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/core/seq/seq_clientmgr.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 80c7c09584cf..3f3bb090fbf4 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1492,8 +1492,7 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
- 	for (i = 0; i < info->hdr->e_shnum; i++)
- 		if (!sect_empty(&info->sechdrs[i]))
- 			nloaded++;
--	size[0] = ALIGN(sizeof(*sect_attrs)
--			+ nloaded * sizeof(sect_attrs->attrs[0]),
-+	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
- 			sizeof(sect_attrs->grp.attrs[0]));
- 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
- 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 37312a3ae60f..f59e13c1d84a 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -2337,19 +2337,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+ {
+ 	const struct ioctl_handler *handler;
+ 	struct snd_seq_client *client;
+-	int err;
+ 
+ 	client = clientptr(clientid);
+ 	if (client == NULL)
+ 		return -ENXIO;
+ 
+ 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
+-		if (handler->cmd == cmd) {
+-			mutex_lock(&client->ioctl_mutex);
+-			err = handler->func(client, arg);
+-			mutex_unlock(&client->ioctl_mutex);
+-			return err;
+-		}
++		if (handler->cmd == cmd)
++			return handler->func(client, arg);
+ 	}
+ 
+ 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
 -- 
-2.21.0
+2.20.1
 
