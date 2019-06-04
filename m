@@ -2,204 +2,571 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDADC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61F7C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBBA24AD6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B565924AD5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQwXpuCB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iAY6QNzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfFDGPX (ORCPT
+        id S1726754AbfFDGQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:15:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40236 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfFDGPW (ORCPT
+        Tue, 4 Jun 2019 02:16:06 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:35470 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbfFDGQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:15:22 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u16so8102393wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 23:15:20 -0700 (PDT)
+        Tue, 4 Jun 2019 02:16:05 -0400
+Received: by mail-ua1-f67.google.com with SMTP id r7so7390046ual.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 23:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oNrnRCUzinS7MBOEvkCWHhxILAHdwQHQATVFVobeDlI=;
-        b=kQwXpuCBELr3dX5uqEhOJFYLyxkuIEq0NSG4lz6eYsk8KUMn8QgyMDH4O6VPhbDM5x
-         zxc9H7/KqiS/H8m00vtJxuIDei1MnfmCcGDoknk+AUBBCuUEHP3wM/7b3ymHXtF903S3
-         L9y0xxcHRUy0gPhtwhQNKuRDPLTQWS80eLFQksyPtYJpxbpsPwlHrcb482PY1NjMh/Pl
-         0vfBdDKHLlnLaFoOMJnsXA+fUrazYYi2QtKMRgy4XgvBkRbpeHpvrBLyf++39KkAItE9
-         dUgPcy68a3wrIHHoxFPnMDp0i9odmQF6qD+hdT3qxIYfyd0jcATIDHB9Ah1v6npmhu6c
-         fS/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ewJ5Ta1tqLfBar5/v+xvEoWC9eNsUmqmktS5BAL1v4=;
+        b=iAY6QNzYUMzpOTEij5DTCCeCGFdWX+1XW4Dl6XBGxs/uh5fTaQLzw6gsvM/YTY8yAy
+         Vuhlb2N9QIGzFB7p+uNx2agmVvaT0YrGwlkrznGcMV/BJ3vjZOwYfT91ObF0HilpxUvZ
+         ushwgIFUHzqKwzktGS+tWtQ9LoozyQTDc6pP8a8A9JtajvFy+BbT9nNuH9J2LXw3mFkK
+         ZXvk9WhmNFswi5rnMmyNWd3V0uXNtDBtdeNRgDQiPpT+QtzQvawBc1TGicUozSJq1H++
+         AztvwhH8/VO7uNnHicJVEEcNqS0BnVhEQg2NzDFigV8i5drGv7mrWaERSiLIZElL+w43
+         pyzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=oNrnRCUzinS7MBOEvkCWHhxILAHdwQHQATVFVobeDlI=;
-        b=uTKfvYH0wkqKms6cN98/Nme83x+iiUaEL2S5R9rkzZe0PDXIN0rYgLXzBz7r0EGW3L
-         rHkPFQ9tEXTb7+hi07WN25wrXi0dZlxiLtCo6Y375i7FaZslqgS/loA1AruzaKkN0bBO
-         KKC8b5fdtJHS3fXa3U0B0ykYM3vigkp87wmGJ0mfuLJObPxWXZuwK2b8aeOQ3EldrDET
-         ezCP1GTyy7AJg1v8P6QsxhUlnH6QAKcZ29harq0nV5ValhJ83By7n3O8G66AJ/dBZ9Of
-         T7X196AFyyYgmWv9VZE69cUivRH+NIMzaAYbvesB9nna+5Ikt3Q7KdmSTJ9ywFM493kq
-         xCPA==
-X-Gm-Message-State: APjAAAUEzvTXBREdhYdsWsS2U/tHwH0iCfIMEx4qru0u+4Djn0Hq7KVr
-        t9JOUjR9MvoUFPKGK8Th64zVFA==
-X-Google-Smtp-Source: APXvYqzK84IpeZCsP3YLU4WmcD+GyCn2MmS9oGwB2ZvCxsCvJESWnYWXPDhjkiJKu13mLrvFm6o38g==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr16540932wmm.62.1559628919933;
-        Mon, 03 Jun 2019 23:15:19 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id w3sm11388400wmc.8.2019.06.03.23.15.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Jun 2019 23:15:19 -0700 (PDT)
-Subject: Re: [PATCH V3 0/8] genirq/timings: Fixes and selftests
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
-References: <20190527205521.12091-1-daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ee0d9f68-2f85-ca56-1af9-f3f6a165863b@linaro.org>
-Date:   Tue, 4 Jun 2019 08:15:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ewJ5Ta1tqLfBar5/v+xvEoWC9eNsUmqmktS5BAL1v4=;
+        b=DicbtPTw7aMYHj8jOthPjPZqL64ODGdvy8ZkF19OItXF4UROeCDGFSIA4f/z6g1h3t
+         AM4rrGRxrzykq0ZQpdto6WokZKWS3xd09DfNTV9pjFnf04N0oPpQdYt2sPOtdbcEhBk/
+         tMLOs70w2Hb6/vTs+UTNUnGWOYn7jHf5azp7UFj50Eu4KIkvhZv4v4o332yk9b1WAq7S
+         q3Dt8JPaN30SpndykWK9LnVpvA/jN0CVq1Ya87mej5VCQxS18z/h98sSb0kIOqBdirqQ
+         GNEiEGGOTCP5dFFJYm/s3qmesPrelEABuTzlTcV1qpkiBSCNn56rB6bWxy9L2XPhCVFA
+         sEzw==
+X-Gm-Message-State: APjAAAVI7lVvbovfBdWbYj7zgrm4/vAPwSXRqcx/H7btFJkt7MpO+eFh
+        H39ckPnm8AvBvAQNCR6whELoig8i77VtnFyY77N34g==
+X-Google-Smtp-Source: APXvYqwKCyV+NOE8sEEcdPlQH+YXFJSn9SnFgvpkYXxbZf0ZGhvdtjM/bzR2bl6kcomUGRSbMbUBLpCYYqPwVEYMQ6Y=
+X-Received: by 2002:ab0:238a:: with SMTP id b10mr9118247uan.52.1559628964082;
+ Mon, 03 Jun 2019 23:16:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190527205521.12091-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190530152758.16628-1-sashal@kernel.org> <20190530152758.16628-2-sashal@kernel.org>
+In-Reply-To: <20190530152758.16628-2-sashal@kernel.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 4 Jun 2019 11:45:52 +0530
+Message-ID: <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] fTPM: firmware TPM running in TEE
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, corbet@lwn.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        tee-dev@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 May 2019 at 20:58, Sasha Levin <sashal@kernel.org> wrote:
+>
+> This patch adds support for a software-only implementation of a TPM
+> running in TEE.
+>
+> There is extensive documentation of the design here:
+> https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+>
+> As well as reference code for the firmware available here:
+> https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+>
+> Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/char/tpm/Kconfig        |   5 +
+>  drivers/char/tpm/Makefile       |   1 +
+>  drivers/char/tpm/tpm_ftpm_tee.c | 380 ++++++++++++++++++++++++++++++++
+>  drivers/char/tpm/tpm_ftpm_tee.h |  40 ++++
+>  4 files changed, 426 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
+>  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
+>
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index f3e4bc490cf05..8bc9a56cade14 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -163,6 +163,11 @@ config TCG_VTPM_PROXY
+>           /dev/vtpmX and a server-side file descriptor on which the vTPM
+>           can receive commands.
+>
+> +config TCG_FTPM_TEE
+> +       tristate "TEE based fTPM Interface"
+> +       depends on TEE && OPTEE
+> +       ---help---
+> +         This driver proxies for fTPM running in TEE
+>
+>  source "drivers/char/tpm/st33zp24/Kconfig"
+>  endif # TCG_TPM
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index a01c4cab902a6..c354cdff9c625 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -33,3 +33,4 @@ obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
+>  obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+>  obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> +obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+> new file mode 100644
+> index 0000000000000..f926b1287988b
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
+> @@ -0,0 +1,380 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) Microsoft Corporation
+> + *
+> + * Implements a firmware TPM as described here:
+> + * https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/
+> + *
+> + * A reference implementation is available here:
+> + * https://github.com/microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM/optee_ta/fTPM
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/tee_drv.h>
+> +#include <linux/tpm.h>
+> +#include <linux/uuid.h>
+> +
+> +#include "tpm.h"
+> +#include "tpm_ftpm_tee.h"
+> +
+> +#define DRIVER_NAME "ftpm-tee"
+> +
+> +/*
+> + * TA_FTPM_UUID: BC50D971-D4C9-42C4-82CB-343FB7F37896
+> + *
+> + * Randomly generated, and must correspond to the GUID on the TA side.
+> + * Defined here in the reference implementation:
+> + * https://github.com/microsoft/ms-tpm-20-ref/blob/master/Samples/ARM32-FirmwareTPM/optee_ta/fTPM/include/fTPM.h#L42
+> + */
+> +
+> +static const uuid_t ftpm_ta_uuid =
+> +       UUID_INIT(0xBC50D971, 0xD4C9, 0x42C4,
+> +                 0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+> +
+> +/**
+> + * ftpm_tee_tpm_op_recv - retrieve fTPM response.
+> + *
+> + * @chip: the tpm_chip description as specified in driver/char/tpm/tpm.h.
+> + * @buf: the buffer to store data.
+> + * @count: the number of bytes to read.
+> + *
+> + * Return:
+> + *     In case of success the number of bytes received.
+> + *     On failure, -errno.
+> + */
+> +static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +       struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+> +       size_t len;
+> +
+> +       len = pvt_data->resp_len;
+> +       if (count < len) {
+> +               dev_err(&chip->dev,
+> +                       "%s:Invalid size in recv: count=%zd, resp_len=%zd\n",
+> +                       __func__, count, len);
+> +               return -EIO;
+> +       }
+> +
+> +       memcpy(buf, pvt_data->resp_buf, len);
+> +       pvt_data->resp_len = 0;
+> +
+> +       return len;
+> +}
+> +
+> +/**
+> + * ftpm_tee_tpm_op_send - send TPM commands through the TEE shared memory.
+> + *
+> + * @chip: the tpm_chip description as specified in driver/char/tpm/tpm.h
+> + * @buf: the buffer to send.
+> + * @len: the number of bytes to send.
+> + *
+> + * Return:
+> + *     In case of success, returns 0.
+> + *     On failure, -errno
+> + */
+> +static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> +{
+> +       struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+> +       size_t resp_len;
+> +       int rc;
+> +       u8 *temp_buf;
+> +       struct tpm_header *resp_header;
+> +       struct tee_ioctl_invoke_arg transceive_args;
+> +       struct tee_param command_params[4];
+> +       struct tee_shm *shm = pvt_data->shm;
+> +
+> +       if (len > MAX_COMMAND_SIZE) {
+> +               dev_err(&chip->dev,
+> +                       "%s:len=%zd exceeds MAX_COMMAND_SIZE supported by fTPM TA\n",
+> +                       __func__, len);
+> +               return -EIO;
+> +       }
+> +
+> +       memset(&transceive_args, 0, sizeof(transceive_args));
+> +       memset(command_params, 0, sizeof(command_params));
+> +       pvt_data->resp_len = 0;
+> +
+> +       /* Invoke FTPM_OPTEE_TA_SUBMIT_COMMAND function of fTPM TA */
+> +       transceive_args = (struct tee_ioctl_invoke_arg) {
+> +               .func = FTPM_OPTEE_TA_SUBMIT_COMMAND,
+> +               .session = pvt_data->session,
+> +               .num_params = 4,
+> +       };
+> +
+> +       /* Fill FTPM_OPTEE_TA_SUBMIT_COMMAND parameters */
+> +       command_params[0] = (struct tee_param) {
+> +               .attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
+> +               .u.memref = {
+> +                       .shm = shm,
+> +                       .size = len,
+> +                       .shm_offs = 0,
+> +               },
+> +       };
+> +
+> +       temp_buf = tee_shm_get_va(shm, 0);
+> +       if (IS_ERR(temp_buf)) {
+> +               dev_err(&chip->dev, "%s:tee_shm_get_va failed for transmit\n",
+> +                       __func__);
+> +               return PTR_ERR(temp_buf);
+> +       }
+> +       memset(temp_buf, 0, (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE));
+> +
+> +       memcpy(temp_buf, buf, len);
+> +
+> +       command_params[1] = (struct tee_param) {
+> +               .attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
+> +               .u.memref = {
+> +                       .shm = shm,
+> +                       .size = MAX_RESPONSE_SIZE,
+> +                       .shm_offs = MAX_COMMAND_SIZE,
+> +               },
+> +       };
+> +
+> +       rc = tee_client_invoke_func(pvt_data->ctx, &transceive_args,
+> +                                       command_params);
+> +       if ((rc < 0) || (transceive_args.ret != 0)) {
+> +               dev_err(&chip->dev, "%s:SUBMIT_COMMAND invoke error: 0x%x\n",
+> +                       __func__, transceive_args.ret);
+> +               return (rc < 0) ? rc : transceive_args.ret;
+> +       }
+> +
+> +       temp_buf = tee_shm_get_va(shm, command_params[1].u.memref.shm_offs);
+> +       if (IS_ERR(temp_buf)) {
+> +               dev_err(&chip->dev, "%s:tee_shm_get_va failed for receive\n",
+> +                       __func__);
+> +               return PTR_ERR(temp_buf);
+> +       }
+> +
+> +       resp_header = (struct tpm_header *)temp_buf;
+> +       resp_len = be32_to_cpu(resp_header->length);
+> +
+> +       /* sanity check resp_len */
+> +       if (resp_len < TPM_HEADER_SIZE) {
+> +               dev_err(&chip->dev, "%s:tpm response header too small\n",
+> +                       __func__);
+> +               return -EIO;
+> +       }
+> +       if (resp_len > MAX_RESPONSE_SIZE) {
+> +               dev_err(&chip->dev,
+> +                       "%s:resp_len=%zd exceeds MAX_RESPONSE_SIZE\n",
+> +                       __func__, resp_len);
+> +               return -EIO;
+> +       }
+> +
+> +       /* sanity checks look good, cache the response */
+> +       memcpy(pvt_data->resp_buf, temp_buf, resp_len);
+> +       pvt_data->resp_len = resp_len;
+> +
+> +       return 0;
+> +}
+> +
+> +static void ftpm_tee_tpm_op_cancel(struct tpm_chip *chip)
+> +{
+> +       /* not supported */
+> +}
+> +
+> +static u8 ftpm_tee_tpm_op_status(struct tpm_chip *chip)
+> +{
+> +       return 0;
+> +}
+> +
+> +static bool ftpm_tee_tpm_req_canceled(struct tpm_chip *chip, u8 status)
+> +{
+> +       return 0;
+> +}
+> +
+> +static const struct tpm_class_ops ftpm_tee_tpm_ops = {
+> +       .flags = TPM_OPS_AUTO_STARTUP,
+> +       .recv = ftpm_tee_tpm_op_recv,
+> +       .send = ftpm_tee_tpm_op_send,
+> +       .cancel = ftpm_tee_tpm_op_cancel,
+> +       .status = ftpm_tee_tpm_op_status,
+> +       .req_complete_mask = 0,
+> +       .req_complete_val = 0,
+> +       .req_canceled = ftpm_tee_tpm_req_canceled,
+> +};
+> +
+> +/*
+> + * Check whether this driver supports the fTPM TA in the TEE instance
+> + * represented by the params (ver/data) to this function.
+> + */
+> +static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+> +{
+> +       /*
+> +        * Currently this driver only support GP Complaint OPTEE based fTPM TA
+> +        */
+> +       if ((ver->impl_id == TEE_IMPL_ID_OPTEE) &&
+> +               (ver->gen_caps & TEE_GEN_CAP_GP))
+> +               return 1;
+> +       else
+> +               return 0;
+> +}
+> +
+> +/*
+> + * Undo what has been done in ftpm_tee_probe
+> + */
+> +static void ftpm_tee_deinit(struct ftpm_tee_private *pvt_data)
+> +{
+> +       /* Release the chip */
+> +       tpm_chip_unregister(pvt_data->chip);
+> +
+> +       /* frees chip */
+> +       if (pvt_data->chip)
+> +               put_device(&pvt_data->chip->dev);
+> +
+> +       if (pvt_data->ctx) {
+> +               /* Free the shared memory pool */
+> +               tee_shm_free(pvt_data->shm);
+> +
+> +               /* close the existing session with fTPM TA*/
+> +               tee_client_close_session(pvt_data->ctx, pvt_data->session);
+> +
+> +               /* close the context with TEE driver */
+> +               tee_client_close_context(pvt_data->ctx);
+> +       }
+> +
+> +       /* memory allocated with devm_kzalloc() is freed automatically */
+> +}
+> +
+> +/**
+> + * ftpm_tee_probe - initialize the fTPM
+> + * @pdev: the platform_device description.
+> + *
+> + * Return:
+> + *     On success, 0. On failure, -errno.
+> + */
+> +static int ftpm_tee_probe(struct platform_device *pdev)
+> +{
+> +       int rc;
+> +       struct tpm_chip *chip;
+> +       struct device *dev = &pdev->dev;
+> +       struct ftpm_tee_private *pvt_data = NULL;
+> +       struct tee_ioctl_open_session_arg sess_arg;
+> +
+> +       pvt_data = devm_kzalloc(dev, sizeof(struct ftpm_tee_private),
+> +                               GFP_KERNEL);
+> +       if (!pvt_data)
+> +               return -ENOMEM;
+> +
+> +       dev_set_drvdata(dev, pvt_data);
+> +
+> +       /* Open context with TEE driver */
+> +       pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+> +                                               NULL);
+> +       if (IS_ERR(pvt_data->ctx)) {
+> +               dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
 
-Hi,
+Is this well tested? I see this misleading error multiple times as
+follows although TEE driver works pretty well.
 
-is it possible to consider this series for merging?
+Module built with "CONFIG_TCG_FTPM_TEE=y"
 
-Thanks in advance
+[    1.436878] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+[    1.509471] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+[    1.517268] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+[    1.525596] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
 
-  -- Daniel
+-Sumit
 
-
-On 27/05/2019 22:55, Daniel Lezcano wrote:
-> This series provides a couple of fixes, an optimization and the code
-> to do the selftests.
-> 
-> While writing the selftests, a couple of issues were spotted with
-> the circular buffer handling and the routine searching for the pattern
-> multiple times.
-> 
-> In addition, a small optimization has been found while investigating the
-> bugs above.
-> 
-> In order to write the selftest, the routine needed by the core code and
-> the tests are wrapped into function which are always inline so the current
-> code is not impacted by a new function call. There is no functional
-> changes in this part.
-> 
-> Finally, the selftest uses samples to insert values in the arrays and
-> use them to predict the next event. These tests cover the most difficult
-> part of the code.
-> 
-> Changelog:
-> 
-> V3:
->   - Removed patch using the min macro
->   - Fixed comment typos in patch 1/8
-> V2:
->   - Removed defaulting to 'n' as it is already the case
-> 
-> 
-> *** BLURB HERE ***
-> 
-> Daniel Lezcano (8):
->   genirq/timings: Fix next event index function
->   genirq/timings: Fix timings buffer inspection
->   genirq/timings: Optimize the period detection speed
->   genirq/timings: Encapsulate timings push
->   genirq/timings: Encapsulate storing function
->   genirq/timings: Add selftest for circular array
->   genirq/timings: Add selftest for irqs circular buffer
->   genirq/timings: Add selftest for next event computation
-> 
->  kernel/irq/Makefile    |   3 +
->  kernel/irq/internals.h |  21 +-
->  kernel/irq/timings.c   | 453 +++++++++++++++++++++++++++++++++++++----
->  lib/Kconfig.debug      |   8 +
->  4 files changed, 442 insertions(+), 43 deletions(-)
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+> +               return -EPROBE_DEFER;
+> +       }
+> +
+> +       /* Open a session with fTPM TA */
+> +       memset(&sess_arg, 0, sizeof(sess_arg));
+> +       memcpy(sess_arg.uuid, ftpm_ta_uuid.b, TEE_IOCTL_UUID_LEN);
+> +       sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+> +       sess_arg.num_params = 0;
+> +
+> +       rc = tee_client_open_session(pvt_data->ctx, &sess_arg, NULL);
+> +       if ((rc < 0) || (sess_arg.ret != 0)) {
+> +               dev_err(dev, "%s:tee_client_open_session failed, err=%x\n",
+> +                       __func__, sess_arg.ret);
+> +               rc = -EINVAL;
+> +               goto out_tee_session;
+> +       }
+> +       pvt_data->session = sess_arg.session;
+> +
+> +       /* Allocate dynamic shared memory with fTPM TA */
+> +       pvt_data->shm = tee_shm_alloc(pvt_data->ctx,
+> +                               (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE),
+> +                               TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
+> +       if (IS_ERR(pvt_data->shm)) {
+> +               dev_err(dev, "%s:tee_shm_alloc failed\n", __func__);
+> +               rc = -ENOMEM;
+> +               goto out_shm_alloc;
+> +       }
+> +
+> +       /* Allocate new struct tpm_chip instance */
+> +       chip = tpm_chip_alloc(dev, &ftpm_tee_tpm_ops);
+> +       if (IS_ERR(chip)) {
+> +               dev_err(dev, "%s:tpm_chip_alloc failed\n", __func__);
+> +               rc = PTR_ERR(chip);
+> +               goto out_chip_alloc;
+> +       }
+> +
+> +       pvt_data->chip = chip;
+> +       pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +
+> +       /* Create a character device for the fTPM */
+> +       rc = tpm_chip_register(pvt_data->chip);
+> +       if (rc) {
+> +               dev_err(dev, "%s:tpm_chip_register failed with rc=%d\n",
+> +                       __func__, rc);
+> +               goto out_chip;
+> +       }
+> +
+> +       return 0;
+> +
+> +out_chip:
+> +       put_device(&pvt_data->chip->dev);
+> +out_chip_alloc:
+> +       tee_shm_free(pvt_data->shm);
+> +out_shm_alloc:
+> +       tee_client_close_session(pvt_data->ctx, pvt_data->session);
+> +out_tee_session:
+> +       tee_client_close_context(pvt_data->ctx);
+> +
+> +       return rc;
+> +}
+> +
+> +/**
+> + * ftpm_tee_remove - remove the TPM device
+> + * @pdev: the platform_device description.
+> + *
+> + * Return:
+> + *     0 in case of success.
+> + */
+> +static int ftpm_tee_remove(struct platform_device *pdev)
+> +{
+> +       struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+> +
+> +       /* Release the chip */
+> +       tpm_chip_unregister(pvt_data->chip);
+> +
+> +       /* frees chip */
+> +       put_device(&pvt_data->chip->dev);
+> +
+> +       /* Free the shared memory pool */
+> +       tee_shm_free(pvt_data->shm);
+> +
+> +       /* close the existing session with fTPM TA*/
+> +       tee_client_close_session(pvt_data->ctx, pvt_data->session);
+> +
+> +       /* close the context with TEE driver */
+> +       tee_client_close_context(pvt_data->ctx);
+> +
+> +        /* memory allocated with devm_kzalloc() is freed automatically */
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id of_ftpm_tee_ids[] = {
+> +       { .compatible = "microsoft,ftpm" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
+> +
+> +static struct platform_driver ftpm_tee_driver = {
+> +       .driver = {
+> +               .name = DRIVER_NAME,
+> +               .of_match_table = of_match_ptr(of_ftpm_tee_ids),
+> +       },
+> +       .probe = ftpm_tee_probe,
+> +       .remove = ftpm_tee_remove,
+> +};
+> +
+> +module_platform_driver(ftpm_tee_driver);
+> +
+> +MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
+> +MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
+> new file mode 100644
+> index 0000000000000..b09ee7be45459
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.h
+> @@ -0,0 +1,40 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) Microsoft Corporation
+> + */
+> +
+> +#ifndef __TPM_FTPM_TEE_H__
+> +#define __TPM_FTPM_TEE_H__
+> +
+> +#include <linux/tee_drv.h>
+> +#include <linux/tpm.h>
+> +#include <linux/uuid.h>
+> +
+> +/* The TAFs ID implemented in this TA */
+> +#define FTPM_OPTEE_TA_SUBMIT_COMMAND  (0)
+> +#define FTPM_OPTEE_TA_EMULATE_PPI     (1)
+> +
+> +/* max. buffer size supported by fTPM  */
+> +#define  MAX_COMMAND_SIZE       4096
+> +#define  MAX_RESPONSE_SIZE      4096
+> +
+> +/**
+> + * struct ftpm_tee_private - fTPM's private data
+> + * @chip:     struct tpm_chip instance registered with tpm framework.
+> + * @state:    internal state
+> + * @session:  fTPM TA session identifier.
+> + * @resp_len: cached response buffer length.
+> + * @resp_buf: cached response buffer.
+> + * @ctx:      TEE context handler.
+> + * @shm:      Memory pool shared with fTPM TA in TEE.
+> + */
+> +struct ftpm_tee_private {
+> +       struct tpm_chip *chip;
+> +       u32 session;
+> +       size_t resp_len;
+> +       u8 resp_buf[MAX_RESPONSE_SIZE];
+> +       struct tee_context *ctx;
+> +       struct tee_shm *shm;
+> +};
+> +
+> +#endif /* __TPM_FTPM_TEE_H__ */
+> --
+> 2.20.1
+>
