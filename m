@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DCDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E92C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5F62461E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4C024C67
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzhVSfX/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yF/IS8w7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfFDIPL (ORCPT
+        id S1727153AbfFDIPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:15:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40107 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfFDIPI (ORCPT
+        Tue, 4 Jun 2019 04:15:17 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36932 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfFDIPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:15:08 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d30so9892843pgm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:15:07 -0700 (PDT)
+        Tue, 4 Jun 2019 04:15:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bh12so1960072plb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 01:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=628ZQKD9jdSHtWmvRCzFbwR4o1BOUbgB+F8276Myxy8=;
-        b=gzhVSfX/Bn6qb7Bn5lG6vK47YR/iVsd/HdMBg0jqihRl1oIgJUL0n2Rcr/GT6ZSNuc
-         1aRUNkfNasPsc40XFopW34wVB0wEY9EGrsslh+r78Eawvrq0LxdAUUimuOx4t+msvwLO
-         uBqkjXbfx5Mxq2ZNzGt1nrr5C31jEDWO0kJeY6FO2Wj6WlshAoCOuxW1W0CrPlnaO526
-         4So3Zm816GJgnVCMXFd2e19o3Ri7YmIrdFWkj0M4eZv3qQDUzvU3oBm66fGUFJM2acQn
-         My9WcvNPZLHe5Q0ufI3CEyUnhMO2419UK0hNaGZL5gajope7z52/G4Mpd9Wq0AWz0APz
-         haGg==
+        bh=1vxV7xw/5L8i8m4bOyu5pRBcqwZ6n7yFKBRMfko8eAg=;
+        b=yF/IS8w7PJss7KY8M0Wgdbhr4VXw0eZdXylHTkYXpnzppT6cn89MSsaQKKrjC+DtQN
+         1GtV+NlutX5shDQlf1LrHQXLzThmo4n0NLbMGxqY8RmRnIiR6hfvu8BJoPrg/+oUZHxB
+         +S7jPtfHSDhI+jm1xYZlszQMW6y3F3wkCVj1Hun96siKj9lKc/AhwLiKhSEEM/la8VKX
+         /dexH7LLGORAMf8idnkuxH74+l9ygl2Kvoz/7surXaj1r61Kubiw+dqSgEGF2t3/gI7E
+         zvccHnVXEs90BwkkWUltHssENapZM1r1qHYnT69sGzuHWmyUp9oo0FJhRwKFmJ0zJhcL
+         3ifQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=628ZQKD9jdSHtWmvRCzFbwR4o1BOUbgB+F8276Myxy8=;
-        b=s8ZfEGzo3pBAQ33fsMUXuGjVDIpBy6PKpKrF/ElY5+ysxIfK7UccCypZ+j0fwXPCUU
-         bQjzlsuQzbn2GScIdJ6jNulfSlB+ef/Y1URd0mhg4l5C8+iS1vPGv0lKC7I8UPKlJhj6
-         eOZ28M9vRCb4FtfQHzoq0KnhCdWvXiVxspDRJwFMoZGt541ScT/mHTMJo49Q1n5AblZe
-         p92w1aDvTkbgdsHW9p3cnMxgnM93MgfPsyIrHezp6SV6GDK6tTwU0bPu8P2urXFPrhWj
-         w3nSLnjmKhOvSXU+aPW3oHLtTDrikAoaWU0UD6OJ45k9YjecUmfzzbGKOEqzteqIZ9bR
-         KXpQ==
-X-Gm-Message-State: APjAAAXzP3axjnp6xySbFaMUstYnBJWecWjkr25NnrTyFdu4heoNMSZo
-        0xa2PwTF00gilcADvQpaOTv99Q==
-X-Google-Smtp-Source: APXvYqwpCoCmq59wFKEjIbjrTVby8p417ikbel/eUac3GvHTET9/FMzHRuPQWLns6Pqw0rSxaIT4AQ==
-X-Received: by 2002:a17:90b:d83:: with SMTP id bg3mr21126762pjb.63.1559636107639;
-        Tue, 04 Jun 2019 01:15:07 -0700 (PDT)
+        bh=1vxV7xw/5L8i8m4bOyu5pRBcqwZ6n7yFKBRMfko8eAg=;
+        b=jlum6xNXmL8HfDRm3wqKUt5ffQiWf02Nov87n2Z4QytAfAMVVYPZ+tgi6VpaP7c0CD
+         SHkL+Lqihrqv3JEg0ECoRAxxNXqeArhxSnaUh6AmlYOl7ipQdxtIGvuq3uwzWGiq55HF
+         ye+AXheVOfKxArjr0pR5vAo+vitZpmRfnfpKDt3g1ASjZEAEvixjhZ9ocFYHNqQUMBdj
+         FvX49hvvGkarAreQwbhemcLn23qRQ/D7O82fBxMGBr50DV1LBjfnOkGEdyQPZcDITRLn
+         JabCSfn7i5FMPZ+3xrdhXJ5IPI0Y9/XMpuKRabdspuI+XDGv5/2HAr3VIH5lmcemLTpg
+         tYOg==
+X-Gm-Message-State: APjAAAWqRVua9Eu7yaC6q5FW6lbR/nG7ghPTR5DeJDGLCvlNfi/CJaLs
+        7GxXDMqVanMUx1echr3XllJUYQ==
+X-Google-Smtp-Source: APXvYqx5tr7hLBSr2deQxAafI0cRVbDGcHrT9nSSxEdJBYE9hB3oMoE89I4R2+wZwZkLmlk0Mk2HWg==
+X-Received: by 2002:a17:902:aa0a:: with SMTP id be10mr27683709plb.27.1559636112034;
+        Tue, 04 Jun 2019 01:15:12 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j4sm14818804pgc.56.2019.06.04.01.15.02
+        by smtp.gmail.com with ESMTPSA id j4sm14818804pgc.56.2019.06.04.01.15.07
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 04 Jun 2019 01:15:06 -0700 (PDT)
+        Tue, 04 Jun 2019 01:15:11 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
@@ -63,9 +63,9 @@ To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
 Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org, arm@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 4/9] mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
-Date:   Tue,  4 Jun 2019 16:14:24 +0800
-Message-Id: <37b15ac756f9fca7c1f9382deb57648890bb141c.1559635435.git.baolin.wang@linaro.org>
+Subject: [PATCH v2 5/9] mmc: sdhci-sprd: Add HS400 enhanced strobe mode
+Date:   Tue,  4 Jun 2019 16:14:25 +0800
+Message-Id: <e1a8f70c1a393e110677b447e5fd1f25667546b8.1559635435.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1559635435.git.baolin.wang@linaro.org>
 References: <cover.1559635435.git.baolin.wang@linaro.org>
@@ -76,40 +76,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the get_max_timeout_count() interface to set the Spredtrum SD
-host controller actual maximum timeout count.
+Add HS400 enhanced strobe mode support for Spreadtrum SD host controller.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/mmc/host/sdhci-sprd.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mmc/host/sdhci-sprd.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 31ba7d6..d91281d 100644
+index d91281d..edec197 100644
 --- a/drivers/mmc/host/sdhci-sprd.c
 +++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -285,6 +285,12 @@ static void sdhci_sprd_hw_reset(struct sdhci_host *host)
- 	usleep_range(300, 500);
+@@ -41,6 +41,7 @@
+ /* SDHCI_HOST_CONTROL2 */
+ #define  SDHCI_SPRD_CTRL_HS200		0x0005
+ #define  SDHCI_SPRD_CTRL_HS400		0x0006
++#define  SDHCI_SPRD_CTRL_HS400ES	0x0007
+ 
+ /*
+  * According to the standard specification, BIT(3) of SDHCI_SOFTWARE_RESET is
+@@ -132,6 +133,15 @@ static inline void sdhci_sprd_sd_clk_off(struct sdhci_host *host)
+ 	sdhci_writew(host, ctrl, SDHCI_CLOCK_CONTROL);
  }
  
-+static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
++static inline void sdhci_sprd_sd_clk_on(struct sdhci_host *host)
 +{
-+	/* The Spredtrum controller actual maximum timeout count is 1 << 31 */
-+	return 1 << 31;
++	u16 ctrl;
++
++	ctrl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++	ctrl |= SDHCI_CLOCK_CARD_EN;
++	sdhci_writew(host, ctrl, SDHCI_CLOCK_CONTROL);
 +}
 +
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -296,6 +302,7 @@ static void sdhci_sprd_hw_reset(struct sdhci_host *host)
- 	.reset = sdhci_reset,
- 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
- 	.hw_reset = sdhci_sprd_hw_reset,
-+	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- };
+ static inline void
+ sdhci_sprd_set_dll_invert(struct sdhci_host *host, u32 mask, bool en)
+ {
+@@ -325,6 +335,26 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 	sdhci_request(mmc, mrq);
+ }
  
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
++static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
++					     struct mmc_ios *ios)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	u16 ctrl_2;
++
++	if (!ios->enhanced_strobe)
++		return;
++
++	sdhci_sprd_sd_clk_off(host);
++
++	/* Set HS400 enhanced strobe mode */
++	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
++	ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
++	ctrl_2 |= SDHCI_SPRD_CTRL_HS400ES;
++	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
++
++	sdhci_sprd_sd_clk_on(host);
++}
++
+ static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
+ 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
+ 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
+@@ -346,6 +376,8 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ 	host->dma_mask = DMA_BIT_MASK(64);
+ 	pdev->dev.dma_mask = &host->dma_mask;
+ 	host->mmc_host_ops.request = sdhci_sprd_request;
++	host->mmc_host_ops.hs400_enhanced_strobe =
++		sdhci_sprd_hs400_enhanced_strobe;
+ 
+ 	host->mmc->caps = MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
+ 		MMC_CAP_ERASE | MMC_CAP_CMD23;
 -- 
 1.7.9.5
 
