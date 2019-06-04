@@ -2,198 +2,164 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C2C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B50C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6407124992
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Vt0CXTF9"
+	by mail.kernel.org (Postfix) with ESMTP id 432A124AC5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfFDLil (ORCPT
+        id S1727388AbfFDLjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:38:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:2599 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfFDLil (ORCPT
+        Tue, 4 Jun 2019 07:39:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:51174 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727280AbfFDLjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:38:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6583e0000>; Tue, 04 Jun 2019 04:38:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 04:38:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Jun 2019 04:38:38 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 11:38:38 +0000
-Received: from [10.24.216.245] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun 2019
- 11:38:36 +0000
-Subject: Re: [PATCH 1/2] PCI: Code reorganization for VGA device link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20190531050109.16211-1-abhsahu@nvidia.com>
- <20190531050109.16211-2-abhsahu@nvidia.com>
- <20190603171552.GB189360@google.com>
-X-Nvconfidentiality: public
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-Message-ID: <9b15f919-583b-a445-3d47-6a2dbfc9cbb3@nvidia.com>
-Date:   Tue, 4 Jun 2019 17:08:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 07:39:39 -0400
+X-UUID: 4d29a50003a741dd8eebf54b7364695c-20190604
+X-UUID: 4d29a50003a741dd8eebf54b7364695c-20190604
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <min.guo@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 307291404; Tue, 04 Jun 2019 19:39:34 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 4 Jun 2019 19:39:33 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 4 Jun 2019 19:39:32 +0800
+From:   <min.guo@mediatek.com>
+To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
+        <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
+Subject: [PATCH v6 0/6] Add MediaTek MUSB Controller Driver
+Date:   Tue, 4 Jun 2019 19:39:13 +0800
+Message-ID: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20190603171552.GB189360@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559648318; bh=qNGxiWS2QRLeAyI8fjEvPOChZL49AO194zOzra25Fys=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Vt0CXTF9zaE69sEciDiQw0/zZ6kEXe2OXK7q8sQ3+9ThA2XO8AvhU9oWkuKL84RQe
-         nRhliecJxxyc8vX8LoKovAZIFZWUDG2FRXkYAWN9WbAQLYhjQn/ihx4n7lOiX36K4n
-         9cWu5fTIRKWhbbRsaBaMMmHr5toJTvGmPeURecgdZcs04MGJGLVUJKwxUCGQ8+APYj
-         MEA1l7CMEnTdF7mNKQ9YFYKnsWX4Ieu+2Zb4ErLqbNDA4MeONCDpliWZUUVSyNIP4j
-         22QEg54QHTYW9SNKUoJHGBHcF5zSSKMvJxPfK1Frh/Jo8QvZAtuoDgKugPGGSl29YM
-         PuiUpWp9VN7AA==
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Min Guo <min.guo@mediatek.com>
 
+These patches introduce the MediaTek MUSB controller driver.
 
-On 6/3/2019 10:45 PM, Bjorn Helgaas wrote:
-> [+cc Lukas]
-> 
-> On Fri, May 31, 2019 at 10:31:08AM +0530, Abhishek Sahu wrote:
->> This patch does minor code reorganization. It introduces a helper
->> function which creates device link from the non-VGA controller
->> (consumer) to the VGA (supplier) and uses this helper function for
->> creating device link from integrated HDA controller to VGA. It will
->> help in subsequent patches which require a similar kind of device
->> link from USB/Type-C USCI controller to VGA.
->>
->> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
->> ---
->>  drivers/pci/quirks.c | 44 +++++++++++++++++++++++++++++---------------
->>  1 file changed, 29 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index a077f67fe1da..a20f7771a323 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -4916,36 +4916,50 @@ static void quirk_fsl_no_msi(struct pci_dev *pdev)
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_fsl_no_msi);
->>  
->>  /*
->> - * GPUs with integrated HDA controller for streaming audio to attached displays
->> - * need a device link from the HDA controller (consumer) to the GPU (supplier)
->> - * so that the GPU is powered up whenever the HDA controller is accessed.
->> - * The GPU and HDA controller are functions 0 and 1 of the same PCI device.
->> - * The device link stays in place until shutdown (or removal of the PCI device
->> - * if it's hotplugged).  Runtime PM is allowed by default on the HDA controller
->> - * to prevent it from permanently keeping the GPU awake.
->> + * GPUs can be multi-function PCI device which can contain controllers other
->> + * than VGA (like Audio, USB, etc.). Internally in the hardware, these non-VGA
->> + * controllers are tightly coupled with VGA controller. Whenever these
->> + * controllers are runtime active, the VGA controller should also be in active
->> + * state. Normally, in these GPUs, the VGA controller is present at function 0.
->> + *
->> + * This is a helper function which creates device link from the non-VGA
->> + * controller (consumer) to the VGA (supplier). The device link stays in place
->> + * until shutdown (or removal of the PCI device if it's hotplugged).
->> + * Runtime PM is allowed by default on these non-VGA controllers to prevent
->> + * it from permanently keeping the GPU awake.
->>   */
->> -static void quirk_gpu_hda(struct pci_dev *hda)
->> +static void
->> +pci_create_device_link_with_vga(struct pci_dev *pdev, unsigned int devfn)
-> 
-> There's nothing in this functionality that depends on VGA, so let's
-> remove "GPU, "VGA", etc from the description, the function name, the
-> local variable name, and the log message.  Maybe you need to allow the
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only modes. This has beed tested on
+MT2701 with a variety of devices in host mode and with the 
+f_mass gadget driver in peripheral mode, plugging otg cables
+in/out a lot of times in all possible imaginable plug orders.
 
- Thanks. Then we can make this function generic where we can pass
- device link supplier and supplier pci class mask. It will help
- in creating device link from one function (other than 0 also) to
- any another function. Later on, same can be used by non
- GPUs devices also, if required.
+changes in v6:
+changes of dt-bindings:
+1. Modify usb connector child node
+changes of DTS:
+1. Modify usb connector child node
+changes of driver:
+1. Add of_platform_populate in probe to populate connector platform_devices
+   from device tree data
+2. Replace extcon with usb role switch mechanism to support dual-role mode,
+   depends on [1]
+3. Remove set vbus function
 
-> caller to supply the class type (PCI_BASE_CLASS_DISPLAY for current
-> users, but Lukas mentioned a NIC that might be able to use this too).
-> 
-> Follow the prevailing indentation style, with return type and function
-> name on the same line, i.e.,
-> 
+    [1] [v6,09/10] usb: roles: add USB Type-B GPIO connector driver
+        https://patchwork.kernel.org/patch/10966361/
 
- I will fix in v2.
+changes in v5:
+changes of dt-bindings suggested by Rob:
+1. Modify compatible as 
+- compatible : should be one of:
+               "mediatek,mt-2701"
+               ...
+               followed by "mediatek,mtk-musb"
+2. Add usb connector child node
+changes of DTS:
+1. Add usb connector child node
+changes of driver suggested by Bin:
+1. Replace musb_readb() with musb_clearb() to clear dma pending interrupts
+2. Replace musb_readb() with musb_clearb() to clear common/tx/rx pending interrupts
+3. Make musb_clearb/w() return the value of musb_readb/w()
 
->   static void pci_create_device_link(...)
-> 
->>  {
->>  	struct pci_dev *gpu;
->>  
->> -	if (PCI_FUNC(hda->devfn) != 1)
->> +	if (PCI_FUNC(pdev->devfn) != devfn)
->>  		return;
->>  
->> -	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(hda->bus),
->> -					  hda->bus->number,
->> -					  PCI_DEVFN(PCI_SLOT(hda->devfn), 0));
->> +	gpu = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
->> +					  pdev->bus->number,
->> +					  PCI_DEVFN(PCI_SLOT(pdev->devfn), 0));
->>  	if (!gpu || (gpu->class >> 16) != PCI_BASE_CLASS_DISPLAY) {
->>  		pci_dev_put(gpu);
->>  		return;
->>  	}
->>  
->> -	if (!device_link_add(&hda->dev, &gpu->dev,
->> +	if (!device_link_add(&pdev->dev, &gpu->dev,
->>  			     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME))
->> -		pci_err(hda, "cannot link HDA to GPU %s\n", pci_name(gpu));
->> +		pci_err(pdev, "cannot link with VGA %s\n", pci_name(gpu));
-> 
-> I think we should emit a message in the success case, too.  There is
-> one in device_link_add(), but it's a dev_dbg() so we can't count on it
-> being in the log.  I'd like a pci_info() that we can count on.
-> 
+changes in v4:
+changes of dt-bindings suggested by Sergei:
+1. String alignment
+changes of driver suggested by Tony and Bin:
+1. Add a new patch for set/get_toggle()
+2. Add a new patch for noirq type of dma
+3. Add a new patch musb_clearb/w()
+4. Abondon patch "usb: musb: Delete the const attribute of addr parameter in readb/w/l hooks"
 
- I will add this in v2.
+changes in v3:
+changes of driver suggested by Bin:
+1. Add a new patch for musb_readb/w/l() to remove const attribute 
+2. Use is_out as function parameter in set_toggle/get_toggle() hooks
+3. Remove 'u8/u16 data' parameter in clearb/w() hooks
+4. Remove musb_default_clearb/w()
+5. Replace musb_readb/w() with musb_clearb/w() to clear pending interrupts 
+6. Add comments to clearb/w() hooks
+7. Replace musb_save_toggle() with musb->io.get_toggle()
+8. Replace musb_set_toggle() with musb->io.set_toggle()
 
- Regards,
- Abhishek
+changes in v2:
+changes of dt-bindings suggested by Rob and Bin:
+1. Modify DRC to DRD
+2. Drop the "<soc-model>-musb" in compatible
+3. Remove phy-names
+4. Add space after comma in clock-names
+dtsi:
+1. Remove phy-names
+changes of driver suggested by Bin:
+1. Add a new patch for musb_set_toggle
+2. Add summarize of MediaTek musb controller differences in the commit log
+3. Abondon patch "usb: musb: Move musbhsdma macro definition to musb_dma.h"
+4. Add "|| COMPILE_TEST" in Kconfig
+5. Add musb_clearb() and musb_clearw() hooks
+6. Add get_toggle() and set_toggle() hooks
+7. Replace musb_readl() with musb_readw() to read 16bit toggle register
+8. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
+9. Create musbhs_dma_controller_create_noirq()
 
->> -	pm_runtime_allow(&hda->dev);
->> +	pm_runtime_allow(&pdev->dev);
->>  	pci_dev_put(gpu);
->>  }
->> +
->> +/*
->> + * Create device link for GPUs with integrated HDA controller for streaming
->> + * audio to attached displays.
->> + */
->> +static void quirk_gpu_hda(struct pci_dev *hda)
->> +{
->> +	pci_create_device_link_with_vga(hda, 1);
->> +}
->>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
->>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
->>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMD, PCI_ANY_ID,
->> -- 
->> 2.17.1
->>
+Min Guo (6):
+  dt-bindings: usb: musb: Add support for MediaTek musb controller
+  arm: dts: mt2701: Add usb2 device nodes
+  usb: musb: Add get/set toggle hooks
+  usb: musb: Add noirq type of dma create interface
+  usb: musb: Add musb_clearb/w() interface
+  usb: musb: Add support for MediaTek musb controller
+
+ .../devicetree/bindings/usb/mediatek,musb.txt      |  55 ++
+ arch/arm/boot/dts/mt2701-evb.dts                   |  21 +
+ arch/arm/boot/dts/mt2701.dtsi                      |  33 ++
+ drivers/usb/musb/Kconfig                           |   9 +-
+ drivers/usb/musb/Makefile                          |   1 +
+ drivers/usb/musb/mediatek.c                        | 582 +++++++++++++++++++++
+ drivers/usb/musb/musb_core.c                       |  74 ++-
+ drivers/usb/musb/musb_core.h                       |  13 +-
+ drivers/usb/musb/musb_dma.h                        |   9 +
+ drivers/usb/musb/musb_host.c                       |  46 +-
+ drivers/usb/musb/musb_io.h                         |  12 +-
+ drivers/usb/musb/musbhsdma.c                       |  56 +-
+ drivers/usb/musb/sunxi.c                           |   4 +-
+ drivers/usb/musb/tusb6010.c                        |   2 +-
+ 14 files changed, 845 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+ create mode 100644 drivers/usb/musb/mediatek.c
+
+-- 
+1.9.1
+
