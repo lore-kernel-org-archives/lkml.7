@@ -2,126 +2,143 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2BCC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D773C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2102E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690560;
-	bh=nS8p33op+lPx3xjF6fPT+mUnp7ey+7F7f1nn/Cd8jNo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3N55ERevjnir/BlfZ/rLck0xVR9nwvlDzKH+trlnXo8OLQSkKNbBq9tua0oE7sR8
-	 bQ2sPUs4POV8rwNSSmSbQ9exnPvgQFIrh7GCluTcF8KjVR+O8cgiuW0cUywgZvLHqu
-	 sEVkSchyb5Xq83gpoK/TVZadp3RJxxgmqsHuxTC4=
+	by mail.kernel.org (Postfix) with ESMTP id 408D420862
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RtHIB50u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFDXWj (ORCPT
+        id S1726957AbfFDXWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfFDXWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26EE620866;
-        Tue,  4 Jun 2019 23:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690555;
-        bh=nS8p33op+lPx3xjF6fPT+mUnp7ey+7F7f1nn/Cd8jNo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmLqG8GdSB2hpVYaVEI0GuTaK+geV4sXNJ7vupghUwtO9/EiovFS/mwomUzDJOrJn
-         c8TNLmydAg3IEgKeJXeMsHAmNYd0tsRe1k7U6JSOoCZwUQEV+iR3khRLlfkTXfhv1N
-         HFMxUjfenkTd4B1sm74IcrJ0E9kfK79vibDMycMc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 12/60] bpf: sockmap, only stop/flush strp if it was enabled at some point
-Date:   Tue,  4 Jun 2019 19:21:22 -0400
-Message-Id: <20190604232212.6753-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
-References: <20190604232212.6753-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Tue, 4 Jun 2019 19:22:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57700 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfFDXWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54NE9sa117761;
+        Tue, 4 Jun 2019 23:21:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=YXvYIW/TW5gVwJgPNuplVdUZS0b4Nt48gIxbsBj1q/A=;
+ b=RtHIB50u7sCZX9RPoLJf0ZHJkpch7IXBg43GqRPBZNwQNAKIZ1Fe1PhgpNlRK+DGJQo8
+ lSVGhzJjuIVibp+vRd2n7xvFHcA0mUp+yl6zRpu/O1SdhEbRN8KVPNzg3MuJ665wOt8D
+ OXBjmWQJtRpmguu4bIch0Rtht6EHlilGvOM6jgxv+O/87WyMCwGCZo6Xse+EXPa8teDX
+ rjR995hOuZyKMICZD2fQse9ORiTlNsim1r28tHpjiESTwKW8UAdpG+JsMg+tDWtWmsBh
+ 96TEzBexMUmmKxxluIaxbJWn0djN0qPyA3q+05GNXykuOBeveW8FJpcOUIDfWQCPvZxz Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2suj0qfuae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Jun 2019 23:21:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54NKbcE183651;
+        Tue, 4 Jun 2019 23:21:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2swnhbvdnw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Jun 2019 23:21:28 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x54NLFRu018591;
+        Tue, 4 Jun 2019 23:21:15 GMT
+Received: from [172.16.8.192] (/206.166.194.194)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Jun 2019 16:21:15 -0700
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20190403160112.GK4038@hirez.programming.kicks-ass.net>
+Date:   Tue, 4 Jun 2019 19:21:13 -0400
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
+ <20190402094320.GM11158@hirez.programming.kicks-ass.net>
+ <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
+ <20190403160112.GK4038@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3259)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906040147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906040147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+Hi, Peter, Longman,=20
 
-[ Upstream commit 014894360ec95abe868e94416b3dd6569f6e2c0c ]
+> On Apr 3, 2019, at 12:01 PM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> On Wed, Apr 03, 2019 at 11:39:09AM -0400, Alex Kogan wrote:
+>=20
+>>>> The patch that I am looking for is to have a separate
+>>>> numa_queued_spinlock_slowpath() that coexists with
+>>>> native_queued_spinlock_slowpath() and
+>>>> paravirt_queued_spinlock_slowpath(). At boot time, we select the =
+most
+>>>> appropriate one for the system at hand.
+>> Is this how this selection works today for paravirt?
+>> I see a PARAVIRT_SPINLOCKS config option, but IIUC you are talking =
+about a different mechanism here.
+>> Can you, please, elaborate or give me a link to a page that explains =
+that?
+>=20
+> Oh man, you ask us to explain how paravirt patching works... that's
+> magic :-)
+>=20
+> Basically, the compiler will emit a bunch of indirect calls to the
+> various pv_ops.*.* functions.
+>=20
+> Then, at alternative_instructions() <- apply_paravirt() it will =
+rewrite
+> all these indirect calls to direct calls to the function pointers that
+> are in the pv_ops structure at that time (+- more magic).
+Trying to resume this work, I am looking for concrete steps required to =
+integrate CNA with the paravirt patching.
 
-If we try to call strp_done on a parser that has never been
-initialized, because the sockmap user is only using TX side for
-example we get the following error.
+Looking at alternative_instructions(), I wonder if I need to add another =
+call, something like apply_numa() similar to apply_paravirt(), and do =
+the patch work there.
+Or perhaps I should =E2=80=9Cjust" initialize the pv_ops structure with =
+the corresponding numa_queued_spinlock_slowpath() in paravirt.c?
 
-  [  883.422081] WARNING: CPU: 1 PID: 208 at kernel/workqueue.c:3030 __flush_work+0x1ca/0x1e0
-  ...
-  [  883.422095] Workqueue: events sk_psock_destroy_deferred
-  [  883.422097] RIP: 0010:__flush_work+0x1ca/0x1e0
+Also, the paravirt code is under arch/x86, while CNA is generic (not =
+x86-specific).
+Do you still want to see CNA-related patching residing under arch/x86?
 
-This had been wrapped in a 'if (psock->parser.enabled)' logic which
-was broken because the strp_done() was never actually being called
-because we do a strp_stop() earlier in the tear down logic will
-set parser.enabled to false. This could result in a use after free
-if work was still in the queue and was resolved by the patch here,
-1d79895aef18f ("sk_msg: Always cancel strp work before freeing the
-psock"). However, calling strp_stop(), done by the patch marked in
-the fixes tag, only is useful if we never initialized a strp parser
-program and never initialized the strp to start with. Because if
-we had initialized a stream parser strp_stop() would have been called
-by sk_psock_drop() earlier in the tear down process.  By forcing the
-strp to stop we get past the WARNING in strp_done that checks
-the stopped flag but calling cancel_work_sync on work that has never
-been initialized is also wrong and generates the warning above.
+We still need a config option (something like NUMA_AWARE_SPINLOCKS) to =
+enable CNA patching under this config only, correct?
 
-To fix check if the parser program exists. If the program exists
-then the strp work has been initialized and must be sync'd and
-cancelled before free'ing any structures. If no program exists we
-never initialized the stream parser in the first place so skip the
-sync/cancel logic implemented by strp_done.
-
-Finally, remove the strp_done its not needed and in the case where we
-are using the stream parser has already been called.
-
-Fixes: e8e3437762ad9 ("bpf: Stop the psock parser before canceling its work")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/skmsg.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index cc94d921476c..49d1efa329d7 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -554,8 +554,10 @@ static void sk_psock_destroy_deferred(struct work_struct *gc)
- 	struct sk_psock *psock = container_of(gc, struct sk_psock, gc);
- 
- 	/* No sk_callback_lock since already detached. */
--	strp_stop(&psock->parser.strp);
--	strp_done(&psock->parser.strp);
-+
-+	/* Parser has been stopped */
-+	if (psock->progs.skb_parser)
-+		strp_done(&psock->parser.strp);
- 
- 	cancel_work_sync(&psock->work);
- 
--- 
-2.20.1
+Thanks in advance,
+=E2=80=94 Alex
 
