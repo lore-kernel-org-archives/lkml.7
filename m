@@ -2,136 +2,91 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F33C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA99C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF37216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B16216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gCSIv1QP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfFDKNT (ORCPT
+        id S1727306AbfFDKPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:13:19 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21251 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727107AbfFDKMN (ORCPT
+        Tue, 4 Jun 2019 06:15:39 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:39189 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfFDKPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:12:13 -0400
-X-UUID: 62a2ad958e424d779cde763c8a056289-20190604
-X-UUID: 62a2ad958e424d779cde763c8a056289-20190604
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <stu.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1540687792; Tue, 04 Jun 2019 18:12:02 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 4 Jun 2019 18:12:01 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Jun 2019 18:12:01 +0800
-From:   Stu Hsieh <stu.hsieh@mediatek.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stu Hsieh <stu.hsieh@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v4 08/14] [media] mtk-mipicsi: enable/disable cmos for mt2712
-Date:   Tue, 4 Jun 2019 18:11:49 +0800
-Message-ID: <1559643115-15124-9-git-send-email-stu.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
-References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Tue, 4 Jun 2019 06:15:39 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x54AEC7I032511;
+        Tue, 4 Jun 2019 19:14:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7I032511
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559643265;
+        bh=PpZBMxg4bzgoXAd/8YiPn6tt8q7c+h3C7+mX9vii/zs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gCSIv1QPdcRJ6xQilbXbvoLZr6xt90IOw0qoumntl15OKD2jRyvNLwoG/RvooA59G
+         flhdZjogSeqZ2Ca9ZJnfoz2j1/9CcYv0RAgmP2e84uL+3tCg6ZcLHNgp1Rrrnm7yGd
+         m5BKXDqli36feukDrAYpvuLIkKT012GanppJ/E833lTAY1/VKoWkxgrpeIXrLH71Ev
+         67Vok6y5uFUNN4S/55QLFP3OGBmYGfZ0Zikq5CN1HC4eMD+iVJGDJHYsalGxZTVGBC
+         0qCaxPdmkiJQIpnoZvNyXrxPCkSxJTq4WrQjMyzoZ7v6G2Dz0P6Jj9YB8DbfIJ96jz
+         deNDGwsF1dZ+g==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 12/15] kbuild: deb-pkg: do not run headers_check
+Date:   Tue,  4 Jun 2019 19:14:06 +0900
+Message-Id: <20190604101409.2078-13-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enable/disable cmos setting for mt2712 when
-streaming start/stop streaming.
+It is absolutely fine to add extra sanity checks in package scripts,
+but it is not necessary to do so.
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+This is already covered by the daily compile-testing (0day bot etc.)
+because headers_check is run as a part of the normal build process
+when CONFIG_HEADERS_CHECK=y.
+
+Replace it with the newly-added "make headers".
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index ea1edbc6401b..8bb40656bcb1 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -88,9 +88,11 @@
- #define CAMSV_MODULE_EN					0x10
- #define CAMSV_FMT_SEL					0x14
- #define CAMSV_INT_EN					0x18
-+#define CAMSV_SW_CTL					0x20
- #define CAMSV_CLK_EN					0x30
+ scripts/package/builddeb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index b03dd56a4782..e8ca6dc97e96 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -130,7 +130,7 @@ if is_enabled CONFIG_MODULES; then
+ fi
  
- #define CAMSV_TG_SEN_MODE				0x500
-+#define CAMSV_TG_VF_CON					0x504
- #define CAMSV_TG_SEN_GRAB_PXL				0x508
- #define CAMSV_TG_SEN_GRAB_LIN				0x50C
- #define CAMSV_TG_PATH_CFG				0x510
-@@ -541,11 +543,41 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 	spin_unlock(&mipicsi->queue_lock);
- }
+ if [ "$ARCH" != "um" ]; then
+-	$MAKE -f $srctree/Makefile headers_check
++	$MAKE -f $srctree/Makefile headers
+ 	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
+ fi
  
-+static void mtk_mipicsi_cmos_vf_enable(struct mtk_mipicsi_dev *mipicsi,
-+				       unsigned int max_camsv_num,
-+				       bool enable)
-+{
-+	void __iomem *base = NULL;
-+	u32 mask = enable ? (u32)1 : ~(u32)1;
-+	int i;
-+
-+	for (i = 0; i < max_camsv_num; i++)
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			if (enable) {
-+				/*enable cmos_en and vf_en*/
-+				base = mipicsi->camsv[i];
-+				writel(readl(base + CAMSV_TG_SEN_MODE) | mask,
-+				       base + CAMSV_TG_SEN_MODE);
-+				writel(readl(base + CAMSV_TG_VF_CON) | mask,
-+				       base + CAMSV_TG_VF_CON);
-+			} else {
-+				/*disable cmos_en and vf_en*/
-+				base = mipicsi->camsv[i];
-+				writel(readl(base + CAMSV_TG_SEN_MODE) & mask,
-+					base + CAMSV_TG_SEN_MODE);
-+				writel(readl(base + CAMSV_TG_VF_CON) & mask,
-+					base + CAMSV_TG_VF_CON);
-+			}
-+		}
-+}
-+
- static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
- 		unsigned int count)
- {
- 	struct mtk_mipicsi_dev *mipicsi = vb2_get_drv_priv(vq);
- 
-+	mtk_mipicsi_cmos_vf_enable(mipicsi, mipicsi->camsv_num, true);
-+
- 	mipicsi->streamon = true;
- 
- 	return 0;
-@@ -558,6 +590,8 @@ static void mtk_mipicsi_vb2_stop_streaming(struct vb2_queue *vq)
- 	struct mtk_mipicsi_buf *tmp = NULL;
- 	unsigned int index = 0;
- 
-+	mtk_mipicsi_cmos_vf_enable(mipicsi, mipicsi->camsv_num, false);
-+
- 	spin_lock(&mipicsi->queue_lock);
- 	while (list_empty(&(mipicsi->fb_list)) == 0) {
- 		list_for_each_entry_safe(buf, tmp, &(mipicsi->fb_list), queue) {
 -- 
-2.18.0
+2.17.1
 
