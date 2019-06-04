@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00094C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CF220862
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C297220866
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690546;
-	bh=Imy2Xfwwpn+5OIUkIvfTfUuzhktvygkHS8+PLdzSwQE=;
+	s=default; t=1559690554;
+	bh=vKSDM8HFvb6IY35qAnnFxHJgFa9N+7LSmfeGddcwvIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCiqf178Tud1TapViVgjkrmAX14fwx3umGlvgWRuUXSY1x8vuNaXV0TXgbnzo8WiL
-	 Sc+Ey3zhyPDivnG2nPVUFXOb8EzCrQCxkHYpbsCzjtBYOS2gSdsxKHIULWyuBg3wPu
-	 ZIrtNhF5wBbC7mL4OAZv/zTkHhQ7D56KeWNkJDf4=
+	b=qQus4fqXbtCaiQqzyqok+jkNq7Hh3tu4O5fFzhxUcSsmevdJxu8+cc1TquAzlw/bM
+	 79sdK4ryFP8OsRpP/I3IEKBYdJHhADY390CHYpFkBGORbXL0+xZDPL0CaEFfNhnffM
+	 YdVjxb1CC1s0w9qkKbecxUnZfG2yO+z6kfvbXbqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfFDXW0 (ORCPT
+        id S1726818AbfFDXWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfFDXWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:24 -0400
+        id S1726744AbfFDXWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 084D12085A;
-        Tue,  4 Jun 2019 23:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2306320859;
+        Tue,  4 Jun 2019 23:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690543;
-        bh=Imy2Xfwwpn+5OIUkIvfTfUuzhktvygkHS8+PLdzSwQE=;
+        s=default; t=1559690549;
+        bh=vKSDM8HFvb6IY35qAnnFxHJgFa9N+7LSmfeGddcwvIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2QMIvSwEGl7RFCpAbQtZN88N644FfUdkTHs4f+0eR1rnzPSb2rVZDCfT2X2OqCNg
-         y1+OOt9Mykl3x2ea61KEqCpTFem/j6BvmXcedNtCo/1fe2Rp2EYTt63CIOqXcomoSM
-         /Xx/G2o54d9+AoNbq5122PRiaXc0pZerNaAuYZpg=
+        b=jecJtypOqD2WRu+HrfuhsJC7LkgY5UVzqgxk+GGb2PfblqgJLJha69CTF4Iw2i0zp
+         UOxxzDMIKmAb8LwVc7IK0FxVB7toPXUymRhYXUQfDyUEwfPjA4GXZReA14Uptpf+yS
+         x5/NrdtNaFH2eoA9wWE1Bq3fY7dz2uGNc/dK2xIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 04/60] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
-Date:   Tue,  4 Jun 2019 19:21:14 -0400
-Message-Id: <20190604232212.6753-4-sashal@kernel.org>
+Cc:     Randall Huang <huangrandall@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.1 09/60] f2fs: fix to avoid accessing xattr across the boundary
+Date:   Tue,  4 Jun 2019 19:21:19 -0400
+Message-Id: <20190604232212.6753-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -59,50 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Randall Huang <huangrandall@google.com>
 
-[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
+[ Upstream commit 2777e654371dd4207a3a7f4fb5fa39550053a080 ]
 
-This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
+When we traverse xattr entries via __find_xattr(),
+if the raw filesystem content is faked or any hardware failure occurs,
+out-of-bound error can be detected by KASAN.
+Fix the issue by introducing boundary check.
 
-The fix attempt was incorrect, leading to the mutex deadlock through
-the close of OSS sequencer client.  The proper fix needs more
-consideration, so let's revert it now.
+[   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
+[   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
+[   38.402935] c7   1827 Call trace:
+[   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
+[   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
+[   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
+[   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
+[   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
+[   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
+[   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
+[   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
+[   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
+[   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
+[   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
+[   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
+[   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
+[   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
+[   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
+[   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
+[   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
+[   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
+[   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
+[   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
+[   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
+[   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
 
-Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
-Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Randall Huang <huangrandall@google.com>
+[Jaegeuk Kim: Fix wrong ending boundary]
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/f2fs/xattr.c | 36 +++++++++++++++++++++++++++---------
+ fs/f2fs/xattr.h |  2 ++
+ 2 files changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 8599f2937ac1..c99e1b77a45b 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2337,19 +2337,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index 848a785abe25..e791741d193b 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -202,12 +202,17 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
+ 	return handler;
+ }
+ 
+-static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
+-					size_t len, const char *name)
++static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
++				void *last_base_addr, int index,
++				size_t len, const char *name)
  {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
--	int err;
+ 	struct f2fs_xattr_entry *entry;
  
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
+ 	list_for_each_xattr(entry, base_addr) {
++		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
++			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr)
++			return NULL;
++
+ 		if (entry->e_name_index != index)
+ 			continue;
+ 		if (entry->e_name_len != len)
+@@ -297,20 +302,22 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 				const char *name, struct f2fs_xattr_entry **xe,
+ 				void **base_addr, int *base_size)
+ {
+-	void *cur_addr, *txattr_addr, *last_addr = NULL;
++	void *cur_addr, *txattr_addr, *last_txattr_addr;
++	void *last_addr = NULL;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+-	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+ 	unsigned int inline_size = inline_xattr_size(inode);
+ 	int err = 0;
  
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd) {
--			mutex_lock(&client->ioctl_mutex);
--			err = handler->func(client, arg);
--			mutex_unlock(&client->ioctl_mutex);
--			return err;
--		}
-+		if (handler->cmd == cmd)
-+			return handler->func(client, arg);
- 	}
+-	if (!size && !inline_size)
++	if (!xnid && !inline_size)
+ 		return -ENODATA;
  
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+-	*base_size = inline_size + size + XATTR_PADDING_SIZE;
++	*base_size = XATTR_SIZE(xnid, inode) + XATTR_PADDING_SIZE;
+ 	txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
+ 	if (!txattr_addr)
+ 		return -ENOMEM;
+ 
++	last_txattr_addr = (void *)txattr_addr + XATTR_SIZE(xnid, inode);
++
+ 	/* read from inline xattr */
+ 	if (inline_size) {
+ 		err = read_inline_xattr(inode, ipage, txattr_addr);
+@@ -337,7 +344,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	else
+ 		cur_addr = txattr_addr;
+ 
+-	*xe = __find_xattr(cur_addr, index, len, name);
++	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
++	if (!*xe) {
++		err = -EFAULT;
++		goto out;
++	}
+ check:
+ 	if (IS_XATTR_LAST_ENTRY(*xe)) {
+ 		err = -ENODATA;
+@@ -581,7 +592,8 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 			struct page *ipage, int flags)
+ {
+ 	struct f2fs_xattr_entry *here, *last;
+-	void *base_addr;
++	void *base_addr, *last_base_addr;
++	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+ 	int found, newsize;
+ 	size_t len;
+ 	__u32 new_hsize;
+@@ -605,8 +617,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	if (error)
+ 		return error;
+ 
++	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
++
+ 	/* find entry with wanted name. */
+-	here = __find_xattr(base_addr, index, len, name);
++	here = __find_xattr(base_addr, last_base_addr, index, len, name);
++	if (!here) {
++		error = -EFAULT;
++		goto exit;
++	}
+ 
+ 	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
+ 
+diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+index 9172ee082ca8..a90920e2f949 100644
+--- a/fs/f2fs/xattr.h
++++ b/fs/f2fs/xattr.h
+@@ -71,6 +71,8 @@ struct f2fs_xattr_entry {
+ 				entry = XATTR_NEXT_ENTRY(entry))
+ #define VALID_XATTR_BLOCK_SIZE	(PAGE_SIZE - sizeof(struct node_footer))
+ #define XATTR_PADDING_SIZE	(sizeof(__u32))
++#define XATTR_SIZE(x,i)		(((x) ? VALID_XATTR_BLOCK_SIZE : 0) +	\
++						(inline_xattr_size(i)))
+ #define MIN_OFFSET(i)		XATTR_ALIGN(inline_xattr_size(i) +	\
+ 						VALID_XATTR_BLOCK_SIZE)
+ 
 -- 
 2.20.1
 
