@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C54CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF15C46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B45206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A401C20851
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559691055;
-	bh=yfyAS/804NSzHyG/cFvbagIkgGYlflnYNBfkE8Ow/MQ=;
+	s=default; t=1559691060;
+	bh=q0nFaonbdU8FzkUXsWzIZxKOOQuFhuGT2DhfvHfs6+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjTwzuA93gSkE3X5u6Xf28+qSJKdpiFWmIyMSdqpaa7OO0vUHm398Zv5oAAEn+P11
-	 H329zFIDbmldbFj9/XgCBVHTiTSp6y8aWAl8h6IDXYMvqxby30++95Oolg4j2VrQUB
-	 TJBOsjs8vmwHwMm8yD0Yu27iP8eG0pjjUVES78oI=
+	b=B6jsNdJJVG8q8euytP+pqD/V/+Ivl7EFM/prAg1Bb9QEo8NY/32QND8H+h75Gh2P8
+	 1TpL8TTpfqyXYrqKfKRvGhWHYNsSkg2gLMT0ioFVYNdsT9qiAt8ccJat+W0VEI+vN2
+	 xTps4iTts5LGIA68N6Ogt5RG5vj6qy+NfjwHTAmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfFDXay (ORCPT
+        id S1727193AbfFDXXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34344 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727336AbfFDXXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:44 -0400
+        id S1727167AbfFDXXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD40620859;
-        Tue,  4 Jun 2019 23:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A65920862;
+        Tue,  4 Jun 2019 23:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690623;
-        bh=yfyAS/804NSzHyG/cFvbagIkgGYlflnYNBfkE8Ow/MQ=;
+        s=default; t=1559690585;
+        bh=q0nFaonbdU8FzkUXsWzIZxKOOQuFhuGT2DhfvHfs6+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVfpB0T4uIfXfLTuO0SZw12ODvWkk4U1SbSOd/VBOEpov7VkJjaNny5uIpU4R0DH3
-         LqeymtRL+Gp/oe+bO58CKYQ53S1ulhke+Oq08rWNUcAFmWcLgMtxBvPN2w2eQvyKu5
-         m0LxRmd6keKE82+Vb1AYA4u1MjHusnYm0834uvC0=
+        b=tdKfySWc2xWntsNfHLBluaSC7ihyLq0LAWI2CG9vKfs85cZOrHaOHaKQMIA/YNKxR
+         ONQ/hvDfv7wuFd0mb/s8QH/3LrPU6GJEe5WwtveRCV+BDzV6miUz+CarUYaPM0miih
+         /wagFv4w59kfaL8/PBJAeZRohtpijX6Nf8/f5I7Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 04/36] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
-Date:   Tue,  4 Jun 2019 19:22:59 -0400
-Message-Id: <20190604232333.7185-4-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Semyon Verchenko <semverchenko@factor-ts.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 34/60] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
+Date:   Tue,  4 Jun 2019 19:21:44 -0400
+Message-Id: <20190604232212.6753-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
-References: <20190604232333.7185-1-sashal@kernel.org>
+In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
+References: <20190604232212.6753-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
+[ Upstream commit 3d0818f5eba80fbe4c0addbfe6ddb2d19dc82cd4 ]
 
-This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
+The Lex 3I380D industrial PC has 4 ethernet controllers on board
+which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
+DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
+as CLK_CRITICAL and they will not get turned off.
 
-The fix attempt was incorrect, leading to the mutex deadlock through
-the close of OSS sequencer client.  The proper fix needs more
-consideration, so let's revert it now.
-
-Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
-Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Reported-and-tested-by: Semyon Verchenko <semverchenko@factor-ts.ru>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/platform/x86/pmc_atom.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 37312a3ae60f..f59e13c1d84a 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2337,19 +2337,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
- {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
--	int err;
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index c7039f52ad51..a311f48ce7c9 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -398,12 +398,21 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+  */
+ static const struct dmi_system_id critclk_systems[] = {
+ 	{
++		/* pmc_plt_clk0 is used for an external HSIC USB HUB */
+ 		.ident = "MPL CEC1x",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
+ 		},
+ 	},
++	{
++		/* pmc_plt_clk0 - 3 are used for the 4 ethernet controllers */
++		.ident = "Lex 3I380D",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
  
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
- 
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd) {
--			mutex_lock(&client->ioctl_mutex);
--			err = handler->func(client, arg);
--			mutex_unlock(&client->ioctl_mutex);
--			return err;
--		}
-+		if (handler->cmd == cmd)
-+			return handler->func(client, arg);
- 	}
- 
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
 -- 
 2.20.1
 
