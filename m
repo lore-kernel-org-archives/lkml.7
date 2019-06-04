@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA88BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2846123406
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B356123406
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SrM3zAvH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y6qiFnTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfFDKpc (ORCPT
+        id S1727588AbfFDKpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:45:32 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38715 "EHLO
+        Tue, 4 Jun 2019 06:45:43 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46681 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfFDKpF (ORCPT
+        with ESMTP id S1727302AbfFDKpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:45:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so15275127wrs.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:45:04 -0700 (PDT)
+        Tue, 4 Jun 2019 06:45:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so10021209wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:45:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ixa6PZM7Qd3yNTQ1/2lb9UJukHzNBYD4+3OM8ec4OSs=;
-        b=SrM3zAvHO7s4r4kfWRb3yKeFRE5PBTe75g4T6jp6QVLZ+DbjYiqMYZ/caaJl2svogL
-         Dho1YX4HBmmhcjNwienKNpKLHxULynaK4RwnoYB8aEOifJlkpTWldE/+L9a6CBOW2SBV
-         8TY+kVlRP8QzflACyJFTgmXnlx9rJAUzH4CNwmMUfhVqaznt97K1fxCP8/Zawp6/IgVv
-         nclsKzImAAkMxU8Y2NicxZ+aWSjqdzGCXD6Uy2EN7XkkhnMLxpGxX+mLyl/mAhj77crl
-         3OedRVGkpp68L5HrhDth6eUQCdIJppx09j67O+gWfpNvj+pXqJRqm3HD5nbQBk9OGfYV
-         t2xQ==
+        bh=FFbRmXkMAE6sjv34a7ljnhiVGkAFw+tIZvmrUIY2GGo=;
+        b=Y6qiFnTJ1MRpHUuCgNqujGVCKMSi3o1dTrg5paygrkOoY89q1o3/qKqVZda1lpsOEk
+         aepjpT3mjU4Jdjty6fQnmvWB2Tz0hwigSNf52sJspJ7fiUowJiz/3HxN7sLf0BmtbclX
+         1CYvUvUFCgmtIh5WO9E92aRfTfvmY2qVMebf3kSoqAxRiszD6jflq0TsLoqUZjsmMflP
+         5Nn+i2AxwRqEHDKXGQFLfnIWghiz1Yx68Qod0Tn9bIasPgvwp/o0HsX32zKdRxB2q94L
+         fedstP7MFi1DjVWWZ6Z6IVAdw+r6UsQ3ZyYEisYtl/QOcYnyFQBNJ07J8Ab2SH71T4nd
+         i7gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Ixa6PZM7Qd3yNTQ1/2lb9UJukHzNBYD4+3OM8ec4OSs=;
-        b=LbDl6KkG7SdwQr8SHj9qZ0k3gIoICf4eH7qOwnfFUFp/35Qg6BKAUoQZEqTp48ky4m
-         rs1j5DkcSJWA33IuaSuLIiHMQdSAE7swv9g2bfLT8dd+NC0u5rPL/EtqNMrwH1qUiyou
-         +NByIGsc/0DCUfAeDq6rcpHlTf3/zpxe1/05gdygvLb4Wavf06hqqileUDpX6KuEroAb
-         Wd0w2tAOLciziTg00bW5REiduBAi0f4snzqFPk46F6ZZFedRO47o1cDV7ZnfXtHcVMOJ
-         eGD1deUzb2v4FVhydbpCrO2rOdupSoC2n+b9yAZpcGrgagtwXbu0wmWQK727QZBD6BAk
-         EFVw==
-X-Gm-Message-State: APjAAAUsevGuBkBzK9eCGGnw7MQVeT+TzNoQCM4uFUHxbkzuJbqArK6i
-        D4RpiXgo6z4En0o9EIkPXvVYvA==
-X-Google-Smtp-Source: APXvYqxeY6H93q1Bt0x5h2fNrnGLPGAkTcBxIAddnWtbIbwQwr3Fz5wwwK1XYktubxlpc0VDO1ZA7Q==
-X-Received: by 2002:adf:e286:: with SMTP id v6mr6228022wri.340.1559645103884;
-        Tue, 04 Jun 2019 03:45:03 -0700 (PDT)
+        bh=FFbRmXkMAE6sjv34a7ljnhiVGkAFw+tIZvmrUIY2GGo=;
+        b=N0RPAD8hU+F9ZP0efzP0W17GY3/F/y2juLbhVVcpPxd7kYkAOq4Z90fXreLn8Ehcri
+         LnnV/oRdGkceADRcXYje4SRQEMCRnLw59IQDq1/cxyKRimPjE3uRY59Uj0Ler5l9GWf5
+         wINB1gcHFAu6oQS0M5fYaMAPzLC1yfTdbuVO/MmUulRqZFZG8YTsJynnXRr7Rz1ay+Eg
+         OVgtJRzlCGXz6HNPB+H73x/3k8WvYIUnBTchoT5ZM08UKT7/wjgKat8oFF/KwgQ9d+12
+         PG51NsrI9AAi5LJFfUzF4B2FafaDIA4HQnogd8JHszIZAa5QZ/gHdMLISqqzRlfSQFkU
+         Cn/w==
+X-Gm-Message-State: APjAAAUGhWCUNs7a1S6ANU1KzHYyNSXHmlj1AMkoME/ewwx+4nQENL3O
+        uAEwC3peygnFLiqrttNzaU9u1w==
+X-Google-Smtp-Source: APXvYqzAHuObwVNxDVyJmzaqwTimhhoqMZDjedQgwBDPmPMfg7OJ5wk7EqESgJS92PT4uisnRMrKQQ==
+X-Received: by 2002:adf:ce03:: with SMTP id p3mr21460783wrn.94.1559645100592;
+        Tue, 04 Jun 2019 03:45:00 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id t140sm2718623wmt.0.2019.06.04.03.45.02
+        by smtp.gmail.com with ESMTPSA id t140sm2718623wmt.0.2019.06.04.03.44.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 03:45:03 -0700 (PDT)
+        Tue, 04 Jun 2019 03:45:00 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     alokc@codeaurora.org, kramasub@codeaurora.org,
         andy.gross@linaro.org, david.brown@linaro.org,
@@ -65,9 +65,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         jlhugo@gmail.com, linux-i2c@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5/8] soc: qcom: geni: Add support for ACPI
-Date:   Tue,  4 Jun 2019 11:44:52 +0100
-Message-Id: <20190604104455.8877-5-lee.jones@linaro.org>
+Subject: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
+Date:   Tue,  4 Jun 2019 11:44:49 +0100
+Message-Id: <20190604104455.8877-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604104455.8877-1-lee.jones@linaro.org>
 References: <20190604104455.8877-1-lee.jones@linaro.org>
@@ -76,70 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting with ACPI as the active set of configuration tables,
-all; clocks, regulators, pin functions ect are expected to be at
-their ideal values/levels/rates, thus the associated frameworks
-are unavailable.  Ensure calls to these APIs are shielded when
-ACPI is enabled.
+The Qualcomm Geni I2C driver currently probes silently which can be
+confusing when debugging potential issues.  Add a low level (INFO)
+print when each I2C controller is successfully initially set-up.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/soc/qcom/qcom-geni-se.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-index 6b8ef01472e9..cff0a413e59a 100644
---- a/drivers/soc/qcom/qcom-geni-se.c
-+++ b/drivers/soc/qcom/qcom-geni-se.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
- 
-+#include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
-@@ -450,6 +451,9 @@ int geni_se_resources_off(struct geni_se *se)
- {
- 	int ret;
- 
-+	if (ACPI_HANDLE(se->dev))
-+		return 0;
-+
- 	ret = pinctrl_pm_select_sleep_state(se->dev);
- 	if (ret)
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index 0fa93b448e8d..e27466d77767 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
  		return ret;
-@@ -487,6 +491,9 @@ int geni_se_resources_on(struct geni_se *se)
- {
- 	int ret;
- 
-+	if (ACPI_HANDLE(se->dev))
-+		return 0;
-+
- 	ret = geni_se_clks_on(se);
- 	if (ret)
- 		return ret;
-@@ -724,12 +731,14 @@ static int geni_se_probe(struct platform_device *pdev)
- 	if (IS_ERR(wrapper->base))
- 		return PTR_ERR(wrapper->base);
- 
--	wrapper->ahb_clks[0].id = "m-ahb";
--	wrapper->ahb_clks[1].id = "s-ahb";
--	ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
--	if (ret) {
--		dev_err(dev, "Err getting AHB clks %d\n", ret);
--		return ret;
-+	if (!ACPI_HANDLE(&pdev->dev)) {
-+		wrapper->ahb_clks[0].id = "m-ahb";
-+		wrapper->ahb_clks[1].id = "s-ahb";
-+		ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
-+		if (ret) {
-+			dev_err(dev, "Err getting AHB clks %d\n", ret);
-+			return ret;
-+		}
  	}
  
- 	dev_set_drvdata(dev, wrapper);
++	dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
++
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
