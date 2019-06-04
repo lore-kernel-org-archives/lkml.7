@@ -2,136 +2,149 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AC6C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D475C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90F123406
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D4323A42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgaFtLgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfFDKnp (ORCPT
+        id S1727416AbfFDKpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:43:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52256 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfFDKno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:43:44 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AE26A7DD;
-        Tue,  4 Jun 2019 10:43:41 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 068F42B59F;
-        Tue,  4 Jun 2019 10:43:32 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 18:43:27 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, lkp@01.org
-Subject: Re: [block] 47cdee29ef: BUG:kernel_NULL_pointer_dereference,address
-Message-ID: <20190604104326.GA22492@ming.t460p>
-References: <20190604020956.GC6576@shao2-debian>
- <20190604040343.GB7208@ming.t460p>
- <de04afaf-5e17-7999-0f10-3da466c66310@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de04afaf-5e17-7999-0f10-3da466c66310@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 04 Jun 2019 10:43:44 +0000 (UTC)
+        Tue, 4 Jun 2019 06:45:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50282 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfFDKpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:45:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f204so10328027wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 03:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=nQjqkj1EN8NC8Ay0yEHmwn6X2HJX2TtkXyONunIjoOQ=;
+        b=LgaFtLgo69Z61g+GbWOW59qkBgcDUOxjNGAQFne/2sNXo+5nvlREiDIDiZ5YaY5F9N
+         Eyv3uRxa6TWCtsMCUJWb9Z8oapmFfry/+Ssw7nMD9REJirzVscIqSBPbu0EB+tXDsrFJ
+         oz9y18iFepuQyqmb98O7GQYfNCXa6ElADnlthp5IzMl8S1xTIWDKver4ZF2aPfftF/WZ
+         CeRdv9BwD+LaDbuC4g0tzV0AMVmDUGL4/e5N0YOscBVmeAlZUeRwdhH6/g9pHq7/a/rA
+         fdQ8GAvTL8rb31m81z4MDhX0+POnf3oemi4gmNJYx+AMv8NuAF1EMYqp8A85NWygnW/u
+         Tz5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nQjqkj1EN8NC8Ay0yEHmwn6X2HJX2TtkXyONunIjoOQ=;
+        b=ZeGMBzU0LkY3jG7iJllccTehOuRQWIJmwjt9MuxrAdiNM2hxK+3R2nRxIrEsulFAv9
+         9gQL3VFhT4gW2v4/P4Cu1rzYCgp9ijSoKJIvUp/be4niUtIYqFW+qiHq9faBnwacmdCU
+         ZpdrOwzRE00IRFs3v4AmeAU1MyJ2ZzzoN0FqUZU+Fq3kRN9qfObUyFYbwoUbO8RdAzFS
+         wKY1lRnhDFcXGtFARaittBNk8YEscSOkOhmpAz9S8b1xkH2ONuOm+9tDVCTF250tNMMV
+         dok3YfYH9av3Vc/953CERWsp5FraACvQ+UoQVUA32PFUeDCWH6rbj2SDQPXZr+itFsF2
+         VMrA==
+X-Gm-Message-State: APjAAAUbNWLkUr2E1WisKMMA3c0EWxLJ62uuvxXBiCD3P3NCx1E8az4Q
+        t/fmRMxye83vclk8dGM/TpKKVg==
+X-Google-Smtp-Source: APXvYqwy7Wly0XpVwU2R8jBLlrTc45c8pBpyc8Qd+lEsf451U2b70fbSQiSGxtDiciO8fcfvfWZ8aw==
+X-Received: by 2002:a1c:448b:: with SMTP id r133mr5943280wma.114.1559645099469;
+        Tue, 04 Jun 2019 03:44:59 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id t140sm2718623wmt.0.2019.06.04.03.44.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 03:44:58 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Date:   Tue,  4 Jun 2019 11:44:48 +0100
+Message-Id: <20190604104455.8877-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 05:06:44PM +0800, Rong Chen wrote:
-> Hi,
-> 
-> On 6/4/19 12:03 PM, Ming Lei wrote:
-> > Hi Rong Chen,
-> > 
-> > Thanks for your test & report!
-> > 
-> > On Tue, Jun 04, 2019 at 10:09:56AM +0800, kernel test robot wrote:
-> > > FYI, we noticed the following commit (built with gcc-7):
-> > > 
-> > > commit: 47cdee29ef9d94e485eb08f962c74943023a5271 ("block: move blk_exit_queue into __blk_release_queue")
-> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > > 
-> > > in testcase: trinity
-> > > with following parameters:
-> > > 
-> > > 	runtime: 300s
-> > > 
-> > > test-description: Trinity is a linux system call fuzz tester.
-> > > test-url: http://codemonkey.org.uk/projects/trinity/
-> > > 
-> > > 
-> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
-> > > 
-> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > 
-> > > 
-> > > +-------------------------------------------------+------------+------------+
-> > > |                                                 | 31cb1d64da | 47cdee29ef |
-> > > +-------------------------------------------------+------------+------------+
-> > > | boot_successes                                  | 3          | 0          |
-> > > | boot_failures                                   | 13         | 8          |
-> > > | BUG:kernel_reboot-without-warning_in_test_stage | 13         |            |
-> > > | BUG:kernel_NULL_pointer_dereference,address     | 0          | 8          |
-> > > | Oops:#[##]                                      | 0          | 8          |
-> > > | RIP:blk_mq_free_rqs                             | 0          | 8          |
-> > > | Kernel_panic-not_syncing:Fatal_exception        | 0          | 8          |
-> > > +-------------------------------------------------+------------+------------+
-> > > 
-> > > 
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > 
-> > > 
-> > > [    6.560544] BUG: kernel NULL pointer dereference, address: 0000000000000020
-> > > [    6.561658] #PF: supervisor read access in kernel mode
-> > > [    6.562495] #PF: error_code(0x0000) - not-present page
-> > > [    6.563277] PGD 0 P4D 0
-> > > [    6.563277] Oops: 0000 [#1] PTI
-> > > [    6.563277] CPU: 0 PID: 147 Comm: kworker/0:2 Tainted: G                T 5.2.0-rc1-00387-g47cdee29 #1
-> > > [    6.563277] Workqueue: events __blk_release_queue
-> > > [    6.563277] RIP: 0010:blk_mq_free_rqs+0x2c/0xaf
-> > 
-> > Looks there is race between removing queue and switching elevator, and
-> > which should be done by Trinity.
-> > 
-> > I guess that commit 47cdee29ef9d94e485eb08f962c74943023a5271 just
-> > changes the timing and makes it easy to trigger.
-> > 
-> > Please test the following patch and see if difference can be made.
-> > If the patch can't fix the issue, please enable KASAN and reproduce,
-> > then more useful log may be got.
-> 
-> The patch doesn't work, Attached please find the dmesg file with KASAN
-> enabled.
+Add a match table to allow automatic probing of ACPI device
+QCOM0220.  Ignore clock attainment errors.  Set default clock
+frequency value.
 
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-Thanks for your test.
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index db075bc0d952..0fa93b448e8d 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+ 
++#include <linux/acpi.h>
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+@@ -483,6 +484,12 @@ static const struct i2c_algorithm geni_i2c_algo = {
+ 	.functionality	= geni_i2c_func,
+ };
+ 
++static const struct acpi_device_id geni_i2c_acpi_match[] = {
++	{ "QCOM0220"},
++	{ },
++};
++MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
++
+ static int geni_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct geni_i2c_dev *gi2c;
+@@ -502,7 +509,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(gi2c->se.base);
+ 
+ 	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+-	if (IS_ERR(gi2c->se.clk)) {
++	if (IS_ERR(gi2c->se.clk) && !ACPI_HANDLE(&pdev->dev)) {
+ 		ret = PTR_ERR(gi2c->se.clk);
+ 		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+ 		return ret;
+@@ -510,12 +517,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 
+ 	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+ 							&gi2c->clk_freq_out);
+-	if (ret) {
++	if (ret && !ACPI_HANDLE(&pdev->dev)) {
+ 		dev_info(&pdev->dev,
+ 			"Bus frequency not specified, default to 100kHz.\n");
+ 		gi2c->clk_freq_out = KHZ(100);
+ 	}
+ 
++	if (ACPI_HANDLE(&pdev->dev)) {
++		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
++
++		/* Using default, same as the !ACPI case above */
++		gi2c->clk_freq_out = KHZ(100);
++	}
++
+ 	gi2c->irq = platform_get_irq(pdev, 0);
+ 	if (gi2c->irq < 0) {
+ 		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
+@@ -660,6 +674,7 @@ static struct platform_driver geni_i2c_driver = {
+ 		.name = "geni_i2c",
+ 		.pm = &geni_i2c_pm_ops,
+ 		.of_match_table = geni_i2c_dt_match,
++		.acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
+ 	},
+ };
+ 
+-- 
+2.17.1
 
-I think I can understand the issue now, it is because blk_mq_free_rqs()
-needs tag_set, however tag_set may have been freed.
-
-In theory, we don't need tagset for freeing scheduler tags which is
-per-request-queue, not like driver tags.
-
-However, the big trouble is that .exit_request() needs tagset, and this
-one is a generic issue, not limited to ide.
-
-Give me a little time, I will investigate and see if good solution can be
-figured out. Otherwise, we may have to revert that commit.
-
-Thanks,
-Ming
