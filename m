@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D735C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271C2C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06710206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E724C206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690888;
-	bh=PQKiAn/pU3JjmVI+vbKfnuXII5x+eHMsSS0tcYeRR1c=;
+	s=default; t=1559690892;
+	bh=WD7CeP7TiCE8NGInyjLsStCl6Wt7ZpMgOuSgMp6hLtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTGXsf+rGX/Mcqp8z7TQ9lgSs/R3MmsAmv6CD53BDLQ/NG+cTNL4vyWNb1m/BDYTO
-	 2TDeMPaX792Nq0bUWP+UcsPQqeySg3uQtMqM+j1Xf9QzVKhrOJgOjvNI9ekHJ/lm0b
-	 iIhAqoWLvY46ek02mZRpWPldRFhqmhZQty6IIPgM=
+	b=KWQR6rAvK8qnztGhv+2YUkshcs2cd3NBAXUVUHtDSHQLClBXL9vYGISQDA0Fp4Zu8
+	 y4jX8QsBQiTi3T9LdCSWSYp+sKpP++rq7xDLcMp/sQq+wgPY+IBWxm/pWqH1BM2fnS
+	 z0AwTttvmbbTOncwxM89GYTql0lB9QnP/srthWa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfFDXYt (ORCPT
+        id S1727728AbfFDX2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfFDXYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:24:47 -0400
+        id S1727755AbfFDXYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:24:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ADEB20866;
-        Tue,  4 Jun 2019 23:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9203420863;
+        Tue,  4 Jun 2019 23:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690687;
-        bh=PQKiAn/pU3JjmVI+vbKfnuXII5x+eHMsSS0tcYeRR1c=;
+        s=default; t=1559690689;
+        bh=WD7CeP7TiCE8NGInyjLsStCl6Wt7ZpMgOuSgMp6hLtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+R6drJJX2W4djoIc62f7YyaTP7Wlzg6nobGZiLhG7DQt8EuvtOlELF5j9aYVop90
-         ekeBoBfO7ScEaS4azt8wJZnrGr7vgmRfXCaikMVIGc1mr7V+NAFiDycUaTOqN4kCQD
-         hVYSuP+1QQsIPETtu6L00U+QFb2dCzkJXqLXhp0k=
+        b=CtdsZYJUznYoai9DrmlUTD1weHXY/fDWPEa0dS2rmRFuVUr1WLOcg3cxEfhH+VTyY
+         wW/233pCJFb/g67O7B5Zb829BTTv2qaxErHojgdVrBahh4MKBFPBRluhcQZLoZ9322
+         n8LBX9oz/LZF9QqCh4QyvqfI3hi4XLXHL0KNxWn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Semyon Verchenko <semverchenko@factor-ts.ru>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/24] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
-Date:   Tue,  4 Jun 2019 19:24:07 -0400
-Message-Id: <20190604232416.7479-16-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/24] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
+Date:   Tue,  4 Jun 2019 19:24:09 -0400
+Message-Id: <20190604232416.7479-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232416.7479-1-sashal@kernel.org>
 References: <20190604232416.7479-1-sashal@kernel.org>
@@ -62,51 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3d0818f5eba80fbe4c0addbfe6ddb2d19dc82cd4 ]
+[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
 
-The Lex 3I380D industrial PC has 4 ethernet controllers on board
-which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
-DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
-as CLK_CRITICAL and they will not get turned off.
+Currently an int is being shifted and the result is being cast to a u64
+which leads to undefined behaviour if the shift is more than 31 bits. Fix
+this by casting the integer value 1 to u64 before the shift operation.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Reported-and-tested-by: Semyon Verchenko <semverchenko@factor-ts.ru>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Addresses-Coverity: ("Bad shift operation")
+Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pmc_atom.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 50f2a125cd2c..e3e1f83a2dd7 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -428,12 +428,21 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
-  */
- static const struct dmi_system_id critclk_systems[] = {
- 	{
-+		/* pmc_plt_clk0 is used for an external HSIC USB HUB */
- 		.ident = "MPL CEC1x",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk0 - 3 are used for the 4 ethernet controllers */
-+		.ident = "Lex 3I380D",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+index 26de61d65a4d..1bdff75ae903 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+@@ -830,7 +830,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
+ 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
+ 			(u64)err_entry->data.err_warn_bitmap_lo;
+ 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
+-			if (err_warn_bit_map & (u64) (1 << i)) {
++			if (err_warn_bit_map & ((u64)1 << i)) {
+ 				err_warn = i;
+ 				break;
+ 			}
 -- 
 2.20.1
 
