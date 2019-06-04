@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF4DC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2FA2085A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B266620859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690536;
-	bh=gy8a2WMB91m89Hl9bICWGdCu1b9GfLzb2vz386JCyrM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=C1uzRO4ML2km5XW171NTko/Cp9u+1M4ojcASOauKDhELLOUZ5eFCNDagUYTjpKXe6
-	 2AgnCu4KjUAoY0FeynlsjcbtMd/etiP9zsjQB5Re/PSlfIjo07XLdX7XzS7W2zsyA7
-	 IuYlmi3QvxjRqoU3Ro6psXLBn5jasZ7J1s9DQurc=
+	s=default; t=1559690540;
+	bh=jfrZ9alUZPFqfZCr58nLq6ozsoLelU04UkheYOiYZPs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k73VE30rNTaIHQWZKDsmbunvvBj8jZLHeAtRf/bePnW2YO3o9H6nzdZFFhYLk+fbQ
+	 ZFJE5Y3GbHvzVh3LspDXg+STFfTC2fmleHVcMK6jtsw4r9h/wz2DzPQnku6v0gyZd8
+	 XJBVDoK+vr9TdeT2Lh9/MgD523Q28X7I3mQq72zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFDXWQ (ORCPT
+        id S1726633AbfFDXWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFDXWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:15 -0400
+        id S1726179AbfFDXWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190FF20851;
-        Tue,  4 Jun 2019 23:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F2D20862;
+        Tue,  4 Jun 2019 23:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690535;
-        bh=gy8a2WMB91m89Hl9bICWGdCu1b9GfLzb2vz386JCyrM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GALRFBsnBC5owwxBrO4/6DoY0iAtcCugjMe4aLF+CXi1PbpSFcNnrdSC/6waXqrSS
-         /QrzVUq0Xx6QGRam3VGI2aPPeZVRCkAjFwY+jb0eqGo0/w1Tf76gGHCO4RsIaxJBlf
-         H7xS5MJiaDyCAcOnkTE5OInmHmkIgTv52L4R/EQ4=
+        s=default; t=1559690537;
+        bh=jfrZ9alUZPFqfZCr58nLq6ozsoLelU04UkheYOiYZPs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2D6RNjZUC6VXYC11GMAeF+L2puh/Haux0bO9igioPQ0tXSNZVSRUKCabGc9vUFPqp
+         m/ODtLiX9jJOcZtDLQlpffwUTEIVjvqgs5uozWHZtmtj2GrkTPhn0TIyZnaurbySDY
+         +wpJZav2Sfg/rCfC1HvViADelY0VHblYAXoPmTBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 01/60] x86/uaccess, kcov: Disable stack protector
-Date:   Tue,  4 Jun 2019 19:21:11 -0400
-Message-Id: <20190604232212.6753-1-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 02/60] ALSA: seq: Protect in-kernel ioctl calls with mutex
+Date:   Tue,  4 Jun 2019 19:21:12 -0400
+Message-Id: <20190604232212.6753-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
+References: <20190604232212.6753-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
+[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
 
-New tooling noticed this mishap:
+ALSA OSS sequencer calls the ioctl function indirectly via
+snd_seq_kernel_client_ctl().  While we already applied the protection
+against races between the normal ioctls and writes via the client's
+ioctl_mutex, this code path was left untouched.  And this seems to be
+the cause of still remaining some rare UAF as spontaneously triggered
+by syzkaller.
 
-  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
-  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+For the sake of robustness, wrap the ioctl_mutex also for the call via
+snd_seq_kernel_client_ctl(), too.
 
-All the other instrumentation (KASAN,UBSAN) also have stack protector
-disabled.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/seq/seq_clientmgr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 6c57e78817da..62471e75a2b0 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -30,6 +30,7 @@ KCOV_INSTRUMENT_extable.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-+CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 38e7deab6384..b3280e81bfd1 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+ {
+ 	const struct ioctl_handler *handler;
+ 	struct snd_seq_client *client;
++	int err;
  
- # cond_syscall is currently not LTO compatible
- CFLAGS_sys_ni.o = $(DISABLE_LTO)
+ 	client = clientptr(clientid);
+ 	if (client == NULL)
+ 		return -ENXIO;
+ 
+ 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
+-		if (handler->cmd == cmd)
+-			return handler->func(client, arg);
++		if (handler->cmd == cmd) {
++			mutex_lock(&client->ioctl_mutex);
++			err = handler->func(client, arg);
++			mutex_unlock(&client->ioctl_mutex);
++			return err;
++		}
+ 	}
+ 
+ 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
 -- 
 2.20.1
 
