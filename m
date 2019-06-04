@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28999C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593C1C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028D724B00
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9F724AB7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559660357;
-	bh=LH2EXWFP9bRtxm0ahdivG4wKLFjsAhI3LHhunp6mYHE=;
+	s=default; t=1559660362;
+	bh=lN+qBEnZ0s/tloxLdpm+NpwQ58sif7RQAdcaFE5YLpo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=CeO2gJGQTohd64FsrXeSYu6HaHIyJnhvwIive1VPN97p0GiW2UGvxKew7scFL7ITw
-	 r3dkSaZFcGmD9dhVb2XBsA+eHy1lZtb0DjdH1S7rngKuxBCAu3M7kdccEUZ0IAPfbP
-	 aaN0Xcpz+pFTW747lSv1is0B2uQ73jvPdShz/bis=
+	b=dShti5L2Rj+X5ZHCv5CR7jm1FpIY26XZAfSTSASYwfag33t/af4xNlX9r1LVpjU6X
+	 2MSJHFdUhZBBco+r3DhymNhee9LN9qFdQ3tjbqdr/fjvAMoPFe9kBsxiSMPGM/y4UO
+	 mbhWE5QWeidSM8DejUji0xlGEnehztgHDezpLaTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfFDO7Q (ORCPT
+        id S1728014AbfFDO7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:59:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48888 "EHLO
+        Tue, 4 Jun 2019 10:59:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48966 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfFDO7O (ORCPT
+        with ESMTP id S1727967AbfFDO7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:59:14 -0400
+        Tue, 4 Jun 2019 10:59:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Z6xN0yGWulWekvwXXiRFtdPpBCls+d5un3yiyvhzWJA=; b=X7BkEqWKl2vx
-        eFmyzsSa+3DadoZ9AeZmxFZ05FVHdT+qL8M5kDSju8lXI3UFKy4JHg+lLuRoRdyEVDmkzf0ukwtFx
-        iYlhRxTA7rRNXC3AWCSQR75rXxTBWXW7smwMat7oBzlxZB2UFlUmUtOOpXD+1g+rC2cJh0hKWHeYH
-        5e/48=;
+        List-Archive; bh=KJndiTBlNhoODFuKB7HEW0uTpDTeJGa/gjvrJqwZm40=; b=ashcMC599Hot
+        FC9kiBFa0K0pnuu/h8v/cv2VNuqFJnrsgDpJvxi4hFDIA5R7wRNmjkBqE+d4GCRaLkP+vBaCzQ6Kz
+        Lboi0QxeFj/+nExh+13db+yPkrxeJdJ8bcjP3rs7msVfHaJZ7FkG74r0v2/aNlqh5pvTwToUr/GIc
+        pbpLU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hYAtv-0006ER-2y; Tue, 04 Jun 2019 14:58:59 +0000
+        id 1hYAtv-0006EW-Lw; Tue, 04 Jun 2019 14:58:59 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id A0D11440049; Tue,  4 Jun 2019 15:58:58 +0100 (BST)
+        id 3CED2440046; Tue,  4 Jun 2019 15:58:59 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
-        perex@perex.cz, shunli.wang@mediatek.com, tiwai@suse.com
-Subject: Applied "ASoC: da7219: Fix build error without CONFIG_I2C" to the asoc tree
-In-Reply-To: <20190601085144.13832-1-yuehaibing@huawei.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        tiwai@suse.com, yingjiang.zhu@linux.intel.com
+Subject: Applied "ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error" to the asoc tree
+In-Reply-To: <20190531142526.12712-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190604145858.A0D11440049@finisterre.sirena.org.uk>
-Date:   Tue,  4 Jun 2019 15:58:58 +0100 (BST)
+Message-Id: <20190604145859.3CED2440046@finisterre.sirena.org.uk>
+Date:   Tue,  4 Jun 2019 15:58:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: da7219: Fix build error without CONFIG_I2C
+   ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error
 
 has been applied to the asoc tree at
 
@@ -90,41 +90,52 @@ to this mail.
 Thanks,
 Mark
 
-From cbc0fa7b6e8c6180c18fd951d28197281a526330 Mon Sep 17 00:00:00 2001
+From ad169f9f0dbb531cd68db921b351ccafcf684ae4 Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 1 Jun 2019 16:51:44 +0800
-Subject: [PATCH] ASoC: da7219: Fix build error without CONFIG_I2C
+Date: Fri, 31 May 2019 22:25:26 +0800
+Subject: [PATCH] ASoC: SOF: Intel: hda: Fix COMPILE_TEST build error
 
-Fix gcc build error while CONFIG_I2C is not set
+while building without PCI:
 
-sound/soc/codecs/da7219.c:2640:1: warning: data definition has no type or storage class
- module_i2c_driver(da7219_i2c_driver);
- ^~~~~~~~~~~~~~~~~
-sound/soc/codecs/da7219.c:2640:1: error: type defaults to int in declaration of module_i2c_driver [-Werror=implicit-int]
-sound/soc/codecs/da7219.c:2640:1: warning: parameter names (without types) in function declaration
-sound/soc/codecs/da7219.c:2629:26: warning: da7219_i2c_driver defined but not used [-Wunused-variable]
+sound/soc/sof/intel/hda.o: In function `hda_dsp_probe':
+hda.c:(.text+0x79c): undefined reference to `pci_ioremap_bar'
+hda.c:(.text+0x79c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
+hda.c:(.text+0x7c4): undefined reference to `pci_ioremap_bar'
+hda.c:(.text+0x7c4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `pci_ioremap_bar'
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 6d817c0e9fd7 ("ASoC: codecs: Add da7219 codec driver")
+Fixes: e13ef82a9ab8 ("ASoC: SOF: add COMPILE_TEST for PCI options")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/mediatek/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/intel/hda.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
-index f70b7109f2b6..59980df5add6 100644
---- a/sound/soc/mediatek/Kconfig
-+++ b/sound/soc/mediatek/Kconfig
-@@ -132,7 +132,7 @@ config SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 8f5c68861bbc..9e2e0f21524e 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -227,7 +227,9 @@ static int hda_init(struct snd_sof_dev *sdev)
  
- config SND_SOC_MT8183_DA7219_MAX98357A
- 	tristate "ASoC Audio driver for MT8183 with DA7219 MAX98357A codec"
--	depends on SND_SOC_MT8183
-+	depends on SND_SOC_MT8183 && I2C
- 	select SND_SOC_MT6358
- 	select SND_SOC_MAX98357A
- 	select SND_SOC_DA7219
+ 	/* initialise hdac bus */
+ 	bus->addr = pci_resource_start(pci, 0);
++#if IS_ENABLED(CONFIG_PCI)
+ 	bus->remap_addr = pci_ioremap_bar(pci, 0);
++#endif
+ 	if (!bus->remap_addr) {
+ 		dev_err(bus->dev, "error: ioremap error\n");
+ 		return -ENXIO;
+@@ -454,7 +456,9 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+ 		goto hdac_bus_unmap;
+ 
+ 	/* DSP base */
++#if IS_ENABLED(CONFIG_PCI)
+ 	sdev->bar[HDA_DSP_BAR] = pci_ioremap_bar(pci, HDA_DSP_BAR);
++#endif
+ 	if (!sdev->bar[HDA_DSP_BAR]) {
+ 		dev_err(sdev->dev, "error: ioremap error\n");
+ 		ret = -ENXIO;
 -- 
 2.20.1
 
