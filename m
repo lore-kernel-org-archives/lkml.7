@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00235C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C451B208CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCED2085A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690589;
-	bh=caxyDblbt9goUyR23cZy4rhLLor6wGZrVk6kVryXEg8=;
+	s=default; t=1559690591;
+	bh=L7/co2suk1XWcswoizUGcXctEkqEhTYO+XgyUP8D1i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=huji44ssLaYX9Yo1TWtaJzonHWZJrNnVDGH6wkhNRFx6e8AIW/13a63Bct2OPX9Fi
-	 T4m4T9DmGaXwkJlRcv3B0jlz4CLSLKjAojHC3sGr4Yr3SwMcffzYjmuKqmU9HY1X8r
-	 RfmNygpejaa1Pf7zmAZ9W8HF7cIbdHdOeABXwKwA=
+	b=UBErEE90zOkrb+EddI0ey5/PoiGCuB1yd0dGQxfkyMoQ8HFLXkILxNjwqHRWNUAIw
+	 RRxIt1QfCG71eiAVbFXbG0TGE7CGf0EdQAfCT489ANzHkdNN5SN6O1LivyXdVre25r
+	 YEV1ust1x7mWqhi+96qJ9TjAvbhVaIAgvhRI9/yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfFDXXJ (ORCPT
+        id S1727230AbfFDXXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33504 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbfFDXXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:04 -0400
+        id S1727168AbfFDXXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:23:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F3AB20866;
-        Tue,  4 Jun 2019 23:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71FB820859;
+        Tue,  4 Jun 2019 23:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690583;
-        bh=caxyDblbt9goUyR23cZy4rhLLor6wGZrVk6kVryXEg8=;
+        s=default; t=1559690586;
+        bh=L7/co2suk1XWcswoizUGcXctEkqEhTYO+XgyUP8D1i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjLY+dzzZKKzol3AHRpCEUE6c70VeMJy+tU/9EVUMtdX2T3CNr5IYtZMB16eykzSi
-         xW5U1xI+OWEfF5sStFRLSn0ILKv8P7ThBWA9dLis2mN9I1bPJsaqkKTDjsAn+rkMBp
-         0HjK0U6BH0GT2FPlzii249BYZoaqUpZ8AaBgqOaE=
+        b=RK7QctSZ+g/UgV3sNRKLQntRvxuwGaUZcVDSMn+wIM3i/cUN0Spd8J+0uu39FQ+tl
+         E4qCfXoiU7RdKBftF8P1bOeP1Y8qi9o1C5ix8kMERf9kym/I23O1atW5mVlhJ05I94
+         IbZrJ5v0mIXJvGsgbmXi5uuC9djcv12UW2VI27T8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, Keith Busch <keith.busch@intel.com>,
-        David Milburn <dmilburn@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 33/60] nvme: fix memory leak for power latency tolerance
-Date:   Tue,  4 Jun 2019 19:21:43 -0400
-Message-Id: <20190604232212.6753-33-sashal@kernel.org>
+Cc:     Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 35/60] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
+Date:   Tue,  4 Jun 2019 19:21:45 -0400
+Message-Id: <20190604232212.6753-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -59,38 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
 
-[ Upstream commit 510a405d945bc985abc513fafe45890cac34fafa ]
+[ Upstream commit d6423bd03031c020121da26c41a26bd5cc6d0da3 ]
 
-Unconditionally hide device pm latency tolerance when uninitializing
-the controller to ensure all qos resources are released so that we're
-not leaking this memory. This is safe to call if none were allocated in
-the first place, or were previously freed.
+There are several Beckhoff Automation industrial PC boards which use
+pmc_plt_clk* clocks for ethernet controllers. This adds affected boards
+to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
+not turned off.
 
-Fixes: c5552fde102fc("nvme: Enable autonomous power state transitions")
-Suggested-by: Keith Busch <keith.busch@intel.com>
-Tested-by: David Milburn <dmilburn@redhat.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-[changelog]
-Signed-off-by: Keith Busch <keith.busch@intel.com>
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 23c90382a515..35d2202ee2fd 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3699,6 +3699,7 @@ EXPORT_SYMBOL_GPL(nvme_start_ctrl);
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index a311f48ce7c9..b1d804376237 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -413,6 +413,30 @@ static const struct dmi_system_id critclk_systems[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
+ 		},
+ 	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Beckhoff CB3163",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
++			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Beckhoff CB6263",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
++			DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Beckhoff CB6363",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
++			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
  
- void nvme_uninit_ctrl(struct nvme_ctrl *ctrl)
- {
-+	dev_pm_qos_hide_latency_tolerance(ctrl->device);
- 	cdev_device_del(&ctrl->cdev, ctrl->device);
- }
- EXPORT_SYMBOL_GPL(nvme_uninit_ctrl);
 -- 
 2.20.1
 
