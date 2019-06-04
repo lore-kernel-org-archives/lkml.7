@@ -2,295 +2,342 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725ADC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01777C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346BA20843
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="Kz74tCOv"
+	by mail.kernel.org (Postfix) with ESMTP id C7BEB20843
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfFDPTP (ORCPT
+        id S1728064AbfFDPUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:19:15 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41160 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfFDPTP (ORCPT
+        Tue, 4 Jun 2019 11:20:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42864 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbfFDPUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:19:15 -0400
-Received: by mail-qt1-f194.google.com with SMTP id s57so7059993qte.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=+GLB//FJMzoRKaojHbKWRnGBjh+3MN+YOG5PwzjbOKg=;
-        b=Kz74tCOv53muyp8/p6NdupmKuw+XBhRNaC5yX+mvvvW2aM/wgTht9w/CQQMz87v6av
-         RRLydBUfqR0vg/cIPBv/dRHuAic6/t5AeV+DLSsAbG9uqANgKsbHC/r5+OyyPkV3vCLx
-         MWkFUIsH3Cw8JQO1FtJ347AqdviS7DbhW5/AZdfxAX2IhhJvTf9Ytj96UYlmCcyeEWN8
-         oHGE3BPxff1UAEsKSzvr9bQ2kt2XfPE3Pu6hTw+JYobZld4K8nhMS6/c456krekjDFnB
-         9zh8Kx0ZfOUtcfdABTAx5b3+PwQzrZxpaiVJQh/pnb+fjJBdRExm//FyxxjNgXe3qBfr
-         dQcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=+GLB//FJMzoRKaojHbKWRnGBjh+3MN+YOG5PwzjbOKg=;
-        b=CtjRw9b3KV/SIqPwyaQdw8Cib6zOQIlB/gPuS+8rJigSnEnykMLyUazl2OvrEhoS1K
-         Wrq8SM5wOHwXdyYYRWdleXqdM5USeFQ5WC/Ilj8xlEH+N1fwkk3lyj+56ZwIgZQcxl3I
-         CU/8EN775NJmkG1AV7AOZPkmrDw2W0AYH8OPawoQtPWECoGA64MsaSMgHGSXaWLm0N/+
-         7dYGi846/StIOUxGfiYrpxPpmAFX2OMcKxJsQUGIXHTpPfAj47QE/F/A7Ebzg+/PDbah
-         4sQr7uXuExSZ0e11SmLXszv2a9cKjUy5m+bJPlEvEnGH9N8jFV3+myskA2/Cii4Sn8i4
-         W2hw==
-X-Gm-Message-State: APjAAAXnp65rCGkop1MsLMLJzQeuudLHRyS7Yy451BOc7gqtyvVvpKTR
-        q2gMvl5o/twfQLabzqSLL7lvGg==
-X-Google-Smtp-Source: APXvYqwm+1CXoL9l4dlrHmtzp93ARlNFcklMLRuzN9brlvTUPxE84r5ERddU/N72qkOlVTTtM69AOQ==
-X-Received: by 2002:aed:2389:: with SMTP id j9mr2200835qtc.244.1559661554019;
-        Tue, 04 Jun 2019 08:19:14 -0700 (PDT)
-Received: from tpx230-nicolas (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id x7sm7286334qka.6.2019.06.04.08.19.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 08:19:13 -0700 (PDT)
-Message-ID: <1cb8cc0c89f0017962226fdb84ae11e763fdd233.camel@ndufresne.ca>
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-Date:   Tue, 04 Jun 2019 11:19:11 -0400
-In-Reply-To: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-z2rjHTDfEa06D9UEeCQq"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Tue, 4 Jun 2019 11:20:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 783AE26C9C8
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org
+Subject: [PATCH 01/10] mfd / platform: cros_ec: Handle chained ECs as platform devices
+Date:   Tue,  4 Jun 2019 17:20:10 +0200
+Message-Id: <20190604152019.16100-2-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190604152019.16100-1-enric.balletbo@collabora.com>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+An MFD is a device that contains several sub-devices (cells). For instance,
+the ChromeOS EC fits in this description as usually contains a charger and
+can have other devices with different functions like a Real-Time Clock,
+an Audio codec, a Real-Time Clock, ...
 
---=-z2rjHTDfEa06D9UEeCQq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+If you look at the driver, though, we're doing something odd. We have
+two MFD cros-ec drivers where one of them (cros-ec-core) instantiates
+another MFD driver as sub-driver (cros-ec-dev), and the latest
+instantiates the different sub-devices (Real-Time Clock, Audio codec,
+etc).
 
-Le lundi 03 juin 2019 =C3=A0 13:28 +0200, Hans Verkuil a =C3=A9crit :
-> Since Thomasz was very busy with other things, I've taken over this
-> patch series. This v4 includes his draft changes and additional changes
-> from me.
->=20
-> This series attempts to add the documentation of what was discussed
-> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
-> later Embedded Linux Conference Europe 2014 in D=C3=BCsseldorf and then
-> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
-> video team (but mostly in a cosmetic way or making the document more
-> precise), during the several years of Chrome OS using the APIs in
-> production.
->=20
-> Note that most, if not all, of the API is already implemented in
-> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
-> this series is just to formalize what we already have.
->=20
-> Thanks everyone for the huge amount of useful comments to previous
-> versions of this series. Much of the credits should go to Pawel Osciak
-> too, for writing most of the original text of the initial RFC.
->=20
-> This v4 incorporates all known comments (let me know if I missed
-> something!) and should be complete for the decoder.
->=20
-> For the encoder there are two remaining TODOs for the API:
->=20
-> 1) Setting the frame rate so bitrate control can make sense, since
->    they need to know this information.
->=20
->    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
->    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
->    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
->    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
->    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
+                  MFD
+------------------------------------------
+   cros-ec-core
+       |___ mfd-cellA (cros-ec-dev)
+       |       |__ mfd-cell0
+       |       |__ mfd-cell1
+       |       |__ ...
+       |
+       |___ mfd-cellB (cros-ec-dev)
+               |__ mfd-cell0
+               |__ mfd-cell1
+               |__ ...
 
-I agree, as long as it's documented. I can imagine how this could be
-confusing for new users.
+The problem that was trying to solve is to describe some kind of topology for
+the case where we have an EC (cros-ec) chained with another EC
+(cros-pd). Apart from that this extends the bounds of what MFD was
+designed to do we might be interested on have other kinds of topology that
+can't be implemented in that way.
 
->=20
-> 2) Interactions between OUTPUT and CAPTURE formats.
->=20
->    The main problem is what to do if the capture sizeimage is too small
->    for the OUTPUT resolution when streaming starts.
->=20
->    Proposal: width and height of S_FMT(OUTPUT) are used to
->    calculate a minimum sizeimage (app may request more). This is
->    driver-specific.
->=20
->    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
->    for the encoder (i.e. we don't support mid-stream resolution
->    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
->    supported. See https://patchwork.linuxtv.org/patch/56478/ for
->    the patch adding this flag.
->=20
->    Of course, if we start to support mid-stream resolution
->    changes (or other changes that require a source change event),
->    then this flag should be dropped by the encoder driver and
->    documentation on how to handle the source change event should
->    be documented in the encoder spec. I prefer to postpone this
->    until we have an encoder than can actually do mid-stream
->    resolution changes.
->=20
->    If sizeimage of the OUTPUT is too small for the CAPTURE
->    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
->    then the second STREAMON (either CAPTURE or OUTPUT) will
->    return -ENOMEM since there is not enough memory to do the
->    encode.
+Let's prepare the code to move the cros-ec-core part from MFD to
+platform/chrome as this is clearly a platform specific thing non-related
+to a MFD device.
 
-You seem confident that we will know immediately if it's too small. But
-what I remember is that HW has an interrupt for this, allowing
-userspace to allocate a larger buffer and resume.
+  platform/chrome  |         MFD
+------------------------------------------
+                   |
+   cros-ec ________|___ cros-ec-dev
+                   |       |__ mfd-cell0
+                   |       |__ mfd-cell1
+                   |       |__ ...
+                   |
+   cros-pd ________|___ cros-ec-dev
+                   |        |__ mfd-cell0
+                   |        |__ mfd-cell1
+                   |        |__ ...
 
-Should we make the capture queue independent of the streaming state, so
-that we can streamoff/reqbufs/.../streamon to resume from an ENOMEM
-error ? And shouldn't ENOMEM be returned by the following capture DQBUF
-when such an interrupt is raised ?
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
->=20
->    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
->    be the case for all current encoders), then any bitrate controls
->    will be limited in range to what the current state (CAPTURE and
->    OUTPUT formats and frame rate) supports.
->=20
-> Comments regarding these two encoder proposals are welcome!
->=20
-> Regards,
->=20
-> 	Hans
->=20
-> Changes since v3:
->=20
-> - Lots of stylistic fixes and fixing typos/grammar/etc.
->=20
-> Decoder:
->=20
-> - width/height for S_FMT(OUTPUT):
->=20
->   Expects that the output width and height is always a valid
->   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
->   instead of returning an error. Note that this resolution is a placehold=
-er
->   until the actual resolution is parsed from the stream.
->=20
-> - Dropped step 3 (Query the minimum number of buffers required for the CA=
-PTURE
->   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to b=
-e
->   a left-over from earlier versions. The same information is also in Step=
- 10,
->   so no need to have this in two places.
->=20
-> - Added step 5 in the Capture Setup section: set COMPOSE rectangle if nee=
-ded.
->=20
-> - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
->=20
-> Encoder:
->=20
-> - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE forma=
-t
->   are marked as read-only and are based on the encoders current state suc=
-h
->   as the OUTPUT format.
->=20
-> - Drop TGT_COMPOSE support in the encoder: there are currently
->   no encoders that can do composing/scaling.
->=20
-> - Document corner cases in the Drain sequence
->=20
-> - Document error handling.
->=20
-> - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
->=20
-> Changes since v2:
-> (https://lore.kernel.org/patchwork/cover/1002474/)
-> Decoder:
->  - Specified that the initial source change event is signaled
->    regardless of whether the client-set format matches the
->    stream format.
->  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
->    for the bitstream input buffers of decoders.
->  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
->    if the stream information is not available.
->  - Described decode error handling.
->  - Mentioned that timestamps can be observed after a seek to
->    determine whether the CAPTURE buffers originated from before
->    or after the seek.
->  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
->    V4L2_DEC_CMD_START, the decoder is not reset and preserves
->    all the state.
->=20
-> Encoder:
->  - Specified that width and height of CAPTURE format are ignored
->    and always zero.
->  - Explicitly noted the common use case for the CROP target with
->    macroblock-unaligned video resolutions.
->  - Added a reference to Request API.
->  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
->    for the bitstream output buffers of encoders.
->  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
->    V4L2_ENC_CMD_START, the encoder is not reset and preserves
->    all the state.
->=20
-> General:
->  - Dropped format enumeration from "Initialization", since it's already
->    a part of "Querying capabilities".
->  - Many spelling, grammar, stylistic, etc. changes.
->  - Changed the style of note blocks.
->  - Rebased onto Hans' documentation cleanup series.
->    (https://patchwork.kernel.org/cover/10775407/
->     https://patchwork.kernel.org/patch/10776737/)
->  - Moved the interfaces under the "Video Memory-To-Memory Interface"
->    section.
->=20
-> For changes since v1 see the v2:
-> https://lore.kernel.org/patchwork/cover/1002474/
->=20
-> For changes since RFC see the v1:
-> https://patchwork.kernel.org/cover/10542207/
->=20
-> Tomasz Figa (2):
->   media: docs-rst: Document memory-to-memory video decoder interface
->   media: docs-rst: Document memory-to-memory video encoder interface
->=20
->  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
->  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
->  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
->  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
->  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
->  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
->  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
->  7 files changed, 1779 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
->  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
->=20
+ drivers/mfd/cros_ec.c                   | 61 +++++++++++++------------
+ drivers/platform/chrome/cros_ec_i2c.c   |  8 ++++
+ drivers/platform/chrome/cros_ec_lpc.c   |  3 +-
+ drivers/platform/chrome/cros_ec_rpmsg.c |  2 +
+ drivers/platform/chrome/cros_ec_spi.c   |  8 ++++
+ include/linux/mfd/cros_ec.h             | 18 ++++++++
+ 6 files changed, 69 insertions(+), 31 deletions(-)
 
---=-z2rjHTDfEa06D9UEeCQq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXPaL7wAKCRBxUwItrAao
-HLX/AJ4rYDmpomVuz9vTkwkuMNuprybr0wCfZlXD1+znpT3mx2TZpf1q2fEUoRk=
-=7kSa
------END PGP SIGNATURE-----
-
---=-z2rjHTDfEa06D9UEeCQq--
+diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+index bd2bcdd4718b..11fced7917fc 100644
+--- a/drivers/mfd/cros_ec.c
++++ b/drivers/mfd/cros_ec.c
+@@ -21,7 +21,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+-#include <linux/mfd/core.h>
+ #include <linux/mfd/cros_ec.h>
+ #include <linux/suspend.h>
+ #include <asm/unaligned.h>
+@@ -39,18 +38,6 @@ static struct cros_ec_platform pd_p = {
+ 	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
+ };
+ 
+-static const struct mfd_cell ec_cell = {
+-	.name = "cros-ec-dev",
+-	.platform_data = &ec_p,
+-	.pdata_size = sizeof(ec_p),
+-};
+-
+-static const struct mfd_cell ec_pd_cell = {
+-	.name = "cros-ec-dev",
+-	.platform_data = &pd_p,
+-	.pdata_size = sizeof(pd_p),
+-};
+-
+ static irqreturn_t ec_irq_thread(int irq, void *data)
+ {
+ 	struct cros_ec_device *ec_dev = data;
+@@ -158,38 +145,42 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+ 		}
+ 	}
+ 
+-	err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO, &ec_cell,
+-				   1, NULL, ec_dev->irq, NULL);
+-	if (err) {
+-		dev_err(dev,
+-			"Failed to register Embedded Controller subdevice %d\n",
+-			err);
+-		return err;
++	/* Register a platform device for the main EC instance */
++	ec_dev->ec = platform_device_register_data(ec_dev->dev, "cros-ec-dev",
++					PLATFORM_DEVID_AUTO, &ec_p,
++					sizeof(struct cros_ec_platform));
++	if (IS_ERR(ec_dev->ec)) {
++		dev_err(ec_dev->dev,
++			"Failed to create CrOS EC platform device\n");
++		return PTR_ERR(ec_dev->ec);
+ 	}
+ 
+ 	if (ec_dev->max_passthru) {
+ 		/*
+-		 * Register a PD device as well on top of this device.
++		 * Register a platform device for the PD behind the main EC.
+ 		 * We make the following assumptions:
+ 		 * - behind an EC, we have a pd
+ 		 * - only one device added.
+ 		 * - the EC is responsive at init time (it is not true for a
+-		 *   sensor hub.
++		 *   sensor hub).
+ 		 */
+-		err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO,
+-				      &ec_pd_cell, 1, NULL, ec_dev->irq, NULL);
+-		if (err) {
+-			dev_err(dev,
+-				"Failed to register Power Delivery subdevice %d\n",
+-				err);
+-			return err;
++		ec_dev->pd = platform_device_register_data(ec_dev->dev,
++					"cros-ec-dev",
++					PLATFORM_DEVID_AUTO, &pd_p,
++					sizeof(struct cros_ec_platform));
++		if (IS_ERR(ec_dev->pd)) {
++			dev_err(ec_dev->dev,
++				"Failed to create CrOS PD platform device\n");
++			platform_device_unregister(ec_dev->ec);
++			return PTR_ERR(ec_dev->pd);
+ 		}
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+ 		err = devm_of_platform_populate(dev);
+ 		if (err) {
+-			mfd_remove_devices(dev);
++			platform_device_unregister(ec_dev->pd);
++			platform_device_unregister(ec_dev->ec);
+ 			dev_err(dev, "Failed to register sub-devices\n");
+ 			return err;
+ 		}
+@@ -210,6 +201,16 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+ }
+ EXPORT_SYMBOL(cros_ec_register);
+ 
++int cros_ec_unregister(struct cros_ec_device *ec_dev)
++{
++	if (ec_dev->pd)
++		platform_device_unregister(ec_dev->pd);
++	platform_device_unregister(ec_dev->ec);
++
++	return 0;
++}
++EXPORT_SYMBOL(cros_ec_unregister);
++
+ #ifdef CONFIG_PM_SLEEP
+ int cros_ec_suspend(struct cros_ec_device *ec_dev)
+ {
+diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
+index 61d75395f86d..6bb82dfa7dae 100644
+--- a/drivers/platform/chrome/cros_ec_i2c.c
++++ b/drivers/platform/chrome/cros_ec_i2c.c
+@@ -307,6 +307,13 @@ static int cros_ec_i2c_probe(struct i2c_client *client,
+ 	return 0;
+ }
+ 
++static int cros_ec_i2c_remove(struct i2c_client *client)
++{
++	struct cros_ec_device *ec_dev = i2c_get_clientdata(client);
++
++	return cros_ec_unregister(ec_dev);
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int cros_ec_i2c_suspend(struct device *dev)
+ {
+@@ -357,6 +364,7 @@ static struct i2c_driver cros_ec_driver = {
+ 		.pm	= &cros_ec_i2c_pm_ops,
+ 	},
+ 	.probe		= cros_ec_i2c_probe,
++	.remove		= cros_ec_i2c_remove,
+ 	.id_table	= cros_ec_i2c_id,
+ };
+ 
+diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+index c9c240fbe7c6..2c7e654cf89c 100644
+--- a/drivers/platform/chrome/cros_ec_lpc.c
++++ b/drivers/platform/chrome/cros_ec_lpc.c
+@@ -317,6 +317,7 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
+ 
+ static int cros_ec_lpc_remove(struct platform_device *pdev)
+ {
++	struct cros_ec_device *ec_dev = platform_get_drvdata(pdev);
+ 	struct acpi_device *adev;
+ 
+ 	adev = ACPI_COMPANION(&pdev->dev);
+@@ -324,7 +325,7 @@ static int cros_ec_lpc_remove(struct platform_device *pdev)
+ 		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
+ 					   cros_ec_lpc_acpi_notify);
+ 
+-	return 0;
++	return cros_ec_unregister(ec_dev);
+ }
+ 
+ static const struct acpi_device_id cros_ec_lpc_acpi_device_ids[] = {
+diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+index 5d3fb2abad1d..520e507bfa54 100644
+--- a/drivers/platform/chrome/cros_ec_rpmsg.c
++++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+@@ -233,6 +233,8 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
+ 	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
+ 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
+ 
++	cros_ec_unregister(ec_dev);
++
+ 	cancel_work_sync(&ec_rpmsg->host_event_work);
+ }
+ 
+diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+index 006a8ff64057..2e21f2776063 100644
+--- a/drivers/platform/chrome/cros_ec_spi.c
++++ b/drivers/platform/chrome/cros_ec_spi.c
+@@ -785,6 +785,13 @@ static int cros_ec_spi_probe(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static int cros_ec_spi_remove(struct spi_device *spi)
++{
++	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
++
++	return cros_ec_unregister(ec_dev);
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int cros_ec_spi_suspend(struct device *dev)
+ {
+@@ -823,6 +830,7 @@ static struct spi_driver cros_ec_driver_spi = {
+ 		.pm	= &cros_ec_spi_pm_ops,
+ 	},
+ 	.probe		= cros_ec_spi_probe,
++	.remove		= cros_ec_spi_remove,
+ 	.id_table	= cros_ec_spi_id,
+ };
+ 
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index cfa78bb4990f..95513d4f9a21 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -128,6 +128,10 @@ struct cros_ec_command {
+  * @event_data: Raw payload transferred with the MKBP event.
+  * @event_size: Size in bytes of the event data.
+  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
++ * @ec: The platform_device used by the mfd driver to interface with the
++ *      main EC.
++ * @pd: The platform_device used by the mfd driver to interface with the
++ *      PD behind an EC.
+  */
+ struct cros_ec_device {
+ 	/* These are used by other drivers that want to talk to the EC */
+@@ -163,6 +167,10 @@ struct cros_ec_device {
+ 	struct ec_response_get_next_event_v1 event_data;
+ 	int event_size;
+ 	u32 host_event_wake_mask;
++
++	/* The platform devices used by the mfd driver */
++	struct platform_device *ec;
++	struct platform_device *pd;
+ };
+ 
+ /**
+@@ -297,6 +305,16 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+  */
+ int cros_ec_register(struct cros_ec_device *ec_dev);
+ 
++/**
++ * cros_ec_unregister() - Remove a ChromeOS EC.
++ * @ec_dev: Device to unregister.
++ *
++ * Call this to deregister a ChromeOS EC, then clean up any private data.
++ *
++ * Return: 0 on success or negative error code.
++ */
++int cros_ec_unregister(struct cros_ec_device *ec_dev);
++
+ /**
+  * cros_ec_query_all() -  Query the protocol version supported by the
+  *         ChromeOS EC.
+-- 
+2.20.1
 
