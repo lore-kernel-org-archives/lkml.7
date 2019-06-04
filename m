@@ -2,129 +2,90 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1286C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946EDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C065F24024
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FD823BF3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 08:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Lsu3ucxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfFDI2K (ORCPT
+        id S1726988AbfFDI37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 04:28:10 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35023 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfFDI2K (ORCPT
+        Tue, 4 Jun 2019 04:29:59 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:57331 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfFDI37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:28:10 -0400
-X-Originating-IP: 90.88.144.139
-Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3117D6000D;
-        Tue,  4 Jun 2019 08:28:06 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 10:28:06 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Message-ID: <20190604082806.smght44dmhuoxw2u@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
- <6901794.oDhxEVzEqc@g550jk>
- <20190603074247.hlayod2pxq55f6ci@flea>
- <3880268.VpfjThaCW4@g550jk>
+        Tue, 4 Jun 2019 04:29:59 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x548TsXm016165;
+        Tue, 4 Jun 2019 17:29:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x548TsXm016165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559636994;
+        bh=wgPN+vEMC9yLs8VRlcnC/BEteIcw2sS7DW+DFAzIrnw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Lsu3ucxmcI56axCWBnGH1GAVLRjnf2cYY2dVKvHvwZ2Yng20JRUEDX0u4KuBItlEb
+         /56vFgqvVDnLuDIFa/cGtaE90vX+4/ECuTGXybjnWsO5LoFiRLQS4QGRFIxC7lJRyR
+         LJ0YEFknuivGha9fvxRYwmzGWNFwTgGvSMSC2/4024Ynmc/wZY3r+t0eR444t7e5BM
+         wJRT7ZYog/AGyOXkQ8uchHcDGaiFwVuUt0w4zKPf/0Qg8ZV7dL9RzPheSRoQdS6AqK
+         t0lt7/Ba/aQahCr7NLvw1+8lSEPmCtlPxPaghg14hUdb1VJDxRqQ+Wukkq9OQRZxxU
+         igyid8NLlS6mw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] s390: fix unrecognized __aligned() in uapi header
+Date:   Tue,  4 Jun 2019 17:29:47 +0900
+Message-Id: <20190604082947.26328-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rokvu4c2fxf472od"
-Content-Disposition: inline
-In-Reply-To: <3880268.VpfjThaCW4@g550jk>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+__aligned() is a shorthand that is only available in the kernel space
+because it is defined in include/linux/compiler_attributes.h, which is
+not exported to the user space.
 
---rokvu4c2fxf472od
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Detected by compile-testing exported headers.
 
-On Mon, Jun 03, 2019 at 05:20:51PM +0200, Luca Weiss wrote:
-> On Montag, 3. Juni 2019 09:42:47 CEST Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Fri, May 31, 2019 at 12:27:55PM +0200, Luca Weiss wrote:
-> > > On Freitag, 24. Mai 2019 11:20:01 CEST Maxime Ripard wrote:
-> > > > It would be great to drop the -keys from the compatible, and to
-> > > > document the bindings
-> > > >
-> > > > Looks good otherwise
-> > > >
-> > > > Maxime
-> > >
-> > > So I should just document the "allwinner,sun50i-a64-lradc" string in
-> > > Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt ? Don't I
-> > > also
-> > > have to add the compatible to the driver code then? Just adding the a64
-> > > compatible to a dts wouldn't work without that.
-> >
-> > What I meant was that you needed both, something like:
-> >
-> > compatible = "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-lradc";
-> >
-> > That way, the OS will try to match a driver for the A64 compatible if
-> > any, and fallback to the A83's otherwise. And since we don't have any
-> > quirk at the moment, there's no change needed to the driver.
->
-> sorry for the long back and forth, I hope I understood you correctly now.
-> Here's what I would submit as v2 then (I'll split the two files into seperate
-> patches as the devicetree documentation suggests)
->
-> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt:
->   - compatible: should be one of the following string:
->                 "allwinner,sun4i-a10-lradc-keys"
->                 "allwinner,sun8i-a83t-r-lradc"
-> +               "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
->
-> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:
-> +               lradc: lradc@1c21800 {
-> +                       compatible = "allwinner,sun50i-a64-lradc",
-> +                                    "allwinner,sun8i-a83t-r-lradc";
-> +                       reg = <0x01c21800 0x400>;
-> +                       interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
->
-> Thanks,
-> Luca
+./usr/include/asm/runtime_instr.h:60:37: error: expected declaration specifiers or ‘...’ before numeric constant
+ } __attribute__((packed)) __aligned(8);
+                                     ^
 
-That looks correct :)
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Maxime
+ arch/s390/include/uapi/asm/runtime_instr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/arch/s390/include/uapi/asm/runtime_instr.h b/arch/s390/include/uapi/asm/runtime_instr.h
+index 45c9ec984e6b..455da46e3193 100644
+--- a/arch/s390/include/uapi/asm/runtime_instr.h
++++ b/arch/s390/include/uapi/asm/runtime_instr.h
+@@ -57,7 +57,7 @@ struct runtime_instr_cb {
+ 	__u64 sf;
+ 	__u64 rsic;
+ 	__u64 reserved8;
+-} __packed __aligned(8);
++} __attribute__((__packed__, __aligned__(8)));
+ 
+ static inline void load_runtime_instr_cb(struct runtime_instr_cb *cb)
+ {
+-- 
+2.17.1
 
---rokvu4c2fxf472od
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYrlgAKCRDj7w1vZxhR
-xZ4wAQDYf4iwJpFsfR8XtFStVojYJ+87YKlwxsWeyc2AY+blqwD/bkhJERAV91vH
-je0Y6DGnu87Ep+qyk/Jh5W384aSsxgM=
-=Mcc7
------END PGP SIGNATURE-----
-
---rokvu4c2fxf472od--
