@@ -2,110 +2,106 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21954C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF07C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E574320717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E408C20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 18:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdRxKh1J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ra2EEE/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFDSOk (ORCPT
+        id S1726668AbfFDSOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 14:14:40 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:51613 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFDSOk (ORCPT
+        Tue, 4 Jun 2019 14:14:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41818 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFDSOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 14:14:40 -0400
-Received: by mail-it1-f194.google.com with SMTP id m3so1680185itl.1;
-        Tue, 04 Jun 2019 11:14:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HCvwaoibVnjg9rjNg5TC6AzleXlhqUmKRsSL5YCF/MY=;
-        b=AdRxKh1JZAxsWtP2YIms4M+pi5FfqgliDRG/gwm4NRjLcFbwmHOZ/qM7oFWJI1Kpml
-         wbC6uLqRcgDx3wCG3+P5x0fSViBTaBtJxUh/fLJ8wztxCJ3ySDLRybYnqltJZYMBDb7Z
-         6kf3NBaSJLh/fi9jn8WgUEQY4II9Ctg4jGHjAvCNDiUuwI/TE7mEJQb7thbqWS7RImCy
-         JCVvQZ1vd6rGcsksQSQIMvX1pHRRN3cUcYbTZT1otg6W03t6WZKf/IdHMdTq1FVGIin5
-         TaNMX0IiqoMs4W0tv0quyrYT7B5tIffjTQtPXl+AkGq69O6jePwzDp3ohuJyR8OkCH8S
-         ZenA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HCvwaoibVnjg9rjNg5TC6AzleXlhqUmKRsSL5YCF/MY=;
-        b=XbSv7sZb3a+T35UospUJHbwldTXjJ+GRxOp82KZ1HQowEs8YoFOUiDYdp7TUdVYfnk
-         hksm/gRoJ4McZAhN1EU1sqFQfLaJA2pYGcIjzVGacWAHLs654ejIJk6iA7FWIhs1ibFk
-         J/l0DJf3Deg1jwqO637x7t8QzZ9DK4BxXqXAhdv5kC013/HwJ00DWdosWCMosm0HZCFZ
-         NgAay/zlo1M19/GCzlHjl5tshTVuzQq4iiNt7eQiHiTFacnIKfuf/OsxPKNY7XuSeaU1
-         5edoBRfqMTc3Mzg8hDIUxrnCC+ZNtHTIx7q3CayJ+k/0QordBccYd7imuHzYCGF8m9TQ
-         OhKA==
-X-Gm-Message-State: APjAAAVF6Z9I96DSwX9xccZz7XS+7Wr7IP071o7/0QEi+uRfEP7emCX7
-        v3ayLs9088Es4LhyvjlaPWmLnPrjylGIIgZAkPA=
-X-Google-Smtp-Source: APXvYqwV0xjh0/S1wriLBmg1iqt9GRGOckgKE25tw9l5cMgEBO3aUMAmh/VeJfuix7PBi8K0c8yip4jc6vbial5JF7k=
-X-Received: by 2002:a24:8988:: with SMTP id s130mr21613638itd.79.1559672079550;
- Tue, 04 Jun 2019 11:14:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com> <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3Dv+hqnQHWU2nG5rB+hGrqbcDC3DUoNGZAzNGJgJwizA@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 4 Jun 2019 11:14:28 -0700
-Message-ID: <CABeXuvp0c+KSimAWPXoV=5GYJGkAfL2s-a71PFZHFDfm4UykzA@mail.gmail.com>
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dbueso@suse.de, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
+        Tue, 4 Jun 2019 14:14:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QHMRtkbg/vKvfRo8sZE/mY2gYzUHuRCKTR/YthVWl8c=; b=ra2EEE/Ob/ezj0iKYgP/I/wYc
+        I3qXruB7acYxBCHDSjG5Q0+g9oP6uX/bov2hBRJXKr6aHlx17pc1ks61TmkBSHps5Ybt+uqiFojeV
+        Zx2kp2oIUkzb0357uqIoShpsDBdXsit8Pwd4pNNZ6UN5xCIAlF2HcANkC4fd2eE9oFaQuUjldKKHo
+        Wm82OcsT+9sV/7+wsLcLX2psc3Iug6uQRzihCDnDKPA7LwPrMiB8ZyM6uwo31kIZB3CTb1KN7WyLa
+        wGjmD1GNg+C3BKy73Td+CJC5vCiEgUBeaagGFS+9c5V7KvvMOvzBYLSpwC7+UIStoYgx5cgHaw6N3
+        oW30DAoiw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYDx7-00082X-Al; Tue, 04 Jun 2019 18:14:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB814209638E7; Tue,  4 Jun 2019 20:14:26 +0200 (CEST)
+Date:   Tue, 4 Jun 2019 20:14:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190604181426.GH3419@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
+ <20190604092008.GJ3402@hirez.programming.kicks-ass.net>
+ <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
+ <20190604173853.GG3419@hirez.programming.kicks-ass.net>
+ <f7f9b778-4f1a-7460-a7ae-1d4e3dd37181@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7f9b778-4f1a-7460-a7ae-1d4e3dd37181@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tue, Jun 4, 2019 at 3:41 PM Oleg Nesterov <oleg@redhat.com> wrote:
+On Tue, Jun 04, 2019 at 02:04:34PM -0400, Waiman Long wrote:
+> On 6/4/19 1:38 PM, Peter Zijlstra wrote:
+> > On Tue, Jun 04, 2019 at 01:30:00PM -0400, Waiman Long wrote:
+> >>> That's somewhat inconsistent wrt the type. I'll make it unsigned long,
+> >>> as that is what makes most sense, given there's a pointer inside.
+> >> Thank for spotting that, I will fix it.
+> > I fixed a whole bunch of them; please find the modified patches here:
 > >
-> > This is the minimal fix for stable, I'll send cleanups later.
-> >
-> > The commit 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
-> > restore_user_sigmask()") introduced the visible change which breaks
-> > user-space: a signal temporary unblocked by set_user_sigmask() can
-> > be delivered even if the caller returns success or timeout.
-> >
-> > Change restore_user_sigmask() to accept the additional "interrupted"
-> > argument which should be used instead of signal_pending() check, and
-> > update the callers.
-> >
-> > Reported-by: Eric Wong <e@80x24.org>
-> > Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
-> > cc: stable@vger.kernel.org (v5.0+)
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=locking/core
+> 
+> Thanks for reviewing the patches.
+> 
+> So how do you think about the overall state of this patchset? Do you
+> think it is mature enough to go into 5.3?
 
-Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
+So far so good :-)
 
-The original fix posted:
-https://lore.kernel.org/patchwork/patch/1077355/ would also have been
-a correct fix for this problem. But, given the cleanups that are in
-the pipeline, this is a better fix.
+> Or if you want more time to think about solving the RT thread issue, we
+> can merge just patches 1-16 and play with the last threes for some more
+> time. I am fine with that too as improving RT tasks is not my main
+> focus. I like patch 16 as it led me to discover the rwsem reader wakeup
+> bug as I hit the negative dentry count WARN_ON message in my testing.
 
--Deepa
+My brain gave out around patch 14.. I'll try again tomorrow. But I'm
+thinking we should be able to do as you suggest and get -16 merged.
+
+> I worked on this owner merging patch mainly to alleviate the need to use
+> cmpxchg for reader lock. cmpxchg_double() is certainly one possible
+> solution though it won't work on older CPUs. We can have a config option
+> to use cmpxchg_double as it may increase the size of other structures
+> that embedded rwsem and impose additional alignment constraint.
+
+cmpxchg8b was introduced with the Pentium (for PAE IIRC, it enabled
+atomic 64bit PTEs, but Linux never used it for that) and every Intel/AMD
+thereafter has had it. AFAIK there's no x86_64 chip without cmpxchg16b.
