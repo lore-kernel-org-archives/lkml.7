@@ -2,104 +2,95 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4824CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AB5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214F720717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="M998QStZ"
+	by mail.kernel.org (Postfix) with ESMTP id B539720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfFDPnc (ORCPT
+        id S1728195AbfFDPo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:43:32 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:43439 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbfFDPnc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:43:32 -0400
-Received: by mail-pg1-f173.google.com with SMTP id f25so10578961pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1tqQUYkCiTPuRzyCy9UBEdirWqMAznB0ETrGx/j7ot8=;
-        b=M998QStZ8hrJ2FjhCVVSwN4KLJOgz73IXrSf06GwSHt2Kcyb8QwopbYLocRJJn8Qna
-         9aoKrKIr+IW0SGQkkLodklP545PgTzJxSr+KqJok3jhl9FZyPtLFpnVr6oTSg/Iy1IFv
-         DCfmBZzmwGb70dSfOxZ04RZQfecnq1skXX2/fjkv/J1WTJQWZCTSGkmY9LtQJoGBvyD2
-         KB4YUr/Y3kg1wVLYNmcI9f16MnhS9TzjSFehLMAdTUsFM836NLGXci80US8XQ1yxMzbQ
-         tOeOd8a2kGtBHuMrCKEyQIIpNZ659MrOaooDKXkFMJgyeOgq1Nj6DxUSmWmY7LnW6aXi
-         q73Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1tqQUYkCiTPuRzyCy9UBEdirWqMAznB0ETrGx/j7ot8=;
-        b=g05YgTqzQYj05jUJSVKMcmv3YRSOOBp/74Jt1n+iKhoX8QBpmU7tg6OH78HvKLl7mt
-         lDg5VXciS+ciy00zN5UmXCzzL0RxQ195bHvpB/niGpLVWNnyaGec9/1zwPssNBvLnkx6
-         XyDzZkL55XhDFdqRmF7czPSN6udfzS00kT7bhN3bezIOrEaTccu9QZgPJLLaDIw+3rqU
-         DzwOdohaWdhg+CTb6ZjFJM6ZXcd+/DmC/+QKm2fjhH0UO4nKgrsPab5oS0/Ai4OF6uxz
-         jw3Q54xVINAIQKdgozp76jCz6CuoNMETzHFrbbnL5uEXY+lHP1EA/ftxc+DfJAum4yTn
-         JlEQ==
-X-Gm-Message-State: APjAAAWSVIJvmkhDkwljO28YEp+y1Khhv3GnKDBb3x3yxv81tZJQFMlQ
-        KpLuTddzSf93DGjhuA8CswyAlYrCcN4LvQ==
-X-Google-Smtp-Source: APXvYqw+0N0zrwtySyXMlKkP0zfzYI5m7MA0xh3RMk9nK5rSOHW7riQreacg0ndGgXI3TCzaBMFfRA==
-X-Received: by 2002:a62:63c6:: with SMTP id x189mr26994829pfb.31.1559663011107;
-        Tue, 04 Jun 2019 08:43:31 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r64sm25606402pfr.58.2019.06.04.08.43.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 08:43:30 -0700 (PDT)
-Subject: Re: [PATCH][next] blktrace: remove redundant assignment to ret
-To:     Colin King <colin.king@canonical.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190604142744.15330-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f834f32d-ab6e-c429-1a3e-13512583ee08@kernel.dk>
-Date:   Tue, 4 Jun 2019 09:43:28 -0600
+        Tue, 4 Jun 2019 11:44:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49650 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728142AbfFDPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:44:58 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 706E4A7F8;
+        Tue,  4 Jun 2019 15:44:52 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EBE95D705;
+        Tue,  4 Jun 2019 15:44:47 +0000 (UTC)
+Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an
+ atomic_long_t
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-14-longman@redhat.com>
+ <20190604085238.GF3402@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <0d4d11c4-80e8-f75f-fae8-b653481db260@redhat.com>
+Date:   Tue, 4 Jun 2019 11:44:46 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190604142744.15330-1-colin.king@canonical.com>
+In-Reply-To: <20190604085238.GF3402@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 04 Jun 2019 15:44:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/19 8:27 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Variable ret is being assigned a value that is never read, hence
-> the assignment is redundant and can be removed.
+On 6/4/19 4:52 AM, Peter Zijlstra wrote:
+> On Mon, May 20, 2019 at 04:59:12PM -0400, Waiman Long wrote:
+>> +static inline struct task_struct *rwsem_read_owner(struct rw_semaphore *sem)
+>> +{
+>> +	return (struct task_struct *)(atomic_long_read(&sem->owner) &
+>> +					~RWSEM_OWNER_FLAGS_MASK);
+>> +}
+>> +
+>> +/*
+>> + * Return the real task structure pointer of the owner and the embedded
+>> + * flags in the owner. pflags must be non-NULL.
+>> + */
+>> +static inline struct task_struct *
+>> +rwsem_read_owner_flags(struct rw_semaphore *sem, long *pflags)
+>> +{
+>> +	long owner = atomic_long_read(&sem->owner);
+>> +
+>> +	*pflags = owner & RWSEM_OWNER_FLAGS_MASK;
+>> +	return (struct task_struct *)(owner & ~RWSEM_OWNER_FLAGS_MASK);
+>> +}
+> I got confused by the 'read' part in those nanes, I initially thought
+> they paired with rwsem_set_reader_owned().
 
-This doesn't look correct to me, here's the full code:
+Sorry for the confusion. I initially use "get", but I am afraid that it
+may get confused with "get/put" for reference counting. So I used read
+instead.
 
-	ret = -ENOENT;
 
-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-	if (!dir)
-		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-	if (!dir)
-		goto err;
-	[...]
-err:
-	[...]
-	return ret;
+> So I've done 's/rwsem_read_owner/rwsem_owner/g on it.
 
-The main issue here, to me, looks like we're not dealing with ERR_PTR
-returns from debugfs_create_dir(), just checking for NULL.
+I am fine with getting rid of the "read" from the function names.
 
--- 
-Jens Axboe
+Cheers,
+Longman
 
