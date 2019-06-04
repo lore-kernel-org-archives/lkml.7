@@ -2,202 +2,179 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0719DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E71C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E6D23A1C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559643667;
-	bh=kCxA6uuhFQC5uXjmGgBXyzWV5U3a7KmyKULiqxOFMxI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jEa/AfHIzhwMj2ukz6YHLmDgq4ky3s6tuDB+oCgxA3L6MOktN5yHuuxJD40GtXo/6
-	 zG7MeTOcl73521ysylEWigreBzEaRlJmiN1nQ1orb84dKajnqUob7NsfW9rYqiaLU7
-	 nunsJ7KlDpraugDG6Ik8xIr5OL++vFscIn58VAuo=
+	by mail.kernel.org (Postfix) with ESMTP id A593524CCE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfFDKVH (ORCPT
+        id S1727203AbfFDK0H convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:21:07 -0400
-Received: from casper.infradead.org ([85.118.1.10]:39178 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfFDKVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:21:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1LiJjE4BLUZ/6TOa4AMue6i7oaMUCoQxA04hSPyYLbU=; b=ElkNkY5Re78xH6p69xUwtSo/Ng
-        5LMt73wKzH4YbdNZEoCt8xucen+jn2mKEyqbnxjdDf69U/ewG8Bgp3wYbZYP7osLlVam9py9Su7YT
-        2j5OVRXTnZkuuEIOnwtm9MBZn4nFKTVIHX/6VTsk7CrZ8AodKVgf6F8a60od+aMPvYvm7cVtGb8Hs
-        jEw4aplK6rVEIp6mEe/cYqAglYmSDjTkAWYqlpsns3WwEP4KfX9EPJDtP/8sKlYHrHZv/4SFbfdWC
-        JHDebl4omHJcgenolvSq8dh8e02D69XE87HN8vVSnLx1zTrWq1lIMlG6tu1Za9jQJ24Yovf+fCWFo
-        ZEtqeQzQ==;
-Received: from [187.113.6.249] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hY6Yw-00060q-Bv; Tue, 04 Jun 2019 10:21:02 +0000
-Date:   Tue, 4 Jun 2019 07:20:57 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>
-Subject: Re: [PATCH 13/22] docs: zh_CN: avoid duplicate citation references
-Message-ID: <20190604072057.47d2f6f8@coco.lan>
-In-Reply-To: <04bca27d-3c59-5cc7-576b-44e399fa893f@linux.alibaba.com>
-References: <cover.1559171394.git.mchehab+samsung@kernel.org>
-        <9d3b9729663f75249b514dd3910309eb418d9e46.1559171394.git.mchehab+samsung@kernel.org>
-        <04bca27d-3c59-5cc7-576b-44e399fa893f@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 4 Jun 2019 06:26:07 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:6957 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726877AbfFDK0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:26:06 -0400
+Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id E6173E301BE5D144F403;
+        Tue,  4 Jun 2019 18:26:02 +0800 (CST)
+Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.236]) by
+ DGGEML404-HUB.china.huawei.com ([fe80::b177:a243:7a69:5ab8%31]) with mapi id
+ 14.03.0439.000; Tue, 4 Jun 2019 18:25:54 +0800
+From:   sunqiuyang <sunqiuyang@huawei.com>
+To:     "Yuchao (T)" <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>
+Subject: RE: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+Thread-Topic: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+Thread-Index: AQHVEdFe1H4hbuAg10SRna9O0QiaOKaDWYUAgACig4CABauIgIAAnKAAgAEWT70=
+Date:   Tue, 4 Jun 2019 10:25:54 +0000
+Message-ID: <157FC541501A9C4C862B2F16FFE316DC1900FE39@dggeml512-mbx.china.huawei.com>
+References: <20190524015555.12622-1-sunqiuyang@huawei.com>
+ <20190530160626.GA28719@jaegeuk-macbookpro.roam.corp.google.com>
+ <786721cc-90eb-cf2c-eed8-3be0ef9dff8c@huawei.com>
+ <20190603162319.GA34729@jaegeuk-macbookpro.roam.corp.google.com>,<ba9aaee7-6bc4-b8d4-4670-54f11fc0cea0@huawei.com>
+In-Reply-To: <ba9aaee7-6bc4-b8d4-4670-54f11fc0cea0@huawei.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.249.127]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, 2 Jun 2019 23:01:21 +0800
-Alex Shi <alex.shi@linux.alibaba.com> escreveu:
+I have tried to add power failure after committing the new SB (resized) and before writing the new CP. This will cause FS inconsistency:
 
-> On 2019/5/30 7:23 =E4=B8=8A=E5=8D=88, Mauro Carvalho Chehab wrote:
-> >     Documentation/process/management-style.rst:35: WARNING: duplicate l=
-abel decisions, other instance in     Documentation/translations/zh_CN/proc=
-ess/management-style.rst
-> >     Documentation/process/programming-language.rst:37: WARNING: duplica=
-te citation c-language, other instance in     Documentation/translations/zh=
-_CN/process/programming-language.rst
-> >     Documentation/process/programming-language.rst:38: WARNING: duplica=
-te citation gcc, other instance in     Documentation/translations/zh_CN/pro=
-cess/programming-language.rst
-> >     Documentation/process/programming-language.rst:39: WARNING: duplica=
-te citation clang, other instance in     Documentation/translations/zh_CN/p=
-rocess/programming-language.rst
-> >     Documentation/process/programming-language.rst:40: WARNING: duplica=
-te citation icc, other instance in     Documentation/translations/zh_CN/pro=
-cess/programming-language.rst
-> >     Documentation/process/programming-language.rst:41: WARNING: duplica=
-te citation gcc-c-dialect-options, other instance in     Documentation/tran=
-slations/zh_CN/process/programming-language.rst
-> >     Documentation/process/programming-language.rst:42: WARNING: duplica=
-te citation gnu-extensions, other instance in     Documentation/translation=
-s/zh_CN/process/programming-language.rst
-> >     Documentation/process/programming-language.rst:43: WARNING: duplica=
-te citation gcc-attribute-syntax, other instance in     Documentation/trans=
-lations/zh_CN/process/programming-language.rst
-> >     Documentation/process/programming-language.rst:44: WARNING: duplica=
-te citation n2049, other instance in     Documentation/translations/zh_CN/p=
-rocess/programming-language.rst
-> >=20
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  .../zh_CN/process/management-style.rst        |  4 +--
-> >  .../zh_CN/process/programming-language.rst    | 28 +++++++++----------
-> >  2 files changed, 16 insertions(+), 16 deletions(-)
-> >=20
-> > diff --git a/Documentation/translations/zh_CN/process/management-style.=
-rst b/Documentation/translations/zh_CN/process/management-style.rst
-> > index a181fa56d19e..c6a5bb285797 100644
-> > --- a/Documentation/translations/zh_CN/process/management-style.rst
-> > +++ b/Documentation/translations/zh_CN/process/management-style.rst
-> > @@ -28,7 +28,7 @@ Linux=E5=86=85=E6=A0=B8=E7=AE=A1=E7=90=86=E9=A3=8E=E6=
-=A0=BC
-> > =20
-> >  =E4=B8=8D=E7=AE=A1=E6=80=8E=E6=A0=B7=EF=BC=8C=E8=BF=99=E9=87=8C=E6=98=
-=AF=EF=BC=9A
-> > =20
-> > -.. _decisions:
-> > +.. _cn_decisions:
-> > =20
-> >  1=EF=BC=89=E5=86=B3=E7=AD=96
-> >  -------
-> > @@ -108,7 +108,7 @@ Linux=E5=86=85=E6=A0=B8=E7=AE=A1=E7=90=86=E9=A3=8E=
-=E6=A0=BC
-> >  =E4=BD=86=E6=98=AF=EF=BC=8C=E4=B8=BA=E4=BA=86=E5=81=9A=E5=A5=BD=E4=BD=
-=9C=E4=B8=BA=E5=86=85=E6=A0=B8=E7=AE=A1=E7=90=86=E8=80=85=E7=9A=84=E5=87=86=
-=E5=A4=87=EF=BC=8C=E6=9C=80=E5=A5=BD=E8=AE=B0=E4=BD=8F=E4=B8=8D=E8=A6=81=E7=
-=83=A7=E6=8E=89=E4=BB=BB=E4=BD=95=E6=A1=A5=E6=A2=81=EF=BC=8C=E4=B8=8D=E8=A6=
-=81=E8=BD=B0=E7=82=B8=E4=BB=BB=E4=BD=95
-> >  =E6=97=A0=E8=BE=9C=E7=9A=84=E6=9D=91=E6=B0=91=EF=BC=8C=E4=B9=9F=E4=B8=
-=8D=E8=A6=81=E7=96=8F=E8=BF=9C=E5=A4=AA=E5=A4=9A=E7=9A=84=E5=86=85=E6=A0=B8=
-=E5=BC=80=E5=8F=91=E4=BA=BA=E5=91=98=E3=80=82=E4=BA=8B=E5=AE=9E=E8=AF=81=E6=
-=98=8E=EF=BC=8C=E7=96=8F=E8=BF=9C=E4=BA=BA=E6=98=AF=E7=9B=B8=E5=BD=93=E5=AE=
-=B9=E6=98=93=E7=9A=84=EF=BC=8C=E8=80=8C
-> >  =E4=BA=B2=E8=BF=91=E4=B8=80=E4=B8=AA=E7=96=8F=E8=BF=9C=E7=9A=84=E4=BA=
-=BA=E6=98=AF=E5=BE=88=E9=9A=BE=E7=9A=84=E3=80=82=E5=9B=A0=E6=AD=A4=EF=BC=8C=
-=E2=80=9C=E7=96=8F=E8=BF=9C=E2=80=9D=E7=AB=8B=E5=8D=B3=E5=B1=9E=E4=BA=8E=E2=
-=80=9C=E4=B8=8D=E5=8F=AF=E9=80=86=E2=80=9D=E7=9A=84=E8=8C=83=E7=95=B4=EF=BC=
-=8C=E5=B9=B6=E6=A0=B9=E6=8D=AE
-> > -:ref:`decisions` =E6=88=90=E4=B8=BA=E7=BB=9D=E4=B8=8D=E5=8F=AF=E4=BB=
-=A5=E5=81=9A=E7=9A=84=E4=BA=8B=E6=83=85=E3=80=82
-> > +:ref:`cn_decisions` =E6=88=90=E4=B8=BA=E7=BB=9D=E4=B8=8D=E5=8F=AF=E4=
-=BB=A5=E5=81=9A=E7=9A=84=E4=BA=8B=E6=83=85=E3=80=82 =20
->=20
-> It's good to have.
->=20
-> > =20
-> >  =E8=BF=99=E9=87=8C=E5=8F=AA=E6=9C=89=E5=87=A0=E4=B8=AA=E7=AE=80=E5=8D=
-=95=E7=9A=84=E8=A7=84=E5=88=99=EF=BC=9A
-> > =20
-> > diff --git a/Documentation/translations/zh_CN/process/programming-langu=
-age.rst b/Documentation/translations/zh_CN/process/programming-language.rst
-> > index 51fd4ef48ea1..9de9a3108c4d 100644
-> > --- a/Documentation/translations/zh_CN/process/programming-language.rst
-> > +++ b/Documentation/translations/zh_CN/process/programming-language.rst
-> > @@ -8,21 +8,21 @@
-> >  =E7=A8=8B=E5=BA=8F=E8=AE=BE=E8=AE=A1=E8=AF=AD=E8=A8=80
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > =20
-> > -=E5=86=85=E6=A0=B8=E6=98=AF=E7=94=A8C=E8=AF=AD=E8=A8=80 [c-language]_ =
-=E7=BC=96=E5=86=99=E7=9A=84=E3=80=82=E6=9B=B4=E5=87=86=E7=A1=AE=E5=9C=B0=E8=
-=AF=B4=EF=BC=8C=E5=86=85=E6=A0=B8=E9=80=9A=E5=B8=B8=E6=98=AF=E7=94=A8 ``gcc=
-`` [gcc]_
-> > -=E5=9C=A8 ``-std=3Dgnu89`` [gcc-c-dialect-options]_ =E4=B8=8B=E7=BC=96=
-=E8=AF=91=E7=9A=84=EF=BC=9AISO C90=E7=9A=84 GNU =E6=96=B9=E8=A8=80=EF=BC=88
-> > +=E5=86=85=E6=A0=B8=E6=98=AF=E7=94=A8C=E8=AF=AD=E8=A8=80 [cn_c-language=
-]_ =E7=BC=96=E5=86=99=E7=9A=84=E3=80=82=E6=9B=B4=E5=87=86=E7=A1=AE=E5=9C=B0=
-=E8=AF=B4=EF=BC=8C=E5=86=85=E6=A0=B8=E9=80=9A=E5=B8=B8=E6=98=AF=E7=94=A8 ``=
-gcc`` [cn_gcc]_ =20
->=20
-> this change isn't good. cn_gcc will show in docs, it looks wired and conf=
-using for peoples. other changes have the same issue. Could you find other =
-way to fix the warning? or I'd rather tolerant it.
+[FSCK] free segment_count matched with CP [Fail] 
 
-Well, Sphinx has a way to do that, like, for example:
+which can be fixed by the fsck tool, resulting in a resized FS.
 
-diff --git a/Documentation/translations/zh_CN/process/programming-language.=
-rst b/Documentation/translations/zh_CN/process/programming-language.rst
-index 9de9a3108c4d..353fb8eaf4b5 100644
---- a/Documentation/translations/zh_CN/process/programming-language.rst
-+++ b/Documentation/translations/zh_CN/process/programming-language.rst
-@@ -9,7 +9,7 @@
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- =E5=86=85=E6=A0=B8=E6=98=AF=E7=94=A8C=E8=AF=AD=E8=A8=80 [cn_c-language]_ =
-=E7=BC=96=E5=86=99=E7=9A=84=E3=80=82=E6=9B=B4=E5=87=86=E7=A1=AE=E5=9C=B0=E8=
-=AF=B4=EF=BC=8C=E5=86=85=E6=A0=B8=E9=80=9A=E5=B8=B8=E6=98=AF=E7=94=A8 ``gcc=
-`` [cn_gcc]_
--=E5=9C=A8 ``-std=3Dgnu89`` [cn_gcc-c-dialect-options]_ =E4=B8=8B=E7=BC=96=
-=E8=AF=91=E7=9A=84=EF=BC=9AISO C90=E7=9A=84 GNU =E6=96=B9=E8=A8=80=EF=BC=88
-+=E5=9C=A8 ``-std=3Dgnu89`` :ref:`gcc C dialect options <cn_gcc-c-dialect-o=
-ptions>` =E4=B8=8B=E7=BC=96=E8=AF=91=E7=9A=84=EF=BC=9AISO C90=E7=9A=84 GNU =
-=E6=96=B9=E8=A8=80=EF=BC=88
- =E5=8C=85=E6=8B=AC=E4=B8=80=E4=BA=9BC99=E7=89=B9=E6=80=A7=EF=BC=89
-=20
- =E8=BF=99=E7=A7=8D=E6=96=B9=E8=A8=80=E5=8C=85=E5=90=AB=E5=AF=B9=E8=AF=AD=
-=E8=A8=80 [cn_gnu-extensions]_ =E7=9A=84=E8=AE=B8=E5=A4=9A=E6=89=A9=E5=B1=
-=95=EF=BC=8C=E5=BD=93=E7=84=B6=EF=BC=8C=E5=AE=83=E4=BB=AC=E8=AE=B8=E5=A4=9A=
-=E9=83=BD=E5=9C=A8=E5=86=85=E6=A0=B8=E4=B8=AD=E4=BD=BF=E7=94=A8=E3=80=82
+________________________________________
+From: Yuchao (T)
+Sent: Tuesday, June 04, 2019 9:43
+To: Jaegeuk Kim
+Cc: sunqiuyang; linux-kernel@vger.kernel.org; linux-fsdevel@vger.kernel.org; linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
 
-If we use that, at least for some of those references, it would probably
-be better to translate "dialect-options" (and similar terms) to Chinese.
+On 2019/6/4 0:23, Jaegeuk Kim wrote:
+> On 05/31, Chao Yu wrote:
+>> On 2019/5/31 0:06, Jaegeuk Kim wrote:
+>>> On 05/24, sunqiuyang wrote:
+>>>> From: Qiuyang Sun <sunqiuyang@huawei.com>
+>>>>
+>>>> This ioctl shrinks a given length (aligned to sections) from end of the
+>>>> main area. Any cursegs and valid blocks will be moved out before
+>>>> invalidating the range.
+>>>>
+>>>> This feature can be used for adjusting partition sizes online.
+>>>> --
+>>>> Changlog v1 ==> v2:
+>>>>
+>>>> Sahitya Tummala:
+>>>>  - Add this ioctl for f2fs_compat_ioctl() as well.
+>>>>  - Fix debugfs status to reflect the online resize changes.
+>>>>  - Fix potential race between online resize path and allocate new data
+>>>>    block path or gc path.
+>>>>
+>>>> Others:
+>>>>  - Rename some identifiers.
+>>>>  - Add some error handling branches.
+>>>>  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
+>>>> --
+>>>> Changelog v2 ==> v3:
+>>>> Implement this interface as ext4's, and change the parameter from shrunk
+>>>> bytes to new block count of F2FS.
+>>>> --
+>>>> Changelog v3 ==> v4:
+>>>>  - During resizing, force to empty sit_journal and forbid adding new
+>>>>    entries to it, in order to avoid invalid segno in journal after resize.
+>>>>  - Reduce sbi->user_block_count before resize starts.
+>>>>  - Commit the updated superblock first, and then update in-memory metadata
+>>>>    only when the former succeeds.
+>>>>  - Target block count must align to sections.
+>>>> --
+>>>> Changelog v4 ==> v5:
+>>>> Write checkpoint before and after committing the new superblock, w/o
+>>>> CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
+>>>> resize fails after the new superblock is committed.
+>>>> --
+>>>> Changelog v5 ==> v6:
+>>>>  - In free_segment_range(), reduce granularity of gc_mutex.
+>>>>  - Add protection on curseg migration.
+>>>>
+>>>> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>>> ---
+>>>>  fs/f2fs/checkpoint.c |   5 +-
+>>>>  fs/f2fs/debug.c      |   7 +++
+>>>>  fs/f2fs/f2fs.h       |   7 +++
+>>>>  fs/f2fs/file.c       |  28 +++++++++++
+>>>>  fs/f2fs/gc.c         | 134 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>>  fs/f2fs/segment.c    |  54 +++++++++++++++++----
+>>>>  fs/f2fs/segment.h    |   1 +
+>>>>  fs/f2fs/super.c      |   4 ++
+>>>>  8 files changed, 228 insertions(+), 12 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>>> index ed70b68..4706d0a 100644
+>>>> --- a/fs/f2fs/checkpoint.c
+>>>> +++ b/fs/f2fs/checkpoint.c
+>>>> @@ -1313,8 +1313,11 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>>    else
+>>>>            __clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
+>>>>
+>>>> -  if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+>>>> +  if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
+>>>> +          is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
+>>>>            __set_ckpt_flags(ckpt, CP_FSCK_FLAG);
+>>>> +  else
+>>>> +          __clear_ckpt_flags(ckpt, CP_FSCK_FLAG);
+>>>
+>>> We don't need to clear this flag.
+>>
+>> During resizefs, we may face inconsistent status of filesystem's on-disk data,
+>> so I propose to use below flow, so once some thing breaks resizefs, fsck can
+>> detect the corruption by the CP_FSCK_FLAG directly.
+>>
+>> - resizefs()
+>>  - set SBI_IS_RESIZEFS
+>>  - do_checkpoint()
+>>   - if (is_resizing)
+>>    - set CP_FSCK_FLAG
+>>
+>>  - clear SBI_IS_RESIZEFS
+>>  - do_checkpoint()
+>>   - if (!is_resizing && not_need_fsck)
+>>    - clear CP_FSCK_FLAG
+>>
+>> It's safe to clear CP_FSCK_FLAG if there is no resizing and corruption, as once
+>> the inconsistency was detected we will keep SBI_NEED_FSCK in memory anyway, then
+>> checkpoint can set CP_FSCK_FLAG again.
+>
+> This tries to resize the image and I mostly worried whether fsck is able to fix
+
+So, Qiuyang, could you try break resizefs at some key points with power-cut, to
+check whether fsck can repair all corruption cases? and what is the result
+(resized fs or origianl fs)?
+
+> the corrupted metadata area. Moreover, I'm in doubt we really need to do this in
+> parallel with FS operations.
+
+What do you mean? We have wrapped main resizefs operaion with
+{freeze,thaw}_bdev, so there should be no parallel FS operations.
 
 Thanks,
-Mauro
+
