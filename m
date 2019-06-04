@@ -2,172 +2,340 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89613C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03BEC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E092070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="bUNqTZBs"
+	by mail.kernel.org (Postfix) with ESMTP id 95E682070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfFDVLx (ORCPT
+        id S1726603AbfFDVO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:11:53 -0400
-Received: from sonic309-27.consmr.mail.gq1.yahoo.com ([98.137.65.153]:44291
-        "EHLO sonic309-27.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbfFDVLw (ORCPT
+        Tue, 4 Jun 2019 17:14:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60780 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726293AbfFDVO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:11:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559682711; bh=rIePoQB7SfoXEtKT+Ykbw4tlwyh2+weCxD1TWpXWU/c=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=bUNqTZBshgF6lT2ZVGKEVPunsAMpq5+svvqycwgdRizvoFNDcMTjzq8O8BzRgWTy20oKaeKLCbOGDHNjwrLy80H+r7EDQ+kRgCWNkA/iFAAzZu+/nVHvsZctgenjAfal4onefIbkptu2SUUNI8HxYaGSVCWjapatN9dOYmHtwJZ5Bp6AUzbo+R5HMTA+aW7DLnuYnh2G4F9yXtBh0iY0ihXehWMRKq6weOaCymsiRYW+pcUBNM6awBGTvh3p9mLNFDjkDmWWVo8u62+52bXhpd4GaNzQiaMnwQbrQ2L9JcQOOmm+Bc8B0I1xu3iwkQKjcwfg0G80RwiauPpoH4v0GQ==
-X-YMail-OSG: bECyNgYVM1m1qz1rZ5_tSVQtdUXUh55m1CyhbxS.3Xc0MUkAPWDot8hT0_j.5Cc
- joS1KBruJIc_X5e_jEU6hNJ.qSDDbwfSzMW9swkznzXAbo.acChmA14CnCZQEWslaoDGD7xNC_F4
- mCljYqz_OtRck9PZXw7hvFABWR8V_m.4Wvt0UTcIexC5AsCRYB7F5J.8JpbWq8yiCpMfpKGg8AVc
- l2V9inOFhhv74sO8Uh4JryZHGnajGSAO8TnrimPg4n1wKQ1yc_TD7FMjO.N1uB7GOLBmlt2r3GtU
- 3LdTAM3Tx_7vX3fNmcdt8P9pH8dvFwxSDWuOKwM7DK0Z.kmc9tRkpH8v3kqldXFsihy7vmlXoQUU
- yg1TgYqypAnCRjR3gK6Fsr9yE9xk1mNwNcXafU9ZHLQ79Fd1kxUS0lPKT9YLCtZIjtJb2qv_jvdB
- hZUOdzp.efFPJytC0256TjCZeQ5LHW58DiNWCujiV9S3HtfwUWtdbHJs3fbDwq5pxTrLYAlouidw
- ocDrVpJZN4k7FRHq2j0DYLHAEEbxsRczZClzrGX5jxt4AoW5UGBcfvHXQC21WkkuHoeZkE5OvOt8
- vMzdvhfld8iGr8TjDQbjQdEdJbzseRHPUwNlcg6zpPGeHr463OOGmFSzgRHUmIPvrI5I93Hl0znb
- 8_qEflCOEbT2ZlPhlPylK5R1dzxI2fw1am.ngJq3axlgi..p.j32f6UHUy_L.YMdKjOzO9tgHuc3
- esc0pQaFqbzBCiu1kVjM0fOh.N0nk9uwOhjYT3TVCeA_07aDRdQ6O.1EnDW44JjE1tLplzKqW_3E
- yRk3D6HhnHjAcVh_X6buY5Udc91GZn0dL2eU90VGiKSMN5.mDSJVPgiiOXdR_rMyZQivtswiBAWV
- ScBCv_6jmYkbezFq8f2VW80FsSmcaGkUJhHH7iiLDT_rTxCxuAvLbll_Q_zPyG0TEL1r.zi8fyV8
- oAYzKtufldOj3yhVo5buNU.41QaetVG6c8qt40p2Y2Z7Z1oz2sU.d2zzkRwCkU11c9_JqASVLjEL
- tYIgIw7OJYeOXJl5DhXD0OYP4m0oumbkf_aVhQtjZm4UuouzDD7OQIeYRvOEdLuYtu7nY9f90I1t
- 8TI4SYJCtOiQS3W6JrGbxKFgIqCtsZcIyJFqPXFGuhyvljYzqFs.UntcTp519S92VYfqPLgv6rRU
- PdoMhX.eSz_aMuF8d.TsZgLwI72fG1cycruTmx2QMYBHSabcqmDGXRQeMGyihDgNNAR.cuS4CxDM
- ndMgn6AN2SGDbBOIE5pAI3m7_PFE8f7sUEQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Tue, 4 Jun 2019 21:11:51 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID e29402de8ce9ac532fdb1db0d6288519;
-          Tue, 04 Jun 2019 21:11:46 +0000 (UTC)
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver
- #2]
-To:     David Howells <dhowells@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, casey@schaufler-ca.com
-References: <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
- <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
- <1207.1559680778@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <3ca991d1-4056-c45b-dbae-9976fb5d81e0@schaufler-ca.com>
-Date:   Tue, 4 Jun 2019 14:11:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 17:14:58 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54KwtNi000550
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 17:14:56 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2swwyhp1eh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 17:14:56 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 4 Jun 2019 22:14:55 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 22:14:51 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54LEosl34144530
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 21:14:50 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 805E5B2064;
+        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C4ECB2066;
+        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.212.108])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jun 2019 21:14:50 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A270016C3783; Tue,  4 Jun 2019 14:14:49 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 14:14:49 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Reply-To: paulmck@linux.ibm.com
+References: <20150911021933.GA1521@fixme-laptop.cn.ibm.com>
+ <20150921193045.GA13674@lerouge>
+ <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <20190603000617.GD28207@linux.ibm.com>
+ <20190603030324.kl3bckqmebzis2vw@gondor.apana.org.au>
+ <CAHk-=wj2t+GK+DGQ7Xy6U7zMf72e7Jkxn4_-kGyfH3WFEoH+YQ@mail.gmail.com>
+ <CAHk-=wgZcrb_vQi5rwpv+=wwG+68SRDY16HcqcMtgPFL_kdfyQ@mail.gmail.com>
+ <20190603195304.GK28207@linux.ibm.com>
+ <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1207.1559680778@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060421-2213-0000-0000-0000039A1A2E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011215; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01213277; UDB=6.00637671; IPR=6.00994345;
+ MB=3.00027185; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-04 21:14:54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060421-2214-0000-0000-00005EB5AC43
+Message-Id: <20190604211449.GU28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/2019 1:39 PM, David Howells wrote:
-> Andy Lutomirski <luto@kernel.org> wrote:
->
->>> Here's a set of patches to add a general variable-length notification=
- queue
->>> concept and to add sources of events for:
->> I asked before and didn't see a response, so I'll ask again.  Why are =
-you
->> paying any attention at all to the creds that generate an event?
-> Casey responded to you.  It's one of his requirements.
+On Mon, Jun 03, 2019 at 01:24:32PM -0700, Linus Torvalds wrote:
+> On Mon, Jun 3, 2019 at 12:53 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> >
+> > I agree that !PREEMPT rcu_read_lock() would not affect compiler code
+> > generation, but given that get_user() is a volatile asm, isn't the
+> > compiler already forbidden from reordering it with the volatile-casted
+> > WRITE_ONCE() access, even if there was nothing at all between them?
+> > Or are asms an exception to the rule that volatile executions cannot
+> > be reordered?
+> 
+> Paul, you MAKE NO SENSE.
+> 
+> What is wrong with you?
 
-Process A takes an action. As a result of that action,
-an event is written to Process B's event buffer. This isn't
-a covert channel, it's a direct access, just like sending
-a signal. Process A is the subject and the event buffer,
-which is part of Process B, is the object.
+Mostly that I didn't check all architectures' definitions of get_user().
+Had I done so, I would have seen that not all of the corresponding asms
+have the "volatile" keyword.  And of course, without that keyword, there
+is absolutely nothing preventing the compiler from reordering the asm
+with pretty much anything.  The only things that would be absolutely
+guaranteed to prevent reordering would be things like memory clobbers
+(barrier()) or accesses that overlap the asm's input/output list.
 
+Yeah, I know, even with the "volatile" keyword, it is not entirely clear
+how much reordering the compiler is allowed to do.  I was relying on
+https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html, which says:
 
-> I'm not sure of the need, and I particularly don't like trying to make
-> indirect destruction events (mount destruction keyed on fput, for insta=
-nce)
-> carry the creds of the triggerer.  Indeed, the trigger can come from al=
-l sorts
-> of places - including af_unix queue destruction, someone poking around =
-in
-> procfs, a variety of processes fputting simultaneously.  Only one of th=
-em can
-> win, and the LSM needs to handle *all* the possibilities.
+	Qualifiers
 
-Yes, it's a hairy problem. It was a significant factor in the
-demise of kdbus.
+	volatile
 
-> However, the LSMs (or at least SELinux) ignore f_cred and use current_c=
-red()
-> when checking permissions.  See selinux_revalidate_file_permission() fo=
-r
-> example - it uses current_cred() not file->f_cred to re-evaluate the pe=
-rms,
-> and the fd might be shared between a number of processes with different=
- creds.
->
->> This seems like the wrong approach.  If an LSM wants to prevent covert=
+		The typical use of extended asm statements is to
+		manipulate input values to produce output values. However,
+		your asm statements may also produce side effects. If so,
+		you may need to use the volatile qualifier to disable
+		certain optimizations. See Volatile.
 
->> communication from, say, mount actions, then it shouldn't allow the
->> watch to be set up in the first place.
-> Yeah, I can agree to that.  Casey?
+But the linked-to "Volatile" section later in that same web page mostly
+talks about the compiler's ability to hoist asms out of loops.
 
-Back to your earlier point, you don't know where the
-event is coming from when you create the event watch.
-If you enforce a watch time, what are you going to check?
-Isn't this going to be considered too restrictive?
+> I just showed you an example of where rcu_read_lock() needs to be a
+> compiler barrier, and then you make incoherent noises about
+> WRITE_ONCE() that do not even exist in that example.
 
+I thought we were discussing this example, but it doesn't matter because
+I was missing your point about get_user() and page faults:
+
+     get_user(val, ptr)
+     rcu_read_lock();
+     WRITE_ONCE(state, 1);
+
+But regardless, given that some architectures omit volatile from their
+asms implementing get_user(), even an optimistic interpretation of that
+part of the GCC documentation would still permit reordering the above.
+And again, I was missing your point about get_user() causing page faults
+and thus context switches.
+
+> Forget about your READ_ONCE/WRITE_ONCE theories. Herbert already
+> showed code that doesn't have those accessors, so reality doesn't
+> match your fevered imagination.
+
+I get the feeling that you believe that I want LKMM to be some sort of
+final judge and absolute arbiter of what code is legal and not from
+a memory-ordering perspective.  This is absolutely -not- the case.
+The current state of the art, despite the recent impressive progress,
+simply cannot reasonably do this.  So all I can claim is that LKMM
+dispenses advice, hopefully good advice.  (It is early days for LKMM's
+handling of plain accesses, so some work might be required to deliver
+on the "good advice" promise, but we have to start somewhere.  Plus it
+is progressing nicely.)
+
+The places where long-standing RCU patterns require rcu_dereference()
+and rcu_assign_pointer() do require some attention to avoid compiler
+optimizations, and {READ,WRITE}_ONCE() is one way of addressing this.
+But not the only way, nor always the best way.  For example, some
+fastpaths might need the optimizations that {READ,WRITE}_ONCE()
+suppresses.  Therefore, Linux kernel hackers have a number of other
+ways of paying attention.  For example, accesses might be constrained
+via barrier() and friends.  For another example, some developers might
+check assembly output (hopefully scripted somehow).
+
+Again, the Linux-kernel memory model dispenses advice, not absolutes.
+Furthermore, the way it dispenses advice is currently a bit limited.
+It can currently say that it is nervous about lack of {READ,WRITE}_ONCE(),
+as in "Flag data-race", but it would be difficult to make it recommend
+the other options in an intelligent way.  So we should interpret "Flag
+data-race" as LKMM saying "I am nervous about your unmarked accesses"
+rather than "You absolutely must call {READ,WRITE}_ONCE() more often!!!"
+Again, advice, not absolutes.
+
+So the idea is that you add and remove {READ,WRITE}_ONCE() to/from the
+-litmus- -tests- to determine which accesses LKMM is nervous about.
+But that doesn't necessarily mean that {READ,WRITE}_ONCE() goes into
+the corresponding places in the Linux kernel.
+
+Does that help, or am I still confused?
+
+> And sometimes it's not even possible, since you can't do a bitfield
+> access, for example, with READ_ONCE().
+
+Ah, good point.  So the Linux kernel uses bitfields to communicate
+between mainline and interrupt handlers.  New one on me.  :-/
+
+> > We can of course put them back in,
+> 
+> Stop the craziness. It's not "we can". It is a "we will".
+> 
+> So I will add that barrier, and you need to stop arguing against it
+> based on specious theoretical arguments that do not match reality. And
+> we will not ever remove that barrier again. Herbert already pointed to
+> me having to do this once before in commit 386afc91144b ("spinlocks
+> and preemption points need to be at least compiler barriers"), and
+> rcu_read_lock() clearly has at a minimum that same preemption point
+> issue.
+
+And the lack of "volatile" allows get_user() to migrate page faults
+(and thus context switches) into RCU read-side critical sections
+in CONFIG_PREEMPT=n.  Yes, this would be very bad.
+
+OK, I finally got it, so please accept my apologies for my earlier
+confusion.
+
+I don't yet see a commit from you, so I queued the one below locally
+and started testing.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 9b4766c5523efb8d3d52b2ba2a29fd69cdfc65bb
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Tue Jun 4 14:05:52 2019 -0700
+
+    rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()
+    
+    Commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree
+    RCU readers") removed the barrier() calls from rcu_read_lock() and
+    rcu_write_lock() in CONFIG_PREEMPT=n&&CONFIG_PREEMPT_COUNT=n kernels.
+    Within RCU, this commit was OK, but it failed to account for things like
+    get_user() that can pagefault and that can be reordered by the compiler.
+    Lack of the barrier() calls in rcu_read_lock() and rcu_read_unlock()
+    can cause these page faults to migrate into RCU read-side critical
+    sections, which in CONFIG_PREEMPT=n kernels could result in too-short
+    grace periods and arbitrary misbehavior.  Please see commit 386afc91144b
+    ("spinlocks and preemption points need to be at least compiler barriers")
+    for more details.
+    
+    This commit therefore restores the barrier() call to both rcu_read_lock()
+    and rcu_read_unlock().  It also removes them from places in the RCU update
+    machinery that used to need compensatory barrier() calls, effectively
+    reverting commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny
+    and Tree RCU readers").
+    
+    Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 0c9b92799abc..8f7167478c1d 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -56,14 +56,12 @@ void __rcu_read_unlock(void);
+ 
+ static inline void __rcu_read_lock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_disable();
++	preempt_disable();
+ }
+ 
+ static inline void __rcu_read_unlock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_enable();
++	preempt_enable();
+ }
+ 
+ static inline int rcu_preempt_depth(void)
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 3f52d8438e0f..841060fce33c 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -288,7 +288,6 @@ void rcu_note_context_switch(bool preempt)
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 	struct rcu_node *rnp;
+ 
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	lockdep_assert_irqs_disabled();
+ 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+@@ -340,7 +339,6 @@ void rcu_note_context_switch(bool preempt)
+ 	if (rdp->exp_deferred_qs)
+ 		rcu_report_exp_rdp(rdp);
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+ 
+@@ -828,11 +826,6 @@ static void rcu_qs(void)
+  * dyntick-idle quiescent state visible to other CPUs, which will in
+  * some cases serve for expedited as well as normal grace periods.
+  * Either way, register a lightweight quiescent state.
+- *
+- * The barrier() calls are redundant in the common case when this is
+- * called externally, but just in case this is called from within this
+- * file.
+- *
+  */
+ void rcu_all_qs(void)
+ {
+@@ -847,14 +840,12 @@ void rcu_all_qs(void)
+ 		return;
+ 	}
+ 	this_cpu_write(rcu_data.rcu_urgent_qs, false);
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	if (unlikely(raw_cpu_read(rcu_data.rcu_need_heavy_qs))) {
+ 		local_irq_save(flags);
+ 		rcu_momentary_dyntick_idle();
+ 		local_irq_restore(flags);
+ 	}
+ 	rcu_qs();
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ 	preempt_enable();
+ }
+ EXPORT_SYMBOL_GPL(rcu_all_qs);
+@@ -864,7 +855,6 @@ EXPORT_SYMBOL_GPL(rcu_all_qs);
+  */
+ void rcu_note_context_switch(bool preempt)
+ {
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	rcu_qs();
+ 	/* Load rcu_urgent_qs before other flags. */
+@@ -877,7 +867,6 @@ void rcu_note_context_switch(bool preempt)
+ 		rcu_tasks_qs(current);
+ out:
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+ 
 
