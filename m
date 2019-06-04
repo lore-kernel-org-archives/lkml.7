@@ -2,133 +2,115 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B713EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB2CC46460
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FE1206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wGl1C6Ba"
+	by mail.kernel.org (Postfix) with ESMTP id 3E1F820665
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfFDWUP (ORCPT
+        id S1726465AbfFDWYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:20:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34562 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfFDWUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:20:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h2so7924393pgg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 15:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7CFZoy+tTyBgH/Y1DK4S3S5eb/9dJPHIxDl6yCqA2lc=;
-        b=wGl1C6BaETLmX90w/Z9x0H6LCrbUNoRHAk16TGpmlimLNRWI4t2oIKOB1Y86ONZpcZ
-         J8OB+vLJmS1Mb4CArjMvtfxkPSLGlYaktxEE2U/sTnLItcyqpCaqXqy+zXyoB5esPKaB
-         JRhEkxwMEtSwQ0XinLktQ4Q4ZeXLRgAFltcmXcYmcLW1o/sBRKp9+Zfbfn8NozqaTbvp
-         lrXySHvNNqlM+QjEAjInFTmyXjJQzfr0pnoQvZLaBpZntWeHdrvC4YPoTXW9BzLs4qy5
-         Bt94TadtVNrxVz8X53dcM3dRC67THeAvHx5rKGWcyi9AnS0rbTm6Fu3BQmn8Rxgm6UlY
-         6dRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7CFZoy+tTyBgH/Y1DK4S3S5eb/9dJPHIxDl6yCqA2lc=;
-        b=Z8A2NmRyGN9fcvVEV+uwKaiEkFTHp99KrF6vNJauxcoRfwqUgGGI686MAJWbw8DEfg
-         qeayWCrIMiZYqXaM98+4YQshhV78sQYn3E8IeX0/DNrygimmU8eGWH1h9ScOy45SGa64
-         2o0Wt7QRsJ/1H60rT16iyMzVHe3dCwNAKAIJ0aSvFkTboNKNfr3bUTAoxhtKd2OZsDrL
-         ApshZ9E9rYrYiYq2A9W/Tld3gawRkDMUOUOgXJkD12plXuoVRmu5NNFAbCV8YOVE3xSA
-         Su+pbwnCwTAAPYHqLmCFjvWAoWdd906gYfD7RGnUFMliA+QsEG9BdBrudxdQ9/X0guJr
-         9C/A==
-X-Gm-Message-State: APjAAAWp2I88HA5OLA9iQRJatmC/xbxjA1iqsDfV0R0kjgROhtEM9xRh
-        +fndeoT5OIFHhXjKE2OkcqmyCw==
-X-Google-Smtp-Source: APXvYqxaPHQnOhvSxbkY4qQfhowzEMFVQJ1lvqNAsaIeP42lRvH3mxOWeGwz1aLz4U+eQ3shD8zFqg==
-X-Received: by 2002:a17:90a:d3d2:: with SMTP id d18mr4539501pjw.5.1559686813764;
-        Tue, 04 Jun 2019 15:20:13 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u20sm7717211pga.82.2019.06.04.15.20.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 15:20:13 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 15:20:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-Message-ID: <20190604222010.GC4814@minitux>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <20190604072001.9288-3-bjorn.andersson@linaro.org>
- <5cf68d5b.1c69fb81.281cd.5f93@mx.google.com>
+        Tue, 4 Jun 2019 18:24:42 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:38310 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFDWYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 18:24:42 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id 907961F462;
+        Tue,  4 Jun 2019 22:24:41 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 22:24:41 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jason Baron <jbaron@akamai.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-aio@kvack.org, omar.kilani@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        stable <stable@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in
+ restore_user_sigmask()
+Message-ID: <20190604222441.tndh2rljrfoaytkr@dcvr>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <20190604134117.GA29963@redhat.com>
+ <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5cf68d5b.1c69fb81.281cd.5f93@mx.google.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04 Jun 08:25 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-06-04 00:20:00)
-> > @@ -6104,6 +6105,25 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
-> >         return err;
-> >  }
-> >  
-> > +/**
-> > + ufshcd_device_reset() - toggle the (optional) device reset line
-> > + * @hba: per-adapter instance
-> > + *
-> > + * Toggles the (optional) reset line to reset the attached device.
-> > + */
-> > +static void ufshcd_device_reset(struct ufs_hba *hba)
-> > +{
-> > +       /*
-> > +        * The USB device shall detect reset pulses of 1us, sleep for 10us to
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Tue, Jun 4, 2019 at 6:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > This is the minimal fix for stable, I'll send cleanups later.
 > 
-> This isn't usb though.
+> Ugh. I htink this is correct, but I wish we had a better and more
+> intuitive interface.
 
-No, it is not.
+I had the same thoughts, but am not a regular kernel hacker,
+so I didn't say anything earlier.
 
-> Can we have a gpio reset driver and then
-> implement this in the reset framework instead? Or did that not work out
-> for some reason?
+> In particular, since restore_user_sigmask() basically wants to check
+> for "signal_pending()" anyway (to decide if the mask should be
+> restored by signal handling or by that function), I really get the
+> feeling that a lot of these patterns like
 > 
-
-The reset DT binding document clearly describes that resets are for
-chip-internal resets, and this is a general purpose (output-only) pad on
-the SoC that's connected to the reset pin on the UFS memory.
-
-I actually see nothing preventing you to connect said reset pin to any
-other GPIO.
-
-Regards,
-Bjorn
-
-> > +        * be on the safe side.
-> > +        */
-> > +       gpiod_set_value_cansleep(hba->device_reset, 1);
-> > +       usleep_range(10, 15);
+> > -       restore_user_sigmask(ksig.sigmask, &sigsaved);
+> > -       if (signal_pending(current) && !ret)
 > > +
-> > +       gpiod_set_value_cansleep(hba->device_reset, 0);
-> > +       usleep_range(10, 15);
-> > +}
-> > +
-> >  /**
-> >   * ufshcd_host_reset_and_restore - reset and restore host controller
-> >   * @hba: per-adapter instance
+> > +       interrupted = signal_pending(current);
+> > +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
+> > +       if (interrupted && !ret)
+> >                 ret = -ERESTARTNOHAND;
+> 
+> are wrong to begin with, and we really should aim for an interface
+> which says "tell me whether you completed the system call, and I'll
+> give you an error return if not".
+> 
+> How about we make restore_user_sigmask() take two return codes: the
+> 'ret' we already have, and the return we would get if there is a
+> signal pending and w're currently returning zero.
+> 
+> IOW, I think the above could become
+> 
+>         ret = restore_user_sigmask(ksig.sigmask, &sigsaved, ret, -ERESTARTHAND);
+> 
+> instead if we just made the right interface decision.
+
+But that falls down if ret were ever expected to match several
+similar error codes (not sure if it happens)
+
+When I was considering fixing this on my own a few weeks ago, I
+was looking for an inline that could quickly tell if `ret' was
+any of the EINTR-like error codes; but couldn't find one...
+
+It'd probably end up being switch/case statement so I'm not sure
+if it'd be too big and slow or not...
+
+The caller would just do:
+
+	ret = restore_user_sigmask(ksig.sigmask, &sigsaved, ret);
+
+And restore_user_sigmask would call some "was_interrupted(ret)"
+inline which could return true if `ret' matched any of the
+too-many-to-keep-track-of EINTR-like codes.  But I figured
+there's probably a good reason it did not exist, already *shrug*
+
+/me goes back to the wonderful world of userspace...
