@@ -2,174 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ED9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1ECC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D929B24992
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767B024AC5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfFDLju (ORCPT
+        id S1727560AbfFDLj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:39:50 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:20662 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727390AbfFDLjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:39:48 -0400
-X-UUID: a7fa3c84535748078ca7207706ca1818-20190604
-X-UUID: a7fa3c84535748078ca7207706ca1818-20190604
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <min.guo@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 999922275; Tue, 04 Jun 2019 19:39:41 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 4 Jun 2019 19:39:40 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Jun 2019 19:39:39 +0800
-From:   <min.guo@mediatek.com>
-To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
-        <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
-Subject: [PATCH v6 2/6] arm: dts: mt2701: Add usb2 device nodes
-Date:   Tue, 4 Jun 2019 19:39:15 +0800
-Message-ID: <1559648359-6569-3-git-send-email-min.guo@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
-References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
+        Tue, 4 Jun 2019 07:39:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40890 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727390AbfFDLj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:39:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15D7380D;
+        Tue,  4 Jun 2019 04:39:56 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A0983F690;
+        Tue,  4 Jun 2019 04:39:51 -0700 (PDT)
+Subject: Re: [RFC PATCH 27/57] drivers: Unify the match prototype for
+ bus_find_device with class_find_device
+To:     rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        alexander.shishkin@linux.intel.com, wsa@the-dreams.de,
+        jic23@kernel.org, knaack.h@gmx.de, grygorii.strashko@ti.com,
+        davem@davemloft.net, bhelgaas@google.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, freude@linux.ibm.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, andreas.noever@gmail.com,
+        michael.jamet@intel.com, balbi@kernel.org,
+        david.kershner@unisys.com
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-28-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0ghb969phwKDJd_hJV6mBm0_B8R9Lrk8RG3Tu9ieO69OQ@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <d51d8361-8807-5795-7da0-68c299217213@arm.com>
+Date:   Tue, 4 Jun 2019 12:39:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <CAJZ5v0ghb969phwKDJd_hJV6mBm0_B8R9Lrk8RG3Tu9ieO69OQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Min Guo <min.guo@mediatek.com>
 
-Add musb nodes and usb2 phy nodes for MT2701
 
-Signed-off-by: Min Guo <min.guo@mediatek.com>
----
-changes in v6:
-1. Modify usb connector child node
+On 04/06/2019 12:26, Rafael J. Wysocki wrote:
+> On Mon, Jun 3, 2019 at 5:51 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> We have iterators for devices by bus and class, with a supplied
+>> "match" function to do the comparison. However, both of the helper
+>> function have slightly different prototype for the "match" argument.
+>>
+>>   int (*) (struct device *dev, void *data)  // bus_find_device
+>>    vs
+>>   int (*) (struct device *dev, const void *data) // class_find_device
+>>
+>> Unify the prototype by promoting the match function to use that of
+>> the class_find_device(). This will allow us to share the generic
+>> match helpers with class_find_device() users.
+> 
+> The patch looks good to me, but the changelog might be a bit better.
+> 
+> It seems to be all about the bus_find_device() and class_find_device()
+> prototype consolidation, so that the same pair of data and match()
+> arguments can be passed to both of them, which then will allow some
+> optimizations to be made, so what about the following:
+> 
+> "There is an arbitrary difference between the prototypes of
+> bus_find_device() and class_find_device() preventing their callers
+> from passing the same pair of data and match() arguments to both of
+> them, which is the const qualifier used in the prototype of
+> class_find_device().  If that qualifier is also used in the
+> bus_find_device() prototype, it will be possible to pass the same
+> match() callback function to both bus_find_device() and
+> class_find_device(), which will allow some optimizations to be made in
+> order to avoid code duplication going forward.
+> 
+> For this reason, change the prototype of bus_find_device() to match
+> the prototype of class_find_device() and adjust its callers to use the
+> const qualifier in accordance with the new prototype of it.".
 
-changes in v5:
-1. Add usb connector child node
+Agreed, I will reword the description.
 
-changes in v4:
-1. no changes
+> 
+> Also, it looks like there is no need to make all of the following
+> changes in the series along with this one in one go and making them
+> separately would be *much* better from the patch review perspective.
 
-changes in v3:
-1. no changes
+Sure. I started with the helpers in the hope that, I would need fewer
+changes to individual subsystems, once I convert them to use the
+new helpers.
 
-changes in v2:
-1. Remove phy-names
----
- arch/arm/boot/dts/mt2701-evb.dts | 21 +++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+i.e, driver A -> use new helper and the change the new helper.
 
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index 88f8fd2..bf53e2b 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -6,6 +6,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt2701.dtsi"
- 
- / {
-@@ -61,6 +62,15 @@
- 		>;
- 		default-brightness-level = <9>;
- 	};
-+
-+	usb_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 45 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &auxadc {
-@@ -230,3 +240,14 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb2 {
-+	status = "okay";
-+	connector{
-+		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_vbus>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 51e1305..80a3b55 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -671,6 +671,39 @@
- 		};
- 	};
- 
-+	usb2: usb@11200000 {
-+		compatible = "mediatek,mt2701-musb",
-+			     "mediatek,mtk-musb";
-+		reg = <0 0x11200000 0 0x1000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "mc";
-+		phys = <&u2port2 PHY_TYPE_USB2>;
-+		dr_mode = "otg";
-+		clocks = <&pericfg CLK_PERI_USB0>,
-+			 <&pericfg CLK_PERI_USB0_MCU>,
-+			 <&pericfg CLK_PERI_USB_SLV>;
-+		clock-names = "main","mcu","univpll";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+		status = "disabled";
-+	};
-+
-+	u2phy0: usb-phy@11210000 {
-+		compatible = "mediatek,generic-tphy-v1";
-+		reg = <0 0x11210000 0 0x0800>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "okay";
-+
-+		u2port2: usb-phy@1a1c4800 {
-+			reg = <0 0x11210800 0 0x0100>;
-+			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-+			clock-names = "ref";
-+			#phy-cells = <1>;
-+			status = "okay";
-+		};
-+	};
-+
- 	ethsys: syscon@1b000000 {
- 		compatible = "mediatek,mt2701-ethsys", "syscon";
- 		reg = <0 0x1b000000 0 0x1000>;
--- 
-1.9.1
+rather than
+
+change all callers of *_find_device() and then all to switch to new helper.
+
+Anyways, looks like the latter is better in terms of splitting the series.
+I will rework the series.
+
+Thanks a lot for your input
+
+Cheers
+Suzuki
 
