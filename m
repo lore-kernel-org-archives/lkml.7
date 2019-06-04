@@ -2,101 +2,104 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB489C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4824CC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1172067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214F720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:43:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="M998QStZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfFDPm0 (ORCPT
+        id S1728221AbfFDPnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:42:26 -0400
-Received: from gateway36.websitewelcome.com ([192.185.193.119]:21045 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728123AbfFDPm0 (ORCPT
+        Tue, 4 Jun 2019 11:43:32 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:43439 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbfFDPnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:42:26 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 37D23400CAD5F
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 10:03:14 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YBZxhh72C90onYBZxhj0mk; Tue, 04 Jun 2019 10:42:25 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=60742 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYBZv-000v52-W6; Tue, 04 Jun 2019 10:42:24 -0500
-Date:   Tue, 4 Jun 2019 10:42:22 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] RDMA/ucma: Use struct_size() helper
-Message-ID: <20190604154222.GA8938@embeddedor>
+        Tue, 4 Jun 2019 11:43:32 -0400
+Received: by mail-pg1-f173.google.com with SMTP id f25so10578961pgv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1tqQUYkCiTPuRzyCy9UBEdirWqMAznB0ETrGx/j7ot8=;
+        b=M998QStZ8hrJ2FjhCVVSwN4KLJOgz73IXrSf06GwSHt2Kcyb8QwopbYLocRJJn8Qna
+         9aoKrKIr+IW0SGQkkLodklP545PgTzJxSr+KqJok3jhl9FZyPtLFpnVr6oTSg/Iy1IFv
+         DCfmBZzmwGb70dSfOxZ04RZQfecnq1skXX2/fjkv/J1WTJQWZCTSGkmY9LtQJoGBvyD2
+         KB4YUr/Y3kg1wVLYNmcI9f16MnhS9TzjSFehLMAdTUsFM836NLGXci80US8XQ1yxMzbQ
+         tOeOd8a2kGtBHuMrCKEyQIIpNZ659MrOaooDKXkFMJgyeOgq1Nj6DxUSmWmY7LnW6aXi
+         q73Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1tqQUYkCiTPuRzyCy9UBEdirWqMAznB0ETrGx/j7ot8=;
+        b=g05YgTqzQYj05jUJSVKMcmv3YRSOOBp/74Jt1n+iKhoX8QBpmU7tg6OH78HvKLl7mt
+         lDg5VXciS+ciy00zN5UmXCzzL0RxQ195bHvpB/niGpLVWNnyaGec9/1zwPssNBvLnkx6
+         XyDzZkL55XhDFdqRmF7czPSN6udfzS00kT7bhN3bezIOrEaTccu9QZgPJLLaDIw+3rqU
+         DzwOdohaWdhg+CTb6ZjFJM6ZXcd+/DmC/+QKm2fjhH0UO4nKgrsPab5oS0/Ai4OF6uxz
+         jw3Q54xVINAIQKdgozp76jCz6CuoNMETzHFrbbnL5uEXY+lHP1EA/ftxc+DfJAum4yTn
+         JlEQ==
+X-Gm-Message-State: APjAAAWSVIJvmkhDkwljO28YEp+y1Khhv3GnKDBb3x3yxv81tZJQFMlQ
+        KpLuTddzSf93DGjhuA8CswyAlYrCcN4LvQ==
+X-Google-Smtp-Source: APXvYqw+0N0zrwtySyXMlKkP0zfzYI5m7MA0xh3RMk9nK5rSOHW7riQreacg0ndGgXI3TCzaBMFfRA==
+X-Received: by 2002:a62:63c6:: with SMTP id x189mr26994829pfb.31.1559663011107;
+        Tue, 04 Jun 2019 08:43:31 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r64sm25606402pfr.58.2019.06.04.08.43.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 08:43:30 -0700 (PDT)
+Subject: Re: [PATCH][next] blktrace: remove redundant assignment to ret
+To:     Colin King <colin.king@canonical.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190604142744.15330-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f834f32d-ab6e-c429-1a3e-13512583ee08@kernel.dk>
+Date:   Tue, 4 Jun 2019 09:43:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYBZv-000v52-W6
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:60742
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190604142744.15330-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+On 6/4/19 8:27 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Variable ret is being assigned a value that is never read, hence
+> the assignment is redundant and can be removed.
 
-So, replace the following form:
+This doesn't look correct to me, here's the full code:
 
-sizeof(*resp) + (i * sizeof(struct ib_path_rec_data))
+	ret = -ENOENT;
 
-with:
+	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+	if (!dir)
+		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+	if (!dir)
+		goto err;
+	[...]
+err:
+	[...]
+	return ret;
 
-struct_size(resp, path_data, i)
+The main issue here, to me, looks like we're not dealing with ERR_PTR
+returns from debugfs_create_dir(), just checking for NULL.
 
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/infiniband/core/ucma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
-index 140a338a135f..cbe460076611 100644
---- a/drivers/infiniband/core/ucma.c
-+++ b/drivers/infiniband/core/ucma.c
-@@ -951,8 +951,7 @@ static ssize_t ucma_query_path(struct ucma_context *ctx,
- 		}
- 	}
- 
--	if (copy_to_user(response, resp,
--			 sizeof(*resp) + (i * sizeof(struct ib_path_rec_data))))
-+	if (copy_to_user(response, resp, struct_size(resp, path_data, i)))
- 		ret = -EFAULT;
- 
- 	kfree(resp);
 -- 
-2.21.0
+Jens Axboe
 
