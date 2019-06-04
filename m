@@ -2,89 +2,90 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B11FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A28EC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172722075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC00B2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 19:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZWkTsPMz"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kSGpqLi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfFDThO (ORCPT
+        id S1726460AbfFDTio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 15:37:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40229 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfFDThO (ORCPT
+        Tue, 4 Jun 2019 15:38:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46020 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDTin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 15:37:14 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g69so8743218plb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 12:37:13 -0700 (PDT)
+        Tue, 4 Jun 2019 15:38:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w34so10915983pga.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 12:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=wR7K6rwo4Jf2/AFMZkaXDQN87jKfQ96qQ877W6vcmgc=;
-        b=ZWkTsPMzXzKaNC9jV4BMIaQAFzkFVB8W3nMso6N1+u6RRZU361q9SzN3hhaamFaj2S
-         3FDqL7nnOPRiiOCMeWeg3uelWuIlruaQIHjSSZJBs1thMX54ug2zKZ57AfZyY4FGVBnC
-         3GibHDBOiL4ZD2EFcTuR2+80tm+CoOayxGfD0=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5awe/yDakGGO/BxwxBGm2kDwtqm01hxaeRIR5WSClTE=;
+        b=kSGpqLi9hgVEttJY+zJphTmom5Q5BaBDXDBe5zqhVVAGx7/lugNzzuHC7qLjH6bnXr
+         IUe2OT/8ZM/oxAdRpwwWcyUEv7AUKPVc3AYzfI/eItQVRaisMwh9h7SPmJZvCIYcZO8E
+         k0KU0cJ86d1ViyKOEcuw5rfV9Iturz7XlAV/RSWm36Eo82G5fTfwPv19U8bu4Gqxr+CM
+         BOCLx6BdgS+3LP7moHlYOItVLkSA+uR6lvepvP/wm0DjH8S9/gjwkn3dESclnow+ueU/
+         4U/x1D5g4h53bvUfCc0X3Likoos40SvliquEQdlR35M4pDRvMfbhkhbCoZHuLe1G8KmI
+         OGHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=wR7K6rwo4Jf2/AFMZkaXDQN87jKfQ96qQ877W6vcmgc=;
-        b=grtahwRiKSBh6qMX2zprEa52s1IHAzQJ5zpX900/3eUmSNec/4F3IA7svKKC7BmYlN
-         33E/7EE9jI/C+P+foMd1m+VjnR4oSce0VIipN1wfDAAiwVMFAXiXk6bLCyXGaBp4Zc2d
-         n6zZ+SDnaHrx1xE4jHFb55KjGzjIuMrWx/YrKE3N7fzCpaiu22L9ZtwWCTetFO2OzrMV
-         zlfMhHRBFL/gHauGNw01n1ikSMYYAACL5agVCUz2qCHMNol4MLKxuBNCpyNJsw5sb1yH
-         JnILmDuTjc5HvXhgYP8SX6bknWom4CtdDDTdjArd+S9uvUWad6ZTbbF/MQuVSmWZeGvg
-         H5iQ==
-X-Gm-Message-State: APjAAAU1e8xJ3QVWLQTWo+o68VpS0iiib3VxNnr9TfMEt6VZFS+8W7Cv
-        vm14ze5y/oHSdw2f6OWcd2ldFg==
-X-Google-Smtp-Source: APXvYqx/XG7jtVZN3IlWga1sbgAvrTvaf61q+rbJEyovi1zKQb0wfhhWaC0ana2hJwlp7SyRImh+FQ==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr38874215ply.234.1559677033534;
-        Tue, 04 Jun 2019 12:37:13 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 128sm20136240pff.16.2019.06.04.12.37.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 12:37:13 -0700 (PDT)
-Message-ID: <5cf6c869.1c69fb81.5ed2e.84d1@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5awe/yDakGGO/BxwxBGm2kDwtqm01hxaeRIR5WSClTE=;
+        b=gOJOT8BPO0SngzOvm5JcW8U4rKlxihzVZgflhh2Kz4m2E3LavdFx6gESwnH9XVmxfs
+         YjqpLDz8mo85hDKZhTcmbS1FZ0acH1nzWYSMm2kdiYKgcl5GuGpKNM61+FeR5DF6Nysk
+         6QH1G/r7oO244dru5ZeadAT1qrBYCrVegF5GHZzFc8ZfckyNtSXvT69xmV3lRAq+rxVo
+         nyltg6N6WWOUn4QAvoF1KCOEPMB0jqnC37v6soB2+I4j2xFo8VOFXiSnU4Jn37FOsSLz
+         O34OxwAHfO0Kq95fAxRXlyWZ/xsaNIJut0PXX84JDoZpWNzBaejuAef5vA5tffmLfx9W
+         NjcA==
+X-Gm-Message-State: APjAAAUk5eZfSBq2hU/UlmemTmlsyVYOepp2sdR4fZsVdOvaPsHZ+sc7
+        W2HmZG66agonu+UvPCYF8R3AUFFlbShsqw==
+X-Google-Smtp-Source: APXvYqzdwHso23dJP5b3wNfTmRHfedIauNzwirK6VyEPimLWGvRmxSf7WGgEInbzWLKS1kSSfaNzKg==
+X-Received: by 2002:a63:6fce:: with SMTP id k197mr295216pgc.140.1559677123064;
+        Tue, 04 Jun 2019 12:38:43 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c129sm21243833pfa.106.2019.06.04.12.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 12:38:41 -0700 (PDT)
+Subject: Re: [PATCH v3] block: aoe: no need to check return value of
+ debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Justin Sanders <justin@coraid.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "Ed L. Cashin" <ed.cashin@acm.org>, linux-block@vger.kernel.org
+References: <20190122152151.16139-5-gregkh@linuxfoundation.org>
+ <20190603194754.GB21877@kroah.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <168b8cf5-15ed-a4c1-6393-4f8df336a68e@kernel.dk>
+Date:   Tue, 4 Jun 2019 13:38:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190604182719.15944-1-helen.koike@collabora.com>
-References: <20190604182719.15944-1-helen.koike@collabora.com>
-Cc:     wad@chromium.org, keescook@chromium.org, snitzer@redhat.com,
-        linux-doc@vger.kernel.org, richard.weinberger@gmail.com,
-        linux-kernel@vger.kernel.org, linux-lvm@redhat.com,
-        enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com,
-        Helen Koike <helen.koike@collabora.com>,
-        Jonathan Corbet <corbet@lwn.net>
-To:     Helen Koike <helen.koike@collabora.com>, dm-devel@redhat.com
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] Documentation/dm-init: fix multi device example
-User-Agent: alot/0.8.1
-Date:   Tue, 04 Jun 2019 12:37:12 -0700
+In-Reply-To: <20190603194754.GB21877@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Helen Koike (2019-06-04 11:27:19)
-> The example in the docs regarding multiple device-mappers is invalid (it
-> has a wrong number of arguments), it's a left over from previous
-> versions of the patch.
-> Replace the example with an valid and tested one.
->=20
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->=20
-> ---
+On 6/3/19 1:47 PM, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Applied, thanks.
+
+-- 
+Jens Axboe
 
