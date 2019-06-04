@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BABC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE23C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B50524AB7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093D224AB7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559660350;
-	bh=4Hjp/ObF0DbD3WwrkMygRC2ARB8hifTb1xokdd9AbmI=;
+	s=default; t=1559660353;
+	bh=iUJ2WlwLAyuZXKgzDUj9gpNtBxyIwuLd2lBtChZk3iE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Zj//G/fn+FUbTmeBJZbuddTXW6vzxu0tTaaA4s4VSeS0WLxNb1dR1ZcB1Cb5gveah
-	 uCRi5rmrB3WEyR9yPqheHKkDlkNgPERGybWX4OlcBqN0hUHwmpjnCAsYSj1weohICE
-	 igQ6ES3/qFERBCGFdspXjdTdL4bbxduEyN9MbNJ8=
+	b=XW8QwBd4I7o3ChkQQGRMSNA5QCavRO1vk5OAfHE2ntq3UVGYpbcktfQC7hqKEzirS
+	 II8GspfStVZDJBoZ27B8OKIENx9U1nuyJ4WXDx8vygPFP6UA2JXtxsvQgVeAaTpUkd
+	 5+LlLcUpb4x63UABxPk1vhnlO17hrzrlC+gVFNA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfFDO7I (ORCPT
+        id S1727966AbfFDO7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:59:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48664 "EHLO
+        Tue, 4 Jun 2019 10:59:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48738 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfFDO7I (ORCPT
+        with ESMTP id S1727900AbfFDO7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:59:08 -0400
+        Tue, 4 Jun 2019 10:59:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3fMg2snLMaK3DY6bsSoeVywpNNwk9adJU5UweamOHes=; b=jafoolg+yknl
-        L7102yJp+Wua6W3SRTJPgRM7Dzke0Rdb3SDkl5fh+yBSdkgT6urtekcv13Hy3Bin8D+b8LPHovM41
-        rSevjtXij3ksr1qf7S916N6CRH/vkKRNMxkzugc6fLgYappul757aAzaq29xhdQJ6NsJtpGqFe8+m
-        ppQpQ=;
+        List-Archive; bh=/4bLYTz4FCL+5b2S/FXwjLi4433MjHEE1bCm7iOrEcM=; b=pdN5QjTxRGyP
+        NKhdHnw581ytBzis1BuVcwgAoY46ggvS+ljEpSD/rtjcZNzNmfhxHtDMwJed6BvHoXJeO1PhA3DG0
+        amtlxEwYMw0uqtmp3u/oAelhrbKgJhSE/2pDBiQu0iBXVnc+bf8t5EEKIeX5rwwIomZvJUf8AL92L
+        IxUSo=;
 Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hYAtt-0006EI-PR; Tue, 04 Jun 2019 14:58:57 +0000
+        id 1hYAtu-0006EO-LR; Tue, 04 Jun 2019 14:58:58 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id F07A6440046; Tue,  4 Jun 2019 15:58:56 +0100 (BST)
+        id 1D7AA440046; Tue,  4 Jun 2019 15:58:58 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Marcus Cooper <codekipper@gmail.com>
-Cc:     alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
-        broonie@kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Mark Brown <broonie@kernel.org>,
-        maxime.ripard@free-electrons.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>, wens@csie.org
-Subject: Applied "ASoC: sun4i-i2s: Add offset to RX channel select" to the asoc tree
-In-Reply-To: <20190603174735.21002-3-codekipper@gmail.com>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     alsa-devel@alsa-project.org, cychiang@chromium.org,
+        dgreid@chromium.org, Jaroslav Kysela <perex@perex.cz>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: max98090: remove 24-bit format support if RJ is 0" to the asoc tree
+In-Reply-To: <20190604104909.112984-1-yuhsuan@chromium.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190604145856.F07A6440046@finisterre.sirena.org.uk>
-Date:   Tue,  4 Jun 2019 15:58:56 +0100 (BST)
+Message-Id: <20190604145858.1D7AA440046@finisterre.sirena.org.uk>
+Date:   Tue,  4 Jun 2019 15:58:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Add offset to RX channel select
+   ASoC: max98090: remove 24-bit format support if RJ is 0
 
 has been applied to the asoc tree at
 
@@ -91,39 +91,56 @@ to this mail.
 Thanks,
 Mark
 
-From f9927000cb35f250051f0f1878db12ee2626eea1 Mon Sep 17 00:00:00 2001
-From: Marcus Cooper <codekipper@gmail.com>
-Date: Mon, 3 Jun 2019 19:47:28 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Add offset to RX channel select
+From 5628c8979642a076f91ee86c3bae5ad251639af0 Mon Sep 17 00:00:00 2001
+From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date: Tue, 4 Jun 2019 18:49:09 +0800
+Subject: [PATCH] ASoC: max98090: remove 24-bit format support if RJ is 0
 
-Whilst testing the capture functionality of the i2s on the newer
-SoCs it was noticed that the recording was somewhat distorted.
-This was due to the offset not being set correctly on the receiver
-side.
+The supported formats are S16_LE and S24_LE now. However, by datasheet
+of max98090, S24_LE is only supported when it is in the right justified
+mode. We should remove 24-bit format if it is not in that mode to avoid
+triggering error.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/max98090.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 8162e107e50b..bc128e2a6096 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -460,6 +460,10 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
- 				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
- 				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
-+
-+		regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
-+				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
-+				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
- 	}
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 7619ea31ab50..ada8c25e643d 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1909,6 +1909,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+ 	return 0;
+ }
  
- 	regmap_field_write(i2s->field_fmt_mode, val);
++static int max98090_dai_startup(struct snd_pcm_substream *substream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
++	unsigned int fmt = max98090->dai_fmt;
++
++	/* Remove 24-bit format support if it is not in right justified mode. */
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
++		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
++	}
++	return 0;
++}
++
+ static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -2316,6 +2331,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
+ #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ 
+ static const struct snd_soc_dai_ops max98090_dai_ops = {
++	.startup = max98090_dai_startup,
+ 	.set_sysclk = max98090_dai_set_sysclk,
+ 	.set_fmt = max98090_dai_set_fmt,
+ 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
 2.20.1
 
