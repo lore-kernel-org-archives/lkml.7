@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8B1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA083C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E182473C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949D32473C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559657900;
-	bh=48XGtTc0lTxanYsIUhRC88FUvVDLfp3UqQDfLE6hKn4=;
+	s=default; t=1559657903;
+	bh=pEsbNQVUXZbSZW2TB6NppvxcRCj8hOFqmsyZKz/KNh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SC7GkdtQFcza58iFLZiIU0bWvuQOVDBqqv9cUyBGVKwkx0p8m80zcT2Jr5+//wdQq
-	 sbqhaxo3XG7wb2p0YgdO9RQVaOLSHUVKGuu3/0S9aZl1H0hihrlb4HJ6AcLtimMgwj
-	 ikpX8SBTL43a6nuHEEKxslFXvfRg1I9pdlWw9mC0=
+	b=YkX5gLJ4JMlpgMwIQQ5xRPqOtmT2xc3/FHr0hw2vIiLWXkBbBdONAq0y6tQFOJ2F7
+	 UP9x0que5W8qCE0P8zzJTNIdiGMlxlpDYUJgrr2EazXsJT5E0hHbmLbCbyKAtUfa/X
+	 e95D1Ca1BsP9295f7mGXy2y01rWGVBMKaFyMKOzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfFDOSP (ORCPT
+        id S1727896AbfFDOSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:18:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52526 "EHLO
+        Tue, 4 Jun 2019 10:18:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52570 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfFDOSD (ORCPT
+        with ESMTP id S1727727AbfFDOSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 10:18:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,32 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WyA/RRUzEMCNSDUX0J/2kOmsPoE/y5/FaiFLeEY8Z7g=; b=b+jGFR+FqWUUKyYHiwJnW2zNxG
-        AQHjUBqohGyiKmiM8QJtfzgadwn5knHuqTTQyOI4jg71iS/obQc6K16soiuTxMaam488022zBsNI9
-        MnZeXMnsxG7Vo1gPsRqFv2yTOck32RwAe2pknIhnS3T5PhujxscxysQ1vUF/grkkg7CnaHGlHo2wT
-        AxbMWEV4mLaVmjGUnydXYeARNse9IeDmMNbMyw6Urfs7bz+3TEd2WOiC2gGEi+tjBStnpHX21AjoQ
-        u1K/LJ9CSk/wkGLTjQ1yNYMOur/rpovICKiqjLKFlwZFUDF4zvN5jU+4Fzk2BCq1dCWRSWQpHhIwr
-        MDP4MUmg==;
+        bh=dhO3igvxIrcqM2bITRvLnPGN4GI5urZRLFU+88zCRl4=; b=CbxVc21JdLEkl0FXEV2FwrXHbE
+        aK8sdLMTmQioUaiN5FMija5UFkoQqIuFVWCG/MDjmQkbP13PTElegFIY5obDo5hFHZKHutXYUNSiK
+        M8sByLx38c/LyOcgNcMQn+eHslUqV8/PXmBmSqhkpiQum1Z7k9Vb9FEbiV5ND8VK5HLEJKAi6wTm+
+        5j9Tp9BehAdbSBtHw5Kh6YzQoUTACOG4NjbDsy/QvtEZ3f6/6pu5BniJxuhS/MneESKh828Voiaik
+        L4SgFCqwLOkt6FVRmNSC+cLLz/HQKhAvxIXvI+4iOJB2+nMtmKbx4K8ztiaPJCdOWTPLJM8+u3/gF
+        CbuE0bRA==;
 Received: from [179.182.172.34] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYAGH-0001Rv-Um; Tue, 04 Jun 2019 14:18:01 +0000
+        id 1hYAGH-0001Rp-Ud; Tue, 04 Jun 2019 14:18:01 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hYAGE-0002lg-TI; Tue, 04 Jun 2019 11:17:58 -0300
+        id 1hYAGE-0002kv-KM; Tue, 04 Jun 2019 11:17:58 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org
-Subject: [PATCH v2 16/22] docs: net: dpio-driver.rst: fix two codeblock warnings
-Date:   Tue,  4 Jun 2019 11:17:50 -0300
-Message-Id: <f5e4bcdb6cc89c270d4ec8ae6cfb932146a834ca.1559656538.git.mchehab+samsung@kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH v2 05/22] docs: bpf: get rid of two warnings
+Date:   Tue,  4 Jun 2019 11:17:39 -0300
+Message-Id: <72cc48d5e25c9fb2b8729111db82abce8b25ee1b.1559656538.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559656538.git.mchehab+samsung@kernel.org>
 References: <cover.1559656538.git.mchehab+samsung@kernel.org>
@@ -70,36 +69,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:43: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:63: WARNING: Unexpected indentation. looking for now-outdated files... none found
+Documentation/bpf/btf.rst:154: WARNING: Unexpected indentation.
+Documentation/bpf/btf.rst:163: WARNING: Unexpected indentation.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
 ---
- .../networking/device_drivers/freescale/dpaa2/dpio-driver.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/bpf/btf.rst | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
-index 5045df990a4c..17dbee1ac53e 100644
---- a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
-+++ b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
-@@ -39,8 +39,7 @@ The Linux DPIO driver consists of 3 primary components--
+diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
+index 35d83e24dbdb..4d565d202ce3 100644
+--- a/Documentation/bpf/btf.rst
++++ b/Documentation/bpf/btf.rst
+@@ -151,6 +151,7 @@ for the type. The maximum value of ``BTF_INT_BITS()`` is 128.
  
-    DPIO service-- provides APIs to other Linux drivers for services
- 
--   QBman portal interface-- sends portal commands, gets responses
--::
-+   QBman portal interface-- sends portal commands, gets responses::
- 
-           fsl-mc          other
-            bus           drivers
-@@ -60,6 +59,7 @@ The Linux DPIO driver consists of 3 primary components--
- 
- The diagram below shows how the DPIO driver components fit with the other
- DPAA2 Linux driver components::
+ The ``BTF_INT_OFFSET()`` specifies the starting bit offset to calculate values
+ for this int. For example, a bitfield struct member has:
 +
-                                                    +------------+
-                                                    | OS Network |
-                                                    |   Stack    |
+  * btf member bit offset 100 from the start of the structure,
+  * btf member pointing to an int type,
+  * the int type has ``BTF_INT_OFFSET() = 2`` and ``BTF_INT_BITS() = 4``
+@@ -160,6 +161,7 @@ from bits ``100 + 2 = 102``.
+ 
+ Alternatively, the bitfield struct member can be the following to access the
+ same bits as the above:
++
+  * btf member bit offset 102,
+  * btf member pointing to an int type,
+  * the int type has ``BTF_INT_OFFSET() = 0`` and ``BTF_INT_BITS() = 4``
 -- 
 2.21.0
 
