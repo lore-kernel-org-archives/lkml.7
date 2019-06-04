@@ -3,255 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E00C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5032CC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A6C24BA6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559652032;
-	bh=RWXt3aNCMTy+UTAYePZmQNO2QW1YFLu3Odj5H+eyHNA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MpZaE/CjPVSRrwCuoevAgt69MQMJqUsWMUDcGG/CWPP88FzU4titLpLpMe1SdAj5b
-	 bjbzylb0M34yH1M2rh+3XdPa5frWX7cDMw7DJnWgGKqL9uV1I6XjjRnfKm1OTVSV3z
-	 THwBg+KpC8T+p0JUTq7rEO/H2GaqZKx1Fe2nYzWY=
+	by mail.kernel.org (Postfix) with ESMTP id 24C3A24BA5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="esUE5NN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfFDMkb (ORCPT
+        id S1727809AbfFDMlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:40:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfFDMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:40:31 -0400
-Received: from localhost (unknown [117.99.94.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2874D240B7;
-        Tue,  4 Jun 2019 12:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559652030;
-        bh=RWXt3aNCMTy+UTAYePZmQNO2QW1YFLu3Odj5H+eyHNA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hdr+1cp/fxGQJ56LsNzXwjSNWS4eq1YQTiZBzI4UDMwB6jZ4XgztjczYnU3pwnb8+
-         uMj6WC0yqMcal5zsMrWfkeqHVgnDI8jvswzpowOSD6tG6q/1ioaLm1OIoFsuF8p4gB
-         MDRiRTit4eY9cpz/wqw4nMAh8myb2AiAISowCT5o=
-Date:   Tue, 4 Jun 2019 18:07:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     yibin.gong@nxp.com
-Cc:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, mark.rutland@arm.com, dan.j.williams@intel.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 7/8] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Message-ID: <20190604123722.GF15118@vkoul-mobl>
-References: <20190529090848.34350-1-yibin.gong@nxp.com>
- <20190529090848.34350-8-yibin.gong@nxp.com>
+        Tue, 4 Jun 2019 08:41:24 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15574 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfFDMlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:41:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf666e60000>; Tue, 04 Jun 2019 05:41:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 04 Jun 2019 05:41:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 05:41:23 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
+ 2019 12:41:22 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 5CB9740609; Tue,  4 Jun 2019 15:41:20 +0300 (EEST)
+Date:   Tue, 4 Jun 2019 15:41:20 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V2 06/12] clk: tegra: add suspend resume support for DFLL
+ clock
+Message-ID: <20190604124120.GD29894@pdeschrijver-desktop.Nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-7-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190529090848.34350-8-yibin.gong@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1559084936-4610-7-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559652070; bh=eYlU/EiszkB9G/gXKiyqydlxvhzbz9Z6m/D0NdsuBOk=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=esUE5NN/po/BVVuGgXZj6/xY8iQFNYfEOb8bOaIfgqDg7+xR5PSCikiNVn22FYDuE
+         p1+7DJQUheTr5EkYYqL2NyeXrCyncRGRZhXe1jGDl63d7hFLjGWFxVtpmsQzFDk4PE
+         yWr2NmC3oSdqPZOkJqOTaD1+vv02ASYmqOOnLs6cgfBJBoEm+BabGSTnrv2BrXmACP
+         XrJ++f/Kp7mLLxVDO/gz1QOFscuSUJo/H2zgiPpCO/vNF3h3VDWSUVmODpmgwShoV9
+         i0G/wo0avsjzadfiIXVRNB6admgk7KcyKPj53CWF7oZxukhfPjsrIGWaIsWgb22gZo
+         hEU26H/y00CRg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-05-19, 17:08, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
+On Tue, May 28, 2019 at 04:08:50PM -0700, Sowjanya Komatineni wrote:
+> This patch adds support for suspend and resume for DFLL clock.
 > 
->   Add edma2 for i.mx7ulp by version v3, since v2 has already
-
-Why leading spaces at start of line?
-
-> been used by mcf-edma.
-> The big changes based on v1 are belows:
-> 1. only one dmamux.
-> 2. another clock dma_clk except dmamux clk.
-> 3. 16 independent interrupts instead of only one interrupt for
-> all channels.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/dma/fsl-edma-common.c | 18 +++++++++++-
->  drivers/dma/fsl-edma-common.h |  3 ++
->  drivers/dma/fsl-edma.c        | 67 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 87 insertions(+), 1 deletion(-)
+>  drivers/clk/tegra/clk-dfll.c | 82 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-dfll.h |  2 ++
+>  2 files changed, 84 insertions(+)
 > 
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index 45d70d3..0d9915c 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
->  	iowrite8(val8, addr + off);
+> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+> index 1fc71baae13b..d92a5a05fbbc 100644
+> --- a/drivers/clk/tegra/clk-dfll.c
+> +++ b/drivers/clk/tegra/clk-dfll.c
+> @@ -286,6 +286,7 @@ struct tegra_dfll {
+>  	unsigned long			dvco_rate_min;
+>  
+>  	enum dfll_ctrl_mode		mode;
+> +	enum dfll_ctrl_mode		resume_mode;
+>  	enum dfll_tune_range		tune_range;
+>  	struct dentry			*debugfs_dir;
+>  	struct clk_hw			dfll_clk_hw;
+> @@ -1873,6 +1874,87 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
 >  }
 >  
-> +void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-> +		     u32 off, u32 slot, bool enable)
-> +{
-> +	u32 val;
-> +
-> +	if (enable)
-> +		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
-> +	else
-> +		val = EDMAMUX_CHCFG_DIS;
-> +
-> +	iowrite32(val, addr + off * 4);
-> +}
-> +
->  void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
->  			unsigned int slot, bool enable)
->  {
-> @@ -102,7 +115,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
->  	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
->  	slot = EDMAMUX_CHCFG_SOURCE(slot);
->  
-> -	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-> +	if (fsl_chan->edma->version == v3)
-> +		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
-> +	else
-> +		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
->  }
->  EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
->  
-> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-> index 014ab74..07482d2 100644
-> --- a/drivers/dma/fsl-edma-common.h
-> +++ b/drivers/dma/fsl-edma-common.h
-> @@ -125,6 +125,7 @@ struct fsl_edma_chan {
->  	dma_addr_t			dma_dev_addr;
->  	u32				dma_dev_size;
->  	enum dma_data_direction		dma_dir;
-> +	char				chan_name[16];
->  };
->  
->  struct fsl_edma_desc {
-> @@ -139,6 +140,7 @@ struct fsl_edma_desc {
->  enum edma_version {
->  	v1, /* 32ch, Vybrid, mpc57x, etc */
->  	v2, /* 64ch Coldfire */
-> +	v3, /* 32ch, i.mx7ulp */
->  };
->  
->  struct fsl_edma_drvdata {
-> @@ -154,6 +156,7 @@ struct fsl_edma_engine {
->  	void __iomem		*membase;
->  	void __iomem		*muxbase[DMAMUX_NR];
->  	struct clk		*muxclk[DMAMUX_NR];
-> +	struct clk		*dmaclk;
->  	u32			dmamux_nr;
->  	struct mutex		fsl_edma_mutex;
->  	const struct fsl_edma_drvdata *drvdata;
-> diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-> index cf18301..45b26d6 100644
-> --- a/drivers/dma/fsl-edma.c
-> +++ b/drivers/dma/fsl-edma.c
-> @@ -165,6 +165,51 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
->  	return 0;
->  }
->  
-> +static int
-> +fsl_edma2_irq_init(struct platform_device *pdev,
-> +		   struct fsl_edma_engine *fsl_edma)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int i, ret, irq;
-> +	int count = 0;
+>  /*
+> + * tegra_dfll_suspend
+> + * @pdev: DFLL instance
+> + *
+> + * dfll controls clock/voltage to other devices, including CPU. Therefore,
+> + * dfll driver pm suspend callback does not stop cl-dvfs operations. It is
+> + * only used to enforce cold voltage limit, since SoC may cool down during
+> + * suspend without waking up. The correct temperature zone after suspend will
+> + * be updated via dfll cooling device interface during resume of temperature
+> + * sensor.
 
-Superflous initialization of count!
+Temperature dependent cl-dvfs is not yet implemented in upstream, so
+leave out the part about cold voltage limits and temperature zones.
 
-> +
-> +	count = of_irq_count(np);
-> +	dev_info(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
-
-Consider using debug level..
-
-> +	if (count <= 2) {
-> +		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
-> +		return -EINVAL;
-> +	}
-> +	/*
-> +	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
-> +	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
-> +	 * For now, just simply request irq without IRQF_SHARED flag, since 16
-> +	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
-> +	 */
-> +	for (i = 0; i < count; i++) {
-> +		irq = platform_get_irq(pdev, i);
-> +		if (irq < 0)
-> +			return -ENXIO;
-> +
-> +		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
-> +
-> +		/* The last IRQ is for eDMA err */
-> +		if (i == count - 1)
-> +			ret = devm_request_irq(&pdev->dev, irq,
-> +						fsl_edma_err_handler,
-> +						0, "eDMA2-ERR", fsl_edma);
-> +		else
-> +
-
-empty line is waste here
-
-> +			ret = devm_request_irq(&pdev->dev, irq,
-> +						fsl_edma_tx_handler, 0,
-> +						fsl_edma->chans[i].chan_name,
-> +						fsl_edma);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void fsl_edma_irq_exit(
->  		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
->  {
-> @@ -191,8 +236,16 @@ static struct fsl_edma_drvdata vf610_data = {
->  	.setup_irq = fsl_edma_irq_init,
->  };
->  
-> +static struct fsl_edma_drvdata imx7ulp_data = {
-> +	.version = v3,
-> +	.dmamuxs = 1,
-> +	.has_dmaclk = true,
-> +	.setup_irq = fsl_edma2_irq_init,
-> +};
-> +
->  static const struct of_device_id fsl_edma_dt_ids[] = {
->  	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
-> +	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
-> @@ -242,6 +295,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
->  	fsl_edma_setup_regs(fsl_edma);
->  	regs = &fsl_edma->regs;
->  
-> +	if (drvdata->has_dmaclk) {
-> +		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
-> +		if (IS_ERR(fsl_edma->dmaclk)) {
-> +			dev_err(&pdev->dev, "Missing DMA block clock.\n");
-> +			return PTR_ERR(fsl_edma->dmaclk);
-> +		}
-> +
-> +		ret = clk_prepare_enable(fsl_edma->dmaclk);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "DMA clk block failed.\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	for (i = 0; i < fsl_edma->dmamux_nr; i++) {
->  		char clkname[32];
->  
-> -- 
-> 2.7.4
-
--- 
-~Vinod
+Peter.
