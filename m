@@ -2,177 +2,112 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C858EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68079C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2E82070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBCC2070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwWQdxbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfFDRXT (ORCPT
+        id S1726555AbfFDRYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:23:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48490 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfFDRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:23:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A407315A2;
-        Tue,  4 Jun 2019 10:23:18 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C4FD3F5AF;
-        Tue,  4 Jun 2019 10:23:17 -0700 (PDT)
-Subject: Re: [PATCH] EDAC/altera: Warm Reset option for Stratix10 peripheral
- DBE
-To:     thor.thayer@linux.intel.com
-Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <9de1152b-25e0-3fb1-bf96-c8e45363942c@arm.com>
-Date:   Tue, 4 Jun 2019 18:23:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 13:24:23 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:51487 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfFDRYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:24:23 -0400
+Received: by mail-it1-f194.google.com with SMTP id m3so1430468itl.1;
+        Tue, 04 Jun 2019 10:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=684y/cl2KzqACBNQ2Tlq591/W/YeCegwH8Huw8QPTB0=;
+        b=LwWQdxbcBykG9LpWPT0qPZT++cUOiQdv8QAiWFA92ZubIEDsixsI9tNrDl/orTP6Zo
+         vd67ZnkmzjC7HuS+T+S3TlGlUVBUkJJWOv7XVf0K9C4sKNS2/B10CpXjKo9Y5nTt4hrk
+         M20k9uTsQvYXMlZKnCjSP9PMH7xUQkxm0k5XYOQYJzOtNS5p2PjgJM302Q/DIS/tYPgc
+         JkdO/oTTxqoK0DtVUqbKSDzqedKF0ZODCnXeI5TSqYMPUrHkUTD/SXmlUdOGAEAuST4R
+         KJcexxAP9J7VHepSTz/zRNtlNAJ2QgPAROaN8nxeEig54LaOIM/lpvFXIQoP5ieWydMO
+         1cHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=684y/cl2KzqACBNQ2Tlq591/W/YeCegwH8Huw8QPTB0=;
+        b=j7dNHg/MgQ0eXm4kesdjbXDWBj6JKO58DS/tCaMd5wDMSW3vxNot70aekDnlZDz3//
+         R6HJK5jpiHlAKpdzagBA0cusd9LEwDlNMMjm0PgU7uXNbIZOQr703eDD5/P7GmVG+9si
+         R34JezF6Lcsm5+CDiCtH7eQCwY6ln54IaSo7Ore44BPjfAc9+OupMLUFuZYc8S+r1OPy
+         BFkOcuu/4SXHaRvPGPGsWJ6NjFN6IrwltTPBKWI8xQTrAA9q357Se66UOiBF4AqiuugJ
+         mnf8ysRawmDsZz5LZdbxkN8zzUylVfiwpvPs+eZ02mZi0bRC4a3e/ohr2FwaQ3ctVuvn
+         meSw==
+X-Gm-Message-State: APjAAAXWBddGiBf3658vdfprgCeVckvPVOuAndNMrWdDLN5G32kUEzin
+        P0ngdciAzUKj7AJiKooLhX2Jeqh+AEHzyi79Zg==
+X-Google-Smtp-Source: APXvYqwy06rCoqbgvSvyZBt+6AqZ+XpW5YBWeva8u+pBMISO20GpbS1CivwRYDmiyNCg/XpGMt8dCWr6az/GtH+Y9zs=
+X-Received: by 2002:a24:5301:: with SMTP id n1mr21181845itb.10.1559669062380;
+ Tue, 04 Jun 2019 10:24:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
+ <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de> <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
+In-Reply-To: <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
+From:   =?UTF-8?Q?Bj=C3=B8rn_Forsman?= <bjorn.forsman@gmail.com>
+Date:   Tue, 4 Jun 2019 19:24:10 +0200
+Message-ID: <CAEYzJUE0SuO3uHm1TTxfr1kPtLic1ggUPnGFYTSPcwk6nfq82g@mail.gmail.com>
+Subject: Re: bcache: oops when writing to writeback_percent without a cache device
+To:     Coly Li <colyli@suse.de>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thor,
+On Tue, 4 Jun 2019 at 17:41, Coly Li <colyli@suse.de> wrote:
+>
+> On 2019/6/4 10:59 =E4=B8=8B=E5=8D=88, Coly Li wrote:
+> > On 2019/6/4 7:00 =E4=B8=8B=E5=8D=88, Bj=C3=B8rn Forsman wrote:
+> >> Hi all,
+> >>
+> >> I get a kernel oops from bcache when writing to
+> >> /sys/block/bcache0/bcache/writeback_percent and there is no attached
+> >> cache device. See the oops itself below my signature.
+> >>
+> >> This is on Linux 4.19.46. I looked in git and see many commits to
+> >> bcache lately, but none seem to address this particular issue.
+> >>
+> >> Background: I'm writing to .../writeback_percent with
+> >> systemd-tmpfiles. I'd rather not replace it with a script that figures
+> >> out whether or not the kernel will oops if writing to the sysfs file
+> >> -- the kernel should not oops in the first place.
+> >
+> > Hi Bjorn,
+> >
+> > Thank you for the reporting. I believe this is a case we missed in
+> > testings. When a bcache device is not attached, it does not make sense
+> > to update the writeback rate in period by the changing of writeback_per=
+cent.
+> >
+> > I will post a patch for your testing soon.
+>
+> Hi Bjorn,
+>
+> Could you please to try this patch ? Hope it may help a bit.
 
-(CC: +Mark, Lorenzo and Sudeep for PSCI.
-How should SYSTEM_RESET2 be used for a vendor-specific reset?
+Hi Coly,
 
-The original patch is:
-lore.kernel.org/r/1559594269-10077-1-git-send-email-thor.thayer@linux.intel.com
-)
+Thanks for the quick patch! I tested it on linux 5.2-rc2 and it indeed
+fixes the problem.
 
-On 03/06/2019 21:37, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> The Stratix10 peripheral FIFO memories can recover from double
-> bit errors with a warm reset instead of a cold reset.
-> Add the option of a warm reset for peripheral (USB, Ethernet)
-> memories.
-> 
-> CPU memories such as SDRAM and OCRAM require a cold reset for
-> DBEs.
-> Filter on whether the error is a SDRAM/OCRAM or a peripheral
-> FIFO memory to determine which reset to use when the warm
-> reset option is configured.
+There is one typo in the patch/commit message: s/writebac/writeback/
 
-... so you want to make different SMC calls on each CPU after panic()?
-
-
-> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-> index 8816f74a22b4..179601f14b48 100644
-> --- a/drivers/edac/altera_edac.c
-> +++ b/drivers/edac/altera_edac.c
-> @@ -2036,6 +2036,19 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
->  /* panic routine issues reboot on non-zero panic_timeout */
->  extern int panic_timeout;
->  
-> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
-> +/* EL3 SMC call to setup CPUs for warm reset */
-> +void panic_smp_self_stop(void)
-> +{
-> +	struct arm_smccc_res result;
-> +
-> +	__cpu_disable();
-> +	cpu_relax();
-> +	arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, S10_WARM_RESET_WFI_FLAG,
-> +		      S10_WARM_RESET_WFI_FLAG, 0, 0, 0, 0, 0, &result);
-> +}
-> +#endif
-
-Oooer!
-
-panic_smp_self_stop() isn't for drivers to override: only the arch code.
-__cpu_disable() is only for the cpu-hotplug machinery. Nothing else should touch it.
-
-Isn't this thing only called if another CPU out there is panic()ing too?
-
-
-I think one of the problems here is arm64 leaves secondary CPUs running after panic().
-This would be better fixed by using the appropriate cpu_ops[]->cpu_die() call in arm64's
-ipi_cpu_stop().
-
-
-As for passing platform-specific options, PSCI[0] has a 'reset_type' for SYSTEM_RESET2,
-which looks suspiciously like what you want here. I'm not sure how its expected to be
-used... hopefully the PSCI maintainers can give us some pointers.
-
-(The existing support is commit 4302e381a870 ("firmware/psci: add support for SYSTEM_RESET2"))
-
-
-Is it possible for firmware to do both the cold/warm reset work when SYSTEM_RESET is
-called? This would mean you don't have to care here and there are fewer choices to be made
-overall.
-If not, is there anything left behind that can give it the hint? Like non-zero error
-counters for the USB/Ethernet devices?
-
-
-> @@ -2067,14 +2080,28 @@ static int s10_edac_dberr_handler(struct notifier_block *this,
->  			regmap_write(edac->ecc_mgr_map,
->  				     S10_SYSMGR_UE_ADDR_OFST, err_addr);
->  			edac_printk(KERN_ERR, EDAC_DEVICE,
-> -				    "EDAC: [Fatal DBE on %s @ 0x%08X]\n",
-> -				    ed->edac_dev_name, err_addr);
-> +				    "EDAC: [Fatal DBE on %s [CPU=%d] @ 0x%08X]\n",
-> +				    ed->edac_dev_name, raw_smp_processor_id(),
-> +				    err_addr);
->  			break;
->  		}
->  		/* Notify the System through SMC. Reboot delay = 1 second */
-> +#ifdef CONFIG_EDAC_ALTERA_ARM64_WARM_RESET
-> +		/* Handle peripheral FIFO DBE as Warm Resets */
-> +		if (dberror & S10_COLD_RESET_MASK) {
-
-
-> +			panic_timeout = 1;
-
-Isn't this value supposed to be provided on the kernel commandline? Surely this prevents
-debug using the commandline option to increase the delay?
-
-(I see you already change it)
-
-
-> +			arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, dberror, 0, 0, 0,
-> +				      0, 0, 0, &result);
-> +		} else {
-> +			arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE,
-> +				      S10_WARM_RESET_WFI_FLAG | dberror, 0, 0,
-> +				      0, 0, 0, 0, &result);
-> +		}
-> +#else
->  		panic_timeout = 1;
->  		arm_smccc_smc(INTEL_SIP_SMC_ECC_DBE, dberror, 0, 0, 0, 0,
->  			      0, 0, &result);
-> +#endif
->  	}
->  
->  	return NOTIFY_DONE;
-
-What do these SMC do? Are they equivalent to the PSCI CPU online/offline calls?
-
-panic() notifiers aren't robust as they can be skipped if kdump is loaded.
-
-
-Thanks,
-
-James
-
-
-[0]
-https://static.docs.arm.com/den0022/d/Power_State_Coordination_Interface_PDD_v1_1_DEN0022D.pdf
+--=20
+Best regards,
+Bj=C3=B8rn Forsman
