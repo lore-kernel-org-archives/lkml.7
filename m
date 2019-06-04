@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03267C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA31C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C300B20862
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7673620859
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690733;
-	bh=flzEsamEXrboVbANmgqeCb6TBlCF6DYo+S4SOr0GrkA=;
+	s=default; t=1559690737;
+	bh=TRhb4bn5sZlQ1o7SrEF3J/f2N5alQl++5ijQez+ggKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1AyD8IY6rRVI8H0V9FzFijN3e7WsQKR0ne4pbxcyF7Ip7NjKCmMOkDd9iokHgeFOr
-	 6hiXEd+u6Ep8LzbaC6dyxT80VvPjaWhJ7m9kiEDtURZq/SN9w19DmMBY/AwJvZFzWW
-	 P3BOqfjFUtD/fAUhqglizU/DdajbTvPm27DaqjGs=
+	b=HuPS8n7uB3z+PSv3vCxeg9ibVkopbyacOc92+Ujiy4AYeujU+cmdYFt7prZCYtIGd
+	 r9vbvFl5+fvyMB2lA9nzTO6ver1jgwoCZSvQFXCw3HqVM/QgaEUQp+PhHNq9k9FTKp
+	 yfbHSFl/l9NCEZgQu5IeeU6YC3mciZgETkSwW1do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfFDXZd (ORCPT
+        id S1728081AbfFDXZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbfFDXZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:26 -0400
+        id S1728012AbfFDXZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF1620862;
-        Tue,  4 Jun 2019 23:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABE12085A;
+        Tue,  4 Jun 2019 23:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690724;
-        bh=flzEsamEXrboVbANmgqeCb6TBlCF6DYo+S4SOr0GrkA=;
+        s=default; t=1559690728;
+        bh=TRhb4bn5sZlQ1o7SrEF3J/f2N5alQl++5ijQez+ggKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8XBoer9DLSRiDco8RfhDYLd98DCMBTtq9iLd48g3pjDoPG/5APMePSudPAYSNURi
-         ZgKQzLkZZy6XcVxHzTHX7MrGHsUD1h4AsMX+kAAZAGkANrKUo6nlOBwy8JJZM8oqRw
-         Wv/VEgV6UydEV5oGMYn/xZp0AemKuNFTFIGZ3cTE=
+        b=X7dAFa301wbOeAptVNGitfi2KdpbzErm1z949HoogjT48hSx8M4a/XJsjwDo3yO1n
+         m6ukr29VwlN/ZX2EB2i7FHijWgwDiHfSpXfaIKkXb+i2I5kMtsSsfMHEOcF0SrAceL
+         JeTH7PwABwVwhCC17MmCOzfZ7EB1GHHHFPYuhZsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/17] selftests/timers: Add missing fflush(stdout) calls
-Date:   Tue,  4 Jun 2019 19:24:54 -0400
-Message-Id: <20190604232459.7745-13-sashal@kernel.org>
+Cc:     Kloetzke Jan <Jan.Kloetzke@preh.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/17] usbnet: fix kernel crash after disconnect
+Date:   Tue,  4 Jun 2019 19:24:56 -0400
+Message-Id: <20190604232459.7745-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
 References: <20190604232459.7745-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,167 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-[ Upstream commit fe48319243a626c860fd666ca032daacc2ba84a5 ]
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-When running under a pipe, some timer tests would not report output in
-real-time because stdout flushes were missing after printf()s that lacked
-a newline. This adds them to restore real-time status output that humans
-can enjoy.
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
+
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
+
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
+
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/timers/adjtick.c        | 1 +
- tools/testing/selftests/timers/leapcrash.c      | 1 +
- tools/testing/selftests/timers/mqueue-lat.c     | 1 +
- tools/testing/selftests/timers/nanosleep.c      | 1 +
- tools/testing/selftests/timers/nsleep-lat.c     | 1 +
- tools/testing/selftests/timers/raw_skew.c       | 1 +
- tools/testing/selftests/timers/set-tai.c        | 1 +
- tools/testing/selftests/timers/set-tz.c         | 2 ++
- tools/testing/selftests/timers/threadtest.c     | 1 +
- tools/testing/selftests/timers/valid-adjtimex.c | 2 ++
- 10 files changed, 12 insertions(+)
+ drivers/net/usb/usbnet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/timers/adjtick.c b/tools/testing/selftests/timers/adjtick.c
-index 9887fd538fec..91316ab4b041 100644
---- a/tools/testing/selftests/timers/adjtick.c
-+++ b/tools/testing/selftests/timers/adjtick.c
-@@ -147,6 +147,7 @@ int check_tick_adj(long tickval)
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 4ab82b998a0f..a5acbcb3c044 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -508,6 +508,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
  
- 	eppm = get_ppm_drift();
- 	printf("%lld usec, %lld ppm", systick + (systick * eppm / MILLION), eppm);
-+	fflush(stdout);
- 
- 	tx1.modes = 0;
- 	adjtimex(&tx1);
-diff --git a/tools/testing/selftests/timers/leapcrash.c b/tools/testing/selftests/timers/leapcrash.c
-index a1071bdbdeb7..a77c70b47495 100644
---- a/tools/testing/selftests/timers/leapcrash.c
-+++ b/tools/testing/selftests/timers/leapcrash.c
-@@ -114,6 +114,7 @@ int main(void)
- 		}
- 		clear_time_state();
- 		printf(".");
-+		fflush(stdout);
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1394,6 +1395,11 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
  	}
- 	printf("[OK]\n");
- 	return ksft_exit_pass();
-diff --git a/tools/testing/selftests/timers/mqueue-lat.c b/tools/testing/selftests/timers/mqueue-lat.c
-index a2a3924d0b41..efdb62470052 100644
---- a/tools/testing/selftests/timers/mqueue-lat.c
-+++ b/tools/testing/selftests/timers/mqueue-lat.c
-@@ -113,6 +113,7 @@ int main(int argc, char **argv)
- 	int ret;
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
++	}
  
- 	printf("Mqueue latency :                          ");
-+	fflush(stdout);
- 
- 	ret = mqueue_lat_test();
- 	if (ret < 0) {
-diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
-index ff942ff7c9b3..2e6e94c02a33 100644
---- a/tools/testing/selftests/timers/nanosleep.c
-+++ b/tools/testing/selftests/timers/nanosleep.c
-@@ -153,6 +153,7 @@ int main(int argc, char **argv)
- 			continue;
- 
- 		printf("Nanosleep %-31s ", clockstring(clockid));
-+		fflush(stdout);
- 
- 		length = 10;
- 		while (length <= (NSEC_PER_SEC * 10)) {
-diff --git a/tools/testing/selftests/timers/nsleep-lat.c b/tools/testing/selftests/timers/nsleep-lat.c
-index 2d7898fda0f1..ac06cf10a5c2 100644
---- a/tools/testing/selftests/timers/nsleep-lat.c
-+++ b/tools/testing/selftests/timers/nsleep-lat.c
-@@ -166,6 +166,7 @@ int main(int argc, char **argv)
- 			continue;
- 
- 		printf("nsleep latency %-26s ", clockstring(clockid));
-+		fflush(stdout);
- 
- 		length = 10;
- 		while (length <= (NSEC_PER_SEC * 10)) {
-diff --git a/tools/testing/selftests/timers/raw_skew.c b/tools/testing/selftests/timers/raw_skew.c
-index 0ab937a17ebb..4e631da7f956 100644
---- a/tools/testing/selftests/timers/raw_skew.c
-+++ b/tools/testing/selftests/timers/raw_skew.c
-@@ -124,6 +124,7 @@ int main(int argv, char **argc)
- 		printf("WARNING: ADJ_OFFSET in progress, this will cause inaccurate results\n");
- 
- 	printf("Estimating clock drift: ");
-+	fflush(stdout);
- 	sleep(120);
- 
- 	get_monotonic_and_raw(&mon, &raw);
-diff --git a/tools/testing/selftests/timers/set-tai.c b/tools/testing/selftests/timers/set-tai.c
-index dc88dbc8831f..3ae76ab483de 100644
---- a/tools/testing/selftests/timers/set-tai.c
-+++ b/tools/testing/selftests/timers/set-tai.c
-@@ -66,6 +66,7 @@ int main(int argc, char **argv)
- 	printf("tai offset started at %i\n", ret);
- 
- 	printf("Checking tai offsets can be properly set: ");
-+	fflush(stdout);
- 	for (i = 1; i <= 60; i++) {
- 		ret = set_tai(i);
- 		ret = get_tai();
-diff --git a/tools/testing/selftests/timers/set-tz.c b/tools/testing/selftests/timers/set-tz.c
-index f4184928b16b..b038131c9682 100644
---- a/tools/testing/selftests/timers/set-tz.c
-+++ b/tools/testing/selftests/timers/set-tz.c
-@@ -76,6 +76,7 @@ int main(int argc, char **argv)
- 	printf("tz_minuteswest started at %i, dst at %i\n", min, dst);
- 
- 	printf("Checking tz_minuteswest can be properly set: ");
-+	fflush(stdout);
- 	for (i = -15*60; i < 15*60; i += 30) {
- 		ret = set_tz(i, dst);
- 		ret = get_tz_min();
-@@ -87,6 +88,7 @@ int main(int argc, char **argv)
- 	printf("[OK]\n");
- 
- 	printf("Checking invalid tz_minuteswest values are caught: ");
-+	fflush(stdout);
- 
- 	if (!set_tz(-15*60-1, dst)) {
- 		printf("[FAILED] %i didn't return failure!\n", -15*60-1);
-diff --git a/tools/testing/selftests/timers/threadtest.c b/tools/testing/selftests/timers/threadtest.c
-index e632e116f05e..a4bf736dd842 100644
---- a/tools/testing/selftests/timers/threadtest.c
-+++ b/tools/testing/selftests/timers/threadtest.c
-@@ -175,6 +175,7 @@ int main(int argc, char **argv)
- 	strftime(buf, 255, "%a, %d %b %Y %T %z", localtime(&start));
- 	printf("%s\n", buf);
- 	printf("Testing consistency with %i threads for %ld seconds: ", thread_count, runtime);
-+	fflush(stdout);
- 
- 	/* spawn */
- 	for (i = 0; i < thread_count; i++)
-diff --git a/tools/testing/selftests/timers/valid-adjtimex.c b/tools/testing/selftests/timers/valid-adjtimex.c
-index 60fe3c569bd9..a747645d79f4 100644
---- a/tools/testing/selftests/timers/valid-adjtimex.c
-+++ b/tools/testing/selftests/timers/valid-adjtimex.c
-@@ -134,6 +134,7 @@ int validate_freq(void)
- 	/* Set the leap second insert flag */
- 
- 	printf("Testing ADJ_FREQ... ");
-+	fflush(stdout);
- 	for (i = 0; i < NUM_FREQ_VALID; i++) {
- 		tx.modes = ADJ_FREQUENCY;
- 		tx.freq = valid_freq[i];
-@@ -261,6 +262,7 @@ int set_bad_offset(long sec, long usec, int use_nano)
- int validate_set_offset(void)
- {
- 	printf("Testing ADJ_SETOFFSET... ");
-+	fflush(stdout);
- 
- 	/* Test valid values */
- 	if (set_offset(NSEC_PER_SEC - 1, 1))
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 -- 
 2.20.1
 
