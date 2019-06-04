@@ -2,103 +2,102 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3960BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D09C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10037212F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B4F212F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6Z4giGi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="A7Kqt8FA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfFDOhi (ORCPT
+        id S1727653AbfFDOi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:37:38 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39347 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfFDOhi (ORCPT
+        Tue, 4 Jun 2019 10:38:56 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37850 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727182AbfFDOi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:37:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so12809791pfe.6;
-        Tue, 04 Jun 2019 07:37:37 -0700 (PDT)
+        Tue, 4 Jun 2019 10:38:56 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 22so334646wmg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 07:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Qzbfu0dliCkkEmJ1UFnYukQdP9RWNNavonlb+Fp2x7g=;
-        b=B6Z4giGie6KhK2KkxWuIhscXtPyiQHeMiQvlupiBP6cuxnHxnkXC7r77dL910UfzOp
-         NbF6jRlrR+fe5PwMr2YdnxhZNvwetSZZa3fSdtJDlWfp2SL6I309qlCdjHgsmEeIhY4X
-         4ZrmS2LFhTrynTLrQxkzzst9w2U0QbfyK5S8C2eHE4lo4WlNv6bg+GxASJxWiLvLJYJZ
-         4vraMmMpkN9pYK7SgbT+8yeb9DtD+3+r+D4rN7oN0ni70urCpD9eRBY3MFNoaI45wugG
-         ECx1VtVgxzw4ohf0wQgQ7/gIGbYiBRYngTDo7tdYImb28Rq0OSmIb06tELlMUi0p4pv0
-         Tscg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=8yVp8LW/5tvDYIdw2ZjGi4ruSvPsT4gaU3KQr2PELI4=;
+        b=A7Kqt8FA/PZlIOCWpIHikU1GTW15SgXKBI4w+GU2YVXQrsV5zxKoLF/CNIHmi/wveq
+         JjUw4ZVMXLxXu0efAKQUqxDpWj6q6qWrZx3Ti20klLgsB/Rv8hNLgRL1R23KwIhPM0Vz
+         hQvfg8kFzMZ2Gm6kl74A7T/JIsM55Jy6eBAGX3dVxxuv3o7b4fvenKXHlAzfic5292ip
+         LSSA9xjv4P2N+g4wXhCwkoP1NYwvmzrsuKWHDOf3UGYqFuBqHc2pKg787buWRZi+hXsO
+         HNkPeJ/Q41f4bF4uDFj4XYlrQuEuuvtI7SePznEdEu5Mnx/cFCyyBa8GskLwLc/FFQtr
+         zgIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Qzbfu0dliCkkEmJ1UFnYukQdP9RWNNavonlb+Fp2x7g=;
-        b=DIjg6BRk4P+XgQ7nfgoj+xgE0Cw9up3T1hwFFts3vDZWuNj0Cag3YJeDdSa3STHU+B
-         24nNFcpKYCKdAJFa92U0HRqgfXk746D28s0LmakouCUr5N0LQVSx7JOGcfJVmC0gjETj
-         VgAm8LuCI84YHdKxdzaLDScryBkZLQqBmviGg51+M/XpMRJP+KXy0o+lrdqnYaDQcfyL
-         JwyP5RzXaxdPIkQR9W6mxyQDuaPxkTcL3NAZfhS0Jp6s/0Lrz9+sJPX9rTZXy4bcJdmj
-         +DmznlTmaS5C0T3xfpJDa07CAAiUADTP+i9jRNjTrwxjS1w3kmgvJI5p5anpQ1nDtYPs
-         GSgg==
-X-Gm-Message-State: APjAAAUpPif+CsMMSd4Sntyww4oMRvAvDsNvEgaysW0YBsAmqAN0T0hj
-        DeWGQ3ElEe11ajP8ns2AUoE=
-X-Google-Smtp-Source: APXvYqxODlBBHGGcFQeLSbBlxK42pdQc5O3+h4I1eh+4EBYLKe4wKcH39RExLE1ACFUyrK4KVJo6gA==
-X-Received: by 2002:a62:f201:: with SMTP id m1mr32199419pfh.217.1559659057712;
-        Tue, 04 Jun 2019 07:37:37 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id m6sm24156872pjl.18.2019.06.04.07.37.35
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8yVp8LW/5tvDYIdw2ZjGi4ruSvPsT4gaU3KQr2PELI4=;
+        b=I8r5XPcE106G7kktZ96QEqAKfwL5Ome4E9oDFMgumY/kWTSTYDDqcUqX8uvnyWoElq
+         wBPhNICt3ozz9Iq3F5HzprNBelKKf1ajYcsgOFCEt8pu6KIjiMhX9G9CqAkZTjW2Y1hv
+         KiQexDPiEXml7RcF0k2N4mOPPEL4pZtMa2P5dc92hMEm/0WkzGPMr2o9OcYRNxwAigHl
+         rnDBq78w0zM2nVY8FaXFSMtFd5+JTOrKBuxErVhcureEodpir883sGERW+M2uncFnAn4
+         d3R4JJF0vbQTLzpP0GgQzaJnovka65Wsl1KMEBkfR8k0q43gkkFeGwILQSrdSVZet2tv
+         byqA==
+X-Gm-Message-State: APjAAAXDtrQ7v5riWvWxaEydNXuohHqcT+2d/wstXZg/mezgqf9Z6krR
+        uy6gX8u7WxEEbMEMBksFplZRDQ==
+X-Google-Smtp-Source: APXvYqxRW4nwf4GpDLyd87BakAfZ89olYzNbTVRR1tlK/pY6mlbd9mILPL7WAvRnQL8m2ze14qkPFg==
+X-Received: by 2002:a7b:ce01:: with SMTP id m1mr8827610wmc.1.1559659134003;
+        Tue, 04 Jun 2019 07:38:54 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s14sm15595662wrw.10.2019.06.04.07.38.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 07:37:37 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tue, 04 Jun 2019 07:38:53 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Paul Walmsley <paul@pwsan.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 3/3] dt: bindings: mtd: brcmand: Add brcmnand,brcmnand-v7.3 support
-Date:   Tue,  4 Jun 2019 10:36:31 -0400
-Message-Id: <1559659013-34502-3-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
-In-Reply-To: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
-References: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
+        ShihPo Hung <shihpo.hung@sifive.com>
+Subject: Re: [PATCH v3 4/5] riscv: dts: add initial support for the SiFive FU540-C000 SoC
+In-Reply-To: <20190602080500.31700-5-paul.walmsley@sifive.com>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-5-paul.walmsley@sifive.com>
+Date:   Tue, 04 Jun 2019 16:38:51 +0200
+Message-ID: <86sgsph0uc.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added brcm,brcmnand-v7.3 as possible compatible string to support
-brcmnand controller v7.3.
+On Sun 02 Jun 2019 at 01:04, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index 0b7c373..ad4cd30 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -28,6 +28,7 @@ Required properties:
-                          brcm,brcmnand-v7.0
-                          brcm,brcmnand-v7.1
-                          brcm,brcmnand-v7.2
-+                         brcm,brcmnand-v7.3
-                          brcm,brcmnand
- - reg              : the register start and length for NAND register region.
-                      (optional) Flash DMA register range (if present)
--- 
-1.9.0.138.g2de3478
-
+> Add initial support for the SiFive FU540-C000 SoC.  This is a 28nm SoC
+> based around the SiFive U54-MC core complex and a TileLink
+> interconnect.
+>
+> This file is expected to grow as more device drivers are added to the
+> kernel.
+>
+> This patch includes a fix to the QSPI memory map due to a
+> documentation bug, found by ShihPo Hung <shihpo.hung@sifive.com>, adds
+> entries for the I2C controller, and merges all DT changes that
+> formerly were made dynamically by the riscv-pk BBL proxy kernel.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Tested-by: Loys Ollivier <lollivier@baylibre.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: ShihPo Hung <shihpo.hung@sifive.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
