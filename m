@@ -2,172 +2,157 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60E2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B44C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6867124A2D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBEC24A2D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHMmHP/K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVPZmX4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfFDLAl (ORCPT
+        id S1727537AbfFDLAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:00:41 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50375 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfFDLAl (ORCPT
+        Tue, 4 Jun 2019 07:00:47 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34311 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfFDLAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:00:41 -0400
-Received: by mail-it1-f196.google.com with SMTP id a186so32679249itg.0;
-        Tue, 04 Jun 2019 04:00:40 -0700 (PDT)
+        Tue, 4 Jun 2019 07:00:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w9so2009671wmd.1;
+        Tue, 04 Jun 2019 04:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=o1UzTMoQyopOip/dJyIQOvQqjI885b7Gn42CpjI0KJ4=;
-        b=OHMmHP/KrSAfLiMP0r7JgejWCz49bYohUe29nT9ufqiQkduTigHuwDU03W3MdIQ2Js
-         oFvnrK++hsI176fCfzQ3nq+HTo4wE3GuCjxCWLQQl6/cN+7I4aH0bsL1+o4g/xc9E74w
-         XsizX+63z6q+73xwLs0rR8z+PYsLmFTqSYa1I3ONKxKH2pm3QgLs4cGglFyi1SbObBAx
-         q/7bfST73AiaPjy9AnNkrR1JFIlwwqrB+bNZSrCCS2kDl5LsdBRtOqsI7oyC/0rOZ/NJ
-         9H/SysIMxOvZo1iA6XrjQStlMBBZ4RzueI1jOLtbxg4K5DyCT6xgFWIomYqkmVqV5k4E
-         BB2A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ry9qT3LbyuH/6y/zhnSI5kikIqB3kIMvxasnYGNS1uY=;
+        b=pVPZmX4zNXZH5nPx9fxT/V81+drhOVhnBjF3iscpO3dNth3UoGAB2zpqv7msmG0OZ9
+         wBvKCdbUZEiZJnImPy1L14F7ZMm/+Ilo64yqoWyFXroUyt/b0tvQjFUU6ylvojdTKayw
+         ev1V12pH8ciH+Tcuym8v35LFZ/I1AtYJ6W47srMsadUMuh7mmvkiDU7DCB2rryMPtZj4
+         hI7FZwJ80iixQeLi5671LcKawio/VFS3JqSuSEs+CuzsJF4c1cufb1CM0K9Qd8gP9baz
+         QL2yIgVB53yhhVDhPouKyM2+BnUQvCMPQdUzne5O3e1J6Cy8AqD4cgDMZCiV475Yfbt3
+         fVrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=o1UzTMoQyopOip/dJyIQOvQqjI885b7Gn42CpjI0KJ4=;
-        b=hrWGlP3TgN2+f6qDVREN5oqLZ3Y7JdLMyTd19Uc882dYQ+6cW/SfM7qHnfmuaI3fJT
-         yp71Gy0+vnqfsV5mCX0Q9A+sYMZze0Ih1yBFpSbK/csMYpbL+kGHn/DXGyRyguLny69I
-         xqpaIoz3r87R1qxOOr9/hcb/E8Za/mdv4j7LzWZi8t6MKY2z5+kijOGrmRa/zSR4ysVP
-         fnLJNX6ggbC0G+DC/RlSWxNH7HHI4J+P9HiZbvQXLx0Q2GvlYEx9HHnKqn5qobtt3u2k
-         naa1S+dOUDP5afUnwWjSVmD2GlRTsiQq3H8sxD5hwgmuVVqgwF8AZmq4y83ZgAhj0kFi
-         ZeHw==
-X-Gm-Message-State: APjAAAWpb8MxsyfLs6JvmmDiiZwTIfgtVlQ1lFw08+1iNHT4EzRCJREv
-        C8FscFrM+U7Z9VjbNm8IWy38kK58jj0aMrm99g==
-X-Google-Smtp-Source: APXvYqxkTo6c0bD5gJQ80S0cN+rImaUg47WYcV7nATdCAQcOqiwaZ3MfklymG7ARjNP5Bmf6wgutnbEmk4qb4jDfksg=
-X-Received: by 2002:a24:6e8b:: with SMTP id w133mr6937839itc.82.1559646039916;
- Tue, 04 Jun 2019 04:00:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ry9qT3LbyuH/6y/zhnSI5kikIqB3kIMvxasnYGNS1uY=;
+        b=eLy6JXOMyq8Vp5ztkOAXArQAasdvsWYzYS7rQB2PHZTB8GONmVNCZF80O9mJf/IZ0a
+         FCmLlaKmg3XvpxHDNmr5euMdCCZA4fm551TD2255bKlgQTosVrEsFsfItztmRSRRm8n/
+         aGSNL331qleoS5F4MjhGxdzGkhL8vPNxRvKO6bbPZ4pozFWGDK8qjRNX/Ocafk6x2xo7
+         UKFS5Ei9p5sntgLIHdJ9LPGcpKo255fzHX8H0P5LYTW3w5rzcjYt1e5d6UrIV9BGPmWr
+         k/E5VqwsG1KBWZUO8SgR7sp+f/8Y3tEstIC+muQcLLtGlp3MhM8ejvodyGym07zCAghp
+         rF7A==
+X-Gm-Message-State: APjAAAX6JLSvdCDwHN/plhZjnXsv85YtEEw8RJeestS7aomc7sr6+Mfw
+        P5JzCyGgHfc0XF4ESD6MNhZ6UjMw
+X-Google-Smtp-Source: APXvYqymhanTOzaenE89rQ1PoRX/A0KxqmSKgazT/TpbMJSre8olIJO+7BRhkHu2o/azVvRpDaqMvw==
+X-Received: by 2002:a1c:3c8a:: with SMTP id j132mr5557438wma.172.1559646044399;
+        Tue, 04 Jun 2019 04:00:44 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id z14sm14106358wrh.86.2019.06.04.04.00.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 04:00:43 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:00:42 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 05/16] PM / devfreq: tegra: Don't set EMC clock rate
+ to maximum on probe
+Message-ID: <20190604110042.GE16519@ulmo>
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-6-digetx@gmail.com>
 MIME-Version: 1.0
-From:   =?UTF-8?Q?Bj=C3=B8rn_Forsman?= <bjorn.forsman@gmail.com>
-Date:   Tue, 4 Jun 2019 13:00:28 +0200
-Message-ID: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
-Subject: bcache: oops when writing to writeback_percent without a cache device
-To:     Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nHwqXXcoX0o6fKCv"
+Content-Disposition: inline
+In-Reply-To: <20190501233815.32643-6-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-I get a kernel oops from bcache when writing to
-/sys/block/bcache0/bcache/writeback_percent and there is no attached
-cache device. See the oops itself below my signature.
+--nHwqXXcoX0o6fKCv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is on Linux 4.19.46. I looked in git and see many commits to
-bcache lately, but none seem to address this particular issue.
+On Thu, May 02, 2019 at 02:38:04AM +0300, Dmitry Osipenko wrote:
+> There is no real benefit from doing so, hence let's drop that rate setting
+> for consistency.
+>=20
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-Background: I'm writing to .../writeback_percent with
-systemd-tmpfiles. I'd rather not replace it with a script that figures
-out whether or not the kernel will oops if writing to the sysfs file
--- the kernel should not oops in the first place.
+Do you have any numbers to tell how long it would take for the EMC rate
+to get incremented? My understanding is that ACTMON basically reacts to
+system load, so I could imagine that not setting to the maximum
+frequency after this is loaded might make the system slow in the short
+term. Only after ACTMON has collected enough data to determine that it
+needs to clock the EMC higher would system speed resume normal.
 
---
-Best regards,
-Bj=C3=B8rn Forsman
+I guess technically this patch doesn't change anything if the system
+already boots at the highest EMC frequency anyway, which I think it does
+on many (although not all) devices.
 
+Anyway, you said you've tested this and are satisfied with the
+performance, so it can't be that bad:
 
-Jun 04 12:35:42 kernel: BUG: unable to handle kernel NULL pointer
-dereference at 0000000000000340
-Jun 04 12:35:42 kernel: PGD 0 P4D 0
-Jun 04 12:35:42 kernel: Oops: 0000 [#1] SMP PTI
-Jun 04 12:35:42 kernel: CPU: 6 PID: 20266 Comm: kworker/6:220 Not
-tainted 4.19.46 #1-NixOS
-Jun 04 12:35:42 kernel: Hardware name: To Be Filled By O.E.M. To Be
-Filled By O.E.M./X99 Extreme4/3.1, BIOS P3.60 04/06/2018
-Jun 04 12:35:42 kernel: Workqueue: events update_writeback_rate [bcache]
-Jun 04 12:35:42 kernel: RIP: 0010:update_writeback_rate+0x2f/0x2e0 [bcache]
-Jun 04 12:35:42 kernel: Code: 41 57 41 56 41 55 41 54 55 53 48 8b af
-00 f4 ff ff f0 80 8f 20 f4 ff ff 10 f0 83 44 24 fc 00 48 8b 87 20 f4
-ff ff a8 08 74 51 <48> 8b 85 40 03 00 00 a8 08 75 46 8b 47 e8 48 89 fb
-85 c0 74 09 80
-Jun 04 12:35:42 kernel: RSP: 0018:ffffafbfccdbbe68 EFLAGS: 00010202
-Jun 04 12:35:42 kernel: RAX: 0000000000000018 RBX: ffff97bf75f60c80
-RCX: ffff97bf7f9a0ee0
-Jun 04 12:35:42 kernel: RDX: ffff97bf7f9a0ee0 RSI: 0000000000000180
-RDI: ffff97bf75f60c80
-Jun 04 12:35:42 kernel: RBP: 0000000000000000 R08: 000073746e657665
-R09: 8080808080808080
-Jun 04 12:35:42 kernel: R10: ffffafbfc3207de8 R11: fefefefefefefeff
-R12: ffff97bf7f9a4d00
-Jun 04 12:35:42 kernel: R13: 0000000000000000 R14: ffff97bf75270180
-R15: 0ffff97bf7f9a4d0
-Jun 04 12:35:42 kernel: FS:  0000000000000000(0000)
-GS:ffff97bf7f980000(0000) knlGS:0000000000000000
-Jun 04 12:35:42 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Jun 04 12:35:42 kernel: CR2: 0000000000000340 CR3: 0000000709a0a004
-CR4: 00000000001606e0
-Jun 04 12:35:42 kernel: Call Trace:
-Jun 04 12:35:42 kernel:  process_one_work+0x1f4/0x3e0
-Jun 04 12:35:42 kernel:  worker_thread+0x2d/0x3e0
-Jun 04 12:35:42 kernel:  ? process_one_work+0x3e0/0x3e0
-Jun 04 12:35:42 kernel:  kthread+0x113/0x130
-Jun 04 12:35:42 kernel:  ? kthread_create_worker_on_cpu+0x70/0x70
-Jun 04 12:35:42 kernel:  ret_from_fork+0x35/0x40
-Jun 04 12:35:42 kernel: Modules linked in: tcp_diag inet_diag
-iptable_mangle xt_CHECKSUM ipt_MASQUERADE ipt_REJECT nf_reject_ipv4
-bridge stp llc nf_tables nfnetlink devlink af_packet msr nouveau
-edac_core x86_pkg_temp_thermal nls_iso8859_1 video intel_powerclamp
-ttm nls_cp437 drm_kms_helper vfat coretemp drm fat crct10dif_pclmul
-agpgart iptable_nat nf_nat_ipv4 nf_nat xt_conntrack crc32_pclmul
-snd_hda_codec_hdmi nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
-libcrc32c ip6t_rpfilter i2c_algo_bit ghash_clmulni_intel fb_sys_fops
-syscopyarea ipt_rpfilter sysfillrect pcbc aesni_intel aes_x86_64
-crypto_simd cryptd sysimgblt ip6table_raw iptable_raw
-snd_hda_codec_realtek snd_hda_codec_generic snd_hda_intel xt_pkttype
-glue_helper snd_hda_codec nf_log_ipv6 intel_cstate uas snd_hda_core
-intel_uncore deflate e1000e snd_hwdep
-Jun 04 12:35:42 kernel:  snd_pcm iTCO_wdt joydev snd_timer mousedev
-mxm_wmi intel_wmi_thunderbolt nf_log_ipv4 evdev input_leds led_class
-snd nf_log_common xt_LOG efi_pstore intel_rapl_perf soundcore mac_hid
-pstore xt_tcpudp efivars ptp nvme mei_me mei pps_core i2c_i801
-nvme_core i2c_core lpc_ich wmi button ip6table_filter pcc_cpufreq
-ip6_tables iptable_filter atkbd libps2 serio loop cpufreq_powersave
-tun kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt
-autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto usb_storage
-bcache hid_logitech_hidpp crc64 raid1 md_mod hid_logitech_dj
-hid_generic usbhid hid sd_mod xhci_pci ahci xhci_hcd libahci libata
-ehci_pci ehci_hcd usbcore scsi_mod crc32c_intel usb_common rtc_cmos
-dm_mod
-Jun 04 12:35:42 kernel: CR2: 0000000000000340
-Jun 04 12:35:42 kernel: ---[ end trace 764634a58d34fb7c ]---
-Jun 04 12:35:43 kernel: RIP: 0010:update_writeback_rate+0x2f/0x2e0 [bcache]
-Jun 04 12:35:43 kernel: Code: 41 57 41 56 41 55 41 54 55 53 48 8b af
-00 f4 ff ff f0 80 8f 20 f4 ff ff 10 f0 83 44 24 fc 00 48 8b 87 20 f4
-ff ff a8 08 74 51 <48> 8b 85 40 03 00 00 a8 08 75 46 8b 47 e8 48 89 fb
-85 c0 74 09 80
-Jun 04 12:35:43 kernel: RSP: 0018:ffffafbfccdbbe68 EFLAGS: 00010202
-Jun 04 12:35:43 kernel: RAX: 0000000000000018 RBX: ffff97bf75f60c80
-RCX: ffff97bf7f9a0ee0
-Jun 04 12:35:43 kernel: RDX: ffff97bf7f9a0ee0 RSI: 0000000000000180
-RDI: ffff97bf75f60c80
-Jun 04 12:35:43 kernel: RBP: 0000000000000000 R08: 000073746e657665
-R09: 8080808080808080
-Jun 04 12:35:43 kernel: R10: ffffafbfc3207de8 R11: fefefefefefefeff
-R12: ffff97bf7f9a4d00
-Jun 04 12:35:43 kernel: R13: 0000000000000000 R14: ffff97bf75270180
-R15: 0ffff97bf7f9a4d0
-Jun 04 12:35:43 kernel: FS:  0000000000000000(0000)
-GS:ffff97bf7f980000(0000) knlGS:0000000000000000
-Jun 04 12:35:43 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Jun 04 12:35:43 kernel: CR2: 0000000000000340 CR3: 0000000709a0a004
-CR4: 00000000001606e0
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+>=20
+> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devf=
+req.c
+> index c7428c5eee23..24ec65556c39 100644
+> --- a/drivers/devfreq/tegra-devfreq.c
+> +++ b/drivers/devfreq/tegra-devfreq.c
+> @@ -653,8 +653,6 @@ static int tegra_devfreq_probe(struct platform_device=
+ *pdev)
+>  		return PTR_ERR(tegra->emc_clock);
+>  	}
+> =20
+> -	clk_set_rate(tegra->emc_clock, ULONG_MAX);
+> -
+>  	tegra->rate_change_nb.notifier_call =3D tegra_actmon_rate_notify_cb;
+>  	err =3D clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
+>  	if (err) {
+> --=20
+> 2.21.0
+>=20
+
+--nHwqXXcoX0o6fKCv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2T1oACgkQ3SOs138+
+s6FJlw//S3HMd6zjiAiIh7sOMGPBFiOdIAVCsSgPmNITPRNUOkFt7n3cwIF39HRA
+LEuKQhYt8l/N1kYwjbRT0bATl35PcVUITRGPcJh9Tg1SMJuO+hJ2jTRHQKpVJSQC
+8qeGgOmhScOTSgqbFDR+a75q9HbQzSZXVY3WSnjXOMfzHQim4AqUg7EJp/X3Qma+
+o7fUuJmHBQHmgc8LHoOATonOt6Qo6RF7xvJt0UEFzOpwzl8JwWKYw+XsqgdzXQKJ
+u97CcKcgIhVOyQKdWMX7nOwHaLvZvLRjoshz6TgjnRjxo/KWklooLWVya3A/FfRd
+uf5RG14aTC0rOqpyc92xvrTGcjjVEHYjR+xaAUYYFHTdXKE8iG2sX5G0uQttQwTi
+kO2QRDqTmzhvHCjB1QFoa1WsKahUAuuL3Sz1QbujROBKhvLe3nSDAie19wS8vzOd
+02D93BBMeTMaYZBJeX6+4cHStKUXChqmsGUuVEijo0ShDtm7Bu1yardeQjAGg0Fr
+iVnltSo3nt/g72+ptJJz3zqOAU2OBRjEZPfakMXBFrAs8B8P7Ks/Gqw5uDGHlYBf
+ydpVF78FHW7Ok2+KkqbtVwe06XM6/IY/m3MxfF7oEbIdMswtyBS9q6dHNrL+qSjy
+6YaRiHpDrDkKHkvCaJ2MTuHy4oPJE3aEaHt9r89mfU57qJdHSYA=
+=MC5w
+-----END PGP SIGNATURE-----
+
+--nHwqXXcoX0o6fKCv--
