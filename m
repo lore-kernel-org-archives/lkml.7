@@ -2,71 +2,143 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC36C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D823C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFD020717
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61ABB20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfFDRAE (ORCPT
+        id S1728023AbfFDRA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:00:04 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:49732 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727715AbfFDRAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:00:04 -0400
-Received: (qmail 6565 invoked by uid 2102); 4 Jun 2019 13:00:03 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 4 Jun 2019 13:00:03 -0400
-Date:   Tue, 4 Jun 2019 13:00:03 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: rcu_read_lock lost its compiler barrier
-In-Reply-To: <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1906041251210.1731-100000@iolanthe.rowland.org>
+        Tue, 4 Jun 2019 13:00:57 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51030 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfFDRA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:00:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 10:00:55 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 10:00:52 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hYCns-0001CA-D9; Tue, 04 Jun 2019 20:00:52 +0300
+Date:   Tue, 4 Jun 2019 20:00:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
+        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v3 2/6] i2c: acpi: Use available IRQ helper functions
+Message-ID: <20190604170052.GQ9224@smile.fi.intel.com>
+References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
+ <20190528142900.24147-2-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528142900.24147-2-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019, Linus Torvalds wrote:
+On Tue, May 28, 2019 at 03:28:56PM +0100, Charles Keepax wrote:
+> Use the available IRQ helper functions, most of the functions have
+> additional helpful side affects like configuring the trigger type of the
+> IRQ.
+> 
 
-> So I don't technically disagree with anything you say,
+You do here two things, i.e.
+- splitting out helper function
+- converting it to use helpers
 
-That's good to know!
+I would split the patch to do exact these steps separately, e.g.:
+- splitting out to a local helper
+- replacing open coded stuff with existing helpers
 
->  I just wanted
-> to point out that as far as the kernel is concerned, we do have higher
-> quality expectations from the compiler than just "technically valid
-> according to the C standard".
 
-Which suggests asking whether these higher expectations should be
-reflected in the Linux Kernel Memory Model.  So far we have largely
-avoided doing that sort of thing, although there are a few exceptions.
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> 
+> Changes since v2:
+>  - Don't consider zero to be a valid IRQ number
+> 
+> Thanks,
+> Charles
+> 
+>  drivers/i2c/i2c-core-acpi.c | 24 ++++++++++++++++--------
+>  1 file changed, 16 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 2728006920888..bc82b44f85860 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -137,14 +137,25 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
+>  	return 0;
+>  }
+>  
+> +static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+> +{
+> +	int *irq = data;
+> +	struct resource r;
+> +
+> +	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
+> +		*irq = i2c_dev_irq_from_resources(&r, 1);
+> +
+> +	return 1; /* No need to add resource to the list */
+> +}
+> +
+>  static int i2c_acpi_get_info(struct acpi_device *adev,
+>  			     struct i2c_board_info *info,
+>  			     struct i2c_adapter *adapter,
+>  			     acpi_handle *adapter_handle)
+>  {
+>  	struct list_head resource_list;
+> -	struct resource_entry *entry;
+>  	struct i2c_acpi_lookup lookup;
+> +	int irq = -ENOENT;
+>  	int ret;
+>  
+>  	memset(&lookup, 0, sizeof(lookup));
+> @@ -176,16 +187,13 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+>  
+>  	/* Then fill IRQ number if any */
+>  	INIT_LIST_HEAD(&resource_list);
+> -	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+> +	ret = acpi_dev_get_resources(adev, &resource_list,
+> +				     i2c_acpi_add_resource, &irq);
+>  	if (ret < 0)
+>  		return -EINVAL;
+>  
+> -	resource_list_for_each_entry(entry, &resource_list) {
+> -		if (resource_type(entry->res) == IORESOURCE_IRQ) {
+> -			info->irq = entry->res->start;
+> -			break;
+> -		}
+> -	}
+> +	if (irq > 0)
+> +		info->irq = irq;
+>  
+>  	acpi_dev_free_resource_list(&resource_list);
+>  
+> -- 
+> 2.11.0
+> 
 
-(For example, we assume the compiler does not destroy address
-dependencies from volatile reads -- but we also warn that this
-assumption may fail if the programmer does not follow some rules
-described in one of Paul's documentation files.)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Alan
 
