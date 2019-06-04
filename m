@@ -2,101 +2,188 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525A1C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D674C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A9720693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165F520717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0RCS61bP"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xswXLDjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfFDRog (ORCPT
+        id S1726538AbfFDRsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:44:36 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:27715 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfFDRof (ORCPT
+        Tue, 4 Jun 2019 13:48:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34251 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfFDRsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:44:35 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x54HiGwD019946;
-        Wed, 5 Jun 2019 02:44:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x54HiGwD019946
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559670256;
-        bh=hfYqstATMxMwoXJHu8Wkpjvj39D6WWogH7gu86RCn1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0RCS61bPD/YYo8BxOT1uO7oS/UEQVBA6xBU23hhs7oqIerqoN5+lMvG9gS42QNDRU
-         Tzr/7eej23xlc3nbmGxQpFhVlPM5vP6+Ep2KPD7Urm6SVsDC5MEAZ/gTXi17nYtXM4
-         vZMSGLpKZ1GnCYvUEMB/OakehOT4dLVvb73o1OClRKu76zLPYYFJxUrgbRvAM5Sl6/
-         ECinsXWTx/Sw0xdXz0Ksk+4aYyG0A7WDslL8bbozmSIovF+PkOhnlNAxhn15/BSGqv
-         /pJQwzyf/ipj1B4EWvCaHuQOu5O5KhYiz1D4zws8F53epqiWmiLGYd40BAB1HiFqmI
-         B82PIMDkjnWaA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH] kobject: return -ENOSPC when add_uevent_var() fails
-Date:   Wed,  5 Jun 2019 02:44:12 +0900
-Message-Id: <20190604174412.13324-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 4 Jun 2019 13:48:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c85so4339366pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WO/pU2tXKcWaOz/Mz8XljUSgZVyxjPQIhAnHQSTWhKk=;
+        b=xswXLDjNe6Jf8a386sadmYdZwL+QReS4MtQ+UfRYLrhTIRzkvqzQ03azY36uhAFiZ6
+         VUlZKPeFui2lSXPN/A1Ld5L6ikHcGCXM0hfmX2/Daawvc4dvYRdpTQNj2TB11YyjMros
+         4yJDUHelpg3r8bdjufBbLRnEpioOFwufDjlJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WO/pU2tXKcWaOz/Mz8XljUSgZVyxjPQIhAnHQSTWhKk=;
+        b=NyRh/87a3rtcB1Ec52Ne0Yw7EO/apFJ/FrxG2irIJmgN213BcHbz/97KGYagZp1TKj
+         DDM/qSyeLYf4a7vrkPSaBeRFwDpt/9+1I+Cm7icGpQt4apnDwAnjPgTjUPiwbY27yrK6
+         DWjKmLC/Gf1kLGreLaxTxrFBzdulW/AQrelT1BBk68fIw17cPAMNqD5oeIVJjy3Te7+N
+         aYUTnKK6mbj0oMvf3luvz++48jQnDf16kFF8DJHhNaEnDw0gr5TCxC0UA6rZ2h3ekOYN
+         bipK5MmUMuGQSeevwtyS4f3HEbeZvSkoYf51AACL/YKAVRSiQEi8Z65wC86r2qZ91e4c
+         guEA==
+X-Gm-Message-State: APjAAAVVj7zShG4BNALxvuB/chiOVzn+Lw20mE5jGjNsvF9AnQ+mLwsL
+        k7lG/1r0WUJ0yx8oRkqtxhpjzA==
+X-Google-Smtp-Source: APXvYqx8jMof6CsO9RKVykzVQR/GUv12PGEyjyOIN6xEEzRdygdf09yxJH05WCP0zIpQf4tWt1xQtQ==
+X-Received: by 2002:a62:5487:: with SMTP id i129mr38037550pfb.68.1559670484899;
+        Tue, 04 Jun 2019 10:48:04 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v4sm24304610pff.45.2019.06.04.10.48.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 10:48:03 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 13:48:02 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [RFC 1/6] rcu: Add support for consolidated-RCU reader checking
+Message-ID: <20190604174802.GB228607@google.com>
+References: <20190601222738.6856-1-joel@joelfernandes.org>
+ <20190601222738.6856-2-joel@joelfernandes.org>
+ <20190603080128.GA3436@hirez.programming.kicks-ass.net>
+ <20190603141847.GA94186@google.com>
+ <20190604065358.73347ced@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604065358.73347ced@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function never attempts to allocate memory, so returning -ENOMEM
-looks weird to me. The reason of the failure is there is no more space
-in the given kobj_uevent_env structure.
+On Tue, Jun 04, 2019 at 06:53:58AM -0400, Steven Rostedt wrote:
+> On Mon, 3 Jun 2019 10:18:47 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > On Mon, Jun 03, 2019 at 10:01:28AM +0200, Peter Zijlstra wrote:
+> > > On Sat, Jun 01, 2019 at 06:27:33PM -0400, Joel Fernandes (Google) wrote:  
+> > > > +#define list_for_each_entry_rcu(pos, head, member, cond...)		\
+> > > > +	if (COUNT_VARGS(cond) != 0) {					\
+> > > > +		__list_check_rcu_cond(0, ## cond);			\
+> > > > +	} else {							\
+> > > > +		__list_check_rcu();					\
+> > > > +	}								\
+> > > > +	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
+> > > > +		&pos->member != (head);					\
+> > > >  		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
+> > > >  
+> > > >  /**
+> > > > @@ -621,7 +648,12 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
+> > > >   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+> > > >   * as long as the traversal is guarded by rcu_read_lock().
+> > > >   */
+> > > > +#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
+> > > > +	if (COUNT_VARGS(cond) != 0) {					\
+> > > > +		__list_check_rcu_cond(0, ## cond);			\
+> > > > +	} else {							\
+> > > > +		__list_check_rcu();					\
+> > > > +	}								\
+> > > >  	for (pos = hlist_entry_safe (rcu_dereference_raw(hlist_first_rcu(head)),\
+> > > >  			typeof(*(pos)), member);			\
+> > > >  		pos;							\  
+> > > 
+> > > 
+> > > This breaks code like:
+> > > 
+> > > 	if (...)
+> > > 		list_for_each_entry_rcu(...);
+> > > 
+> > > as they are no longer a single statement. You'll have to frob it into
+> > > the initializer part of the for statement.  
+> > 
+> > Thanks a lot for that. I fixed it as below (diff is on top of the patch):
+> > 
+> > If not for that '##' , I could have abstracted the whole if/else
+> > expression into its own macro and called it from list_for_each_entry_rcu() to
+> > keep it more clean.
+> > 
+> > ---8<-----------------------
+> > 
+> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > index b641fdd9f1a2..cc742d294bb0 100644
+> > --- a/include/linux/rculist.h
+> > +++ b/include/linux/rculist.h
+> > @@ -371,12 +372,15 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
+> >   * as long as the traversal is guarded by rcu_read_lock().
+> >   */
+> >  #define list_for_each_entry_rcu(pos, head, member, cond...)		\
+> > -	if (COUNT_VARGS(cond) != 0) {					\
+> > -		__list_check_rcu_cond(0, ## cond);			\
+> > -	} else {							\
+> > -		__list_check_rcu();					\
+> > -	}								\
+> > -	for (pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
+> > +	for (								\
+> > +	     ({								\
+> > +		if (COUNT_VARGS(cond) != 0) {				\
+> > +			__list_check_rcu_cond(0, ## cond);		\
+> > +		} else {						\
+> > +			__list_check_rcu_nocond();			\
+> > +		}							\
+> > +	      }),							\
+> 
+> For easier to read I would do something like this:
+> 
+> #define check_rcu_list(cond)						\
+> 	({								\
+> 		if (COUNT_VARGS(cond) != 0)				\
+> 			__list_check_rcu_cond(0, ## cond);		\
+> 		else							\
+> 			__list_check_rcu_nocond();			\
+> 	})
+> 
+> #define list_for_each_entry_rcu(pos, head, member, cond...)		\
+> 	for (check_rcu_list(cond),					\
 
-No caller of this function relies on this functing returning a specific
-error code, so just change it to return -ENOSPC. The intended change,
-if any, is the error number displayed in log messages.
+Yes, already doing it this way as I replied to Peter here:
+https://lore.kernel.org/patchwork/patch/1082846/#1278489
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Thanks!
 
- lib/kobject_uevent.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ - Joel
 
-diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-index 7998affa45d4..5ffd44bf4aad 100644
---- a/lib/kobject_uevent.c
-+++ b/lib/kobject_uevent.c
-@@ -647,7 +647,7 @@ EXPORT_SYMBOL_GPL(kobject_uevent);
-  * @env: environment buffer structure
-  * @format: printf format for the key=value pair
-  *
-- * Returns 0 if environment variable was added successfully or -ENOMEM
-+ * Returns 0 if environment variable was added successfully or -ENOSPC
-  * if no space was available.
-  */
- int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
-@@ -657,7 +657,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
- 
- 	if (env->envp_idx >= ARRAY_SIZE(env->envp)) {
- 		WARN(1, KERN_ERR "add_uevent_var: too many keys\n");
--		return -ENOMEM;
-+		return -ENOSPC;
- 	}
- 
- 	va_start(args, format);
-@@ -668,7 +668,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
- 
- 	if (len >= (sizeof(env->buf) - env->buflen)) {
- 		WARN(1, KERN_ERR "add_uevent_var: buffer size too small\n");
--		return -ENOMEM;
-+		return -ENOSPC;
- 	}
- 
- 	env->envp[env->envp_idx++] = &env->buf[env->buflen];
--- 
-2.17.1
 
