@@ -3,109 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C4EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A136C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87ABD2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m8JrSPi2"
+	by mail.kernel.org (Postfix) with ESMTP id CE8E52075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559681871;
+	bh=ihQrR3672ZM/DzWjZDVj/EkCVxnHXupxxQEbDR/4vAg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MJOS/GRvZ4LmJpR0pDMDP9ApOiwIH+Ak2vCzAfp+f8md2IpICaeKn8YGepI2Jw6js
+	 pJqqxwt5UTwEADsjCitDNwqRuDj5boU19A3bzngwP4lRpdJNt6/52sFDxGfYU/X8v7
+	 ixmg8T4F0jvDkLiYzTqoJvKRKSw7xD7914QQWA/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfFDU5n (ORCPT
+        id S1726636AbfFDU5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 4 Jun 2019 16:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfFDU5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Jun 2019 16:57:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:47076 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfFDU5n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:57:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id l26so17462166lfh.13
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9382D2085A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559681862;
+        bh=ihQrR3672ZM/DzWjZDVj/EkCVxnHXupxxQEbDR/4vAg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I4PRguwk4bMuMypdm5AOXXn53k/m+L5N9pyKwSfTNHLewnh8M65uGMG7NNR3Ebc8l
+         rsRnH3DUUzV1SO4+TidtsVDH9S4H4Orx7UfDX0ta38L+l5LFNUqPzgkVOGyqiElmZe
+         nHeIlBvnyw6Sot3eJ4IIqxcrsiVBsK6rjKdIv0AM=
+Received: by mail-wm1-f42.google.com with SMTP id f10so144564wmb.1
         for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bML0yxEZ55a3hV+DSfUrlsRp9njWmbey5g4KNB1QRmU=;
-        b=m8JrSPi2NL+Zc5vsMANgT2U/1SZgCD8B0/lscDLgOEQXwpC6wvsfjxRPp4e1byjP50
-         95u8vYyxQDNXIdanbRzc/UTb3TzQ9lnqIt2q+x4wzh9u3yZoVdjc5XjDLjyeXgpF/6DT
-         LpszLlezTnx1BEmJGSc87Q0yjP7GWglc+/0cU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bML0yxEZ55a3hV+DSfUrlsRp9njWmbey5g4KNB1QRmU=;
-        b=O5aA+x10APMu6KpQMWhNL5Z3bcQuHymOMzws1ybCdVn/Zu05MN93R3jKkIEV2utgmS
-         u1m6nbSqOFySJ4QJqI/65MdrNEZ+u/2Z28DY2IhOoqJXxw6qCpM7kr1CgWTmWSJFjyIT
-         NRQe8t3wsGduj96TdLUORV5mr7D4FzjKx4P28m3fe8chwX6nbDYvJ15wCC0UCFMSrp8B
-         LJSqDOx6upsh0XIeOWqhEFpSZpqJz0qFa15e1Ih9Nrh/T8S4yzGhQNMkWxpMEItr4D6H
-         vyrRHNGYSqEv++0Xvdb6nbsH01rLtCTPRDefrHRFHZ6udGjzKhLcv4ckZRnrAXWO1N+D
-         k7iQ==
-X-Gm-Message-State: APjAAAXJiG0hpeLpR3N+69MIX/+uQRu1KnVhNpUFUvMh3chzpHh5UFMc
-        PaKtrF3m0JjDFMTfsG5NOQvqfkgeOjQ=
-X-Google-Smtp-Source: APXvYqxtT6ylMkm+DKCBvi7OC8Ek8GsOJXKv84EWv/FerAsa7F9YDOa2TBG6fteLtGR+q93hkhtO5A==
-X-Received: by 2002:ac2:42c8:: with SMTP id n8mr3549788lfl.28.1559681860818;
-        Tue, 04 Jun 2019 13:57:40 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id m25sm2905207lfp.97.2019.06.04.13.57.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 13:57:40 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id 136so5942819lfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:57:39 -0700 (PDT)
-X-Received: by 2002:a19:6e41:: with SMTP id q1mr10011222lfk.20.1559681859360;
- Tue, 04 Jun 2019 13:57:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAWH66ne9WVxMUyhrxJkeIzBPi/l8Cb0juCnRtDVGVS/gpTo9ATi
+        aST7xm2XWpfe8P2deQghTN/89oO3praFqKNo5mkMOw==
+X-Google-Smtp-Source: APXvYqzjigMmzQseLoEe4mdRuIyW/gpGOaqBUS3DaksOo5KC4LVSwBy+ViDmwuhEPpoWAnb6UhQhHp6vTImgw+QurWo=
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr19833827wmi.0.1559681861171;
+ Tue, 04 Jun 2019 13:57:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20181130175957.167031-1-briannorris@chromium.org>
- <20190308023401.GA121759@google.com> <MN2PR18MB26376D3A660956396D0E60AFA0150@MN2PR18MB2637.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB26376D3A660956396D0E60AFA0150@MN2PR18MB2637.namprd18.prod.outlook.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 4 Jun 2019 13:57:27 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOe8t9b4vwv6_r9B+3MJ8gKZ_6NN8x6mA5X5scWDt7Xzw@mail.gmail.com>
-Message-ID: <CA+ASDXOe8t9b4vwv6_r9B+3MJ8gKZ_6NN8x6mA5X5scWDt7Xzw@mail.gmail.com>
-Subject: Re: [EXT] Re: [4.20 PATCH] Revert "mwifiex: restructure
- rx_reorder_tbl_lock usage"
-To:     Ganapathi Bhat <gbhat@marvell.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
+ <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com> <1207.1559680778@warthog.procyon.org.uk>
+In-Reply-To: <1207.1559680778@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 13:57:30 -0700
+X-Gmail-Original-Message-ID: <CALCETrXmjpSvVj_GROhgouNtbzLm5U9B4b364wycMaqApqDVNA@mail.gmail.com>
+Message-ID: <CALCETrXmjpSvVj_GROhgouNtbzLm5U9B4b364wycMaqApqDVNA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ganapathi,
-
-On Mon, Jun 3, 2019 at 8:04 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
-> > There are a few possible ways to handle this:
-> > (a) prevent processing softirqs in that context; e.g., with
-> >     local_bh_disable(). This seems somewhat of a hack.
-> >     (Side note: I think most of the locks in this driver really could be
-> >     spin_lock_bh(), not spin_lock_irqsave() -- we don't really care
-> >     about hardirq context for 99% of these locks.)
-> > (b) restructure so that packet processing (e.g., netif_rx_ni()) is done
-> >     outside of the spinlock.
-> >
-> > It's actually not that hard to do (b). You can just queue your skb's up in a
-> > temporary sk_buff_head list and process them all at once after you've
-> > finished processing the reorder table. I have a local patch to do this, and I
-> > might send it your way if I can give it a bit more testing.
+On Tue, Jun 4, 2019 at 1:39 PM David Howells <dhowells@redhat.com> wrote:
 >
-> OK; That will be good; We will run a complete test after the patch; (OR we can work on this, share for review);
+> Andy Lutomirski <luto@kernel.org> wrote:
+>
+> > > Here's a set of patches to add a general variable-length notification queue
+> > > concept and to add sources of events for:
+> >
+> > I asked before and didn't see a response, so I'll ask again.  Why are you
+> > paying any attention at all to the creds that generate an event?
+>
+> Casey responded to you.  It's one of his requirements.
+>
 
-I gave my work another round of testing and submitted it here:
+It being a "requirement" doesn't make it okay.
 
-https://patchwork.kernel.org/cover/10976089/
-[PATCH 0/2] mwifiex: spinlock usage improvements
+> However, the LSMs (or at least SELinux) ignore f_cred and use current_cred()
+> when checking permissions.  See selinux_revalidate_file_permission() for
+> example - it uses current_cred() not file->f_cred to re-evaluate the perms,
+> and the fd might be shared between a number of processes with different creds.
 
-Feel free to give it a spin. It doesn't completely resolve everything
-you were trying to fix, but I believe it helps nudge things in the
-right direction.
+That's a bug.  It's arguably a rather severe bug.  If I ever get
+around to writing the patch I keep thinking of that will warn if we
+use creds from invalid contexts, it will warn.
 
-Brian
+Let's please not repeat this.
