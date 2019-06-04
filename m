@@ -4,119 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E02C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3374C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7480C24CB3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A651724CE5
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XLsvONrF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vZW6AxHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfFDJML (ORCPT
+        id S1727054AbfFDJMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:12:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33645 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfFDJML (ORCPT
+        Tue, 4 Jun 2019 05:12:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1716 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726877AbfFDJMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:12:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g21so8106435plq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PkvAy0HG/cZzH7p73LTDgLYGpVT1MehWvYFfFdnT2Fc=;
-        b=XLsvONrFeGHoW3EfQRkoyPM7lWU3JuUCXY3/sd7tNiIwxHShI/cMEKKFLrma4d6TQ3
-         fpgQ+RtwMent0S3STZcQk5dhjKKKDFKirRchZ0nxX+tawmlWqJZMILnadviSRkJMxLth
-         gfA6mrJ6r3qG+GBkDg9Yl9yjjJtsvmkyYNNqc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PkvAy0HG/cZzH7p73LTDgLYGpVT1MehWvYFfFdnT2Fc=;
-        b=LWYbzuOnFeV1ypm0iHW8g6pvgJHpbAacXkpHTScCFT/TVqNmO1FeMhycWnztKNIDxU
-         k1+I7vGXXKh15mlZvgLlatgaO+337EeKgqBA0gr/2pEUBhRmGnaBTov4EbqRrDJr+gcq
-         g13gYhlMZaK/bF+Ht+kAAQaxrnSIH/eStxtrALJnYzj4v5un+qdzkxIUU6Pr3PmPgorS
-         abmDcz0Ie6GYjTahFaVpcdzNbF2/gDMzCsvLyIgzgsUkmFnpjhiTYUJi8Q4DxBiNOEoq
-         7o6Oj3xGDsC59OevT37a0UKkMe9bGfYTxpISyG/v/ndc80fo8d9d+vgN+txVYfI86B+V
-         +9HQ==
-X-Gm-Message-State: APjAAAXnFKHDkHH2pgeDFbkwJmzYsT51vZgS2gUIM9Ck34xhkma1Vdez
-        RmBwbABTZXNTGSwttsPkU9CJZPyjeQs=
-X-Google-Smtp-Source: APXvYqxDyY0ozrmSHzomFvWje7xUaWGpFIWh42pUXi1Mg8hI3/M46iMnwG1Ys2iAiNUMGp3qdug8tg==
-X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr20221589plq.223.1559639530118;
-        Tue, 04 Jun 2019 02:12:10 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:845f:e35d:e30c:4b47])
-        by smtp.gmail.com with ESMTPSA id x21sm773591pfi.91.2019.06.04.02.12.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 02:12:09 -0700 (PDT)
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dgreid@chromium.org,
-        cychiang@chromium.org
-Subject: [PATCH v2] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Tue,  4 Jun 2019 17:11:50 +0800
-Message-Id: <20190604091150.154384-1-yuhsuan@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
+        Tue, 4 Jun 2019 05:12:14 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5498qN1019707;
+        Tue, 4 Jun 2019 11:12:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=tCqCtJ+aEYgGguO+2MVvQssjCEBkv0n4pYDaflX/fgg=;
+ b=vZW6AxHp77jsL1NDtrWsqInx58HnzpDKTYw6dwAwdOPhoq5dIR7polTodTJGWpXOjsBG
+ BxLQ8cFjPqI8RazZ2PUDq5+SUGwmdpIK8M2TeGEjqS+kToN0MCto4S3wMNmNts5lnhOw
+ 0NHZef2YsHDplKzQA/VT+uaXdXSAAM8dVrlM33y5DX8gTlonYQM0tDnZ6poWCd02733d
+ L+K26KpTKbFIPvVyA2aYwBfB9rFQ8pTgzSd3yHwlN+g32178Floepp3jT2y8iWyhABFc
+ HN8PFxNtmMMGpFWb4PM8gLcFJJWPwfwXKlMYNONk5OrVZyVJKAcpsya2wGDfc1JfD1GC 5A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sunmefkkc-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 04 Jun 2019 11:12:00 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D1331AC;
+        Tue,  4 Jun 2019 08:55:44 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 055512509;
+        Tue,  4 Jun 2019 08:55:43 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019
+ 10:55:43 +0200
+Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 4 Jun 2019 10:55:43
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>,
+        Bich Hemon <bich.hemon@st.com>
+Subject: [PATCH 08/10] ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
+Date:   Tue, 4 Jun 2019 10:55:17 +0200
+Message-ID: <1559638519-6128-9-git-send-email-erwan.leray@st.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.31]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The supported formats are S16_LE and S24_LE now. However, by datasheet
-of max98090, S24_LE is only supported when it is in the right justified
-mode. We should remove 24-bit format if it is not in that mode to avoid
-triggering error.
+From: Bich Hemon <bich.hemon@st.com>
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
----
- sound/soc/codecs/max98090.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Add idle and no_console_suspend states to uart4 pin configuration
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 7619ea31ab50..a6c2cb89767c 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1909,6 +1909,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
- 	return 0;
- }
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 62a8c78..34cc847 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -251,8 +251,11 @@
+ };
  
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = codec_dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/* Remove 24-bit format support if it is not in right justified mode. */
-+	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2316,6 +2331,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ &uart4 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
+ 	pinctrl-0 = <&uart4_pins_a>;
++	pinctrl-1 = <&uart4_sleep_pins_a>;
++	pinctrl-2 = <&uart4_idle_pins_a>;
++	pinctrl-3 = <&uart4_pins_a>;
+ 	status = "okay";
+ };
  
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
-2.22.0.rc1.311.g5d7573a151-goog
+1.9.1
 
