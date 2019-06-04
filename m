@@ -2,119 +2,98 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0F6C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342EE24A74
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lQ08PYzA"
+	by mail.kernel.org (Postfix) with ESMTP id 2F58423426
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfFDOyd (ORCPT
+        id S1727891AbfFDOym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:54:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:35170 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727586AbfFDOyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:54:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1559660071; bh=95GYOgwl829tExfkDRtkMvcWLHLqIMDdOvd0ItQBRPA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lQ08PYzAowbpDALh/bdzfBKo2Glb31I+mPrDYyfuk3YUz7jUjP2TtF05N7MRU/ABy
-         ys6ZI84RcheuM7k2KhWKh1CcT2ElO9D+OfXrBtTR/YWsT7VFHVOTIUXA0gPdGnbJtF
-         tNWOQaooGXJWtgGvUEWRkvO6/e0ePeOF9ehbh9GQ=
-Date:   Tue, 4 Jun 2019 16:54:30 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 03/12] media: rc: sunxi: Add A31 compatible
-Message-ID: <20190604145430.xqufpyosetgb4bo7@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-4-peron.clem@gmail.com>
+        Tue, 4 Jun 2019 10:54:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37676 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727848AbfFDOyj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:54:39 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54EbCIA050947
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 10:54:38 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2swt7gsw57-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 10:54:38 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 4 Jun 2019 15:54:34 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 15:54:33 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54EsVpR60358910
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 14:54:31 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9AFDAAE053;
+        Tue,  4 Jun 2019 14:54:31 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A506AE051;
+        Tue,  4 Jun 2019 14:54:31 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  4 Jun 2019 14:54:31 +0000 (GMT)
+Date:   Tue, 4 Jun 2019 16:54:29 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: fix unrecognized __aligned() in uapi header
+References: <20190604082947.26328-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190528161440.27172-4-peron.clem@gmail.com>
+In-Reply-To: <20190604082947.26328-1-yamada.masahiro@socionext.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19060414-0016-0000-0000-00000284111E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060414-0017-0000-0000-000032E121FA
+Message-Id: <20190604145429.GE5774@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=936 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 06:14:31PM +0200, Clément Péron wrote:
-> Allwiner A31 has a different memory mapping so add the compatible
-> we will need it later.
+On Tue, Jun 04, 2019 at 05:29:47PM +0900, Masahiro Yamada wrote:
+> __aligned() is a shorthand that is only available in the kernel space
+> because it is defined in include/linux/compiler_attributes.h, which is
+> not exported to the user space.
 > 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> Detected by compile-testing exported headers.
+> 
+> ./usr/include/asm/runtime_instr.h:60:37: error: expected declaration specifiers or â€˜...â€™ before numeric constant
+>  } __attribute__((packed)) __aligned(8);
+>                                      ^
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  drivers/media/rc/sunxi-cir.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> index d02dcb6fd0a5..0504ebfc831f 100644
-> --- a/drivers/media/rc/sunxi-cir.c
-> +++ b/drivers/media/rc/sunxi-cir.c
-> @@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_quirks = {
->  	.fifo_size = 64,
->  };
->  
-> +static const struct sunxi_ir_quirks sun6i_a31_ir_quirks = {
-> +	.has_reset = true,
-> +	.fifo_size = 64,
-> +};
-> +
+>  arch/s390/include/uapi/asm/runtime_instr.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-BTW, H6 BSP uses FIFO size 40:
+Applied, thanks.
 
-https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/drivers/media/rc/sunxi-ir-dev.c#L290
-
-Have you tried filling the fifo with over 40 words on H6, to see if it works?
-
-I know it's docummented as having 64 words in the manual, so maybe Allwiner
-just didn't care enough to make the driver configurable, and the H6
-FIFO really has that depth.
-
-regards,
-	o.
-
->  static const struct of_device_id sunxi_ir_match[] = {
->  	{
->  		.compatible = "allwinner,sun4i-a10-ir",
-> @@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] = {
->  		.compatible = "allwinner,sun5i-a13-ir",
->  		.data = &sun5i_a13_ir_quirks,
->  	},
-> +	{
-> +		.compatible = "allwinner,sun6i-a31-ir",
-> +		.data = &sun6i_a31_ir_quirks,
-> +	},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, sunxi_ir_match);
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
