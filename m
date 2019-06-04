@@ -2,80 +2,110 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14664C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DDBC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D881B24C40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D5024BB1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PiqMpK43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfFDECf (ORCPT
+        id S1726521AbfFDED3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 00:02:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18076 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725267AbfFDECe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 00:02:34 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3943AF26C5A7EC46D866;
-        Tue,  4 Jun 2019 12:02:32 +0800 (CST)
-Received: from huawei.com (10.175.100.202) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
- 12:02:23 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <idosch@mellanox.com>,
-        <daniel@iogearbox.net>, <petrm@mellanox.com>, <jiri@mellanox.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is set
-Date:   Tue, 4 Jun 2019 06:07:34 +0000
-Message-ID: <1559628454-138692-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.4
+        Tue, 4 Jun 2019 00:03:29 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37809 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFDED2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 00:03:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bh12so1714255plb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f+q8eC1oiPgskruXaD+lspZshT3DmysyCU4e5tlyJjQ=;
+        b=PiqMpK43hy+ZR1dHjSMjo96+17tuIuN5HH32kvTcLbSyEtz417yLi/xM2Vwho6JqM4
+         1lGnBHIw8zkZJun7qWrPkc2vbORsLIlvB2I/4P0zndCq3csZylWmWq+7zA4RpaZq5Yx/
+         zCjR21x2u0bOtrwfKymJzTptoNBTTv63izIHleLACD+2Eud5Nq2GtoejJY+ZW8/zzzrv
+         WllsQ9qulkia+37jLN7algupIoPuUy7/VgtNbaY23XAOfmKrzObetXyXz0xtP/79W5Bq
+         mbSHWqZACJ7FBI1aaUDsg2YH9Aj6Magje6JiHRHoyGRJx1snURU3rjECHPe32HcDYO3q
+         FHtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f+q8eC1oiPgskruXaD+lspZshT3DmysyCU4e5tlyJjQ=;
+        b=rjea8wvCy2EEseSOr7Wm4OUwk6TTUOa8YD5giip/ByrzvxMSCYJJPIHf79qY1PHLwr
+         WKjmdWn2e99OoeLHvEfY29ZfdWJudbNTUw0DdySg/HhPLQ6pnDCC2AR7YSLfaPBMozNM
+         pmU77Xo+1txJC67VO7BuRgfPtP4FhW2aklpzTqHYG2PEf3fFVMRqdMky7N6pPz+IdfBA
+         OCqTgRhLparDORBwZxrEglN1L4dL1cox6e/735MsTz8ZO8pFdIQufkyqjiZvdmEZIoqI
+         dCi2F1y8tnrmCqQevgvlqhkwupMCZbbbj0jk4x/fv2mAHP9ShrdZZcaYU/CkT7KEGNTW
+         jthA==
+X-Gm-Message-State: APjAAAVitMMUG96mHSL4qo4e1nHl3dd/5VZSCgRTI6acPYiMLBcoYI7j
+        kp2yCCZh5UGmnYAroW+1aMSV9g==
+X-Google-Smtp-Source: APXvYqwiYYNeL6yX8LBntiessg9e2/wQoMr5l0ZNyv/tZHZlDbqLoD3Gv+ai7+HDa9fvLwX3+pDpFQ==
+X-Received: by 2002:a17:902:f20b:: with SMTP id gn11mr34004883plb.126.1559621007496;
+        Mon, 03 Jun 2019 21:03:27 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id m123sm16735468pfm.39.2019.06.03.21.03.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 21:03:25 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 09:33:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Markus Mayer <mmayer@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Markus Mayer <code@mmayer.net>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM STB AVS CPUFREQ DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        "open list:BROADCOM STB AVS CPUFREQ DRIVER" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] cpufreq: brcmstb-avs-cpufreq: Couple fixes
+Message-ID: <20190604040323.vzunculbiqgkemrx@vireshk-i7>
+References: <20190522184547.31791-1-f.fainelli@gmail.com>
+ <3734641.73qX0VsHyn@kreacher>
+ <013ec7c0-0984-cfc9-ea3a-0180719f5ac4@gmail.com>
+ <CAGt4E5tZ1YLbtCDJDXTTZrH5S4Jmw_BVOfz+i-KF=TUjA=yvkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.202]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGt4E5tZ1YLbtCDJDXTTZrH5S4Jmw_BVOfz+i-KF=TUjA=yvkQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's some NICs, such as hinic, with NETIF_F_IP_CSUM and NETIF_F_TSO
-on but NETIF_F_HW_CSUM off. And ipvlan device features will be
-NETIF_F_TSO on with NETIF_F_IP_CSUM and NETIF_F_IP_CSUM both off as
-IPVLAN_FEATURES only care about NETIF_F_HW_CSUM. So TSO will be
-disabled in netdev_fix_features.
-For example:
-Features for enp129s0f0:
-rx-checksumming: on
-tx-checksumming: on
-        tx-checksum-ipv4: on
-        tx-checksum-ip-generic: off [fixed]
-        tx-checksum-ipv6: on
+On 03-06-19, 12:55, Markus Mayer wrote:
+> On Wed, 29 May 2019 at 10:02, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >
+> > On 5/27/19 3:51 AM, Rafael J. Wysocki wrote:
+> > > On Wednesday, May 22, 2019 8:45:45 PM CEST Florian Fainelli wrote:
+> > >> Hi Rafael, Viresh,
+> > >>
+> > >> These patch series contains two minor fixes for the brcmstb-avs-cpufreq
+> > >> driver.
+> > >>
+> > >> Florian Fainelli (2):
+> > >>   cpufreq: brcmstb-avs-cpufreq: Fix initial command check
+> > >>   cpufreq: brcmstb-avs-cpufreq: Fix types for voltage/frequency
+> 
+> To both of these
+> 
+> Acked-by: Markus Mayer <mmayer@broadcom.com>
 
-Fixes: a188222b6ed2 ("net: Rename NETIF_F_ALL_CSUM to NETIF_F_CSUM_MASK")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- drivers/net/ipvlan/ipvlan_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied. Thanks.
 
-diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-index bbeb1623e2d5..717fce6edeb7 100644
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -112,7 +112,7 @@ static void ipvlan_port_destroy(struct net_device *dev)
- }
- 
- #define IPVLAN_FEATURES \
--	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
-+	(NETIF_F_SG | NETIF_F_CSUM_MASK | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
- 	 NETIF_F_GSO | NETIF_F_TSO | NETIF_F_GSO_ROBUST | \
- 	 NETIF_F_TSO_ECN | NETIF_F_TSO6 | NETIF_F_GRO | NETIF_F_RXCSUM | \
- 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
 -- 
-2.21.GIT
-
+viresh
