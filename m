@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A51C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2033CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A48B206C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D916E206C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690812;
-	bh=AR4eTHwSeJQcxxIju8U2g2uV2eCRmqIjgfKgnmshzos=;
+	s=default; t=1559690821;
+	bh=vwnWIWlm+60qgmZyuWQzafB4PtIQ8oJruKI4bbm8GNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKn45Nm9UfdzdON9+cQ4QF+124In8TZ31qJ863Drj/PkyhiigLIbYs9dagsxvC0Y5
-	 +WCZniF37uKIvJZMLm3odMci7Lsv4wNsSoawRIfD5OGLOQzKUFqooqrQka80R/YW7E
-	 E5OFeVlhKBYmlz2TgOT7VesiVqQAgXWsOI5nMVjI=
+	b=U7qMY2GhRU4OFLDWXA2+2yx0b7TxZIYdfpt4A7a6b40dAi3Vn9bP9iMf2HLm3TAXS
+	 g4hJCphEehphLoYWaXxuZS4qRLBbeIEea5SHfs1Eu03ZAwZwN75Pbmvah/uMoDcgIH
+	 dhJcbEorBjjthHvb6vRtU6oHGcSiEbqgc8R2TPg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfFDX0v (ORCPT
+        id S1727669AbfFDX07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfFDXZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:31 -0400
+        id S1728030AbfFDXZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E299208CB;
-        Tue,  4 Jun 2019 23:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D6820862;
+        Tue,  4 Jun 2019 23:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690730;
-        bh=AR4eTHwSeJQcxxIju8U2g2uV2eCRmqIjgfKgnmshzos=;
+        s=default; t=1559690729;
+        bh=vwnWIWlm+60qgmZyuWQzafB4PtIQ8oJruKI4bbm8GNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCCLfOLUDhE8RJ6dT7Gx+EDgypg1KTOgVPAsVBE3UkJ3yQ3vf+MbaeuC3ZiacqwPL
-         bmkbK1OkVSCNXOAkuFKRz+jhViuV4IPF3Ys/QmFw4QVZPWyUgnG2niGBlF1XiDpI57
-         NUaadR2BTPWpAzokiiFtGNCqHi2YFCpa4EUpl/9I=
+        b=KK/vIFGNa1FflVBP+/1gXRwOD2HU3zQYfmoLG5TmOeXQyallKok5sD6E3hiN8GzDd
+         KCdKBAeTEd83L2Bo06tFwsKFSwmcekDGdoGAjo13eSrCbTGGAN+PRUHtJfOonLmxZp
+         Q1XXjORdIlODhSgpjh35wq7+OTmPcTo6dYcFkVkg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/17] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
-Date:   Tue,  4 Jun 2019 19:24:58 -0400
-Message-Id: <20190604232459.7745-17-sashal@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/17] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
+Date:   Tue,  4 Jun 2019 19:24:57 -0400
+Message-Id: <20190604232459.7745-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
 References: <20190604232459.7745-1-sashal@kernel.org>
@@ -59,69 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
+[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
 
-kselftests exposed a problem in the s390 handling for memory slots.
-Right now we only do proper memory slot handling for creation of new
-memory slots. Neither MOVE, nor DELETION are handled properly. Let us
-implement those.
+According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
+each MSR may be written with any value, and the high-order 8 bits are
+sign-extended according to the value of bit 31", but the fixed counters
+in real hardware are limited to the width of the fixed counters ("bits
+beyond the width of the fixed-function counter are reserved and must be
+written as zeros").  Fix KVM to do the same.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reported-by: Nadav Amit <nadav.amit@gmail.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 2032ab81b2d7..07f571900676 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3288,21 +3288,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
--	int rc;
--
--	/* If the basics of the memslot do not change, we do not want
--	 * to update the gmap. Every update causes several unnecessary
--	 * segment translation exceptions. This is usually handled just
--	 * fine by the normal fault handler + gmap, but it will also
--	 * cause faults on the prefix page of running guest CPUs.
--	 */
--	if (old->userspace_addr == mem->userspace_addr &&
--	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
--	    old->npages * PAGE_SIZE == mem->memory_size)
--		return;
-+	int rc = 0;
- 
--	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
--		mem->guest_phys_addr, mem->memory_size);
-+	switch (change) {
-+	case KVM_MR_DELETE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		break;
-+	case KVM_MR_MOVE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		if (rc)
-+			break;
-+		/* FALLTHROUGH */
-+	case KVM_MR_CREATE:
-+		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-+				      mem->guest_phys_addr, mem->memory_size);
-+		break;
-+	case KVM_MR_FLAGS_ONLY:
-+		break;
-+	default:
-+		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
-+	}
- 	if (rc)
- 		pr_warn("failed to commit memory region\n");
- 	return;
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index 5ab4a364348e..2729131fe9bf 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -235,11 +235,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		}
+ 		break;
+ 	default:
+-		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+-		    (pmc = get_fixed_pmc(pmu, msr))) {
+-			if (!msr_info->host_initiated)
+-				data = (s64)(s32)data;
+-			pmc->counter += data - pmc_read_counter(pmc);
++		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
++			if (msr_info->host_initiated)
++				pmc->counter = data;
++			else
++				pmc->counter = (s32)data;
++			return 0;
++		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
++			pmc->counter = data;
+ 			return 0;
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			if (data == pmc->eventsel)
 -- 
 2.20.1
 
