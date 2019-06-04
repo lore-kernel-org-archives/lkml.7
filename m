@@ -2,67 +2,111 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D327EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60586C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B301D2075C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4040A20843
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfFDQIn (ORCPT
+        id S1728302AbfFDQJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:08:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25369 "EHLO mga01.intel.com"
+        Tue, 4 Jun 2019 12:09:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22656 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbfFDQIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:08:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1728208AbfFDQJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:09:20 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:08:42 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 09:09:19 -0700
 X-ExtLoop1: 1
-Received: from unknown (HELO localhost) ([10.241.225.31])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 09:08:41 -0700
-Date:   Tue, 4 Jun 2019 09:08:41 -0700
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     Xue Chaojing <xuechaojing@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>
-Subject: Re: [PATCH net-next v4] hinic: add LRO support
-Message-ID: <20190604090841.00007d28@intel.com>
-In-Reply-To: <20190604011608.26485-1-xuechaojing@huawei.com>
-References: <20190604011608.26485-1-xuechaojing@huawei.com>
-X-Mailer: Claws Mail 3.14.0 (GTK+ 2.24.30; i686-w64-mingw32)
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga001.jf.intel.com with ESMTP; 04 Jun 2019 09:09:15 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hYBzu-0000nb-Qw; Tue, 04 Jun 2019 19:09:14 +0300
+Date:   Tue, 4 Jun 2019 19:09:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] x86/cpu: Add Icelake-NNPI to Intel family
+Message-ID: <20190604160914.GN9224@smile.fi.intel.com>
+References: <20190530123827.8218-1-rajneesh.bhardwaj@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530123827.8218-1-rajneesh.bhardwaj@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 01:16:08 +0000 Xue wrote:
-> This patch adds LRO support for the HiNIC driver.
+On Thu, May 30, 2019 at 06:08:27PM +0530, Rajneesh Bhardwaj wrote:
+> Add the CPUID model number of Icelake Neural Network Processor for Deep
+
+I believe we spell "Ice Lake".
+
+> Learning Inference (ICL-NNPI) to the Intel family list. Icelake NNPI uses
+
+Ditto.
+
+> model number 0x9D and this will be documented in a future version of Intel
+> Software Development Manual.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: x86-ml <x86@kernel.org>
+> Cc: Linux PM <linux-pm@vger.kernel.org>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> ---
+>  arch/x86/include/asm/intel-family.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> index 9f15384c504a..087de5d3b93a 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -53,6 +53,7 @@
+>  #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+>  
+>  #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+> +#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+>  
+>  /* "Small Core" Processors (Atom) */
+>  
+> -- 
+> 2.17.1
+> 
 
-Hm, you added my reviewed-by tag, but I didn't add it myself, I
-only commented on your code.  This is a no-no. You don't add tags with
-other people's names just because you think you can/should.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-If someone EXPLICITLY says: "go ahead and add my reviewed-by after these
-changes" then you can add it yourself.
 
-Also, what did you change in v1:v4? There should be a summary somewhere
-in the commit log (usually after a ---)
-
-FWIW, I looked over the code and my concerns were addressed.
-
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
