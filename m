@@ -2,410 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA59C28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86964C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057F6248D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nk4K9og7"
+	by mail.kernel.org (Postfix) with ESMTP id 5FAC4248D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559647610;
+	bh=LYFF90I25JY7V0ZhSu4XFP/RPOk2v/6uwiYk7ki5MAA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DAuLKH4/nn+1kc8de8HLHAd5tfen/hnkh2JCO0Bgo4isy9gTO9iLIPMu1EACk6zeP
+	 LVF/0UP0cqTsK2E6iVR/WZbvuDjtA7XgLNxMHHXMG6naQIBPJjHsR3KooJcpndfM4I
+	 GfoYNchV2TSVQtOdIZudivfpad2wsA4QWQvgGIQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfFDLZa (ORCPT
+        id S1727356AbfFDL0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:25:30 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42988 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfFDLZ3 (ORCPT
+        Tue, 4 Jun 2019 07:26:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34847 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfFDL0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:25:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o12so8286996wrj.9;
-        Tue, 04 Jun 2019 04:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lvcQvo1dL0ZC1d+EYzjKaa+0OOHuI5nTxQDS6FSwGQk=;
-        b=nk4K9og7+4YBxV8FoGJ0oyWMXlnrH7Y4jRUAOu1tlCAN39qVmdy3pkxueqbYuR6eho
-         cbMl9Vx5WsPoH7XfKGlPrGPt6/kOXsvqtRGkAraRVd1uqoNVwW04Sm6MGSdLAh2KV8SH
-         rlKn8ektgdAeiqoE18rs9c0dk+wzxSh/MrZjX2HNpP/oFD2J8P2ZyOOZoj2PSRjOWnTK
-         XFF0jCSrFjiEg8+pU7PU3iRs5aMf5FKXj7B04qrbkLO36qZvUSzVSKqq4hy43Nokd8YK
-         eX68LjbL7ZXdU+nmyKDKt2ibg+6D1lquuz2cYS1QchpOrxQPn9rOJ7IyYpc+f3Aldvtm
-         nayw==
+        Tue, 4 Jun 2019 07:26:49 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n14so19177101otk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 04:26:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lvcQvo1dL0ZC1d+EYzjKaa+0OOHuI5nTxQDS6FSwGQk=;
-        b=F7mvOlkY75Ji40FDkiZt9KXu4RWYxbKvvefk2oMGE24hTlb5Q91syiHM6bVMbpQ4tv
-         eCHYvltlzJaA9rYwwhfU9nsh5zUBivHU6/WwbCbXIHltSUEr41GQHkDEUmO209LPNtZa
-         236fa7WhRw1WEiFRIniSgz1IJr8fp2RrRCyZvNm8+UQblgyBtn3xqjeOzdcPk6mnqYnH
-         MjaparmhMGA5Vnz/bahWzXNQ/c3AvKQrRM57p7zgVwA96fdqSScm891i/bxRELMC2T2v
-         IoTqUFbT4beFzrNY1dsyNzoZfPdb689/C3SbE0i3PTttSRLYDQBwJQ3dPUaILv4O0QUU
-         wjgg==
-X-Gm-Message-State: APjAAAWkTeNrrS6w81LAFn6SgDzWSZzMpTo5MXUVN+HTxstNddPFxlMr
-        9t56i4xQdLz7JQb0CMZTdreA+r7f
-X-Google-Smtp-Source: APXvYqxqrYdnjrNV0sIN9aOCKBdaH2Cz2G3JwSkzgBYhRzo6DTELUdNP0d2j9MiDXPyrEqsba6PlmQ==
-X-Received: by 2002:adf:b64b:: with SMTP id i11mr20026326wre.205.1559647526942;
-        Tue, 04 Jun 2019 04:25:26 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id w14sm1551011wrt.59.2019.06.04.04.25.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 04:25:25 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:25:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 16/16] PM / devfreq: Introduce driver for NVIDIA
- Tegra20
-Message-ID: <20190604112524.GP16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-17-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c+bLIXaZ17N12ujpsyYbaNmHRjzt3Mh0NBkU6cPWx/k=;
+        b=ao5Gdw/MCly4LSDpj0v2ThPqkp5IF3jUEbM4zKLBSxOFKabeeEtcSAMnRNhIUdAhdT
+         d3gPhmwfldEMUrqkJXcJ3TbfjukjbEzKiHjQ16ECKXY5A+o2hFJ+vBo/dq9nOJM8BnII
+         FhJhdH8ugJVfwSTY2lPNCLsU8MI0H0zw1F9rMSU/Hdu7VW9cl1RJz/2bQRYTeVA5Egbz
+         cUSGbN1GVkJUnJ+eL/12e27Ur5uJv5LTDXHKGj+FaZ54M92hpto9vrdQ3qNzgQL0+xDG
+         n6HIDsVjBj9gx0FrGDk6qTrHTuQGP9CuMIl+iZit+CtYkHlBlP6hVdbie8ZEoD88edtF
+         i5qg==
+X-Gm-Message-State: APjAAAUh2jPRJLZuQWEiUPd2I12OVQ4um/U9uTwEPSs7JsEyXD0Pdt1+
+        IFgyirOsLzUEnCzRbMqxYqM9vGF8cnAwWqdfv3U=
+X-Google-Smtp-Source: APXvYqwbCd7Da1EmQl1d1NP4qH8OhiH1lq3bzfOZttdZb6aQhIcEINmifkjA6pyDjBayUkh/1zPKudcAeJetLOGoxeM=
+X-Received: by 2002:a9d:3285:: with SMTP id u5mr5132565otb.266.1559647608261;
+ Tue, 04 Jun 2019 04:26:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b5sSX5qSQrSInIHt"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-17-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com> <1559577023-558-28-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1559577023-558-28-git-send-email-suzuki.poulose@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 4 Jun 2019 13:26:37 +0200
+Message-ID: <CAJZ5v0ghb969phwKDJd_hJV6mBm0_B8R9Lrk8RG3Tu9ieO69OQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 27/57] drivers: Unify the match prototype for
+ bus_find_device with class_find_device
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        David Kershner <david.kershner@unisys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 3, 2019 at 5:51 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> We have iterators for devices by bus and class, with a supplied
+> "match" function to do the comparison. However, both of the helper
+> function have slightly different prototype for the "match" argument.
+>
+>  int (*) (struct device *dev, void *data)  // bus_find_device
+>   vs
+>  int (*) (struct device *dev, const void *data) // class_find_device
+>
+> Unify the prototype by promoting the match function to use that of
+> the class_find_device(). This will allow us to share the generic
+> match helpers with class_find_device() users.
 
---b5sSX5qSQrSInIHt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch looks good to me, but the changelog might be a bit better.
 
-On Thu, May 02, 2019 at 02:38:15AM +0300, Dmitry Osipenko wrote:
-> Add devfreq driver for NVIDIA Tegra20 SoC's. The driver periodically
-> reads out Memory Controller counters and adjusts memory frequency based
-> on the memory clients activity.
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  MAINTAINERS                       |   8 ++
->  drivers/devfreq/Kconfig           |  10 ++
->  drivers/devfreq/Makefile          |   1 +
->  drivers/devfreq/tegra20-devfreq.c | 212 ++++++++++++++++++++++++++++++
->  4 files changed, 231 insertions(+)
->  create mode 100644 drivers/devfreq/tegra20-devfreq.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 98edc38bfd7b..e7e434f74038 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10098,6 +10098,14 @@ F:	include/linux/memblock.h
->  F:	mm/memblock.c
->  F:	Documentation/core-api/boot-time-mm.rst
-> =20
-> +MEMORY FREQUENCY SCALING DRIVER FOR NVIDIA TEGRA20
-> +M:	Dmitry Osipenko <digetx@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +L:	linux-tegra@vger.kernel.org
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
-> +S:	Maintained
-> +F:	drivers/devfreq/tegra20-devfreq.c
-> +
->  MEMORY MANAGEMENT
->  L:	linux-mm@kvack.org
->  W:	http://www.linux-mm.org
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index a6bba6e1e7d9..1530dbefa31f 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -100,6 +100,16 @@ config ARM_TEGRA_DEVFREQ
->  	  It reads ACTMON counters of memory controllers and adjusts the
->  	  operating frequencies and voltages with OPP support.
-> =20
-> +config ARM_TEGRA20_DEVFREQ
-> +	tristate "NVIDIA Tegra20 DEVFREQ Driver"
-> +	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
-> +	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-> +	select PM_OPP
+It seems to be all about the bus_find_device() and class_find_device()
+prototype consolidation, so that the same pair of data and match()
+arguments can be passed to both of them, which then will allow some
+optimizations to be made, so what about the following:
 
-Again, I'm not sure the COMPILE_TEST will work here unless you add a few
-more dependencies.
+"There is an arbitrary difference between the prototypes of
+bus_find_device() and class_find_device() preventing their callers
+from passing the same pair of data and match() arguments to both of
+them, which is the const qualifier used in the prototype of
+class_find_device().  If that qualifier is also used in the
+bus_find_device() prototype, it will be possible to pass the same
+match() callback function to both bus_find_device() and
+class_find_device(), which will allow some optimizations to be made in
+order to avoid code duplication going forward.
 
-Thierry
+For this reason, change the prototype of bus_find_device() to match
+the prototype of class_find_device() and adjust its callers to use the
+const qualifier in accordance with the new prototype of it.".
 
-> +	help
-> +	  This adds the DEVFREQ driver for the Tegra20 family of SoCs.
-> +	  It reads Memory Controller counters and adjusts the operating
-> +	  frequencies and voltages with OPP support.
-> +
->  config ARM_RK3399_DMC_DEVFREQ
->  	tristate "ARM RK3399 DMC DEVFREQ Driver"
->  	depends on ARCH_ROCKCHIP
-> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-> index 47e5aeeebfd1..338ae8440db6 100644
-> --- a/drivers/devfreq/Makefile
-> +++ b/drivers/devfreq/Makefile
-> @@ -11,6 +11,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+=3D governor_passive=
-=2Eo
->  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+=3D exynos-bus.o
->  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+=3D rk3399_dmc.o
->  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+=3D tegra30-devfreq.o
-> +obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+=3D tegra20-devfreq.o
-> =20
->  # DEVFREQ Event Drivers
->  obj-$(CONFIG_PM_DEVFREQ_EVENT)		+=3D event/
-> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-=
-devfreq.c
-> new file mode 100644
-> index 000000000000..ff82bac9ee4e
-> --- /dev/null
-> +++ b/drivers/devfreq/tegra20-devfreq.c
-> @@ -0,0 +1,212 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * NVIDIA Tegra20 devfreq driver
-> + *
-> + * Copyright (C) 2019 GRATE-DRIVER project
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/devfreq.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/slab.h>
-> +
-> +#include <soc/tegra/mc.h>
-> +
-> +#include "governor.h"
-> +
-> +#define MC_STAT_CONTROL				0x90
-> +#define MC_STAT_EMC_CLOCK_LIMIT			0xa0
-> +#define MC_STAT_EMC_CLOCKS			0xa4
-> +#define MC_STAT_EMC_CONTROL			0xa8
-> +#define MC_STAT_EMC_COUNT			0xb8
-> +
-> +#define EMC_GATHER_CLEAR			(1 << 8)
-> +#define EMC_GATHER_ENABLE			(3 << 8)
-> +
-> +struct tegra_devfreq {
-> +	struct devfreq *devfreq;
-> +	struct clk *emc_clock;
-> +	void __iomem *regs;
-> +};
-> +
-> +static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-> +				u32 flags)
-> +{
-> +	struct tegra_devfreq *tegra =3D dev_get_drvdata(dev);
-> +	struct devfreq *devfreq =3D tegra->devfreq;
-> +	struct dev_pm_opp *opp;
-> +	unsigned long rate;
-> +	int err;
-> +
-> +	opp =3D devfreq_recommended_opp(dev, freq, flags);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +
-> +	rate =3D dev_pm_opp_get_freq(opp);
-> +	dev_pm_opp_put(opp);
-> +
-> +	err =3D clk_set_min_rate(tegra->emc_clock, rate);
-> +	if (err)
-> +		return err;
-> +
-> +	err =3D clk_set_rate(tegra->emc_clock, 0);
-> +	if (err)
-> +		goto restore_min_rate;
-> +
-> +	return 0;
-> +
-> +restore_min_rate:
-> +	clk_set_min_rate(tegra->emc_clock, devfreq->previous_freq);
-> +
-> +	return err;
-> +}
-> +
-> +static int tegra_devfreq_get_dev_status(struct device *dev,
-> +					struct devfreq_dev_status *stat)
-> +{
-> +	struct tegra_devfreq *tegra =3D dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * EMC_COUNT returns number of memory events, that number is lower
-> +	 * than the number of clocks. Conversion ratio of 1/8 results in a
-> +	 * bit higher bandwidth than actually needed, it is good enough for
-> +	 * the time being because drivers don't support requesting minimum
-> +	 * needed memory bandwidth yet.
-> +	 *
-> +	 * TODO: adjust the ratio value once relevant drivers will support
-> +	 * memory bandwidth management.
-> +	 */
-> +	stat->busy_time =3D readl_relaxed(tegra->regs + MC_STAT_EMC_COUNT);
-> +	stat->total_time =3D readl_relaxed(tegra->regs + MC_STAT_EMC_CLOCKS) / =
-8;
-> +	stat->current_frequency =3D clk_get_rate(tegra->emc_clock);
-> +
-> +	writel_relaxed(EMC_GATHER_CLEAR, tegra->regs + MC_STAT_CONTROL);
-> +	writel_relaxed(EMC_GATHER_ENABLE, tegra->regs + MC_STAT_CONTROL);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct devfreq_dev_profile tegra_devfreq_profile =3D {
-> +	.polling_ms	=3D 500,
-> +	.target		=3D tegra_devfreq_target,
-> +	.get_dev_status	=3D tegra_devfreq_get_dev_status,
-> +};
-> +
-> +static struct tegra_mc *tegra_get_memory_controller(void)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device_node *np;
-> +	struct tegra_mc *mc;
-> +
-> +	np =3D of_find_compatible_node(NULL, NULL, "nvidia,tegra20-mc-gart");
-> +	if (!np)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	pdev =3D of_find_device_by_node(np);
-> +	of_node_put(np);
-> +	if (!pdev)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	mc =3D platform_get_drvdata(pdev);
-> +	if (!mc)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	return mc;
-> +}
-> +
-> +static int tegra_devfreq_probe(struct platform_device *pdev)
-> +{
-> +	struct tegra_devfreq *tegra;
-> +	struct tegra_mc *mc;
-> +	unsigned long max_rate;
-> +	unsigned long rate;
-> +	int err;
-> +
-> +	mc =3D tegra_get_memory_controller();
-> +	if (IS_ERR(mc)) {
-> +		err =3D PTR_ERR(mc);
-> +		dev_err(&pdev->dev, "failed to get memory controller: %d\n",
-> +			err);
-> +		return err;
-> +	}
-> +
-> +	tegra =3D devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-> +	if (!tegra)
-> +		return -ENOMEM;
-> +
-> +	/* EMC is a system-critical clock that is always enabled */
-> +	tegra->emc_clock =3D devm_clk_get(&pdev->dev, "emc");
-> +	if (IS_ERR(tegra->emc_clock)) {
-> +		err =3D PTR_ERR(tegra->emc_clock);
-> +		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	tegra->regs =3D mc->regs;
-> +
-> +	max_rate =3D clk_round_rate(tegra->emc_clock, ULONG_MAX);
-> +
-> +	for (rate =3D 0; rate <=3D max_rate; rate++) {
-> +		rate =3D clk_round_rate(tegra->emc_clock, rate);
-> +
-> +		err =3D dev_pm_opp_add(&pdev->dev, rate, 0);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
-> +			goto remove_opps;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Reset statistic gathers state, select global bandwidth for the
-> +	 * statistics collection mode and set clocks counter saturation
-> +	 * limit to maximum.
-> +	 */
-> +	writel_relaxed(0x00000000, tegra->regs + MC_STAT_CONTROL);
-> +	writel_relaxed(0x00000000, tegra->regs + MC_STAT_EMC_CONTROL);
-> +	writel_relaxed(0xffffffff, tegra->regs + MC_STAT_EMC_CLOCK_LIMIT);
-> +
-> +	platform_set_drvdata(pdev, tegra);
-> +
-> +	tegra->devfreq =3D devfreq_add_device(&pdev->dev, &tegra_devfreq_profil=
-e,
-> +					    DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
-> +	if (IS_ERR(tegra->devfreq)) {
-> +		err =3D PTR_ERR(tegra->devfreq);
-> +		goto remove_opps;
-> +	}
-> +
-> +	return 0;
-> +
-> +remove_opps:
-> +	dev_pm_opp_remove_all_dynamic(&pdev->dev);
-> +
-> +	return err;
-> +}
-> +
-> +static int tegra_devfreq_remove(struct platform_device *pdev)
-> +{
-> +	struct tegra_devfreq *tegra =3D platform_get_drvdata(pdev);
-> +
-> +	devfreq_remove_device(tegra->devfreq);
-> +	dev_pm_opp_remove_all_dynamic(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver tegra_devfreq_driver =3D {
-> +	.probe		=3D tegra_devfreq_probe,
-> +	.remove		=3D tegra_devfreq_remove,
-> +	.driver		=3D {
-> +		.name	=3D "tegra20-devfreq",
-> +	},
-> +};
-> +module_platform_driver(tegra_devfreq_driver);
-> +
-> +MODULE_ALIAS("platform:tegra20-devfreq");
-> +MODULE_AUTHOR("Dmitry Osipenko <digetx@gmail.com>");
-> +MODULE_DESCRIPTION("NVIDIA Tegra20 devfreq driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 2.21.0
->=20
-
---b5sSX5qSQrSInIHt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2VSQACgkQ3SOs138+
-s6Fpnw//ShKwtgVr1pHOxNmjT8I+pZUxGNzv6vi+49HAZRpNeatucR0WBoVRquK+
-Xt/ZarB9driAZRg8UkbCb5i9HAKilBcWXfso1q+judg9jy34HFwX5U6qGQGylybJ
-hNx87Nn+Gx4am7fYy6MMmmFH6xflA2dJHCABZlYlapbbXYJcVZHneZEIj5sDopVo
-xOLK3BQvg426d7ArSfw+hXMBkrW4I32QbuRsqnblLRx2PUx0sjQnH3jQpM4nHaIX
-5oK9hyGyYnfQiGR8amAwvkl9knffZa19MSIxH3b5u4ESXn78HyN9rWXzIfbutci9
-cFzoKWj7Qw1m0Syo1IAEpySULsKydjaxZMJGXjwDytCUPcAyOfef72W8G8C5ixA1
-6oYuG2H0OJWXHSViZzJImXP9vIO3eB+sShDLsc+qsei9hrHAaA+lELiozgL9N4/a
-NWf9DuDjE1VnVhUmbUygW4GzNVY5tkJAKUBAGyqMvfrksWOvvrRY2M4jTdsy7vMA
-i/2IN7noBl5TDtxUk2l2H1wp5ZRixjvLXa49ElAMgF4SB7+UuNU10rDqRWkgnGtQ
-Q/+UZstvhaoHMBtZVXyC8COFaTUG3IHS12NQRxGxq5Ar1SkVWNpT7NCSqQOrtMfO
-a6UkKzobei7mtYqPfmfHHW2HN87CL/xDmABbYoBO3oZO4q6gu5A=
-=eJ30
------END PGP SIGNATURE-----
-
---b5sSX5qSQrSInIHt--
+Also, it looks like there is no need to make all of the following
+changes in the series along with this one in one go and making them
+separately would be *much* better from the patch review perspective.
