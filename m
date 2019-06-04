@@ -2,266 +2,181 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269ACC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EAA243BD
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82F424A5F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 09:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hb7rXrst"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="aWootuo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfFDJi7 (ORCPT
+        id S1727075AbfFDJnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 05:38:59 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39375 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfFDJi7 (ORCPT
+        Tue, 4 Jun 2019 05:43:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33385 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfFDJnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 05:38:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a10so15773688ljf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:38:56 -0700 (PDT)
+        Tue, 4 Jun 2019 05:43:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so1863399wmh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 02:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0p+QUllSWbb6IfUF0ciw23eu7sV22MgW/puri+CeCb8=;
-        b=hb7rXrstdGiY0ZZmC64PPrQM9dGTY90IFqakAW521v6oSsVaMiEpNOt0P7/j+7n3UX
-         O+nDNuDF0FYbZGt99SJEUsSmdIoJ2Kk2NrLkTioEmtnpJEOh4Po1rvl01QWxxrSrRxdR
-         XFFYxf0/ZMZn3n6HFDTMfZo4MvruNCPuvTHveQ7j/XHxJHJKtpdQSD04RDwB00gPez+3
-         s5wY1nShIzKhSm8UM3RDNcSH3hRzxCfYu6QLMFOYF9dNzosrIJhpto3Ja3/hjf3s8N2u
-         ZZnBsuzUvjBdDBI/9pU8zPJZMwexgGG5bQZUll9aCD8xW9vvtNz3zRqkxhuwXAEzZMe4
-         NhRg==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9zsBjqfFxDnK299EPt8HWTK+gFJutyEx94Q+WKO51eU=;
+        b=aWootuo87lkA0fLMe02iMsBMN+6Wqgil2jMBTKo9HBgNee7yNm2q1+xrxYOhB7fc0E
+         QdFIfeYWDIv9ZKgHFFdxdTncjeBcuwSUOHUtyAgqaMGrAlrXvyMEVCAY2HUDOhqjIw5h
+         SxkBKH5LldMT+QhWcPWGEv4EwYGtj4BWNJCbDaZlb6RNLzX6iZFgojxKoo5aiJcLyhDo
+         6qvz+hd1La+h9MLVdRDT8JF3qIjoSFa7v3LAG7jMi9ucZxPObzoqY4RbV/STLhEMcs6E
+         AnB58Pyjt/Abe7IIgi7BiHELdpM0KM9WzSTWjHzDUItug42iiZjNUYgW2Tz/1bkV1q/u
+         HVTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0p+QUllSWbb6IfUF0ciw23eu7sV22MgW/puri+CeCb8=;
-        b=fHA8OJ1lBSVZIY9VcLAy9yAnPKdT02QImOQMjVy0FL9ghsE3IUMZw1W0xVjCKa74/q
-         rIbPssCWWx75/UKSHMa1rcQo+7R7oksFjQ/6ZT4U5kd3cJzi0eBgKSwqakp01A61Onr1
-         w3Ec4oHJF7+uxulbt0ne/0uuf27y1tZp+iq15nc5JqsGNkNVT+UexblaVG+OHApjyB62
-         EG2joxhKgqnN4dUBqcwaZZvPD9K8OYtt3jD/ey6wEFVIg8XMB+NVYOoeMZ3IbxtV9rgv
-         lJo3uwhCBEBVnVLT9yZzwAAe9/WXdrp3bEsADjNci4Ox3p3aQvv3jcx/Lm6GwKC/HvYC
-         T6xg==
-X-Gm-Message-State: APjAAAVJW80nstM8KYkl4kkKbFZ6sWxbYAJkzXQZDwK4hOHkvnHIApyy
-        YPWYD/4jp1GPdYLcfpPt+Nj4J01ko0zi9r5rCYk=
-X-Google-Smtp-Source: APXvYqz8Fs0Utf9F/Lt7HEIPoitdiihSHsfsz4RU7NzGx/GZSyGjwih6it3Mw6Vl6Uxgf1A2UiY2hXFXe+AbfJ0cl9A=
-X-Received: by 2002:a2e:28d:: with SMTP id y13mr16086475lje.177.1559641136069;
- Tue, 04 Jun 2019 02:38:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9zsBjqfFxDnK299EPt8HWTK+gFJutyEx94Q+WKO51eU=;
+        b=VovyNRa2pd9/CmD09ejUsGmSiDEYxb4UzvCxg8KK7ipw1PC5ojolNScNVPX9w9ornK
+         Idsn6RbnXEoYzAW2amvG7HU2Kdf338XAYgJG5bdVqDFm9QtK/vyYTEmSlfs100kVUyiS
+         BAaTnThbvVUPFeYNYNjm8TvG2u/Cv6eHsVvfLnwhQ2mrW211wjbgOeU4G4PP2UxoGd/M
+         DP0XhcQ03UnGcIBrKgGWSMBWXaMlak3bFy1n6SShklYBxEe/AsnUH3Ao5dX2aWLHzpJI
+         MuASSMU5mcWLWx4kfW3So9tgTnXUyqUiajlXAeLywiC7Sn6jF/1pCRWIGSbqMbr4vv2Y
+         xYSQ==
+X-Gm-Message-State: APjAAAVjT3pUlsfkEHm1PtnUfKypTEfoHUahwisQDcRUbfp7WVAOYFjv
+        lKoTMYOIVfoZf3Mb4QYYUwMWpQ==
+X-Google-Smtp-Source: APXvYqwgwSue4d4xXG1eqyr2WgURWLA8qP2rB2INz9FuaOZWfmKlm2odEX/0SxywA21Yhne9QzL+xA==
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr17669213wml.28.1559641400055;
+        Tue, 04 Jun 2019 02:43:20 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id y132sm27296890wmd.35.2019.06.04.02.43.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 04 Jun 2019 02:43:19 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 11:43:18 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
+        arnd@arndb.de, Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] fork: add clone3
+Message-ID: <20190604094317.4wfelmbw4lgxzide@brauner.io>
+References: <20190603144331.16760-1-christian@brauner.io>
+ <4020.1559640492@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20190603174735.21002-1-codekipper@gmail.com> <20190603174735.21002-7-codekipper@gmail.com>
- <20190604075840.kquy3zcuckuzmvzr@flea> <CAEKpxB=RdYF9eEvAJ+R7sT6OtdtBWjhMM1am+EhaN=9ZO9Gd2A@mail.gmail.com>
- <CAP03XepJVPge5sz4WcmK8pp2jHAPJdGb6v6A3R0DzSf5O6qj-g@mail.gmail.com>
-In-Reply-To: <CAP03XepJVPge5sz4WcmK8pp2jHAPJdGb6v6A3R0DzSf5O6qj-g@mail.gmail.com>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Tue, 4 Jun 2019 11:38:44 +0200
-Message-ID: <CAEKpxBmxAQKgDhvjpczAWwNtNhYRs07wjMSnr8nqHk1XxMT=nw@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 6/9] ASoC: sun4i-i2s: Add multi-lane functionality
-To:     Christopher Obbard <chris@64studio.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4020.1559640492@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 at 11:02, Christopher Obbard <chris@64studio.com> wrote:
->
-> On Tue, 4 Jun 2019 at 09:43, Code Kipper <codekipper@gmail.com> wrote:
-> >
-> > On Tue, 4 Jun 2019 at 09:58, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Mon, Jun 03, 2019 at 07:47:32PM +0200, codekipper@gmail.com wrote:
-> > > > From: Marcus Cooper <codekipper@gmail.com>
-> > > >
-> > > > The i2s block supports multi-lane i2s output however this functionality
-> > > > is only possible in earlier SoCs where the pins are exposed and for
-> > > > the i2s block used for HDMI audio on the later SoCs.
-> > > >
-> > > > To enable this functionality, an optional property has been added to
-> > > > the bindings.
-> > > >
-> > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > >
-> > > I'd like to have Mark's input on this, but I'm really worried about
-> > > the interaction with the proper TDM support.
-> > >
-> > > Our fundamental issue is that the controller can have up to 8
-> > > channels, but either on 4 lines (instead of 1), or 8 channels on 1
-> > > (like proper TDM) (or any combination between the two, but that should
-> > > be pretty rare).
-> >
-> > I understand...maybe the TDM needs to be extended to support this to consider
-> > channel mapping and multiple transfer lines. I was thinking about the later when
-> > someone was requesting support on IIRC a while ago, I thought masking might
-> > of been a solution. These can wait as the only consumer at the moment is
-> > LibreELEC and we can patch it there.
->
-> Hi Marcus,
->
-> FWIW, the TI McASP driver has support for TDM & (i think?) multiple
-> transfer lines which are called serializers.
-> Maybe this can help with inspiration?
-> see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/ti/davinci-mcasp.c
-> sample DTS:
->
-> &mcasp0 {
->     #sound-dai-cells = <0>;
->     status = "okay";
->     pinctrl-names = "default";
->     pinctrl-0 = <&mcasp0_pins>;
->
->     op-mode = <0>;
->     tdm-slots = <8>;
->     serial-dir = <
->         2 0 1 0
->         0 0 0 0
->         0 0 0 0
->         0 0 0 0
->     >;
->     tx-num-evt = <1>;
->     rx-num-evt = <1>;
-> };
->
->
-> Cheers!
+On Tue, Jun 04, 2019 at 10:28:12AM +0100, David Howells wrote:
+> Christian Brauner <christian@brauner.io> wrote:
+> 
+> > +#include <linux/compiler_types.h>
+> 
+> I suspect you don't want to include that directly.
+> 
+> Also, to avoid bloating linux/sched/task.h yet further, maybe put this in
+> linux/sched/clone.h?
 
-Thanks, this looks good.
-CK
->
-> > Do you have any ideas Master?
-> > CK
-> > >
-> > > You're trying to do the first one, and I'm trying to do the second one.
-> > >
-> > > There's a number of assumptions later on that will break the TDM case,
-> > > see below for examples
-> > >
-> > > > ---
-> > > >  sound/soc/sunxi/sun4i-i2s.c | 44 ++++++++++++++++++++++++++++++++-----
-> > > >  1 file changed, 39 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > > > index bca73b3c0d74..75217fb52bfa 100644
-> > > > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > > > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > > > @@ -23,7 +23,7 @@
-> > > >
-> > > >  #define SUN4I_I2S_CTRL_REG           0x00
-> > > >  #define SUN4I_I2S_CTRL_SDO_EN_MASK           GENMASK(11, 8)
-> > > > -#define SUN4I_I2S_CTRL_SDO_EN(sdo)                   BIT(8 + (sdo))
-> > > > +#define SUN4I_I2S_CTRL_SDO_EN(lines)         (((1 << lines) - 1) << 8)
-> > > >  #define SUN4I_I2S_CTRL_MODE_MASK             BIT(5)
-> > > >  #define SUN4I_I2S_CTRL_MODE_SLAVE                    (1 << 5)
-> > > >  #define SUN4I_I2S_CTRL_MODE_MASTER                   (0 << 5)
-> > > > @@ -355,14 +355,23 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
-> > > >       struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-> > > >       int sr, wss, channels;
-> > > >       u32 width;
-> > > > +     int lines;
-> > > >
-> > > >       channels = params_channels(params);
-> > > > -     if (channels != 2) {
-> > > > +     if ((channels > dai->driver->playback.channels_max) ||
-> > > > +             (channels < dai->driver->playback.channels_min)) {
-> > > >               dev_err(dai->dev, "Unsupported number of channels: %d\n",
-> > > >                       channels);
-> > > >               return -EINVAL;
-> > > >       }
-> > > >
-> > > > +     lines = (channels + 1) / 2;
-> > > > +
-> > > > +     /* Enable the required output lines */
-> > > > +     regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
-> > > > +                        SUN4I_I2S_CTRL_SDO_EN_MASK,
-> > > > +                        SUN4I_I2S_CTRL_SDO_EN(lines));
-> > > > +
-> > >
-> > > This has the assumption that each line will have 2 channels, which is wrong.
-> > >
-> > > >       if (i2s->variant->is_h3_i2s_based) {
-> > > >               regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-> > > >                                  SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
-> > > > @@ -373,8 +382,19 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
-> > > >       }
-> > > >
-> > > >       /* Map the channels for playback and capture */
-> > > > -     regmap_field_write(i2s->field_txchanmap, 0x76543210);
-> > > >       regmap_field_write(i2s->field_rxchanmap, 0x00003210);
-> > > > +     regmap_field_write(i2s->field_txchanmap, 0x10);
-> > > > +     if (i2s->variant->is_h3_i2s_based) {
-> > > > +             if (channels > 2)
-> > > > +                     regmap_write(i2s->regmap,
-> > > > +                                  SUN8I_I2S_TX_CHAN_MAP_REG+4, 0x32);
-> > > > +             if (channels > 4)
-> > > > +                     regmap_write(i2s->regmap,
-> > > > +                                  SUN8I_I2S_TX_CHAN_MAP_REG+8, 0x54);
-> > > > +             if (channels > 6)
-> > > > +                     regmap_write(i2s->regmap,
-> > > > +                                  SUN8I_I2S_TX_CHAN_MAP_REG+12, 0x76);
-> > > > +     }
-> > >
-> > > And this creates a mapping matching that.
-> > >
-> > > >       /* Configure the channels */
-> > > >       regmap_field_write(i2s->field_txchansel,
-> > > > @@ -1057,9 +1077,10 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
-> > > >  static int sun4i_i2s_probe(struct platform_device *pdev)
-> > > >  {
-> > > >       struct sun4i_i2s *i2s;
-> > > > +     struct snd_soc_dai_driver *soc_dai;
-> > > >       struct resource *res;
-> > > >       void __iomem *regs;
-> > > > -     int irq, ret;
-> > > > +     int irq, ret, val;
-> > > >
-> > > >       i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
-> > > >       if (!i2s)
-> > > > @@ -1126,6 +1147,19 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
-> > > >       i2s->capture_dma_data.addr = res->start + SUN4I_I2S_FIFO_RX_REG;
-> > > >       i2s->capture_dma_data.maxburst = 8;
-> > > >
-> > > > +     soc_dai = devm_kmemdup(&pdev->dev, &sun4i_i2s_dai,
-> > > > +                            sizeof(*soc_dai), GFP_KERNEL);
-> > > > +     if (!soc_dai) {
-> > > > +             ret = -ENOMEM;
-> > > > +             goto err_pm_disable;
-> > > > +     }
-> > > > +
-> > > > +     if (!of_property_read_u32(pdev->dev.of_node,
-> > > > +                               "allwinner,playback-channels", &val)) {
-> > > > +             if (val >= 2 && val <= 8)
-> > > > +                     soc_dai->playback.channels_max = val;
-> > > > +     }
-> > > > +
-> > >
-> > > I'm not quite sure how this works.
-> > >
-> > > of_property_read_u32 will return 0, so you will enter in the
-> > > condition. But what happens if the property is missing?
-> > >
-> > > Maxime
-> > >
-> > > --
-> > > Maxime Ripard, Bootlin
-> > > Embedded Linux and Kernel engineering
-> > > https://bootlin.com
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAEKpxB%3DRdYF9eEvAJ%2BR7sT6OtdtBWjhMM1am%2BEhaN%3D9ZO9Gd2A%40mail.gmail.com.
-> > For more options, visit https://groups.google.com/d/optout.
+Yeah, not the worst idea.
+Though I'd leave the flags where they are and just add struct
+kernel_clone_args in there. But I assume that's what you meant anyway.
+
+> 
+> > -extern long _do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *, unsigned long);
+> > +extern long _do_fork(struct kernel_clone_args *kargs);
+> >  extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
+> 
+> Maybe these could move into linux/sched/clone.h too.
+
+Meh, that could be a separate cleanup patch after clone3() has been
+merged.
+
+> 
+> > +#define CLONE_MAX ~0U
+> 
+> Can you add a comment summarising the meaning?
+
+Yes, can do.
+
+> 
+> > +	u64 clone_flags = args->flags;
+> > +	int __user *child_tidptr = args->child_tid;
+> > +	unsigned long tls = args->tls;
+> > +	unsigned long stack_start = args->stack;
+> > +	unsigned long stack_size = args->stack_size;
+> 
+> Some of these are only used once, so it's probably not worth sticking them in
+> local variables.
+
+[1]:
+Ok, will double check.
+This was just to minimize copy-paste erros for variables which were used
+multiple times.
+
+> 
+> > -		if (clone_flags &
+> > -		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
+> > -			return ERR_PTR(-EINVAL);
+> 
+> Did this error check get lost?  I can see part of it further on, but the check
+> on CLONE_PARENT_SETTID is absent.
+
+No, it's only relevant for legacy clone() since it uses the
+parent_tidptr argument to return the pidfd. clone3() has a dedicated
+return argument for that in clone_args.
+The check for legacy clone() is now done in legacy clone() directly.
+copy_process() should only do generic checks for all version of
+clone(),fork(),vfork(), etc.
+
+> 
+> > +	int __user *parent_tidptr = args->parent_tid;
+> 
+> There's only one usage remaining after this patch, so a local var doesn't gain
+> a lot.
+
+Yes, that leads back to [1].
+
+> 
+> >  pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+> >  {
+> > -	return _do_fork(flags|CLONE_VM|CLONE_UNTRACED, (unsigned long)fn,
+> > -		(unsigned long)arg, NULL, NULL, 0);
+> > +	struct kernel_clone_args args = {
+> > +		.flags = ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
+> > +		.exit_signal = (flags & CSIGNAL),
+> 
+> Kernel threads can have exit signals?
+
+Yes,
+
+kernel/kthread.c:       pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
+kernel/umh.c:   pid = kernel_thread(call_usermodehelper_exec_async, sub_info, SIGCHLD);
+
+And even if they couldn't have. This is just to make sure that if they
+ever would we'd be prepared.
+
+> 
+> > +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> > +				     struct clone_args __user *uargs,
+> > +				     size_t size)
+> 
+> I would make this "noinline".  If it gets inlined, local variable "args" may
+> still be on the stack when _do_fork() gets called.
+
+Hm, can do.
+
+Thanks!
+Christian
