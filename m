@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B266620859
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CF220862
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 23:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559690540;
-	bh=jfrZ9alUZPFqfZCr58nLq6ozsoLelU04UkheYOiYZPs=;
+	s=default; t=1559690546;
+	bh=Imy2Xfwwpn+5OIUkIvfTfUuzhktvygkHS8+PLdzSwQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k73VE30rNTaIHQWZKDsmbunvvBj8jZLHeAtRf/bePnW2YO3o9H6nzdZFFhYLk+fbQ
-	 ZFJE5Y3GbHvzVh3LspDXg+STFfTC2fmleHVcMK6jtsw4r9h/wz2DzPQnku6v0gyZd8
-	 XJBVDoK+vr9TdeT2Lh9/MgD523Q28X7I3mQq72zU=
+	b=qCiqf178Tud1TapViVgjkrmAX14fwx3umGlvgWRuUXSY1x8vuNaXV0TXgbnzo8WiL
+	 Sc+Ey3zhyPDivnG2nPVUFXOb8EzCrQCxkHYpbsCzjtBYOS2gSdsxKHIULWyuBg3wPu
+	 ZIrtNhF5wBbC7mL4OAZv/zTkHhQ7D56KeWNkJDf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFDXWU (ORCPT
+        id S1726708AbfFDXW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 19:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
+        Tue, 4 Jun 2019 19:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFDXWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:22:17 -0400
+        id S1726663AbfFDXWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:22:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F2D20862;
-        Tue,  4 Jun 2019 23:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 084D12085A;
+        Tue,  4 Jun 2019 23:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690537;
-        bh=jfrZ9alUZPFqfZCr58nLq6ozsoLelU04UkheYOiYZPs=;
+        s=default; t=1559690543;
+        bh=Imy2Xfwwpn+5OIUkIvfTfUuzhktvygkHS8+PLdzSwQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2D6RNjZUC6VXYC11GMAeF+L2puh/Haux0bO9igioPQ0tXSNZVSRUKCabGc9vUFPqp
-         m/ODtLiX9jJOcZtDLQlpffwUTEIVjvqgs5uozWHZtmtj2GrkTPhn0TIyZnaurbySDY
-         +wpJZav2Sfg/rCfC1HvViADelY0VHblYAXoPmTBU=
+        b=S2QMIvSwEGl7RFCpAbQtZN88N644FfUdkTHs4f+0eR1rnzPSb2rVZDCfT2X2OqCNg
+         y1+OOt9Mykl3x2ea61KEqCpTFem/j6BvmXcedNtCo/1fe2Rp2EYTt63CIOqXcomoSM
+         /Xx/G2o54d9+AoNbq5122PRiaXc0pZerNaAuYZpg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 02/60] ALSA: seq: Protect in-kernel ioctl calls with mutex
-Date:   Tue,  4 Jun 2019 19:21:12 -0400
-Message-Id: <20190604232212.6753-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 04/60] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
+Date:   Tue,  4 Jun 2019 19:21:14 -0400
+Message-Id: <20190604232212.6753-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 References: <20190604232212.6753-1-sashal@kernel.org>
@@ -61,48 +61,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
 
-ALSA OSS sequencer calls the ioctl function indirectly via
-snd_seq_kernel_client_ctl().  While we already applied the protection
-against races between the normal ioctls and writes via the client's
-ioctl_mutex, this code path was left untouched.  And this seems to be
-the cause of still remaining some rare UAF as spontaneously triggered
-by syzkaller.
+This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
 
-For the sake of robustness, wrap the ioctl_mutex also for the call via
-snd_seq_kernel_client_ctl(), too.
+The fix attempt was incorrect, leading to the mutex deadlock through
+the close of OSS sequencer client.  The proper fix needs more
+consideration, so let's revert it now.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
+Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/core/seq/seq_clientmgr.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 38e7deab6384..b3280e81bfd1 100644
+index 8599f2937ac1..c99e1b77a45b 100644
 --- a/sound/core/seq/seq_clientmgr.c
 +++ b/sound/core/seq/seq_clientmgr.c
-@@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+@@ -2337,19 +2337,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
  {
  	const struct ioctl_handler *handler;
  	struct snd_seq_client *client;
-+	int err;
+-	int err;
  
  	client = clientptr(clientid);
  	if (client == NULL)
  		return -ENXIO;
  
  	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd)
--			return handler->func(client, arg);
-+		if (handler->cmd == cmd) {
-+			mutex_lock(&client->ioctl_mutex);
-+			err = handler->func(client, arg);
-+			mutex_unlock(&client->ioctl_mutex);
-+			return err;
-+		}
+-		if (handler->cmd == cmd) {
+-			mutex_lock(&client->ioctl_mutex);
+-			err = handler->func(client, arg);
+-			mutex_unlock(&client->ioctl_mutex);
+-			return err;
+-		}
++		if (handler->cmd == cmd)
++			return handler->func(client, arg);
  	}
  
  	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
