@@ -2,80 +2,169 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A251AC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FCCC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B9B219BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559654334;
-	bh=kstaWkEOjz4sGnvduRYtac82iKRZqlwD3wYOfYdZAJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z6/3tY5IWnljw5XvZJFknuDmPqA7IZOsfGCBHzUs96OtcLj5uylkAE2VXD4PY5WKr
-	 cevouHs5vPiwZZLL2Ena1Jr0N+keyFAMYvKa79xZzG/IdCpCLzzBYbJtQIyhGW38nM
-	 aJLTsoL0aO3rFsaSd6Bml3e2YzZF5LdDQtqMnV0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 51127219BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:18:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ctcAw7L7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfFDNSw (ORCPT
+        id S1727790AbfFDNSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727182AbfFDNSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:18:50 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B3242199C;
-        Tue,  4 Jun 2019 13:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559654329;
-        bh=kstaWkEOjz4sGnvduRYtac82iKRZqlwD3wYOfYdZAJU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ne0yes6lGitXgq3FdEvA/6cW2YR77DufQi52Gox4dH+56J4CFagViIAsuRlw+SY1h
-         GeQJt2hA7XSzmQP1p1M+2CIZZKq/BL7Y+B9v74X6DxRsjFb3vBQaL3elhp51Wu0q/L
-         /lWNsSEXnx/Kduvzcs5X43uAwHfOAN0pyqHu50Vo=
-Date:   Tue, 4 Jun 2019 08:18:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, lftan.linux@gmail.com
-Subject: Re: [PATCH] PCI: altera: Allow building as module
-Message-ID: <20190604131848.GA40122@google.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+        Tue, 4 Jun 2019 09:18:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55042 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbfFDNSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:18:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DHf13028057;
+        Tue, 4 Jun 2019 08:17:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559654261;
+        bh=RElHPxtACkCdk4rLufC/bmJZmseWFYOIIvYrh7aFO/8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ctcAw7L7QUByHCOouvIbfAiWv5Zee8mbXY3jZXhr2OTNddfQLtmVD7zJnqx/VdTyr
+         lC1MgB43JIWeJjcT739mZpUBUOpgDiQwkfxViuPTLl3GsgePCdIvDMwpmCh+CjaqWG
+         lqtruagGs6y45G+xx4UhzoFRKD5nWMZRXj0nSwfY=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DHeFX052834
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jun 2019 08:17:40 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
+ 2019 08:17:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 4 Jun 2019 08:17:40 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGQ098972;
+        Tue, 4 Jun 2019 08:17:35 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 10/30] PCI: cadence: Use *_start_link() and *_wait_for_link() to establish link
+Date:   Tue, 4 Jun 2019 18:44:56 +0530
+Message-ID: <20190604131516.13596-11-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
+References: <20190604131516.13596-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:57:14PM +0800, Ley Foon Tan wrote:
-> Altera PCIe Rootport IP is a soft IP and is only available after
-> FPGA image is programmed.
-> 
-> Make driver modulable to support use case FPGA image is programmed
-> after kernel is booted. User proram FPGA image in kernel then only load
-> PCIe driver module.
+Use cdns_pcie_start_link() to start link training and
+cdns_pcie_wait_for_link() in order to wait to establish the link.
 
-I'm not objecting to these patches, but help me understand how this
-works.  The "usual" scenario is that if a driver is loaded before a
-matching device is available, i.e., either the driver is built
-statically or it is loaded before a device is hot-added, the event of
-the device being available causes the driver's probe method to be
-called.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/controller/pcie-cadence-ep.c   | 11 ++++++++++-
+ drivers/pci/controller/pcie-cadence-host.c | 11 +++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-This seems to be a more manual process of programming the FPGA which
-results in a new "altera-pcie" platform device.  And then apparently
-you need to load the appropriate module by hand?  Is there no
-"hot-add" type of event for this platform device that automatically
-looks for the driver?
+diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+index b044167071e6..825a515821c3 100644
+--- a/drivers/pci/controller/pcie-cadence-ep.c
++++ b/drivers/pci/controller/pcie-cadence-ep.c
+@@ -21,6 +21,7 @@
+ /**
+  * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+  * @pcie: Cadence PCIe controller
++ * @dev: pointer to PCIe EP device
+  * @max_regions: maximum number of regions supported by hardware
+  * @ob_region_map: bitmask of mapped outbound regions
+  * @ob_addr: base addresses in the AXI bus where the outbound regions start
+@@ -37,6 +38,7 @@
+  */
+ struct cdns_pcie_ep {
+ 	struct cdns_pcie		pcie;
++	struct device			*dev;
+ 	u32				max_regions;
+ 	unsigned long			ob_region_map;
+ 	phys_addr_t			*ob_addr;
+@@ -386,6 +388,7 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	struct pci_epf *epf;
++	int ret = 0;
+ 	u32 cfg;
+ 
+ 	/*
+@@ -397,7 +400,11 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 		cfg |= BIT(epf->func_no);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+ 
+-	return 0;
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret)
++		dev_err(ep->dev, "Failed to start link\n");
++
++	return ret;
+ }
+ 
+ static const struct pci_epc_features cdns_pcie_epc_features = {
+@@ -460,6 +467,8 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+ 	if (!ep)
+ 		return -ENOMEM;
+ 
++	ep->dev = dev;
++
+ 	pcie = &ep->pcie;
+ 	pcie->is_rc = false;
+ 	pcie->plat_data = pdev->dev.platform_data;
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index 2363f05e7c58..4ad8f2ece6e2 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -365,6 +365,14 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 		goto err_get_sync;
+ 	}
+ 
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		goto err_start_link;
++	}
++
++	cdns_pcie_wait_for_link(dev, pcie);
++
+ 	ret = cdns_pcie_host_init(dev, &resources, rc);
+ 	if (ret)
+ 		goto err_init;
+@@ -386,6 +394,9 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	pci_free_resource_list(&resources);
+ 
+  err_init:
++	cdns_pcie_start_link(pcie, false);
++
++ err_start_link:
+ 	pm_runtime_put_sync(dev);
+ 
+  err_get_sync:
+-- 
+2.17.1
 
-Bjorn
