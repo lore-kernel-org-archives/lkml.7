@@ -2,101 +2,97 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E63C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E95C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D789F24A02
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8167124A3C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559650243;
+	bh=bx10crper5s5AYw/kBlidhtOiBbuZXbSa+8Uxao2YZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zTbJg8ipmgBvjf8pt6ZMNVf/vO4I7TWypKw4WLxVNktCptv480o74BzeESI+kTMJA
+	 2J9Q3m4wIghqY8t6QE5Zcnh2x4ca8clHK9IgXbFkznC61YwS3FCzILi+atut6r8vJ6
+	 J9JIys8bsq8R2UaMqekzTY/y9dYLJ9QTTaOv9OKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfFDMKi (ORCPT
+        id S1727699AbfFDMKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:10:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41634 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfFDMKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:10:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D48EF80D;
-        Tue,  4 Jun 2019 05:10:35 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3B43F690;
-        Tue,  4 Jun 2019 05:10:32 -0700 (PDT)
-Subject: Re: [PATCH v6 15/19] arm64: Add vDSO compat support
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-16-vincenzo.frascino@arm.com>
- <20190601093830.GA13589@arrakis.emea.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <2027e092-2d76-9350-6c5b-7d3debc6a93f@arm.com>
-Date:   Tue, 4 Jun 2019 13:10:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 4 Jun 2019 08:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfFDMKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:10:41 -0400
+Received: from localhost (unknown [117.99.94.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 328D124A02;
+        Tue,  4 Jun 2019 12:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559650240;
+        bh=bx10crper5s5AYw/kBlidhtOiBbuZXbSa+8Uxao2YZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=afx9V+aIVbqwBiSR3kTsnxskJZ0D90hjgaW18j81v/vZ4eO0q+t2nn+PZULSBPNY8
+         uG54BzSzpIvaKaQLY2ld2MzeMbjT4O+JwmcVfJW56c3YEZVkuvsczGGlkG+BwVFgKO
+         7YimuA7USP+Hp1SruKbCgzO8FFSIY0WZD+je0MrE=
+Date:   Tue, 4 Jun 2019 17:37:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [V3 2/2] dmaengine: fsl-qdma: Add improvement
+Message-ID: <20190604120733.GV15118@vkoul-mobl>
+References: <20190522032103.13713-1-peng.ma@nxp.com>
+ <20190522032103.13713-2-peng.ma@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190601093830.GA13589@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522032103.13713-2-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+On 22-05-19, 03:21, Peng Ma wrote:
+> When an error occurs we should clean the error register then to return
 
-thank you for testing my patches and providing the scripts you used to reproduce
-the issue.
+The patch title is supposed to tell us about the change. "Add
+improvement: is a very generic term!
 
-On 01/06/2019 10:38, Catalin Marinas wrote:
-> On Thu, May 30, 2019 at 03:15:27PM +0100, Vincenzo Frascino wrote:
->> Add vDSO compat support to the arm64 building system.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->> ---
->>  arch/arm64/Kconfig         |  1 +
->>  arch/arm64/Makefile        | 23 +++++++++++++++++++++--
->>  arch/arm64/kernel/Makefile |  6 +++++-
->>  3 files changed, 27 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 952c9f8cf3b8..3e1d4f8347f4 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -108,6 +108,7 @@ config ARM64
->>  	select GENERIC_STRNLEN_USER
->>  	select GENERIC_TIME_VSYSCALL
->>  	select GENERIC_GETTIMEOFDAY
->> +	select GENERIC_COMPAT_VDSO if !CPU_BIG_ENDIAN
+I have change title to "Continue to clear register on error" and applied
+
 > 
-> This select needs to also depend on COMPAT (or rather be selected from
-> the COMPAT menuconfig), otherwise, trying to build this series with 64K
-> pages where COMPAT is disabled, I get:
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+> changed for V3:
+> 	- no changed.
 > 
-
-This is a very good catch, my bad, will definitely fix in v7.
-
-...
+>  drivers/dma/fsl-qdma.c |    4 +---
+>  1 files changed, 1 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> index da8fdf5..8e341c0 100644
+> --- a/drivers/dma/fsl-qdma.c
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -703,10 +703,8 @@ static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
+>  
+>  	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
+>  
+> -	if (intr) {
+> +	if (intr)
+>  		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
+> -		return IRQ_NONE;
+> -	}
+>  
+>  	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
+>  	return IRQ_HANDLED;
+> -- 
+> 1.7.1
 
 -- 
-Regards,
-Vincenzo
+~Vinod
