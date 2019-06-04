@@ -2,106 +2,222 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB8EC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDADC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FD32070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D09620848
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfFDUE2 (ORCPT
+        id S1726538AbfFDUHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:04:28 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45233 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDUE2 (ORCPT
+        Tue, 4 Jun 2019 16:07:07 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:44293 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDUHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:04:28 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s22so3680282qkj.12;
-        Tue, 04 Jun 2019 13:04:27 -0700 (PDT)
+        Tue, 4 Jun 2019 16:07:06 -0400
+Received: by mail-it1-f200.google.com with SMTP id o83so954800itc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:07:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kRWHmlTazXX9nh3l+uCl+QUYh7joRupEOxTxYsi6yow=;
-        b=SXym818ZY4smWXmvcE8o6563iTfvy9jWjvzneIlUJ0KNSaAYSAvPo6xhPb+Wz/Wts4
-         BNe5iFhu64pMgFczNJCTLx/iPJqLtHERbO9poa/paXZZ/nA2Y+1ZTleHYf96HT30TAdC
-         FXvJPtekAFeA5MwxyytMoCoYyx/LP6PBev3VZHIkdq6u5SWoZo7dvzHiq5VqQACnF2fV
-         erBgkR/gsR0mAC8Bx5IWH8+IyQW/9bEDCgu2IsIavL4BS89bXdu0Q4Ao1K8LyBxArK13
-         ml6HdIdwmtOwW3x59uzxTA5lKiTl2v5V+QE2U0/S6jScsSywwbbsCZc2Fdmae2DlFe8s
-         S7kg==
-X-Gm-Message-State: APjAAAWUwLJ/K1XrwnSPzN4kl9/FZxIUNPxdpd4NPjXSbiRoLL95LgZu
-        il7lndNrbyezfTu1dC/igIWHROGbC+dD9OxK1aI=
-X-Google-Smtp-Source: APXvYqyofKzA14lv2A+QgH4Q7Jn1VXFGegI/NwNXTI2mi6UtDhR9SWuQ11u/xLdSZRSY6UUR1nNt+brbqwKzA9VWtmY=
-X-Received: by 2002:a37:a4d3:: with SMTP id n202mr28029003qke.84.1559678666645;
- Tue, 04 Jun 2019 13:04:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Qx32/jmFXzvap35zBa5P6GJR66Mkv/YmIfI7vIS/BYo=;
+        b=sgTluj6LEuLMEnCKbGmUQI00er8VTWVXU7lg33SWtFoRwoMcGzqY9XtIsA+hYpFGhD
+         PMRyMplqhqn92fyKFIaFEWv71gVQJekCex1brgd2uEJD7KXzdjbUbAAh3j2KgSo4QHBu
+         NtoE7kTw3t2s0d49dASDzIn8qpo3K3M8AkZBGnFp9lfy0K+SjKPnO8WLpYzwvuN4oO0+
+         prHnTqgliKaFps6mOAAW1U8W8uIIX/x7w3b7xY4/K1C85OW9GqxHvH8eDP2RpH9rrd8P
+         xMwajIZ3thAXaWoN5VBsprKSghF+Ul5K5ooJJaVYWCHVE5zva2IrszsRrNNMlGs6IyAu
+         wRjw==
+X-Gm-Message-State: APjAAAWmPXZvhDUWiYYp6BQAuyeci6hB0zmXBF8ocbyQjqDT0aLhZhDK
+        wpXxbcdPqb+0iAKrMxOlCvGsB4LjAVecnN8Ga7u6syront6x
+X-Google-Smtp-Source: APXvYqyxyoyD6gRXj7sk/YxH/ul0VNXXPgY/O7450SxPFKvjV9FEinAzm6jp/s5WKZh56OkqsrqXOsyqchAF2OJQR9D0yObIPIbo
 MIME-Version: 1.0
-References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org> <20190531233306.GB25597@minitux>
- <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org> <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
- <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org> <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
- <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
-In-Reply-To: <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 4 Jun 2019 22:04:09 +0200
-Message-ID: <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Dan Williams <dcbw@redhat.com>
-Cc:     Alex Elder <elder@linaro.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, abhishek.esse@gmail.com,
-        Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a24:fcc4:: with SMTP id b187mr6727127ith.179.1559678825697;
+ Tue, 04 Jun 2019 13:07:05 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 13:07:05 -0700
+In-Reply-To: <000000000000fa91e1058a358cd5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005ea120058a850695@google.com>
+Subject: Re: possible deadlock in __do_page_fault (2)
+From:   syzbot <syzbot+606e524a3ca9617cf8c0@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, hdanton@sina.com, jmorris@namei.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu, zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
-> On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
-> >
-> > Can you describe what kind of multiplexing is actually going on?
-> > I'm still unclear about what we actually use multiple logical
-> > interfaces for here, and how they relate to one another.
->
-> Each logical interface represents a different "connection" (PDP/EPS
-> context) to the provider network with a distinct IP address and QoS.
-> VLANs may be a suitable analogy but here they are L3+QoS.
->
-> In realistic example the main interface (say rmnet0) would be used for
-> web browsing and have best-effort QoS. A second interface (say rmnet1)
-> would be used for VOIP and have certain QoS guarantees from both the
-> modem and the network itself.
->
-> QMAP can also aggregate frames for a given channel (connection/EPS/PDP
-> context/rmnet interface/etc) to better support LTE speeds.
+syzbot has found a reproducer for the following crash on:
 
-Thanks, that's a very helpful explanation!
+HEAD commit:    56b697c6 Add linux-next specific files for 20190604
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12d210d4a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=606e524a3ca9617cf8c0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ddae0ea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e78f16a00000
 
-Is it correct to say then that the concept of having those separate
-connections would be required for any proper LTE modem implementation,
-but the QMAP protocol (and based on that, the rmnet implementation)
-is Qualcomm specific and shared only among several generations of
-modems from that one vendor?
+The bug was bisected to:
 
-You mentioned the need to have a common user space interface
-for configuration, and if the above is true, I agree that we should try
-to achieve that, either by ensuring rmnet is generic enough to
-cover other vendors (and non-QMAP clients), or by creating a
-new user level interface that IPA/rmnet can be adapted to.
+commit 69d61f577d147b396be0991b2ac6f65057f7d445
+Author: Mimi Zohar <zohar@linux.ibm.com>
+Date:   Wed Apr 3 21:47:46 2019 +0000
 
-       Arnd
+     ima: verify mprotect change is consistent with mmap policy
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16461c5aa00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15461c5aa00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11461c5aa00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+606e524a3ca9617cf8c0@syzkaller.appspotmail.com
+Fixes: 69d61f577d14 ("ima: verify mprotect change is consistent with mmap  
+policy")
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc3-next-20190604 #8 Not tainted
+------------------------------------------------------
+syz-executor361/10886 is trying to acquire lock:
+00000000c4471342 (&mm->mmap_sem#2){++++}, at: do_user_addr_fault  
+arch/x86/mm/fault.c:1406 [inline]
+00000000c4471342 (&mm->mmap_sem#2){++++}, at: __do_page_fault+0x9e9/0xda0  
+arch/x86/mm/fault.c:1521
+
+but task is already holding lock:
+000000009878d2b3 (&sb->s_type->i_mutex_key#10){+.+.}, at: inode_trylock  
+include/linux/fs.h:798 [inline]
+000000009878d2b3 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&sb->s_type->i_mutex_key#10){+.+.}:
+        down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+        inode_lock include/linux/fs.h:778 [inline]
+        process_measurement+0x15ae/0x15e0  
+security/integrity/ima/ima_main.c:228
+        ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+        security_file_mprotect+0xd5/0x100 security/security.c:1426
+        do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+        __do_sys_mprotect mm/mprotect.c:582 [inline]
+        __se_sys_mprotect mm/mprotect.c:579 [inline]
+        __x64_sys_mprotect+0x78/0xb0 mm/mprotect.c:579
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&mm->mmap_sem#2){++++}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+        down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+        do_user_addr_fault arch/x86/mm/fault.c:1406 [inline]
+        __do_page_fault+0x9e9/0xda0 arch/x86/mm/fault.c:1521
+        do_page_fault+0x71/0x57d arch/x86/mm/fault.c:1552
+        page_fault+0x1e/0x30 arch/x86/entry/entry_64.S:1156
+        fault_in_pages_readable include/linux/pagemap.h:600 [inline]
+        iov_iter_fault_in_readable+0x377/0x450 lib/iov_iter.c:426
+        generic_perform_write+0x186/0x520 mm/filemap.c:3197
+        __generic_file_write_iter+0x25e/0x630 mm/filemap.c:3336
+        ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+        call_write_iter include/linux/fs.h:1870 [inline]
+        new_sync_write+0x4d3/0x770 fs/read_write.c:483
+        __vfs_write+0xe1/0x110 fs/read_write.c:496
+        vfs_write+0x268/0x5d0 fs/read_write.c:558
+        ksys_write+0x14f/0x290 fs/read_write.c:611
+        __do_sys_write fs/read_write.c:623 [inline]
+        __se_sys_write fs/read_write.c:620 [inline]
+        __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+        do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&sb->s_type->i_mutex_key#10);
+                                lock(&mm->mmap_sem#2);
+                                lock(&sb->s_type->i_mutex_key#10);
+   lock(&mm->mmap_sem#2);
+
+  *** DEADLOCK ***
+
+3 locks held by syz-executor361/10886:
+  #0: 00000000b8e64295 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+  #1: 00000000e032805f (sb_writers#3){.+.+}, at: file_start_write  
+include/linux/fs.h:2836 [inline]
+  #1: 00000000e032805f (sb_writers#3){.+.+}, at: vfs_write+0x485/0x5d0  
+fs/read_write.c:557
+  #2: 000000009878d2b3 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+inode_trylock include/linux/fs.h:798 [inline]
+  #2: 000000009878d2b3 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+ext4_file_write_iter+0x246/0x1070 fs/ext4/file.c:232
+
+stack backtrace:
+CPU: 0 PID: 10886 Comm: syz-executor361 Not tainted 5.2.0-rc3-next-20190604  
+#8
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+  check_prev_add kernel/locking/lockdep.c:2311 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+  validate_chain kernel/locking/lockdep.c:2801 [inline]
+  __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+  down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+  do_user_addr_fault arch/x86/mm/fault.c:1406 [inline]
+  __do_page_fault+0x9e9/0xda0 arch/x86/mm/fault.c:1521
+  do_page_fault+0x71/0x57d arch/x86/mm/fault.c:1552
+  page_fault+0x1e/0x30 arch/x86/entry/entry_64.S:1156
+RIP: 0010:fault_in_pages_readable include/linux/pagemap.h:600 [inline]
+RIP: 0010:iov_iter_fault_in_readable+0x377/0x450 lib/iov_iter.c:426
+Code: 89 f6 41 88 57 e0 e8 b8 dd 3c fe 45 85 f6 74 c1 e9 70 fe ff ff e8 29  
+dc 3c fe 0f 1f 00 0f ae e8 44 89 f0 48 8b 8d 68 ff ff ff <8a> 11 89 c3 0f  
+1f 00 41 88 57 d0 31 ff 89 de e8 85 dd 3c fe 85 db
+RSP: 0018:ffff88808ca6f918 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000200011ff
+RDX: 0000000000000000 RSI: ffffffff83341b37 RDI: 0000000000000007
+RBP: ffff88808ca6f9b8 R08: ffff88809be68000 R09: ffff88809be688f8
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000001000
+R13: 0000000000001000 R14: 0000000000000000 R15: ffff88808ca6f990
+  generic_perform_write+0x186/0x520 mm/filemap.c:3197
+  __generic_file_write_iter+0x25e/0x630 mm/filemap.c:3336
+  ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446939
+Code: e8 4c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007effabbcdce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446939
+RDX: 000000000007fe00 RSI: 0000000020000200 RDI: 0000000000000006
+RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00007ffd5dd15ddf R14: 00007effabbce9c0 R15: 20c49ba5e353f7cf
+
