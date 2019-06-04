@@ -2,79 +2,143 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401C0C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3221C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACE724CF3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FC424CCA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 07:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSCSBO5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfFDHsB (ORCPT
+        id S1726937AbfFDHtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 03:48:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25293 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfFDHsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:48:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 00:47:59 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2019 00:47:56 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
-In-Reply-To: <20190604073706.GA25045@kroah.com>
-References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com> <20190604073706.GA25045@kroah.com>
-Date:   Tue, 04 Jun 2019 10:47:55 +0300
-Message-ID: <87k1e123mc.fsf@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 4 Jun 2019 03:49:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:32778 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfFDHtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 03:49:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so9878416pgv.0;
+        Tue, 04 Jun 2019 00:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0dEnqFti2YXtQ+SGgrU+y7p7F1e1QKCL0JuN/nDle0w=;
+        b=qSCSBO5hjq1MTvWRs5IECdL+RaYyVZZK5WEvA8gtf507w9V/gD+djPDx0Bb7yzkmwi
+         7HWCxiU34gdirN5WdQ98l/EXRPGUps3qIU9sKbSyqcDjyW2BD+JDHkmWS/J8bGm2qA1v
+         ttV7DEz0WSkjCehneiEdPcqui56qirv0dwO/YUtnOyyx5yKSyZSX1W0LUMtrou+hxSpC
+         fcMXMHEvzxpIGXJnJVfn+ytewEHf++JB4trsh1AhC4Yd5YlC5egUroZ527xeloTAByE3
+         pFPq3kHjLpE/LYsOjx5ZDYQvluWsRURFezTClwcCqPdS9phcsodNgfGa24Ucy786FB96
+         r/aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0dEnqFti2YXtQ+SGgrU+y7p7F1e1QKCL0JuN/nDle0w=;
+        b=EktE6kc9z6wM3LnTrXArnImN8r2mg6f/NeT3cxgJmcciozlysDIKq45UAdycTAz/HM
+         4Ih1AAej1s37z7WYyeOAkLkPf9tHAY2M5LtXQC4ZjQf42m6/AVppf88uYhjrVb30P9AA
+         +A1j220tJi+oR8UOCBlAhRQqxsb0CBhfm7diZqjRofqdz1gpfLEn8IhpD3mOhjGhUr+9
+         IROta4sth4Xh2AzOvbCOVIXs/y/5aEMJRZyddZAs9b76wBMuiiZsXAubTljwo8OupPNS
+         vYM1L8WMZKaDkb38ZAI19tFX/hCrjufLR/8/neGJrT/VWjQ1Rxcg7oyn+bS0DHmT+ver
+         IR2A==
+X-Gm-Message-State: APjAAAUuQDjnsL9hOsmnsCxKdkrR7NqHqf4COLGWz6xXen2wMxWgzc97
+        cbzYHt4Pb0MfKdo4ymQA+0E=
+X-Google-Smtp-Source: APXvYqwR3/qqkUWtVuOpkE4cdTOdma9vsrICt+qC+uUBUW3eIyK8DNzACK3QdRsdpQK6LD5qFtSMOQ==
+X-Received: by 2002:a17:90a:2e87:: with SMTP id r7mr33960547pjd.112.1559634560323;
+        Tue, 04 Jun 2019 00:49:20 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id k13sm9829540pgq.45.2019.06.04.00.49.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 04 Jun 2019 00:49:19 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     prabhakar.csengg@gmail.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] media: davinci: vpif_capture: fix memory leak in vpif_probe()
+Date:   Tue,  4 Jun 2019 15:50:17 +0800
+Message-Id: <1559634617-16264-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If vpif_probe() fails on v4l2_device_register() and vpif_probe_complete(),
+then memory allocated at initialize_vpif() for global vpif_obj.dev[i]
+become unreleased.
 
-Hi,
+The patch adds deallocation of vpif_obj.dev[i] on the error path.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> +struct dentry *usb_debugfs_init(void)
->> +{
->> +	if (!usb_debug_root)
->> +		usb_debug_root = debugfs_create_dir("usb", NULL);
->> +
->> +	atomic_inc(&usb_debug_root_refcnt);
->> +
->> +	return usb_debug_root;
->> +}
->> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
->> +
->> +void usb_debugfs_cleanup(void)
->> +{
->> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
->> +		debugfs_remove_recursive(usb_debug_root);
->> +		usb_debug_root = NULL;
->> +	}
->> +}
->> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
->
-> Only remove the debugfs subdir if the usbcore module is removed.  Create
-> the debugfs subdir when the usbcore module is loaded.  No need for any
-> reference counting of any sort at all.  No need to overthink this :)
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ drivers/media/platform/davinci/vpif_capture.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-There is a slight need to overthink. He wants to use the same directory
-for gadget-only builds too :-)
-
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index b5aacb0..277d500 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1385,6 +1385,14 @@ static int initialize_vpif(void)
+ 	return err;
+ }
+ 
++static void free_vpif_objs(void)
++{
++	int i;
++
++	for (i = 0; i < VPIF_DISPLAY_MAX_DEVICES; i++)
++		kfree(vpif_obj.dev[i]);
++}
++
+ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
+ 			    struct v4l2_subdev *subdev,
+ 			    struct v4l2_async_subdev *asd)
+@@ -1654,7 +1662,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	err = v4l2_device_register(vpif_dev, &vpif_obj.v4l2_dev);
+ 	if (err) {
+ 		v4l2_err(vpif_dev->driver, "Error registering v4l2 device\n");
+-		goto cleanup;
++		goto vpif_free;
+ 	}
+ 
+ 	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, res_idx))) {
+@@ -1701,7 +1709,10 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 				  "registered sub device %s\n",
+ 				   subdevdata->name);
+ 		}
+-		vpif_probe_complete();
++		err = vpif_probe_complete();
++		if (err) {
++			goto probe_subdev_out;
++		}
+ 	} else {
+ 		vpif_obj.notifier.ops = &vpif_async_ops;
+ 		err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
+@@ -1720,6 +1731,8 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	kfree(vpif_obj.sd);
+ vpif_unregister:
+ 	v4l2_device_unregister(&vpif_obj.v4l2_dev);
++vpif_free:
++	free_vpif_objs();
+ cleanup:
+ 	v4l2_async_notifier_cleanup(&vpif_obj.notifier);
+ 
+@@ -1748,8 +1761,8 @@ static int vpif_remove(struct platform_device *device)
+ 		ch = vpif_obj.dev[i];
+ 		/* Unregister video device */
+ 		video_unregister_device(&ch->video_dev);
+-		kfree(vpif_obj.dev[i]);
+ 	}
++	free_vpif_objs();
+ 	return 0;
+ }
+ 
 -- 
-balbi
+2.7.4
+
