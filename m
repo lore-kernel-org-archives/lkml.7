@@ -2,76 +2,287 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FE8C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF3C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DAF249D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEE123BD2
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 14:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfFDOOh (ORCPT
+        id S1727573AbfFDOPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 10:14:37 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48126 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfFDOOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:14:37 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYACw-0001Zj-Uz; Tue, 04 Jun 2019 16:14:34 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Add pin names for rk3288-veyron jaq, mickey, speedy
-Date:   Tue, 04 Jun 2019 16:14:34 +0200
-Message-ID: <1748246.UnQIR8Fo6l@phil>
-In-Reply-To: <20190524233309.45420-1-dianders@chromium.org>
-References: <20190524233309.45420-1-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 4 Jun 2019 10:15:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42444 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfFDOPg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:15:36 -0400
+Received: from laptop-1.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 464BF2852B8;
+        Tue,  4 Jun 2019 15:15:34 +0100 (BST)
+Message-ID: <075093e4a45556569f5ecde7f5489fe02df57946.camel@collabora.com>
+Subject: Re: [PATCH 1/3] iio: common: cros_ec_sensors: support protocol v3
+ message
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     kernel@collabora.com, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Jun 2019 16:15:31 +0200
+In-Reply-To: <20190603125509.GV4797@dell>
+References: <9d5dbba798410321177efa5d8a562105ff8cf429.1558533743.git.fabien.lahoudere@collabora.com>
+         <20190603125509.GV4797@dell>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 25. Mai 2019, 01:33:09 CEST schrieb Douglas Anderson:
-> This is like commit 0ca87bd5baa6 ("ARM: dts: rockchip: Add pin names
-> for rk3288-veyron-jerry") and commit ca3516b32cd9 ("ARM: dts:
-> rockchip: Add pin names for rk3288-veyron-minnie") but for 3 more
-> veyron boards.
+Le lundi 03 juin 2019 à 13:55 +0100, Lee Jones a écrit :
+> On Wed, 22 May 2019, Fabien Lahoudere wrote:
 > 
-> A few notes:
-> - While there is most certainly duplication between all the veyron
->   boards, it still feels like it is sane to just have each board have
->   a full list of its pin names.  The format of "gpio-line-names" does
->   not lend itself to one-off overriding and besides it seems sane to
->   more fully match schematic names.  Also note that the extra
->   duplication here is only in source code and is unlikely to ever
->   change (since these boards are shipped).  Duplication in the .dtb
->   files is unavoidable.
-> - veyron-jaq and veyron-mighty are very closely related and so I have
->   shared a single list for them both with comments on how they are
->   different.  This is just a typo fix on one of the boards, a possible
->   missing signal on one of the boards (or perhaps I was never given
->   the most recent schematics?) and dealing with the fact that one of
->   the two boards has full sized SD.
+> > Version 3 of the EC protocol provides min and max frequencies and
+> > fifo
+> > size for EC sensors.
+> > 
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> > ---
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 98
+> > ++++++++++++++++++-
+> >  .../linux/iio/common/cros_ec_sensors_core.h   |  7 ++
+> >  include/linux/mfd/cros_ec_commands.h          | 21 ++++
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Please note that we are about to add a pretty bit update for this
+> file.  Once it's complete you may wish to rebase in order to avoid
+> any possible merge conflicts.
+> 
 
-applied for 5.3 with Matthias Rb.
+Thanks Lee. Indeed I see and reviewed this 30 patches series.
+I am waiting they are applied to rebase ans submit v3.
 
-Thanks
-Heiko
-
+> >  3 files changed, 125 insertions(+), 1 deletion(-)
+> > 
+> > diff --git
+> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index 719a0df5aeeb..d5c8b4714ad6 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -19,12 +19,84 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/platform_device.h>
+> >  
+> > +/*
+> > + * Hard coded to the first device to support sensor fifo.  The EC
+> > has a 2048
+> > + * byte fifo and will trigger an interrupt when fifo is 2/3 full.
+> > + */
+> > +#define CROS_EC_FIFO_SIZE (2048 * 2 / 3)
+> > +
+> >  static char *cros_ec_loc[] = {
+> >  	[MOTIONSENSE_LOC_BASE] = "base",
+> >  	[MOTIONSENSE_LOC_LID] = "lid",
+> >  	[MOTIONSENSE_LOC_MAX] = "unknown",
+> >  };
+> >  
+> > +static void get_default_min_max_freq_and_fifo_size(enum
+> > motionsensor_type type,
+> > +						   u32 *min_freq,
+> > +						   u32 *max_freq,
+> > +						   u32
+> > *max_fifo_events)
+> > +{
+> > +	/* we don't know fifo size, set to size previously used by
+> > sensor HAL */
+> > +	*max_fifo_events = CROS_EC_FIFO_SIZE;
+> > +
+> > +	switch (type) {
+> > +	case MOTIONSENSE_TYPE_ACCEL:
+> > +	case MOTIONSENSE_TYPE_GYRO:
+> > +		*min_freq = 12500;
+> > +		*max_freq = 100000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_MAG:
+> > +		*min_freq = 5000;
+> > +		*max_freq = 25000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_PROX:
+> > +	case MOTIONSENSE_TYPE_LIGHT:
+> > +		*min_freq = 100;
+> > +		*max_freq = 50000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_BARO:
+> > +		*min_freq = 250;
+> > +		*max_freq = 20000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_ACTIVITY:
+> > +	default:
+> > +		*max_fifo_events = 0;
+> > +		*min_freq = 0;
+> > +		*max_freq = 0;
+> > +		break;
+> > +	}
+> > +}
+> > +
+> > +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device
+> > *ec_dev,
+> > +					     u16 cmd_offset, u16 cmd,
+> > u32 *mask)
+> > +{
+> > +	struct {
+> > +		struct cros_ec_command msg;
+> > +		union {
+> > +			struct ec_params_get_cmd_versions params;
+> > +			struct ec_response_get_cmd_versions resp;
+> > +		};
+> > +	} __packed buf;
+> > +	struct ec_params_get_cmd_versions *params = &buf.params;
+> > +	struct ec_response_get_cmd_versions *resp = &buf.resp;
+> > +	struct cros_ec_command *msg = &buf.msg;
+> > +	int ret;
+> > +
+> > +	memset(&buf, 0, sizeof(buf));
+> > +	msg->command = EC_CMD_GET_CMD_VERSIONS + cmd_offset;
+> > +	msg->insize = sizeof(*resp);
+> > +	msg->outsize = sizeof(*params);
+> > +	params->cmd = cmd;
+> > +	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+> > +	if (ret >= 0) {
+> > +		if (msg->result == EC_RES_SUCCESS)
+> > +			*mask = resp->version_mask;
+> > +		else
+> > +			*mask = 0;
+> > +	}
+> > +	return ret;
+> > +}
+> > +
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      struct iio_dev *indio_dev,
+> >  			      bool physical_device)
+> > @@ -33,6 +105,8 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+> >  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+> >  	struct cros_ec_sensor_platform *sensor_platform =
+> > dev_get_platdata(dev);
+> > +	u32 ver_mask;
+> > +	int ret;
+> >  
+> >  	platform_set_drvdata(pdev, indio_dev);
+> >  
+> > @@ -47,8 +121,16 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  
+> >  	mutex_init(&state->cmd_lock);
+> >  
+> > +	/* determine what version of MOTIONSENSE CMD EC has */
+> > +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
+> > +						ec->cmd_offset,
+> > +						EC_CMD_MOTION_SENSE_CMD
+> > ,
+> > +						&ver_mask);
+> > +	if (ret < 0 || ver_mask == 0)
+> > +		return -ENODEV;
+> > +
+> >  	/* Set up the host command structure. */
+> > -	state->msg->version = 2;
+> > +	state->msg->version = fls(ver_mask) - 1;
+> >  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> >  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
+> >  
+> > @@ -66,6 +148,20 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  		}
+> >  		state->type = state->resp->info.type;
+> >  		state->loc = state->resp->info.location;
+> > +		if (state->msg->version < 3) {
+> > +			get_default_min_max_freq_and_fifo_size(
+> > +					state->resp->info.type,
+> > +					&state->min_freq,
+> > +					&state->max_freq,
+> > +					&state->fifo_max_event_count);
+> > +		} else {
+> > +			state->min_freq =
+> > +				state->resp->info_3.min_frequency;
+> > +			state->max_freq =
+> > +				state->resp->info_3.max_frequency;
+> > +			state->fifo_max_event_count =
+> > +				state->resp-
+> > >info_3.fifo_max_event_count;
+> > +		}
+> >  	}
+> >  
+> >  	return 0;
+> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
+> > b/include/linux/iio/common/cros_ec_sensors_core.h
+> > index ce16445411ac..4742a9637a85 100644
+> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > @@ -78,6 +78,13 @@ struct cros_ec_sensors_core_state {
+> >  				    unsigned long scan_mask, s16
+> > *data);
+> >  
+> >  	int curr_sampl_freq;
+> > +
+> > +	/* Min and Max Sampling Frequency in mHz */
+> > +	u32 min_freq;
+> > +	u32 max_freq;
+> > +
+> > +	/* event fifo size represented in number of events */
+> > +	u32 fifo_max_event_count;
+> >  };
+> >  
+> >  /**
+> > diff --git a/include/linux/mfd/cros_ec_commands.h
+> > b/include/linux/mfd/cros_ec_commands.h
+> > index dcec96f01879..27d71cbf22f1 100644
+> > --- a/include/linux/mfd/cros_ec_commands.h
+> > +++ b/include/linux/mfd/cros_ec_commands.h
+> > @@ -1744,6 +1744,27 @@ struct ec_response_motion_sense {
+> >  			uint8_t chip;
+> >  		} info;
+> >  
+> > +		/* Used for MOTIONSENSE_CMD_INFO version 3 */
+> > +		struct __ec_todo_unpacked {
+> > +			/* Should be element of enum motionsensor_type.
+> > */
+> > +			uint8_t type;
+> > +
+> > +			/* Should be element of enum
+> > motionsensor_location. */
+> > +			uint8_t location;
+> > +
+> > +			/* Should be element of enum motionsensor_chip.
+> > */
+> > +			uint8_t chip;
+> > +
+> > +			/* Minimum sensor sampling frequency */
+> > +			uint32_t min_frequency;
+> > +
+> > +			/* Maximum sensor sampling frequency */
+> > +			uint32_t max_frequency;
+> > +
+> > +			/* Max number of sensor events that could be in
+> > fifo */
+> > +			uint32_t fifo_max_event_count;
+> > +		} info_3;
+> > +
+> >  		/* Used for MOTIONSENSE_CMD_DATA */
+> >  		struct ec_response_motion_sensor_data data;
+> >  
 
