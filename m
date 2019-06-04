@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7BFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A5FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87317219BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E7120717
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 13:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KEFWasOi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N8jkDEwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfFDNTE (ORCPT
+        id S1727888AbfFDNTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 09:19:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55094 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfFDNTA (ORCPT
+        Tue, 4 Jun 2019 09:19:07 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39376 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbfFDNTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:19:00 -0400
+        Tue, 4 Jun 2019 09:19:02 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DIlQV028229;
-        Tue, 4 Jun 2019 08:18:47 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DIEoq119974;
+        Tue, 4 Jun 2019 08:18:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559654327;
-        bh=A1e4i3JXTGF5KqEnqJblhBzQo0a5PhT1C6gt15QrFqM=;
+        s=ti-com-17Q1; t=1559654294;
+        bh=iGGz8aJS305f8zkEMQQLmC9ZNt7J1jEUCbTcSQRPp8c=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KEFWasOiIKb8vqmQe82XGw9RwsDQAOM9j+AmROXwTFSQODUVNDgZrKFM+Q/wYkfMN
-         aMC5++WST/g4Y/LAl7colTxb5MX0VeH4+/ldbUS/mhwYKUyU5HP1URDqe4+t4tDPtq
-         dNFjjWVS5DmERnQ2PcM0zlqNkK1cQ9GO/J6xrTz8=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DIlLx009840
+        b=N8jkDEwpWuoOdA9t6AYdQYMuDLTffL+VUteLJp1OVzUM3ExXPoBOaemiDe1fXwRLR
+         Glb+o8SJQmgSkmPXTcE5fy+Tosxatv+/DcmsyY7omogGVF2OYIUCZp5iShHHYCT7rO
+         lpwRrvi1TP5cLGxqyTOADGGeWmDgY/RHw4XiW754=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DIENZ009122
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:18:47 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 4 Jun 2019 08:18:14 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:18:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:18:14 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:18:47 -0500
+ Frontend Transport; Tue, 4 Jun 2019 08:18:14 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGc098972;
-        Tue, 4 Jun 2019 08:18:42 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DGdGW098972;
+        Tue, 4 Jun 2019 08:18:09 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -63,9 +63,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-omap@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 22/30] PCI: cadence: Configure pci_epc_features to align BAR addresses to 256 Bytes
-Date:   Tue, 4 Jun 2019 18:45:08 +0530
-Message-ID: <20190604131516.13596-23-kishon@ti.com>
+Subject: [RFC PATCH 16/30] PCI: endpoint: Assign function number of each PF in EPC  core
+Date:   Tue, 4 Jun 2019 18:45:02 +0530
+Message-ID: <20190604131516.13596-17-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 References: <20190604131516.13596-1-kishon@ti.com>
@@ -77,29 +77,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cadence PCIe controller has BITS[7:0] of the Inbound Address
-Translation Units AXI address reserved for special purpose. In order to
-accommodate this constraint, BAR addresses should be aligned to 256 Byte
-addresses. Configure pci_epc_features to align BAR addresses to 256
-Bytes here.
+The endpoint core relies on the drivers that invoke the API to bind
+a controller driver with a function driver to allocate and assign a
+function number to each physical function. Ideally the function
+numbers should be assinged by EPC core for each of the physical
+function that is bound to the EPC.
+
+Assign function number of each PF in EPC core and remove function
+number allocation in endpoint configfs.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/pcie-cadence-ep.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/endpoint/pci-ep-cfs.c   | 27 +++++----------------------
+ drivers/pci/endpoint/pci-epc-core.c | 12 +++++++++++-
+ include/linux/pci-epc.h             |  2 ++
+ 3 files changed, 18 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-index 3dc1a896c1e6..25638af7c668 100644
---- a/drivers/pci/controller/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/pcie-cadence-ep.c
-@@ -484,6 +484,7 @@ static const struct pci_epc_features cdns_pcie_epc_features = {
- 	.linkup_notifier = false,
- 	.msi_capable = true,
- 	.msix_capable = false,
-+	.align = 256,
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index d1288a0bd530..e7e8367eead1 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -29,7 +29,6 @@ struct pci_epc_group {
+ 	struct config_group group;
+ 	struct pci_epc *epc;
+ 	bool start;
+-	unsigned long function_num_map;
  };
  
- static const struct pci_epc_features cdns_pcie_epc_vf_features = {
+ static inline struct pci_epf_group *to_pci_epf_group(struct config_item *item)
+@@ -89,37 +88,22 @@ static int pci_epc_epf_link(struct config_item *epc_item,
+ 			    struct config_item *epf_item)
+ {
+ 	int ret;
+-	u32 func_no = 0;
+ 	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item);
+ 	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
+ 	struct pci_epc *epc = epc_group->epc;
+ 	struct pci_epf *epf = epf_group->epf;
+ 
+-	func_no = find_first_zero_bit(&epc_group->function_num_map,
+-				      BITS_PER_LONG);
+-	if (func_no >= BITS_PER_LONG)
+-		return -EINVAL;
+-
+-	set_bit(func_no, &epc_group->function_num_map);
+-	epf->func_no = func_no;
+-
+ 	ret = pci_epc_add_epf(epc, epf);
+ 	if (ret)
+-		goto err_add_epf;
++		return ret;
+ 
+ 	ret = pci_epf_bind(epf);
+-	if (ret)
+-		goto err_epf_bind;
++	if (ret) {
++		pci_epc_remove_epf(epc, epf);
++		return ret;
++	}
+ 
+ 	return 0;
+-
+-err_epf_bind:
+-	pci_epc_remove_epf(epc, epf);
+-
+-err_add_epf:
+-	clear_bit(func_no, &epc_group->function_num_map);
+-
+-	return ret;
+ }
+ 
+ static void pci_epc_epf_unlink(struct config_item *epc_item,
+@@ -134,7 +118,6 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
+ 
+ 	epc = epc_group->epc;
+ 	epf = epf_group->epf;
+-	clear_bit(epf->func_no, &epc_group->function_num_map);
+ 	pci_epf_unbind(epf);
+ 	pci_epc_remove_epf(epc, epf);
+ }
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index eea07f9ec5ff..e5d8d8370686 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -471,6 +471,8 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
+  */
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
+ {
++	u32 func_no = 0;
++
+ 	if (epf->epc)
+ 		return -EBUSY;
+ 
+@@ -480,9 +482,16 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
+ 	if (epf->func_no > epc->max_functions - 1)
+ 		return -EINVAL;
+ 
++	mutex_lock(&epc->lock);
++	func_no = find_first_zero_bit(&epc->function_num_map,
++				      BITS_PER_LONG);
++	if (func_no >= BITS_PER_LONG)
++		return -EINVAL;
++
++	set_bit(func_no, &epc->function_num_map);
++	epf->func_no = func_no;
+ 	epf->epc = epc;
+ 
+-	mutex_lock(&epc->lock);
+ 	list_add_tail(&epf->list, &epc->pci_epf);
+ 	mutex_unlock(&epc->lock);
+ 
+@@ -503,6 +512,7 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+ 		return;
+ 
+ 	mutex_lock(&epc->lock);
++	clear_bit(epf->func_no, &epc->function_num_map);
+ 	list_del(&epf->list);
+ 	mutex_unlock(&epc->lock);
+ }
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index a430d02aa1ff..ad118a3f1330 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -89,6 +89,7 @@ struct pci_epc_mem {
+  * @max_functions: max number of functions that can be configured in this EPC
+  * @group: configfs group representing the PCI EPC device
+  * @lock: mutex to protect pci_epc ops
++ * @function_num_map: bitmap to manage physical function number
+  * @notifier: used to notify EPF of any EPC events (like linkup)
+  */
+ struct pci_epc {
+@@ -100,6 +101,7 @@ struct pci_epc {
+ 	struct config_group		*group;
+ 	/* mutex to protect against concurrent access of EP controller */
+ 	struct mutex			lock;
++	unsigned long			function_num_map;
+ 	struct atomic_notifier_head	notifier;
+ };
+ 
 -- 
 2.17.1
 
