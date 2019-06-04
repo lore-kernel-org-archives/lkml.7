@@ -1,153 +1,156 @@
 Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A403DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09123C46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2E22495C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559623916;
-	bh=HZj2j+O3j5SGfey94n7aEH/l37mWi/Hxz64vXUJXCAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oYul2L42H9JzqcEpz/Qi77kwsuOCioeVJPqW3aeJxbM2stOCW2+1XPrmGsML4TxFl
-	 6DaE9iIJk2h/WNyZIJeEq2oHVuivWlaQ5kUzH54VjmK3bLoBA7QjYuS01gPYd5FFyw
-	 YBZ8hqtx2AdPxWJHLzf5hlX797AcONL8NFlRN7Kw=
+	by mail.kernel.org (Postfix) with ESMTP id DCEF224AE6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfFDEvz (ORCPT
+        id S1726554AbfFDE7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 00:51:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36309 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfFDEvz (ORCPT
+        Tue, 4 Jun 2019 00:59:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:54941 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfFDE7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 00:51:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a3so2190530pgb.3;
-        Mon, 03 Jun 2019 21:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HIshHbJGz5AuZX+SokNLkAl+hD0L1jiePIWoq2eJXjE=;
-        b=CHp9I4t8D8E6Sf8L73xeqo6RDiNmk13G3jhqACbPNpNvCuGV1v7FaOayAR3r1y9VxR
-         SmG9Lgp87OWWgEGXuCd0/ce/8dRaCCuU7rc1wWsI9fNhtrGkC2Bd6V7XAiZLwS/jFcIV
-         XPKjcwgxRjmkXPMpyusWkE0uO+SNn9TjS/L7DhEKglcgLznHuZMeQc2guYxS/u/ZdvB6
-         Dt9582g8LRbhaZNVRVJSo8AcYBqo/KkpPSdWWIhrQDat0rYlMDMxxj42bshxLmasOKM/
-         nz+7P8RMDg+CLbA5qVI8CjmSeB+zq9D8IORFMp7IUaroSbi76uCi+jFnHVWyOTGSPxeP
-         xBog==
+        Tue, 4 Jun 2019 00:59:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id n8so4900831ioo.21
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:59:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HIshHbJGz5AuZX+SokNLkAl+hD0L1jiePIWoq2eJXjE=;
-        b=mpeTL3YbUAi77a8FxCE0dQ//PJbmj4BASsZNJBOO3fVi79TXLxSgTm7nirirnSchaK
-         V0kw7M8VCuktCbbuQKb8Ixv+EcmSi5DrW8ralGiOwvxlJ4vLEaIRz5K17iZ/3agqcjdv
-         +yGUdZ24T7sA7K85hOemFs0oRD3M6KK83kqOU5n1W/fVkyez/jUopVi9a3IE/nXxgR9X
-         ewEY0n4BdyJXp0KAxa6L9H9t3jvFE6hmJoiKXhqvfHHfEyiK4ZeWh7SzZsjivf3wnOOa
-         M9LC45IoPlV3zd1tPBsZouEQpNfWCwt1ASdB/RcToBAr9/hth4kw+DunZw+HUCnjfOOS
-         SKnw==
-X-Gm-Message-State: APjAAAXpcriu6UPfFFe12fkRCBPTtHCYOnlvlWuupPabwnGuzKoRceZP
-        Z+1ycIIb6iQOP6GwPAcmxGI=
-X-Google-Smtp-Source: APXvYqxR/48QdIGAIUfDAIFTi3ruydBg7FO5eCefdksVed2G9NtEyc9wCflexu9+e9paiCqFo0XGAQ==
-X-Received: by 2002:a17:90a:aa88:: with SMTP id l8mr34652130pjq.65.1559623914129;
-        Mon, 03 Jun 2019 21:51:54 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id f186sm18863795pfb.5.2019.06.03.21.51.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 21:51:52 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 13:51:46 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "christian@brauner.io" <christian@brauner.io>,
-        "oleksandr@redhat.com" <oleksandr@redhat.com>
-Subject: Re: [PATCH v1 3/4] mm: account nr_isolated_xxx in
- [isolate|putback]_lru_page
-Message-ID: <20190604045146.GD43390@google.com>
-References: <20190604042047.13492-1-hdanton@sina.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TTDReImnbsPUfsbHC9WPWZEbpuEYQR4VhJJHGQELGSY=;
+        b=ClrYVFulBVVmWRGZBW81Li/5Ej1Md4JwceI1vPC4HOQMKGWGnyOl4py0C6/4YovS3j
+         nmRTrfpAyT72UxhYuvqSN3o/R0YpVBg0NAyX7th7aZsb6FRLf5DJUYIRvk65uFptwz0M
+         O3QgYRbITyHUjyUUi6reVA2UCQv/3sz9N48q2FDM1CwttzfxVsIs0dx6AY8RwLpaD5wX
+         H6OKgyeDMaCxHdJSgR3et68pVxr2B2+/ZMpK3b+EzEk7iFElTXosrDZJCImWd+9KDL71
+         aweFdYskPFl0eGnDvQUu23KqZnO+3TVAUO9+2/oqJRXwp3NYHbIxqlXljX/vXAL1Gp+t
+         bEBA==
+X-Gm-Message-State: APjAAAVcneLHDPS263aHIKzbFHtwc8X6rqOokkYzV+sOPWLIa4XTUrLH
+        /sATXFLyBzWRywna0RK6LmIEN3v79M9/P0clFmDj158FNmed
+X-Google-Smtp-Source: APXvYqxhOTHCxmPPGUlRYIewZVdGpcmTCrQduA2Xdse33/kHj/bIPyHrvD0dun9841nI60bFqTIyH3BCmNbfMgaNz9JLeN4NfBWQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604042047.13492-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:c492:: with SMTP id t18mr14002910jam.67.1559624345428;
+ Mon, 03 Jun 2019 21:59:05 -0700 (PDT)
+Date:   Mon, 03 Jun 2019 21:59:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000017b026058a785790@google.com>
+Subject: INFO: rcu detected stall in rose_connect
+From:   syzbot <syzbot+af81c7a21a31b18bec0e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
+Hello,
 
-On Tue, Jun 04, 2019 at 12:20:47PM +0800, Hillf Danton wrote:
-> 
-> Hi Minchan
-> 
-> On Mon, 3 Jun 2019 13:37:27 +0800 Minchan Kim wrote:
-> > @@ -1181,10 +1179,17 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
-> >  		return -ENOMEM;
-> > 
-> >  	if (page_count(page) == 1) {
-> > +		bool is_lru = !__PageMovable(page);
-> > +
-> >  		/* page was freed from under us. So we are done. */
-> >  		ClearPageActive(page);
-> >  		ClearPageUnevictable(page);
-> > -		if (unlikely(__PageMovable(page))) {
-> > +		if (likely(is_lru))
-> > +			mod_node_page_state(page_pgdat(page),
-> > +						NR_ISOLATED_ANON +
-> > +						page_is_file_cache(page),
-> > +						hpage_nr_pages(page));
+syzbot found the following crash on:
 
-That should be -hpage_nr_pages(page). It's a bug.
+HEAD commit:    0462eaac Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12fda636a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7b54c66298f8420
+dashboard link: https://syzkaller.appspot.com/bug?extid=af81c7a21a31b18bec0e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> > +		else {
-> >  			lock_page(page);
-> >  			if (!PageMovable(page))
-> >  				__ClearPageIsolated(page);
-> 
-> As this page will go down the path only through the MIGRATEPAGE_SUCCESS branches,
-> with no putback ahead, the current code is, I think, doing right things for this
-> work to keep isolated stat balanced.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-I guess that's the one you pointed out. Right?
-Thanks for the review!
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+af81c7a21a31b18bec0e@syzkaller.appspotmail.com
 
-> 
-> > @@ -1210,15 +1215,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
-> >  		 * restored.
-> >  		 */
-> >  		list_del(&page->lru);
-> > -
-> > -		/*
-> > -		 * Compaction can migrate also non-LRU pages which are
-> > -		 * not accounted to NR_ISOLATED_*. They can be recognized
-> > -		 * as __PageMovable
-> > -		 */
-> > -		if (likely(!__PageMovable(page)))
-> > -			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
-> > -					page_is_file_cache(page), -hpage_nr_pages(page));
-> >  	}
-> > 
-> 
-> BR
-> Hillf
-> 
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	0-...!: (10499 ticks this GP) idle=5fa/1/0x4000000000000002  
+softirq=44473/44473 fqs=15
+	(t=10501 jiffies g=63393 q=282)
+rcu: rcu_preempt kthread starved for 10470 jiffies! g63393 f0x0  
+RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     I29056    10      2 0x80004000
+Call Trace:
+  context_switch kernel/sched/core.c:2818 [inline]
+  __schedule+0x7cb/0x1560 kernel/sched/core.c:3445
+  schedule+0xa8/0x260 kernel/sched/core.c:3509
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1589 [inline]
+  rcu_gp_kthread+0x9b2/0x18b0 kernel/rcu/tree.c:1746
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+NMI backtrace for cpu 0
+CPU: 0 PID: 25729 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #9
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2625 [inline]
+  rcu_sched_clock_irq.cold+0x4d1/0xbfd kernel/rcu/tree.c:2161
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1298
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x33b/0xdd0 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+  smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
+RIP: 0010:check_kcov_mode kernel/kcov.c:68 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0x11/0x50 kernel/kcov.c:102
+Code: 48 c7 05 8e 89 f5 08 00 00 00 00 e9 a4 e9 ff ff 90 90 90 90 90 90 90  
+90 90 55 48 89 e5 48 8b 75 08 65 48 8b 04 25 c0 fd 01 00 <65> 8b 15 b0 57  
+91 7e 81 e2 00 01 1f 00 75 2b 8b 90 e0 12 00 00 83
+RSP: 0018:ffff888062d17c00 EFLAGS: 00000297 ORIG_RAX: ffffffffffffff13
+RAX: ffff8880875ce680 RBX: dffffc0000000000 RCX: ffffffff864bdd76
+RDX: 0000000000000001 RSI: ffffffff864bdd14 RDI: 0000000000000004
+RBP: ffff888062d17c00 R08: ffff8880875ce680 R09: ffffed100c5a2f70
+R10: ffffed100c5a2f6f R11: 0000000000000003 R12: ffff88808ce48600
+R13: 0000000000000001 R14: ffff888216685300 R15: 0000000000000000
+  rose_find_socket+0x54/0x120 net/rose/af_rose.c:281
+  rose_new_lci net/rose/af_rose.c:302 [inline]
+  rose_new_lci+0xca/0x140 net/rose/af_rose.c:296
+  rose_connect+0x3b8/0x1510 net/rose/af_rose.c:776
+  __sys_connect+0x264/0x330 net/socket.c:1840
+  __do_sys_connect net/socket.c:1851 [inline]
+  __se_sys_connect net/socket.c:1848 [inline]
+  __x64_sys_connect+0x73/0xb0 net/socket.c:1848
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007eff2ff64c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
+RDX: 0000000000000040 RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007eff2ff656d4
+R13: 00000000004bf7f6 R14: 00000000004d0d38 R15: 00000000ffffffff
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
