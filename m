@@ -2,112 +2,76 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68079C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E91C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBCC2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwWQdxbc"
+	by mail.kernel.org (Postfix) with ESMTP id E8D5320828
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 17:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfFDRYX (ORCPT
+        id S1726597AbfFDRY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 13:24:23 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:51487 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfFDRYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:24:23 -0400
-Received: by mail-it1-f194.google.com with SMTP id m3so1430468itl.1;
-        Tue, 04 Jun 2019 10:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=684y/cl2KzqACBNQ2Tlq591/W/YeCegwH8Huw8QPTB0=;
-        b=LwWQdxbcBykG9LpWPT0qPZT++cUOiQdv8QAiWFA92ZubIEDsixsI9tNrDl/orTP6Zo
-         vd67ZnkmzjC7HuS+T+S3TlGlUVBUkJJWOv7XVf0K9C4sKNS2/B10CpXjKo9Y5nTt4hrk
-         M20k9uTsQvYXMlZKnCjSP9PMH7xUQkxm0k5XYOQYJzOtNS5p2PjgJM302Q/DIS/tYPgc
-         JkdO/oTTxqoK0DtVUqbKSDzqedKF0ZODCnXeI5TSqYMPUrHkUTD/SXmlUdOGAEAuST4R
-         KJcexxAP9J7VHepSTz/zRNtlNAJ2QgPAROaN8nxeEig54LaOIM/lpvFXIQoP5ieWydMO
-         1cHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=684y/cl2KzqACBNQ2Tlq591/W/YeCegwH8Huw8QPTB0=;
-        b=j7dNHg/MgQ0eXm4kesdjbXDWBj6JKO58DS/tCaMd5wDMSW3vxNot70aekDnlZDz3//
-         R6HJK5jpiHlAKpdzagBA0cusd9LEwDlNMMjm0PgU7uXNbIZOQr703eDD5/P7GmVG+9si
-         R34JezF6Lcsm5+CDiCtH7eQCwY6ln54IaSo7Ore44BPjfAc9+OupMLUFuZYc8S+r1OPy
-         BFkOcuu/4SXHaRvPGPGsWJ6NjFN6IrwltTPBKWI8xQTrAA9q357Se66UOiBF4AqiuugJ
-         mnf8ysRawmDsZz5LZdbxkN8zzUylVfiwpvPs+eZ02mZi0bRC4a3e/ohr2FwaQ3ctVuvn
-         meSw==
-X-Gm-Message-State: APjAAAXWBddGiBf3658vdfprgCeVckvPVOuAndNMrWdDLN5G32kUEzin
-        P0ngdciAzUKj7AJiKooLhX2Jeqh+AEHzyi79Zg==
-X-Google-Smtp-Source: APXvYqwy06rCoqbgvSvyZBt+6AqZ+XpW5YBWeva8u+pBMISO20GpbS1CivwRYDmiyNCg/XpGMt8dCWr6az/GtH+Y9zs=
-X-Received: by 2002:a24:5301:: with SMTP id n1mr21181845itb.10.1559669062380;
- Tue, 04 Jun 2019 10:24:22 -0700 (PDT)
+        Tue, 4 Jun 2019 13:24:27 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48522 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfFDRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:24:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 121D380D;
+        Tue,  4 Jun 2019 10:24:24 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44D773F5AF;
+        Tue,  4 Jun 2019 10:24:23 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: clean up asym packing
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1559571064-28087-1-git-send-email-vincent.guitto@linaro.org>
+ <1559571436-29091-1-git-send-email-vincent.guittot@linaro.org>
+ <7280a3b0-0727-f365-4453-8b4b01a64559@arm.com>
+ <CAKfTPtCU_+YJgMVpk-CKhetqTbOcNWVOmbUOD_xuTJqSD64J=w@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <22ddd35b-a901-0292-9dab-6b5efcd16d93@arm.com>
+Date:   Tue, 4 Jun 2019 18:24:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
- <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de> <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
-In-Reply-To: <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
-From:   =?UTF-8?Q?Bj=C3=B8rn_Forsman?= <bjorn.forsman@gmail.com>
-Date:   Tue, 4 Jun 2019 19:24:10 +0200
-Message-ID: <CAEYzJUE0SuO3uHm1TTxfr1kPtLic1ggUPnGFYTSPcwk6nfq82g@mail.gmail.com>
-Subject: Re: bcache: oops when writing to writeback_percent without a cache device
-To:     Coly Li <colyli@suse.de>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAKfTPtCU_+YJgMVpk-CKhetqTbOcNWVOmbUOD_xuTJqSD64J=w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 at 17:41, Coly Li <colyli@suse.de> wrote:
->
-> On 2019/6/4 10:59 =E4=B8=8B=E5=8D=88, Coly Li wrote:
-> > On 2019/6/4 7:00 =E4=B8=8B=E5=8D=88, Bj=C3=B8rn Forsman wrote:
-> >> Hi all,
-> >>
-> >> I get a kernel oops from bcache when writing to
-> >> /sys/block/bcache0/bcache/writeback_percent and there is no attached
-> >> cache device. See the oops itself below my signature.
-> >>
-> >> This is on Linux 4.19.46. I looked in git and see many commits to
-> >> bcache lately, but none seem to address this particular issue.
-> >>
-> >> Background: I'm writing to .../writeback_percent with
-> >> systemd-tmpfiles. I'd rather not replace it with a script that figures
-> >> out whether or not the kernel will oops if writing to the sysfs file
-> >> -- the kernel should not oops in the first place.
-> >
-> > Hi Bjorn,
-> >
-> > Thank you for the reporting. I believe this is a case we missed in
-> > testings. When a bcache device is not attached, it does not make sense
-> > to update the writeback rate in period by the changing of writeback_per=
-cent.
-> >
-> > I will post a patch for your testing soon.
->
-> Hi Bjorn,
->
-> Could you please to try this patch ? Hope it may help a bit.
+On 03/06/2019 19:32, Vincent Guittot wrote:
+> On Mon, 3 Jun 2019 at 20:15, Valentin Schneider
+[...]
+> My original goal was to add a group type to classify the group but
+> this would have broken the current behavior whereas I only want to
+> move code
+> 
+>>
+>> Also, why tag this group in update_sd_pick_busiest()? It would make more
+>> sense to do so in update_sg_lb_stats() like with the other sg_lb_stats fields:
+> 
+> With your proposal below, the test is called for every groups'
+> statistic update whereas it is only done lastly after checking other
+> rules in the current code and I don't want to modify the current
+> behavior but only move code to set imbalance in calculate imbalance.
+> 
 
-Hi Coly,
+Adding a new group_type would make sense. From a behavioral point of view
+your change is fine, but from a logical one it sits halfway between being
+a new stat and being a new group_type. I'd rather see a new group_type,
+though as you said that's a different topic than cleaning up duplicate
+operations.
 
-Thanks for the quick patch! I tested it on linux 5.2-rc2 and it indeed
-fixes the problem.
-
-There is one typo in the patch/commit message: s/writebac/writeback/
-
---=20
-Best regards,
-Bj=C3=B8rn Forsman
+> A bigger cleanup will come in next steps
+> 
+[...]
