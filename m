@@ -2,152 +2,100 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B1FC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00821C28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3C42064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C9624E86
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559627387;
+	bh=Cp1M7M5lwY2172OZCuc8q6Bam/oQDv/B2nA08ZbydRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m1OTIHcpV4j4rwkC3GdkA4ysD1jszI8puCdksBkHDFp+tJCyQcYNmXs5IbKzbfcqJ
+	 771aGxLXttq9M/LzmVxvt3nEf8Ta6iIxhUcbC1bt8EcsmxSKP9iEIbQoywW3aSE5a8
+	 CyRanOxgEEIwDgu2UCH4OAQcE8DlRZb1/9Y+5LM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfFDFsa (ORCPT
+        id S1726683AbfFDFtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 01:48:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41174 "EHLO mx1.redhat.com"
+        Tue, 4 Jun 2019 01:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfFDFs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 01:48:29 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726530AbfFDFtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 01:49:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8E1DC307D914;
-        Tue,  4 Jun 2019 05:48:29 +0000 (UTC)
-Received: from gondolin (ovpn-116-92.ams2.redhat.com [10.36.116.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE1BA60C67;
-        Tue,  4 Jun 2019 05:48:23 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 07:48:20 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
-Subject: Re: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Message-ID: <20190604074820.71853cbb.cohuck@redhat.com>
-In-Reply-To: <20190603185658.54517-4-parav@mellanox.com>
-References: <20190603185658.54517-1-parav@mellanox.com>
-        <20190603185658.54517-4-parav@mellanox.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id A16732064A;
+        Tue,  4 Jun 2019 05:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559627386;
+        bh=Cp1M7M5lwY2172OZCuc8q6Bam/oQDv/B2nA08ZbydRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i9LyBIRv7aF+DPTixovlNvUtojp+B1dBAaE4w+88LGUgHfmamuvHb1b0WM4hE5YFB
+         V0rRkR1yDWQgfueaEPbRq7LZeAGfGa3SVEbCl8UF04avnNfgilADt3Rud0/Ao9fQ8H
+         oBA+C0h3vkG5swz7rAoTEPbU9gkQN8/SryEXifgM=
+Date:   Tue, 4 Jun 2019 07:49:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     "kernelci.org bot" <bot@kernelci.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 5.1 00/40] 5.1.7-stable review
+Message-ID: <20190604054943.GB16504@kroah.com>
+References: <20190603090522.617635820@linuxfoundation.org>
+ <5cf53378.1c69fb81.9dd1b.494b@mx.google.com>
+ <7hmuiyjzg8.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 04 Jun 2019 05:48:29 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7hmuiyjzg8.fsf@baylibre.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 13:56:58 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+On Mon, Jun 03, 2019 at 11:28:23AM -0700, Kevin Hilman wrote:
+> "kernelci.org bot" <bot@kernelci.org> writes:
+> 
+> > stable-rc/linux-5.1.y boot: 132 boots: 1 failed, 131 passed (v5.1.6-41-ge674455b9242)
+> >
+> > Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-5.1.y/kernel/v5.1.6-41-ge674455b9242/
+> > Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y/kernel/v5.1.6-41-ge674455b9242/
+> >
+> > Tree: stable-rc
+> > Branch: linux-5.1.y
+> > Git Describe: v5.1.6-41-ge674455b9242
+> > Git Commit: e674455b924207b06e6527d961a4b617cf13e7a9
+> > Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> > Tested: 73 unique boards, 23 SoC families, 14 builds out of 209
+> >
+> > Boot Failure Detected:
+> >
+> > arm:
+> >     multi_v7_defconfig:
+> >         gcc-8:
+> >             bcm4708-smartrg-sr400ac: 1 failed lab
+> 
+> FYI, this one has been fixed and marked with Fixes tag[1], but it
+> appears the patch hasn't yet landed in mainline.
 
-> In following sequences, child devices created while removing mdev parent
-> device can be left out, or it may lead to race of removing half
-> initialized child mdev devices.
-> 
-> issue-1:
-> --------
->        cpu-0                         cpu-1
->        -----                         -----
->                                   mdev_unregister_device()
->                                     device_for_each_child()
->                                       mdev_device_remove_cb()
->                                         mdev_device_remove()
-> create_store()
->   mdev_device_create()                   [...]
->     device_add()
->                                   parent_remove_sysfs_files()
-> 
-> /* BUG: device added by cpu-0
->  * whose parent is getting removed
->  * and it won't process this mdev.
->  */
-> 
-> issue-2:
-> --------
-> Below crash is observed when user initiated remove is in progress
-> and mdev_unregister_driver() completes parent unregistration.
-> 
->        cpu-0                         cpu-1
->        -----                         -----
-> remove_store()
->    mdev_device_remove()
->    active = false;
->                                   mdev_unregister_device()
->                                   parent device removed.
->    [...]
->    parents->ops->remove()
->  /*
->   * BUG: Accessing invalid parent.
->   */
-> 
-> This is similar race like create() racing with mdev_unregister_device().
-> 
-> BUG: unable to handle kernel paging request at ffffffffc0585668
-> PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
-> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-> RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
-> Call Trace:
->  remove_store+0x71/0x90 [mdev]
->  kernfs_fop_write+0x113/0x1a0
->  vfs_write+0xad/0x1b0
->  ksys_write+0x5a/0xe0
->  do_syscall_64+0x5a/0x210
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Therefore, mdev core is improved as below to overcome above issues.
-> 
-> Wait for any ongoing mdev create() and remove() to finish before
-> unregistering parent device.
-> This continues to allow multiple create and remove to progress in
-> parallel for different mdev devices as most common case.
-> At the same time guard parent removal while parent is being accessed by
-> create() and remove() callbacks.
-> create()/remove() and unregister_device() are synchronized by the rwsem.
-> 
-> Refactor device removal code to mdev_device_remove_common() to avoid
-> acquiring unreg_sem of the parent.
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 71 ++++++++++++++++++++++++--------
->  drivers/vfio/mdev/mdev_private.h |  2 +
->  2 files changed, 55 insertions(+), 18 deletions(-)
-> 
+A Fixes: tag will not guarantee it will make it into a stable release.
+It might, a month or so later, if we get bored.  You should always use a
+ Cc: stable@ tag instead, as that is the documented way to ensure that
+the patch makes it into a stable release.
 
-> @@ -265,6 +299,12 @@ int mdev_device_create(struct kobject *kobj,
->  
->  	mdev->parent = parent;
->  
+Once this hits Linus's tree, send me the SHA1 and I will be glad to
+queue it up.
 
-Adding
+thanks,
 
-/* Check if parent unregistration has started */
-
-here as well might be nice, but no need to resend the patch for that.
-
-> +	if (!down_read_trylock(&parent->unreg_sem)) {
-> +		mdev_device_free(mdev);
-> +		ret = -ENODEV;
-> +		goto mdev_fail;
-> +	}
-> +
->  	device_initialize(&mdev->dev);
->  	mdev->dev.parent  = dev;
->  	mdev->dev.bus     = &mdev_bus_type;
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+greg k-h
