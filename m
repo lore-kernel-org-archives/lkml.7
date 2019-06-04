@@ -2,144 +2,156 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8070EC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EFAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB4E207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gx4TZAEO"
+	by mail.kernel.org (Postfix) with ESMTP id 4A841207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559679510;
+	bh=iG0LtosQD92m9TTWN5JRMbddz/rPfUkoOrLnFTnZQOQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=an+EMr9+WDHse6dmGqX/HthoPAydUWo3QzAXyujdzU4+yFdL0lZKyZHhhqLLJ2YLA
+	 Gyarm/MdhT2eaKl0UZAwYzB7k4Fs+vfiCJB6uFHTBwo/hwGFVV5V29Q8+lTtLTA3Tf
+	 ckFz/YGjrm+scRUvCz08RY3BO1KkTb7aVUHof0Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFDURp (ORCPT
+        id S1726684AbfFDUS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:17:45 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3027 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDURp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:17:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf6d1da0000>; Tue, 04 Jun 2019 13:17:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Jun 2019 13:17:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Jun 2019 13:17:43 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Jun
- 2019 20:17:43 +0000
-Subject: Re: [PATCH v3] mm/swap: Fix release_pages() when releasing devmap
- pages
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "Weiny, Ira" <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20190604164813.31514-1-ira.weiny@intel.com>
- <cfd74a0f-71b5-1ece-80af-7f415321d5c1@nvidia.com>
- <CAPcyv4hmN7M3Y1HzVGSi9JuYKUUmvBRgxmkdYdi_6+H+eZAyHA@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4d97645c-0e55-37c0-1a16-8649706b9e78@nvidia.com>
-Date:   Tue, 4 Jun 2019 13:17:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 4 Jun 2019 16:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfFDUS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 16:18:28 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40AC20B7C
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2019 20:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559679507;
+        bh=iG0LtosQD92m9TTWN5JRMbddz/rPfUkoOrLnFTnZQOQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rbONcUbdged+eCYwiMBzEgIiISkpCCnOqZ/4M19YbzaRTOQKMWsCBAxo5+IxafmlK
+         34t68z4pDP29OChTaaouHHy6Tiwq2L9QIUePzd+ewplo2OOiZ67f3wAfD1vyAlek/3
+         rK7nBAoWHn927V1BRXLPKPfNrMiub2NxnMrBaFLk=
+Received: by mail-wr1-f54.google.com with SMTP id e16so8916841wrn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:18:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAXAZZNYs/nE2rcnXvfEI/7HHTZyEn7QgxqiFVpZky1xJYAXhU2J
+        yiIbQJFY20K/2Ppb9i87gfb6ugurYAyLhyWwL3KKcA==
+X-Google-Smtp-Source: APXvYqwRkR9sWPYIMXZS9Q5rRlolzNc9nEBk2wWzs1nb5BIz1g/f+XZVoePL8lZsbJxQ+uA26oNFehMnbw/ZMl7tJOw=
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr7455664wrj.47.1559679505381;
+ Tue, 04 Jun 2019 13:18:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4hmN7M3Y1HzVGSi9JuYKUUmvBRgxmkdYdi_6+H+eZAyHA@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559679450; bh=Ys4ew+Gn4nTU0UcGzoVS+OBJ0Amfu2GbT4HCKGZeoDg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gx4TZAEOnnJoMkQENcIFwkJRTeWMbOPM7mRcK+8rjXNzVqKtDzpAdmm7NnBAGtfQI
-         A0eEnruDTcpmH8hKXEjNLMNckgvcHOStNiReVkWzaHHb1Q/iPZFkiDxQkhArWOMGC+
-         D7lv9c504aqW9XuEkLGvK+i/G2TqEq/rWS6bvB2zbHv4LjdpyUKlZvZLDo0wVQHUj8
-         Hdn4Q+2ZbnsI9Qk+d4lDU2LEf+nvS5D3BIYxFpgLmNtc9ORa9cEkMonoegxqbxAV/7
-         idTsoGv3ZZffMTpLFTJ6pWH+DvyHDvUPnGlSckAa0dLGLYzt1h97UYOsLMnyRPfttx
-         Fsju2MaD0zNcQ==
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-4-sean.j.christopherson@intel.com> <960B34DE67B9E140824F1DCDEC400C0F654ECBBD@ORSMSX116.amr.corp.intel.com>
+ <20190603200804.GG13384@linux.intel.com> <20190603203950.GJ13384@linux.intel.com>
+In-Reply-To: <20190603203950.GJ13384@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 13:18:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrUb4X9_L9RXKhmyNpfSCsbNodP=BfbfO8Fz_efq24jp8w@mail.gmail.com>
+Message-ID: <CALCETrUb4X9_L9RXKhmyNpfSCsbNodP=BfbfO8Fz_efq24jp8w@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/9] x86/sgx: Allow userspace to add multiple pages in
+ single ioctl()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/19 1:11 PM, Dan Williams wrote:
-> On Tue, Jun 4, 2019 at 12:48 PM John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> On 6/4/19 9:48 AM, ira.weiny@intel.com wrote:
->>> From: Ira Weiny <ira.weiny@intel.com>
->>>
-...
->>> diff --git a/mm/swap.c b/mm/swap.c
->>> index 7ede3eddc12a..6d153ce4cb8c 100644
->>> --- a/mm/swap.c
->>> +++ b/mm/swap.c
->>> @@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
->>>               if (is_huge_zero_page(page))
->>>                       continue;
->>>
->>> -             /* Device public page can not be huge page */
->>> -             if (is_device_public_page(page)) {
->>> +             if (is_zone_device_page(page)) {
->>>                       if (locked_pgdat) {
->>>                               spin_unlock_irqrestore(&locked_pgdat->lru_lock,
->>>                                                      flags);
->>>                               locked_pgdat = NULL;
->>>                       }
->>> -                     put_devmap_managed_page(page);
->>> -                     continue;
->>> +                     /*
->>> +                      * Not all zone-device-pages require special
->>> +                      * processing.  Those pages return 'false' from
->>> +                      * put_devmap_managed_page() expecting a call to
->>> +                      * put_page_testzero()
->>> +                      */
->>
->> Just a documentation tweak: how about:
->>
->>                         /*
->>                          * ZONE_DEVICE pages that return 'false' from
->>                          * put_devmap_managed_page() do not require special
->>                          * processing, and instead, expect a call to
->>                          * put_page_testzero().
->>                          */
-> 
-> Looks better to me, but maybe just go ahead and list those
-> expectations explicitly. Something like:
-> 
->                         /*
->                          * put_devmap_managed_page() only handles
->                          * ZONE_DEVICE (struct dev_pagemap managed)
->                          * pages when the hosting dev_pagemap has the
->                          * ->free() or ->fault() callback handlers
->                          *  implemented as indicated by
->                          *  dev_pagemap.type. Otherwise the expectation
->                          *  is to fall back to a plain decrement /
->                          *  put_page_testzero().
->                          */
+On Mon, Jun 3, 2019 at 1:39 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Jun 03, 2019 at 01:08:04PM -0700, Sean Christopherson wrote:
+> > On Sun, Jun 02, 2019 at 11:26:09PM -0700, Xing, Cedric wrote:
+> > > > From: Christopherson, Sean J
+> > > > Sent: Friday, May 31, 2019 4:32 PM
+> > > >
+> > > > +/**
+> > > > + * sgx_ioc_enclave_add_pages - handler for %SGX_IOC_ENCLAVE_ADD_PAGES
+> > > > + *
+> > > > + * @filep:       open file to /dev/sgx
+> > > > + * @cmd: the command value
+> > > > + * @arg: pointer to an &sgx_enclave_add_page instance
+> > > > + *
+> > > > + * Add a range of pages to an uninitialized enclave (EADD), and
+> > > > +optionally
+> > > > + * extend the enclave's measurement with the contents of the page (EEXTEND).
+> > > > + * The range of pages must be virtually contiguous.  The SECINFO and
+> > > > + * measurement maskare applied to all pages, i.e. pages with different
+> > > > + * properties must be added in separate calls.
+> > > > + *
+> > > > + * EADD and EEXTEND are done asynchronously via worker threads.  A
+> > > > +successful
+> > > > + * sgx_ioc_enclave_add_page() only indicates the pages have been added
+> > > > +to the
+> > > > + * work queue, it does not guarantee adding the pages to the enclave
+> > > > +will
+> > > > + * succeed.
+> > > > + *
+> > > > + * Return:
+> > > > + *   0 on success,
+> > > > + *   -errno otherwise
+> > > > + */
+> > > > +static long sgx_ioc_enclave_add_pages(struct file *filep, unsigned int cmd,
+> > > > +                               unsigned long arg)
+> > > > +{
+> > > > + struct sgx_enclave_add_pages *addp = (void *)arg;
+> > > > + struct sgx_encl *encl = filep->private_data;
+> > > > + struct sgx_secinfo secinfo;
+> > > > + unsigned int i;
+> > > > + int ret;
+> > > > +
+> > > > + if (copy_from_user(&secinfo, (void __user *)addp->secinfo,
+> > > > +                    sizeof(secinfo)))
+> > > > +         return -EFAULT;
+> > > > +
+> > > > + for (i = 0, ret = 0; i < addp->nr_pages && !ret; i++) {
+> > > > +         if (signal_pending(current))
+> > > > +                 return -ERESTARTSYS;
+> > >
+> > > If interrupted, how would user mode code know how many pages have been EADD'ed?
+> >
+> > Hmm, updating nr_pages would be fairly simple and shouldn't confuse
+> > userspace, e.g. as opposed to overloading the return value.
+>
+> Or maybe update @addr and @src as well?  That would allow userspace to
+> re-invoke the ioctl() without having to modify the struct.
 
-I like it--but not here, because it's too much internal detail in a
-call site that doesn't use that level of detail. The call site looks
-at the return value, only.
-
-Let's instead put that blurb above (or in) the put_devmap_managed_page() 
-routine itself. And leave the blurb that I wrote where it is. And then I
-think everything will have an appropriate level of detail in the right places.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+If you're going to use -ERESTARTSYS, that's the way to go.  -EINTR
+would be an alternative.  A benefit of -ERESTARTSYS is that, with
+-EINTR, it wouldn't be that surprising for user code to simply fail to
+handle it.
