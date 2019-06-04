@@ -2,222 +2,118 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D072AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5FC24B60
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C83C24189
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 05:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="cr4uhYPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFDFKI (ORCPT
+        id S1726595AbfFDFUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 01:10:08 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:57006 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfFDFKI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 01:10:08 -0400
-Received: by mail-it1-f199.google.com with SMTP id l124so17023437itg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 22:10:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=LidQTU17X5/KpQRHO4+nf/YJjxojTu6k2jorsmJvRAw=;
-        b=NMD+pbLqS13CKgjN1PI6+OpxbOv0uLMz4//Ezc3BNoNM67g/zKx88zPKc6aqL/a3MJ
-         GuxXpNGvE5f1oozFaYwp3V3PJCdyDGrycL+ulDqoNOUM296qqmau0Xk7xBcSA/ToWKWF
-         IoKvrVaM5nuoAjlqO5u0YE+YRLHgmWYMjuyZjw5Us5X/Ylx3jHETdGLJeP5TdBV7azR5
-         kBHu6WqPNI0v1BtcxL1xz3WkUozzksHqOIKhyNR478URwTqMnlOK1Jltz903S3gMC8+L
-         mijvavuw0ReDdSf+1dl+nTjkazl26NbKHSeEw4NC3jPbrcDkoiKLEp8xXTF0VLOLZC/k
-         ugKQ==
-X-Gm-Message-State: APjAAAWk+olIdK+k6KBFtDraQlgpkyc1YTdHRsxIriWuf/FfkpInR2xk
-        k3MsV1+OF//73h//AhcRsRTv4aZ4Pw0hu4S+KVC9rRefwFFh
-X-Google-Smtp-Source: APXvYqzxuSmRhFepigl/gUP7nn6fHskO5olfJeWARkV6e1ehrOJKpYZHebQrqrVqVF4XbYuchSfea87Tsa46DgXvy9GK8eT6x8u8
+        Tue, 4 Jun 2019 01:20:02 -0400
+Received: from mail-eopbgr710070.outbound.protection.outlook.com ([40.107.71.70]:5472
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726410AbfFDFUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 01:20:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UaFggC1qeq29/gDWrBuhdqleJ/H57oZmTO8dc//QVTE=;
+ b=cr4uhYPLKKNV/0fPXHVMDnhOcLx0znsMo62AaDdW0RTMuthgG+DhJMVRitWjIOE86wU5Go1bUvtUz7yFLZzgPY7pHU+J1Xj5eT5j93BjVBwnWgO9esv/JDKLykYzH7OLpTlSkENUdhV3l0dinOkX6Erh8bzucjeA9V+IOwXz1gA=
+Received: from DM6PR03MB4713.namprd03.prod.outlook.com (20.179.104.87) by
+ DM6PR03MB3753.namprd03.prod.outlook.com (20.176.114.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Tue, 4 Jun 2019 05:19:59 +0000
+Received: from DM6PR03MB4713.namprd03.prod.outlook.com
+ ([fe80::2dcf:b826:c4ec:20f2]) by DM6PR03MB4713.namprd03.prod.outlook.com
+ ([fe80::2dcf:b826:c4ec:20f2%4]) with mapi id 15.20.1965.011; Tue, 4 Jun 2019
+ 05:19:59 +0000
+From:   Christopher Heiny <Cheiny@synaptics.com>
+To:     Aaron Ma <aaron.ma@canonical.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Duggan <aduggan@synaptics.com>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
+Thread-Topic: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
+Thread-Index: AQHUyTs5Qp0btHE2q0GPqsqH5pp/nqYB8HQAgAEjw4CAHbD4gIAIh1MAgAFryICAYLRCgIAAK7YA
+Date:   Tue, 4 Jun 2019 05:19:59 +0000
+Message-ID: <580b73847333fa1866caaccc959bf8735b4f7524.camel@synaptics.com>
+References: <20190220164200.31044-1-aaron.ma@canonical.com>
+         <17cd420ea32a9787c56ba25e36e7661541c2f65f.camel@synaptics.com>
+         <a0f21198-5715-8858-8368-51e43092181e@canonical.com>
+         <acd07f4d-1602-46c5-c486-c917f1868b59@canonical.com>
+         <f4f7265d9ad06726bb2ef12ab6b7529d2fb06165.camel@synaptics.com>
+         <9321df87-5bc5-0c75-2815-f8602ecf9d86@canonical.com>
+         <2995b27a-9ec8-eebe-78b6-2d3bf5098af8@canonical.com>
+In-Reply-To: <2995b27a-9ec8-eebe-78b6-2d3bf5098af8@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [166.137.178.9]
+x-clientproxiedby: BY5PR16CA0034.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::47) To DM6PR03MB4713.namprd03.prod.outlook.com
+ (2603:10b6:5:181::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Cheiny@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4bdfe471-b135-48da-c809-08d6e8ac49a9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR03MB3753;
+x-ms-traffictypediagnostic: DM6PR03MB3753:
+x-microsoft-antispam-prvs: <DM6PR03MB3753C04B4C4D4BCCB3AA76D7DD150@DM6PR03MB3753.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0058ABBBC7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39860400002)(366004)(396003)(199004)(189003)(66946007)(73956011)(66476007)(305945005)(486006)(81156014)(81166006)(476003)(7736002)(6436002)(386003)(6506007)(53546011)(8676002)(86362001)(53936002)(118296001)(66446008)(11346002)(71200400001)(2616005)(446003)(229853002)(2201001)(71190400001)(66066001)(6486002)(36756003)(66556008)(3846002)(256004)(6116002)(76176011)(99286004)(6246003)(14454004)(25786009)(52116002)(72206003)(110136005)(316002)(102836004)(64756008)(2501003)(5660300002)(6512007)(8936002)(186003)(26005)(50226002)(478600001)(68736007)(80792005)(2906002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3753;H:DM6PR03MB4713.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8DN3nofztWYMvkD0JsDNGpjYOUvwq+/N24Ie+rwS0TfZtdhCcVBXRiBQ9Cq8lDurvQutF9HbB0hGS4ByuQULgkfyqHXOHPryNlsEX3xlG2dMMc9WqzEr2gtrcN/mqKCOQTGj8U7mxnjN+O9Ur1EkvYUdWC2d02A//biZcEeWBvKt4+EicpaiQ08UpeZo7xyaNxhWeQbeVZzun3qJWkdtEDOrkJox7pPnmOvx6IQM4f7KN+Dz8TO/fSGdH5F646cEgAcfI6vCBXmltw6si6yEYddxh5IlyZwP8ZcjTIzf8umlY5R8c8Pcmn9FwFZn6oHxDzaFixxvSRCFJMSw/gbyrfP/YfUZussE3i83+Y65TBPhHMZvCRro4w+H3/cwjWB6YmCUbAIfniWmvj0n8ZDXd06E3UzfyDE+fQf2Ns4TML0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <638EC2AFA5D20F40A4D2594806E4675A@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a24:9dd0:: with SMTP id f199mr17626579itd.120.1559625007278;
- Mon, 03 Jun 2019 22:10:07 -0700 (PDT)
-Date:   Mon, 03 Jun 2019 22:10:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ab73d058a787e2c@google.com>
-Subject: KASAN: slab-out-of-bounds Read in rt_cache_valid
-From:   syzbot <syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bdfe471-b135-48da-c809-08d6e8ac49a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 05:19:59.2233
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cheiny@synaptics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3753
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    9221dced Merge tag 'for-linus-20190601' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=114cdc0ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1fa7e451a5cac069
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9e23ea2aa21044c2798
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in rt_cache_valid+0x158/0x190  
-net/ipv4/route.c:1556
-Read of size 2 at addr ffff8880654f3ac7 by task syz-executor.0/26603
-
-CPU: 0 PID: 26603 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
-  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load2_noabort+0x14/0x20 mm/kasan/generic_report.c:130
-  rt_cache_valid+0x158/0x190 net/ipv4/route.c:1556
-  __mkroute_output net/ipv4/route.c:2332 [inline]
-  ip_route_output_key_hash_rcu+0x819/0x2d50 net/ipv4/route.c:2564
-  ip_route_output_key_hash+0x1ef/0x360 net/ipv4/route.c:2393
-  __ip_route_output_key include/net/route.h:125 [inline]
-  ip_route_output_flow+0x28/0xc0 net/ipv4/route.c:2651
-  ip_route_output_key include/net/route.h:135 [inline]
-  sctp_v4_get_dst+0x467/0x1260 net/sctp/protocol.c:435
-  sctp_transport_route+0x12d/0x360 net/sctp/transport.c:297
-  sctp_assoc_add_peer+0x53e/0xfc0 net/sctp/associola.c:663
-  sctp_process_param net/sctp/sm_make_chunk.c:2531 [inline]
-  sctp_process_init+0x2491/0x2b10 net/sctp/sm_make_chunk.c:2344
-  sctp_cmd_process_init net/sctp/sm_sideeffect.c:667 [inline]
-  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1369 [inline]
-  sctp_side_effects net/sctp/sm_sideeffect.c:1179 [inline]
-  sctp_do_sm+0x3a30/0x50e0 net/sctp/sm_sideeffect.c:1150
-  sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1059
-  sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
-  sctp_backlog_rcv+0x196/0xbe0 net/sctp/input.c:339
-  sk_backlog_rcv include/net/sock.h:945 [inline]
-  __release_sock+0x129/0x390 net/core/sock.c:2412
-  release_sock+0x59/0x1c0 net/core/sock.c:2928
-  sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:9039
-  __sctp_connect+0xab2/0xcd0 net/sctp/socket.c:1226
-  __sctp_setsockopt_connectx+0x133/0x1a0 net/sctp/socket.c:1334
-  sctp_setsockopt_connectx_old net/sctp/socket.c:1350 [inline]
-  sctp_setsockopt net/sctp/socket.c:4644 [inline]
-  sctp_setsockopt+0x22c0/0x6d10 net/sctp/socket.c:4608
-  compat_sock_common_setsockopt+0x106/0x140 net/core/sock.c:3137
-  __compat_sys_setsockopt+0x185/0x380 net/compat.c:383
-  __do_compat_sys_setsockopt net/compat.c:396 [inline]
-  __se_compat_sys_setsockopt net/compat.c:393 [inline]
-  __ia32_compat_sys_setsockopt+0xbd/0x150 net/compat.c:393
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7ff5849
-Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90  
-90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f5df10cc EFLAGS: 00000296 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 0000000000000084
-RDX: 000000000000006b RSI: 000000002055bfe4 RDI: 000000000000001c
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 480:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
-  slab_post_alloc_hook mm/slab.h:437 [inline]
-  slab_alloc mm/slab.c:3326 [inline]
-  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
-  dst_alloc+0x10e/0x200 net/core/dst.c:93
-  rt_dst_alloc+0x83/0x3f0 net/ipv4/route.c:1624
-  __mkroute_output net/ipv4/route.c:2337 [inline]
-  ip_route_output_key_hash_rcu+0x8f3/0x2d50 net/ipv4/route.c:2564
-  ip_route_output_key_hash+0x1ef/0x360 net/ipv4/route.c:2393
-  __ip_route_output_key include/net/route.h:125 [inline]
-  ip_route_output_flow+0x28/0xc0 net/ipv4/route.c:2651
-  ip_route_output_key include/net/route.h:135 [inline]
-  sctp_v4_get_dst+0x467/0x1260 net/sctp/protocol.c:435
-  sctp_transport_route+0x12d/0x360 net/sctp/transport.c:297
-  sctp_assoc_add_peer+0x53e/0xfc0 net/sctp/associola.c:663
-  sctp_process_param net/sctp/sm_make_chunk.c:2531 [inline]
-  sctp_process_init+0x2491/0x2b10 net/sctp/sm_make_chunk.c:2344
-  sctp_sf_do_unexpected_init net/sctp/sm_statefuns.c:1541 [inline]
-  sctp_sf_do_unexpected_init.isra.0+0x7cd/0x1350 net/sctp/sm_statefuns.c:1441
-  sctp_sf_do_5_2_1_siminit+0x35/0x40 net/sctp/sm_statefuns.c:1670
-  sctp_do_sm+0x121/0x50e0 net/sctp/sm_sideeffect.c:1147
-  sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1059
-  sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
-  sctp_backlog_rcv+0x196/0xbe0 net/sctp/input.c:339
-  sk_backlog_rcv include/net/sock.h:945 [inline]
-  __release_sock+0x129/0x390 net/core/sock.c:2412
-  release_sock+0x59/0x1c0 net/core/sock.c:2928
-  sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:9039
-  __sctp_connect+0xab2/0xcd0 net/sctp/socket.c:1226
-  sctp_connect net/sctp/socket.c:4846 [inline]
-  sctp_inet_connect+0x29c/0x340 net/sctp/socket.c:4862
-  __sys_connect+0x264/0x330 net/socket.c:1834
-  __do_sys_connect net/socket.c:1845 [inline]
-  __se_sys_connect net/socket.c:1842 [inline]
-  __ia32_sys_connect+0x72/0xb0 net/socket.c:1842
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3432 [inline]
-  kmem_cache_free+0x86/0x260 mm/slab.c:3698
-  dst_destroy+0x29e/0x3c0 net/core/dst.c:129
-  dst_destroy_rcu+0x16/0x19 net/core/dst.c:142
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2092 [inline]
-  invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
-  rcu_core+0xba5/0x1500 kernel/rcu/tree.c:2291
-  __do_softirq+0x25c/0x94c kernel/softirq.c:293
-
-The buggy address belongs to the object at ffff8880654f3a00
-  which belongs to the cache ip_dst_cache of size 176
-The buggy address is located 23 bytes to the right of
-  176-byte region [ffff8880654f3a00, ffff8880654f3ab0)
-The buggy address belongs to the page:
-page:ffffea0001953cc0 refcount:1 mapcount:0 mapping:ffff8880a76ad600  
-index:0xffff8880654f3c00
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00026be808 ffffea000181c088 ffff8880a76ad600
-raw: ffff8880654f3c00 ffff8880654f3000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880654f3980: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
-  ffff8880654f3a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffff8880654f3a80: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
-                                            ^
-  ffff8880654f3b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880654f3b80: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+T24gVHVlLCAyMDE5LTA2LTA0IGF0IDEwOjQ1ICswODAwLCBBYXJvbiBNYSB3cm90ZToNCj4gSGkg
+Q2hyaXN0b3BoZXI6DQo+IA0KPiBIYXZlIGdvdCB0aW1lIHRvIHJldmlldyB0aGVzZSAyIHBhdGNo
+ZXM/DQo+IFVzZXJzIHJlcG9ydGVkIGl0IHdvcmtzIGZpbmUgc2luY2UgSSBzZW50IG91dCB0aGlz
+IHBhdGNoLg0KDQpIaSBBYXJvbiwNCg0KSSd2ZSBiZWVuIHBva2luZyBhcm91bmQgd2l0aCB0aGlz
+IG9mZiBhbmQgb24uICBVbmZvcnR1bmF0ZWx5LCBtb3JlIG9mZg0KdGhhbiBvbiA6LSggYnV0IGhl
+cmUncyBteSBjdXJyZW50IHRha2U6DQoNCnJtaV9kcml2ZXJfc2V0X2lycV9iaXRzKCkgaXNuJ3Qg
+Z29pbmcgdG8gYmUgY2FsbGVkIGFsbCB0aGF0IG9mdGVuLCBhbmQNCml0J3Mgbm90IGdvaW5nIHRv
+IGJlIGNhbGxlZCBhdCBhbGwgZHVyaW5nIG5vcm1hbCBvcGVyYXRpb24sIHdoaWNoIGlzDQp3aGVy
+ZSB0aGUgbW9zdCBzZXJpb3VzIHByb2JsZW0gd291bGQgb2NjdXIuDQoNCkkgaGF2ZW4ndCBlbnRp
+cmVseSBjb252aW5jZWQgbXlzZWxmIHRoYXQgdGhlcmUgY291bGRuJ3QgYmUgYSBwcm9ibGVtDQpk
+dXJpbmcgcmVwZWF0ZWQgc3BvbnRhbmVvdXMgZGV2aWNlIHJlc2V0cyAoZm9yIGV4YW1wbGUsIGR1
+ZSB0byBFU0QsIGENCmRvZGd5IGNoYXJnZXIsIG9yIGZpcm13YXJlIGJ1ZywgYW1vbmcgb3RoZXIg
+dGhpbmdzKS4gIE9uIHRoZSBvdGhlcg0KaGFuZCwgYWxsIHRoZSBzY2VuYXJpb3MgSSBoYXZlIGNv
+bWUgdXAgd2l0aCBhcmUgYm90aCB1bmxpa2VseSBhbmQgc28NCmNvbnRyaXZlZCB0aGF0IHRoZSBz
+eXN0ZW0gaXMgcHJvYmFibHkgaG9zZWQgcmVnYXJkbGVzcyBvZiB3aGF0IHdlIGRvIGluDQp0aGUg
+ZHJpdmVyLg0KDQpHaXZlbiB0aGF0LCBJJ20gd2lsbGluZyB0byBhY2NlcHQgdGhlIHBhdGNoIGFz
+IGlzLg0KDQoJCQkJCUNoZWVycywNCgkJCQkJCUNocmlzDQoNCg0KDQoNCg0KDQoNCj4gDQo+IFRo
+YW5rcywNCj4gQWFyb24NCj4gDQo+IE9uIDQvMy8xOSA5OjU4IFBNLCBBYXJvbiBNYSB3cm90ZToN
+Cj4gPiBTdXJlLCB0YWtlIHlvdXIgdGltZSwgaWYgeW91IGhhdmUgYW55IHF1ZXN0aW9ucyBsZXQg
+bWUga25vdyBwbGVhc2UuDQo+ID4gDQo+ID4gVGhhbmtzLA0KPiA+IEFhcm9uDQoNCg0K
