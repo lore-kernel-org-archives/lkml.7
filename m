@@ -2,86 +2,91 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5B3C28D17
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475D5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1591524B72
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193CF24B74
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 06:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfFDGUs (ORCPT
+        id S1726743AbfFDGVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 02:20:48 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35619 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfFDGUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 02:20:48 -0400
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 49FAD1C0009;
-        Tue,  4 Jun 2019 06:20:38 +0000 (UTC)
-Subject: Re: [PATCH v4 05/14] arm64, mm: Make randomization selected by
- generic topdown mmap layout
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Paul Burton <paul.burton@mips.com>,
-        linux-riscv@lists.infradead.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-References: <20190526134746.9315-1-alex@ghiti.fr>
- <20190526134746.9315-6-alex@ghiti.fr>
- <20190603174001.GL63283@arrakis.emea.arm.com>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <e8dab94d-679e-8898-033e-3b5dbf0cc044@ghiti.fr>
-Date:   Tue, 4 Jun 2019 02:20:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 4 Jun 2019 02:21:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37728 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726595AbfFDGVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:21:44 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 138E72D886150BB2774;
+        Tue,  4 Jun 2019 14:21:39 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 4 Jun 2019
+ 14:21:32 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <patches@armlinux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>, <geert+renesas@glider.be>,
+        <keescook@chromium.org>, <linux-arm-kernel@lists.infradead.org>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <linux@armlinux.org.uk>, <geert@linux-m68k.org>, <krzk@kernel.org>,
+        <rmk+kernel@armlinux.org.uk>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ARM: mm: remove unused variables
+Date:   Tue, 4 Jun 2019 14:19:57 +0800
+Message-ID: <20190604061957.18704-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <CAJKOXPeDRuvmHG=KUCYiPav2ODT4MC4hEgi5hAsy7s_+v-DB3g@mail.gmail.com>
+References: <CAJKOXPeDRuvmHG=KUCYiPav2ODT4MC4hEgi5hAsy7s_+v-DB3g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190603174001.GL63283@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: sv-FI
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 1:40 PM, Catalin Marinas wrote:
-> On Sun, May 26, 2019 at 09:47:37AM -0400, Alexandre Ghiti wrote:
->> This commits selects ARCH_HAS_ELF_RANDOMIZE when an arch uses the generic
->> topdown mmap layout functions so that this security feature is on by
->> default.
->> Note that this commit also removes the possibility for arm64 to have elf
->> randomization and no MMU: without MMU, the security added by randomization
->> is worth nothing.
-> Not planning on this anytime soon ;).
+Fix gcc warnings:
+
+arch/arm/mm/init.c: In function 'mem_init':
+arch/arm/mm/init.c:456:13: warning: unused variable 'itcm_end' [-Wunused-variable]
+  extern u32 itcm_end;
+             ^
+arch/arm/mm/init.c:455:13: warning: unused variable 'dtcm_end' [-Wunused-variable]
+  extern u32 dtcm_end;
+             ^
+
+They are not used any more since
+commit 1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
+
+Link: https://lkml.org/lkml/2019/5/12/82
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+KernelVersion: 5.2-rc5
+ arch/arm/mm/init.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index be0b42937888..c71ecbb04db8 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -450,12 +450,6 @@ static void __init free_highpages(void)
+  */
+ void __init mem_init(void)
+ {
+-#ifdef CONFIG_HAVE_TCM
+-	/* These pointers are filled in on TCM detection */
+-	extern u32 dtcm_end;
+-	extern u32 itcm_end;
+-#endif
+-
+ 	set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
+ 
+ 	/* this will put all unused low memory onto the freelists */
+-- 
+2.20.1
 
 
-Great :) Thanks for your time,
-
-Alex
-
-
->
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
