@@ -2,123 +2,148 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD3CC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F043C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4039F20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559681470;
-	bh=WoHldgKkngmxQsKjM+ZXSy/iOD+GzqZEW5s3/Clv9gM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G9pYUcdqNrPfh1QxuO9bxNoUED+Web9EOqDVobX0Of9P/TBtpL9pI+sPzm3Fql8Dn
-	 UPr+3ktkOe95JCatP5yKSnVl7ecX61Oe+niodiw14695QJgkN3cuDykw/edBkyoFAO
-	 5DOXPZ3+ZV6jq9qwD6pB3RqCwSAu4UR3dOzP2dD0=
+	by mail.kernel.org (Postfix) with ESMTP id 5FC3D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 20:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IKnJi1Fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFDUvJ (ORCPT
+        id S1726528AbfFDUxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 16:51:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41285 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfFDUvJ (ORCPT
+        Tue, 4 Jun 2019 16:53:38 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33220 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfFDUxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 16:51:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 107so15080481otj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:51:08 -0700 (PDT)
+        Tue, 4 Jun 2019 16:53:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so3619426pfq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 13:53:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gruPFlVVyS4OxQK3/Q59YreJPgKRxWAs8F6mM68ird0=;
+        b=IKnJi1FlMevrgtGn8TeswKeGDAwgN7EYyZ3FFApF9iNkUD2wUJZL6r/aQ00ict3TGV
+         ROBfLrskBDVWg1WAfQdKcN/u0lhaGPHlKQgotl5/D391Z3NuN4NOSLGiEH5ATxaN8OVY
+         7ed77bU1xqalexXPqGWLT3t8fiNPr8Tt991HQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CzJhGKhzrzdwswjZmo+oYPOFFA3OkVX4vMWQxKITSco=;
-        b=W7HGaO0fnOLgvhIhRQmZUjbJlgWqFwiwmKiTlO+QB6b39yXf0HkBXsf/UcG6S6y+ns
-         aAr7Z0Mqo1fxgPqirNnW622bbqJeICs4+1k4Bi0q/zbiXyfeiAuEAgekgWhXQ5djgKV5
-         QP3tfiLClm7n0GiV9LYiczuKgRn9ewIqtPiVkOiTplcuOqZVG+fH0CVzw1xnz/gVVogd
-         IaMTb4wjP1REbBJ6JH5WW1q/AYL06+2yCLKC4SLOdr77kF/BtAlQkhmexoejoF3OBIvn
-         b2QKHK4kqHA2ibW84a4c21tdwhoU2OU7D/aVi2YOTXPHWitAbDGBjfSd9v5CytufxzZ7
-         +UXw==
-X-Gm-Message-State: APjAAAUfl0SB0Kzg+HAtwbQJaRlbxXPKMyV8GdTCrUeX00jmtMXA0FLA
-        pMtOXnKMsnaj0A5yTb2cPpMUS65TSxvz3OwiS6vs9A==
-X-Google-Smtp-Source: APXvYqw6aV66KCDU4wYhdXF/YwYlfF8jogyhDJ2Tb5qeXvYAYMxi5dQVzM1epv/bsdX0FEIRXWIJOOfFlUDKyaAzOqI=
-X-Received: by 2002:a9d:7393:: with SMTP id j19mr6354384otk.118.1559681468447;
- Tue, 04 Jun 2019 13:51:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gruPFlVVyS4OxQK3/Q59YreJPgKRxWAs8F6mM68ird0=;
+        b=rn84U27Bah5YvzyBdL8bLI+edGitGJQUCb7UWS+21l/8W26Z+Kq2vjr0Xwy7dmuWUD
+         j5YhWJ/ZeYHxN3AYbrDCd9taqq2ofTnBb2nd4Qv+e7MxGp9e0UTKqZ84pIKJ+YjZ/Plc
+         EJsEdlOCLFEx/N7RV/OIu6GL8iIUg+hnSQDRbo+pvpEy29S7sjK+p3Sg0vKm3yNg/MNq
+         YAAloyP5vaSd+e+vPUULXfmwRPw98nKUqHm4o2bjRBwnaPOF7wNDXOLc9hhyZxi2UzDl
+         vSQrVdB2EZI5mUML4f4ofbliqCWjyaIDxLDmNITKkSjGFfECAQxkAL3+18Zd1YJFeNdf
+         urnw==
+X-Gm-Message-State: APjAAAUnAtcVEA5C1za4BKVPDB20Pgj9O5s+ZZ3fijACj7sT273pb447
+        SgmqUA1nI43+MONfgeCX0jPqiw==
+X-Google-Smtp-Source: APXvYqwC4tUyV6LN0n8dHVSZTPwtyuQc+MFJYqWpQKhpmQzcNKMrmzZYHfOSJnItRmJt3Bn7d/8qMQ==
+X-Received: by 2002:a63:ff23:: with SMTP id k35mr615831pgi.139.1559681617542;
+        Tue, 04 Jun 2019 13:53:37 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id b128sm13870876pfa.165.2019.06.04.13.53.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 13:53:36 -0700 (PDT)
+From:   Brian Norris <briannorris@chromium.org>
+To:     Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
+        Doug Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH 0/2] mwifiex: spinlock usage improvements
+Date:   Tue,  4 Jun 2019 13:53:21 -0700
+Message-Id: <20190604205323.200361-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 MIME-Version: 1.0
-References: <20190604174412.13324-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190604174412.13324-1-yamada.masahiro@socionext.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 4 Jun 2019 22:50:54 +0200
-Message-ID: <CAJZ5v0jXKNr3_W9B_raetj42UOdphA3GEE_Qh7nBSwDzwXfA1Q@mail.gmail.com>
-Subject: Re: [PATCH] kobject: return -ENOSPC when add_uevent_var() fails
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 8:00 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> This function never attempts to allocate memory, so returning -ENOMEM
-> looks weird to me.
+This series follows up on some notes from this thread:
 
-And why is the "looks weird to me" a good enough reason for making
-changes like this?
+  http://lkml.kernel.org/linux-wireless/20181130175957.167031-1-briannorris@chromium.org
+  Subject: [4.20 PATCH] Revert "mwifiex: restructure rx_reorder_tbl_lock usage"
 
-The existing behavior is known and documented AFAICS and is it really
-so confusing?
+where Ganapathi suggested I send out my work. So here goes.
 
-> The reason of the failure is there is no more space
-> in the given kobj_uevent_env structure.
->
-> No caller of this function relies on this functing returning a specific
-> error code, so just change it to return -ENOSPC. The intended change,
-> if any, is the error number displayed in log messages.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  lib/kobject_uevent.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-> index 7998affa45d4..5ffd44bf4aad 100644
-> --- a/lib/kobject_uevent.c
-> +++ b/lib/kobject_uevent.c
-> @@ -647,7 +647,7 @@ EXPORT_SYMBOL_GPL(kobject_uevent);
->   * @env: environment buffer structure
->   * @format: printf format for the key=value pair
->   *
-> - * Returns 0 if environment variable was added successfully or -ENOMEM
-> + * Returns 0 if environment variable was added successfully or -ENOSPC
->   * if no space was available.
->   */
->  int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
-> @@ -657,7 +657,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
->
->         if (env->envp_idx >= ARRAY_SIZE(env->envp)) {
->                 WARN(1, KERN_ERR "add_uevent_var: too many keys\n");
-> -               return -ENOMEM;
-> +               return -ENOSPC;
->         }
->
->         va_start(args, format);
-> @@ -668,7 +668,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
->
->         if (len >= (sizeof(env->buf) - env->buflen)) {
->                 WARN(1, KERN_ERR "add_uevent_var: buffer size too small\n");
-> -               return -ENOMEM;
-> +               return -ENOSPC;
->         }
->
->         env->envp[env->envp_idx++] = &env->buf[env->buflen];
-> --
-> 2.17.1
->
+In particular, patch 1 is a step toward helping apply Ganapathi's
+original "mwifiex: restructure rx_reorder_tbl_lock usage" solution
+without regression, by logically separating the two operations (and
+therefore, the locking patterns) involved in that deadlock. It doesn't
+re-apply that change, nor does it 100% unblock such a solution, but at
+least it's a step in the right direction, as I understand it.
+
+Patch 2 is a change I noticed should be possible along the way. There
+are a number of reasons we probably shouldn't be disabling hardirqs when
+it's not necessary, but one funny side effect: bugs noticed in the above
+"revert" patch would no longer happen. This is because
+mwifiex_recv_packet() bases softirq decisions on in_interrupt() (see
+description in include/linux/preempt.h), so it will automatically skip
+softirq processing if we have BH disabled, but not if we only have hard
+IRQs disabled. In other words, if we have such an incorrect nesting bug
+in the future (this time with BH disabled), we will now skip softirq
+processing and therefore sidestep this sort of bug. [1]
+
+[Related note: softirq masking is weird:
+https://lwn.net/Articles/779738/]
+
+It's also possible we can improve system responsiveness and
+debuggability by keeping (hard) IRQs enabled more often, although I
+didn't measure any particular effect here, and most of these contexts
+should be rather quick.
+
+I've done a variety of performance and stress tests for this series, on
+both 8897/SDIO and 8997/PCIe, and I haven't seen any decrease in
+performance or stability. Or, any change in performance appears to be
+within the range of "noise".
+
+I'd appreciate any testing others can do on this series though, as
+Ganapathi did offer to try this out.
+
+Regards,
+Brian
+
+[1] Side note: the usage of 'in_interrupt()' in mwifiex_recv_packet() is
+probably not really a good idea. But it does have a helpful side effect
+for this particular sort of bug.
+
+
+Brian Norris (2):
+  mwifiex: dispatch/rotate from reorder table atomically
+  mwifiex: don't disable hardirqs; just softirqs
+
+ drivers/net/wireless/marvell/mwifiex/11n.c    |  53 +++-----
+ drivers/net/wireless/marvell/mwifiex/11n.h    |   5 +-
+ .../net/wireless/marvell/mwifiex/11n_aggr.c   |  24 ++--
+ .../wireless/marvell/mwifiex/11n_rxreorder.c  | 125 ++++++++----------
+ .../net/wireless/marvell/mwifiex/cfg80211.c   |  35 +++--
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c |  76 +++++------
+ drivers/net/wireless/marvell/mwifiex/init.c   |  32 ++---
+ drivers/net/wireless/marvell/mwifiex/main.c   |  29 ++--
+ drivers/net/wireless/marvell/mwifiex/scan.c   |  58 ++++----
+ .../wireless/marvell/mwifiex/sta_cmdresp.c    |   5 +-
+ .../net/wireless/marvell/mwifiex/sta_event.c  |  10 +-
+ drivers/net/wireless/marvell/mwifiex/tdls.c   |  68 ++++------
+ drivers/net/wireless/marvell/mwifiex/txrx.c   |   5 +-
+ .../net/wireless/marvell/mwifiex/uap_txrx.c   |  10 +-
+ drivers/net/wireless/marvell/mwifiex/usb.c    |  10 +-
+ drivers/net/wireless/marvell/mwifiex/util.c   |  15 +--
+ drivers/net/wireless/marvell/mwifiex/wmm.c    |  92 +++++--------
+ 17 files changed, 269 insertions(+), 383 deletions(-)
+
+-- 
+2.22.0.rc1.311.g5d7573a151-goog
+
