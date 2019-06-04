@@ -2,153 +2,133 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80754C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913BCC28CC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D420863
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LE3OjEH9"
+	by mail.kernel.org (Postfix) with ESMTP id 7422E206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 22:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfFDWJO (ORCPT
+        id S1726538AbfFDWKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 18:09:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36485 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfFDWJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 18:09:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so3752861pgb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 15:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NGFWos9reZ21x+VPBWgjaST/llqX50Psvr0VLnDsejc=;
-        b=LE3OjEH9gGdSD8HL7lZl/oU8JB8AiXuo0O9VefLwxFSrPzWA63vjBLqujXKByi2zHo
-         EW8hrmDGrAVo+1FFiSO6D5l8GqZo+xaiPL1i23DAlGDzelL9ldMHJRRlsPlN26HhXZMV
-         marf4yM/9clcphCztYfcrrJf4Y24XL4i4DvoBEx8Ibsvm+H7Bx90Gabs8cniguI8L5GN
-         fKo/ejDhrSjivqMZcnaALrq0d8EiuYc5zsOdh+OE+P/9NWv9URNwckpzMLR0lmlAkZc+
-         Qa5arISvb2yhpPXSTDY1s81jbncFzBIsZHb7kBrmj23EXebMO+H86+TiLegdgtF7xF3A
-         iHOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NGFWos9reZ21x+VPBWgjaST/llqX50Psvr0VLnDsejc=;
-        b=QUqQeA3fWR9eIxmKRtEuLlBfkHFiiWPbP6PyiW0n3oYtlXFTmI+Vk/CLOOfNtzuVl9
-         /5mnAOJLyAPE4IxhQiS5cdbv6UV84Oip+cCro1K8UBs/oqMoABqyirapayheyU9fhZ9G
-         fpZ7iplSXeLftJHUDDiGwMIRpdo3Qw3YJeY/wQxilhUeed9SVnxeorbStuMxPXx9Rqdw
-         EigZD2kDEn25NAJgzXkfuVfU8UCCpu8Z6MSwSe1q7OViyrvKcB9B7fqg1cogsW2uYUm+
-         fN7hdCmGqhIRy9Tt9LlJ2n2vsmYDv4FHRLxym10nTTEPYG2Li6lBeKDTUC6uHI32uKbu
-         npkg==
-X-Gm-Message-State: APjAAAV9L/Yw1Ju1dHHAt6Wp6KVDzlVWPHILrfRtL0Oy4VGOVJnThF6C
-        WSsYVMB6y8plVEOBgZF6xoyaLA==
-X-Google-Smtp-Source: APXvYqz0k3aXvYp9vPgvRV/jmmcqPdGm62iQvQ+8caZbKxT6w3UTp/yE1RNEnvkaFlsMacIaHCfcaQ==
-X-Received: by 2002:a62:2bc7:: with SMTP id r190mr5307624pfr.40.1559686153100;
-        Tue, 04 Jun 2019 15:09:13 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j20sm15469801pff.183.2019.06.04.15.09.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 15:09:12 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 15:09:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845-mtp: Specify UFS
- device-reset GPIO
-Message-ID: <20190604220910.GA4814@minitux>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <20190604072001.9288-4-bjorn.andersson@linaro.org>
- <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
+        Tue, 4 Jun 2019 18:10:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6264 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfFDWKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 18:10:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 15:10:24 -0700
+X-ExtLoop1: 1
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 15:10:24 -0700
+Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 4 Jun 2019 15:10:23 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX162.amr.corp.intel.com ([169.254.3.190]) with mapi id 14.03.0415.000;
+ Tue, 4 Jun 2019 15:10:24 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Stephen Smalley" <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: RE: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED
+ address
+Thread-Topic: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED
+ address
+Thread-Index: AQHVGAkhOWaRiY3eFUikM4z1CKpVNqaL3IKAgACNcAD//6h8oA==
+Date:   Tue, 4 Jun 2019 22:10:22 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-3-sean.j.christopherson@intel.com>
+ <20190604114951.GC30594@linux.intel.com>
+ <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+In-Reply-To: <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTViMzE3OTQtY2NkZi00ZWM4LWEzMTAtNmQyNWExNzc4MDRmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaXI3M1Jpa2o5dGpHbjhYR3NYd3FIM1pJQWhpamtWRytkQW1seTVnTWdpanpsQTZiendSOWRKcDhpMUVVXC9WdlgifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04 Jun 09:22 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-06-04 00:20:01)
-> > Specify the UFS device-reset gpio, so that the controller will issue a
-> > reset of the UFS device.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> > index 2e78638eb73b..d116a0956a9c 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> > @@ -388,6 +388,8 @@
-> >  &ufs_mem_hc {
-> >         status = "okay";
-> >  
-> > +       device-reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-> > +
-> 
-> We had to do something similar on one particular brand of UFS that we had. I
-> think it was an SK Hynix part that had trouble and wouldn't provision properly.
-> Either way, we did this with a pinctrl toggle in the DTS where the "init" state
-> has the UFS_RESET pin asserted and then "default" state has the pin deasserted.
-> That was good enough to make this work.
-> 
-
-Thanks for pointing this out, I forgot to attribute these downstream
-changes. I can see how this works, but I must say I find it quite
-hackish.
-
-The downstream solution seems to have evolved this into naming these
-states and jumping between them (with the appropriate sleeps) during a
-host reset as well.
-
-
-But thanks for the confirmation that there's more than John's memory
-that needs this.
-
-Regards,
-Bjorn
-
-> 	&ufs_mem_hc {
-> 		pinctrl-names = "init", "default";
-> 		pinctrl-0 = <&ufs_dev_reset_assert>;
-> 		pinctrl-1 = <&ufs_dev_reset_deassert>;
-> 	};
-> 
->         ufs_dev_reset_assert: ufs_dev_reset_assert {
->                 config {
->                         pins = "ufs_reset";
->                         bias-pull-down;         /* default: pull down */
->                         drive-strength = <8>;   /* default: 3.1 mA */
->                         output-low; /* active low reset */
->                 };
->         };
-> 
->         ufs_dev_reset_deassert: ufs_dev_reset_deassert {
->                 config {
->                         pins = "ufs_reset";
->                         bias-pull-down;         /* default: pull down */
->                         drive-strength = <8>;
->                         output-high; /* active low reset */
->                 };
->         };
+PiBGcm9tOiBsaW51eC1zZ3gtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtc2d4
+LQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBBbmR5IEx1dG9taXJza2kN
+Cj4gU2VudDogVHVlc2RheSwgSnVuZSAwNCwgMjAxOSAxOjE2IFBNDQo+IA0KPiBPbiBUdWUsIEp1
+biA0LCAyMDE5IGF0IDQ6NTAgQU0gSmFya2tvIFNha2tpbmVuDQo+IDxqYXJra28uc2Fra2luZW5A
+bGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIEZyaSwgTWF5IDMxLCAyMDE5IGF0
+IDA0OjMxOjUyUE0gLTA3MDAsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+ID4gPiBTR1gg
+ZW5jbGF2ZXMgaGF2ZSBhbiBhc3NvY2lhdGVkIEVuY2xhdmUgTGluZWFyIFJhbmdlIChFTFJBTkdF
+KSB0aGF0DQo+ID4gPiBpcyB0cmFja2VkIGFuZCBlbmZvcmNlZCBieSB0aGUgQ1BVIHVzaW5nIGEg
+YmFzZSttYXNrIGFwcHJvYWNoLA0KPiA+ID4gc2ltaWxhciB0byBob3cgaGFyZHdhcmUgcmFuZ2Ug
+cmVnaXN0ZXJzIHN1Y2ggYXMgdGhlIHZhcmlhYmxlIE1UUlJzLg0KPiA+ID4gQXMgYSByZXN1bHQs
+IHRoZSBFTFJBTkdFIG11c3QgYmUgbmF0dXJhbGx5IHNpemVkIGFuZCBhbGlnbmVkLg0KPiA+ID4N
+Cj4gPiA+IFRvIHJlZHVjZSBib2lsZXJwbGF0ZSBjb2RlIHRoYXQgd291bGQgYmUgbmVlZGVkIGlu
+IGV2ZXJ5IHVzZXJzcGFjZQ0KPiA+ID4gZW5jbGF2ZSBsb2FkZXIsIHRoZSBTR1ggZHJpdmVyIG5h
+dHVyYWxseSBhbGlnbnMgdGhlIG1tYXAoKSBhZGRyZXNzDQo+ID4gPiBhbmQgYWxzbyByZXF1aXJl
+cyB0aGUgcmFuZ2UgdG8gYmUgbmF0dXJhbGx5IHNpemVkLiAgVW5mb3J0dW5hdGVseSwNCj4gPiA+
+IFNHWCBmYWlscyB0byBncmFudCBhIHdhaXZlciB0byB0aGUgTUFQX0ZJWEVEIGNhc2UsIGUuZy4g
+aW5jb3JyZWN0bHkNCj4gPiA+IHJlamVjdHMgbW1hcCgpIGlmIHVzZXJzcGFjZSBpcyBhdHRlbXB0
+aW5nIHRvIG1hcCBhIHNtYWxsIHNsaWNlIG9mIGFuDQo+IGV4aXN0aW5nIGVuY2xhdmUuDQo+ID4g
+Pg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogU2VhbiBDaHJpc3RvcGhlcnNvbiA8c2Vhbi5qLmNocmlz
+dG9waGVyc29uQGludGVsLmNvbT4NCj4gPg0KPiA+IFdoeSB5b3Ugd2FudCB0byBhbGxvdyBtbWFw
+KCkgdG8gYmUgY2FsbGVkIG11bHRpcGxlIHRpbWVzPyBtbWFwKCkgY291bGQNCj4gPiBiZSBhbGxv
+d2VkIG9ubHkgb25jZSB3aXRoIFBST1RfTk9ORSBhbmQgZGVuaWVkIGFmdGVyd2FyZHMuIElzIHRo
+aXMgZm9yDQo+ID4gc2VuZGluZyBmZCB0byBhbm90aGVyIHByb2Nlc3MgdGhhdCB3b3VsZCBtYXAg
+YWxyZWFkeSBleGlzdGluZyBlbmNsYXZlPw0KPiA+DQo+ID4gSSBkb24ndCBzZWUgYW55IGNoZWNr
+cyBmb3Igd2hldGhlciB0aGUgaXMgZW5jbGF2ZSB1bmRlcm5lYXRoLiBBbHNvLCBJDQo+ID4gdGhp
+bmsgdGhhdCBpbiBhbGwgY2FzZXMgbW1hcCgpIGNhbGxiYWNrIHNob3VsZCBhbGxvdyBvbmx5IFBS
+T1RfTk9ORSBhcw0KPiA+IHBlcm1pc3Npb25zIGZvciBjbGFyaXR5IGV2ZW4gaWYgaXQgY291bGQg
+Y2FsbGVkIG11bHRpcGxlIHRpbWVzLg0KPiA+DQo+IA0KPiBXaGF0J3MgdGhlIGFkdmFudGFnZSB0
+byBvbmx5IGFsbG93aW5nIFBST1RfTk9ORT8gIFRoZSBpZGVhIGhlcmUgaXMgdG8NCj4gYWxsb3cg
+YSBQUk9UX05PTkUgbWFwIGZvbGxvd2VkIGJ5IHNvbWUgcmVwbGFjZW1ldHMgdGhhdCBvdmVybGF5
+IGl0IGZvcg0KPiB0aGUgaW5kaXZpZHVhbCBzZWdtZW50cy4gIEFkbWl0dGVkbHksIG1wcm90ZWN0
+KCkgY2FuIGRvIHRoZSBzYW1lIHRoaW5nLA0KPiBidXQgZGlzYWxsb3dpbmcgbW1hcCgpIHNlZW1z
+IGF0IGxlYXN0IGEgYml0IHN1cnByaXNpbmcuDQoNCkRpc2FsbG93aW5nIG1tYXAoKSBpcyBub3Qg
+b25seSBzdXJwcmlzaW5nIGJ1dCBhbHNvIHVubmVjZXNzYXJ5Lg0KDQpBIGJpdCBvZmYgdG9waWMg
+aGVyZS4gVGhpcyBtbWFwKCkvbXByb3RlY3QoKSBkaXNjdXNzaW9uIHJlbWluZHMgbWUgYSBxdWVz
+dGlvbiAoZ3Vlc3MgZm9yIEphcmtrbyk6IE5vdyB0aGF0IHZtYS0+dm1fZmlsZS0+cHJpdmF0ZV9k
+YXRhIGtlZXBzIGEgcG9pbnRlciB0byB0aGUgZW5jbGF2ZSwgd2h5IGRvIHdlIHN0b3JlIGl0IGFn
+YWluIGluIHZtYS0+dm1fcHJpdmF0ZT8gSXQgaXNuJ3QgYSBiaWcgZGVhbCBidXQgbm9uLU5VTEwg
+dm1fcHJpdmF0ZSBkb2VzIHByZXZlbnQgbXByb3RlY3QoKSBmcm9tIG1lcmdpbmcgYWRqYWNlbnQg
+Vk1Bcy4gDQoNCg==
