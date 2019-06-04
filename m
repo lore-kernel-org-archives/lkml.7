@@ -2,113 +2,261 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF781C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD80C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59282147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bwPYy4WK"
+	by mail.kernel.org (Postfix) with ESMTP id 12E86218EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 15:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfFDPZR (ORCPT
+        id S1728141AbfFDPZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 11:25:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36594 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728020AbfFDPZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 11:25:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u22so12903413pfm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 08:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=Mrua8Se3/4ilWZJMy5h+Rrfq98YU9hLPDYoeq7tQAs0=;
-        b=bwPYy4WKJZInqlQTDw1tRC2vfxgDnGkK0PChtQyEZsGS0topViNdNdWX6VaSl0HMrO
-         qSz/UqMNTHg45ahUSDI9Xnc5tEuvAfrpjfMhBG14xZHMiUqJAKP4h78NdotF4VlIogzP
-         UEi49SUP40Pyaut0+lMsfKNsgbjYpzHc2RCqI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=Mrua8Se3/4ilWZJMy5h+Rrfq98YU9hLPDYoeq7tQAs0=;
-        b=B0uNJkOH0xVm9UMP6EbBTC6xT15UPI42VEPYnDmzKcJNNyFmZGzzY6SgcEmOoH/8BI
-         4AA42rGF1yNCCk7PJxWNs+9FhiArjCMlT3EREyGn+Ohvypo97t2ZvapofihB2B5geEgq
-         0ZMVYN83E4myrRVqYYgXDP1BpRMjVfd+7CMjCq2QBOOE2OYFn18orFW5T9M6KxuPMWDt
-         Yr3uN5kgnpWOfNJILjZbeHzcs5pTZcCsJF5Jrk2d16RLHGb+qIMex7XAXibJ4rH/IT4H
-         PIi9yDeKSpC0qnYdO0XBl2jba07Aqz0pLVvjZWdtpwhzNYFZsFEhzMDHSSSbf8y93hAG
-         tQrg==
-X-Gm-Message-State: APjAAAXZzVJ4GKnWY6tKJXpaQn0XoQ/t+Fgh/OSxESYSB6mAlJhKQexi
-        r0htPg+sZG3ZOwMcemarndHGRQ==
-X-Google-Smtp-Source: APXvYqzFK80JeE50UcjFQyirswrvWFymO/ZMzI1vu12d2/0cwjZ7GI6ZIB2R/YBegZpgyFsXzUUQMw==
-X-Received: by 2002:a62:5c84:: with SMTP id q126mr12951772pfb.247.1559661915912;
-        Tue, 04 Jun 2019 08:25:15 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k6sm19398866pfi.86.2019.06.04.08.25.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 08:25:15 -0700 (PDT)
-Message-ID: <5cf68d5b.1c69fb81.281cd.5f93@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 4 Jun 2019 11:25:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45782 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727901AbfFDPZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 11:25:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 08:25:45 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2019 08:25:41 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id C5D4D20BEB; Tue,  4 Jun 2019 18:25:40 +0300 (EEST)
+Date:   Tue, 4 Jun 2019 18:25:40 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20190604152540.wd7c3scez2futh6z@paasikivi.fi.intel.com>
+References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190604072001.9288-3-bjorn.andersson@linaro.org>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org> <20190604072001.9288-3-bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-User-Agent: alot/0.8.1
-Date:   Tue, 04 Jun 2019 08:25:14 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-06-04 00:20:00)
-> @@ -6104,6 +6105,25 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
->         return err;
->  }
-> =20
-> +/**
-> + ufshcd_device_reset() - toggle the (optional) device reset line
-> + * @hba: per-adapter instance
-> + *
-> + * Toggles the (optional) reset line to reset the attached device.
-> + */
-> +static void ufshcd_device_reset(struct ufs_hba *hba)
-> +{
-> +       /*
-> +        * The USB device shall detect reset pulses of 1us, sleep for 10u=
-s to
+Hi Vishal,
 
-This isn't usb though. Can we have a gpio reset driver and then
-implement this in the reset framework instead? Or did that not work out
-for some reason?
+Thanks for the update. A few small issues below...
 
-> +        * be on the safe side.
-> +        */
-> +       gpiod_set_value_cansleep(hba->device_reset, 1);
-> +       usleep_range(10, 15);
+On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> 
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+> v8
+> - Added reset-gpios optional property to assert video_aresetn
+> 
+> v7
+> - Removed the control name from dt bindings
+> - Updated the example dt node name to csi2rx
+> 
+> v6
+> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+> - Added reviewed by Rob Herring
+> 
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
+> 
+> v4
+> - Added reviewed by Hyun Kwon
+> 
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
+> 
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
+> 
+>  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 119 +++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> new file mode 100644
+> index 0000000..fef8179
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> @@ -0,0 +1,119 @@
+> +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
+> +--------------------------------------------------------
 > +
-> +       gpiod_set_value_cansleep(hba->device_reset, 0);
-> +       usleep_range(10, 15);
-> +}
+> +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
+> +from compliant camera sensors and send the output as AXI4 Stream video data
+> +for image processing.
 > +
->  /**
->   * ufshcd_host_reset_and_restore - reset and restore host controller
->   * @hba: per-adapter instance
+> +The subsystem consists of a MIPI DPHY in slave mode which captures the
+> +data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
+> +packet data. The optional Video Format Bridge (VFB) converts this data to
+> +AXI4 Stream video data.
+> +
+> +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
+> +- reg: Physical base address and length of the registers set for the device.
+> +- interrupts: Property with a value describing the interrupt number.
+> +- clocks: List of phandles to AXI Lite and Video clocks.
+> +- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
+> +  as clocks listed in clocks property.
+> +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
+> +  Packets other than this data type (except for RAW8 and User defined data
+> +  types) will be filtered out. Possible values are as below -
+> +  0x1E - YUV4228B
+> +  0x1F - YUV42210B
+> +  0x20 - RGB444
+> +  0x21 - RGB555
+> +  0x22 - RGB565
+> +  0x23 - RGB666
+> +  0x24 - RGB888
+> +  0x28 - RAW6
+> +  0x29 - RAW7
+> +  0x2A - RAW8
+> +  0x2B - RAW10
+> +  0x2C - RAW12
+> +  0x2D - RAW14
+> +  0x2E - RAW16
+> +  0x2F - RAW20
+> +
+> +
+> +Optional properties:
+> +--------------------
+> +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+> +  Without this property the driver won't be loaded as IP won't be able to generate
+> +  media bus format compliant stream output.
+> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
+> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
+> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
+> +- xlnx,en-active-lanes: present if the number of active lanes can be
+> +  re-configured at runtime in the Protocol Configuration Register.
+> +  Otherwise all lanes, as set in IP configuration, are always active.
+> +- reset-gpios: Optional specifier for a GPIO that asserts video_aresetn.
+> +
+> +Ports
+> +-----
+> +The device node shall contain two 'port' child nodes as defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +The port@0 is a sink port and shall connect to CSI2 source like camera.
+> +It must have the data-lanes property.
+
+Technically this is wrong as data-lanes is an endpoint property. I'd just
+leave it out here.
+
+> +
+> +The port@1 is a source port and can be connected to any video processing IP
+> +which can work with AXI4 Stream data.
+> +
+> +Required port properties:
+> +--------------------
+> +- reg: 0 - for sink port.
+> +       1 - for source port.
+> +
+> +Optional endpoint property:
+
+s/Optional/Required/
+
+> +---------------------------
+> +- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
+> +  This should be in the sink port endpoint which connects to MIPI CSI2 source
+> +  like sensor. The possible values are:
+
+And add here that it's only needed for port 0. Or put it to the heading.
+
+I think this is good with these changes.
+
+> +  1       - For 1 lane enabled in IP.
+> +  1 2     - For 2 lanes enabled in IP.
+> +  1 2 3   - For 3 lanes enabled in IP.
+> +  1 2 3 4 - For 4 lanes enabled in IP.
+> +
+> +Example:
+> +
+> +	xcsi2rxss_1: csi2rx@a0020000 {
+> +		compatible = "xlnx,mipi-csi2-rx-subsystem-4.0";
+> +		reg = <0x0 0xa0020000 0x0 0x10000>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 95 4>;
+> +		xlnx,csi-pxl-format = <0x2a>;
+> +		xlnx,vfb;
+> +		xlnx,en-active-lanes;
+> +		xlnx,en-csi-v2-0;
+> +		xlnx,en-vcx;
+> +		clock-names = "lite_aclk", "video_aclk";
+> +		clocks = <&misc_clk_0>, <&misc_clk_1>;
+> +		reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				/* Sink port */
+> +				reg = <0>;
+> +				csiss_in: endpoint {
+> +					data-lanes = <1 2 3 4>;
+> +					/* MIPI CSI2 Camera handle */
+> +					remote-endpoint = <&camera_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				/* Source port */
+> +				reg = <1>;
+> +				csiss_out: endpoint {
+> +					remote-endpoint = <&vproc_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.8.3.1
+
+How old is that? :-)
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
