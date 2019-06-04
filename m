@@ -2,89 +2,130 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2704BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA9C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEACE207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52379207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 21:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559683624;
+	bh=oQ1JVM7OTEDQtkaAi9QY0NyPFMx/9MMFSQQMnQkpRPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=K7SkKiMlSt14ijA7mNhERHozaJ6DUnHVU26xWbD50UWCK8lln8Ndzdjj8mshUhz5W
+	 ZocHFEqCDllQ0booj0l0wrLjfnkrO/p9oy8oMv4zSXC5reE7FBHujeqePN8nbwe16P
+	 az3sItfLbAs88hZ7rDP72DwnalpRBxdS2S5SLgIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFDVZg (ORCPT
+        id S1726593AbfFDV1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 17:25:36 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52608 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDVZf (ORCPT
+        Tue, 4 Jun 2019 17:27:03 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45528 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFDV1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 17:25:35 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0F7F61500FF39;
-        Tue,  4 Jun 2019 14:25:35 -0700 (PDT)
-Date:   Tue, 04 Jun 2019 14:25:34 -0700 (PDT)
-Message-Id: <20190604.142534.1883466423005092248.davem@davemloft.net>
-To:     natechancellor@gmail.com
-Cc:     alexandre.belloni@bootlin.com, horatiu.vultur@microchip.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net: mscc: ocelot: Fix some struct initializations
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190603204953.44235-1-natechancellor@gmail.com>
-References: <20190603204953.44235-1-natechancellor@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Jun 2019 14:25:35 -0700 (PDT)
+        Tue, 4 Jun 2019 17:27:03 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so10504598lfm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fjr6VsCXE/x8E/UigyoFfXOlatfjUvy0HOG/EWEq9/E=;
+        b=AqnHNsD1VskjlimA3YwkF5JNU3DvSRUk55MoR6ni75AS44QkMcJCvxHI3dSdlI6y5J
+         mKW0Es7RWq6sAXJ9MeVUOaPQSf8pexTFCehFbQMkkbeBhb+EWYhswZLPdoe2U/wgnvPd
+         T/eBCFdkAAdh/w7SO0Y9hNdRXoDDz3+5dAwXw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fjr6VsCXE/x8E/UigyoFfXOlatfjUvy0HOG/EWEq9/E=;
+        b=sFK5NbsDtwWIG/OHI2aDkp14PoT/cZttTfsz7x+youDTtd0NZte3jjaWUwMB3iwcQz
+         OKjBXHxdLHKSL5T4XGmrXb2UjgbORgi0Q/6ozt79hULLI0jgA1aKBzIoISjS4cNNOFU3
+         3XHgmCZKKcVYSKWQRIng2EAeGiib4x6nJ+AMwMgUAham/3mK8J9Ri4wKAhPir60gNagv
+         cFdS8ETWzaEa7ZFQkZwhzPUhq8t3+TTcRkoTZinDHCkSWV32Z2ZwgaJBB+Faon3qPnQ7
+         MzEdrMKhf1iJ4bzBRabm9KNqBjGcxNwuH7+eKACs0EICV/jHVUdZgxF2Wky+otIabCV8
+         3U6g==
+X-Gm-Message-State: APjAAAVtmo+owZjNDdK5J5OK+JON4wDX56LkAERwNnPDjMS2kyIMojq+
+        P7LZ1AXtDUVDj0uhVYMmibt4usuAuVA=
+X-Google-Smtp-Source: APXvYqxMH/s+lAXumbjHAq26NPiRIsjskKnJKL4a7W7SDshWWh/ihN31HnEb0uaWvnDfzEQ2LQBCuA==
+X-Received: by 2002:a19:2948:: with SMTP id p69mr17512979lfp.160.1559683620631;
+        Tue, 04 Jun 2019 14:27:00 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id m25sm2914933lfp.97.2019.06.04.14.26.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 14:26:59 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id j29so3627662lfk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 14:26:59 -0700 (PDT)
+X-Received: by 2002:a19:ae01:: with SMTP id f1mr17362076lfc.29.1559683618741;
+ Tue, 04 Jun 2019 14:26:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
+In-Reply-To: <20190604134117.GA29963@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 4 Jun 2019 14:26:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
+Message-ID: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
+        Jason Baron <jbaron@akamai.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-aio@kvack.org, omar.kilani@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        stable <stable@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Mon,  3 Jun 2019 13:49:53 -0700
+On Tue, Jun 4, 2019 at 6:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> This is the minimal fix for stable, I'll send cleanups later.
 
-> Clang warns:
-> 
-> drivers/net/ethernet/mscc/ocelot_ace.c:335:37: warning: suggest braces
-> around initialization of subobject [-Wmissing-braces]
->         struct ocelot_vcap_u64 payload = { 0 };
->                                            ^
->                                            {}
-> drivers/net/ethernet/mscc/ocelot_ace.c:336:28: warning: suggest braces
-> around initialization of subobject [-Wmissing-braces]
->         struct vcap_data data = { 0 };
->                                   ^
->                                   {}
-> drivers/net/ethernet/mscc/ocelot_ace.c:683:37: warning: suggest braces
-> around initialization of subobject [-Wmissing-braces]
->         struct ocelot_ace_rule del_ace = { 0 };
->                                            ^
->                                            {}
-> drivers/net/ethernet/mscc/ocelot_ace.c:743:28: warning: suggest braces
-> around initialization of subobject [-Wmissing-braces]
->         struct vcap_data data = { 0 };
->                                   ^
->                                   {}
-> 4 warnings generated.
-> 
-> One way to fix these warnings is to add additional braces like Clang
-> suggests; however, there has been a bit of push back from some
-> maintainers[1][2], who just prefer memset as it is unambiguous, doesn't
-> depend on a particular compiler version[3], and properly initializes all
-> subobjects. Do that here so there are no more warnings.
-> 
-> [1]: https://lore.kernel.org/lkml/022e41c0-8465-dc7a-a45c-64187ecd9684@amd.com/
-> [2]: https://lore.kernel.org/lkml/20181128.215241.702406654469517539.davem@davemloft.net/
-> [3]: https://lore.kernel.org/lkml/20181116150432.2408a075@redhat.com/
-> 
-> Fixes: b596229448dd ("net: mscc: ocelot: Add support for tcam")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/505
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Ugh. I htink this is correct, but I wish we had a better and more
+intuitive interface.
 
-Applied to net-next.
+In particular, since restore_user_sigmask() basically wants to check
+for "signal_pending()" anyway (to decide if the mask should be
+restored by signal handling or by that function), I really get the
+feeling that a lot of these patterns like
+
+> -       restore_user_sigmask(ksig.sigmask, &sigsaved);
+> -       if (signal_pending(current) && !ret)
+> +
+> +       interrupted = signal_pending(current);
+> +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
+> +       if (interrupted && !ret)
+>                 ret = -ERESTARTNOHAND;
+
+are wrong to begin with, and we really should aim for an interface
+which says "tell me whether you completed the system call, and I'll
+give you an error return if not".
+
+How about we make restore_user_sigmask() take two return codes: the
+'ret' we already have, and the return we would get if there is a
+signal pending and w're currently returning zero.
+
+IOW, I think the above could become
+
+        ret = restore_user_sigmask(ksig.sigmask, &sigsaved, ret, -ERESTARTHAND);
+
+instead if we just made the right interface decision.
+
+Hmm?
+
+             Linus
