@@ -2,108 +2,100 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8C3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C516CC28CC6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E4524B70
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CF624B70
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 11:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfFDLPe (ORCPT
+        id S1727697AbfFDLPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 07:15:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:40576 "EHLO foss.arm.com"
+        Tue, 4 Jun 2019 07:15:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64072 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbfFDLPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:15:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C6A11688;
-        Tue,  4 Jun 2019 04:15:16 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF653F690;
-        Tue,  4 Jun 2019 04:15:14 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v3 4/6] sched: Add new tracepoint to track pelt at se level
-Date:   Tue,  4 Jun 2019 12:14:57 +0100
-Message-Id: <20190604111459.2862-5-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604111459.2862-1-qais.yousef@arm.com>
-References: <20190604111459.2862-1-qais.yousef@arm.com>
+        id S1727323AbfFDLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 07:15:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 04:15:40 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2019 04:15:33 -0700
+Date:   Tue, 4 Jun 2019 14:15:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 0/9] security: x86/sgx: SGX vs. LSM
+Message-ID: <20190604111533.GA15393@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new tracepoint allows tracking PELT signals at sched_entity level.
-Which is supported in CFS tasks and taskgroups only.
+On Fri, May 31, 2019 at 04:31:50PM -0700, Sean Christopherson wrote:
+> This series is the result of a rather absurd amount of discussion over
+> how to get SGX to play nice with LSM policies, without having to resort
+> to evil shenanigans or put undue burden on userspace.  The discussion
+> definitely wandered into completely insane territory at times, but I
+> think/hope we ended up with something reasonable.
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
- include/trace/events/sched.h | 4 ++++
- kernel/sched/fair.c          | 1 +
- kernel/sched/pelt.c          | 2 ++
- 3 files changed, 7 insertions(+)
+By definition this is a broken series because it does not apply to
+mainline. Even RFC series should at least apply. Would be better idea to
+discuss design ideas and use snippets instead. Now you have to take
+original v20 and apply to these patches to evaluate anything.
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 520b89d384ec..c7dd9bc7f001 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -617,6 +617,10 @@ DECLARE_TRACE(pelt_irq_tp,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
-+DECLARE_TRACE(pelt_se_tp,
-+	TP_PROTO(struct sched_entity *se),
-+	TP_ARGS(se));
-+
- #endif /* _TRACE_SCHED_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index dee1338ec4a9..8e0015ebf109 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3354,6 +3354,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
- 	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
- 
- 	trace_pelt_cfs_tp(cfs_rq);
-+	trace_pelt_se_tp(se);
- 
- 	return 1;
- }
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index c9d4945861a4..7f1a1f641866 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -267,6 +267,7 @@ int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
- {
- 	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
- 		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
-+		trace_pelt_se_tp(se);
- 		return 1;
- 	}
- 
-@@ -280,6 +281,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
- 
- 		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
- 		cfs_se_util_change(&se->avg);
-+		trace_pelt_se_tp(se);
- 		return 1;
- 	}
- 
--- 
-2.17.1
+> The basic gist of the approach is to require userspace to declare what
+> protections are maximally allowed for any given page, e.g. add a flags
+> field for loading enclave pages that takes ALLOW_{READ,WRITE,EXEC}.  LSMs
+> can then adjust the allowed protections, e.g. clear ALLOW_EXEC to prevent
+> ever mapping the page with PROT_EXEC.  SGX enforces the allowed perms
+> via a new mprotect() vm_ops hook, e.g. like regular mprotect() uses
+> MAY_{READ,WRITE,EXEC}.
 
+mprotect() does not use MAY_{READ,WRITE,EXEC} constants. It uses
+VM_MAY{READ,WRITE,EXEC,SHARED} constants.
+
+What are ALLOW_{READ,WRITE,EXEC} and how they are used? What does the
+hook do and why it is in vm_ops and not in file_operations? Are they
+arguments to the ioctl or internal variables that are set based on
+SECINFO?
+
+/Jarkko
