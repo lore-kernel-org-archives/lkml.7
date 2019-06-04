@@ -2,182 +2,145 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855FEC28CC6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD27C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4EE20693
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7135020693
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 16:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Vqwh3DMG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/L7XlWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfFDQYt (ORCPT
+        id S1727673AbfFDQZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 12:24:49 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:60080 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727385AbfFDQYt (ORCPT
+        Tue, 4 Jun 2019 12:25:29 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:53286 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbfFDQZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 12:24:49 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 42C65C00D6;
-        Tue,  4 Jun 2019 16:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559665499; bh=Z5knSwzfDyOQC0KtFQddwe2paagbYdxhRAUwXuNmts0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Vqwh3DMGF1XYObsbOe0Wro+2QkJIMTgrEYdeWcp8507uTxa9tJD3XDutMesW8Brgp
-         bj+hH+pFLmyYb7cDcqIND9n3OQ/PTSxGXzYIiXrKeSmmhJwSWb2DNb/4w/6uEEdocs
-         b6/QDfHiIMh2ZnvxznZ1TeDJ32nvxKcgU/rcJQWjq42zeDVt856vuVO/Kwjrzqm0EU
-         e1ELgAo6bP+DjxMQiV8Py6ANmpYJzSm1hIwYSOww/HtDWXdxs9oyVkF1MGWKkSbP6q
-         tDkcmDY4Y8lXIK518K5LXmflncjmKQE9ZBeKXCKc3IaUP8i+GsN7ncKmWB9LHxitwm
-         bs4NrIiAlbVbA==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 03E2BA022E;
-        Tue,  4 Jun 2019 16:24:45 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id DAA163D05A;
-        Tue,  4 Jun 2019 18:24:45 +0200 (CEST)
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     bhelgaas@google.com, mj@ucw.cz, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v2] PCI: Add PCIe 5.0 data rate (32 GT/s) support
-Date:   Tue,  4 Jun 2019 18:24:43 +0200
-Message-Id: <92365e3caf0fc559f9ab14bcd053bfc92d4f661c.1559664969.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Jun 2019 12:25:29 -0400
+Received: by mail-it1-f193.google.com with SMTP id m187so1098397ite.3;
+        Tue, 04 Jun 2019 09:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=keUx6OuTtnNnS8af2D8MRcezvwV9OMJ0K5kA2b/Onj8=;
+        b=W/L7XlWaFAFC25Fsz4CXjMTrwc8PsTmaQ8HGbUAYsAo60RiR9fODX6dyVe9/QY2ZPe
+         kcWVcaBcvoM3Te+G8UuxrDWK305KGBkb1QlFNgoTOUwmB+ySljpLY/LNOkHUVfyNof5Y
+         RWu7BSCU1KTy8xhog0NHEaML4VIAPY9wEs13EyeiRTVcW4HQ+i43ncoyTxb18LtXyoba
+         s3ClM75/YGscb0IR39VRwOcvsCp/wc+Cl4w4GI4e1I/Xc6JGJtjCga77WcgnCTSYxXi3
+         xSGoOldTC1VSI6zCOg8zXg51veJ3U2NQOIATn6cfOFQzWuzsWsENpwwbGLogs8uow04Y
+         Bt4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=keUx6OuTtnNnS8af2D8MRcezvwV9OMJ0K5kA2b/Onj8=;
+        b=CjP1GWtYsURk6o5VjeuFiYnqWXTz9WW2tG6BZdn675qimLYBI/GftCQmzAkAF0gvvu
+         tLu5DVNrl1KwQCRi12hWI8QXlfo255UWttlpwMMJWeUXz9Xye/0qkuCGn/lJ32BV4pCS
+         tPp+aBTdYSjeEni62PBmxGDRrUMcdXnKmK6jTSYh38/FiUNBU/GlBYUXBcg4t0nWlZ7B
+         yYRbFwyWX4tskKkkHlUPWabErFfM51KE83mLi7r+nASnoyXKaqKglM1sGlXIgPaV2RyW
+         lyl2SMIRir1XVnd+QCQbBosYc8WhQbICnhMXyZVguB/x9rCwmL53NP6LyvKM1cyhJ6JF
+         8z7w==
+X-Gm-Message-State: APjAAAW1Xug2a8qrMwH8UKPvKSGSEBji8+XoUObEzdqSP9PENCgAYrAC
+        pP1VsrS9dV6t5vyuNW6q63GxSwnvbqxbOGH8+t4=
+X-Google-Smtp-Source: APXvYqx/4rCisoqpGnzzw0zsbZQJzp6XnK7vklgy6SJ5670sERpis86AGb6uijJLfZA5p9whZRyv+dcYdZCQul/rIyg=
+X-Received: by 2002:a02:5b05:: with SMTP id g5mr20735653jab.114.1559665528083;
+ Tue, 04 Jun 2019 09:25:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190603170306.49099-1-nitesh@redhat.com> <20190603170306.49099-2-nitesh@redhat.com>
+ <CAKgT0Udnc_cmgBLFEZ5udexsc1cfjX1rJR3qQFOW-7bfuFh6gQ@mail.gmail.com>
+ <4cdfee20-126e-bc28-cf1c-2cfd484ca28e@redhat.com> <CAKgT0Ud6uKpcj9HFHYOThCY=0_P0=quBLbsDR7uUMdbwcYeSTw@mail.gmail.com>
+ <09e6caea-7000-b3e4-d297-df6bea78e127@redhat.com>
+In-Reply-To: <09e6caea-7000-b3e4-d297-df6bea78e127@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 4 Jun 2019 09:25:16 -0700
+Message-ID: <CAKgT0UeMpcckGpT6OnC2kqgtyT2p9bvNgE2C0eqW1GOJTU-DHA@mail.gmail.com>
+Subject: Re: [RFC][Patch v10 1/2] mm: page_hinting: core infrastructure
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCIe 5.0 allows an effective 32.0 GT/s speed per lane.
+On Tue, Jun 4, 2019 at 9:08 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+>
+> On 6/4/19 11:14 AM, Alexander Duyck wrote:
+> > On Tue, Jun 4, 2019 at 5:55 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>
+> >> On 6/3/19 3:04 PM, Alexander Duyck wrote:
+> >>> On Mon, Jun 3, 2019 at 10:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>> This patch introduces the core infrastructure for free page hinting in
+> >>>> virtual environments. It enables the kernel to track the free pages which
+> >>>> can be reported to its hypervisor so that the hypervisor could
+> >>>> free and reuse that memory as per its requirement.
+> >>>>
+> >>>> While the pages are getting processed in the hypervisor (e.g.,
+> >>>> via MADV_FREE), the guest must not use them, otherwise, data loss
+> >>>> would be possible. To avoid such a situation, these pages are
+> >>>> temporarily removed from the buddy. The amount of pages removed
+> >>>> temporarily from the buddy is governed by the backend(virtio-balloon
+> >>>> in our case).
+> >>>>
+> >>>> To efficiently identify free pages that can to be hinted to the
+> >>>> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
+> >>>> chunks are reported to the hypervisor - especially, to not break up THP
+> >>>> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
+> >>>> in the bitmap are an indication whether a page *might* be free, not a
+> >>>> guarantee. A new hook after buddy merging sets the bits.
+> >>>>
+> >>>> Bitmaps are stored per zone, protected by the zone lock. A workqueue
+> >>>> asynchronously processes the bitmaps, trying to isolate and report pages
+> >>>> that are still free. The backend (virtio-balloon) is responsible for
+> >>>> reporting these batched pages to the host synchronously. Once reporting/
+> >>>> freeing is complete, isolated pages are returned back to the buddy.
+> >>>>
+> >>>> There are still various things to look into (e.g., memory hotplug, more
+> >>>> efficient locking, possible races when disabling).
+> >>>>
+> >>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> >>> So one thing I had thought about, that I don't believe that has been
+> >>> addressed in your solution, is to determine a means to guarantee
+> >>> forward progress. If you have a noisy thread that is allocating and
+> >>> freeing some block of memory repeatedly you will be stuck processing
+> >>> that and cannot get to the other work. Specifically if you have a zone
+> >>> where somebody is just cycling the number of pages needed to fill your
+> >>> hinting queue how do you get around it and get to the data that is
+> >>> actually code instead of getting stuck processing the noise?
+> >> It should not matter. As every time the memory threshold is met, entire
+> >> bitmap
+> >> is scanned and not just a chunk of memory for possible isolation. This
+> >> will guarantee
+> >> forward progress.
+> > So I think there may still be some issues. I see how you go from the
+> > start to the end, but how to you loop back to the start again as pages
+> > are added? The init_hinting_wq doesn't seem to have a way to get back
+> > to the start again if there is still work to do after you have
+> > completed your pass without queue_work_on firing off another thread.
+> >
+> That will be taken care as the part of a new job, which will be
+> en-queued as soon
+> as the free memory count for the respective zone will reach the threshold.
 
-Currently if you read a PCIe 5.0 EP link data rate through sysfs, the
-resulting output will be "Unknown speed" instead of "32.0 GT/s" as we
-would be expect.
-
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes:
-v1 -> v2
- - Rebase patch
-
- drivers/pci/pci-sysfs.c       | 3 +++
- drivers/pci/pci.c             | 4 +++-
- drivers/pci/probe.c           | 2 +-
- drivers/pci/slot.c            | 1 +
- include/linux/pci.h           | 1 +
- include/uapi/linux/pci_regs.h | 4 ++++
- 6 files changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d27475..d52d304 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -182,6 +182,9 @@ static ssize_t current_link_speed_show(struct device *dev,
- 		return -EINVAL;
- 
- 	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
-+	case PCI_EXP_LNKSTA_CLS_32_0GB:
-+		speed = "32 GT/s";
-+		break;
- 	case PCI_EXP_LNKSTA_CLS_16_0GB:
- 		speed = "16 GT/s";
- 		break;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843..4729a7c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5621,7 +5621,9 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
- 	 */
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
- 	if (lnkcap2) { /* PCIe r3.0-compliant */
--		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
-+		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
-+			return PCIE_SPEED_32_0GT;
-+		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
- 			return PCIE_SPEED_16_0GT;
- 		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
- 			return PCIE_SPEED_8_0GT;
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0e8e2c1..c5f27c8 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -668,7 +668,7 @@ const unsigned char pcie_link_speed[] = {
- 	PCIE_SPEED_5_0GT,		/* 2 */
- 	PCIE_SPEED_8_0GT,		/* 3 */
- 	PCIE_SPEED_16_0GT,		/* 4 */
--	PCI_SPEED_UNKNOWN,		/* 5 */
-+	PCIE_SPEED_32_0GT,		/* 5 */
- 	PCI_SPEED_UNKNOWN,		/* 6 */
- 	PCI_SPEED_UNKNOWN,		/* 7 */
- 	PCI_SPEED_UNKNOWN,		/* 8 */
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index f4d92b1..ae4aa0e 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -75,6 +75,7 @@ static const char *pci_bus_speed_strings[] = {
- 	"5.0 GT/s PCIe",	/* 0x15 */
- 	"8.0 GT/s PCIe",	/* 0x16 */
- 	"16.0 GT/s PCIe",	/* 0x17 */
-+	"32.0 GT/s PCIe",	/* 0x18 */
- };
- 
- static ssize_t bus_speed_read(enum pci_bus_speed speed, char *buf)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a5a84d..2173e6b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -258,6 +258,7 @@ enum pci_bus_speed {
- 	PCIE_SPEED_5_0GT		= 0x15,
- 	PCIE_SPEED_8_0GT		= 0x16,
- 	PCIE_SPEED_16_0GT		= 0x17,
-+	PCIE_SPEED_32_0GT		= 0x18,
- 	PCI_SPEED_UNKNOWN		= 0xff,
- };
- 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 2716476..f28e562 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -528,6 +528,7 @@
- #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
- #define  PCI_EXP_LNKCAP_SLS_8_0GB 0x00000003 /* LNKCAP2 SLS Vector bit 2 */
- #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
-+#define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
- #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
- #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
- #define  PCI_EXP_LNKCAP_L0SEL	0x00007000 /* L0s Exit Latency */
-@@ -556,6 +557,7 @@
- #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
- #define  PCI_EXP_LNKSTA_CLS_8_0GB 0x0003 /* Current Link Speed 8.0GT/s */
- #define  PCI_EXP_LNKSTA_CLS_16_0GB 0x0004 /* Current Link Speed 16.0GT/s */
-+#define  PCI_EXP_LNKSTA_CLS_32_0GB 0x0005 /* Current Link Speed 32.0GT/s */
- #define  PCI_EXP_LNKSTA_NLW	0x03f0	/* Negotiated Link Width */
- #define  PCI_EXP_LNKSTA_NLW_X1	0x0010	/* Current Link Width x1 */
- #define  PCI_EXP_LNKSTA_NLW_X2	0x0020	/* Current Link Width x2 */
-@@ -661,6 +663,7 @@
- #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_16_0GB	0x00000010 /* Supported Speed 16GT/s */
-+#define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
- #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
- #define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
- #define  PCI_EXP_LNKCTL2_TLS		0x000f
-@@ -668,6 +671,7 @@
- #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
- #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
- #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
-+#define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
- #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
- #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
--- 
-2.7.4
-
+So does that mean that you have multiple threads all calling
+queue_work_on until you get below the threshold? If so it seems like
+that would get expensive since that is an atomic test and set
+operation that would be hammered until you get below that threshold.
