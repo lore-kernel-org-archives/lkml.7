@@ -2,217 +2,158 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58527C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E81C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0747424A31
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53E724A31
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 04:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ylkho9VZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFfV/BaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfFDER5 (ORCPT
+        id S1726488AbfFDETz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 00:17:57 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42866 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFDER4 (ORCPT
+        Tue, 4 Jun 2019 00:19:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39940 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFDETz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 00:17:56 -0400
-Received: by mail-ot1-f67.google.com with SMTP id i2so17280363otr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:17:56 -0700 (PDT)
+        Tue, 4 Jun 2019 00:19:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d30so9537836pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2019 21:19:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hltidb8QtHOPGObUrHtf/4ZtTKSopSnDSqcRsOo2rxw=;
-        b=Ylkho9VZmxrfNPZuXnkJqmPSoMFRbrUkdrtYfi9TjOfn5rg1xJOod4IoGWz/MBoi1z
-         SKaIfklCToaQ05NrOxSCmDKfVaQoJciFCLThIiUTVOm8h1cZYWNBEvS31DqUaCzTt7lj
-         D85LvLurfQi+AwomNGxJ4J+bTDtmYwVSStL+Z0WY44DZdbovZH7MZN8azhTPVgTtpj8l
-         aGi+QoS4/idCbF/AJjecqoBpmBYZDsC82qz3wGtO4cB+aYfi2CQK94fw5Z47Mfhfru48
-         1J8TMQPUj+L4my+E+d5z6GzzvleTKb8BJSaUOx3aFfZQhvuVA7Weh4QDbpGZDAsPTth0
-         6YUw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=rqesh/1RcslZqpfaYXp2NOCg2du22Gl0mzXUAG7Z6/w=;
+        b=AFfV/BaCBqJ6kDwO3NSGhJY0v7DGK+9j8+swmyBQx1qu0MHJcYdjWqr0jP0gMBDnYx
+         n+t9Nj3ya/YptxpENH/30szuBnvleTl83So+VwVF+QRqx6KijhaeOqp7MmrY9UBFHA6r
+         VktQjI0mFeYQ9R5bF2AQOW1YJuAEXCPpSYbGR+kTBXY5CUkb1V9JO3HiLNfLAg/fi/kk
+         J58wHK7mhQXhnHG1Vi823fUdCnTvjyqS2NaAxhDhVrnx9uC835+Cpinn7XSiMJsborRs
+         tdmK/jp3FbQ2RYW772i0pEP8+x2mYA57z+2v8bNQyUPl/jkwDFXUKayBDya0lhD1PLY6
+         +skQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hltidb8QtHOPGObUrHtf/4ZtTKSopSnDSqcRsOo2rxw=;
-        b=D+5vWu9BYi46bk5AjEwYTGb+Dy/Oi4LYI2NeO0tsDRi8IVenmFQ1c6l7VA182zBr/d
-         yz1qwr805gbksUAC/mkNwRoH4izWWvECquBpFmN6OYZ8YHzh9hfNXs87MECjEsCmtHdM
-         5ud577g93GyXTKmezvUbUT6saZ1r1kX+bF31fwfCCddbk45YOu0hJH0qMqdrLiWLLkFr
-         ijWMTnl/zhdcFXkTbysXZoFxF4ozxGyGs2U2cG5Fzpk4fGYbM0MvBGtiAfCh6dCIZrCK
-         l2EZaQ+yMh+kOTM6biwfrXNspGoZ7j8tqeWdKboSvQrSbCaHbonGaKyuf4KYa50xxt32
-         KXuw==
-X-Gm-Message-State: APjAAAW0jzjDwmQAOF2+iRmgI4y78VtzAhPdnQIVWVxU/kM9WEJdj+x2
-        /sF20s+9dYyFxSB+JMdPlpqw3Jm41tahrHYYvEer/A==
-X-Google-Smtp-Source: APXvYqwo/LUbj2pYOXZO3ffCZPIeLTijVrKjdQTitvOc7MYQLuagna3P5yWym8s7Wsy/jQis1++NrNsm5wG+0k9zBSo=
-X-Received: by 2002:a9d:6e96:: with SMTP id a22mr3655013otr.207.1559621875900;
- Mon, 03 Jun 2019 21:17:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=rqesh/1RcslZqpfaYXp2NOCg2du22Gl0mzXUAG7Z6/w=;
+        b=V8r+ADZr0DvOIK3YoFaBlEEm7+W7K9UHMzIlGn8ov58KJZdNKdo68kC+Dqs4LMWWgW
+         z2IaGRkMbf/znEnh6ij9xlkuqpGIofPL3SEj/LuX/xv1YanppghHZkl3ULj2OMMvLkBm
+         EWJTPooczDMSvHILnvg3AM2cAreOJomA2XTUmv5XG7dfZBlyCJEMooCxQbYyWPK6bBjP
+         wgCe84ibPh4I5tMaGZPZW90kOhXocQuspzt2nvNbHP65Bbw2GgjfFpW7Y/GGW3bbH6Gn
+         iuUFxDUJu1h+xmQtP0UzN3+sSHUe9tKCUVfmsQdPV7JtSdquBW7WpaY8Q3NOz9W/BzsN
+         qLFA==
+X-Gm-Message-State: APjAAAU5e0lCYy8FlO6HlCx9CHTyvyVNirxMWfx8sJo04yhKyHZ4ssV3
+        aVR1K+ceHAjokQfw8CuZ84U=
+X-Google-Smtp-Source: APXvYqwxXhBFVO4rZBeSlIpjSfLs3AH1VBh7lBCiVio59+4okEljODkLiYqqdycbhIB/cK81c/kcyw==
+X-Received: by 2002:a17:90a:cb84:: with SMTP id a4mr34316807pju.104.1559621994365;
+        Mon, 03 Jun 2019 21:19:54 -0700 (PDT)
+Received: from [192.168.1.5] ([117.192.17.118])
+        by smtp.gmail.com with ESMTPSA id m20sm371756pjn.16.2019.06.03.21.19.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 21:19:53 -0700 (PDT)
+Subject: Re: [PATCH v2 8/9] staging: rtl8712: fixed enable_rx_ff0_filter as
+ bool and CamelCase
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, joe@perches.com, wlanfae@realtek.com,
+        Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        himadri18.07@gmail.com, straube.linux@gmail.com
+References: <cover.1559470737.git.linux.dkm@gmail.com>
+ <7b32a7cf85ef0c3f6d2ba82480a1f8d0ad651779.1559470738.git.linux.dkm@gmail.com>
+ <20190602171427.GE19671@kroah.com>
+From:   Deepak Kumar Mishra <linux.dkm@gmail.com>
+Message-ID: <07d55e1d-982e-b2c6-7c81-e22a33b22efa@gmail.com>
+Date:   Tue, 4 Jun 2019 09:49:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155677657023.2336373.4452495266651002382.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190503125634.GH15740@linux>
-In-Reply-To: <20190503125634.GH15740@linux>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 3 Jun 2019 21:17:44 -0700
-Message-ID: <CAPcyv4jx-+QJC3Aw-wY9PWshCWpu2VZKZz=PjTO7jN5Ojxz+pg@mail.gmail.com>
-Subject: Re: [PATCH v7 09/12] mm/sparsemem: Support sub-section hotplug
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190602171427.GE19671@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 5:56 AM Oscar Salvador <osalvador@suse.de> wrote:
->
-> On Wed, May 01, 2019 at 10:56:10PM -0700, Dan Williams wrote:
-> > The libnvdimm sub-system has suffered a series of hacks and broken
-> > workarounds for the memory-hotplug implementation's awkward
-> > section-aligned (128MB) granularity. For example the following backtrace
-> > is emitted when attempting arch_add_memory() with physical address
-> > ranges that intersect 'System RAM' (RAM) with 'Persistent Memory' (PMEM)
-> > within a given section:
-> >
-> >  WARNING: CPU: 0 PID: 558 at kernel/memremap.c:300 devm_memremap_pages+0x3b5/0x4c0
-> >  devm_memremap_pages attempted on mixed region [mem 0x200000000-0x2fbffffff flags 0x200]
-> >  [..]
-> >  Call Trace:
-> >    dump_stack+0x86/0xc3
-> >    __warn+0xcb/0xf0
-> >    warn_slowpath_fmt+0x5f/0x80
-> >    devm_memremap_pages+0x3b5/0x4c0
-> >    __wrap_devm_memremap_pages+0x58/0x70 [nfit_test_iomap]
-> >    pmem_attach_disk+0x19a/0x440 [nd_pmem]
-> >
-> > Recently it was discovered that the problem goes beyond RAM vs PMEM
-> > collisions as some platform produce PMEM vs PMEM collisions within a
-> > given section. The libnvdimm workaround for that case revealed that the
-> > libnvdimm section-alignment-padding implementation has been broken for a
-> > long while. A fix for that long-standing breakage introduces as many
-> > problems as it solves as it would require a backward-incompatible change
-> > to the namespace metadata interpretation. Instead of that dubious route
-> > [1], address the root problem in the memory-hotplug implementation.
-> >
-> > [1]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  mm/sparse.c |  223 ++++++++++++++++++++++++++++++++++++++++-------------------
-> >  1 file changed, 150 insertions(+), 73 deletions(-)
-> >
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index 198371e5fc87..419a3620af6e 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -83,8 +83,15 @@ static int __meminit sparse_index_init(unsigned long section_nr, int nid)
-> >       unsigned long root = SECTION_NR_TO_ROOT(section_nr);
-> >       struct mem_section *section;
-> >
-> > +     /*
-> > +      * An existing section is possible in the sub-section hotplug
-> > +      * case. First hot-add instantiates, follow-on hot-add reuses
-> > +      * the existing section.
-> > +      *
-> > +      * The mem_hotplug_lock resolves the apparent race below.
-> > +      */
-> >       if (mem_section[root])
-> > -             return -EEXIST;
-> > +             return 0;
->
-> Just a sidenote: we do not bail out on -EEXIST, so it should be fine if we
-> stick with it.
-> But if not, I would then clean up sparse_add_section:
->
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -901,13 +901,12 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->         int ret;
->
->         ret = sparse_index_init(section_nr, nid);
-> -       if (ret < 0 && ret != -EEXIST)
-> +       if (ret < 0)
->                 return ret;
->
->         memmap = section_activate(nid, start_pfn, nr_pages, altmap);
->         if (IS_ERR(memmap))
->                 return PTR_ERR(memmap);
-> -       ret = 0;
 
-Good catch, folded the cleanup.
+On 02/06/19 10:44 PM, Greg KH wrote:
+> On Sun, Jun 02, 2019 at 03:55:37PM +0530, Deepak Mishra wrote:
+>> This patch fixes CamelCase blnEnableRxFF0Filter by renaming it
+>> to enable_rx_ff0_filter in drv_types.h and related files rtl871x_cmd.c
+>> xmit_linux.c
+>> It was reported by checkpatch.pl
+>>
+>> This fix also makes enable_rx_ff0_filter a bool and uses true false than
+>> previously used u8 as suggested by joe@perches.com
+>>
+>> Signed-off-by: Deepak Mishra <linux.dkm@gmail.com>
+>> ---
+>>   drivers/staging/rtl8712/drv_types.h   | 2 +-
+>>   drivers/staging/rtl8712/rtl871x_cmd.c | 2 +-
+>>   drivers/staging/rtl8712/xmit_linux.c  | 4 ++--
+>>   3 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/staging/rtl8712/drv_types.h b/drivers/staging/rtl8712/drv_types.h
+>> index ddab6514a549..e3e2b32e964e 100644
+>> --- a/drivers/staging/rtl8712/drv_types.h
+>> +++ b/drivers/staging/rtl8712/drv_types.h
+>> @@ -164,7 +164,7 @@ struct _adapter {
+>>   	struct iw_statistics iwstats;
+>>   	int pid; /*process id from UI*/
+>>   	struct work_struct wk_filter_rx_ff0;
+>> -	u8 blnEnableRxFF0Filter;
+>> +	bool enable_rx_ff0_filter;
+>>   	spinlock_t lockRxFF0Filter;
+>>   	const struct firmware *fw;
+>>   	struct usb_interface *pusb_intf;
+>> diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
+>> index 05a78ac24987..6a8d58d97873 100644
+>> --- a/drivers/staging/rtl8712/rtl871x_cmd.c
+>> +++ b/drivers/staging/rtl8712/rtl871x_cmd.c
+>> @@ -238,7 +238,7 @@ u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
+>>   	mod_timer(&pmlmepriv->scan_to_timer,
+>>   		  jiffies + msecs_to_jiffies(SCANNING_TIMEOUT));
+>>   	padapter->ledpriv.LedControlHandler(padapter, LED_CTL_SITE_SURVEY);
+>> -	padapter->blnEnableRxFF0Filter = 0;
+>> +	padapter->enable_rx_ff0_filter = false;
+>>   	return _SUCCESS;
+>>   }
+>>   
+>> diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
+>> index e65a51c7f372..9fa1abcf5e50 100644
+>> --- a/drivers/staging/rtl8712/xmit_linux.c
+>> +++ b/drivers/staging/rtl8712/xmit_linux.c
+>> @@ -103,11 +103,11 @@ void r8712_SetFilter(struct work_struct *work)
+>>   	r8712_write8(padapter, 0x117, newvalue);
+>>   
+>>   	spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
+>> -	padapter->blnEnableRxFF0Filter = 1;
+>> +	padapter->enable_rx_ff0_filter = true;
+>>   	spin_unlock_irqrestore(&padapter->lockRxFF0Filter, irqL);
+>>   	do {
+>>   		msleep(100);
+>> -	} while (padapter->blnEnableRxFF0Filter == 1);
+>> +	} while (padapter->enable_rx_ff0_filter == true);
+> That is horrible, and I'm amazed it ever even works.  Please fix this
+> properly, spinning on a random variable is not how you do
+> synchronization in the kernel.
 
->
->
-> > +
-> > +     if (!mask)
-> > +             rc = -EINVAL;
-> > +     else if (mask & ms->usage->map_active)
->
->         else if (ms->usage->map_active) should be enough?
->
-> > +             rc = -EEXIST;
-> > +     else
-> > +             ms->usage->map_active |= mask;
-> > +
-> > +     if (rc) {
-> > +             if (usage)
-> > +                     ms->usage = NULL;
-> > +             kfree(usage);
-> > +             return ERR_PTR(rc);
-> > +     }
-> > +
-> > +     /*
-> > +      * The early init code does not consider partially populated
-> > +      * initial sections, it simply assumes that memory will never be
-> > +      * referenced.  If we hot-add memory into such a section then we
-> > +      * do not need to populate the memmap and can simply reuse what
-> > +      * is already there.
-> > +      */
->
-> This puzzles me a bit.
-> I think we cannot have partially populated early sections, can we?
+I agree and will submit a different fix for this.
 
-Yes, at boot memory need not be section aligned it has historically
-been handled as a un-removable section of memory with holes.
+I am submitting a patchset v3 for removal of unused variables and 
+CamelCase fix for now.
 
-> And how we even come to hot-add memory into those?
+Thanks.
+
+Deepak Mishra
+
+> thanks,
 >
-> Could you please elaborate a bit here?
-
-Those sections are excluded from add_memory_resource() adding more
-memory, but arch_add_memory() with sub-section support can fill in the
-subsection holes in mem_map.
-
->
-> > +     ms = __pfn_to_section(start_pfn);
-> >       section_mark_present(ms);
-> > -     sparse_init_one_section(ms, section_nr, memmap, usage);
-> > +     sparse_init_one_section(ms, section_nr, memmap, ms->usage);
-> >
-> > -out:
-> > -     if (ret < 0) {
-> > -             kfree(usage);
-> > -             depopulate_section_memmap(start_pfn, PAGES_PER_SECTION, altmap);
-> > -     }
-> > +     if (ret < 0)
-> > +             section_deactivate(start_pfn, nr_pages, nid, altmap);
->
-> Uhm, if my eyes do not trick me, ret is only used for the return value from
-> sparse_index_init(), so this is not needed. Can we get rid of it?
-
-Yes, these can go.
-
-Apologies for the delay and missing these comments in the v8 posting.
+> greg k-h
