@@ -2,135 +2,185 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984E2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D05C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3642231F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B102231F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 12:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XZ/J6Yzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfFDMdT (ORCPT
+        id S1727795AbfFDMd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 08:33:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38278 "EHLO mx1.redhat.com"
+        Tue, 4 Jun 2019 08:33:58 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60168 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfFDMdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:33:18 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7E3B8E3C6;
-        Tue,  4 Jun 2019 12:33:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D87DB648D6;
-        Tue,  4 Jun 2019 12:33:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
-References: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com> <20190529142504.GC32147@quack2.suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     dhowells@redhat.com, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+        id S1727654AbfFDMd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:33:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1559651635; bh=BxxySmvFXnZjtb/3jRvUJ5xAJWsfsR3yPsxl6YMjSdM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XZ/J6YzqPnmG5/SSvTvNnIbG0FUOkSx2ZzQtC2SWzbRGDLTHYkE/9TjTjVyQbLjwx
+         47yTGEb8HeV2BYxRL9AEQDawcAw4Xg5XA3dxUN+GjP2OZnpImMdeH2zuif20Li4lz3
+         84MgE3lXOKt37uWn9fPy3MVThkkGtU93JB4rXP6Y=
+Date:   Tue, 4 Jun 2019 14:33:55 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6:
+ Add IR receiver node
+Message-ID: <20190604123355.m47ufmhtzuzfvmp7@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+ <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+ <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+ <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <16166.1559651581.1@warthog.procyon.org.uk>
-Date:   Tue, 04 Jun 2019 13:33:01 +0100
-Message-ID: <16167.1559651581@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 04 Jun 2019 12:33:17 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amir Goldstein <amir73il@gmail.com> wrote:
+Hi Clément,
 
-> Well I am sure that ring buffer for fanotify events would be useful, so
-> seeing that David is proposing a generic notification mechanism, I wanted
-> to know how that mechanism could best share infrastructure with fsnotify.
->
-> But apart from that I foresee the questions from users about why the
-> mount notification API and filesystem events API do not have better
-> integration.
->
-> The way I see it, the notification queue can serve several classes
-> of notifications and fsnotify could be one of those classes
-> (at least FAN_CLASS_NOTIF fits nicely to the model).
+On Mon, Jun 03, 2019 at 09:58:23PM +0200, Clément Péron wrote:
+> Hi Ondrej,
+> 
+> On Fri, 31 May 2019 at 14:46, Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > Hello Clément,
+> >
+> > On Fri, May 31, 2019 at 12:25:32AM +0200, Clément Péron wrote:
+> > > Hi Ondrej,
+> > >
+> > > On Thu, 30 May 2019 at 16:55, Ondřej Jirman <megous@megous.com> wrote:
+> > > >
+> > > > Hello Clément,
+> > > >
+> > > > On Tue, May 28, 2019 at 06:14:38PM +0200, Clément Péron wrote:
+> > > > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > > > >
+> > > > > Add support for it.
+> > > > >
+> > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+> > > > >  1 file changed, 19 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > @@ -647,6 +647,25 @@
+> > > > >                               pins = "PL0", "PL1";
+> > > > >                               function = "s_i2c";
+> > > > >                       };
+> > > > > +
+> > > > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > > > +                             pins = "PL9";
+> > > > > +                             function = "s_cir_rx";
+> > > > > +                     };
+> > > > > +             };
+> > > > > +
+> > > > > +             r_ir: ir@7040000 {
+> > > > > +                             compatible = "allwinner,sun50i-h6-ir",
+> > > > > +                                          "allwinner,sun6i-a31-ir";
+> > > > > +                             reg = <0x07040000 0x400>;
+> > > > > +                             interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                             clocks = <&r_ccu CLK_R_APB1_IR>,
+> > > > > +                                      <&r_ccu CLK_IR>;
+> > > > > +                             clock-names = "apb", "ir";
+> > > > > +                             resets = <&r_ccu RST_R_APB1_IR>;
+> > > > > +                             pinctrl-names = "default";
+> > > > > +                             pinctrl-0 = <&r_ir_rx_pin>;
+> > > > > +                             status = "disabled";
+> > > > >               };
+> > > >
+> > > > Please make a comment here, that this is known broken on some boards and may
+> > > > result IRQ flood if enabled. Otherwise noone will know.
+> > >
+> > > I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+> > > suggested it.
+> > > https://github.com/clementperon/linux/tree/h6_ir_v4
+> > >
+> > > But maybe we could also use the bit 5 of the IRQ status.
+> >
+> > Thanks, that's nice, but that will not make the HW work. That will just disable
+> > it. The comment is still necessary.
+> I have pushed a new version on my github.
+> https://github.com/clementperon/linux/commits/h6_ir_v4
+> 
+> I will submit it, if you are ok with it.
 
-It could be done; the main thing that concerns me is that the buffer is of
-limited capacity.
+the changes make it worse. Console is flooded with "Temporarily disable IRQ"
+and other symptoms are the same as I described before. Interrupts are not
+disabled in a any reasonable time. (I've waited for more > 5mins already.)
 
-However, I could take this:
+You probably need to disable interrupts right away, not wait for 100k failures.
 
-	struct fanotify_event_metadata {
-		__u32 event_len;
-		__u8 vers;
-		__u8 reserved;
-		__u16 metadata_len;
-		__aligned_u64 mask;
-		__s32 fd;
-		__s32 pid;
-	};
+thank you and regards,
+	o.
 
-and map it to:
-
-	struct fanotify_notification {
-		struct watch_notification watch; /* WATCH_TYPE_FANOTIFY */
-		__aligned_u64	mask;
-		__u16		metadata_len;
-		__u8		vers;
-		__u8		reserved;
-		__u32		reserved2;
-		__s32		fd;
-		__s32		pid;
-	};
-
-and some of the watch::info bit could be used:
-
-	n->watch.info & WATCH_INFO_OVERRUN	watch queue overran
-	n->watch.info & WATCH_INFO_LENGTH	event_len
-	n->watch.info & WATCH_INFO_RECURSIVE	FAN_EVENT_ON_CHILD
-	n->watch.info & WATCH_INFO_FLAG_0	FAN_*_PERM
-	n->watch.info & WATCH_INFO_FLAG_1	FAN_Q_OVERFLOW
-	n->watch.info & WATCH_INFO_FLAG_2	FAN_ON_DIR
-	n->subtype				ffs(n->mask)
-
-Ideally, I'd dispense with metadata_len, vers, reserved* and set the version
-when setting the watch.
-
-	fanotify_watch(int watchfd, unsigned int flags, u64 *mask,
-		       int dirfd, const char *pathname, unsigned int at_flags);
-
-We might also want to extend the watch_filter to allow you to, say, filter on
-the first __u64 after the watch member so that you could filter on specific
-events:
-
-	struct watch_notification_type_filter {
-		__u32	type;
-		__u32	info_filter;
-		__u32	info_mask;
-		__u32	subtype_filter[8];
-		__u64	payload_mask[1];
-		__u64	payload_set[1];
-	};
-
-So, in this case, it would require:
-
-	n->mask & wf->payload_mask[0] == wf->payload_set[0]
-
-to be true to record the message.
-
-David
+> Thanks,
+> Clément
+> 
+> >
+> > thank you,
+> >         o.
+> >
+> > > Regards, Clement
+> > >
+> > > >
+> > > > thanks,
+> > > >         o.
+> > > >
+> > > > >               r_i2c: i2c@7081400 {
+> > > > > --
+> > > > > 2.20.1
+> > > > >
+> > > > >
+> > > > > _______________________________________________
+> > > > > linux-arm-kernel mailing list
+> > > > > linux-arm-kernel@lists.infradead.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.gmail.com.
+> > > For more options, visit https://groups.google.com/d/optout.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
