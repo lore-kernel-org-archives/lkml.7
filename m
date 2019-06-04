@@ -2,131 +2,89 @@ Return-Path: <SRS0=CtY/=UD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B13C28CC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02C8C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F1524A1E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APWwtveP"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8A924A21
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Jun 2019 10:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfFDKyv (ORCPT
+        id S1727452AbfFDKzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 06:54:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37751 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbfFDKyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 06:54:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 22so5989052wmg.2;
-        Tue, 04 Jun 2019 03:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j6hUjIqRG1YkL75o/DPFfpMfo/IVNVfXJC4sNpNd0tg=;
-        b=APWwtvePIWTDcmPk7AtpRlDbr1f2wInftq4QFEJXHzXrs/AXrq6ZbwtQ6YVl7LxQSc
-         OCrQKXigLLaA0wNdtGjyDGmGgZpSRWsnhoNLR+hiD5Cn4c81m48Xovo/n6axPPo0K86t
-         k8ZV0YwsVLhYgj5Ocx6ujK13fNgxIY3QROEmaetKSyh4SQ1/axt/exIWF8thZkdo6AYo
-         jwmcOCjvNiDZ9MdIzwb9s4QhLF9mSh8ZogUMm6xNW+FIgkdJXVGfH4UUzvBBpYjoKQ7x
-         BeAXdkKv+r1swHZ2ySRHqSQstSfq+0Pps0Ce0tRJ12MRhC7k050di+ydIzofqtbej1xN
-         HMVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j6hUjIqRG1YkL75o/DPFfpMfo/IVNVfXJC4sNpNd0tg=;
-        b=gwRQ/2HqaeqnRfLOrMFKaqDhz/Eqm8mzloQ/4nV1P2grSVvVPnHlg6uGBD8gRKr4sE
-         +2hDMX6HN83sBYfp3HTJH5MDFzBhBi0N8q13cp2VkQo9OvdTKPyh/A3BqN9qHk9JDEtE
-         sn0MmnG5ElPDPusbBvSXxCBHjgjYju18N5egyo1ZHup2pAJET3fW1oT3LuUr95D/VJPq
-         Gncd7I5xQRqdAqZMiI1RDMEbZf5wnT9xeQp/0BCM3RVG66btyVQf0zdwjJz76rTTNYRM
-         v0/Rzdx0aM7abySEWXa9R1jVCFS0L41f//FoNnTNqPjRxxHyQRdKCoL+X7vHP/c8P+sw
-         AG/A==
-X-Gm-Message-State: APjAAAU2+Wqpa2mMApN/75MWm0dmrooCiq6rNFJBfQW4PUVJBMPTJFw6
-        eHORhN2L8Ri6rcFatqMfn04=
-X-Google-Smtp-Source: APXvYqxutJ6NBBR2g6rHF5LKUIMrFLHnOtdFcq1XJfM/uFiLfMehOpzohOS+/agVOJNsl49BvO9GHA==
-X-Received: by 2002:a1c:be03:: with SMTP id o3mr17643273wmf.139.1559645688942;
-        Tue, 04 Jun 2019 03:54:48 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id b5sm13175277wrx.22.2019.06.04.03.54.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 03:54:47 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 12:54:46 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/16] PM / devfreq: tegra: Fix kHz to Hz conversion
-Message-ID: <20190604105446.GA16519@ulmo>
-References: <20190501233815.32643-1-digetx@gmail.com>
- <20190501233815.32643-2-digetx@gmail.com>
+        Tue, 4 Jun 2019 06:55:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:40278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfFDKzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 06:55:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C760380D;
+        Tue,  4 Jun 2019 03:55:38 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CF5F3F5AF;
+        Tue,  4 Jun 2019 03:55:38 -0700 (PDT)
+Subject: Re: [RFC PATCH 46/57] driver: Add variants of driver_find_device()
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-47-git-send-email-suzuki.poulose@arm.com>
+ <20190603191041.GD6487@kroah.com>
+ <97a6b41f-7b30-54fc-a633-e59895467902@arm.com>
+Message-ID: <0ed1eb1e-df7f-d531-19ee-8b29ee37ae6d@arm.com>
+Date:   Tue, 4 Jun 2019 11:55:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
-In-Reply-To: <20190501233815.32643-2-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <97a6b41f-7b30-54fc-a633-e59895467902@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02, 2019 at 02:38:00AM +0300, Dmitry Osipenko wrote:
-> The kHz to Hz is incorrectly converted in a few places in the code,
-> this results in a wrong frequency being calculated because devfreq core
-> uses OPP frequencies that are given in Hz to clamp the rate, while
-> tegra-devfreq gives to the core value in kHz and then it also expects to
-> receive value in kHz from the core. In a result memory freq is always set
-> to a value which is close to ULONG_MAX because of the bug. Hence the EMC
-> frequency is always capped to the maximum and the driver doesn't do
-> anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
-> frequency scaling works properly now.
->=20
-> Cc: <stable@vger.kernel.org> # 4.14+
-> Tested-by: Steev Klimaszewski <steev@kali.org>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+On 04/06/2019 09:45, Suzuki K Poulose wrote:
+> 
+> 
+> On 03/06/2019 20:10, Greg KH wrote:
+>> On Mon, Jun 03, 2019 at 04:50:12PM +0100, Suzuki K Poulose wrote:
+>>> Add a wrappers to lookup a device by name for a given driver, by various
+>>> generic properties of a device. This can avoid the proliferation of custom
+>>> match functions throughout the drivers.
+>>>
+>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> ---
+>>>    include/linux/device.h | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 44 insertions(+)
+>>
+>> You should put the "here are the new functions that everyone can use"
+>> much earlier in the patch series, otherwise it's hard to dig out.
+> 
+> Sure, I will add it in the respective commits.
+> 
+>>
+>> And if you send just those as an individual series, and they look good,
+>> I can queue them up now so that everyone else can take the individual
+>> patches through their respective trees.
+> 
+> I see. I think I may be able to do that.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+The API change patch (i.e, "drivers: Unify the match prototype for 
+bus_find_device with class_find_device" ) is tricky and prevents us from doing
+this. So, that patch has to come via your tree as it must be a one shot change.
+And that would make the individual subsystem patches conflict with your tree.
+Also, it would break the builds until the individual subsystem trees are merged
+with your tree with the new API.
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
+So I am not quite sure what the best approach here would be.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz2TfQACgkQ3SOs138+
-s6GExg/9HsPjT2SjCQvZabaE2o3s+/XY1gquN4JnV0phciJyXkDiCEYstAtLTcwR
-K464Jww0SwHI9j28NVkTwfCI5ZCV8PJgjY+5R/NRSW0JidhZS8AaMKkFfCMa8Ubz
-8KBWHvn+iRlGR4Lpssr/nWPqk0NLga+exxpzQVQmY7iPZ02yxoC3sNiJmbXHT54F
-o7QgAd1qwFST5DQ/yMHzZK27iUhFdupDGkyb2BVh2X0y6q2iseuvoW5at81ZuoVI
-TB8Knl5dWItuG/ERGfnfoU8hV5i7RJDzTcnlLh//GSdD4cpRLGFVDbDE7lgnd4vq
-DSCu/I4befv91FmHVIgEgI5qmccCzm9sFUrRT3Ga8hGtclm/namJyL8std4Jxh+b
-9s7O9EeBAo/ZisfXhlzZnY5mg2Z8dfCxwxbxXhPZE/Mz6/ndmGfVFKsXRIvVBd5f
-lDn71dlug/uXWQ5Tudkz/23JQyGW6dbQK14BZPt/2EEygyJnsmJckQuyOYUhy3Ak
-xBkemlaQNzBS/ILhs7TVKA/+EFkdS/8Fcow5Kl4RdORdx9aXpbNxPIOMNWqyJYVH
-v7Y0DsHPN98oshCFNQ7K0z9XIV6auZrlZ7RCnyfXhCz4NLQcxlrGYGQX6NIafFN8
-ZXJgm+e4fuFBdNGBWUeh5STwqInQ4zLEdp9RwywxzH+SUoA6ePg=
-=8Afm
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+Cheers
+Suzuki
