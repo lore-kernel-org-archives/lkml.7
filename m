@@ -2,107 +2,140 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF032C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C0BC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FB020866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371C02075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJIeKYAq"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="W94VHWr2";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="WHSzEdP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfFEJOM (ORCPT
+        id S1726988AbfFEJQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:14:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41153 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfFEJOM (ORCPT
+        Wed, 5 Jun 2019 05:16:03 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:33688 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726831AbfFEJQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:14:12 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p15so1447917eds.8;
-        Wed, 05 Jun 2019 02:14:11 -0700 (PDT)
+        Wed, 5 Jun 2019 05:16:03 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x559Au50011101;
+        Wed, 5 Jun 2019 02:16:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=bSNlKwRUWHQdeWlvsoHSg81ZXH/HDNKdNlg6eAHevvg=;
+ b=W94VHWr2guDg+kRLYRmKD2o8RULThwQUU56qk2anEvEuBJ6AH93JY65yDz9ImM9oT/lx
+ 65bfjzCnR+uS0JU7gDSWSwBj/M38AzMVtNR7BBW3mKiEcKcmsarhbT0CFSy1FoDP7Cus
+ /uz9xKVJrbdxemItAyAgwIdX27P2mxulsQMT2+Pq9aQO74JAsaXiaVi59wG6MwNlCMyn
+ dmelrLua/nJB5u8kTwrGHGWnfL6u8MJRKQEPGswtVJRhSaIGvsLNMiGHvOMIVas1LXNU
+ 5n25UsektPQHbx7f5VqdDtgu5+6+nXCCqqi0YItTXohLH3NsVRpv3DvnSROziCplrrbr pA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2sx3kg9h0v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 05 Jun 2019 02:16:00 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 5 Jun
+ 2019 02:15:58 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.51) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 5 Jun 2019 02:15:58 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SIkDJF94QQYpgHjDwpPSCXyyZeSnG/w25TXgH00ITJ4=;
-        b=dJIeKYAqYBd28rV2p/QlSsx12zlwv+SPzRaNni4M9LXFcPdEM/SQ5LqFS5djuvZGQY
-         jTaps0K0Ie7cH0SHbePdXwE29V2QBN9E+iSaoBWQdz6q7mguHzCzWRp1ntgMuLchrDTo
-         rTJZBRxfNBjb6OAT6byWZ/l7BZjCUIClDmDZToqReWVUIGOU+FSK/fDKFSamfPNsCNzy
-         DZ0vjtfkeqCfqqyIdSEgDNWo3yYby2UALLyE8uboNe+HvQK0pzS6iLoQKKkQsBiOUFCN
-         As8x786O1FJeHKdgFlIqQFKVYlyKSsd45ncYNaqhThhjGVM8F9sbdEB72WBMoAlDiLw8
-         kaZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SIkDJF94QQYpgHjDwpPSCXyyZeSnG/w25TXgH00ITJ4=;
-        b=WS3zCY7ZeIEX0/jDqFykCd0fZuztC+OPFbz/6O9UQlSz9lE9OuQYj7fRLXBbOtmmJm
-         bq8Df1EZwv/G+R1G1RYqKCLdhl75IH7GyQl8Z8L+PScI9UugTu3u9l3qvElxXPoPA7wK
-         QtLoppT/iYrfxANCn11X5gkxxNCCwZ2y8NsZMVt/7qNZLfk6JIudBkMkJt98n/1OWqnh
-         uOIENoX5dONdRet9fcI0AIn6RSnTfnhq5z2U/SziakzXCc/GrsW3ZwKsi7dOIEDkFYBU
-         KdEoKaDfKFkNPxwb3acoSCoPHnUuf+oi6EPzFDrH1mJxgMn1reMEpbEsrNcIojMKJKzN
-         HT/Q==
-X-Gm-Message-State: APjAAAVi3eBmJ3I5gKzfh+aGQsPeGUoCv2bARd2+yZKw8bPSNVRM1/qp
-        6WAjZ77HG5Nk45mL7R2YBoE1oawFLe7x+Llwa6Y=
-X-Google-Smtp-Source: APXvYqyHSZHvR/bUxZb93EVUfWQPfAPFW8EIGruc4u8ilMEr/FeRSUn6fvrkKFP6vb04Oxns8NU5X8ceMsgMDq/S+NU=
-X-Received: by 2002:aa7:da4b:: with SMTP id w11mr34037247eds.36.1559726050471;
- Wed, 05 Jun 2019 02:14:10 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bSNlKwRUWHQdeWlvsoHSg81ZXH/HDNKdNlg6eAHevvg=;
+ b=WHSzEdP/3zD5lWj3Yoe/HiboioNac0Ut2VoGVYp4zOOHsi7hpu2VPAQzWlsiUUvDc5Z2Oy826HTXfpHnTg4V3XemRkBsVmWCiqu6JgqepgNcN862ngeWL9Fx7MfpC5cWHxyzKzEoxp6ZjG76YYE4VoEjMkNcuVCv2DmJ4CKcKes=
+Received: from MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) by
+ MN2PR18MB3200.namprd18.prod.outlook.com (10.255.236.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Wed, 5 Jun 2019 09:15:53 +0000
+Received: from MN2PR18MB2637.namprd18.prod.outlook.com
+ ([fe80::3c77:9f53:7e47:7eb8]) by MN2PR18MB2637.namprd18.prod.outlook.com
+ ([fe80::3c77:9f53:7e47:7eb8%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 09:15:53 +0000
+From:   Ganapathi Bhat <gbhat@marvell.com>
+To:     Brian Norris <briannorris@chromium.org>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "Doug Anderson" <dianders@chromium.org>
+Subject: RE: [EXT] [PATCH 1/2] mwifiex: dispatch/rotate from reorder table
+ atomically
+Thread-Topic: [EXT] [PATCH 1/2] mwifiex: dispatch/rotate from reorder table
+ atomically
+Thread-Index: AQHVGxea/zVcujTz8UmrfbHXEE3O2aaMxlVQ
+Date:   Wed, 5 Jun 2019 09:15:53 +0000
+Message-ID: <MN2PR18MB26374464564D1F5A418CA98EA0160@MN2PR18MB2637.namprd18.prod.outlook.com>
+References: <20190604205323.200361-1-briannorris@chromium.org>
+ <20190604205323.200361-2-briannorris@chromium.org>
+In-Reply-To: <20190604205323.200361-2-briannorris@chromium.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [61.1.213.187]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c57cc2b-2c33-426f-e488-08d6e9966924
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3200;
+x-ms-traffictypediagnostic: MN2PR18MB3200:
+x-microsoft-antispam-prvs: <MN2PR18MB320090ED0999FE136002804AA0160@MN2PR18MB3200.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(366004)(136003)(346002)(396003)(199004)(189003)(11346002)(14444005)(446003)(476003)(486006)(256004)(186003)(66066001)(478600001)(86362001)(81166006)(8936002)(14454004)(8676002)(81156014)(316002)(26005)(7696005)(6506007)(3846002)(6116002)(76176011)(305945005)(102836004)(74316002)(9686003)(55016002)(7736002)(53936002)(66476007)(71190400001)(2906002)(52536014)(66556008)(76116006)(6436002)(229853002)(4326008)(5660300002)(54906003)(64756008)(66946007)(66446008)(110136005)(25786009)(68736007)(78486014)(4744005)(6246003)(33656002)(71200400001)(99286004)(73956011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3200;H:MN2PR18MB2637.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eZmLFjSrFJ5TT/S0nkLbGWgJgfnxxJGfQWffe8xDSWNQ3x/TCHIEnxkJsBNQdrC1yO/VgfgI3jnN7IvR1T2mt4YtNxKzvLJL/3xeIGW0MYW41T0VmDyujGzttG+kTmMYjBZDSR8D7Jo4/hQyEEshZg4ouYbL0tnB0BipgvESmbbh0iW9+y3+kye3VeFUkGeZLi5YxdE7cJ/cNqNCqL+BdKgVkpt7KKwYNAPA9cQhktxCGCKQKnR3YjaNdRUg3f06Cl0oiwrW21x3MR1x8Q5S6aGfMs4RigSAwMhlTKea+SHmhDCRWiWNc5LbPVRo9RztREakH/wbEBFad19Gw136Z648ICIFkdgCmm+uWzy7XkiY5HxVBiYenEFCWRgViD1V7Z0ObC2llb+B0403ntjw6izY3PskAAb8UALpN6aiMHk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
-In-Reply-To: <20190604.202258.1443410652869724565.davem@davemloft.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 5 Jun 2019 12:13:59 +0300
-Message-ID: <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-To:     David Miller <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c57cc2b-2c33-426f-e488-08d6e9966924
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 09:15:53.6076
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gbhat@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3200
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 06:23, David Miller <davem@davemloft.net> wrote:
->
-> From: Vladimir Oltean <olteanv@gmail.com>
-> Date: Tue,  4 Jun 2019 20:07:39 +0300
->
-> > This patchset adds the following:
-> >
-> >  - A timecounter/cyclecounter based PHC for the free-running
-> >    timestamping clock of this switch.
-> >
-> >  - A state machine implemented in the DSA tagger for SJA1105, which
-> >    keeps track of metadata follow-up Ethernet frames (the switch's way
-> >    of transmitting RX timestamps).
->
-> This series doesn't apply cleanly to net-next, please respin.
->
-> Thank you.
+Hi Brian,
 
-Hi Dave,
+> (1) iterating / clearing the mwifiex reordering table
+> (2) dispatching received packets to upper layers
+>=20
+> This makes it much harder to make lock recursion mistakes, as these two
+> steps no longer need to hold the same locks.
 
-It is conflicting because net-next at the moment lacks this patch that
-I submitted to net:
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=e8d67fa5696e2fcaf956dae36d11e6eff5246101
-What would you like me to do: resubmit after you merge net into
-net-next, add the above patch to this series (which you'll have to
-skip upon the next merge), or you can just cherry-pick it and then the
-series will apply?
+Yes, this is clean;
 
-Thanks!
--Vladimir
+>=20
+> Testing: I've played with a variety of stress tests, including download s=
+tress
+> tests on the same APs which caught regressions with commit
+> 5188d5453bc9 ("mwifiex: restructure rx_reorder_tbl_lock usage"). I've
+> primarily tested on Marvell 8997 / PCIe, although I've given 8897 / SDIO =
+a
+> quick spin as well.
+>=20
+
+Thanks a lot for this; We will also run the tests locally; But, I find the =
+change is good;
+
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+
+Regards,
+Ganapathi
