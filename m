@@ -2,96 +2,130 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC938C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B890C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CD3206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE584206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfFEMay (ORCPT
+        id S1727740AbfFEMcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:30:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41893 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfFEMay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:30:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so19283587wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:30:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LbP+4Vhj30bq0+PmaAtLxhYGOHZkRbouhUMM/rlGAio=;
-        b=NSSYdLPc2VNUD7/+/Nc7sL1uD4BtfPNOdogzKmKEpKHJ01lJ3MX+yu9ploDrbJhsCg
-         VUUUGBh+7CT9TLnD76Pfcq6cN2vZcDzoUFEqzY/gYE6QM2IqNjIdCXrt5oHQbWmoPVZn
-         pNF2nzSpX1KxhuclCEOZGOxco3ONirkGpf8a7l7oHJLgIkRfURnjU6wTEdzntpLRsEtH
-         4YhiZ88yvbILNFNSV6v6s2pNN9DXkG7sLg0aV7EyYH9l7986kHzKlVlTUzdKsDOUvekm
-         nQsF4SJmvzkCjX3zcNWsWTCaqbiks8I3Ah/JypCaoEPqwasIPdqVi8dfk8sCEcgdoRdr
-         7+rg==
-X-Gm-Message-State: APjAAAV73/uuj8CBjSiB7ObUmKCo5VGqG+J70PuD0i87/OUKpsUtLjj7
-        LkZzt8toJXcjlzdCPQCu6WUnbGqIDJ4=
-X-Google-Smtp-Source: APXvYqyvlm5M1bXcrn9GAlNkvwvBbkHrjifqtLlqk0RswqV2sJBC5ghNSb7uw+F4oxs2+AXkRoYKuQ==
-X-Received: by 2002:adf:a18a:: with SMTP id u10mr2661650wru.351.1559737853018;
-        Wed, 05 Jun 2019 05:30:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id j15sm10149112wrn.50.2019.06.05.05.30.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:30:52 -0700 (PDT)
-Subject: Re: [PATCH 2/3] KVM: LAPIC: lapic timer is injected by posted
- interrupt
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
- <1559729351-20244-3-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <16c54182-7198-f476-080b-5876cd871e42@redhat.com>
-Date:   Wed, 5 Jun 2019 14:30:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 5 Jun 2019 08:32:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41920 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727461AbfFEMcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:32:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8D62CAE8B;
+        Wed,  5 Jun 2019 12:32:03 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 1D58EDA843; Wed,  5 Jun 2019 14:32:54 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 14:32:53 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Maninder Singh <maninder1.s@samsung.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        terrelln@fb.com
+Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to functions
+Message-ID: <20190605123253.GZ15290@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Maninder Singh <maninder1.s@samsung.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        terrelln@fb.com
+References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+ <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
+ <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+ <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
+ <20190605115703.GY15290@twin.jikos.cz>
 MIME-Version: 1.0
-In-Reply-To: <1559729351-20244-3-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605115703.GY15290@twin.jikos.cz>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/19 12:09, Wanpeng Li wrote:
-> +static void apic_timer_expired_pi(struct kvm_lapic *apic)
-> +{
-> +	struct kvm_timer *ktimer = &apic->lapic_timer;
-> +
-> +	kvm_apic_local_deliver(apic, APIC_LVTT);
-> +	if (apic_lvtt_tscdeadline(apic))
-> +		ktimer->tscdeadline = 0;
-> +	if (apic_lvtt_oneshot(apic)) {
-> +		ktimer->tscdeadline = 0;
-> +		ktimer->target_expiration = 0;
-> +	}
-> +}
+On Wed, Jun 05, 2019 at 01:57:03PM +0200, David Sterba wrote:
+> On Tue, Jun 04, 2019 at 03:43:26PM -0700, Andrew Morton wrote:
+> > On Mon,  3 Jun 2019 14:32:03 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
+> > 
+> > > currently params structure is passed in all functions, which increases
+> > > stack usage in all the function and lead to stack overflow on target like
+> > > ARM with kernel stack size of 8 KB so better to pass pointer.
+> > > 
+> > > Checked for ARM:
+> > > 
+> > >                                 Original               Patched
+> > > Call FLow Size:                  1264                   1040
+> > > ....
+> > > (HUF_sort)                      -> 296
+> > > (HUF_buildCTable_wksp)          -> 144
+> > > (HUF_compress4X_repeat)         -> 88
+> > > (ZSTD_compressBlock_internal)   -> 200
+> > > (ZSTD_compressContinue_internal)-> 136                  -> 88
+> > > (ZSTD_compressCCtx)             -> 192                  -> 64
+> > > (zstd_compress)                 -> 144                  -> 96
+> > > (crypto_compress)               -> 32
+> > > (zcomp_compress)                -> 32
+> > > ....
+> > > 
+> > > Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> > > Signed-off-by: Vaneet Narang <v.narang@samsung.com>
+> > > 
+> > 
+> > You missed btrfs.  This needs review, please - particularly the
+> > kernel-wide static ZSTD_parameters in zstd_get_btrfs_parameters().
+> 
+> > 
+> > The base patch is here:
+> > 
+> > http://lkml.kernel.org/r/1559552526-4317-2-git-send-email-maninder1.s@samsung.com  
+> > 
+> > --- a/fs/btrfs/zstd.c~zstd-pass-pointer-rathen-than-structure-to-functions-fix
+> > +++ a/fs/btrfs/zstd.c
+> > @@ -27,15 +27,17 @@
+> >  /* 307s to avoid pathologically clashing with transaction commit */
+> >  #define ZSTD_BTRFS_RECLAIM_JIFFIES (307 * HZ)
+> >  
+> > -static ZSTD_parameters zstd_get_btrfs_parameters(unsigned int level,
+> > +static ZSTD_parameters *zstd_get_btrfs_parameters(unsigned int level,
+> >  						 size_t src_len)
+> >  {
+> > -	ZSTD_parameters params = ZSTD_getParams(level, src_len, 0);
+> > +	static ZSTD_parameters params;
+> 
+> > +
+> > +	params = ZSTD_getParams(level, src_len, 0);
+> 
+> No thats' broken, the params can't be static as it depends on level and
+> src_len. What happens if there are several requests in parallel with
+> eg. different levels?
+> 
+> Would be really great if the mailinglist is CCed when the code is
+> changed in a non-trivial way.
 
-Please rename this function to kvm_apic_inject_pending_timer_irqs and
-call it from kvm_inject_apic_timer_irqs.
+So this does not compile fs/btrfs/zstd.o which Andrew probably found
+too, otherwise btrfs is the only in-tree user of the function outside of
+lib/ and crypto/.
 
-Then apic_timer_expired can just do
-
-        if (atomic_read(&apic->lapic_timer.pending))
-                return;
-
-+	if (unlikely(posted_interrupt_inject_timer(apic->vcpu))) {
-+		kvm_apic_inject_pending_timer_irqs(apic);
-+		return;
-+	}
-
-etc.
-
-Paolo
+I think that Nick Terrell should have been CCed too, as he ported zstd
+to linux.
