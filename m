@@ -2,206 +2,220 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B0C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A21C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7457020866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a2p19VFR"
+	by mail.kernel.org (Postfix) with ESMTP id EABB720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfFEGQk (ORCPT
+        id S1726697AbfFEGRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:16:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43880 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfFEGQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:16:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so11803601pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
-        b=a2p19VFRYfiN+slwv4mz43rBb2yISQyrLkTJcMwSA/WWx9l79OZvNlzb0McxQjlz1q
-         V0H85qKfEr5ZtprV5QK9qBTKSV8I1gF9ndrBiqTp2IS+Bz1UAF4xjzJ5ovK8Dbv9obd/
-         E4MAUdbc473B8+RS4fi0cnV5jtQ/pttN9wdLEjbGLZPKISnutmqS1RoLvLUmatV7Sxj4
-         1YpTj26Z25oIhkuyqe73xgLobBxUTtBRWPzTU80HA6shTFVU+iFMdg7A/LeV1fBVQ54j
-         iipbbvvwaXrxFxqY26USW52xFqh7PwiURi/plOK8dz92vePi2swKlawieFKqGfDli8E8
-         zFfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
-        b=n8ueAmDHyMX0qf2CJZlr1VQ5vVsoiQuzUYnv1AtV2cdTU2LhFCy1Veag9MNVSnEgJM
-         X3BBMK3kC0lXxF9iHfS574raISwh9liiQY4sJF4eSQhbl05lShccaTx+KPRjAK7/kmYs
-         qfOWBfBgD3ofeOu5I9z1o6qHuCEHr0lUCxUKVaATNS9WYs1n/fJQnjmz7DNRXRV/dEr+
-         iP9z9X5D9h+qS0qzhdvmNZ0UBcBwWypkKpOZrW6olBySOaooLAw9wYsY6Rf2w8ALBObw
-         fakCaLCtC6v5lYszYQSprSaXG7e+zo8WVzLaANqd4rKYYg7ri0bSc9TWhw0QydRwnL7U
-         jY7A==
-X-Gm-Message-State: APjAAAWfsJloSC6xXQtCHgRCgY7o0sWKvKoTeO5K+u3zJX9QFeLdr4DJ
-        QVLQBiYdrM3EwSU+4vTagFp98A==
-X-Google-Smtp-Source: APXvYqwEJhIs8QubYN0avnbvfixWjIzhGaRnp7YPaFTgZ2Z2O0BG2WDaO37plKfU2MMrMOlw9tyzHw==
-X-Received: by 2002:a62:ea0a:: with SMTP id t10mr43421341pfh.236.1559715396814;
-        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z18sm8987858pgh.88.2019.06.04.23.16.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 23:17:21 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Message-ID: <20190605061721.GK22737@tuxbook-pro>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-4-lee.jones@linaro.org>
+        Wed, 5 Jun 2019 02:17:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726554AbfFEGRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 02:17:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3C086AEA0;
+        Wed,  5 Jun 2019 06:17:03 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604104455.8877-4-lee.jones@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Jun 2019 08:17:02 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Azat Khuzhin <azat@libevent.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
+In-Reply-To: <3d9903f6-ebf8-6b8b-6251-b3a305dc9f19@kernel.dk>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
+ <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
+ <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
+ <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
+ <3d9903f6-ebf8-6b8b-6251-b3a305dc9f19@kernel.dk>
+Message-ID: <abf62eeb1b0be93404967c1e98190e83@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-
-> This patch provides basic support for booting with ACPI instead
-> of the currently supported Device Tree.  When doing so there are a
-> couple of differences which we need to taken into consideration.
+On 2019-05-31 23:09, Jens Axboe wrote:
+> On 5/31/19 1:45 PM, Roman Penyaev wrote:
+>> On 2019-05-31 18:54, Jens Axboe wrote:
+>>> On 5/31/19 10:02 AM, Roman Penyaev wrote:
+>>>> On 2019-05-31 16:48, Jens Axboe wrote:
+>>>>> On 5/16/19 2:57 AM, Roman Penyaev wrote:
+>>>>>> Hi all,
+>>>>>> 
+>>>>>> This is v3 which introduces pollable epoll from userspace.
+>>>>>> 
+>>>>>> v3:
+>>>>>>     - Measurements made, represented below.
+>>>>>> 
+>>>>>>     - Fix alignment for epoll_uitem structure on all 64-bit archs
+>>>>>> except
+>>>>>>       x86-64. epoll_uitem should be always 16 bit, proper
+>>>>>> BUILD_BUG_ON
+>>>>>>       is added. (Linus)
+>>>>>> 
+>>>>>>     - Check pollflags explicitly on 0 inside work callback, and do
+>>>>>> nothing
+>>>>>>       if 0.
+>>>>>> 
+>>>>>> v2:
+>>>>>>     - No reallocations, the max number of items (thus size of the
+>>>>>> user
+>>>>>> ring)
+>>>>>>       is specified by the caller.
+>>>>>> 
+>>>>>>     - Interface is simplified: -ENOSPC is returned on attempt to 
+>>>>>> add
+>>>>>> a
+>>>>>> new
+>>>>>>       epoll item if number is reached the max, nothing more.
+>>>>>> 
+>>>>>>     - Alloced pages are accounted using user->locked_vm and 
+>>>>>> limited
+>>>>>> to
+>>>>>>       RLIMIT_MEMLOCK value.
+>>>>>> 
+>>>>>>     - EPOLLONESHOT is handled.
+>>>>>> 
+>>>>>> This series introduces pollable epoll from userspace, i.e. user
+>>>>>> creates
+>>>>>> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets
+>>>>>> header
+>>>>>> and ring pointers and then consumes ready events from a ring,
+>>>>>> avoiding
+>>>>>> epoll_wait() call.  When ring is empty, user has to call
+>>>>>> epoll_wait()
+>>>>>> in order to wait for new events.  epoll_wait() returns -ESTALE if
+>>>>>> user
+>>>>>> ring has events in the ring (kind of indication, that user has to
+>>>>>> consume
+>>>>>> events from the user ring first, I could not invent anything 
+>>>>>> better
+>>>>>> than
+>>>>>> returning -ESTALE).
+>>>>>> 
+>>>>>> For user header and user ring allocation I used vmalloc_user().  I
+>>>>>> found
+>>>>>> that it is much easy to reuse remap_vmalloc_range_partial() 
+>>>>>> instead
+>>>>>> of
+>>>>>> dealing with page cache (like aio.c does).  What is also nice is
+>>>>>> that
+>>>>>> virtual address is properly aligned on SHMLBA, thus there should 
+>>>>>> not
+>>>>>> be
+>>>>>> any d-cache aliasing problems on archs with vivt or vipt caches.
+>>>>> 
+>>>>> Why aren't we just adding support to io_uring for this instead? 
+>>>>> Then
+>>>>> we
+>>>>> don't need yet another entirely new ring, that's is just a little
+>>>>> different from what we have.
+>>>>> 
+>>>>> I haven't looked into the details of your implementation, just
+>>>>> curious
+>>>>> if there's anything that makes using io_uring a non-starter for 
+>>>>> this
+>>>>> purpose?
+>>>> 
+>>>> Afaict the main difference is that you do not need to recharge an fd
+>>>> (submit new poll request in terms of io_uring): once fd has been 
+>>>> added
+>>>> to
+>>>> epoll with epoll_ctl() - we get events.  When you have thousands of
+>>>> fds
+>>>> -
+>>>> that should matter.
+>>>> 
+>>>> Also interesting question is how difficult to modify existing event
+>>>> loops
+>>>> in event libraries in order to support recharging (EPOLLONESHOT in
+>>>> terms
+>>>> of epoll).
+>>>> 
+>>>> Maybe Azat who maintains libevent can shed light on this (currently 
+>>>> I
+>>>> see
+>>>> that libevent does not support "EPOLLONESHOT" logic).
+>>> 
+>>> In terms of existing io_uring poll support, which is what I'm 
+>>> guessing
+>>> you're referring to, it is indeed just one-shot.
+>> 
+>> Yes, yes.
+>> 
+>>> But there's no reason  why we can't have it persist until explicitly
+>>> canceled with POLL_REMOVE.
+>> 
+>> It seems not so easy.  The main problem is that with only a ring it is
+>> impossible to figure out on kernel side what event bits have been
+>> already
+>> seen by the userspace and what bits are new.  So every new cqe has to
+>> be added to a completion ring on each wake_up_interruptible() call.
+>> (I mean when fd wants to report that something is ready).
+>> 
+>> IMO that can lead to many duplicate events (tens? hundreds? honestly 
+>> no
+>> idea), which userspace has to handle with subsequent read/write calls.
+>> It can kill all performance benefits of a uring.
+>> 
+>> In uepoll this is solved with another piece of shared memory, where
+>> userspace atomically clears bits and kernel side sets bits.  If kernel
+>> observes that bits were set (i.e. userspace has not seen this event)
+>> - new index is added to a ring.
 > 
-> Firstly, the SDM850 ACPI tables omit information pertaining to the
-> 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> initialise any of these lines, the firmware will restart the
-> platform.
+> Those are good points.
 > 
-> Secondly, when booting with ACPI, it is expected that the firmware
-> will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> their ideal configuration.  Thus, the possible Pin Functions
-> available to this platform are not advertised when providing the
-> higher GPIOD/Pinctrl APIs with pin information.
+>> Can we extend the io_uring API to support this behavior?  Also would
+>> be great if we can make event path lockless.  On a big number of fds
+>> and frequent events - this matters, please take a look, recently I
+>> did some measurements:  https://lkml.org/lkml/2018/12/12/305
 > 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/pinctrl/qcom/Kconfig          |  2 +-
->  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
->  2 files changed, 35 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> index 2e66ab72c10b..aafbe932424f 100644
-> --- a/drivers/pinctrl/qcom/Kconfig
-> +++ b/drivers/pinctrl/qcom/Kconfig
-> @@ -168,7 +168,7 @@ config PINCTRL_SDM660
->  
->  config PINCTRL_SDM845
->         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-> -       depends on GPIOLIB && OF
-> +       depends on GPIOLIB && (OF || ACPI)
->         select PINCTRL_MSM
->         help
->           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> index c97f20fca5fd..7188bee3cf3e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->   */
->  
-> +#include <linux/acpi.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
->  	UFS_RESET(ufs_reset, 0x99f000),
->  };
->  
-> +static const int sdm845_acpi_reserved_gpios[] = {
-> +	0, 1, 2, 3, 81, 82, 83, 84, -1
-> +};
-> +
->  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
->  	.pins = sdm845_pins,
->  	.npins = ARRAY_SIZE(sdm845_pins),
-> @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
->  	.nfunctions = ARRAY_SIZE(sdm845_functions),
->  	.groups = sdm845_groups,
->  	.ngroups = ARRAY_SIZE(sdm845_groups),
-> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
+> Yeah, I'd be happy to entertain that idea, and lockless completions as
+> well. We already do that for polled IO, but consider any "normal"
+> completion to be IRQ driven and hence need locking.
 
-The reason why put these in DT is because the list is board/firmware
-dependent. E.g. the firmware on db845c does not support the peripherals
-that sits on these 8 pins and as such these are not reserved.
+I would like to contribute as much as I can. "Subscription" on events
+along with lockless ring seems reasonable to do for io_uring. I still
+tend to think that uepoll and io_uring poll can coexist, at least
+because it can be difficult to adopt current event libraries to async
+nature of "add fd" / "remove add" requests of the io_uring, e.g. when
+epoll_ctl() is called in order to remove fd, the caller expects no
+events come after epoll_ctl() returns. Async behavior can break the
+event loop. What can help is ability to wait on particular request,
+which seems not possible without ugly tricks, right? (Under ugly tricks
+I mean something as: wait for any event, traverse the completion ring
+in order to meet particular completion, repeat if nothing is found).
 
-But given that the two structs looks identical now, did you perhaps not
-intend to add.reserved_gpios for the non-ACPI case?
+Also epoll_ctl() can be called from another thread in order to
+add/remove fd, and I suppose that is also successfully used by event
+loop libraries or users of these libraries (not quite sure though, but
+can imagine why it can be useful). To fix that will require introducing
+locks on submission path of io_uring callers (I mean on user side,
+inside these libraries), which can impact performance for generic
+cases (only submission though).
 
-Regards,
-Bjorn
+What I want to say is that polling using io_uring can be used in some
+new io/event stacks, but adoption of current event libraries can be
+non trivial, where old plain epoll with a ring can be an easiest way.
+But of course that's only my speculation.
 
-> +	.ngpios = 150,
-> +};
-> +
-> +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
-> +	.pins = sdm845_pins,
-> +	.npins = ARRAY_SIZE(sdm845_pins),
-> +	.groups = sdm845_groups,
-> +	.ngroups = ARRAY_SIZE(sdm845_groups),
-> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
->  	.ngpios = 150,
->  };
->  
->  static int sdm845_pinctrl_probe(struct platform_device *pdev)
->  {
-> -	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> +	int ret;
-> +
-> +	if (pdev->dev.of_node) {
-> +		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> +	} else if (ACPI_HANDLE(&pdev->dev)) {
-> +		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
-> +	} else {
-> +		dev_err(&pdev->dev, "DT and ACPI disabled\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return ret;
->  }
->  
-> +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
-> +	{ "QCOM0217"},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
-> +
->  static const struct of_device_id sdm845_pinctrl_of_match[] = {
->  	{ .compatible = "qcom,sdm845-pinctrl", },
->  	{ },
-> @@ -1302,6 +1334,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
->  		.name = "sdm845-pinctrl",
->  		.pm = &msm_pinctrl_dev_pm_ops,
->  		.of_match_table = sdm845_pinctrl_of_match,
-> +		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
->  	},
->  	.probe = sdm845_pinctrl_probe,
->  	.remove = msm_pinctrl_remove,
-> -- 
-> 2.17.1
-> 
+--
+Roman
+
