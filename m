@@ -2,117 +2,116 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDDCC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D13FC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513CB206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59AB206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jv+ylw+e"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kiWAsPzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfFEGTh (ORCPT
+        id S1726613AbfFEGUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:19:37 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39381 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfFEGTg (ORCPT
+        Wed, 5 Jun 2019 02:20:25 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:53717 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfFEGUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:19:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g9so9303957plm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8NDvqSiCIKv+/i60Ynslx6ipNYtxvNjYvkZ3l5Jrxiw=;
-        b=Jv+ylw+eYYUmtx1uLMAE5WfRGbPZcDvoOmC1qqQkMmVoWISm6X+KqDoG/xkKlfZp1M
-         O6gSWIh+Sh12hcQ1RTa4KsSVZBTgRrVifmZUjlC3+RENnfGGKqgwZIjqDpBIZG7ZZ0o9
-         cgt6l84qKjCge1D0+WNYLBz4yjubpHHQLrQE/uGjorTP8Bo6TcuCatE17fGGRYUdhLHa
-         YrMCziHY1qjVIkTMkhNdM+sEuMQR9wqYTzegHOCf/2dCREgk/m0XHsyumJ/GOC18x5+a
-         DQ6HMN7Cc1c/9R7EJYu5f/Ojspos4AX5jlFgJbN4m2txeCi4CRZW+ZO99kX+jPvezxjt
-         KgqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8NDvqSiCIKv+/i60Ynslx6ipNYtxvNjYvkZ3l5Jrxiw=;
-        b=ajV8A0PzLJM+Yr06y6oee5BtxvK7gyRlWnXpY+pgOLUPLLr1lldK+IRjWoer634PZx
-         e5doH1eAI66zxJDeAEgJmGnND5epRoV5e8TxeMi3dF1l8DPhwra0buDinWUj1+FxUud/
-         I1hlNOdNJLSfXJ972+cwD4k/ikpLzG+9gqV+nxbK5EhjvS8nuhQsJIuteYYULqJoNGPD
-         GcGTYxhsLU3d1TE8dnvbx2ohugndXnKCaeoaE0Oi4IhMZH/QxVPiQMWZMTPMYyeq7BGw
-         SDhyrb4BFcnoHL0cK52ekgdzJjnbbZjKSJkmmTTmVAVjyBZI9jGDCkJm5VPWtW48lLTb
-         EQAA==
-X-Gm-Message-State: APjAAAXN5vDTg3znbPCUTqTnRCfo5aXl5cpfF7AgKgjKOuURh4AkJUas
-        M8TVrCzAiiD/Vo78KiRCoxfL+g==
-X-Google-Smtp-Source: APXvYqwh+STN/4aMELzC9REIaRk3yfuoyfOR7lNLNz7fdt88CIQ5SzfZxE21KW+S3BxQ6DpLT5kMqQ==
-X-Received: by 2002:a17:902:a708:: with SMTP id w8mr39377169plq.162.1559715575910;
-        Tue, 04 Jun 2019 23:19:35 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t25sm15044103pgv.30.2019.06.04.23.19.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 23:19:35 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 23:20:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
-Message-ID: <20190605062020.GL22737@tuxbook-pro>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-2-lee.jones@linaro.org>
+        Wed, 5 Jun 2019 02:20:24 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x556K9Te018192
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 15:20:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x556K9Te018192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559715610;
+        bh=Ojboyi9ZYqHo5qkbWSZookahlhHYjfJvXncHmnUVX7w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kiWAsPzD3A2U5JCaZA1yCur4gPQVsZoQFvLRwgdSbsfgdtnKj8Co9QhLEsduv/8zY
+         eovuP/IWHJffnX+mktAFQi/JxGU4IDi5Yw9pJSm3c18dDTpbaIrK40ZhCYB76W/+CB
+         xGALKCCI03OJffIiRybiGDrsU6ANGHvUFyqzcAlk6bPh/iPgRI9Tm0ezKN/uCHkE7a
+         7Q6iNAcF05acWT9ISSZ65LzVnb6X9hsr0hEeUQVw8smTzzaH1Sx4uEiQNlc3GeA0NI
+         33fNl1ACcYgLgSKnMiiv0ryveXAej0Sp+SeAZuJkY6fsSFUMuXp3ATKsK5179HbzOV
+         ldvWYNlyGB1rQ==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id u124so4488025vsu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:20:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAXWmMxp2iBMbF8Fas0aPsvEuAUPNiiufDluekVt3aKLj+BFB941
+        ZIZC5YmjtNqidG0PdRNB3ivhd1HU21RxNXfPkYg=
+X-Google-Smtp-Source: APXvYqx9aJlOShxCbPONz1FJbnW7ROQjQspurPhnUr26ELCgRss/o+Jqn0R1OZa2rU+KJVG0SjOGUKrBJKkbvtFW3Zc=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr605229vsl.155.1559715609026;
+ Tue, 04 Jun 2019 23:20:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604104455.8877-2-lee.jones@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190527083412.26651-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190527083412.26651-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 5 Jun 2019 15:19:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARvOC-TsJbGA2-0i5tDtHkoL4o8jdFn5_MghY5UzXd-iA@mail.gmail.com>
+Message-ID: <CAK7LNARvOC-TsJbGA2-0i5tDtHkoL4o8jdFn5_MghY5UzXd-iA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Allow assembly code to use BIT(), GENMASK(), etc. and
+ clean-up arm64 header
+To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+Hi Will,
 
-> The Qualcomm Geni I2C driver currently probes silently which can be
-> confusing when debugging potential issues.  Add a low level (INFO)
-> print when each I2C controller is successfully initially set-up.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index 0fa93b448e8d..e27466d77767 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> +
+Is this series applicable to arm64 tree?
 
-I would prefer that we do not add such prints, as it would be to accept
-the downstream behaviour of spamming the log to the point where no one
-will ever look through it.
+Thanks.
 
-Regards,
-Bjorn
-
->  	return 0;
->  }
->  
-> -- 
+On Mon, May 27, 2019 at 5:37 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+>
+> Some in-kernel headers use _BITUL() instead of BIT().
+>
+>  arch/arm64/include/asm/sysreg.h
+>  arch/s390/include/asm/*.h
+>
+> I think the reason is because BIT() is currently not available
+> in assembly. It hard-codes 1UL, which is not available in assembly.
+>
+> 1/2 replaced
+>    1UL -> UL(1)
+>    0UL -> UL(0)
+>    1ULL -> ULL(1)
+>    0ULL -> ULL(0)
+>
+> With this, there is no more restriction that prevents assembly
+> code from using them.
+>
+> 2/2 is a clean-up as as example.
+>
+> I can contribute to cleanups of arch/s390/, etc.
+> once this series lands in upstream.
+>
+> I hope both patches can go in the arm64 tree.
+>
+>
+>
+> Masahiro Yamada (2):
+>   linux/bits.h: make BIT(), GENMASK(), and friends available in assembly
+>   arm64: replace _BITUL() with BIT()
+>
+>  arch/arm64/include/asm/sysreg.h | 82 ++++++++++++++++-----------------
+>  include/linux/bits.h            | 17 ++++---
+>  2 files changed, 51 insertions(+), 48 deletions(-)
+>
+> --
 > 2.17.1
-> 
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
