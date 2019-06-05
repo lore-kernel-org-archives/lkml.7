@@ -2,106 +2,134 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4662C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D58AC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0E62075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C50F20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:02:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SeI7bF0L"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XKoGucDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfFEJCB (ORCPT
+        id S1726990AbfFEJCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:02:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:33750 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfFEJCA (ORCPT
+        Wed, 5 Jun 2019 05:02:19 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37879 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFEJCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:02:00 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5591lT9005012
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 18:01:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5591lT9005012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559725310;
-        bh=4heQMOeUYxMT3vJUuhyF+RiSNQYhKDyB7w/dctvl+6E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SeI7bF0L1HMB9F7KCilotuNHnv6pAioBe2+XH9Wot6g3YTSYtxcXsgGs9wTnofC7F
-         6X82w/+oQEUy/Pw9qRwu425DyqOkivFKHjcmREbVm5h4r4uHFMVqCH6fn0brIwQZ1s
-         TcRUCieJT+TcxLo557uJHEFg4ZLxi0KChwSxPMc9522Jquf0Rn8shMN8/Pq454faGc
-         5PpP0oj43dLvVfzYn2z2s7cUBDoYTq3ULOyqQdXezk2cI/iujdYj0s6LeXuaqmRijV
-         9qoGOFEFHPMx3eDyddYtimoLAHMBjitMuFmkoS3WjYHUSRarVtQE4YcEXZQma1vFpo
-         BKzGifODKgDZA==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id d128so15227850vsc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:01:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAWVOUhk2kXtGlWUyxH1IMv6kKW32Tz7AKmJf7sgqRYZK3S51dEk
-        YcHidyxDmUcRqeXAe1nKqPuMhlSUojbxPw7h+P4=
-X-Google-Smtp-Source: APXvYqzeIRg6colne+y2aqfBRfPeHx02Mun1CpteDFhWzEa2w0ohGhvri+gUFERzTepayGbUr6HKEcJgKfnX9xi06VY=
-X-Received: by 2002:a67:7fcc:: with SMTP id a195mr443645vsd.181.1559725306637;
- Wed, 05 Jun 2019 02:01:46 -0700 (PDT)
+        Wed, 5 Jun 2019 05:02:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v14so960072wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W0UkzujEUwohNcf3VeH5h/qlE6pjw3A5B8Q608W8mEU=;
+        b=XKoGucDRE59ctdALi55KnuMB2pfY4g1Lt2zBA4dvnGGpwv8Z5gwHb05HCPJDTYlsbv
+         5TEfJkhJycV628Z7tr8w84ThBaNxy//SPoHYuGOJ0VhosZmyjqvffKiCo1uNMfH2phSz
+         4/Z+AWW56a/f6ql6qLBNzuywl75gEeAD102Rkce3ha+JURcmzY76hw5YCbVZat/ARTKv
+         VjXv0W9LPviK5+3e65+wQ/+9r0PD/i6Wmq0HNSuHy4K90cwTLPxRfj32qo9BRccs76SB
+         tVQbQBCNFgicGamR/5EkDT2QMolDsY0paIHmFUR1OewGP2Mvn3M1z7hZlsdU5/d8O5hX
+         WKlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W0UkzujEUwohNcf3VeH5h/qlE6pjw3A5B8Q608W8mEU=;
+        b=QMgvsPStdZz1DANt1jUOt+ns2sIA8QHuuXkO76GfrWecF8ZvoM1Fmj2CRHSghaf/03
+         egofPNmVvSC+K/KOJRR6/OYO58A2QZJaY155Tb0VOCURlKeGlevh+faAGcCbQSbgWH4p
+         UkTj30O33mS2J94FTUJs7t4pu2zhRow+DtOoqeeTKfZEF8dJBPGF8Dr2rzrFQVaI2z6/
+         +eUNSGI/SoEJuDZaSyHygU/oHVqXRmcc8GpXBr5r0f6m+sXf+uo25UCQb3+fBm25LBGh
+         a+O4fDEsqwjygwRhClCoR0wdWkU1qjB9YDj4heysvuUlby3HvOkexgW3BthSj0IGM7Zq
+         H4gA==
+X-Gm-Message-State: APjAAAXQI5bX/JnZd5NCJFrY2UcwwXC1NMdQJi9lx+yJBBMLl5Nzlz8U
+        Y9ismwt5+m/35aGu5d8shYmFNhEB0JowCg==
+X-Google-Smtp-Source: APXvYqwa2RNAJJwxMJ6JTg0mjevN5vtgAE668gbRTlJwHBOWetytUnE20xaQcYxq0qE3ERpFLm+yug==
+X-Received: by 2002:adf:fc87:: with SMTP id g7mr20918125wrr.229.1559725337237;
+        Wed, 05 Jun 2019 02:02:17 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c129sm2697842wma.27.2019.06.05.02.02.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Jun 2019 02:02:16 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     kishon@ti.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH v2] phy: meson-g12a-usb3-pcie: disable locking for cr_regmap
+Date:   Wed,  5 Jun 2019 11:02:15 +0200
+Message-Id: <20190605090215.29905-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190527083412.26651-1-yamada.masahiro@socionext.com> <20190605073406.geesp3rbrxajmac6@mbp>
-In-Reply-To: <20190605073406.geesp3rbrxajmac6@mbp>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 5 Jun 2019 18:01:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQJPMsRtNRYUH+dib0ZMAPqOe5HO0UcAW7zRdjyWWyQWQ@mail.gmail.com>
-Message-ID: <CAK7LNAQJPMsRtNRYUH+dib0ZMAPqOe5HO0UcAW7zRdjyWWyQWQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Allow assembly code to use BIT(), GENMASK(), etc. and
- clean-up arm64 header
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 4:36 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Mon, May 27, 2019 at 05:34:10PM +0900, Masahiro Yamada wrote:
-> > Some in-kernel headers use _BITUL() instead of BIT().
-> >
-> >  arch/arm64/include/asm/sysreg.h
-> >  arch/s390/include/asm/*.h
-> >
-> > I think the reason is because BIT() is currently not available
-> > in assembly. It hard-codes 1UL, which is not available in assembly.
-> [...]
-> > Masahiro Yamada (2):
-> >   linux/bits.h: make BIT(), GENMASK(), and friends available in assembly
-> >   arm64: replace _BITUL() with BIT()
-> >
-> >  arch/arm64/include/asm/sysreg.h | 82 ++++++++++++++++-----------------
-> >  include/linux/bits.h            | 17 ++++---
->
-> I'm not sure it's worth the hassle. It's nice to have the same BIT macro
-> but a quick grep shows arc, arm64, s390 and x86 using _BITUL. Maybe a
-> tree-wide clean-up would be more appropriate.
+Locking is not needed for the phy_g12a_usb3_pcie_cr_bus_read/write() and
+currently it causes the following BUG because of the usage of the
+regmap_read_poll_timeout() running in spinlock_irq, configured by regmap fast_io.
 
+Simply disable locking in the cr_regmap config since it's only used from the
+PHY init callback function.
 
-I am happy to clean-up the others
-in the next development cycle
-once 1/2 lands in the mainline.
+BUG: sleeping function called from invalid context at drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c:85
+in_atomic(): 1, irqs_disabled(): 128, pid: 60, name: kworker/3:1
+[snip]
+Workqueue: events deferred_probe_work_func
+Call trace:
+ dump_backtrace+0x0/0x190
+ show_stack+0x14/0x20
+ dump_stack+0x90/0xb4
+ ___might_sleep+0xec/0x110
+ __might_sleep+0x50/0x88
+ phy_g12a_usb3_pcie_cr_bus_addr.isra.0+0x80/0x1a8
+ phy_g12a_usb3_pcie_cr_bus_read+0x34/0x1d8
+ _regmap_read+0x60/0xe0
+ _regmap_update_bits+0xc4/0x110
+ regmap_update_bits_base+0x60/0x90
+ phy_g12a_usb3_pcie_init+0xdc/0x210
+ phy_init+0x74/0xd0
+ dwc3_meson_g12a_probe+0x2cc/0x4d0
+ platform_drv_probe+0x50/0xa0
+ really_probe+0x20c/0x3b8
+ driver_probe_device+0x68/0x150
+ __device_attach_driver+0xa8/0x170
+ bus_for_each_drv+0x64/0xc8
+ __device_attach+0xd8/0x158
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x90/0x98
+ deferred_probe_work_func+0x94/0xe8
+ process_one_work+0x1e0/0x338
+ worker_thread+0x230/0x458
+ kthread+0x134/0x138
+ ret_from_fork+0x10/0x1c
 
+Fixes: 36077e16c050 ("phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo PHY Driver")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Since there is no subsystem that
-takes care of include/linux/bits.h,
-I just asked Will to pick up both.
-I planed per-arch patch submission
-to reduce the possibility of merge conflict.
-
-
-If you guys are not willing to pick up them,
-is it better to send treewide conversion to Andrew?
-
-
+diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+index 6233a7979a93..ac322d643c7a 100644
+--- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
++++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+@@ -188,7 +188,7 @@ static const struct regmap_config phy_g12a_usb3_pcie_cr_regmap_conf = {
+ 	.reg_read = phy_g12a_usb3_pcie_cr_bus_read,
+ 	.reg_write = phy_g12a_usb3_pcie_cr_bus_write,
+ 	.max_register = 0xffff,
+-	.fast_io = true,
++	.disable_locking = true,
+ };
+ 
+ static int phy_g12a_usb3_init(struct phy *phy)
 -- 
-Best Regards
-Masahiro Yamada
+2.21.0
+
