@@ -2,120 +2,343 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A57BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B7DC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F62C206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A2B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1Ni0USQm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCfiN04t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfFEAm7 (ORCPT
+        id S1726537AbfFEAsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 20:42:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53808 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfFEAms (ORCPT
+        Tue, 4 Jun 2019 20:48:03 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45102 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfFEAsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 20:42:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x550YI29161118;
-        Wed, 5 Jun 2019 00:42:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=Tbgmsx0BLpXVDNqw4K1e+6YBW7jqMnAbJks3Wr0Trhk=;
- b=1Ni0USQmAz5qcWM0vJRu/jvxmWMwCdvjBLFvFqHOIiPD1yctYqBZf0M1LlIyFMTQVn40
- HlCSoHCZGZJRlWaxyVRrNLsRe5sWuO7lNJv8ctZDnX79bN4eFn1nZrw/RZ9bVUL8VyIA
- c0v+BSVlVbSUD++HBXuAjPfZ6DltGrZog7v3qtSwBzIpSmml+7dOFGXV8K7bJxcmVqwf
- e4BXv/gwmRuPU/mzow/Myt+Ks3wg4SMLcjCDci9+0q0ogXvaWC+VQ1/MhdZ5ANpHWHW8
- OSGRgXZlBGIScZDIClmAzip13IDh9GMkRGNeJ77+JlmqzcW3AbsnAQ9Lgk1940/0h/vk Gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2sugstg46h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 00:42:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x550eU1c151687;
-        Wed, 5 Jun 2019 00:42:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2swnh9w1be-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 00:42:18 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x550gItn014126;
-        Wed, 5 Jun 2019 00:42:18 GMT
-Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Jun 2019 17:42:17 -0700
-From:   Divya Indi <divya.indi@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Divya Indi <divya.indi@oracle.com>
-Subject: [PATCH 2/3] tracing: Adding additional NULL checks.
-Date:   Tue,  4 Jun 2019 17:42:04 -0700
-Message-Id: <1559695325-17155-3-git-send-email-divya.indi@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1559695325-17155-2-git-send-email-divya.indi@oracle.com>
-References: <1559695325-17155-1-git-send-email-divya.indi@oracle.com>
- <1559695325-17155-2-git-send-email-divya.indi@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=875
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906050001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=906 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906050001
+        Tue, 4 Jun 2019 20:48:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so3229798lje.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 17:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pv23Ci9XYYXbAvdmjUDu6QVKJnotvin7bH7iuxivMig=;
+        b=bCfiN04tgowJLuApBvXwZWyNMtGb9FgYGJp5LkSEcg4PdHWnZmIBeM/cM9k5AbYodp
+         rettTdhr1CO5CzRe80O5GNP151HRdnuXMuXParmN+k4ysLrvJ8T4FJPz5UBNGPIWWhDv
+         jLzSs2o7zt6OpGXykmBbYrEGKSLH0DyvmhFwA2O4C1gJAlb4gCQQYVi8jqNR76aV2CAE
+         B26xYkubYvYF6WWvFMWbUtKHUYW3SWHpux/uSw6Ty7qvZxcnWDlOTriysJ/qSBj39HJL
+         iN8/XK32e67VWiHpnny1O7oiB03Lzd4/CGvnWXT8rNKGMQku64Dn87Rnbdfu/kl1KQN3
+         xajg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pv23Ci9XYYXbAvdmjUDu6QVKJnotvin7bH7iuxivMig=;
+        b=PMDOYbP1jmln37D0mkZtzA5mXtga2i0BZDybYQXmsxU0qQFjzyUwHFp0GhqdvG1f6n
+         6/+7KN9KwquJjPG8UEVq9WsQPK12CCik4fTZ0ndEeirGnGrhp9kZ7yROYNILXs7Um8PM
+         pZEHIVZVe5HVA6J9HKoPFWlGtIL6nsxdqDcdM7vMnSFJYM1OakiRogJyET3wLuBoXEiV
+         k/G6r4Vmqcvh7YFI5lzP6Pds334JoQygnoqEQCeOTDPtxAoweRPOuG7X29DCPhiYnptM
+         DriTEKsXHMfxiUiSOMBVbrB6MALuSuFXMQzn7Mi0ro2REF3g2wiKmnzsQldKnEiVO8Jc
+         lfdw==
+X-Gm-Message-State: APjAAAUaJXNqEuCCNREkQDixKMy6q/cXGJ1L27V03THHPvLoW15/lOj7
+        00//w2HRc8FrDy4tCAn7oN4udbCw1wtXOn5FuMUUew==
+X-Google-Smtp-Source: APXvYqxvjJ99N3aai52FzW/2dSKhKjlCCwgFuNgdJiXvkROkaHK9M4UqMQad+SFwjoWlFMwgkqQd/uzHdaUnjHCnq4g=
+X-Received: by 2002:a2e:a318:: with SMTP id l24mr6685023lje.36.1559695679940;
+ Tue, 04 Jun 2019 17:47:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-5-brendanhiggins@google.com> <20190517175841.F3396216FD@mail.kernel.org>
+In-Reply-To: <20190517175841.F3396216FD@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 4 Jun 2019 17:47:48 -0700
+Message-ID: <CAFd5g456V4aQUSxxTAizun8ak4zogcAt4-YGgebX2L55Kb-xEg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have exported certain functions providing access to Ftrace
-instances from other kernel components, we are adding some additional
-NULL checks to ensure safe usage by the users.
+On Fri, May 17, 2019 at 10:58 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-05-14 15:16:57)
+> > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
+> > new file mode 100644
+> > index 0000000000000..1884f1b550888
+> > --- /dev/null
+> > +++ b/kunit/kunit-stream.c
+> > @@ -0,0 +1,152 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * C++ stream style string formatter and printer used in KUnit for outputting
+> > + * KUnit messages.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <kunit/test.h>
+> > +#include <kunit/kunit-stream.h>
+> > +#include <kunit/string-stream.h>
+> > +
+> > +static const char *kunit_stream_get_level(struct kunit_stream *this)
+> > +{
+> > +       unsigned long flags;
+> > +       const char *level;
+> > +
+> > +       spin_lock_irqsave(&this->lock, flags);
+> > +       level = this->level;
+> > +       spin_unlock_irqrestore(&this->lock, flags);
+> > +
+> > +       return level;
+>
+> Please remove this whole function and inline it to the one call-site.
+>
+> > +}
+> > +
+> > +void kunit_stream_set_level(struct kunit_stream *this, const char *level)
+> > +{
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&this->lock, flags);
+> > +       this->level = level;
+> > +       spin_unlock_irqrestore(&this->lock, flags);
+>
+> I don't get the locking here. What are we protecting against? Are tests
+> running in parallel using the same kunit_stream? If so, why is the level
+> changeable in one call and then adding strings is done in a different
+> function call? It would make sense to combine the level setting and
+> string adding so that it's one atomic operation if it's truly a parallel
+> operation, or remove the locking entirely.
 
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
----
- kernel/trace/trace.c        | 3 +++
- kernel/trace/trace_events.c | 2 ++
- 2 files changed, 5 insertions(+)
+I think you are right. I am not sure it makes sense for two separate
+threads to share a kunit_stream; even if locked properly, it would end
+up printing out corrupted text.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1c80521..a60dc13 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3205,6 +3205,9 @@ int trace_array_printk(struct trace_array *tr,
- 	if (!(global_trace.trace_flags & TRACE_ITER_PRINTK))
- 		return 0;
- 
-+	if (!tr)
-+		return -EINVAL;
-+
- 	va_start(ap, fmt);
- 	ret = trace_array_vprintk(tr, ip, fmt, ap);
- 	va_end(ap);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b6b4618..445b059 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -800,6 +800,8 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
- 	char *event = NULL, *sub = NULL, *match;
- 	int ret;
- 
-+	if (!tr)
-+		return -ENODEV;
- 	/*
- 	 * The buf format can be <subsystem>:<event-name>
- 	 *  *:<event-name> means any event by that name.
--- 
-1.8.3.1
+In anycase, I think it makes sense to decide the level when the stream
+is allocated which would sidestep this issue entirely.
 
+> > +}
+> > +
+> > +void kunit_stream_add(struct kunit_stream *this, const char *fmt, ...)
+> > +{
+> > +       va_list args;
+> > +       struct string_stream *stream = this->internal_stream;
+> > +
+> > +       va_start(args, fmt);
+> > +
+> > +       if (string_stream_vadd(stream, fmt, args) < 0)
+> > +               kunit_err(this->test, "Failed to allocate fragment: %s\n", fmt);
+> > +
+> > +       va_end(args);
+> > +}
+> > +
+> > +void kunit_stream_append(struct kunit_stream *this,
+> > +                               struct kunit_stream *other)
+> > +{
+> > +       struct string_stream *other_stream = other->internal_stream;
+> > +       const char *other_content;
+> > +
+> > +       other_content = string_stream_get_string(other_stream);
+> > +
+> > +       if (!other_content) {
+> > +               kunit_err(this->test,
+> > +                         "Failed to get string from second argument for appending.\n");
+> > +               return;
+> > +       }
+> > +
+> > +       kunit_stream_add(this, other_content);
+> > +}
+> > +
+> > +void kunit_stream_clear(struct kunit_stream *this)
+> > +{
+> > +       string_stream_clear(this->internal_stream);
+> > +}
+> > +
+> > +void kunit_stream_commit(struct kunit_stream *this)
+>
+> Should this be rather called kunit_stream_flush()?
+
+So the intention is that the string in the buffer will not get printed
+out until commit is called. In this way, you can build up a message
+and then decide not to print it. This is useful when you are parsing
+through a lot of data that would be useful in debugging a failing or
+broken test, but are not yet sure if it is going to pass or not.
+
+I think flush has the connotation, that you are just forcing the
+buffer to get written out now, but that it will happen regardless
+eventually, where commit has the correct connotation that you *must*
+call it in order to write out the data stored in the buffer.
+
+Seems as though I should probably add this distinction to the
+kernel-doc comment.
+
+> > +{
+> > +       struct string_stream *stream = this->internal_stream;
+> > +       struct string_stream_fragment *fragment;
+> > +       const char *level;
+> > +       char *buf;
+> > +
+> > +       level = kunit_stream_get_level(this);
+> > +       if (!level) {
+> > +               kunit_err(this->test,
+> > +                         "Stream was committed without a specified log level.\n");
+>
+> Drop the full-stop?
+
+Whoops, nice catch. Will fix in next revision.
+
+> > +               level = KERN_ERR;
+> > +               kunit_stream_set_level(this, level);
+> > +       }
+> > +
+> > +       buf = string_stream_get_string(stream);
+> > +       if (!buf) {
+> > +               kunit_err(this->test,
+>
+> Can you grow a local variable for 'this->test'? It's used many times.
+
+Sure, will fix in next revision.
+
+> Also, 'this' is not very kernel idiomatic. We usually name variables by
+> their type instead of 'this' which is a keyword in other languages.
+> Perhaps it could be named 'kstream'?
+
+Seems reasonable. Will fix in next revision.
+
+> > +                        "Could not allocate buffer, dumping stream:\n");
+> > +               list_for_each_entry(fragment, &stream->fragments, node) {
+> > +                       kunit_err(this->test, fragment->fragment);
+> > +               }
+> > +               kunit_err(this->test, "\n");
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       kunit_printk(level, this->test, buf);
+> > +       kfree(buf);
+> > +
+> > +cleanup:
+> > +       kunit_stream_clear(this);
+> > +}
+> > +
+> > +static int kunit_stream_init(struct kunit_resource *res, void *context)
+> > +{
+> > +       struct kunit *test = context;
+> > +       struct kunit_stream *stream;
+> > +
+> > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+>
+> Of course, here it's called 'stream', so maybe it should be 'kstream'
+> here too.
+
+Will do.
+
+>
+> > +       if (!stream)
+> > +               return -ENOMEM;
+> > +
+> > +       res->allocation = stream;
+> > +       stream->test = test;
+> > +       spin_lock_init(&stream->lock);
+> > +       stream->internal_stream = new_string_stream();
+>
+> Can new_string_stream() be renamed to alloc_string_stream()? Sorry, I
+> just see so much C++ isms in here it's hard to read from the kernel
+> developer perspective.
+
+No problem. WIll fix in next revision.
+
+> > +
+> > +       if (!stream->internal_stream) {
+>
+> Nitpick: Please join this to the "allocation" event above instead of
+> keeping it separated.
+
+Yeah, that's a lot cleaner. Will do.
+
+> > +               kfree(stream);
+> > +               return -ENOMEM;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void kunit_stream_free(struct kunit_resource *res)
+> > +{
+> > +       struct kunit_stream *stream = res->allocation;
+> > +
+> > +       if (!string_stream_is_empty(stream->internal_stream)) {
+> > +               kunit_err(stream->test,
+> > +                        "End of test case reached with uncommitted stream entries.\n");
+> > +               kunit_stream_commit(stream);
+> > +       }
+> > +
+> > +       destroy_string_stream(stream->internal_stream);
+> > +       kfree(stream);
+> > +}
+> > +
+> > +struct kunit_stream *kunit_new_stream(struct kunit *test)
+> > +{
+> > +       struct kunit_resource *res;
+> > +
+> > +       res = kunit_alloc_resource(test,
+> > +                                  kunit_stream_init,
+> > +                                  kunit_stream_free,
+> > +                                  test);
+> > +
+> > +       if (res)
+> > +               return res->allocation;
+> > +       else
+> > +               return NULL;
+>
+> Don't have if (...) return ...; else return ..., just return instead of
+> else.
+
+Sorry. Will fix.
+
+Thanks!
