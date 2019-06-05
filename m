@@ -2,74 +2,117 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B681C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54E4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EFE20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AB320684
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfFENAe (ORCPT
+        id S1727875AbfFENEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:00:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18084 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727601AbfFENAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:00:34 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5444C141E15664E96DBB;
-        Wed,  5 Jun 2019 21:00:31 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 5 Jun 2019 21:00:21 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Mike Isely <isely@pobox.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] media: pvrusb2: fix null-ptr-deref in class_unregister()
-Date:   Wed, 5 Jun 2019 21:08:20 +0800
-Message-ID: <20190605130820.19306-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 5 Jun 2019 09:04:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42460 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbfFENEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 09:04:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x17so1335299wrl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:04:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E10Uq/CKstRqDPNkNzGX3FpBcikgtSLsGRUBR28/US4=;
+        b=EqVLve8XhQbtB4zYS4QrGtem6w4tlk7U1e8plkiMVRTiSXknVP2b2aaSfqw1tN3yrV
+         /qU2WOD6m2jBf5LZR8GcNidS71yHpdzFTuzdlVH8i9z6ATgejR50qmUqP9vBPbjiAwF4
+         ag8mk3uzf2suDQvV1fH72oJ5YO8mjlN9KegckwBOclX00zl+/BADPSZLjO1b7AU8bneK
+         g2B5mvk6xf/K3lg8B58UiWo1mNWdKAi+O3IlVpLk2KVaFeU0Xfswfz5yjES0eiT/Gv2z
+         RmnHhmqgqASXIsLpaBJsq6zr1ZEGWgMwmpvUPhuWom0Ur+vRShza4xAxs1HKzHu9Q3zz
+         gBWA==
+X-Gm-Message-State: APjAAAWqpz3lpAEJbEY6UmkrWjy4KImzdhc3RBOR9ZNRM6y9kq3vA4sy
+        8qllfBqBv0lAqVObaubSRg6NXA==
+X-Google-Smtp-Source: APXvYqyTyzOOwhPEgHbXp4Rgoj+1MrN0NFP0TnUwo4C8ked0YmhErXRIquO15dMk8YjMci+9zcI6Ig==
+X-Received: by 2002:adf:cd8c:: with SMTP id q12mr9193934wrj.103.1559739846327;
+        Wed, 05 Jun 2019 06:04:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
+        by smtp.gmail.com with ESMTPSA id d10sm24821024wrh.91.2019.06.05.06.04.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 06:04:05 -0700 (PDT)
+Subject: Re: [PATCH 1/3] KVM: LAPIC: Make lapic timer unpinned when timer is
+ injected by posted-interrupt
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
+ <1559729351-20244-2-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <505fc388-2223-146f-ae8a-824169078a17@redhat.com>
+Date:   Wed, 5 Jun 2019 15:04:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1559729351-20244-2-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The class_ptr will be NULL if pvr2_sysfs_class_create() fails
-in pvr_init(), when call pvr2_sysfs_class_destroy(), it will
-lead to null-ptr-deref, fix it.
+On 05/06/19 12:09, Wanpeng Li wrote:
+> +static inline bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> +{
+> +	return (kvm_x86_ops->pi_inject_timer_enabled(vcpu) &&
+> +		kvm_mwait_in_guest(vcpu->kvm));
+> +}
+> +
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/media/usb/pvrusb2/pvrusb2-sysfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Here you need to check kvm_halt_in_guest, not kvm_mwait_in_guest,
+because you need to go through kvm_apic_expired if the guest needs to be
+woken up from kvm_vcpu_block.
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-sysfs.c b/drivers/media/usb/pvrusb2/pvrusb2-sysfs.c
-index 7bc6d090358e..b6c6b314fadc 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-sysfs.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-sysfs.c
-@@ -802,7 +802,8 @@ struct pvr2_sysfs_class *pvr2_sysfs_class_create(void)
- void pvr2_sysfs_class_destroy(struct pvr2_sysfs_class *clp)
+There is a case when you get to kvm_vcpu_block with kvm_halt_in_guest,
+which is when the guest disables asynchronous page faults.  Currently,
+timer interrupts are delivered while apf.halted = true, with this change
+they wouldn't.  I would just disable KVM_REQ_APF_HALT in
+kvm_can_do_async_pf if kvm_halt_in_guest is true, let me send a patch
+for that later.
+
+When you do this, I think you don't need the
+kvm_x86_ops->pi_inject_timer_enabled check at all, because if we know
+that the vCPU cannot be asleep in kvm_vcpu_block, then we can inject the
+timer interrupt immediately with __apic_accept_irq (if APICv is
+disabled, it will set IRR and do kvm_make_request + kvm_vcpu_kick).
+
+You can keep the module parameter, mostly for debugging reasons, but
+please move it from kvm-intel to kvm, and add something like
+
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 123ea07a3f3b..1cc7973c382e 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -14,6 +14,11 @@
+ static cpumask_var_t housekeeping_mask;
+ static unsigned int housekeeping_flags;
+
++bool housekeeping_enabled(enum hk_flags flags)
++{
++	return !!(housekeeping_flags & flags);
++}
++
+ int housekeeping_any_cpu(enum hk_flags flags)
  {
- 	pvr2_sysfs_trace("Unregistering pvr2_sysfs_class id=%p", clp);
--	class_unregister(&clp->class);
-+	if (clp)
-+		class_unregister(&clp->class);
- }
- 
- 
--- 
-2.20.1
+ 	if (static_branch_unlikely(&housekeeping_overridden))
 
+so that the default for the module parameter can be
+housekeeping_enabled(HK_FLAG_TIMER).
+
+Thanks,
+
+Paolo
