@@ -2,111 +2,174 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03332C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27FC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9B82075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34612075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfFERVM (ORCPT
+        id S1726642AbfFERVe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:21:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:35290 "EHLO foss.arm.com"
+        Wed, 5 Jun 2019 13:21:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37520 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfFERVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:21:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F68D374;
-        Wed,  5 Jun 2019 10:21:11 -0700 (PDT)
-Received: from queper01-ThinkPad-T460s (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F4C03F5AF;
-        Wed,  5 Jun 2019 10:21:02 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 18:20:52 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Message-ID: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
-References: <20190114184255.258318-1-mka@chromium.org>
- <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+        id S1725950AbfFERVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 13:21:33 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A06128553A;
+        Wed,  5 Jun 2019 17:21:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 80C445F7D7;
+        Wed,  5 Jun 2019 17:21:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com>
+References: <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com> <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com> <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk> <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com> <20192.1559724094@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13376.1559755281.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 05 Jun 2019 18:21:21 +0100
+Message-ID: <13377.1559755281@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 05 Jun 2019 17:21:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > (cc'ing Andy's correct email address)
-> > 
-> > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > > > >
-> > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > > >
-> > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > > > that describes this topology.
-> > > > >
-> > > > > This is partly true. There are two groups of gold and silver cores,
-> > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > > > is one of the early examples of ARM's Dynamiq architecture.
-> > > > >
-> > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > >
-> > > > > I noticed that this patch sneaked through for this merge window but
-> > > > > perhaps we can whip up a quick fix for -rc2?
-> > > > >
-> > > >
-> > > > And please find attached a patch to fix this up. Andy, since this
-> > > > hasn't landed yet (can we still squash this into the original patch?),
-> > > > I couldn't add a Fixes tag.
-> > > >
-> > >
-> > > I had the same concern. Thanks for catching this. I suspect this must
-> > > cause some problem for IPA given that it can't discern between the big
-> > > and little "power clusters"?
-> > 
-> > Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > the topology.
+Casey Schaufler <casey@schaufler-ca.com> wrote:
+
+> > But there are problems with not sending the event:
+> >
+> >  (1) B's internal state is then corrupt (or, at least, unknowingly invalid).
 > 
-> And EAS and IPA are OK with the real topology? I'm just curious if
-> changing the topology to reflect reality will be a problem for those
-> two.
+> Then B is a badly written program.
 
-FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-EAS at least (which is used in recent Android kernels -- 4.19+).
+No.  It may have the expectation that it will get events but then it is denied
+those events and doesn't even know they've happened.
 
-But doing this is still required for other things in the scheduler (the
-so-called 'capacity-awareness' code). So until we have a better
-solution, this patch is doing the right thing.
+> >  (2) B can potentially figure out that the event happened by other means.
+> 
+> Then why does it need the event mechanism in the first place?
 
-I hope that helps.
+Why does a CPU have interrupt lines?  It can always continuously poll the
+hardware.  Why do poll() and select() exist?
 
-Thanks,
-Quentin
+> > I've implemented four event sources so far:
+> >
+> >  (1) Keys/keyrings.  You can only get events on a key you have View permission
+> >      on and the other process has to have write access to it, so I think this
+> >      is good enough.
+> 
+> Sounds fine.
+> 
+> >  (2) Block layer.  Currently this will only get you hardware error events,
+> >      which is probably safe.  I'm not sure you can manipulate those without
+> >      permission to directly access the device files.
+> 
+> There's an argument to be made that this should require CAP_SYS_ADMIN,
+> or that an LSM like SELinux might include hardware error events in
+> policy, but generally I agree that system generated events like this
+> are both harmless and pointless for the general public to watch.
+
+CAP_SYS_ADMIN is probably too broad a hammer - this is something you might
+want to let a file manager or desktop environment use.  I wonder if we could
+add a CAP_SYS_NOTIFY - or is it too late for adding new caps?
+
+> >  (3) Superblock.  This is trickier since it can see events that can be
+> >      manufactured (R/W <-> R/O remounting, EDQUOT) as well as events that
+> >      can't without hardware control (EIO, network link loss, RF kill).
+> 
+> The events generated by processes (the 1st set) need controls
+> like keys. The events generated by the system (the 2nd set) may
+> need controls like the block layer.
+>
+>
+> > (4)  Mount topology.  This is the trickiest since it allows you to see
+> >      events beyond the point at which you placed your watch (in essence,
+> >      you place a subtree watch).
+> 
+> Like keys.
+> 
+> >      The question is what permission checking should I do?  Ideally, I'd
+> >      emulate a pathwalk between the watchpoint and the eventing object to
+> >      see if the owner of the watchpoint could reach it.
+> 
+> That will depend, as I've been saying, on what causes
+> the event to be generated. If it's from a process, the
+> question is "can the active process, the one that generated
+> the event, write to the passive, watching process?"
+> If it's the system on a hardware event, you may want the watcher
+> to have CAP_SYS_ADMIN.
+> 
+> >      I'd need to do a reverse walk, calling
+> >      inode_permission(MAY_NOT_BLOCK) for each directory between the
+> >      eventing object and the watchpoint to see if one rejects it - but
+> >      some filesystems have a permission check that can't be called in this
+> >      state.
+> 
+> This is for setting the watch, right?
+
+No.  Setting the watch requires execute permission on the directory on which
+you're setting the watch, but there's no way to know what permissions will be
+required for an event at that point.
+
+I'm talking about when an event is generated (hence "eventing object").
+Imagine you have a subpath:
+
+	dirA/dirB/dirC/dirD/dirE
+
+where dir* are directories.  If you place a watch on dirA and then an event
+occurs on dirB (such as someone mounting on it), I do a walk back up the
+parental tree, in the order:
+
+	dirE, dirD, dirC, dirB, dirA
+
+If I need to check permissions on all the directories, I would find the
+watchpoint on dirA, then I would have to repeat the walk to find out whether
+the owner of the watchpoint can access all of those directories (perhaps
+skipping dirA since I had permission to place a watchpoint thereon).
+
+Note that this is subject to going awry if there's a race versus rename().
+
+> >      It would also be necessary to do this separately for each watchpoint in
+> >      the parental chain.
+> >
+> >      Further, each permissions check would generate an audit event and
+> >      could generate FAN_ACCESS and/or FAN_ACCESS_PERM fanotify events -
+> >      which could be a problem if fanotify is also trying to post those
+> >      events to the same watch queue.
+> 
+> If you required that the watching process open(dir) what
+> you want to watch you'd get this for free. Or did I miss
+> something obvious?
+
+A subtree watch, such as the mount topology watch, watches not only the
+directory and mount object you pointed directly at, but the subtree rooted
+thereon.
+
+Take the sample program in the last patch.  It places a watch on "/" with no
+filter against WATCH_INFO_RECURSIVE, so it sees all mount topology events that
+happen under the VFS path subtree rooted at "/" - whether or not it can
+actually pathwalk to those mounts.
+
+David
