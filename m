@@ -2,123 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012BFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D715C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD02D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559764003;
-	bh=lpXSty8OvP8wMPY+dbYLrBP1KgGqVQex58AtPAl7jPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JFRL0e8O2i2UMF5zhliRsG8cwaz+WsWbVblw4gOFP7h/H2SDBOo88eP2v508X9ZMA
-	 a+Gqs8Pq9gA1osC5ysD4D4pwvOBZQzLDYaVMDcLhm/GAFCxVFhFebY+rnoA8+PgZJ4
-	 1+N+JfZHollnMLofCgG+10Ct+rRCBPpo2Md+La4s=
+	by mail.kernel.org (Postfix) with ESMTP id D40C52083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3SHbq+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfFETqn (ORCPT
+        id S1726541AbfFETv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:46:43 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41708 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFETqm (ORCPT
+        Wed, 5 Jun 2019 15:51:27 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:41907 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFETv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:46:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kZOzUUZ1da7mPtdEIr5pBNywzNIi07uBPLrGLgK0d5Q=; b=tVdH1grPqhyZ6eMQy0JywOyu1
-        oxuYOmt0jEzsT+tK0qeH10zU3cNaGmrJe9/RmXC0bVgr5rzNqd6iFqx1GoPFdnw6JU0tK4+LzkWzF
-        1Zm1xvMIrZgOmSwzrlW/wQPpWqgEPR/TMWNQ1uvGsUjK48q/dMuyAMe5CjZ3aQkMsHudE=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYbrp-0001PF-B6; Wed, 05 Jun 2019 19:46:37 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 9A9B0440046; Wed,  5 Jun 2019 20:46:36 +0100 (BST)
-Date:   Wed, 5 Jun 2019 20:46:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>
-Subject: Re: [PATCH 0/6] mailbox: arm_mhu: add support to use in doorbell mode
-Message-ID: <20190605194636.GW2456@sirena.org.uk>
-References: <20190531143320.8895-1-sudeep.holla@arm.com>
- <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
- <20190531165326.GA18115@e107155-lin>
- <20190603193946.GC2456@sirena.org.uk>
- <20190604093827.GA31069@e107533-lin.cambridge.arm.com>
+        Wed, 5 Jun 2019 15:51:26 -0400
+Received: by mail-yb1-f194.google.com with SMTP id d2so26117ybh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ADSrVTY729P8giks2VI3lL/ewrVA0y+ziy53/CJHjbI=;
+        b=l3SHbq+tQMcR8JiOwkKI+rqmX8UZZye9PTtYe2D5QDQJbkEw4tn4YzYjfj1Avcsc8J
+         cRSil6+QYDOrKQcFibXBl8KHBvqgfc+1gWOKhOe5AQUjTBRcaA3c9aZHM9gXxsy42Uaj
+         XaKe/llBw2BCOk7t9sYKNJWXw59+a0I7dELeuw9kQpYWeGkMxRiRyXAcTSC6Y+L4A1hI
+         8NfTciR75XJzP+w3pQnIvURLV7LJhtCB6aKw4xvZuKpyq0I/nCGRAMJWlVW7ec6CpZJy
+         ACUbqKujEVikDTF5Sng3n0OT3pwVrcF9Was5/ZEXf62lg8i+p7yOdy49gg/QBSLKQy/T
+         wMSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ADSrVTY729P8giks2VI3lL/ewrVA0y+ziy53/CJHjbI=;
+        b=prA1aXO7JT9yWOAkxSA4lTVJPrBH29RkF49SFlY+2Tn+b/jkS5g0kUI0es3LXWNhbc
+         1YFKLJH76SaefETwFxSjkAtyWh00u8EycwZ8J4H1qp7KSCUi6/ub8aFKjEvTzLQoG7sJ
+         en9uPPkewzYXZ8vredc6n3oxbMgLbpfsJLTKhw6TnkVrHkoa7lOVOdNA++/0pkzYVm83
+         hYQYJ+8kUdX++YDmquNwZBDuGQXZsmjvgCHuKlK77mBGX07QvYDr06IbYg7YjiY8fXjY
+         JMeE/+2eBXDtnmYJH+gCAvF3qdXngow+8YhFImbefDjgZVBEtEnUe+4aFKDrSR2m3e0a
+         Bnlg==
+X-Gm-Message-State: APjAAAUsWenv/XRkfVK7+6jqIgc+HeXjyykz418UkNfYnSfHphIQNdQQ
+        B61rlpH9g+hrGFkuXo79RDaeqCJzNnKDBWe5Ux2Gpg==
+X-Google-Smtp-Source: APXvYqxszqUD/k5nU1g4wHGqDzn8YOE0ACTETUwVMD6KIg9ukVr7Jucv9S+W7J8xRSISnfIGsWcd/E7G53G2roOi1so=
+X-Received: by 2002:a25:7c05:: with SMTP id x5mr19854493ybc.358.1559764285452;
+ Wed, 05 Jun 2019 12:51:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="O/1O6NUaCrlCPhw5"
-Content-Disposition: inline
-In-Reply-To: <20190604093827.GA31069@e107533-lin.cambridge.arm.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190605024454.1393507-1-guro@fb.com> <20190605024454.1393507-2-guro@fb.com>
+ <CALvZod4F4FqO27Y+msXrxT9yaDLLN7njmBsRoTkmQSPE_7=FtQ@mail.gmail.com> <20190605171355.GA10098@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190605171355.GA10098@tower.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 5 Jun 2019 12:51:14 -0700
+Message-ID: <CALvZod6Cu+Uyy-Jp-er0Kz9dwLhmb5KO0XP3X55PVcSx4A4w3g@mail.gmail.com>
+Subject: Re: [PATCH v6 01/10] mm: add missing smp read barrier on getting
+ memcg kmem_cache pointer
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 5, 2019 at 10:14 AM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Tue, Jun 04, 2019 at 09:35:02PM -0700, Shakeel Butt wrote:
+> > On Tue, Jun 4, 2019 at 7:45 PM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > Johannes noticed that reading the memcg kmem_cache pointer in
+> > > cache_from_memcg_idx() is performed using READ_ONCE() macro,
+> > > which doesn't implement a SMP barrier, which is required
+> > > by the logic.
+> > >
+> > > Add a proper smp_rmb() to be paired with smp_wmb() in
+> > > memcg_create_kmem_cache().
+> > >
+> > > The same applies to memcg_create_kmem_cache() itself,
+> > > which reads the same value without barriers and READ_ONCE().
+> > >
+> > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> >
+> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> >
+> > This seems like independent to the series. Shouldn't this be Cc'ed stable?
+>
+> It is independent, but let's keep it here to avoid merge conflicts.
+>
+> It has been so for a long time, and nobody complained, so I'm not sure
+> if we really need a stable backport. Do you have a different opinion?
+>
 
---O/1O6NUaCrlCPhw5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 04, 2019 at 10:44:24AM +0100, Sudeep Holla wrote:
-> On Mon, Jun 03, 2019 at 08:39:46PM +0100, Mark Brown wrote:
-
->=20
-> > It feels like the issues with sharing access to the hardware and with t=
-he
-> > API for talking to doorbell hardware are getting tied together and
-> > confusing things.  But like I say I might be missing something here.
-
-=2E..
-
-> So what I am trying to convey here is MHU controller hardware can be
-> used choosing one of the  different transport protocols available and
-> that's platform choice based on the use-case.
-
-> The driver in the kernel should identify the same from the firmware/DT
-> and configure it appropriately.
-
-> It may get inefficient and sometime impossible to address all use-case
-> if we stick to one transport protocol in the driver and try to build
-> an abstraction on top to use in different transport mode.
-
-Right, what I was trying to get at was that it feels like the discussion
-is getting wrapped up in the specifics of the MHU rather than
-representing this sort of controller with multiple modes in the
-framework.  It's important for establishing the use case but ultimately
-a separate issue.
-
---O/1O6NUaCrlCPhw5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz4HBsACgkQJNaLcl1U
-h9ByUgf/UsJL7ity8FKfFJ8RCFQnmEJwwqTPF2rr5baP6c9jYRf2nJx1ZEL8CBQQ
-NbUfRcVcpQG2901CsRWwzKGEQ6ISkphLyaissRoh2FVJEJkeZkMkt89BD0O5h3/G
-NRuofyB0qDaX2uMC81S+EQgpu/oB8uFgIOQ0Hp7tpz116b50qf7tb0c+ww6OYlTD
-CQJK8XRRLfA+eQ1NgF6mLYiWWda6+xSs79QsrFsypRLgAChputP3NkM4lDFQPYeH
-X2zMWOqPnQ0S8y5Nc8uIxkUMaQ8v4rN8xYjLjE8dTNjn62omGAo6wJFavlozdn6X
-vC4syRan227VJQuJ+YZ83T29+f5TUQ==
-=POCs
------END PGP SIGNATURE-----
-
---O/1O6NUaCrlCPhw5--
+Nah, it's fine as it is.
