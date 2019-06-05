@@ -2,121 +2,86 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20B7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEA0C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C78206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F44C20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAt2glob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfFEIlp (ORCPT
+        id S1726785AbfFEInV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:41:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33614 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfFEIlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:41:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0AB11B9AD5;
-        Wed,  5 Jun 2019 08:41:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BEF6160576;
-        Wed,  5 Jun 2019 08:41:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com>
-References: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com> <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk> <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
+        Wed, 5 Jun 2019 04:43:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41532 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFEInU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:43:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 83so5192576pgg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nArXIV60d+VYSTjP25TqL0r5OPQUfdfeQ9wV987OiVo=;
+        b=jAt2glob59zpg/piEgeo9LTYRsl/CaayO7C7wfjhbPvYScQMl45oyQPIrlgSb4LKFN
+         uB6rTG6V2mGdGDUdwS0EaPd90EW2GiOVIIrCfis/CCl0lQLukg0nl2r/hLEre1f4N0gr
+         5pCE/DSm+Lqq8bL+CQSl6ak6ibV+Kk2b5gjs+c0coCxbP6sS2Vew+x5LTiyqtRqmZv3p
+         oxOviY4oLFOGlEM9xljT3hzkTVeBxfwCSOD9xcwfxMnKZk4kdIjJQswuLN2GObAYpjA4
+         s7tvDXPzAePIjNYbwMTTvCYF0qN2ss2b3lFhtTqcWMkGbHkhg7FKYtjP1iZgQAV2KCPa
+         Cq6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nArXIV60d+VYSTjP25TqL0r5OPQUfdfeQ9wV987OiVo=;
+        b=TVnlTMC/z7x3Yp1R2shmM+MHhdBH6k1d9vta4M2vVzLBF9o9eOpQrcK39IPoLq8aH8
+         pgzv9rNR3OHxqYOguGXtKdaA2S3awxHka556ZKFZOvekzd/Nb9xL5/tfL2alwo0Urwes
+         CSussKrKtdkN4D/0N+6dtGWgy3OIRASlpQ6dIEYV8ostMYaxVhe660GC8N/WkW9W9jOs
+         9ZFRaRpIuou9izPzLv4GjQMU5YYhplkDiq7RaALHRNQuT428/zWdEgB3MrxKX41A9m+Z
+         CWOmA56SMFOBxYsIyHf6Y6ZSAr8aICUkCRM/fn8QHYU9pUlxqo+p9+dCQ051z4vIoGQj
+         SB1w==
+X-Gm-Message-State: APjAAAXvyCTsSFSdTSyryee0aPd9YXpvfE3k1H9Od5jvczDMuNaZWyDM
+        U+3eDFzScixMe+kUqGkgOAVLsvrOQIEWo0wIyUE=
+X-Google-Smtp-Source: APXvYqwVkUT1PCQXZq3AwPelP4rt1tzMY1P1LcvQsvjtIjq/pLuPEAddIf+GoWC3unHIX7yoH6yq/Q3oFQRYfz9VfYg=
+X-Received: by 2002:a17:90b:d8b:: with SMTP id bg11mr10724673pjb.30.1559724200329;
+ Wed, 05 Jun 2019 01:43:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <20191.1559724094.1@warthog.procyon.org.uk>
-Date:   Wed, 05 Jun 2019 09:41:34 +0100
-Message-ID: <20192.1559724094@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 05 Jun 2019 08:41:44 +0000 (UTC)
+References: <20190602163541.8842-1-benniciemanuel78@gmail.com>
+In-Reply-To: <20190602163541.8842-1-benniciemanuel78@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Jun 2019 11:43:09 +0300
+Message-ID: <CAHp75VdMQcZNgv9Tri7UY+wUOy4uUk4yMXYLaBQBBA88iysLFg@mail.gmail.com>
+Subject: Re: [PATCH v2] pci: hotplug: ibmphp: Remove superfluous debug message
+To:     benniciemanuel78@gmail.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joe Perches <joe@perches.com>, Lukas Wunner <lukas@wunner.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
+On Sun, Jun 2, 2019 at 7:35 PM Emanuel Bennici
+<benniciemanuel78@gmail.com> wrote:
+>
+> The 'Exit' Debug message is superfluous ftrace can be used instead.
+>
 
-> I will try to explain the problem once again. If process A
-> sends a signal (writes information) to process B the kernel
-> checks that either process A has the same UID as process B
-> or that process A has privilege to override that policy.
-> Process B is passive in this access control decision, while
-> process A is active. In the event delivery case, process A
-> does something (e.g. modifies a keyring) that generates an
-> event, which is then sent to process B's event buffer.
+When reviewer gives you a comment in one entry, your job is to check
+your entire series and address the same comment in other places.
+There are many such unneeded debug messages.
 
-I think this might be the core sticking point here.  It looks like two
-different situations:
-
- (1) A explicitly sends event to B (eg. signalling, sendmsg, etc.)
-
- (2) A implicitly and unknowingly sends event to B as a side effect of some
-     other action (eg. B has a watch for the event A did).
-
-The LSM treats them as the same: that is B must have MAC authorisation to send
-a message to A.
-
-But there are problems with not sending the event:
-
- (1) B's internal state is then corrupt (or, at least, unknowingly invalid).
-
- (2) B can potentially figure out that the event happened by other means.
-
-
-I've implemented four event sources so far:
-
- (1) Keys/keyrings.  You can only get events on a key you have View permission
-     on and the other process has to have write access to it, so I think this
-     is good enough.
-
- (2) Block layer.  Currently this will only get you hardware error events,
-     which is probably safe.  I'm not sure you can manipulate those without
-     permission to directly access the device files.
-
- (3) Superblock.  This is trickier since it can see events that can be
-     manufactured (R/W <-> R/O remounting, EDQUOT) as well as events that
-     can't without hardware control (EIO, network link loss, RF kill).
-
- (4) Mount topology.  This is the trickiest since it allows you to see events
-     beyond the point at which you placed your watch (in essence, you place a
-     subtree watch).
-
-     The question is what permission checking should I do?  Ideally, I'd
-     emulate a pathwalk between the watchpoint and the eventing object to see
-     if the owner of the watchpoint could reach it.
-
-     I'd need to do a reverse walk, calling inode_permission(MAY_NOT_BLOCK)
-     for each directory between the eventing object and the watchpoint to see
-     if one rejects it - but some filesystems have a permission check that
-     can't be called in this state.
-
-     It would also be necessary to do this separately for each watchpoint in
-     the parental chain.
-
-     Further, each permissions check would generate an audit event and could
-     generate FAN_ACCESS and/or FAN_ACCESS_PERM fanotify events - which could
-     be a problem if fanotify is also trying to post those events to the same
-     watch queue.
-
-David
+-- 
+With Best Regards,
+Andy Shevchenko
