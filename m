@@ -2,116 +2,83 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3D6C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512BFC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2FE2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1611120872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559725064;
+	bh=c0YEsqOYSkHPRoBUDuZFnNT2TV2vkO/fBx9LryXQQZ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GUBLih7blSMGGwDkj3trUHPs5Ix902Pj67owj8zrnabfbhsrBT772VBchYiJvT5jn
+	 Hxz4Y/afi9OowpuQJX6EeUYXPJlxzDMiHu+qpJ5sQo1OrWoJ6afqCsZZOAMsLlrdW0
+	 GSontaFvFJe5I4aziDhQ2m7p0T3dXhgSI9Vi+LhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfFEI4U (ORCPT
+        id S1726934AbfFEI5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:56:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60380 "EHLO mx1.redhat.com"
+        Wed, 5 Jun 2019 04:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbfFEI4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:56:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726708AbfFEI5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:57:43 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C53788307;
-        Wed,  5 Jun 2019 08:56:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 76A465D705;
-        Wed,  5 Jun 2019 08:56:06 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  5 Jun 2019 10:56:12 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 10:56:04 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-aio@kvack.org, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        stable <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in
- restore_user_sigmask()
-Message-ID: <20190605085604.GA32406@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <20190604134117.GA29963@redhat.com>
- <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 135622075C;
+        Wed,  5 Jun 2019 08:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559725062;
+        bh=c0YEsqOYSkHPRoBUDuZFnNT2TV2vkO/fBx9LryXQQZ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=teZM/VNmaW2NHqGV+N5r5iL6lXUjHQig6NHWnNF1S4mYmzsi4NjAF+fDOk9ojtHv/
+         25WU1Ez7qjGG2oOTnK4qQ6beAa8EzJL3ZIvJGdHCforEvAOk3AV311Tb0ce+T3SpAR
+         Y7j7xuy/LI67Ly841xOLS0ynRGXPJp0OtJa5QCRg=
+Received: by mail-lj1-f171.google.com with SMTP id j24so22436407ljg.1;
+        Wed, 05 Jun 2019 01:57:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAXX8KtjYKOl8qzbP1TH2BJSO/F+OW8cJfD8+/sHWKUohKUw+PWM
+        qI7EINhyRdVmIeq3IrvWq+ZSSaqdO39ek/3YSlM=
+X-Google-Smtp-Source: APXvYqzWe9Tothd6asG+gMZd5Vz4a7A8Pf6iNjr+UUtXa6DLhJ+wX4cCJAUOiSl2wA1tKPJahmNyoUGCdoEKUu6MJcQ=
+X-Received: by 2002:a2e:424c:: with SMTP id p73mr2829347lja.216.1559725060311;
+ Wed, 05 Jun 2019 01:57:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 05 Jun 2019 08:56:19 +0000 (UTC)
+References: <CGME20190506130052eucas1p25afd4e15648e9efc6fd011e46081fbea@eucas1p2.samsung.com>
+ <20190503204958.GA12532@kozik-lap> <20190506130046.20898-1-m.szyprowski@samsung.com>
+In-Reply-To: <20190506130046.20898-1-m.szyprowski@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 5 Jun 2019 10:57:28 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcCL6i5RYbKSrLVL+U4bEP-cUvOzdZLKONqOcRBudUPYg@mail.gmail.com>
+Message-ID: <CAJKOXPcCL6i5RYbKSrLVL+U4bEP-cUvOzdZLKONqOcRBudUPYg@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc2: Force 8bit UTMI width for Samsung Exynos SoCs
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jules Maselbas <jmaselbas@kalray.eu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04, Linus Torvalds wrote:
+On Mon, 6 May 2019 at 15:00, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 >
-> On Tue, Jun 4, 2019 at 6:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > This is the minimal fix for stable, I'll send cleanups later.
+> Samsung Exynos SoCs require to force UTMI width to 8bit, otherwise the
+> host side of the shared USB2 PHY doesn't work.
 >
-> Ugh. I htink this is correct, but I wish we had a better and more
-> intuitive interface.
+> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Fixes: 707d80f0a3c5 ("usb: dwc2: gadget: Replace phyif with phy_utmi_width")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Yes,
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> In particular, since restore_user_sigmask() basically wants to check
-> for "signal_pending()" anyway
-
-No, the caller should check signal_pending() anyway and this is enough.
-
-> > -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> > -       if (signal_pending(current) && !ret)
-> > +
-> > +       interrupted = signal_pending(current);
-> > +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> > +       if (interrupted && !ret)
-> >                 ret = -ERESTARTNOHAND;
->
-> are wrong to begin with,
-
-This is fs/aio.c and I have already mentioned that this code doesn't look
-right anyway.
-
-> IOW, I think the above could become
->
->         ret = restore_user_sigmask(ksig.sigmask, &sigsaved, ret, -ERESTARTHAND);
->
-> instead if we just made the right interface decision.
-
-I think this particular code should simply do
-
-		ret = do_io_getevents(...);
-
-		if (ret == -ERESTARTSYS)
-			ret = -EINTR;
-
-		restore_user_sigmask(ret == -EINTR);
-
-However I agree that another helper(s) which takes/returns the error code makes
-sense and I was going to do this. Lets do this step by step, I think we should
-kill sigmask/sigsaved first.
-
-Oleg.
-
+Best regards,
+Krzysztof
