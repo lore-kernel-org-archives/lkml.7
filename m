@@ -2,104 +2,85 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CC8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98409C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE9C206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B93206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:55:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HF0oX4Go"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDBAVMTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfFEPxK (ORCPT
+        id S1728413AbfFEPzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:53:10 -0400
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:42535 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFEPxK (ORCPT
+        Wed, 5 Jun 2019 11:55:14 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:35696 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfFEPzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:53:10 -0400
-Received: by mail-pl1-f171.google.com with SMTP id go2so9831736plb.9;
-        Wed, 05 Jun 2019 08:53:09 -0700 (PDT)
+        Wed, 5 Jun 2019 11:55:14 -0400
+Received: by mail-pf1-f173.google.com with SMTP id d126so15098726pfd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=b/A6amxgGsaMi5e6lYvOcmDbkuB6qV1wDTVAsO9soAo=;
-        b=HF0oX4GoizXaqFveRN0w+AdvmpoRPfcJEj2QWQPAAikUxO3E5MhSys+ftd+F4GdQnA
-         C7N3z2QxGpOrM/vmTLJvjZ34g9cpScZcxD+7A2r96crKQo7jp7SiZLU/uvKA38yDBAvL
-         TmrqIJuV+CMX/yYJY2yqNdIvrrCj/y0cH0O089lydcDg1OG8EkYMVB6NVwA5dts259O6
-         VRtrgU0hINVN2WZ2/8YD6D8cdonMAjiolDKuyaQ3+tmpDzUF7ow5KeLJizbKWQVT4JM2
-         MrA2itSy0bu4vhG1A4WDEKq/JTQwGSWlxSy34SNjBBE14zkCUQMPhbQIQrZclTV1yd4m
-         Z3mQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2DfKoTbUkHhuP2+XX+gOP/GXMo98uk4f8Hq+Sd8x/uU=;
+        b=HDBAVMTypXAZfR0duFmc4K1/93WlRwCVC+qISQ4GY2eJDWVecH5SDn/57rnesLcZRd
+         Kqg4hHsMQ3VWgqL7eKCXp1f6Akskuui4UhGUmL9tRGFdrc25dsbksl+JTm2B9lOesyAZ
+         mc0UmHCtbrTRjiGsHNbLd7G04dYKCZ0VfBxdUcUjAeDB4WxhGWhvdxdF2shqaZSXZ/B6
+         T3+GcnMHZvdxzpXxVR330vE5tpbSk4bNXFlPssK/g+tlmA1+itYttxcOQVxVPk4NOEXh
+         PQF8Auo4KoPHyHQFTNRt840Hu6I6IhGjHYNzi53ce+MZPmvKE94Vt0mIYhDwBQUdbw3V
+         0UWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b/A6amxgGsaMi5e6lYvOcmDbkuB6qV1wDTVAsO9soAo=;
-        b=rrml6b5L3XVN3VaBB4MUfltT630R4qw2jofukfl3LXAEtMWljiqQkB6OW+1TJOOmMN
-         yKiaY/0j2/5NxqI+L2LXS6JUi8jh4XaZ8aMLneNsBocFC4Pi4+Hdro1Xp8OXmxSVHWHz
-         sz2/Uw/8IrPDXOweEmnk/puIYN2Y/lcVLO5yJx899EgRHBR+r/ddk8VgLgiRdx7pbRNj
-         aK8UYsrvfdb21UQXBq+S3j2DsbKFl05kkImj8Z+jepZm/uvkcs6xKOqyMoc4W6nABDaH
-         sOpDj1JxJg7nYZZ+jGp5XAn5i9vHcIiwP0IOzlegcjxEpD/vaY0FSG1tJeceY+WyoDju
-         vX6w==
-X-Gm-Message-State: APjAAAVO06CbwMgThwhZFIptbvUe6YqjHoMwp4EYGSTLlKnp1UeycEtp
-        bXUSGVlHxWYZ6tYkT3YUqrM=
-X-Google-Smtp-Source: APXvYqxgWZ2/4dL8gag6+o+Uvf4y2RkFKHmnXsUUxDCJ5qeHofTWkkWqQtuN6I4poQZrn5o2ydx3tw==
-X-Received: by 2002:a17:902:27a8:: with SMTP id d37mr44949235plb.150.1559749989277;
-        Wed, 05 Jun 2019 08:53:09 -0700 (PDT)
-Received: from [172.27.227.204] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id b8sm5919398pfr.93.2019.06.05.08.53.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2DfKoTbUkHhuP2+XX+gOP/GXMo98uk4f8Hq+Sd8x/uU=;
+        b=DKOa1bzmZjS4BEFFOQRVHvHkbch7woNeJSyYKQLjUTVcnXGbvqL1KNfU0AgF9GA3Vw
+         W01t8119ZhyL95xaBDgghf7U7RcZrYEQgOox+dAMAY7n4M+WE1ixwLgJZs2F1teHlXe3
+         1gnB2u4fCgtQ0cd/wXURQkG6pus6iN0Q4sPKGGCsOk/FJjOr8Q9ZZPH5RjiJxjuxqDBt
+         9bMLLui3vmhkdR14HGti/p7QVFLVz8MH5xW3b7ItOukOZLG+bUrMKENbEHvkEN5sWVUO
+         S5J5aRmWbENNdGz5XVC2JYX9WwKU2fkv9SG04ZTk+PV6lar4C2xxV4rPiT6NrwsL2d8j
+         fkSg==
+X-Gm-Message-State: APjAAAW6q5Z01lJO4X3OZ7CcZmrg9GmK0dvejvjnHduOnOOp/lXLVMqU
+        fvjJjZpxPaYwQBJhc2EM+8k=
+X-Google-Smtp-Source: APXvYqxpR5cEgDtmltAvYZ9AqYKidTDaDzzZM1TzdDM3zyq2rPE0LI3y59r5zJCpopq1OyFELGS5xw==
+X-Received: by 2002:a17:90a:338e:: with SMTP id n14mr43932679pjb.35.1559750113484;
+        Wed, 05 Jun 2019 08:55:13 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([2401:4900:2714:c5a9:f4d2:57f9:5d08:5667])
+        by smtp.gmail.com with ESMTPSA id 26sm4625351pfi.147.2019.06.05.08.55.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 08:53:08 -0700 (PDT)
-Subject: Re: general protection fault in fib6_nh_init
-To:     syzbot <syzbot+1b2927fda48c5bf2e931@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-References: <0000000000008ee293058a787e2d@google.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <cfea6086-4416-7e3c-f456-26ff44bf55a5@gmail.com>
-Date:   Wed, 5 Jun 2019 09:53:06 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Wed, 05 Jun 2019 08:55:12 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 21:25:01 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
+        khalid.aziz@oracle.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Remove VM_BUG_ON in __alloc_pages_node
+Message-ID: <20190605155501.GA5786@bharath12345-Inspiron-5559>
+References: <20190605060229.GA9468@bharath12345-Inspiron-5559>
+ <20190605070312.GB15685@dhcp22.suse.cz>
+ <20190605130727.GA25529@bharath12345-Inspiron-5559>
+ <20190605142246.GH15685@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <0000000000008ee293058a787e2d@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605142246.GH15685@dhcp22.suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 11:10 PM, syzbot wrote:
-> 
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 4498 Comm: syz-executor.4 Not tainted 5.2.0-rc2+ #10
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:ipv6_addr_any include/net/ipv6.h:626 [inline]
-> RIP: 0010:ip6_route_check_nh_onlink net/ipv6/route.c:2910 [inline]
-> RIP: 0010:ip6_validate_gw net/ipv6/route.c:3013 [inline]
-> RIP: 0010:fib6_nh_init+0x47e/0x1c80 net/ipv6/route.c:3121
-> Code: 89 de e8 45 9f 4e fb 48 85 db 0f 84 fb 10 00 00 e8 97 9d 4e fb 48
-> 8d 7b 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02
-> 00 0f 85 bf 16 00 00 48 8d 7b 48 48 8b 4b 40 48 b8 00 00
-> RSP: 0018:ffff888060e277c0 EFLAGS: 00010a02
-> RAX: dffffc0000000000 RBX: ff8880a43d5cc000 RCX: ffffc90012a9f000
-> RDX: 1ff1101487ab9808 RSI: ffffffff86220829 RDI: ff8880a43d5cc040
+IMO the reason why a lot of failures must not have occured in the past
+might be because the programs which use it use stuff like cpu_to_node or
+have checks for nid.
+If one day we do get a program which passes an invalid node id without
+VM_BUG_ON enabled, it might get weird.
 
-This one to me is falls into the corruption of the rt6_info in pcpu memory.
-
-ip6_route_check_nh_onlink has already checked that 'from' is non-NULL
-and fib6_dst falls within that memory.
-
-RDI is the first input arg and appears to point to an invalid memory
-address. In my tests all mallocs (f6i, nexthops, pcpu routesm etc) start
-with 0xffff but RDI is 0xff88 which seems wrong.
