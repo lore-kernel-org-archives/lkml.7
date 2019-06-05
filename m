@@ -2,141 +2,122 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F14C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E12C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069F720866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8452075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JMDtt3o4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFEGAz (ORCPT
+        id S1726685AbfFEGBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:00:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33353 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFEGAy (ORCPT
+        Wed, 5 Jun 2019 02:01:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40047 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfFEGBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:00:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so5670554wru.0;
-        Tue, 04 Jun 2019 23:00:53 -0700 (PDT)
+        Wed, 5 Jun 2019 02:01:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so11779386pgm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XhgXHLObV5Vbqo0Ol1dr/K9C6PfbnIr6P+CU31xn0uk=;
+        b=JMDtt3o4OpRyNKqkIsA2AAl8veHAMN2+KlqcyzaxHwpNI6+UJ79YrJx/oC0KuKGwN4
+         uLEguOKwpu/0TSXjxpVrV9ohcTpmW1vkIcHcIVFgf/wP1efqPouTguYWm4hBw/s9V3XE
+         aw5GVUVx5BjtFgTryP1pejwqui5+CG9DuIUr2Ev5/THCjVKRvJBSeEgLJSQ/KuXmabKK
+         8imeg+KY2S7LywceHrI7pk9u1toSQeENkXq3lHGZjPFcoLpEOYr1s0TZGtu8CjO/sgnV
+         mzVHrj+TjeVEHvdU1/i3c4QDrjusE5znnwztyeYOiLl5Loaz8upXQeqBR5ZaH4KbdnXP
+         iplA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Jr87Gbws8ErCuxH3u7ORPLMbc3HC1qxus6riAj+j6cg=;
-        b=bFeyXJdEmCvqwRvb0dk5EN9SJXVPISrlatq/ubsha2JXyx+brqfTiME73Jed8Ga2kp
-         leE0OA4KPpf4mUMjOlMtI5QJKJ7XTtmruxJlLEeDNKlwgTR2k7iWxdYFe+6NFmTpJVDC
-         axTmA1p/1zvRGirYRZX0eSI7s2xKiXezD6iWpd/PiuA9NqaTa8/uExwpV3qZ9PvO90HV
-         btm2JbNXqBG/jAFOQf+Xi0lO38BpUXdydPGrtT+X5c9MNusn1BtCVlUQbBhjNZnMviqw
-         ApLHtb4121VJaPSRLtR+W7ar5vt7U0cX/Aim2Faug7ia56PemoisCDHpaBeVla/3vkvY
-         WSUg==
-X-Gm-Message-State: APjAAAXyfNn1Q3tOycwygnjQxjjZSGiMDNGGeIYatGCHdoXLrdyvWyXV
-        hVNEeBjq3vcjURp3fsAYTrey5MaO
-X-Google-Smtp-Source: APXvYqzLo3uHq/9PyinbqiOl35e5j8VA3HVX57olzTSkAkBf7tFUEn5+tlThiUC+Mt5MgR8w4Nv2pQ==
-X-Received: by 2002:adf:dd91:: with SMTP id x17mr11865882wrl.291.1559714452100;
-        Tue, 04 Jun 2019 23:00:52 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id 32sm53705912wra.35.2019.06.04.23.00.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 23:00:50 -0700 (PDT)
-Subject: Re: [PATCH] sg: Fix a double-fetch bug in drivers/scsi/sg.c
-To:     Gen Zhang <blackgod016574@gmail.com>, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190523023855.GA17852@zhanggen-UX430UQ>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
- IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
- Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
- duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
- 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
- wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
- LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
- 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
- zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
- 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
- +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
- al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
- 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
- K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
- SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
- Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
- 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
- t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
- T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
- rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
- XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
- B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
- AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
- DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
- qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
- ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
- XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
- c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
- ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
- 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
- VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
- sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
-Date:   Wed, 5 Jun 2019 08:00:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XhgXHLObV5Vbqo0Ol1dr/K9C6PfbnIr6P+CU31xn0uk=;
+        b=tqfmwrO4s4chrHgB553UK0nuQ9kZkHeM4ecn7NhRrcVD0V5sfBPcszsElZTn7lMV4i
+         7SIdPbi1Jov/0BVfviKMwFJitMYy+8apjzlkVLkmexb+/3ejL8XClzCMRbUAGYFy9Pd2
+         lauR7WH3thtgfrzdSYPvj6y3YTRdHweK24xxApc4V7W69OgCQP2WKjRaz9jw7O8f32/5
+         LJxROIvIJlXHDAogtHcHhOqpoGVxmyVsFWTmB3tqpYqaCNAdU5riXfl3mpWuYKQrSFJC
+         osQT9GBSLud6JMywJ67sp4HBMFSGhnrtHBDvl5rFb95t03x3OjqfYlvCXCgRrvL+jzkc
+         WIBQ==
+X-Gm-Message-State: APjAAAVg2ThNkoVNpvlP/UcEkWtgdTEj61b83ikmgzhj9VEwnvSVIERY
+        R3NlbhanCu3VIblWrT3YeWF95w==
+X-Google-Smtp-Source: APXvYqxRBdu6ErpFV+5gKRxDXyTrGYM8duUS6m39Y3koDFw3q4yhtgHG0ERg3ih11MGWr8lRBc13xA==
+X-Received: by 2002:a17:90a:2ec9:: with SMTP id h9mr43058272pjs.130.1559714469980;
+        Tue, 04 Jun 2019 23:01:09 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q22sm2332383pff.63.2019.06.04.23.01.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 23:01:09 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 23:01:54 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Message-ID: <20190605060154.GJ22737@tuxbook-pro>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523023855.GA17852@zhanggen-UX430UQ>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23. 05. 19, 4:38, Gen Zhang wrote:
-> In sg_write(), the opcode of the command is fetched the first time from 
-> the userspace by __get_user(). Then the whole command, the opcode 
-> included, is fetched again from userspace by __copy_from_user(). 
-> However, a malicious user can change the opcode between the two fetches.
-> This can cause inconsistent data and potential errors as cmnd is used in
-> the following codes.
-> 
-> Thus we should check opcode between the two fetches to prevent this.
-> 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> ---
-> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-> index d3f1531..a2971b8 100644
-> --- a/drivers/scsi/sg.c
-> +++ b/drivers/scsi/sg.c
-> @@ -694,6 +694,8 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
->  	hp->flags = input_size;	/* structure abuse ... */
->  	hp->pack_id = old_hdr.pack_id;
->  	hp->usr_ptr = NULL;
-> +	if (opcode != cmnd[0])
-> +		return -EINVAL;
+On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
 
-Isn't it too early to check cmnd which is copied only here:
-
->  	if (__copy_from_user(cmnd, buf, cmd_size))
->  		return -EFAULT;
->  	/*
-> ---
+> Hi,
+> 
+> > 
+> > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
+> > > acquire and toggle this and then adds this to SDM845 MTP.
+> > >
+> > > Bjorn Andersson (3):
+> > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > >   scsi: ufs: Allow resetting the UFS device
+> > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > 
+> > Adding similar change as in sdm845-mtp to the not yet upstream
+> > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > 
+> > Tested-by: John Stultz <john.stultz@linaro.org>
+> Maybe ufs_hba_variant_ops would be the proper place to add this?
 > 
 
-thanks,
--- 
-js
-suse labs
+Are you saying that these memories only need a reset when they are
+paired with the Qualcomm host controller?
+
+The way it's implemented it here is that the device-reset GPIO is
+optional and only if you specify it we'll toggle the reset. So if your
+board design has a UFS memory that requires a reset pulse during
+initialization you specify this, regardless of which vendor your SoC
+comes from.
+
+Regards,
+Bjorn
