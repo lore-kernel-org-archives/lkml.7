@@ -2,108 +2,156 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016AEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AD4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3084206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC54E206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5Kr8noE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHV/oYBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfFEMxC (ORCPT
+        id S1727842AbfFEMxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:53:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33466 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbfFEMxB (ORCPT
+        Wed, 5 Jun 2019 08:53:17 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39943 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbfFEMxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:53:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so4990881pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:53:01 -0700 (PDT)
+        Wed, 5 Jun 2019 08:53:16 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c70so5009518qkg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8OO5de15CKFr8wHCwMW+y7NtSPgZuAg+fbs0S4ZOD4Q=;
-        b=i5Kr8noEdSNioZn7W1oY8BIV8RpAglWLDKr42IaJOjk6FK6VMipuk4CGufa8xW5jfI
-         ZrDrSxMcPS9QaNWioDIKpXxLyunhXcUcl1h2vFIH2qnHtcFCXI0cHCHvf+lUbp5XvZI0
-         S/Wph6YKBYI/+crFDWak1n/bWiGC+MGt3iRlAY8JrH2dPdRbXd9R0AFyoLItjUrQ6DrE
-         aWDgjqHXRE0BhjJzCp851LJST/hcb16uJmL8tl9W1nJbT+S4cp3c7ClW/CFZwmg829Fp
-         Yk2j6SGhWamYleoWjjfuGGpAYbP5qF7ihvsCoN/SPwF05744+6MPZeU1fB9h4H+F+7tC
-         zcRg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=FEJlwRzOSRN+nlu5X4lPOwpsvJ7oWUXOjTXr6yHewVs=;
+        b=KHV/oYBHp2bFpw53YVfhzl3g1kG2WmIzXRZmzI671MGDFgyIhzTfBLeny6QRd70/Wb
+         Q49SrLx5bOYcq2UmvSigcBYt6+enapqr/jp80PXY1p/Iw73+1AbeG1WQ34FQWF5AsKvJ
+         AGGL7LlhdFnNbX5jRS+pEU1gQVS2U/7ZugcNin0lr/k5mnUgkNYskil9lWeShlZeX+V+
+         honvGgrYzMXAKP8nxyImXTxWXcu+MauFLuTdLk0+IvFYUuBNrCPlCzWx2DLr8HfTORMF
+         /M+4nzHB/xT/FWPQ7B5nsF7aqSjSoRXrMBxptfHgcxSyXz6vDTdeHNz8mkC5VxT1c0BQ
+         xsWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8OO5de15CKFr8wHCwMW+y7NtSPgZuAg+fbs0S4ZOD4Q=;
-        b=FibW4SHkz5hqx2uPwFLFD8amLTON7Bi7U6u1Kps31kGUODuZhZvyKVNoVHBcXhY28x
-         95WYVQ4TnkAQU1eef4J8RdbActZ+o6zS0HMGKdO98INd76+UhE9S7i2ZkIO0fveht0fi
-         tFfeJCzQU8sxtSA3dEqp9rC5/8NCdY/x32PWHEjN1P2jPYApHlo6MX4B/zSsiU1EW3eL
-         zdJmn69cSszHO2CxeUk3h1V0MW+XNYYBaRX7Clz9u1rvT/KCJA31ABw8GVvXvNXXpvnj
-         3bG2kEPpAUe/hXR9b95rDEE3iMh6hsi3KkMT1lx2ZoSul5PFTn407uZ6mlafslKEe/J+
-         wcUg==
-X-Gm-Message-State: APjAAAVTyx+L5QZ1nVi4lAoMlq42N15RkDzgvoJ6eZQdea8V4HQWtYJp
-        Yu4aioz/XykUv9mzcNeFxi3NMlwD
-X-Google-Smtp-Source: APXvYqwcqApiGCTxpaxAAnU91R4amjEo/dzeMf2KNPOdiUs7zunJNsapZ2Mr5NHnI2I+7T3kmE1Q4A==
-X-Received: by 2002:a63:d504:: with SMTP id c4mr4132889pgg.20.1559739180549;
-        Wed, 05 Jun 2019 05:53:00 -0700 (PDT)
-Received: from [10.44.0.192] ([103.48.210.53])
-        by smtp.gmail.com with ESMTPSA id o66sm16898206pje.8.2019.06.05.05.52.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:52:58 -0700 (PDT)
-From:   Greg Ungerer <gregungerer00@gmail.com>
-X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: [PATCH] m68k: io: Fix io{read,write}{16,32}be() for Coldfire
- peripherals
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Angelo Dureghello <angelo@sysam.it>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190429081937.7544-1-geert@linux-m68k.org>
- <20190603122608.GA21347@jerusalem>
- <d474e366-cf5f-bbf3-9521-c5ea29bb9c19@linux-m68k.org>
- <CAMuHMdVTOO13Y49D82r5YgTFGwvgB0UdCZ3o1VAXHWzYof05xA@mail.gmail.com>
-Message-ID: <f5e30b21-3c88-c134-d2bb-dabd191c6122@linux-m68k.org>
-Date:   Wed, 5 Jun 2019 22:52:51 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=FEJlwRzOSRN+nlu5X4lPOwpsvJ7oWUXOjTXr6yHewVs=;
+        b=kQLbNV7aa5iswVMBnlF4KPG9sPc1MOzisz10L7MQcUMLDMqy0rOMuoYZWfGj++YWop
+         FEqUBVLo4oed7m0CwpHNxH5w+xj89/gYtcdOvJhkxcx3KI8sZNJNsH6zLG5yCPpVsr+n
+         wRALmlPwcKa/FF0M28l3c0+d4ZNGxsulXcl+7nvE6ArHt1IuBhX6cj6eDBgahamsXa5e
+         x7r++jNixIBtss+S30+eLpMfuj56WFmXYdXT9Nc4COk9nqAs/49jpmlo9xBUlLWWr+0D
+         gntDzmDNcuxNe4UHJGEsiJqBznBX6PwFRX1oTSBJwoL6r6ppvJzaFzYYwZSSr49sDJZj
+         OXzw==
+X-Gm-Message-State: APjAAAXCEYD0QR6Hr7nlIhst5exHq4npUHaoJnJkJmgqXgOkogysziYX
+        b/npJSk7My1xmAwDiHH2v3c=
+X-Google-Smtp-Source: APXvYqxpOHxbmXPU3eVITd9pgKb9Z6rBwqCROpIc51RhnW7VWDuMfcmxuBM3TI73Byjp3o64Xi3W3g==
+X-Received: by 2002:ae9:ea05:: with SMTP id f5mr13508285qkg.275.1559739195257;
+        Wed, 05 Jun 2019 05:53:15 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id q29sm1693245qkq.77.2019.06.05.05.53.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 05:53:14 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D172C41149; Wed,  5 Jun 2019 09:53:11 -0300 (-03)
+Date:   Wed, 5 Jun 2019 09:53:11 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ben Gainey <ben.gainey@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCHv2] perf jvmti: Fix gcc string overflow warning
+Message-ID: <20190605125311.GE20408@kernel.org>
+References: <20190531080307.22628-1-jolsa@kernel.org>
+ <20190531120530.GB17152@kernel.org>
+ <20190531131321.GB1281@krava>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVTOO13Y49D82r5YgTFGwvgB0UdCZ3o1VAXHWzYof05xA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531131321.GB1281@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Em Fri, May 31, 2019 at 03:13:21PM +0200, Jiri Olsa escreveu:
+> On Fri, May 31, 2019 at 09:05:30AM -0300, Arnaldo Carvalho de Melo wrote:
+> > I think for these needs flipping that 'n' into a 'l' is good enough.
+ 
+> ok, I forgot there's strlcpy.. v2 attached
 
-On 4/6/19 5:34 pm, Geert Uytterhoeven wrote:
-> On Tue, Jun 4, 2019 at 9:18 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
->> On 3/6/19 10:26 pm, Angelo Dureghello wrote:
->>> couldn't seen any follow up on this patch. I tested it and at least
->>> for mcf5441x it works properly and solves all issues.
->>>
->>> Do you think it may be accepted as an initial fix ?
->>
->> I'll add it to the m68knommu git tree.
->> Seeing as you wrote it Geert I assume you have no problem with that?  :-)
+Thanks, applied v2.
+
+- Arnaldo
+ 
+> ---
+> We are getting fake gcc warning when we compile with gcc9 (9.1.1):
 > 
-> Actually I wanted to look into the issues pointed out by Arnd, but didn't
-> get to that yet...
+>      CC       jvmti/libjvmti.o
+>    In file included from /usr/include/string.h:494,
+>                     from jvmti/libjvmti.c:5:
+>    In function ‘strncpy’,
+>        inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
+>    /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+>      106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+>          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
+>    jvmti/libjvmti.c:165:26: note: length computed here
+>      165 |   size_t file_name_len = strlen(file_name);
+>          |                          ^~~~~~~~~~~~~~~~~
+>    cc1: all warnings being treated as errors
+> 
+> As per Arnaldo's suggestion using strlcpy, which does
+> the same thing and keeps gcc silent.
+> 
+> Cc: Ben Gainey <ben.gainey@arm.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Link: http://lkml.kernel.org/n/tip-sve3b63c550wr907e6ui6gx5@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/jvmti/libjvmti.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+> index aea7b1fe85aa..c441a34cb1c0 100644
+> --- a/tools/perf/jvmti/libjvmti.c
+> +++ b/tools/perf/jvmti/libjvmti.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/compiler.h>
+> +#include <linux/string.h>
+>  #include <sys/types.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> @@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+>  		result[i] = '\0';
+>  	} else {
+>  		/* fallback case */
+> -		size_t file_name_len = strlen(file_name);
+> -		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
+> +		strlcpy(result, file_name, max_length);
+>  	}
+>  }
+>  
+> -- 
+> 2.21.0
 
-Ok, no worries. I won't do anything with this right now then.
+-- 
 
-Regards
-Greg
-
-
+- Arnaldo
