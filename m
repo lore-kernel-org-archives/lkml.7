@@ -2,110 +2,97 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A70C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C78BC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED392067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262E62067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAgoWy5U"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ATatBIiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfFEMLX (ORCPT
+        id S1727598AbfFEMML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:11:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33943 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEMLW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:11:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c85so5936163pfc.1;
-        Wed, 05 Jun 2019 05:11:22 -0700 (PDT)
+        Wed, 5 Jun 2019 08:12:11 -0400
+Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:5024
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727343AbfFEMML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:12:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0VttWoGeA31c+2HzIYdX6LBJx8qWi/Su25TJGeVD+lc=;
-        b=ZAgoWy5UXnUyYxUnO8a97KJkK8S5ZwfQbzliMcuFGF5wJCS5QTunurNFF1CsElLMln
-         WjKHBI/RI65POLDgTqTuEJJulsSPIAaFaQvdJD/yQhvfxEOjFyiVQN22Ojmw9PJvB5kk
-         jzcHhGdI/ve6Tie/C8gawHf9vJFTCLsmKv7VnCeZn5HWgWslTpyMDALN3PKad+FE9SAT
-         P1p2CzGDz7zNP6l+8qvGbRypkYGn9YNlj3Nng8FRDSqYeLM8OPEg+9u/CFFQTWWnv7pZ
-         7rx/Gy2C1fbo1neEyn2f4+SgiGcu2D0w94tRKn5v8uq8BwbciVwY3RetEeqC6YkTDe8z
-         +bjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0VttWoGeA31c+2HzIYdX6LBJx8qWi/Su25TJGeVD+lc=;
-        b=AvFvnNrAzlOMo5ujeblPj3XpKj3kfbXz6kG/lnF63bHRwCl6efScjgDvfPdTB+K9Bn
-         vz811DbMNPyQ7gnLnJWzo9EDwacSlqVV1ywiYsDcjBNJvsMTh0JmzfZqXXBlvM3nqdwU
-         zn8710t0mS15ytOYot9zn6qySYqbnDvtIY8RNDQOhXAQ1j7IYQ2IzQ9QqokverpGGYyD
-         IR/arL7eyS0mb34uf59FltcLcTdSnckoXPfMOAFUwSI0DAWYhmBUMypz35D/dLwRxOMB
-         9SYw5scuPgaM3ZzQr+3BFmOQmy4oyGtGD9p5gq2zMoLmK0kSlB6nkoyYgUEZPHP6tUKr
-         pn1w==
-X-Gm-Message-State: APjAAAVoQg8LKd/wKlVWUdbXR2NywqjI0AyVCVwiVgMB3U+8a4kR5n+2
-        5pvVMMe6H7n6bWeEuP9QSYQ=
-X-Google-Smtp-Source: APXvYqz2jOOChrGTnN1pOtlc9Ifhcp1FAReD38lXlHEm7M9HVHDPC1f/UQ4A+msSCasdtIJWKtoOjQ==
-X-Received: by 2002:a62:d0:: with SMTP id 199mr15757825pfa.253.1559736682058;
-        Wed, 05 Jun 2019 05:11:22 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id t14sm2424182pgg.33.2019.06.05.05.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:11:21 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 17:41:17 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anton Vasilyev <vasilyev@ispras.ru>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fotg210-udc: Remove unneeded variable
-Message-ID: <20190605121117.GA4729@hari-Inspiron-1545>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x0n5lmzdb+ILPEV62bCBwyWy9NnxFf3sF89ZpPDV5zU=;
+ b=ATatBIiBLhOZ7l4GzuIijkyFdt+1fPG/TBdQrxrPMNro2hjuaDkXL9y+OOyyYu+LMQ55FA55CmX7BNgagIqe3Z/g8SjWFXONeyZy5nIfr7+ke0FVAtv40QLsAiTyrN8LXdlPphvFCbPYrMI9A8d2nmGoFwb4ZGM56sYSFp6AWsQ=
+Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com (52.134.247.150) by
+ OSAPR01MB1683.jpnprd01.prod.outlook.com (52.134.232.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Wed, 5 Jun 2019 12:12:08 +0000
+Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com
+ ([fe80::19ad:b6ce:a287:dc85]) by OSAPR01MB3089.jpnprd01.prod.outlook.com
+ ([fe80::19ad:b6ce:a287:dc85%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 12:12:08 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
+Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
+Thread-Index: AQHVG1qxx9ucB2mLPUSYOHggZ3+zpqaMymmAgAAt5MA=
+Date:   Wed, 5 Jun 2019 12:12:07 +0000
+Message-ID: <OSAPR01MB30897161EF40942B1E561232D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+References: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
+In-Reply-To: <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: df842f99-7a47-4de6-616a-08d6e9af07f1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSAPR01MB1683;
+x-ms-traffictypediagnostic: OSAPR01MB1683:
+x-microsoft-antispam-prvs: <OSAPR01MB1683B170B5E945A57142EBC5D8160@OSAPR01MB1683.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(376002)(396003)(39860400002)(136003)(189003)(199004)(102836004)(86362001)(53936002)(26005)(74316002)(5660300002)(6506007)(66946007)(71200400001)(71190400001)(6916009)(9686003)(52536014)(476003)(66556008)(73956011)(66476007)(64756008)(66446008)(6436002)(305945005)(7736002)(99286004)(486006)(478600001)(76116006)(7696005)(446003)(256004)(14444005)(76176011)(11346002)(55016002)(186003)(68736007)(14454004)(4326008)(4744005)(3846002)(54906003)(66066001)(6116002)(6246003)(81166006)(81156014)(8676002)(8936002)(229853002)(25786009)(33656002)(2906002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB1683;H:OSAPR01MB3089.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LsjFjOahFp796PF8TsgMhAyBu9zp5Ff/ZBEEWKN5qjEfISXFqKgQ1gBY/KHHHGk7Q7XEmimvq414OQKESNUBf7RDYtawZaV3xtsV18DPU/an7a1gn+qKEl5XecREDGI/ZJNxp/aA+hXGVTxQ4XieupZiLoIXIcyNs42EPZMFGbmWkz0+kOqFdKG7261vkFtk0LiYzBr1ieZ0IPsylAARrUw36Q4d+06dNoXPqTYYKCkCcjnAIHnJn6fzsrNNC1mnBLqIBzI2E26NCJGtU53GYSTVg2ceYtIaTBWlCldw90TyMZmVKzKI+IiwTjATXoUl7zIFIMmiRXRvtAc7AbGeG1IQAA67ckkWGZgsJ5Tib9YrmW+nj6DbAuG8pcYudu/uK0lJoo8i6NsiNQeqFvYUaGpz+rzKXg2bsMtHhio+PpI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df842f99-7a47-4de6-616a-08d6e9af07f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 12:12:07.9942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1683
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warning reported by coccicheck
-
-drivers/usb/gadget/udc/fotg210-udc.c:484:5-8: Unneeded variable: "ret".
-Return "0" on line 507
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/usb/gadget/udc/fotg210-udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
-index cec4929..21f3e6c 100644
---- a/drivers/usb/gadget/udc/fotg210-udc.c
-+++ b/drivers/usb/gadget/udc/fotg210-udc.c
-@@ -481,7 +481,6 @@ static int fotg210_set_halt_and_wedge(struct usb_ep *_ep, int value, int wedge)
- 	struct fotg210_ep *ep;
- 	struct fotg210_udc *fotg210;
- 	unsigned long flags;
--	int ret = 0;
- 
- 	ep = container_of(_ep, struct fotg210_ep, ep);
- 
-@@ -504,7 +503,7 @@ static int fotg210_set_halt_and_wedge(struct usb_ep *_ep, int value, int wedge)
- 	}
- 
- 	spin_unlock_irqrestore(&ep->fotg210->lock, flags);
--	return ret;
-+	return 0;
- }
- 
- static int fotg210_ep_set_halt(struct usb_ep *_ep, int value)
--- 
-2.7.4
-
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
+ZGF5LCBKdW5lIDUsIDIwMTkgNjoyNSBQTQ0KPHNuaXA+DQo+IFRoYW5rIHlvdSwgdGhpcyBzZWVt
+cyB0byBmaXggdGhlIHdhcm5pbmcsIHNvDQo+IFRlc3RlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVu
+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmsgeW91IGZvciB0aGUgdGVzdGluZyEN
+Cg0KPiBIb3dldmVyLCB0aGUgb3RoZXIgaW1iYWxhbmNlIChwaHktZWUwODAyMDAudXNiLXBoeS42
+IGVuYWJsaW5nIGl0cw0KPiByZWd1bGF0b3IgZHVyaW5nIGVhY2ggc3lzdGVtIHJlc3VtZSBwaGFz
+ZSwgYnV0IG5ldmVyIHRvdWNoaW5nIGl0DQo+IG90aGVyd2lzZSkgaXMgc3RpbGwgcHJlc2VudC4N
+Cg0KVW1tLCBzaW5jZSBJJ2QgbGlrZSB0byBpbnZlc3RpZ2F0ZSB0aGlzLA0Kd291bGQgeW91IHNo
+YXJlIHlvdXIgZGVidWcgcHJpbnQgcGF0Y2g/DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBT
+aGltb2RhDQoNCg==
