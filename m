@@ -2,79 +2,150 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A82BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838A4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D317C2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCE4206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfFEVGv (ORCPT
+        id S1726670AbfFEVHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:06:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60447 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfFEVGu (ORCPT
+        Wed, 5 Jun 2019 17:07:38 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:53551 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfFEVHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:06:50 -0400
-Received: from orion.localdomain ([77.2.1.21]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MBlpC-1hOgQB2mxo-00CDaq; Wed, 05 Jun 2019 23:06:43 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     pshelar@ovn.org, davem@davemloft.net, netdev@vger.kernel.org,
-        dev@openvswitch.org
-Subject: [PATCH] net: openvswitch: drop unneeded likely() call around IS_ERR()
-Date:   Wed,  5 Jun 2019 23:06:40 +0200
-Message-Id: <1559768800-18763-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:Q0dMVNlWg9Jugz820HJgEoP92ieTHn0R4pNNu/4D0178AMiTNJA
- 2pbG0EUsUk5rT/7rQ+Oa2DpHh7NtfbB3rFCQu3vf/+qhcltN1aaWiUQwcWBlNkDQ8sRj8oD
- O2l0sqEhqlDjiJgELCviecqAYisKKctWUbBdmEfGDaTZnQLVvCYgeffxGPgXGRROq0Fv/ix
- 6bOtupJsJY3OSHr0Jo/3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OLwNnzRBr9k=:w1lVm35MLec14dcy+nNU/l
- bvHwPeRbM0WDL6IhhWFAZBg1/1kY0WJv9vb+G8E+alDOZVOBe/EaFn0WL7ShK7YvU8vQJEpWy
- xPtWaqORf8nC3f3Cdv1AMl6DmlOQUn8trItWZmcfbg9Q5U75NCMzbimC1lNipRjOuThFX1t7A
- yMX12gJ6RPZ3XAL//79dkiMqMC+/LBiKi33Ew+Uft45iaExd5ojgBTw2PyEreElmr5KYXmsxR
- zImQfbGZsKEJXtjZLhZYxRACtmETZ+R2c7IYtYBvnN2F90ZHbGGxOG1lkI/t7U8s209UME/Gh
- mOexaBHRHQzwwPRCBSIxdlJReHknbUIp7F+A38BkADStRFy3jGIQ289GfBmMgsfxeLxSnDYR8
- hpjg2ei0eiitYIe+Qi9MW3iFHn3ZCBkPPsTDt8muOUH7xLwFkzI/VDqnV6DPln2RPjibIqldN
- M+ANjavxXPMjbLJVbjvw/T6sfX9MrGofdM+eRzqhZoxlXcaT7xm8aV8Bn0rmQtGdSlAwpprn5
- vW/4+2LBN8arbnfZJq2Px/ka6toX7AIwkbyX5o5MZc3UBLJOsJ5nRO1l4GSCnFIxEzUzmW8BZ
- q815SLbJC9dH2c5MJIaxs/KvPsKid53twoz8eNZxRQAtrBiia1tqkT3naKgKX6ORyBlbuyIiA
- UlUGGcGVlOt2kQM8C38PG60iA29GU86XUqUpzFUCuzOXZ578k/imvrZC0qZyaWbsCJQLwoOuR
- WbhXrAm3/u9RXwnSIryg1hSjgOsVLUE+yI8EuA==
+        Wed, 5 Jun 2019 17:07:38 -0400
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1E24924000B;
+        Wed,  5 Jun 2019 21:07:33 +0000 (UTC)
+Message-ID: <870e55d3697583841700258b184ed4f5f3a8fb03.camel@bootlin.com>
+Subject: Re: [PATCH 4/7] media: cedrus: Remove dst_bufs from context
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@bootlin.com
+Cc:     wens@csie.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 05 Jun 2019 23:07:33 +0200
+In-Reply-To: <20190530211516.1891-5-jernej.skrabec@siol.net>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+         <20190530211516.1891-5-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+Hi,
 
-IS_ERR() already calls unlikely(), so this extra likely() call
-around the !IS_ERR() is not needed.
+Le jeudi 30 mai 2019 à 23:15 +0200, Jernej Skrabec a écrit :
+> This array is just duplicated capture buffer queue. Remove it and adjust
+> code to look into capture buffer queue instead.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- net/openvswitch/datapath.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index dc9ff93..4076e08 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1347,7 +1347,7 @@ static int ovs_flow_cmd_del(struct sk_buff *skb, struct genl_info *info)
- 	reply = ovs_flow_cmd_alloc_info((const struct sw_flow_actions __force *) flow->sf_acts,
- 					&flow->id, info, false, ufid_flags);
- 	if (likely(reply)) {
--		if (likely(!IS_ERR(reply))) {
-+		if (!IS_ERR(reply)) {
- 			rcu_read_lock();	/*To keep RCU checker happy. */
- 			err = ovs_flow_cmd_fill_info(flow, ovs_header->dp_ifindex,
- 						     reply, info->snd_portid,
--- 
-1.9.1
+Cheers and thanks,
+
+Paul
+
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 +---
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  4 ++--
+>  .../staging/media/sunxi/cedrus/cedrus_video.c | 22 -------------------
+>  3 files changed, 3 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> index 3f476d0fd981..d8e6777e5e27 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -100,8 +100,6 @@ struct cedrus_ctx {
+>  	struct v4l2_ctrl_handler	hdl;
+>  	struct v4l2_ctrl		**ctrls;
+>  
+> -	struct vb2_buffer		*dst_bufs[VIDEO_MAX_FRAME];
+> -
+>  	union {
+>  		struct {
+>  			void		*mv_col_buf;
+> @@ -187,7 +185,7 @@ static inline dma_addr_t cedrus_dst_buf_addr(struct cedrus_ctx *ctx,
+>  	if (index < 0)
+>  		return 0;
+>  
+> -	buf = ctx->dst_bufs[index];
+> +	buf = ctx->fh.m2m_ctx->cap_q_ctx.q.bufs[index];
+>  	return buf ? cedrus_buf_addr(buf, &ctx->dst_fmt, plane) : 0;
+>  }
+>  
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index d0ee3f90ff46..b2290f98d81a 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -119,7 +119,7 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+>  		if (buf_idx < 0)
+>  			continue;
+>  
+> -		cedrus_buf = vb2_to_cedrus_buffer(ctx->dst_bufs[buf_idx]);
+> +		cedrus_buf = vb2_to_cedrus_buffer(cap_q->bufs[buf_idx]);
+>  		position = cedrus_buf->codec.h264.position;
+>  		used_dpbs |= BIT(position);
+>  
+> @@ -194,7 +194,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>  		if (buf_idx < 0)
+>  			continue;
+>  
+> -		ref_buf = to_vb2_v4l2_buffer(ctx->dst_bufs[buf_idx]);
+> +		ref_buf = to_vb2_v4l2_buffer(cap_q->bufs[buf_idx]);
+>  		cedrus_buf = vb2_v4l2_to_cedrus_buffer(ref_buf);
+>  		position = cedrus_buf->codec.h264.position;
+>  
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> index e2b530b1a956..681dfe3367a6 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> @@ -411,26 +411,6 @@ static void cedrus_queue_cleanup(struct vb2_queue *vq, u32 state)
+>  	}
+>  }
+>  
+> -static int cedrus_buf_init(struct vb2_buffer *vb)
+> -{
+> -	struct vb2_queue *vq = vb->vb2_queue;
+> -	struct cedrus_ctx *ctx = vb2_get_drv_priv(vq);
+> -
+> -	if (!V4L2_TYPE_IS_OUTPUT(vq->type))
+> -		ctx->dst_bufs[vb->index] = vb;
+> -
+> -	return 0;
+> -}
+> -
+> -static void cedrus_buf_cleanup(struct vb2_buffer *vb)
+> -{
+> -	struct vb2_queue *vq = vb->vb2_queue;
+> -	struct cedrus_ctx *ctx = vb2_get_drv_priv(vq);
+> -
+> -	if (!V4L2_TYPE_IS_OUTPUT(vq->type))
+> -		ctx->dst_bufs[vb->index] = NULL;
+> -}
+> -
+>  static int cedrus_buf_out_validate(struct vb2_buffer *vb)
+>  {
+>  	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+> @@ -517,8 +497,6 @@ static void cedrus_buf_request_complete(struct vb2_buffer *vb)
+>  static struct vb2_ops cedrus_qops = {
+>  	.queue_setup		= cedrus_queue_setup,
+>  	.buf_prepare		= cedrus_buf_prepare,
+> -	.buf_init		= cedrus_buf_init,
+> -	.buf_cleanup		= cedrus_buf_cleanup,
+>  	.buf_queue		= cedrus_buf_queue,
+>  	.buf_out_validate	= cedrus_buf_out_validate,
+>  	.buf_request_complete	= cedrus_buf_request_complete,
 
