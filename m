@@ -2,120 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E35C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEF0C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE992075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027E62086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k03miPaf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ALAHy9Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfFEIcy (ORCPT
+        id S1726757AbfFEIdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:32:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34737 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfFEIcy (ORCPT
+        Wed, 5 Jun 2019 04:33:40 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40931 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfFEIdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:32:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so5090917plt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:32:54 -0700 (PDT)
+        Wed, 5 Jun 2019 04:33:40 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so13687453wre.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dk0R1JeANwhvfJ8EQjNAn0p7Nj8AEAOaqyvCO9n4i9o=;
-        b=k03miPaflHsYxMZvcILGpctdJhtceRMyyo9Sz+HkvQksJJ5V01qAuQPRb2/jd89gDK
-         W6n3QXdOdbDFKXrQoM7emCK5pdtddXCUPmDIfXd7ruUGPhYAq8g4y4S8arksaz7/MZv1
-         Xe/oBYbsELe4UOkCSaFDKyGfqoGV+H4qILh3HdKr4cpBGa7+YJ6dZuVXGE9XDl12Qby7
-         OGiB7W+9JwHgOD+Ahlk4o/EW/Wo0knAZU9N+y0rCdxlKMJ65GdO6VjNosDTiZXaUfEKq
-         SApCpBFPE4n/f+EVCTjab8t4+nsnS7hBs1IyP5Otrjj4xwplyT0oZ1m1uJ7gpNxp4m3a
-         qXbw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vdptXZpu4LSX12pCYwIuZQ7IZAANQVexuK981Stg0C8=;
+        b=ALAHy9QmYv7XXWye+P3GXr5WU1UBM7bpcAsb7JjMhGfhzFK3WTSgq/gW44X6s9DOOU
+         Gw8HELrnNrL9ZOQJmWNOqcViKXL7Sd5viTsVA0Q5MLVLthX6g58h35/3DmaK2HPZzhhD
+         sje7iHdviQdSy+B6RipLN3FM/ZGi/OGTDeMW/LLtCHO3pEaDn9BXkyJFbNgNdrS3PHt+
+         /3/jMj2U55oO5OsWSC7R7Ca48Z64cAhsmLCy6essSLonYiZTtEPIudofmZIksO1TMmNf
+         V/Z9D2Vv22H/lyRMEl2a24fB5kF7oMk30DEakRsmq5XN2pFxO7VScBTMlTSG7p8I8SYM
+         k5YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dk0R1JeANwhvfJ8EQjNAn0p7Nj8AEAOaqyvCO9n4i9o=;
-        b=FoYXTPSmTNuPv3uvtrTG87P3mIM/QJEAFeyKSqB6DR61KOTRgcKfDEQXZiUSw1hOsm
-         /cHHHmN9QEHK0td3lwpc47qIunmdEbqE3sEQt8D0vQiAab6Qxx1Jghzlw1pIICpKLx84
-         PnPJg1bHtmcJ1/aaguh65pGTFrslVw9z1BR1Mk0deM2bHrJanVNRNomL8erCgV88i6Gp
-         b5onVt9CRddL09h3YzNWktlz6G5WzFy2H2aOhUg19PMDZ2xo25HhLLgyDxAHbZj9zqpf
-         JvD5wLdp/NW4iSapv89nA/CdGQ6AkLuPP81ZPOF9rZQUnUuZPmXS0/rkJS3zkhgkjp/4
-         Je+A==
-X-Gm-Message-State: APjAAAWDpGbB7nR1IoJdjDKZkS5CySNvox/77n4zd37bHyQI2/K+kRe3
-        /VVfMSv69RnhFj5oIW9LsA5rPzHQXVBDqL/mCYM=
-X-Google-Smtp-Source: APXvYqwbZaGMyauKiFD++PrI2NLWR+EDp4DDtRCdyEdJmY9157nkeZUMvJH5Ca/fFXFKRHqlA5YUgzAWFuI8b1Jcpx4=
-X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr41234514plr.262.1559723573797;
- Wed, 05 Jun 2019 01:32:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vdptXZpu4LSX12pCYwIuZQ7IZAANQVexuK981Stg0C8=;
+        b=C4q/Wy+pyRj7V3E72UO8P371NzdYLghwi+lxV5QPCbClE3nOokb4r00pDcAd1hwkGF
+         CqfsdB9I0Q9SM7dvlGpH/mC6ym4d0YIgY1peThMnZXSU0R0rolz1+tmtc6SwIY78VtZ2
+         3gTpg0+ttsxbe8CINI6ZWvo5VupEhmiRU7D/51voqiETHJXaMqdE+IKDg89fep5C9jK2
+         bGW2FTkzCyV1F2K1N1TVq80P7eiFcfH9zuGtlg5Qlq9fNHF4ycLa8wX3+VIIo/iFhM5D
+         xvl9EulRWO33Z1QOibY4qA3MO/TTxsQId2ByfCcIejhoke/ZEhz/37z97ODBaS5klaVu
+         ZWZQ==
+X-Gm-Message-State: APjAAAXKx8zs905UwyXFLu4VMhXddLkywrF4sY+z7/K0zBJO8vI4BZcY
+        x/DjMb/H4IRn+atwYkry9wjbKQ==
+X-Google-Smtp-Source: APXvYqyotqt2GSUVfKt41uOpAW3PK5kR7ACoXfTM+FsjWd3orDAWwl5xXL8dCNOr84ImWYJtqfdXbQ==
+X-Received: by 2002:a5d:5186:: with SMTP id k6mr7551716wrv.30.1559723618540;
+        Wed, 05 Jun 2019 01:33:38 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id b5sm15274471wrx.22.2019.06.05.01.33.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 01:33:37 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RFC v3 0/2] clocksource: davinci-timer: new driver
+Date:   Wed,  5 Jun 2019 10:33:32 +0200
+Message-Id: <20190605083334.22383-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190602143017.19645-1-benniciemanuel78@gmail.com>
-In-Reply-To: <20190602143017.19645-1-benniciemanuel78@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Jun 2019 11:32:42 +0300
-Message-ID: <CAHp75Vf5Foj3FKD6DiRgck07KAVddGTTXJQhWib77yctfdAjOg@mail.gmail.com>
-Subject: Re: [PATCH] pci: ibmphp: add check of return value from pci_hp_register()
-To:     benniciemanuel78@gmail.com
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joe Perches <joe@perches.com>, Lukas Wunner <lukas@wunner.de>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 5:30 PM Emanuel Bennici
-<benniciemanuel78@gmail.com> wrote:
->
-> Check the return value of pci_hp_register() in Function
-> ebda_rsrc_controller()
->
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Maybe this is correct, maybe not.
-You are changing behaviour of the function.
-How did you test this?
+This is another version of the new davinci clocksource driver. After much
+discussion this contains many changes to simplify and improve the driver.
 
-> Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
-> ---
->  drivers/pci/hotplug/ibmphp_ebda.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/hotplug/ibmphp_ebda.c b/drivers/pci/hotplug/ibmphp_ebda.c
-> index 11a2661dc062..7e523ce071b3 100644
-> --- a/drivers/pci/hotplug/ibmphp_ebda.c
-> +++ b/drivers/pci/hotplug/ibmphp_ebda.c
-> @@ -896,10 +896,17 @@ static int __init ebda_rsrc_controller(void)
->
->         }                       /* each hpc  */
->
-> +       int result = 0;
->         list_for_each_entry(tmp_slot, &ibmphp_slot_head, ibm_slot_list) {
->                 snprintf(name, SLOT_NAME_SIZE, "%s", create_file_name(tmp_slot));
-> -               pci_hp_register(&tmp_slot->hotplug_slot,
-> -                       pci_find_bus(0, tmp_slot->bus), tmp_slot->device, name);
-> +               result = pci_hp_register(&tmp_slot->hotplug_slot,
-> +                                        pci_find_bus(0, tmp_slot->bus),
-> +                                        tmp_slot->device, name);
-> +
-> +               if (result) {
-> +                       err("pci_hp_register failed with error %d\n", result);
-> +                       goto error;
-> +               }
->         }
->
->         print_ebda_hpc();
-> --
-> 2.19.1
->
+v1 -> v2:
+- changed the format of the copyright notice
+- removed all mentiones of the periodic timer setting
+- added caching of the TCR register value so that its updating doesn't
+  require a read
+- split the timer configuration for clock events into the
+  set_state_oneshot() and set_state_shutdown() callbacks
 
+v2 -> v3:
+- tim34, if used, should run in periodic mode for clocksource, now fixed
+- dropped all the configuration variables from struct davinci_clockevent
+  as clockevent always uses tim12
+- dropped caching of the TCR register with the following reasoning: on
+  systems using tim34 for clocksource, the TCR register is only touched
+  by the clock driver and we know that we need to keep tim34 in periodic
+  mode; on da830 the RTOS running on the DSP may modify the TCR register
+  but we on the other hand never change its settings when only using tim12
+- subsequently the whole routine for TCR updating was dropped
+- dropped the shift variable from most places
+- added separate routines for initializing clocksource for da830 and all
+  other systems
+- sprinkled a bunch of comments all over the driver to explain things
+  that caused confusion before
+
+Bartosz Golaszewski (2):
+  clocksource: davinci-timer: add support for clockevents
+  clocksource: timer-davinci: add support for clocksource
+
+ drivers/clocksource/Kconfig         |   5 +
+ drivers/clocksource/Makefile        |   1 +
+ drivers/clocksource/timer-davinci.c | 370 ++++++++++++++++++++++++++++
+ include/clocksource/timer-davinci.h |  44 ++++
+ 4 files changed, 420 insertions(+)
+ create mode 100644 drivers/clocksource/timer-davinci.c
+ create mode 100644 include/clocksource/timer-davinci.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.0
+
