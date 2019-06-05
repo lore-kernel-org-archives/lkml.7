@@ -3,155 +3,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B19AC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD859C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C5A206E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559748480;
-	bh=xEfhG429XxHiLVgfdyIBAtdWzt6JRW7N/DPQkRYCI6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gb8IMI/+CFx/T5zKzNmPljBb+XH5IqHqgXAE/MBCej1XbqPjZ8bmRwMz+FcfTNOL2
-	 fPmG537zDxILyylp9q78vT3LlvPy04zBKkSJsLK3Pous+JFCF++TPcV1CTjBANe0w9
-	 /RLNR2d+6j3d3jZvvpkSiaP/1iwrozZ9ZPOW2m0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7D5482075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YkmfipVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfFEP17 (ORCPT
+        id S1728319AbfFEPb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:27:59 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40175 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbfFEP17 (ORCPT
+        Wed, 5 Jun 2019 11:31:29 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:27037 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfFEPb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:27:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so3928922qtn.7;
-        Wed, 05 Jun 2019 08:27:58 -0700 (PDT)
+        Wed, 5 Jun 2019 11:31:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DoYP3SXq/F69tuFAtMw8bYjy0iDS2z1aQ6oaElaTXL8=;
-        b=pEDdS/Gt9MDlY9k11wK/L3izJSlmNQGxdN8DnF2v/gdBy7xtXb8UJdX42bIYBBI5QB
-         n9Rvr5rOrDrn95t6jDQVNX+JfdWUG6xp3BKnPO/rTE/dbe3Rv0wAn/83itq3kpa4EcBP
-         bTiwnt/LzUYaJhSwJFtJmggS1qHOJNzW3aVWcRMtPpLRFfwufoBSk/8XPc4DXnqxMBGc
-         4zzOq7uygtQ88uNtCZ9Wt+L+qFGKjI5oSOwnBpGUIuaRP3dgDaznJxn3tS97HjrFQxrG
-         2wBAx5OaG2PFz1XAFeDHxdMc5aqKtBJIugmoFREvlnuULQVEZUEc/qw8p5z/7jjQ8MxC
-         H2Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DoYP3SXq/F69tuFAtMw8bYjy0iDS2z1aQ6oaElaTXL8=;
-        b=emGzmP3oQxGesGWu132xIrSO/FX/OgV6RxXR0EHgBgodtJfG9P0rbjIqRKAtg18prt
-         1JRGs/e5CrqQDkPtRh1VVueagjFkejgvznsThpEcEslYIzUUu+wxrm9rGHjRFZMxv3LM
-         RWWIAOg7Bjgemjh1b4VMPs0rEQnPkgL2LFp44jlTpeMYNugIRodEYmS98MJF6WHoHkUl
-         N/GuzQtz5U9lxgL1vHNq90pWPoESXOz1amU3MYYlvHYD56B0eVguTOl1cZq/2679HPct
-         BZuQAY4qOWsHVnzYPT/ubSKRxjtHmMJCQneSuPWo+RE3UVJViPQQHyIJCzMSqCEiHq5G
-         1ysg==
-X-Gm-Message-State: APjAAAVaxq+XMMnWFXhUtZrbbugMQfDDKgRrVYW6jqaaVovwDbBv1n9M
-        9eNgl49K/avirE8lVfGAi44=
-X-Google-Smtp-Source: APXvYqxGSPbzamSX1tRyVLk9HFMCpuOKya9aHxwl9uQDtiW/Cl9yo+PicBLUpAo4n+Pj3Kry+APbrQ==
-X-Received: by 2002:a0c:95b3:: with SMTP id s48mr17429642qvs.84.1559748477813;
-        Wed, 05 Jun 2019 08:27:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c027])
-        by smtp.gmail.com with ESMTPSA id t197sm6390498qke.2.2019.06.05.08.27.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 08:27:56 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 08:27:54 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190605152754.GO374014@devbig004.ftw2.facebook.com>
-References: <20190515094459.10317-1-patrick.bellasi@arm.com>
- <20190515094459.10317-13-patrick.bellasi@arm.com>
- <20190531153545.GE374014@devbig004.ftw2.facebook.com>
- <20190603122929.GC19426@darkstar>
- <20190605140943.GM374014@devbig004.ftw2.facebook.com>
- <20190605150630.vh5pyfpd6y3mfcaa@e110439-lin>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559748688; x=1591284688;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SZDqMhXVHKpi6b60Mndyg6IqKyAEKB8xVLBf3wCGp48=;
+  b=YkmfipVk/32s1sMohbCiuDppYdTQGNJcnJ6ZJ2oKTSpWVduS0KcT6JaS
+   mapbUV9cV74y86HYBw6fHAfi0abYTU2GgBUIY3L27awUHbKy+oufVQUXS
+   lGPSo7jXd4/+ow8yGTurbI/vC8OZGoFzEpdgp9afyDDUnMnHJTslGiKra
+   E=;
+X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
+   d="scan'208";a="808761647"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Jun 2019 15:31:25 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 60EDEA18D7;
+        Wed,  5 Jun 2019 15:31:21 +0000 (UTC)
+Received: from EX13D05UWC004.ant.amazon.com (10.43.162.223) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 15:31:20 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D05UWC004.ant.amazon.com (10.43.162.223) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 15:31:20 +0000
+Received: from localhost (10.85.18.74) by mail-relay.amazon.com
+ (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Wed, 5 Jun 2019 15:31:20 +0000
+Date:   Wed, 5 Jun 2019 08:31:20 -0700
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Eduardo Valentin <eduval@amazon.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
+ and queue messages
+Message-ID: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
+References: <20190531043347.4196-1-eduval@amazon.com>
+ <20190531043347.4196-3-eduval@amazon.com>
+ <20190604171611.GS9224@smile.fi.intel.com>
+ <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
+ <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
+ <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
+ <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190605150630.vh5pyfpd6y3mfcaa@e110439-lin>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Patrick.
+On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
+> > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
+> > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
+> 
+> > Well, yes, but the point is you would be switching from a simple AND (&) operation
+> > to a division...
+> >
+> > I am keeping the power of 2 dep so that we can keep this with a simple &.
+> 
+> Works for me.
+> 
+> > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
+> > > > >
+> > > > > Wouldn't compiler warn you due to unused data?
+> > > > > Perhaps drop of_match_ptr() for good...
+> > > >
+> > > > Not sure what you meant here. I dont see any compiler warning.
+> > > > Also, of_match_ptr seams to be well spread in the kernel.
+> > >
+> > > If this will be compiled with CONFIG_OF=n...
+> >
+> > I see.. I obviously did not test with that config..
+> >
+> > > Though I didn't check all dependencies to see if it even possible. In
+> > > any case of_match_ptr() is redundant in both cases here.
+> > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
+> > > CONFIG_OF, or drop the macro use.
+> >
+> > I will wrap it into CONFIG_OF..
+> 
+> Would be this expected to work in the case of CONFIG_OF=n?
+> If no, why to introduce ugly #ifdef:s and additional macros?
 
-On Wed, Jun 05, 2019 at 04:06:30PM +0100, Patrick Bellasi wrote:
-> The only additional point I can think about as a (slightly) stronger
-> reason is that I guess we would like to have the same API for cgroups
-> as well as for the task specific and the system wide settings.
-> 
-> The task specific values comes in via the sched_setattr() syscall:
-> 
->    [PATCH v9 06/16] sched/core: uclamp: Extend sched_setattr() to support utilization clamping
->    https://lore.kernel.org/lkml/20190515094459.10317-7-patrick.bellasi@arm.com/
-> 
-> where we need to encode each clamp into a __u32 value.
-> 
-> System wide settings are expose similarly to these:
-> 
->    grep '' /proc/sys/kernel/sched_*
-> 
-> where we have always integer numbers.
-> 
-> AFAIU your proposal will require to use a "scaled percentage" - e.g.
-> 3844 for 38.44% which however it's still not quite the same as writing
-> the string "38.44".
-> 
-> Not sure that's a strong enough argument, is it?
+I do hate those too...
 
-It definitely is an argument but the thing is that the units we use in
-kernel API are all over the place anyway.  Even for something as
-simple as sizes, we use bytes, 512 byte sectors, kilobytes and pages
-all over the place.  Some for good reasons (as you mentioned above)
-and others for historical / random ones.
+> Wouldn't be better to have
+>   depends on OF || COMPILE_TEST
 
-So, I'm generally not too concerned about units differing between
-cgroup interface and, say, syscall interface.  That ship has sailed a
-long while ago and we have to deal with it everywhere anyway (in many
-cases there isn't even a good unit to pick for compatibility because
-the existing interfaces are already mixing units heavily).  As long as
-the translation is trivial, it isn't a big issue.  Note that some
-translations are not trivial.  For example, the sched nice value
-mapping to weight has a separate unit matching knob for that reason.
+Well, technically, the original author had a case for using this
+without CONFIG_OF. That is why I did not force here to be a strong
+dependency on CONFIG_OF. So, I guess in this case the driver will
+work properly in both cases if we:
 
-> > We can go into the weeds with the semantics but how about us using
-> > an alternative adjective "misleading" for the cpu.util.min/max names
-> > to short-circuit that?
++#ifdef CONFIG_OF
++static const struct of_device_id i2c_slave_mqueue_of_match[] = {
++       {
++               .compatible = "i2c-slave-mqueue",
++       },
++       { /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
++#endif
++
++static struct i2c_driver i2c_slave_mqueue_driver = {
++       .driver = {
++               .name   = "i2c-slave-mqueue",
++               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
++       },
++       .probe          = i2c_slave_mqueue_probe,
++       .remove         = i2c_slave_mqueue_remove,
++       .id_table       = i2c_slave_mqueue_id,
++};
+
+The above is a well stablish pattern across the drivers.
+
+> ?
 > 
-> Not quite sure to get what you mean here. Are you pointing out that
-> with clamps we don't strictly enforce a bandwidth but we just set a
-> bias?
-
-It's just that "util" is already used a lot and cpu.util.max reads
-like it should cap cpu utilization (wallclock based) to 80% and it's
-likely that it'd read seem way to many other folks too.  A more
-distinctive name signals that it isn't something that obvious.
-
-Thanks.
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
 -- 
-tejun
+All the best,
+Eduardo Valentin
