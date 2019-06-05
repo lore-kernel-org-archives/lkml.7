@@ -2,106 +2,144 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F46C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE513C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAC12075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE42020866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsKJodQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfFEJJK (ORCPT
+        id S1726958AbfFEJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:09:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35360 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbfFEJJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:09:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AD5A30BC569;
-        Wed,  5 Jun 2019 09:09:09 +0000 (UTC)
-Received: from krava (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2B2F019C65;
-        Wed,  5 Jun 2019 09:09:07 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 11:09:07 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com
-Subject: Re: [PATCH V3 1/5] perf cpumap: Retrieve die id information
-Message-ID: <20190605090907.GC23116@krava>
-References: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 05 Jun 2019 09:09:09 +0000 (UTC)
+        Wed, 5 Jun 2019 05:10:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39511 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfFEJKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:10:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g9so9461056plm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=A0F5TwKY/VCSLcp+XKNpiRnciFopNfIc4l3QtF9bGnE=;
+        b=qsKJodQeWHQrpBSUsCV/81Z7vFl9IiPrLe7Wx+TTMYwOb8vRhY7qMbyumwt8N6nzUp
+         huDpz/WgJhGZQJNcubX5sDMOT5m/6LbguxcPIte89UJaj/B9lKADRPVtqIepVB+oX5sd
+         hnXgkLK8L2MAW5lPvWDC99pJ4HSaC8QE332V5c6l5n9kmFfM5U7iJgD+3HoP8nJY6/oe
+         T2TGY4+lUrdaa/iyrZ9+h1U0EN1aUJNorBJTwurwt7/FrvQoDKhFU75jWXstBB47BFp4
+         vZG8Ouj9I7fWnXUOm8nkebeHXwU6K1NcK2iJ+B0SMP3aK6IXE+yb2bmKcQto4teTeueg
+         RHKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A0F5TwKY/VCSLcp+XKNpiRnciFopNfIc4l3QtF9bGnE=;
+        b=fA5br/hzAN9IYWMvPcnXrm2Tas4QHys4d7+yV6XU77qXOYq9OEB+EJDOTuylcnJtlk
+         QYNWb8YjbaYSFOFYjBS+LKjMhvbqOP1aOck3yjANWACjl/faMvUnVSKqoeDeavwKgMeo
+         fj2oeYr2gK5xEdcU70JVxm5TxsL4i1A/Js61HBi+aOTHv5BCJAyz8YhYPl5up1MsWRyf
+         RMk1lcd3c62hJ904nZJ0RmlIuy1fzoyGQM1F3jwvxiW5S6xQpfeTMxTZN/7G4QSMLpVu
+         lpZbpQ3PQrwr1pqfjWCO41CmGozKsbRoS1hwEQsaH3ra5AFbUm6wHUd1SS+DZAdIl+wh
+         jtlw==
+X-Gm-Message-State: APjAAAVWf0EVia7eHPvj5i2XYA3a/+zuAd7BNpAQBhUeYaCS8Tt2J+a3
+        9iHZ0mJdcxX6WRKYgm7gUA==
+X-Google-Smtp-Source: APXvYqwPrprfYIFcfp2U4RhBi6aA36+dRA/hHPLVJndUrShnel3Up//HynanoblmvqR0aoxy92SoVg==
+X-Received: by 2002:a17:902:624:: with SMTP id 33mr42733906plg.325.1559725842640;
+        Wed, 05 Jun 2019 02:10:42 -0700 (PDT)
+Received: from mylaptop.nay.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id w36sm11844525pgl.62.2019.06.05.02.10.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 02:10:39 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
+Date:   Wed,  5 Jun 2019 17:10:19 +0800
+Message-Id: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:50:40PM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> There is no function to retrieve die id information of a given CPU.
-> 
-> Add cpu_map__get_die_id() to retrieve die id information.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
-> 
-> No changes since V2.
+As for FOLL_LONGTERM, it is checked in the slow path
+__gup_longterm_unlocked(). But it is not checked in the fast path, which
+means a possible leak of CMA page to longterm pinned requirement through
+this crack.
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Place a check in the fast path.
 
-for the whole patchset
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/gup.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-thanks,
-jirka
+diff --git a/mm/gup.c b/mm/gup.c
+index f173fcb..0e59af9 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2196,6 +2196,26 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_CMA
++static inline int reject_cma_pages(int nr_pinned, struct page **pages)
++{
++	int i;
++
++	for (i = 0; i < nr_pinned; i++)
++		if (is_migrate_cma_page(pages[i])) {
++			put_user_pages(pages + i, nr_pinned - i);
++			return i;
++		}
++
++	return nr_pinned;
++}
++#else
++static inline int reject_cma_pages(int nr_pinned, struct page **pages)
++{
++	return nr_pinned;
++}
++#endif
++
+ /**
+  * get_user_pages_fast() - pin user pages in memory
+  * @start:	starting user address
+@@ -2236,6 +2256,9 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 		ret = nr;
+ 	}
+ 
++	if (unlikely(gup_flags & FOLL_LONGTERM) && nr)
++		nr = reject_cma_pages(nr, pages);
++
+ 	if (nr < nr_pages) {
+ 		/* Try to get the remaining pages with get_user_pages */
+ 		start += nr << PAGE_SHIFT;
+-- 
+2.7.5
 
-> 
->  tools/perf/util/cpumap.c | 7 +++++++
->  tools/perf/util/cpumap.h | 1 +
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 0b59922..7db1365 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -373,6 +373,13 @@ int cpu_map__build_map(struct cpu_map *cpus, struct cpu_map **res,
->  	return 0;
->  }
->  
-> +int cpu_map__get_die_id(int cpu)
-> +{
-> +	int value, ret = cpu__get_topology_int(cpu, "die_id", &value);
-> +
-> +	return ret ?: value;
-> +}
-> +
->  int cpu_map__get_core_id(int cpu)
->  {
->  	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
-> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> index f00ce62..6762ff9 100644
-> --- a/tools/perf/util/cpumap.h
-> +++ b/tools/perf/util/cpumap.h
-> @@ -25,6 +25,7 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size);
->  size_t cpu_map__fprintf(struct cpu_map *map, FILE *fp);
->  int cpu_map__get_socket_id(int cpu);
->  int cpu_map__get_socket(struct cpu_map *map, int idx, void *data);
-> +int cpu_map__get_die_id(int cpu);
->  int cpu_map__get_core_id(int cpu);
->  int cpu_map__get_core(struct cpu_map *map, int idx, void *data);
->  int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp);
-> -- 
-> 2.7.4
-> 
