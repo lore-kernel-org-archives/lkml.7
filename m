@@ -2,203 +2,174 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC5C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC36EC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEC02075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8829B2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLRkqZn0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLRkqZn0"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gMWlqo2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFEF1D (ORCPT
+        id S1726530AbfFEFas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:27:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:32866 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFEF1D (ORCPT
+        Wed, 5 Jun 2019 01:30:48 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:18083 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfFEFas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:27:03 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AE64F6074C; Wed,  5 Jun 2019 05:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559712422;
-        bh=1KJN3mFJVMBneJMO/d67H03JGGeCwXkWQw9EA/NpWtY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QLRkqZn0wy/3UdzNoUrvwffxt8Kr6B9Bg9hCvpd7OzILqWtSPMzO1mT9DrKc4T7dl
-         TCKl4DhH4x1HTlf+wYnBqlCrS6l26tm6noTFtu6EDec+3rzmkMVw+jYWPreqhjkU9r
-         ppodi2GjDvQz88A7gtDzJjYBe/Alu13bndVse+FY=
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3A3C609CD;
-        Wed,  5 Jun 2019 05:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559712422;
-        bh=1KJN3mFJVMBneJMO/d67H03JGGeCwXkWQw9EA/NpWtY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QLRkqZn0wy/3UdzNoUrvwffxt8Kr6B9Bg9hCvpd7OzILqWtSPMzO1mT9DrKc4T7dl
-         TCKl4DhH4x1HTlf+wYnBqlCrS6l26tm6noTFtu6EDec+3rzmkMVw+jYWPreqhjkU9r
-         ppodi2GjDvQz88A7gtDzJjYBe/Alu13bndVse+FY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3A3C609CD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f46.google.com with SMTP id p26so3944263edr.2;
-        Tue, 04 Jun 2019 22:27:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAVgm0GzdoB9JK5inlhi3sv1gMB6DCijHyYDQzr/7fu/yEaypf9/
-        YRee09mrHqqOfEs7/H4bf9BQ+HDzSLpr//+yXho=
-X-Google-Smtp-Source: APXvYqxdlbGMVdeW3rWEdt46VbbnhcG5V+U3jyhEom0QjHb/okBPll2garbSRrpQ9xZmyFz02Z2v9+15OuPvo9kStv0=
-X-Received: by 2002:a50:b797:: with SMTP id h23mr40316638ede.197.1559712420354;
- Tue, 04 Jun 2019 22:27:00 -0700 (PDT)
+        Wed, 5 Jun 2019 01:30:48 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x555UAE8001144;
+        Wed, 5 Jun 2019 14:30:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x555UAE8001144
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559712611;
+        bh=vIsvVdWf1BBkZws01DfQPUbAu87IXpqK2p7t7RStVSs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gMWlqo2qXDYYgeX7TYIEYiiw4hICHiZNgr+lDSPs4ZvaffjYGqPLJ7tr8nbEmwm6y
+         6h61Ahd/9pNcTBRffwoIEuzk9pMkIT8NNE9PWPlAuB+fS/lPHE5SPEOwKuRR9ClNk/
+         aTUXkD8UZO0lu8abr1wWwTCfRi1eRLBsoeeua1M+//Ts5BAKnn1PT5sJ+lD8Tqaxj5
+         xWeGvsi5g+6kSEnvl85aYBDIEX9nKctH1pVVeXgD5WCqu4lHE4EhtfDWFYaG4Ya/uV
+         nXfPw7Px6kJwj2Y0hR6eDDurKAJZy+eqUjcvG+sjweatdKp0XUIDMtYxw4Yt61nvTh
+         cqbof4fGWREPw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>,
+        linux-nilfs@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
+Date:   Wed,  5 Jun 2019 14:30:06 +0900
+Message-Id: <20190605053006.14332-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190513210747.22429-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20190513210747.22429-1-bjorn.andersson@linaro.org>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Wed, 5 Jun 2019 10:56:49 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
-Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 2:39 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Bring in the Truly display and enable the DSI channels to make the
-> mdss/gpu probe, even though we're lacking LABIB, preventing us from
-> seeing anything on the screen.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
+which is not exported to user-space.
 
-Looks good to me and work well too with a wip lab-ibb driver change.
+UAPI headers must use the ones prefixed with double-underscore.
 
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Detected by compile-testing exported headers:
 
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 02b8357c8ce8..83198a19ff57 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -352,6 +352,77 @@
->         status = "okay";
->  };
->
-> +&dsi0 {
-> +       status = "okay";
-> +       vdda-supply = <&vdda_mipi_dsi0_1p2>;
-> +
-> +       qcom,dual-dsi-mode;
-> +       qcom,master-dsi;
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint = <&truly_in_0>;
-> +                               data-lanes = <0 1 2 3>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       panel@0 {
-> +               compatible = "truly,nt35597-2K-display";
-> +               reg = <0>;
-> +               vdda-supply = <&vreg_l14a_1p88>;
-> +
-> +               reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-> +               mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               truly_in_0: endpoint {
-> +                                       remote-endpoint = <&dsi0_out>;
-> +                               };
-> +                       };
-> +
-> +                       port@1 {
-> +                               reg = <1>;
-> +                               truly_in_1: endpoint {
-> +                                       remote-endpoint = <&dsi1_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi0_phy {
-> +       status = "okay";
-> +       vdds-supply = <&vdda_mipi_dsi0_pll>;
-> +};
-> +
-> +&dsi1 {
-> +       status = "okay";
-> +       vdda-supply = <&vdda_mipi_dsi1_1p2>;
-> +
-> +       qcom,dual-dsi-mode;
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint = <&truly_in_1>;
-> +                               data-lanes = <0 1 2 3>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi1_phy {
-> +       status = "okay";
-> +       vdds-supply = <&vdda_mipi_dsi1_pll>;
-> +};
-> +
->  &gcc {
->         protected-clocks = <GCC_QSPI_CORE_CLK>,
->                            <GCC_QSPI_CORE_CLK_SRC>,
-> @@ -365,6 +436,14 @@
->         clock-frequency = <400000>;
->  };
->
-> +&mdss {
-> +       status = "okay";
-> +};
-> +
-> +&mdss_mdp {
-> +       status = "okay";
-> +};
-> +
->  &qupv3_id_1 {
->         status = "okay";
->  };
-> --
-> 2.18.0
->
+./usr/include/linux/nilfs2_ondisk.h: In function ‘nilfs_checkpoint_set_snapshot’:
+./usr/include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function ‘cpu_to_le32’ [-Werror=implicit-function-declaration]
+  cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                 ^
+./usr/include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro ‘NILFS_CHECKPOINT_FNS’
+ NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+ ^~~~~~~~~~~~~~~~~~~~
+./usr/include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function ‘le32_to_cpu’ [-Werror=implicit-function-declaration]
+  cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                             ^
+./usr/include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro ‘NILFS_CHECKPOINT_FNS’
+ NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+ ^~~~~~~~~~~~~~~~~~~~
+./usr/include/linux/nilfs2_ondisk.h: In function ‘nilfs_segment_usage_set_clean’:
+./usr/include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function ‘cpu_to_le64’ [-Werror=implicit-function-declaration]
+  su->su_lastmod = cpu_to_le64(0);
+                   ^~~~~~~~~~~
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ include/uapi/linux/nilfs2_ondisk.h | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/include/uapi/linux/nilfs2_ondisk.h b/include/uapi/linux/nilfs2_ondisk.h
+index a7e66ab11d1d..c23f91ae5fe8 100644
+--- a/include/uapi/linux/nilfs2_ondisk.h
++++ b/include/uapi/linux/nilfs2_ondisk.h
+@@ -29,7 +29,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/magic.h>
+-
++#include <asm/byteorder.h>
+ 
+ #define NILFS_INODE_BMAP_SIZE	7
+ 
+@@ -533,19 +533,19 @@ enum {
+ static inline void							\
+ nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
+-				   (1UL << NILFS_CHECKPOINT_##flag));	\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
++				     (1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline void							\
+ nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
+ 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline int							\
+ nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
+ {									\
+-	return !!(le32_to_cpu(cp->cp_flags) &				\
++	return !!(__le32_to_cpu(cp->cp_flags) &				\
+ 		  (1UL << NILFS_CHECKPOINT_##flag));			\
+ }
+ 
+@@ -595,20 +595,20 @@ enum {
+ static inline void							\
+ nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
+ {									\
+-	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
++	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
+ 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
+ }									\
+ static inline void							\
+ nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
+ {									\
+ 	su->su_flags =							\
+-		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
++		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
+ 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
+ }									\
+ static inline int							\
+ nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
+ {									\
+-	return !!(le32_to_cpu(su->su_flags) &				\
++	return !!(__le32_to_cpu(su->su_flags) &				\
+ 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
+ }
+ 
+@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+ static inline void
+ nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
+ {
+-	su->su_lastmod = cpu_to_le64(0);
+-	su->su_nblocks = cpu_to_le32(0);
+-	su->su_flags = cpu_to_le32(0);
++	su->su_lastmod = __cpu_to_le64(0);
++	su->su_nblocks = __cpu_to_le32(0);
++	su->su_flags = __cpu_to_le32(0);
+ }
+ 
+ static inline int
+ nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
+ {
+-	return !le32_to_cpu(su->su_flags);
++	return !__le32_to_cpu(su->su_flags);
+ }
+ 
+ /**
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
