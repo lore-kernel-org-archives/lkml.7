@@ -2,117 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54E4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B7CC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2AB320684
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0C020684
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Dvb5lvHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfFENEI (ORCPT
+        id S1727917AbfFENE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:04:08 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42460 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbfFENEI (ORCPT
+        Wed, 5 Jun 2019 09:04:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42437 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbfFENE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:04:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x17so1335299wrl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:04:07 -0700 (PDT)
+        Wed, 5 Jun 2019 09:04:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t28so11928670lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NRvNKqXzZztvQh3qtkPJBNz3Y41PCmY2mwresCdihvw=;
+        b=Dvb5lvHNFy/YlX9VOpbVuAXgLc/Bkqb9FHL1QfulyPL3Nfu7LNFUDi2bdtRN38UIDB
+         kpsq1w0ZNYuzjO5QiRB/VNBh4B2zYpwznNXZ2BcTi+m6xeubmV2GNyYxBYFe52W8b6at
+         WcDyZ7BR4dByy2KBn+q2kg8uW24xdyRPcakrY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E10Uq/CKstRqDPNkNzGX3FpBcikgtSLsGRUBR28/US4=;
-        b=EqVLve8XhQbtB4zYS4QrGtem6w4tlk7U1e8plkiMVRTiSXknVP2b2aaSfqw1tN3yrV
-         /qU2WOD6m2jBf5LZR8GcNidS71yHpdzFTuzdlVH8i9z6ATgejR50qmUqP9vBPbjiAwF4
-         ag8mk3uzf2suDQvV1fH72oJ5YO8mjlN9KegckwBOclX00zl+/BADPSZLjO1b7AU8bneK
-         g2B5mvk6xf/K3lg8B58UiWo1mNWdKAi+O3IlVpLk2KVaFeU0Xfswfz5yjES0eiT/Gv2z
-         RmnHhmqgqASXIsLpaBJsq6zr1ZEGWgMwmpvUPhuWom0Ur+vRShza4xAxs1HKzHu9Q3zz
-         gBWA==
-X-Gm-Message-State: APjAAAWqpz3lpAEJbEY6UmkrWjy4KImzdhc3RBOR9ZNRM6y9kq3vA4sy
-        8qllfBqBv0lAqVObaubSRg6NXA==
-X-Google-Smtp-Source: APXvYqyTyzOOwhPEgHbXp4Rgoj+1MrN0NFP0TnUwo4C8ked0YmhErXRIquO15dMk8YjMci+9zcI6Ig==
-X-Received: by 2002:adf:cd8c:: with SMTP id q12mr9193934wrj.103.1559739846327;
-        Wed, 05 Jun 2019 06:04:06 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id d10sm24821024wrh.91.2019.06.05.06.04.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 06:04:05 -0700 (PDT)
-Subject: Re: [PATCH 1/3] KVM: LAPIC: Make lapic timer unpinned when timer is
- injected by posted-interrupt
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
- <1559729351-20244-2-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <505fc388-2223-146f-ae8a-824169078a17@redhat.com>
-Date:   Wed, 5 Jun 2019 15:04:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NRvNKqXzZztvQh3qtkPJBNz3Y41PCmY2mwresCdihvw=;
+        b=bOqjeRKNZFsuZYC4NuAWow1epMA9RObSIlDkYwMZ4e+Yo4/uIqJT3sJhFg0Mi2Kuzt
+         X9bJQeOB+NCJGuren/iMDO1XaFlAjxUmTqECtAlcqx2gLExw4qeow6boeZ96lMqgTpYl
+         Df8y1yq3oJkAY5FVU0bicdmfMhFEjV1vzZXskhyHg3tU1QRhFQYtnRmQraQqcpvEyiVe
+         tuXBnWbp0jpsbXxEocDA6FG8b0jv9a3iTqEwWcRMBpEIqtt5eAb7A0cAaOto60el0gbt
+         uRyW0iDAiPcwrntIHzB3u6dv01TO2JT7JwTX0oIR1nwke6tTW7O+4JsvXrq07VjP25AP
+         S5UQ==
+X-Gm-Message-State: APjAAAWPFdsLsVcFQEasmvaYsCTKNdjuhHbbp06KtKnU4gzDGAlNEhzI
+        k5+P7Qr/Eo+t2xkUM16bQdxI5R83J7X+CiIM558O+g==
+X-Google-Smtp-Source: APXvYqyt7OLKBZ4DAerRqhiAeTPqPshOGmAnuk0KkZaQmyvMV/dwuVHzpUT44mnRI2A50tJlbF4XhdP85jTinsVz67M=
+X-Received: by 2002:a05:651c:87:: with SMTP id 7mr3383290ljq.184.1559739895494;
+ Wed, 05 Jun 2019 06:04:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559729351-20244-2-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190601222738.6856-1-joel@joelfernandes.org> <20190601222738.6856-5-joel@joelfernandes.org>
+ <20190605012429.wmlvlgn4mb4jkvua@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20190605012429.wmlvlgn4mb4jkvua@ca-dmjordan1.us.oracle.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 5 Jun 2019 09:04:44 -0400
+Message-ID: <CAEXW_YTsT5BY5Qbc6Jju2XmbHSQFELrGM9UaPPXY-ETmJaBrsA@mail.gmail.com>
+Subject: Re: [RFC 4/6] workqueue: Convert for_each_wq to use built-in list check
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Neil Brown <neilb@suse.com>, netdev <netdev@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Zilstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, rcu <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/19 12:09, Wanpeng Li wrote:
-> +static inline bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> +{
-> +	return (kvm_x86_ops->pi_inject_timer_enabled(vcpu) &&
-> +		kvm_mwait_in_guest(vcpu->kvm));
-> +}
-> +
+On Tue, Jun 4, 2019 at 9:25 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+>
+> On Sat, Jun 01, 2019 at 06:27:36PM -0400, Joel Fernandes (Google) wrote:
+> > list_for_each_entry_rcu now has support to check for RCU reader sections
+> > as well as lock. Just use the support in it, instead of explictly
+> > checking in the caller.
+> >
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/workqueue.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> > index 9657315405de..91ed7aca16e5 100644
+> > --- a/kernel/workqueue.c
+> > +++ b/kernel/workqueue.c
+> > @@ -424,9 +424,8 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
+> >   * ignored.
+> >   */
+> >  #define for_each_pwq(pwq, wq)                                                \
+> > -     list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node)          \
+> > -             if (({ assert_rcu_or_wq_mutex(wq); false; })) { }       \
+> > -             else
+> > +     list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,          \
+> > +                              lock_is_held(&(wq->mutex).dep_map))
+> >
+>
+> I think the definition of assert_rcu_or_wq_mutex can also be deleted.
 
-Here you need to check kvm_halt_in_guest, not kvm_mwait_in_guest,
-because you need to go through kvm_apic_expired if the guest needs to be
-woken up from kvm_vcpu_block.
-
-There is a case when you get to kvm_vcpu_block with kvm_halt_in_guest,
-which is when the guest disables asynchronous page faults.  Currently,
-timer interrupts are delivered while apf.halted = true, with this change
-they wouldn't.  I would just disable KVM_REQ_APF_HALT in
-kvm_can_do_async_pf if kvm_halt_in_guest is true, let me send a patch
-for that later.
-
-When you do this, I think you don't need the
-kvm_x86_ops->pi_inject_timer_enabled check at all, because if we know
-that the vCPU cannot be asleep in kvm_vcpu_block, then we can inject the
-timer interrupt immediately with __apic_accept_irq (if APICv is
-disabled, it will set IRR and do kvm_make_request + kvm_vcpu_kick).
-
-You can keep the module parameter, mostly for debugging reasons, but
-please move it from kvm-intel to kvm, and add something like
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 123ea07a3f3b..1cc7973c382e 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -14,6 +14,11 @@
- static cpumask_var_t housekeeping_mask;
- static unsigned int housekeeping_flags;
-
-+bool housekeeping_enabled(enum hk_flags flags)
-+{
-+	return !!(housekeeping_flags & flags);
-+}
-+
- int housekeeping_any_cpu(enum hk_flags flags)
- {
- 	if (static_branch_unlikely(&housekeeping_overridden))
-
-so that the default for the module parameter can be
-housekeeping_enabled(HK_FLAG_TIMER).
-
-Thanks,
-
-Paolo
+Sure, will do. Thank you.
