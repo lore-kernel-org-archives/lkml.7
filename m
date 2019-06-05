@@ -2,120 +2,108 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE51C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02461C46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF11220665
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D125320883
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="he3iEBP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfFERHh (ORCPT
+        id S1728820AbfFERLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:07:37 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:33126 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbfFERHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:07:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id EB4B8204191;
-        Wed,  5 Jun 2019 19:07:33 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GQkvM02M94+7; Wed,  5 Jun 2019 19:07:27 +0200 (CEST)
-Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
-        by smtp.infotech.no (Postfix) with ESMTPA id 47457204162;
-        Wed,  5 Jun 2019 19:07:25 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH] sg: Fix a double-fetch bug in drivers/scsi/sg.c
-To:     Jiri Slaby <jslaby@suse.cz>, Gen Zhang <blackgod016574@gmail.com>,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190523023855.GA17852@zhanggen-UX430UQ>
- <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <da6f10b8-3b9a-f8d6-33c4-0d8f5711bb23@interlog.com>
-Date:   Wed, 5 Jun 2019 13:07:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 13:11:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34876 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728577AbfFERLx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 13:11:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so9917913plo.2;
+        Wed, 05 Jun 2019 10:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=v+XL33nKKgLzcxRQhQhEGC6TDQvccYp6B7En+erV9hc=;
+        b=he3iEBP4RwmWS2hsetYGcIfsHu6mjuFkNE/44bYCJIdQvaLJ5hco7f4N15KuvI7SzQ
+         25V3oruilcb3EeYf/ho6mZJ9iD6cz8kqD0+GetH8bQbbWBN5P24cxJeCd7t7/jU36hUY
+         MDXKNPnZRKk7pFFlXKbDleNfv1Mw18jufPZqLDyD6LE9H15h1K9PpOsY+lSbK6n2xpal
+         MhWAlKKok5LqzYIausi5764vbJYDiQynYgbAttuI+ntxphashbZoxe0QLMIOevq4o9ku
+         QG4lcSVhdK16awf7duEkmsxk6iS/fC5xR4UwEkamihST27EwoH9MnjbxiBylEI4d5Yjt
+         em1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=v+XL33nKKgLzcxRQhQhEGC6TDQvccYp6B7En+erV9hc=;
+        b=kCUjv+mLUJh2DrhnOqp3gsZ6mBOXDtuzoKIHDV5jztvCWLaI9FDQP9cMtUUpyUOKTL
+         LVuopVhfzg/zC4XQu9Pc6Y/hrC4TQt9lK4sAhuauyV6dgMXB6rrgTBONgGk9UMbis4Tb
+         LRXq63EqDzDlU7HyyQW3r9G3GjyaWgFh9iS+EYr5GMutz3MG/7JYDNg/WRAgJttmZTw+
+         8pN8XvDNjkrrrSGG8vjLVyEPyVYc+9Ioe6rZlCxa2ER90MrRk5NWZGq50qrPoIF+MozT
+         2NrQo6rR3gPoPPkko/qTVPY4vVskfbdvARyc9sA05N7bY6tWrDL8EsRuchxxM9gX7M+9
+         w4WQ==
+X-Gm-Message-State: APjAAAVsAfFa5Uu20Xd2CONvAhL8TD6sSV7dNGxBKH6gjp4tBH5xCtnr
+        fLv6+dm5KvBZbOBx6Ksxcv8=
+X-Google-Smtp-Source: APXvYqwwDdrTNaphEd6GlINLgVtsrsKLUvrt8xyInFHL1cnGX/XoAdjjv8uPV+gD1gxuOOddS/d0Fw==
+X-Received: by 2002:a17:902:d916:: with SMTP id c22mr19896662plz.195.1559754713050;
+        Wed, 05 Jun 2019 10:11:53 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id j20sm22027968pfi.138.2019.06.05.10.11.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 10:11:51 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 22:41:47 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: gadget: musb: Remove unneeded variable
+Message-ID: <20190605171147.GA9558@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-05 2:00 a.m., Jiri Slaby wrote:
-> On 23. 05. 19, 4:38, Gen Zhang wrote:
->> In sg_write(), the opcode of the command is fetched the first time from
->> the userspace by __get_user(). Then the whole command, the opcode
->> included, is fetched again from userspace by __copy_from_user().
->> However, a malicious user can change the opcode between the two fetches.
->> This can cause inconsistent data and potential errors as cmnd is used in
->> the following codes.
->>
->> Thus we should check opcode between the two fetches to prevent this.
->>
->> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
->> ---
->> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
->> index d3f1531..a2971b8 100644
->> --- a/drivers/scsi/sg.c
->> +++ b/drivers/scsi/sg.c
->> @@ -694,6 +694,8 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
->>   	hp->flags = input_size;	/* structure abuse ... */
->>   	hp->pack_id = old_hdr.pack_id;
->>   	hp->usr_ptr = NULL;
->> +	if (opcode != cmnd[0])
->> +		return -EINVAL;
-> 
-> Isn't it too early to check cmnd which is copied only here:
-> 
->>   	if (__copy_from_user(cmnd, buf, cmd_size))
->>   		return -EFAULT;
->>   	/*
->> ---
->>
+fix below warning reported by coccicheck
 
-Hi,
-Yes, it is too early. It needs to be after that __copy_from_user(cmnd,
-buf, cmd_size) call.
+drivers/usb/musb/musb_gadget.c:1088:6-12: Unneeded variable: "status".
+Return "0" on line 1121
 
-To put this in context, this is a very old interface; dating from 1992
-and deprecated for almost 20 years. The fact that the first byte of
-the SCSI cdb needs to be read first to work out that size of the
-following SCSI command and optionally the offset of a data-out
-buffer that may follow the command; is one reason why that interface
-was replaced. Also the implementation did not handle SCSI variable
-length cdb_s.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/usb/musb/musb_gadget.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Then there is the question of whether this double-fetch is exploitable?
-I cannot think of an example, but there might be (e.g. turning a READ
-command into a WRITE). But the "double-fetch" issue may be more wide
-spread. The replacement interface passes the command and data-in/-out as
-pointers while their corresponding lengths are placed in the newer
-interface structure. This assumes that the cdb and data-out won't
-change in the user space between when the write(2) is called and
-before or while the driver, using those pointers, reads the data.
-All drivers that use pointers to pass data have this "feature".
-
-Also I'm looking at this particular double-fetch from the point of view
-of the driver rewrite I have done and is currently in the early stages
-of review [linux-scsi list: "[PATCH 00/19] sg: v4 interface, rq sharing
-+ multiple rqs"] and this problem is more difficult to fix since the
-full cdb read is delayed to a common point further along the submit
-processing path. To detect a change in cbd[0] my current code would
-need to be altered to carry cdb[0] through to that common point. So
-is it worth it for such an old, deprecated and replaced interface??
-What cdb/user_permissions checking that is done, is done _after_
-the full cdb is read. So trying to get around a user exclusion of
-say WRITE(10) by first using the first byte of READ(10), won't succeed.
-
-Doug Gilbert
+diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
+index ffe462a..2cb31fc 100644
+--- a/drivers/usb/musb/musb_gadget.c
++++ b/drivers/usb/musb/musb_gadget.c
+@@ -1085,7 +1085,6 @@ static int musb_gadget_disable(struct usb_ep *ep)
+ 	u8		epnum;
+ 	struct musb_ep	*musb_ep;
+ 	void __iomem	*epio;
+-	int		status = 0;
+ 
+ 	musb_ep = to_musb_ep(ep);
+ 	musb = musb_ep->musb;
+@@ -1118,7 +1117,7 @@ static int musb_gadget_disable(struct usb_ep *ep)
+ 
+ 	musb_dbg(musb, "%s", musb_ep->end_point.name);
+ 
+-	return status;
++	return 0;
+ }
+ 
+ /*
+-- 
+2.7.4
 
