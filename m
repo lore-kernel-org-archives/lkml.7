@@ -2,113 +2,122 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89968C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FFDC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48388206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a48INu+5"
+	by mail.kernel.org (Postfix) with ESMTP id 431A520693
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559745897;
+	bh=oHxtFKkYS5StAuSisLKCiV0W777DWpUhOPSQSos7mis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BWtkZmFXSTMkkZciY5bsHREsDSxsXP+qWf3+CR55wqgVQ5uqPiSJNf4uqNckMSJDi
+	 c4RAtNh9iPFFvLe3rVRwqYgwgrn4r8e8WuXKkXyc2vJi0Zx3cuNghCcsxE8w/LVTjC
+	 FXvXQIrDbGTDtE6wIvQzrZo+velFN7zM77HZOyzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfFEOmp (ORCPT
+        id S1728444AbfFEOo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:42:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56032 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfFEOmo (ORCPT
+        Wed, 5 Jun 2019 10:44:56 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44807 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfFEOoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:42:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 16so2525843wmg.5;
-        Wed, 05 Jun 2019 07:42:43 -0700 (PDT)
+        Wed, 5 Jun 2019 10:44:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x47so18193542qtk.11;
+        Wed, 05 Jun 2019 07:44:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3vFv+9zEqsMX4iOvV90D7yujY9zYQAWPx+3AS1AwwC4=;
-        b=a48INu+57UfDJPyfFCLneJ04BtvLlFadHfCG6hUUgCZsFiMnI+Zd2MnlJGiT3BnXWI
-         m73A4O8U/wNpUIoQYx8AbY6TjCX8CRMzSnJjRAwyUh2V64NQA3PteMsr9X8LYEymzQe4
-         U7CNJc1FsXVeURBmEowZY8TXxUxGj+/2Dl3P5ORosjcj9DYvKEITnDaO0VvbsWZ9BSAO
-         myMyagp71quqj5Zd47rwP7LCju2MWABgHSIcvokcdtuEsLxYKDtPM6RfaKIm2xF4jTqd
-         9TEZqUPNANhVoZxcQvRz6zb3kKPx4opJC7G39aX1DUQyYWKKz/GDs9VZ85lTFluVhHhy
-         kXkQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5+amuC/f1g13FqxbZK0H3rjZkiafibYvngvdoJHTeaY=;
+        b=Xaqop4NdhGsU31i8w22hqZOGA5bCkTzg6R5/EC23RiUJCzN5dtF4iVkzqxmY+7J7nX
+         AfCP9j3/4u4rffKpsh9eGXyVuhVeR2HrVAZRtK+P1ffC5kcpdY3epjr2QWP3NZjrkenF
+         8W3aRGBFCMgBLy8KknjGQHlImKIdbrIFC8KleevyNJ6JsC2MlBLiwtlvnsN0CSzMZr+n
+         XnEvGmv/FOXw5+56Ja1z6QhroJqSBdPwfOCZ7OYZwnFJSflOfHZgSfFHnITUufXKnTDG
+         R7LviF6TFrc6hpxIXyzLX773qaqqUragn0HHbmEHPg5NaM3JF4cyFtWeET4bCo0kJxrL
+         GGlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3vFv+9zEqsMX4iOvV90D7yujY9zYQAWPx+3AS1AwwC4=;
-        b=QYLaxRXuAC/V1p/KO14Nah37UUeF3kcn4/oPNNWNfz115Uxpp80/MELL2R3dcHkadY
-         Aroq6xMQWSQ+5CH+P4keihnWVZoKST8W5/ZbOBdggucFGrSliSKm+k9xm04CcKPEZupa
-         mxeAW6bUvEvRBX1H3itJP5bEzbwiilujFdGXrF64tWWEN+vXXEdSUUUGMN93/vTIZYvV
-         JosOpbriknefJfYjqHyP+L2doPpmHjasRyVjcxf5+bzeziSX6GYpVzGbMoc6IqJgCwTc
-         a7Ypyw5dwKMl0K2praIOUNwbck//4+6NtsbCwNLDv5Tev155xIy/VvZ/wJqmMoya2GuG
-         RmfQ==
-X-Gm-Message-State: APjAAAX99Wv/j0dD+Y/lort/HOVGnMczC8pNuswikDQNGu+aCD14DlmB
-        DZ5rXMg/tpMCuAJrWe3FoNY=
-X-Google-Smtp-Source: APXvYqx0yNYuf8WnnkxZ9MvxUzd0Z29ns36ss0TxfJv6MvrDfPWtpLgoRrRwktrdsvxXoiinsDosbA==
-X-Received: by 2002:a1c:9a16:: with SMTP id c22mr11252035wme.39.1559745762496;
-        Wed, 05 Jun 2019 07:42:42 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id y12sm18083581wrh.40.2019.06.05.07.42.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 07:42:41 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 16:42:40 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH] Input: alps: Drop unlikely before IS_ERR(_OR_NULL)
-Message-ID: <20190605144240.pfrvlgxsdpacpwxf@pali>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
- <20190605142428.84784-5-wangkefeng.wang@huawei.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5+amuC/f1g13FqxbZK0H3rjZkiafibYvngvdoJHTeaY=;
+        b=naMpvJgK1oNQ+aoogGJgWT698/YYuF+m6lC7fJW2eK25Mzn6UZDZVhrkuWUKVvk+RX
+         e3rtlaPtV+WTiXBGXkAWobaRT3D3uvaGdyqTWWwEVlrvTeLPdRWsY43aaIJdu0O4mHth
+         zKHUrEpadjX5Q+VMMXxbnM/YYZAhn/9KTy7gLX8xvMDnyjbPgAyfqQxSTAoaCgBqxaHN
+         HsbQazDbkq7BLw6kQCfD82ydpmLlGQ6cw3fhfQW7OEySFyfGUOhXbfWI5r7EDEn7/afB
+         qHOHijo7Amah+uSbIplUxIBACkcUnZjEDRxx5nJ0301SODDuWNRfHfhpb6OT5j92HTBU
+         eUVA==
+X-Gm-Message-State: APjAAAWBlGIAeS2VKtWLd3fI6Yggf73ZxJjGmwEF3jLSO8lwYHAH0+4o
+        EJkXhdGf1wYlVB7211+8Slk=
+X-Google-Smtp-Source: APXvYqyHClRti1uqD1HXPdrPMGuakIUjLA2LyMPf4+a8tjzEnJIhKWBZFVZfpe9h9fo08DyAFybxXQ==
+X-Received: by 2002:a0c:be87:: with SMTP id n7mr14243540qvi.65.1559745893929;
+        Wed, 05 Jun 2019 07:44:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:c027])
+        by smtp.gmail.com with ESMTPSA id n19sm9375766qkg.58.2019.06.05.07.44.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 07:44:52 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 07:44:50 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190605144450.GN374014@devbig004.ftw2.facebook.com>
+References: <20190515094459.10317-1-patrick.bellasi@arm.com>
+ <20190515094459.10317-13-patrick.bellasi@arm.com>
+ <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+ <20190603122725.GB19426@darkstar>
+ <20190605140324.GL374014@devbig004.ftw2.facebook.com>
+ <20190605143805.olk2ta5p2jnd4mjt@e110439-lin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605142428.84784-5-wangkefeng.wang@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190605143805.olk2ta5p2jnd4mjt@e110439-lin>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 05 June 2019 22:24:28 Kefeng Wang wrote:
-> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
-> so no need to do that again from its callers. Drop it.
+Hello,
 
-Hi! I already reviewed this patch and rejected it, see:
-https://patchwork.kernel.org/patch/10817475/
-
-> Cc: "Pali Rohár" <pali.rohar@gmail.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/input/mouse/alps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Jun 05, 2019 at 03:39:50PM +0100, Patrick Bellasi wrote:
+> Which means we will enforce the effective values as:
 > 
-> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-> index 0a6f7ca883e7..791ef0f826c5 100644
-> --- a/drivers/input/mouse/alps.c
-> +++ b/drivers/input/mouse/alps.c
-> @@ -1478,7 +1478,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
->  		/* On V2 devices the DualPoint Stick reports bare packets */
->  		dev = priv->dev2;
->  		dev2 = psmouse->dev;
-> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
-> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
->  		/* Register dev3 mouse if we received PS/2 packet first time */
->  		if (!IS_ERR(priv->dev3))
->  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+>    /tg1/tg11:
+> 
+>          util_min.effective=0
+>             i.e. keep the child protection since smaller than parent
+> 
+>          util_max.effective=800
+>             i.e. keep parent limit since stricter than child
+>
+> Please shout if I got it wrong, otherwise I'll update v10 to
+> implement the above logic.
+
+Everything sounds good to me.  Please note that cgroup interface files
+actually use literal "max" for limit/protection max settings so that 0
+and "max" mean the same things for all limit/protection knobs.
+
+Thanks.
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+tejun
