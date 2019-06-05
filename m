@@ -2,186 +2,244 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B6FC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28012C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04AB20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB3020883
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGNQhr7s"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OLrB/QI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFETGT (ORCPT
+        id S1726667AbfFETHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:06:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33068 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFETGS (ORCPT
+        Wed, 5 Jun 2019 15:07:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41882 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFETHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:06:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so12939542pgv.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:06:18 -0700 (PDT)
+        Wed, 5 Jun 2019 15:07:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so1753102otj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M6BGDN2AyVfgjLFK/UIuQsI5QieCC/mU2xEW0eQBY6c=;
-        b=NGNQhr7s+dSXGA0agT49GCRMN5IBD59uXz3hQDX1aXq4lMe5N67yu52ciH/CgRwHUP
-         oaU5ZJ03dVccEINZLKm3W1zobHhPMqR//HHdjiAQd1g8hmh0CtDIW5Y1pTk1IbY2IaO1
-         B/VPli8Q2TMnY+VKcvSXoK9/vA/peszAGu4EYmGzokB+0Rl+59FpTDynelw9pT15L2jK
-         5YCE0Ph6aJcwVoI4t3kz8ujggXCUBpUiYs69ebmhnQtTVw6y9DWv7/bp2SoKFq5ORurU
-         jdB4W+mLQDd8lH8tQIlNHznVWVhnupC3IELyc2LldxJmHthhy8vWRQMMGjYpHQ8rWlau
-         Y+4g==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FlGX/Q/ed4YLpiHihy7wKZjWbXQYUcrLzGq5do+X348=;
+        b=OLrB/QI7SOZkBoOCJvJu/oZedSJQS+6e3vcQQioJRsL2HLS3UXE0MF5JJ48ujYCrRX
+         bpQ26cFMyEZ7PkMmokOgMIfekwWGfuv95Lo22jjqwCYNgzLyN1QIk0rMRi5bGjt8Gp5R
+         qRJzS9WVdVCONuYpJM6xmY/eXFoyS1RX02M4Bo+LBmAVGMQuGyN/NlLluu3prOipzIom
+         dvlHWW1dhIOlidBLrhzBx5/WpnE4OSyFKbwkwnhxvE4PXqgDoRMTcwsmcS78BxKZ+ayM
+         ZcQxNzhm81hrnTIiDhtByguCDXFJr7dt5iOqQJ4GKBUKG+jLpE8qsDxia/YxvotytVs1
+         ch4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M6BGDN2AyVfgjLFK/UIuQsI5QieCC/mU2xEW0eQBY6c=;
-        b=JwaUTbni5+cKuKv0ICU9aLuDpHTcuyxdBThMrEt3sikDtX2Nr+bPhmaICSlAZ0y9Fe
-         DQN2oJ4glBcv7n/Bg+n/I0Q0vAkFZodzCKe/xk/q2fRVsfG0EJStFS4L6FDrZg6lngbi
-         EmJ2OdGs9n2R0BvHbBZJsxZcZHm9ZUjt6OZgeBzfF8PBvU2wDhxXdrZmgIa6BTu9zGoY
-         4RU0RHLx23Jczo6f1DZSJBPDKAHe+FopUw/x5Fx2MBIJcVh+MR+7qcf33z96TaXQc6eH
-         ZnHaT1XZgJ4JqIz0FbnITP8iWhv/4mEfP6e5/e96upLQMCWzUi3JpuKaIMMeo46mn2Mb
-         5o5A==
-X-Gm-Message-State: APjAAAXfvSgCskJAoiS02RZ2Z609OJgLQkav5Ry9fjyVHrqplF2qXas8
-        pWZDE5q/E6wuCDOYlbWYsk59yw==
-X-Google-Smtp-Source: APXvYqzlT/XPvgcF1v+ffkfX/JPoo7GvSAjnePPEFFPhNx56Xy63K3pCAsqBkSIncUTmupa3p3kRtw==
-X-Received: by 2002:a17:90a:9308:: with SMTP id p8mr44957549pjo.12.1559761577409;
-        Wed, 05 Jun 2019 12:06:17 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q4sm19489811pgb.39.2019.06.05.12.06.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 12:06:16 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 12:06:14 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Message-ID: <20190605190614.GI4814@minitux>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-4-lee.jones@linaro.org>
- <20190605061721.GK22737@tuxbook-pro>
- <20190605073133.GL4797@dell>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FlGX/Q/ed4YLpiHihy7wKZjWbXQYUcrLzGq5do+X348=;
+        b=a7rHe9OuSEAOFckjU7hGXdo282wu1CU+cydZ/OrN9sgrhppLjzXgmg7zP9bCF+MSVL
+         0VpVdqraXfu0YX1kOIamH5mVcntMoroJJQ9TdtycIDJabNJnqy+GwT5rdW+2Qf8wfO1F
+         do1voYquMTwHsOj1lyDeS7UvN4cyfcDmxrvMXLCQYHNNdTdWs/wdnbrCOQWUXpZEcy+P
+         vniwBdhO5Hsu6iToAqyNlytqGRrIsDavN4/3gqqoQ2UNjNm4po2F+o2Nm5sNGZz2TZ7R
+         u/nynzuSwOs2+JNLuXE8rCtp5D16Ppic24ji/5hDMnyyInva6F39dmtKSN4m3Wd3aQhL
+         Q/DQ==
+X-Gm-Message-State: APjAAAW/17B/CpQanOuY/P8dYqSl/aX99+NWCvugjbWGKjYzXbE2a0P7
+        2NO6jZjpv2KhXatE4Y1sFOxZHloQzc1Go5BmhZ6tRw==
+X-Google-Smtp-Source: APXvYqzgVMKh9g4W1mu1XQOvy1kR0wNgwQKf4iqlSH2P2xmTbIEaH9QIde+dosL04I1rFqIv0WxNp1FKT990IzXVl+0=
+X-Received: by 2002:a9d:7248:: with SMTP id a8mr10453669otk.363.1559761620354;
+ Wed, 05 Jun 2019 12:07:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605073133.GL4797@dell>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190603054159.GA5747@rapoport-lnx>
+In-Reply-To: <20190603054159.GA5747@rapoport-lnx>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 5 Jun 2019 12:06:49 -0700
+Message-ID: <CAPcyv4gAWUPoRK2o-FkpqMbB4559q4O-Fx7niT1vppoRC1VyWA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Jun 00:31 PDT 2019, Lee Jones wrote:
+On Sun, Jun 2, 2019 at 10:42 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Hi Dan,
+>
+> On Thu, May 30, 2019 at 03:59:43PM -0700, Dan Williams wrote:
+> > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > interpretation of the EFI Memory Types as "reserved for a special
+> > purpose".
+> >
+> > The proposed Linux behavior for specific purpose memory is that it is
+> > reserved for direct-access (device-dax) by default and not available for
+> > any kernel usage, not even as an OOM fallback. Later, through udev
+> > scripts or another init mechanism, these device-dax claimed ranges can
+> > be reconfigured and hot-added to the available System-RAM with a unique
+> > node identifier.
+> >
+> > This patch introduces 3 new concepts at once given the entanglement
+> > between early boot enumeration relative to memory that can optionally be
+> > reserved from the kernel page allocator by default. The new concepts
+> > are:
+> >
+> > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
+> >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
+> >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
+> >   enabled, otherwise treat it as typical ram.
+> >
+> > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
+> >   a device driver to search iomem resources for application specific
+> >   memory. Teach the iomem code to identify such ranges as "Application
+> >   Reserved".
+> >
+> > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
+> >   traditional System RAM pool the expectation is that they will have
+> >   typical SRAT entries. In order to support a policy of device-dax by
+> >   default with the option to hotplug later, the numa initialization code
+> >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
+>
+> I'd appreciate a more elaborate description how this flag is going to be
+> used.
 
-> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
-> 
-> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> > 
-> > > This patch provides basic support for booting with ACPI instead
-> > > of the currently supported Device Tree.  When doing so there are a
-> > > couple of differences which we need to taken into consideration.
-> > > 
-> > > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > > initialise any of these lines, the firmware will restart the
-> > > platform.
-> > > 
-> > > Secondly, when booting with ACPI, it is expected that the firmware
-> > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > > their ideal configuration.  Thus, the possible Pin Functions
-> > > available to this platform are not advertised when providing the
-> > > higher GPIOD/Pinctrl APIs with pin information.
-> > > 
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/pinctrl/qcom/Kconfig          |  2 +-
-> > >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
-> > >  2 files changed, 35 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> > > index 2e66ab72c10b..aafbe932424f 100644
-> > > --- a/drivers/pinctrl/qcom/Kconfig
-> > > +++ b/drivers/pinctrl/qcom/Kconfig
-> > > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
-> > >  
-> > >  config PINCTRL_SDM845
-> > >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-> > > -       depends on GPIOLIB && OF
-> > > +       depends on GPIOLIB && (OF || ACPI)
-> > >         select PINCTRL_MSM
-> > >         help
-> > >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> > > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > > index c97f20fca5fd..7188bee3cf3e 100644
-> > > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > > @@ -3,6 +3,7 @@
-> > >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> > >   */
-> > >  
-> > > +#include <linux/acpi.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/of.h>
-> > >  #include <linux/platform_device.h>
-> > > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
-> > >  	UFS_RESET(ufs_reset, 0x99f000),
-> > >  };
-> > >  
-> > > +static const int sdm845_acpi_reserved_gpios[] = {
-> > > +	0, 1, 2, 3, 81, 82, 83, 84, -1
-> > > +};
-> > > +
-> > >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> > >  	.pins = sdm845_pins,
-> > >  	.npins = ARRAY_SIZE(sdm845_pins),
-> > > @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> > >  	.nfunctions = ARRAY_SIZE(sdm845_functions),
-> > >  	.groups = sdm845_groups,
-> > >  	.ngroups = ARRAY_SIZE(sdm845_groups),
-> > > +	.reserved_gpios = sdm845_acpi_reserved_gpios,
-> > 
-> > The reason why put these in DT is because the list is board/firmware
-> > dependent. E.g. the firmware on db845c does not support the peripherals
-> > that sits on these 8 pins and as such these are not reserved.
-> 
-> If we need to be more particular about which platform(s) this affects,
-> we could add matching based on their differences (some ACPI HID or F/W
-> version/descriptor, etc) as and when we enable them for booting with
-> ACPI.
-> 
+This flag is only there to communicate to the numa code what ranges of
+"conventional memory" should be skipped for onlining and reserved for
+device-dax to consume. However, now that I say that out loud I realize
+I might be able to get away with just using a plain entry
+memblock.reserved. I'll take a look.
 
-You're making an assumption that all SDM845 (the platform) devices using
-ACPI will have this list of GPIOs reserved for secure firmware to use,
-this is questionable but I don't have any better suggestion.
+>
+> > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > now, just identify and reserve memory of this type.
+> >
+> > Cc: <x86@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  arch/x86/Kconfig                  |   20 ++++++++++++++++++++
+> >  arch/x86/boot/compressed/eboot.c  |    5 ++++-
+> >  arch/x86/boot/compressed/kaslr.c  |    2 +-
+> >  arch/x86/include/asm/e820/types.h |    9 +++++++++
+> >  arch/x86/kernel/e820.c            |    9 +++++++--
+> >  arch/x86/kernel/setup.c           |    1 +
+> >  arch/x86/platform/efi/efi.c       |   37 +++++++++++++++++++++++++++++++++----
+> >  drivers/acpi/numa.c               |   15 ++++++++++++++-
+> >  include/linux/efi.h               |   14 ++++++++++++++
+> >  include/linux/ioport.h            |    1 +
+> >  include/linux/memblock.h          |    7 +++++++
+> >  mm/memblock.c                     |    4 ++++
+> >  12 files changed, 115 insertions(+), 9 deletions(-)
+>
+> ...
+>
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 08a5f4a131f5..ddde1c7b1f9a 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -1109,6 +1109,7 @@ void __init setup_arch(char **cmdline_p)
+> >
+> >       if (efi_enabled(EFI_MEMMAP)) {
+> >               efi_fake_memmap();
+> > +             efi_find_app_specific();
+> >               efi_find_mirror();
+> >               efi_esrt_init();
+> >
+> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> > index e1cb01a22fa8..899f1305c77a 100644
+> > --- a/arch/x86/platform/efi/efi.c
+> > +++ b/arch/x86/platform/efi/efi.c
+> > @@ -123,10 +123,15 @@ void __init efi_find_mirror(void)
+> >   * more than the max 128 entries that can fit in the e820 legacy
+> >   * (zeropage) memory map.
+> >   */
+> > +enum add_efi_mode {
+> > +     ADD_EFI_ALL,
+> > +     ADD_EFI_APP_SPECIFIC,
+> > +};
+> >
+> > -static void __init do_add_efi_memmap(void)
+> > +static void __init do_add_efi_memmap(enum add_efi_mode mode)
+> >  {
+> >       efi_memory_desc_t *md;
+> > +     int add = 0;
+> >
+> >       for_each_efi_memory_desc(md) {
+> >               unsigned long long start = md->phys_addr;
+> > @@ -139,7 +144,9 @@ static void __init do_add_efi_memmap(void)
+> >               case EFI_BOOT_SERVICES_CODE:
+> >               case EFI_BOOT_SERVICES_DATA:
+> >               case EFI_CONVENTIONAL_MEMORY:
+> > -                     if (md->attribute & EFI_MEMORY_WB)
+> > +                     if (is_efi_dax(md))
+> > +                             e820_type = E820_TYPE_SPECIFIC;
+> > +                     else if (md->attribute & EFI_MEMORY_WB)
+> >                               e820_type = E820_TYPE_RAM;
+> >                       else
+> >                               e820_type = E820_TYPE_RESERVED;
+> > @@ -165,9 +172,24 @@ static void __init do_add_efi_memmap(void)
+> >                       e820_type = E820_TYPE_RESERVED;
+> >                       break;
+> >               }
+> > +
+> > +             if (e820_type == E820_TYPE_SPECIFIC) {
+> > +                     memblock_remove(start, size);
+> > +                     memblock_add_range(&memblock.reserved, start, size,
+> > +                                     MAX_NUMNODES, MEMBLOCK_APP_SPECIFIC);
+>
+> Why cannot this happen at e820__memblock_setup()?
+> Then memblock_remove() call should not be required as nothing will
+> memblock_add() the region.
 
-But you do this by adding a new struct msm_pinctrl_soc_data
-sdm845_acpi_pinctrl, specifically for the ACPI case. And then, on the
-line I object to here, you add this list as the list of reserved GPIOs
-for the DT case as well.
+It's only required given the relative call order of efi_fake_memmap()
+and the desire to be able to specify EFI_MEMORY_SP on the kernel
+command line if the platform BIOS neglects to do it. efi_fake_memmap()
+currently occurs after e820__memblock_setup() and my initial attempts
+to flip the order resulted in boot failures so there is a subtle
+dependency on that order I have not identified.
 
-> > But given that the two structs looks identical now, did you perhaps not
-> > intend to add.reserved_gpios for the non-ACPI case?
-> 
-> Given your example above, I think it's best that we let the
-> configuration tables advertise these in the first instance.  I only
-> add them here because it is not possible to obtain them from
-> elsewhere.
-> 
+[..]
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index 6bbad46f4d2c..654fecb52ba5 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -982,6 +982,10 @@ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
+> >       if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
+> >               return true;
+> >
+> > +     /* if we want specific memory skip non-specific memory regions */
+> > +     if ((flags & MEMBLOCK_APP_SPECIFIC) && !memblock_is_app_specific(m))
+> > +             return true;
+> > +
+>
+> With this the MEMBLOCK_APP_SPECIFIC won't be skipped for traversals that
+> don't set memblock_flags explicitly. Is this the intention?
 
-Then add it for ACPI only - which I still presume you intended to do by
-adding sdm845_acpi_pinctrl (which is now identical to sdm845_pinctrl).
-
-Regards,
-Bjorn
+Yeah as per above it turns out the only real need is to identify it as
+reserved, so the flag can likely go away altogether.
