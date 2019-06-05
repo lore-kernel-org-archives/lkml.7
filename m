@@ -2,106 +2,162 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98190C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDCFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7752075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZxNl0qOQ"
+	by mail.kernel.org (Postfix) with ESMTP id CB83D20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfFELXf (ORCPT
+        id S1727343AbfFELYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:23:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41390 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfFELXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:23:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sVN3EHsvpO4JEKTL1zRRHRBKbHxUnSg7DWieN951vaQ=; b=ZxNl0qOQMb2nfXeNThDfWARnO
-        IjMcoH4MbKtQUU/nYGjzXO/SzWGoG4bwvM6cBsqxqnboCmwXwdmrZT6ztabNtnUgigfRmXDx8fQga
-        0rKqTEt4/6uc2AluHwNMT79+xCxIagqOb/We+wKGSyrnU5U0zj89HIUQ91CjDb3ocZFKE34NA73Xt
-        ht21jsc6XZzCEdyBsoxDu/s7ytcLxb6tZ+TqSKkA+jPRHteOcwa78zZTOL6egPiRNwQtvKPfLFnxB
-        43TAXA7rZyGVZ8LyRQz4qMmoOohTstIupqEoWtffXXODQJqZlI73n1KFz6tSlAtnVI5oGHg9JPstG
-        ajfQGCbTw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYU0u-0005Bg-TM; Wed, 05 Jun 2019 11:23:28 +0000
-Date:   Wed, 5 Jun 2019 04:23:28 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [RFC V2] mm: Generalize notify_page_fault()
-Message-ID: <20190605112328.GB2025@bombadil.infradead.org>
-References: <1559630046-12940-1-git-send-email-anshuman.khandual@arm.com>
- <87sgsomg91.fsf@concordia.ellerman.id.au>
+        Wed, 5 Jun 2019 07:24:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57866 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726280AbfFELYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:24:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3087374;
+        Wed,  5 Jun 2019 04:24:34 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C9273F5AF;
+        Wed,  5 Jun 2019 04:24:33 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] iommu: Introduce device fault data
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
+ <20190603145749.46347-3-jean-philippe.brucker@arm.com>
+ <20190603150842.11070cfd@jacob-builder>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19CA6A9EE@SHSMSX104.ccr.corp.intel.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <50dc3cc5-6019-ad42-6aba-d84fab4020f9@arm.com>
+Date:   Wed, 5 Jun 2019 12:24:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgsomg91.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19CA6A9EE@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 09:19:22PM +1000, Michael Ellerman wrote:
-> Anshuman Khandual <anshuman.khandual@arm.com> writes:
-> > Similar notify_page_fault() definitions are being used by architectures
-> > duplicating much of the same code. This attempts to unify them into a
-> > single implementation, generalize it and then move it to a common place.
-> > kprobes_built_in() can detect CONFIG_KPROBES, hence notify_page_fault()
-> > need not be wrapped again within CONFIG_KPROBES. Trap number argument can
-> > now contain upto an 'unsigned int' accommodating all possible platforms.
-> ...
+On 05/06/2019 09:51, Tian, Kevin wrote:
+>> From: Jacob Pan
+>> Sent: Tuesday, June 4, 2019 6:09 AM
+>>
+>> On Mon,  3 Jun 2019 15:57:47 +0100
+>> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+>>
+>>> +/**
+>>> + * struct iommu_fault_page_request - Page Request data
+>>> + * @flags: encodes whether the corresponding fields are valid and
+>>> whether this
+>>> + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
+>>> values)
+>>> + * @pasid: Process Address Space ID
+>>> + * @grpid: Page Request Group Index
+>>> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
+>>> + * @addr: page address
+>>> + * @private_data: device-specific private information
+>>> + */
+>>> +struct iommu_fault_page_request {
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+>>> +	__u32	flags;
+>>> +	__u32	pasid;
+>>> +	__u32	grpid;
+>>> +	__u32	perm;
+>>> +	__u64	addr;
+>>> +	__u64	private_data[2];
+>>> +};
+>>> +
+>>
+>> Just a thought, for non-identity G-H PASID management. We could pass on
+>> guest PASID in PRQ to save a lookup in QEMU. In this case, QEMU
+>> allocate a GPASID for vIOMMU then a host PASID for pIOMMU. QEMU has a
+>> G->H lookup. When PRQ comes in to the pIOMMU with HPASID, IOMMU
+>> driver
+>> can retrieve GPASID from the bind data then report to the guest via
+>> VFIO. In this case QEMU does not need to do a H->G PASID lookup.
+>>
+>> Should we add a gpasid field here? or we can add a flag and field
+>> later, up to you.
+>>
 > 
-> You've changed several of the architectures from something like above,
-> where it disables preemption around the call into the below:
-> 
-> 
-> Which skips everything if we're preemptible. Is that an equivalent
-> change? If so can you please explain why in more detail.
+> Can private_data serve this purpose?
 
-See the discussion in v1 of this patch, which you were cc'd on.
+Isn't private_data already used for VT-d's Private Data field?
 
-I agree the description here completely fails to mention why the change.
-It should mention commit a980c0ef9f6d8c.
+> It's better not introducing
+> gpasid awareness within host IOMMU driver. It is just a user-level
+> data associated with a PASID when binding happens. Kernel doesn't
+> care the actual meaning, simply record it and then return back to user 
+> space later upon device fault. Qemu interprets the meaning as gpasid
+> in its own context. otherwise usages may use it for other purpose.
 
-> Also why not have it return bool?
-> 
-> cheers
-> 
+Regarding a gpasid field I don't mind either way, but extending the
+iommu_fault structure later won't be completely straightforward so we
+could add some padding now.
+
+Userspace negotiate the iommu_fault struct format with VFIO, before
+allocating a circular buffer of N fault structures
+(https://lore.kernel.org/lkml/20190526161004.25232-26-eric.auger@redhat.com/).
+So adding new fields requires introducing a new ABI version and a struct
+iommu_fault_v2. That may be OK for disruptive changes, but just adding a
+new field indicated by a flag shouldn't have to be that complicated.
+
+How about setting the iommu_fault structure to 128 bytes?
+
+struct iommu_fault {
+	__u32   type;
+	__u32   padding;
+	union {
+		struct iommu_fault_unrecoverable event;
+		struct iommu_fault_page_request prm;
+		__u8 padding2[120];
+	};
+};
+
+Given that @prm is currently 40 bytes and @event 32 bytes, the padding
+allows either of them to grow 10 new 64-bit fields (or 20 new 32-bit
+fields, which is still representable with new flags) before we have to
+upgrade the ABI version.
+
+A 4kB and a 64kB queue can hold respectively:
+
+* 85 and 1365 records when iommu_fault is 48 bytes (current format).
+* 64 and 1024 records when iommu_fault is 64 bytes (but allows to grow
+only 2 new 64-bit fields).
+* 32 and 512 records when iommu_fault is 128 bytes.
+
+In comparison,
+* the SMMU even queue can hold 128 and 2048 events respectively at those
+sizes (and is allowed to grow up to 524k entries)
+* the SMMU PRI queue can hold 256 and 4096 PR.
+
+But the SMMU queues have to be physically contiguous, whereas our fault
+queues are in userspace memory which is less expensive. So 128-byte
+records might be reasonable. What do you think?
+
+
+The iommu_fault_response (patch 4/4) is a bit easier to extend because
+it's userspace->kernel and userspace can just declare the size it's
+using. I did add a version field in case we run out of flags or want to
+change the whole thing, but I think I was being overly cautious and it
+might just be a waste of space.
+
+Thanks,
+Jean
