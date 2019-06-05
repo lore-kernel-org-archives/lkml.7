@@ -2,99 +2,76 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F65AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAA9C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE60420866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DB32086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559725556;
+	bh=Pz8YyhuVAwCFqXMPjBkm0rXnp/wYpoIIb3ZnyUKQR9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JbSSwA4CGrqpAtNc0OXheLo7n2Jf87q89cplHrywe8f9CV/3vxNBszmbaLf2FQi3t
+	 ZNLJ1ugX5kojvGUDiN3U4oAFjmrygsvXOvajroMv/Wf7IdDR1yMRcTX0pH0YpW8HQr
+	 eDBmq73uNocfHEpQK+RC89PQSz2p5PZSMHigBJyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfFEJFF (ORCPT
+        id S1726970AbfFEJFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:05:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53592 "EHLO mx1.redhat.com"
+        Wed, 5 Jun 2019 05:05:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbfFEJFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:05:04 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726502AbfFEJFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:05:54 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42F9630832C9;
-        Wed,  5 Jun 2019 09:04:59 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id F089B5D6A9;
-        Wed,  5 Jun 2019 09:04:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  5 Jun 2019 11:04:58 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 11:04:54 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-aio@kvack.org, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        stable <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in
- restore_user_sigmask()
-Message-ID: <20190605090453.GB32406@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <20190604134117.GA29963@redhat.com>
- <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
- <878sugewok.fsf@xmission.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE1D2075C;
+        Wed,  5 Jun 2019 09:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559725554;
+        bh=Pz8YyhuVAwCFqXMPjBkm0rXnp/wYpoIIb3ZnyUKQR9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KXhfq/jef0DTyI4dpjhJOr/cbHlgFXdhlDWgp6xowWFON7r5FMh/3IF6Agq8QmeQz
+         4flXb7AgIdZRiCFrGMfXQD7vZ4XHbCsv5PHPV91oSLyOZDqxZs57ayVjrVXl8uRRLK
+         fFOEhex0mtbrW+u1E6OnnEeicHHRPvBZ0CZe5lkg=
+Date:   Wed, 5 Jun 2019 17:05:34 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: fsl: imx8mq: add the snvs power key node
+Message-ID: <20190605090533.GK29853@dragon>
+References: <20190528161101.28919-1-angus@akkea.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878sugewok.fsf@xmission.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 05 Jun 2019 09:05:04 +0000 (UTC)
+In-Reply-To: <20190528161101.28919-1-angus@akkea.ca>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04, Eric W. Biederman wrote:
->
-> >> -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> >> -       if (signal_pending(current) && !ret)
-> >> +
-> >> +       interrupted = signal_pending(current);
-> >> +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-> >> +       if (interrupted && !ret)
-> >>                 ret = -ERESTARTNOHAND;
-> >
-> > are wrong to begin with, and we really should aim for an interface
-> > which says "tell me whether you completed the system call, and I'll
-> > give you an error return if not".
->
-> The pattern you are pointing out is specific to io_pgetevents and it's
-> variations.  It does look buggy to me but not for the reason you point
-> out, but instead because it does not appear to let a pending signal
-> cause io_pgetevents to return early.
->
-> I suspect we should fix that and have do_io_getevents return
-> -EINTR or -ERESTARTNOHAND like everyone else.
+On Tue, May 28, 2019 at 09:11:01AM -0700, Angus Ainslie (Purism) wrote:
+> Add a node for the snvs power key, "disabled" by default.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-Exactly. It should not even check signal_pending(). It can rely on
-wait_event_interruptible_hrtimeout().
-
-> So can we please get this fix in and then look at cleaning up and
-> simplifying this code.
-
-Yes ;)
-
-Oleg.
-
+Applied, thanks.
