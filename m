@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D7C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AFEC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3BB2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C759D2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sU7AoaR6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pjELKVwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfFENXj (ORCPT
+        id S1728230AbfFENXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:23:39 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50932 "EHLO
+        Wed, 5 Jun 2019 09:23:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50958 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfFENXb (ORCPT
+        with ESMTP id S1727966AbfFENXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:23:31 -0400
+        Wed, 5 Jun 2019 09:23:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N+L4hncPrLT3YUw3a9VAy36wpeglIBN4ooUYuEyD+Zg=; b=sU7AoaR6XP70/tJhp2u/GbFRde
-        RTKU51MaT9Cng0tVNUUKO/Ws4K4pO3OYm09DKcxV3clxcQFDMKW3xuSE/AFdouNIHTJgS6Sl45H2n
-        QcCJl2Aua9sR+9uA1L+WZnjDJ9huFWsf4F9tERmWgNmwr9hw1Rz+3Q9SPfBQiXOpJVjBUZVgoktKH
-        ijnIwToxQNsCpppxzUwFAJdt2ccAbJ9AtqKaoOnRY9vL77dyIdAcHI57noOy3kIPsIGk/EyyPy220
-        ErMmxIx8RIXErC8p4GtvbNJF6fPs2mDUKY0rArA6doGIOfG183I5FpR0ORHZf2dhIsgccteXK/+/u
-        b9TFoEqw==;
+        bh=TdtUzQw4Xh7pHfYaMHc8uRWdMmIOW2a80o3ly6vU9Hk=; b=pjELKVwdXyyPfzMHoK9Lfi+j7f
+        7tq78mcAfsue4hbA0T6rVyocnkjkMIIpERRHvY/hFtRijHlbPIGF3x6iXNn4cqWc+vrnrC4SvUC6s
+        lQesRhD5MOS1BCjlSxYIvUWBaGD4tHlW6nhYXIYouoWeWyJGy9bVy/yJGZ1rGYRcZo849ev/1t/Pn
+        5ZknIqdltUmPBAHajFM2On0t6crKFfpCcLkVuu9MQ+LDKwbEt9weytZiGfQ/m/naNB0epliwHyXe5
+        DQp2MngaSjahfjnMfKhD9zrszu82UplInvvflWZWHkrAl+ccFZJSbtmFL/yrqIvbO/wTbj4TeC0mW
+        mUIhIq7A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYVsJ-0006rO-2f; Wed, 05 Jun 2019 13:22:43 +0000
+        id 1hYVsJ-0006rR-2V; Wed, 05 Jun 2019 13:22:43 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 7158B202D0BA0; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
-Message-Id: <20190605131944.591902815@infradead.org>
+        id 907EE2008D9FD; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
+Message-Id: <20190605131945.064393024@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 05 Jun 2019 15:07:54 +0200
+Date:   Wed, 05 Jun 2019 15:08:02 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -60,8 +60,9 @@ Cc:     linux-kernel@vger.kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: [PATCH 01/15] x86/entry/32: Clean up return from interrupt preemption path
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 09/15] compiler.h: Make __ADDRESSABLE() symbol truly unique
 References: <20190605130753.327195108@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -70,71 +71,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code flow around the return from interrupt preemption point seems
-needlesly complicated.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-There is only one site jumping to resume_kernel, and none (outside of
-resume_kernel) jumping to restore_all_kernel. Inline resume_kernel
-in restore_all_kernel and avoid the CONFIG_PREEMPT dependent label.
+The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
+symbol which has a unique name.  However, if the macro is used multiple
+times from within another macro, the line number will always be the
+same, resulting in duplicate symbols.
 
+Make the temporary symbols truly unique by using __UNIQUE_ID instead of
+__LINE__.
+
+Cc: Julia Cartwright <julia@ni.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Edward Cree <ecree@solarflare.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/8bc857824f82462a296a8a3c4913a11a7f801e74.1547073843.git.jpoimboe@redhat.com
 ---
- arch/x86/entry/entry_32.S |   24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ include/linux/compiler.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -67,7 +67,6 @@
- # define preempt_stop(clobbers)	DISABLE_INTERRUPTS(clobbers); TRACE_IRQS_OFF
- #else
- # define preempt_stop(clobbers)
--# define resume_kernel		restore_all_kernel
- #endif
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -294,7 +294,7 @@ unsigned long read_word_at_a_time(const
+  */
+ #define __ADDRESSABLE(sym) \
+ 	static void * __section(".discard.addressable") __used \
+-		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
++		__UNIQUE_ID(__addressable_##sym) = (void *)&sym;
  
- .macro TRACE_IRQS_IRET
-@@ -755,7 +754,7 @@ END(ret_from_fork)
- 	andl	$SEGMENT_RPL_MASK, %eax
- #endif
- 	cmpl	$USER_RPL, %eax
--	jb	resume_kernel			# not returning to v8086 or userspace
-+	jb	restore_all_kernel		# not returning to v8086 or userspace
- 
- ENTRY(resume_userspace)
- 	DISABLE_INTERRUPTS(CLBR_ANY)
-@@ -765,18 +764,6 @@ ENTRY(resume_userspace)
- 	jmp	restore_all
- END(ret_from_exception)
- 
--#ifdef CONFIG_PREEMPT
--ENTRY(resume_kernel)
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	cmpl	$0, PER_CPU_VAR(__preempt_count)
--	jnz	restore_all_kernel
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
--	jz	restore_all_kernel
--	call	preempt_schedule_irq
--	jmp	restore_all_kernel
--END(resume_kernel)
--#endif
--
- GLOBAL(__begin_SYSENTER_singlestep_region)
- /*
-  * All code from here through __end_SYSENTER_singlestep_region is subject
-@@ -1027,6 +1014,15 @@ ENTRY(entry_INT80_32)
- 	INTERRUPT_RETURN
- 
- restore_all_kernel:
-+#ifdef CONFIG_PREEMPT
-+	DISABLE_INTERRUPTS(CLBR_ANY)
-+	cmpl	$0, PER_CPU_VAR(__preempt_count)
-+	jnz	.Lno_preempt
-+	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
-+	jz	.Lno_preempt
-+	call	preempt_schedule_irq
-+.Lno_preempt:
-+#endif
- 	TRACE_IRQS_IRET
- 	PARANOID_EXIT_TO_KERNEL_MODE
- 	BUG_IF_WRONG_CR3
+ /**
+  * offset_to_ptr - convert a relative memory offset to an absolute pointer
 
 
