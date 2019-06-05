@@ -2,110 +2,257 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D231C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E51C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E1D206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0onlU0z"
+	by mail.kernel.org (Postfix) with ESMTP id 0108F2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfFEVwn (ORCPT
+        id S1726732AbfFEVxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:52:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46271 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfFEVwm (ORCPT
+        Wed, 5 Jun 2019 17:53:31 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:60650 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfFEVxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:52:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y11so111503pfm.13;
-        Wed, 05 Jun 2019 14:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pcjlD80KxqjkrJpLh0zg0y8IPXMG4YKyEPyNxaKimzE=;
-        b=o0onlU0z+qsTXYziIZn66NQ2jsSX0MO6KYoQXm0fIF79bfEs+9YKw8o6seNpgADsOe
-         VN8QCmTR4+lGIVXmTw0UbHjnRZQQ4Mqj/fw2JcMB4KRzyZd0+dIL/4lfIqXIWMJWzZYW
-         gnRifZJTd+FZ+ao2kvpDb7/Lwxp7fPB9VKthhkYC/2rr1dKeDOVHf9jbCFwwMjBZTwSD
-         VNi3VnXQJus9WpKtF+iHqSfZmYHB3dg/ypFqCYrdemCOKb03FjwmJTUtbpBLHJcUJQvS
-         0W0azfecf8jx+6LzLHeY40SG+61o66fsnf4bnoM/CJ6ao07c9tQcQMS8a8t0MG5jAT9s
-         50Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pcjlD80KxqjkrJpLh0zg0y8IPXMG4YKyEPyNxaKimzE=;
-        b=qg1oWxD8qvDm2ieIWGbUygLVkvZjFIvCfe8k3ONWNmR06t5zGuNQoArI/UKe7VC4+E
-         GXP7r6tefXvDyM++mXFQWrLmCIxXXH5MUcOkntxHODI2PsuUCcihFs7n9GO9t/ZOupTr
-         KLmIcGktnJG6WlHG5ryAUn4dKi7W9ULIU47RLbamePwH3Z8If5oN9yFadvA34r6S6qZE
-         UVxhhD1H3YTr8HUfb6lQiNMNkNYPVZi/frXQCLrc0GjWT9RSTu+F1AJiCIH0ohHjw7ji
-         2A5/eQPA7Cx68VFfFm3qNIZnyR86XD/89ifSyqPmdTvO25YILWmlmmlL+AKLQJia4++X
-         YBfw==
-X-Gm-Message-State: APjAAAWCbu/xdy4LtPjQmlsIiqBGJ7Rlfw1IYvJ8fNESZWC3nJTCfeTt
-        Phw+UbHOY4JJdOdNpbDwU/HDTOMTcpJeiRlks4Q=
-X-Google-Smtp-Source: APXvYqx80No/1styLEMcrYrPQiNeCLl7fYi2qEaBpkNmgIzsNFA6azr7O+9NlgEXZmfEf3tLVZbhUfZyH7jzwBj0RUM=
-X-Received: by 2002:a62:7552:: with SMTP id q79mr29394127pfc.71.1559771561768;
- Wed, 05 Jun 2019 14:52:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559769249-22011-1-git-send-email-info@metux.net>
-In-Reply-To: <1559769249-22011-1-git-send-email-info@metux.net>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 5 Jun 2019 16:52:30 -0500
-Message-ID: <CAH2r5mvzEPj2NXMJW5fOfq0+bbh-pZFnJnL1jEnyFYDt1HJi1A@mail.gmail.com>
-Subject: Re: [PATCH] fs: cifs: drop unneeded likely() call around IS_ERR()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
+        Wed, 5 Jun 2019 17:53:30 -0400
+Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 5B3033A3DA3;
+        Wed,  5 Jun 2019 21:13:02 +0000 (UTC)
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id F3779200003;
+        Wed,  5 Jun 2019 21:12:52 +0000 (UTC)
+Message-ID: <c1b57cddd7945c02c348a8fb253445e61a56cc7c.camel@bootlin.com>
+Subject: Re: [PATCH 7/7] media: cedrus: Improve H264 memory efficiency
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     wens@csie.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 05 Jun 2019 23:12:52 +0200
+In-Reply-To: <30580764.erAxqE4FcP@jernej-laptop>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+         <20190530211516.1891-8-jernej.skrabec@siol.net>
+         <20190603122328.kczqsr4pza2ggvbk@flea> <30580764.erAxqE4FcP@jernej-laptop>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This duplicates a patch submitted earlier by Kefeng Wang
-<wangkefeng.wang@huawei.com> which I plan to merge later today into
-cifs-2.6.git for-next
+Hi,
 
-On Wed, Jun 5, 2019 at 4:14 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> From: Enrico Weigelt <info@metux.net>
->
-> IS_ERR() already calls unlikely(), so this extra unlikely() call
-> around IS_ERR() is not needed.
->
-> Signed-off-by: Enrico Weigelt <info@metux.net>
-> ---
->  fs/cifs/dfs_cache.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
-> index e3e1c13..1692c0c 100644
-> --- a/fs/cifs/dfs_cache.c
-> +++ b/fs/cifs/dfs_cache.c
-> @@ -492,7 +492,7 @@ static struct dfs_cache_entry *__find_cache_entry(unsigned int hash,
->  #ifdef CONFIG_CIFS_DEBUG2
->                         char *name = get_tgt_name(ce);
->
-> -                       if (unlikely(IS_ERR(name))) {
-> +                       if (IS_ERR(name)) {
->                                 rcu_read_unlock();
->                                 return ERR_CAST(name);
->                         }
-> --
-> 1.9.1
->
+Le lundi 03 juin 2019 à 18:37 +0200, Jernej Škrabec a écrit :
+> Dne ponedeljek, 03. junij 2019 ob 14:23:28 CEST je Maxime Ripard napisal(a):
+> > On Thu, May 30, 2019 at 11:15:16PM +0200, Jernej Skrabec wrote:
+> > > H264 decoder driver preallocated pretty big worst case mv col buffer
+> > > pool. It turns out that pool is most of the time much bigger than it
+> > > needs to be.
+> > > 
+> > > Solution implemented here is to allocate memory only if capture buffer
+> > > is actually used and only as much as it is really necessary.
+> > > 
+> > > This is also preparation for 4K video decoding support, which will be
+> > > implemented later.
+> > 
+> > What is it doing exactly to prepare for 4k?
+> 
+> Well, with that change 4K videos can be actually watched with 256 MiB CMA 
+> pool, but I can drop this statement in next version.
+> 
+> I concentrated on 256 MiB CMA pool, because it's maximum memory size supported 
+> by older VPU versions, but I think they don't support 4K decoding. I don't 
+> have them, so I can't test that hypothesis.
 
+I think it's a fair goal to try and optimize the CMA pool usage, maybe
+it should be presented as that and I guess it's fine to connect that to
+4K decoding if you like :)
 
--- 
-Thanks,
+Either way, I think we should have per-codec framework callbacks for
+these kinds of things.
 
-Steve
+Cheers,
+
+Paul
+
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 -
+> > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 81 +++++++------------
+> > >  2 files changed, 28 insertions(+), 57 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> > > 16c1bdfd243a..fcbbbef65494 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > @@ -106,10 +106,6 @@ struct cedrus_ctx {
+> > > 
+> > >  	union {
+> > >  	
+> > >  		struct {
+> > > 
+> > > -			void		*mv_col_buf;
+> > > -			dma_addr_t	mv_col_buf_dma;
+> > > -			ssize_t		mv_col_buf_field_size;
+> > > -			ssize_t		mv_col_buf_size;
+> > > 
+> > >  			void		*pic_info_buf;
+> > >  			dma_addr_t	pic_info_buf_dma;
+> > >  			void		*neighbor_info_buf;
+> > > 
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > > b2290f98d81a..758fd0049e8f 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > @@ -54,17 +54,14 @@ static void cedrus_h264_write_sram(struct cedrus_dev
+> > > *dev,> 
+> > >  		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
+> > >  
+> > >  }
+> > > 
+> > > -static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_ctx *ctx,
+> > > -					      unsigned int 
+> position,
+> > > +static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_buffer *buf,
+> > > 
+> > >  					      unsigned int 
+> field)
+> > >  
+> > >  {
+> > > 
+> > > -	dma_addr_t addr = ctx->codec.h264.mv_col_buf_dma;
+> > > -
+> > > -	/* Adjust for the position */
+> > > -	addr += position * ctx->codec.h264.mv_col_buf_field_size * 2;
+> > > +	dma_addr_t addr = buf->extra_buf_dma;
+> > > 
+> > >  	/* Adjust for the field */
+> > > 
+> > > -	addr += field * ctx->codec.h264.mv_col_buf_field_size;
+> > > +	if (field)
+> > > +		addr += buf->extra_buf_size / 2;
+> > > 
+> > >  	return addr;
+> > >  
+> > >  }
+> > > 
+> > > @@ -76,7 +73,6 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
+> > > 
+> > >  				struct cedrus_h264_sram_ref_pic 
+> *pic)
+> > >  
+> > >  {
+> > >  
+> > >  	struct vb2_buffer *vbuf = &buf->m2m_buf.vb.vb2_buf;
+> > > 
+> > > -	unsigned int position = buf->codec.h264.position;
+> > > 
+> > >  	pic->top_field_order_cnt = cpu_to_le32(top_field_order_cnt);
+> > >  	pic->bottom_field_order_cnt = cpu_to_le32(bottom_field_order_cnt);
+> > > 
+> > > @@ -84,10 +80,8 @@ static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
+> > > 
+> > >  	pic->luma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 
+> 0));
+> > >  	pic->chroma_ptr = cpu_to_le32(cedrus_buf_addr(vbuf, &ctx->dst_fmt, 
+> 1));
+> > > -	pic->mv_col_top_ptr =
+> > > -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 
+> 0));
+> > > -	pic->mv_col_bot_ptr =
+> > > -		cpu_to_le32(cedrus_h264_mv_col_buf_addr(ctx, position, 
+> 1));
+> > > +	pic->mv_col_top_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 
+> 0));
+> > > +	pic->mv_col_bot_ptr = cpu_to_le32(cedrus_h264_mv_col_buf_addr(buf, 
+> 1));
+> > >  }
+> > >  
+> > >  static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+> > > 
+> > > @@ -142,6 +136,28 @@ static void cedrus_write_frame_list(struct cedrus_ctx
+> > > *ctx,> 
+> > >  	output_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
+> > >  	output_buf->codec.h264.position = position;
+> > > 
+> > > +	if (!output_buf->extra_buf_size) {
+> > > +		const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
+> > > +		unsigned int field_size;
+> > > +
+> > > +		field_size = DIV_ROUND_UP(ctx->src_fmt.width, 16) *
+> > > +			DIV_ROUND_UP(ctx->src_fmt.height, 16) * 16;
+> > > +		if (!(sps->flags & 
+> V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE))
+> > > +			field_size = field_size * 2;
+> > > +		if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
+> > > +			field_size = field_size * 2;
+> > > +
+> > > +		output_buf->extra_buf_size = field_size * 2;
+> > > +		output_buf->extra_buf =
+> > > +			dma_alloc_coherent(dev->dev,
+> > > +					   output_buf-
+> > extra_buf_size,
+> > > +					   &output_buf-
+> > extra_buf_dma,
+> > > +					   GFP_KERNEL);
+> > > +
+> > > +		if (!output_buf->extra_buf)
+> > > +			output_buf->extra_buf_size = 0;
+> > > +	}
+> > > +
+> > 
+> > That also means that instead of allocating that buffer exactly once,
+> > you now allocate it for each output buffer?
+> 
+> It's not completely the same. I'm allocating multiple times, yes, but much 
+> smaller chunks and only if needed.
+> 
+> Still, this slight overhead happens only when buffer is used for the first time. 
+> When buffer is reused, this MV buffer is also reused.
+> 
+> > I guess that it will cleaned up by your previous patch at
+> > buffer_cleanup time, so after it's no longer a reference frame?
+> 
+> Yes, it will be deallocated in buffer_cleanup, but only after capture buffers 
+> are freed, which usually happens when device file descriptor is closed.
+> 
+> Buffers which holds reference frames are later reused, together with it's MV 
+> buffer, so there's no overhead.
+> 
+> > What is the average memory usage before, and after that change during
+> > a playback, and what is the runtime cost of doing it multiple times
+> > instead of once?
+> 
+> As I already said, overhead is present only when buffer is used for the first 
+> time, which is not ideal, but allows to calculate minimal buffer size needed 
+> and even doesn't allocate anything if capture buffer is not used at all.
+> 
+> I didn't collect any exact numbers, but with this change I can play H264 and 
+> HEVC (with similar modification) 4K video samples with 256 MiB CMA pool. 
+> Without this change, it's not really possible. You can argue "but what if 4K 
+> video use 16 reference frames", then yes, only solution is to increase CMA 
+> pool, but why reserve extra memory which will never be used?
+> 
+> I've been using this optimization for past ~6 month with no issues noticed. If 
+> you feel better, I can change this to be a bit conservative and allocate MV 
+> buffer when buffer_init is called. This will consume a bit more memory as SPS is 
+> not available at that time (worst case buffer size estimation), but it still 
+> won't allocate MV buffers for unallocated capture frames.
+> 
+> Best regards,
+> Jernej
+> 
+> 
+
