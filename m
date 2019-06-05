@@ -2,90 +2,68 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF15C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB37C46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059132067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D846D2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559768712;
+	bh=44VDRxA/D3CrY0vgvknhCg1a02P7ybmCoTRJfyAa7ME=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=PY46eXV8BKZ1kjGAVb1s21nB5QzqQ5fhJLXN6p/wbmnz4VnDI2kb5ML2ZKHDTY77i
+	 +XEPPO+vHEQf7ShJl+/KA32M9y4LoSDFyM/gt/O9ovWlLg2OUx6l0MXcRxaCP1t4QH
+	 51XBwuUFEwHi7sqzuS/BY4RamMgZt0Lu1a4dkNAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFEVDp (ORCPT
+        id S1726667AbfFEVFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:03:45 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:35409 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEVDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:03:44 -0400
-Received: from orion.localdomain ([77.2.1.21]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MAOa3-1hOPWF3A4Z-00Bt1P; Wed, 05 Jun 2019 23:03:36 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] net: sctp: drop unneeded likely() call around IS_ERR()
-Date:   Wed,  5 Jun 2019 23:03:27 +0200
-Message-Id: <1559768607-17439-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:RDhO0c91eGQhuPk7OHIf4MDNfPy3l+iTaNUx9a50PPTwDQpqrjO
- 55dpkrt7kgxoqVnayYCOjOUfNg+9htcpuYwvkAJR9gslNxD/RqsECCRyiL0zteRLcDlns2e
- TRJRVVhzG9ZWaDjd658fE9Q9zcXTW7xd1x3hAKD3RUzVVTvWFGb5PSGvbwLELA9oXMcRZu7
- vP60tsLC8L+Zk/om8bEdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sKdrp2sgGcQ=:pvV0FiTPX8gMA1+4M/9k2f
- SQZ9FRTN2nzdQjrrAiIwDQOcMvGS5UU5GpALTkIm7l6gT0UQVvAiwdlCxbriciOLFLP+f5f/2
- oZWRx/CznID8gGaxEI15X3hIsZXjy9tMTjdddXkzcxMBc/p5/vKi49OhaPfsAWjenWlCt9tgt
- iFnody6EFvOsVzFubjoajOtU18IYuDLeI1cbWzK+RQamOhCz5Q3Ucs54k1cOAZoLLSKXNB89z
- Hw6h1jEaUMmnJwmcYuEYU2mZpzNluZFgMIWZwwqLgOsvE1222DP8YQbWSFNdk0P5MOb8Uq68E
- 75r+C4X580HDQsiMeW3jf+CZh9YzoXm+e2BJ9xwq3mTc2mfHr7JSxNxU9lNXdU0qe7zsoHzWn
- 04vH9A3hHD1We9M9LetXZ6aR/nbJ8ZfMs9CBkQasEqeXO/QpeEnAR3y37IswHJMerxPq7RVVr
- cEnMVDCRkkaHhZFvt3nuBf5ErYyFWF+X9SU7HNSMPDiXmV+9z+ir2pFhWExZC0AXLhEp1TCdo
- l4+HnWs/VERXoq1B7akgU2p3FjDY5iOtSUAcNBYPZiYbIbGq99bs0XxYDDarvjbkvALVXKw7G
- G9LBNWTvwuj4HefRDvTkEyALCwu+Xp0Xu49/fQ40x2J72yiwtMgqrWLjumSYSUMHopj9e4hcw
- kxGqIAWCzjzkV/Sk7PulRGphC/K1hyvKNeP1ZYok78CMw4lpDu53G8A/NxQeJM4WYRW4HxBeu
- V3QXqsxzIa4IGcun/P35h1OYvJ5+krxd2gWC7SxDAIPWoXvQPraqY3zIoig=
+        Wed, 5 Jun 2019 17:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbfFEVFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:05:11 -0400
+Subject: Re: [GIT PULL] pidfd fixes for v5.2-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559768711;
+        bh=44VDRxA/D3CrY0vgvknhCg1a02P7ybmCoTRJfyAa7ME=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=mGoxbpQv90c+jhzDr/7ehtiJ0M/BgzPRYHqvh2JKcd9wfwPHkmxowFVNNz1wUyO9O
+         OFpTwjb133gAZTLybv98DcVzBSRPoQjZ/ueH069CSM0km/b2BNNygd5MjJDeSqaRGl
+         HYYq5gCEbvQXS0vf1NU5lGPvP0gmbMrU4vOrPIvw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190605132937.29438-1-christian@brauner.io>
+References: <20190605132937.29438-1-christian@brauner.io>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190605132937.29438-1-christian@brauner.io>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
+ tags/pidfd-fixes-v5.2-rc4
+X-PR-Tracked-Commit-Id: 1fcd0eb356ad56c4e405f06e31dd9fde2109d5ab
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: db309f2aedb88a938e37a6eac02be7a7e0e850b1
+Message-Id: <155976871111.18999.281700280051587555.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 Jun 2019 21:05:11 +0000
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        arnd@arndb.de, Christian Brauner <christian@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+The pull request you sent on Wed,  5 Jun 2019 15:29:37 +0200:
 
-IS_ERR() already calls unlikely(), so this extra unlikely() call
-around IS_ERR() is not needed.
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/pidfd-fixes-v5.2-rc4
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- net/sctp/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/db309f2aedb88a938e37a6eac02be7a7e0e850b1
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 39ea0a3..c7b0f51 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -985,7 +985,7 @@ static int sctp_setsockopt_bindx(struct sock *sk,
- 		return -EINVAL;
- 
- 	kaddrs = memdup_user(addrs, addrs_size);
--	if (unlikely(IS_ERR(kaddrs)))
-+	if (IS_ERR(kaddrs))
- 		return PTR_ERR(kaddrs);
- 
- 	/* Walk through the addrs buffer and count the number of addresses. */
-@@ -1315,7 +1315,7 @@ static int __sctp_setsockopt_connectx(struct sock *sk,
- 		return -EINVAL;
- 
- 	kaddrs = memdup_user(addrs, addrs_size);
--	if (unlikely(IS_ERR(kaddrs)))
-+	if (IS_ERR(kaddrs))
- 		return PTR_ERR(kaddrs);
- 
- 	/* Allow security module to validate connectx addresses. */
+Thank you!
+
 -- 
-1.9.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
