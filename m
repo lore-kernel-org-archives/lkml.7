@@ -2,124 +2,104 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE668C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A27CC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB4720866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559758771;
-	bh=z2449oIoMxCMf05ewxCgr8nvzAgC1WKf7tzs4LUZww4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IrsoCdp+FtOXiHF5XAGBaLyuLVoz0o5sc7mJ62KVeYGw34vlrQq6LmOZdIAwN47Ll
-	 K8bekwjzxAVwlbzKCD/WHhJFflUqAWlO3J4GxUpPStC3aJ9Y+HNuUuy8u4QFWsKsyQ
-	 LEs5z4XAmDNS/16yOcXO5YuKc+yGKMD+K1ymO4qo=
+	by mail.kernel.org (Postfix) with ESMTP id 3718C2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFESTa (ORCPT
+        id S1726604AbfFESYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:19:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36098 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFESTa (ORCPT
+        Wed, 5 Jun 2019 14:24:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:56165 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfFESYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:19:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=z2449oIoMxCMf05ewxCgr8nvzAgC1WKf7tzs4LUZww4=; b=hnFDrNh2DslYLoRjh5wN7qj55
-        gCrGZaH+wsTspLUeaiQHh65bvr7exJKjHxyMwiP0bRJ2kek8WECA8OcVyLZMtKu9wSt5uA54HmANN
-        0rYKSwzl5mBHgJcf5h0Ug8hVjK32gtuquvevNpspgjWvp2mSYjc2MdVgQbrt3AHNyPb1Y=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYaUy-0001AG-Fj; Wed, 05 Jun 2019 18:18:56 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id D4DF5440046; Wed,  5 Jun 2019 19:18:55 +0100 (BST)
-Date:   Wed, 5 Jun 2019 19:18:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Corey Minyard <minyard@acm.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Kershner <david.kershner@unisys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Len Brown <lenb@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 02/13] bus_find_device: Unify the match callback with
- class_find_device
-Message-ID: <20190605181855.GV2456@sirena.org.uk>
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
- <1559747630-28065-3-git-send-email-suzuki.poulose@arm.com>
+        Wed, 5 Jun 2019 14:24:16 -0400
+Received: from [192.168.1.110] ([77.2.1.21]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N17gy-1gXZo22HZy-012WRk; Wed, 05 Jun 2019 20:24:08 +0200
+Subject: Re: [PATCH] block: Drop unlikely before IS_ERR(_OR_NULL)
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190605142428.84784-4-wangkefeng.wang@huawei.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <8221bc17-b0bb-da6f-4343-3e73467252d5@metux.net>
+Date:   Wed, 5 Jun 2019 18:24:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EEDXPAtTg2mD7Iri"
-Content-Disposition: inline
-In-Reply-To: <1559747630-28065-3-git-send-email-suzuki.poulose@arm.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190605142428.84784-4-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Y0QXYRfj1pDFaLHuulCV3aQ53CFCLSD47VeOfBiZj/brBBYX0yH
+ XPNsNjyRUa68eg8AjCoqPdjWHUiXgGUn97FxC3B/Q9EDhCseqCjzMMFPML7OOWcm8+V9ji1
+ Se+WIOh5QglRc7af3tl3m9hBgNPBIF+B5g7Arm7Pmg5/1LAjFOAv5iF0h6D+YUEB5f5VecX
+ qyL3R/zcXo+sHfgzJFVcw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l3dySK4iN1I=:m3RNRdxfUGQ4yBpcFIFwwh
+ JgRjk0Uhv/3h0kAZRaosu/08k69o/om82ldoSuG8E8aZMwb5hdUY6PCbyz7mJfxBGLQQXAf28
+ EGuGm4wZEyqRsQi3Wq6ZKsKe843DdaKogyvB90wn1GjbbBVU8Cm1gjdlCskCw9QokhCHP4PXi
+ Jm8AtlMp1X9otZhrrOvedcPBghNXZfYDvdcW/GHsriBKfi0Y3424YL+IUfcRIhDh6BwARZaFf
+ WO91A6ZlPoXR8LL7EVILPb9hhAHm+//JWN24Hd/Dglvnoec8zuyfjqy1vACEH2N8s5Pk6CsuS
+ JKndYXkoT5CPV83fv6kr74lMdIBryoZQ8v63KmepFTUE5cNkjLCypiIY5BwYUAZ/TAX0dYoH2
+ m+21F/aVdYEQyMlQHyb1FwGYlP98mfBJvi/upfJsAbUMsWOJdejP0AIPpS5hWMKxOjHz0avNo
+ bOrkFpR0Qpka2lS9osGYrHL++qh+/DqGmlMJV6hLsIUP9ffIC4/ygFJHGv2oKZvxYB7LNVuJb
+ t+rsTV3okwrrUpqbwglmjcToiv3y2Is6I/HwViWV+UXRHejBMTMaouz1aHjT8vnAiBLywQ5Cg
+ pNQQSq12yri4De47+hfsyptLmD93q6YuVFAdiKez4pecxnaFYI+A3vcDpxpHLVI+ZI+UPF1G+
+ b620kMkaMmusrFJnnFAyX7fZ9RnfQfqJ7toJS+3DtivevsUkGeC2TaIA4ge4PLUW19BSTph9B
+ n+wbGvWIDWlmWgD+7/DRLUOQ6PeXsZkMZTAfrsL0NVz9OtNuaALASUEjGA8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05.06.19 14:24, Kefeng Wang wrote:
 
---EEDXPAtTg2mD7Iri
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> index b97b479e4f64..1f7127b03490 100644
+> --- a/block/blk-cgroup.c
+> +++ b/block/blk-cgroup.c
+> @@ -881,7 +881,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+>   			blkg_free(new_blkg);
+>   		} else {
+>   			blkg = blkg_create(pos, q, new_blkg);
+> -			if (unlikely(IS_ERR(blkg))) {
+> +			if (IS_ERR(blkg)) {
+>   				ret = PTR_ERR(blkg);
+>   				goto fail_unlock;
+>   			}
+> 
 
-On Wed, Jun 05, 2019 at 04:13:39PM +0100, Suzuki K Poulose wrote:
-> There is an arbitrary difference between the prototypes of
-> bus_find_device() and class_find_device() preventing their callers
-> from passing the same pair of data and match() arguments to both of
-> them, which is the const qualifier used in the prototype of
+I think this cocci script should do such things automatically:
 
-Acked-by: Mark Brown <broonie@kernel.org>
+virtual patch
+virtual context
+virtual org
+virtual report
 
---EEDXPAtTg2mD7Iri
-Content-Type: application/pgp-signature; name="signature.asc"
+@@
+expression E;
+@@
+- unlikely(IS_ERR(E))
++ IS_ERR(E)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz4B44ACgkQJNaLcl1U
-h9AP1Qf7BosK6S5EJ3oSKd/4Ff/u6NARI5+Sut5+66fdSBrGM/hGX3xyPsbJ1wz7
-6NNZ9Fa+LGnjiednm3MV4N26bMDSjObtSPHcN/RDrQXVj6FzvLWMy6RaHT8U60Vq
-g0dYTLbl7C7rYzUi8hvgECvw2OcMC4fBSQqoRA6+Rngpt80JexV+GiDXdhssdQFM
-MsPampHlCdVdoEROayITj1O3nJAMbXhKtAa5ITp/ZgGHbbdvThaP2yHqI4DY1ObE
-7T0GGw/8C387ACiTS0kvX3bg/jUg1YpyfpfK1gc1HhoUC2j2vLFWsBoqG7rNO3W1
-EasG+SiNHA5D1PA2EImJcNDIGmLSCQ==
-=+R08
------END PGP SIGNATURE-----
+Do you already do it this way and have a cocci scrip on the way
+to mainline ?
 
---EEDXPAtTg2mD7Iri--
+
+--mtx
+
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
