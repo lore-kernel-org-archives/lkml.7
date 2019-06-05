@@ -2,162 +2,60 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3361EC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE10C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B64820883
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004042075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfFETLN (ORCPT
+        id S1726637AbfFETOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:11:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51156 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbfFETLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:11:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9FC83AF0C;
-        Wed,  5 Jun 2019 19:11:10 +0000 (UTC)
-Message-ID: <6f40f43ed32c5c519761879245423f7c371e4ae6.camel@suse.de>
-Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
-        viresh.kumar@linaro.org, mturquette@baylibre.com,
-        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-Date:   Wed, 05 Jun 2019 21:11:06 +0200
-In-Reply-To: <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
-         <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
-         <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
-         <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-PJNAuTBnger31MKfSUoC"
-User-Agent: Evolution 3.32.2 
-MIME-Version: 1.0
+        Wed, 5 Jun 2019 15:14:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38478 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFETOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 15:14:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E40B71510F003;
+        Wed,  5 Jun 2019 12:14:50 -0700 (PDT)
+Date:   Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
+Message-Id: <20190605.121450.2198491088032558315.davem@davemloft.net>
+To:     ivan.khoronzhuk@linaro.org
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP
+ support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Jun 2019 12:14:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Date: Wed,  5 Jun 2019 16:20:02 +0300
 
---=-PJNAuTBnger31MKfSUoC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> This patchset adds XDP support for TI cpsw driver and base it on
+> page_pool allocator. It was verified on af_xdp socket drop,
+> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 
-On Wed, 2019-06-05 at 13:34 +0200, Stefan Wahren wrote:
-> Hi,
->=20
-> Am 05.06.19 um 13:00 schrieb Nicolas Saenz Julienne:
-> > Hi Stefan,
-> > thanks for the review, I took note of your code comments.
-> >=20
-> > On Wed, 2019-06-05 at 11:46 +0200, Stefan Wahren wrote:
-> > > Hi Nicolas,
-> > >=20
-> > > Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
-> > > > Hi all,
-> > > > this series aims at adding cpufreq support to the Raspberry Pi fami=
-ly of
-> > > > boards.
-> > > >=20
-> > > > The previous revision can be found at:=20
-> > > > https://lkml.org/lkml/2019/5/20/431
-> > > >=20
-> > > > The series first factors out 'pllb' from clk-bcm2385 and creates a =
-new
-> > > > clk driver that operates it over RPi's firmware interface[1]. We ar=
-e
-> > > > forced to do so as the firmware 'owns' the pll and we're not allowe=
-d to
-> > > > change through the register interface directly as we might race wit=
-h the
-> > > > over-temperature and under-voltage protections provided by the firm=
-ware.
-> > > it would be nice to preserve such design decision in the driver as a
-> > > comment, because the cover letter usually get lost.
-> > > > Next it creates a minimal cpufreq driver that populates the CPU's o=
-pp
-> > > > table, and registers cpufreq-dt. Which is needed as the firmware
-> > > > controls the max and min frequencies available.
-> > > I tested your series on top of Linux 5.2-rc1 with multi_v7_defconfig =
-and
-> > > manually enable this drivers. During boot with Raspbian rootfs i'm
-> > > getting the following:
-> > >=20
-> > > [    1.177009] cpu cpu0: failed to get clock: -2
-> > > [    1.183643] cpufreq-dt: probe of cpufreq-dt failed with error -2
-> > This is surprising, who could be creating a platform_device for cpufreq=
--dt
-> > apart from raspberrypi-cpufreq? Just to make things clear, you're using=
- the
-> > device tree from v5.2-rc1 (as opposed to the Raspbian one)?
->=20
-> sorry my fault, i thought it already has been replaced. The behavior in
-> this unexpected case is fine, since it doesn't crash.
->=20
-> I replaced the the DTB with the mainline one, but now i'm getting this:
->=20
-> [    4.566068] cpufreq: cpufreq_online: CPU0: Running at unlisted freq:
-> 600000 KHz
-> [    4.580690] cpu cpu0: dev_pm_opp_set_rate: Invalid target frequency 0
-> [    4.594391] cpufreq: __target_index: Failed to change cpu frequency: -=
-22
+Jesper et al., please give this a good once over.
 
-For the record this fixes it:
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index aa51756fd4d6..edb71eefe9cf 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -1293,7 +1293,7 @@ static int clk_core_determine_round_nolock(struct clk=
-_core
-*core,
-        } else if (core->ops->round_rate) {
-                rate =3D core->ops->round_rate(core->hw, req->rate,
-                                             &req->best_parent_rate);
--               if (rate < 0)
-+               if (IS_ERR_VALUE(rate))
-                        return rate;
-
-                req->rate =3D rate;
-
-round_rate() returns a 'long' value, yet 'pllb' in rpi3b+ goes as high as
-2.8GHz, which only fits in an 'unsigned long'. This explains why I didn't s=
-ee
-this issue with RPI2b.
-
-I'll add the patch to the series.
-
-Regards,
-Nicolas
-
-
---=-PJNAuTBnger31MKfSUoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz4E8oACgkQlfZmHno8
-x/65VAf/fn1es6te2vdGehlcnMHV8inkQwAi0BEftzdL8s5w+Yv3WsJH3lwZM3sD
-DPZNWwlL/U2nVcKb997HnAcZm6CkosH87jzzF8n41F2LlzJGAzVDOZyxcbTJlK5V
-XtGsBvTkcqww24j6tKopUZ+9lWTSDTy2Jt3o/yxliP1oMFDrOVDQ0H20Qcprx32O
-lgev+7L7raIhmw8Fzy4DLU0nLe8kqkxGOHdorK7cRELAhys0rCx4WEX5MjJGUHQe
-TE9hQOG8bbGjvTtfE0MN837iw+S0D4XIyvjY5REPut2RTEcyf7uTea52DyXMeX5v
-vAGHR2WLM77yT5igIMv746NEBYT2SA==
-=2JhT
------END PGP SIGNATURE-----
-
---=-PJNAuTBnger31MKfSUoC--
-
+Thank you.
