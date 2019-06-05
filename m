@@ -2,156 +2,112 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AD4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FF2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC54E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3A7206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHV/oYBH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SFA9jBNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfFEMxR (ORCPT
+        id S1727870AbfFEMxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:53:17 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39943 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbfFEMxQ (ORCPT
+        Wed, 5 Jun 2019 08:53:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55017 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbfFEMxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:53:16 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c70so5009518qkg.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:53:16 -0700 (PDT)
+        Wed, 5 Jun 2019 08:53:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g135so2141907wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=FEJlwRzOSRN+nlu5X4lPOwpsvJ7oWUXOjTXr6yHewVs=;
-        b=KHV/oYBHp2bFpw53YVfhzl3g1kG2WmIzXRZmzI671MGDFgyIhzTfBLeny6QRd70/Wb
-         Q49SrLx5bOYcq2UmvSigcBYt6+enapqr/jp80PXY1p/Iw73+1AbeG1WQ34FQWF5AsKvJ
-         AGGL7LlhdFnNbX5jRS+pEU1gQVS2U/7ZugcNin0lr/k5mnUgkNYskil9lWeShlZeX+V+
-         honvGgrYzMXAKP8nxyImXTxWXcu+MauFLuTdLk0+IvFYUuBNrCPlCzWx2DLr8HfTORMF
-         /M+4nzHB/xT/FWPQ7B5nsF7aqSjSoRXrMBxptfHgcxSyXz6vDTdeHNz8mkC5VxT1c0BQ
-         xsWg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uycimCcEQzjnF8sAY15CB1rjUO658nghgDAo0Xg98gY=;
+        b=SFA9jBNJIJjn/VRmKcxWKSqZlCzG68DwU1APLNgz/VGf54XhH+wBfVmPfIf0S9G78i
+         B83QHCtcDhiKC3BC/qlukVnIfhbtivcNHDGthGl2vtQyePaPo/cpWuF6v2NMyzf12abb
+         YxiD0aZzeGxoJxmQALzwEgncPRo/6fQCFcLfOQiR0EpFhS7oCP3JZzP5B/OeyAGX0E42
+         CRsfyWi8aGOtUWN8J73M790NZ//umWtXEvn+qpC6beRqeQJUePP3JRwTEy0Bmeg+X/yZ
+         y6W86bz1rzSAuLj1PM9rlsKgyPNaF5nKaYqAgWGwmse4N7A/DMfDQWuwtgokhCattDhE
+         N6gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FEJlwRzOSRN+nlu5X4lPOwpsvJ7oWUXOjTXr6yHewVs=;
-        b=kQLbNV7aa5iswVMBnlF4KPG9sPc1MOzisz10L7MQcUMLDMqy0rOMuoYZWfGj++YWop
-         FEqUBVLo4oed7m0CwpHNxH5w+xj89/gYtcdOvJhkxcx3KI8sZNJNsH6zLG5yCPpVsr+n
-         wRALmlPwcKa/FF0M28l3c0+d4ZNGxsulXcl+7nvE6ArHt1IuBhX6cj6eDBgahamsXa5e
-         x7r++jNixIBtss+S30+eLpMfuj56WFmXYdXT9Nc4COk9nqAs/49jpmlo9xBUlLWWr+0D
-         gntDzmDNcuxNe4UHJGEsiJqBznBX6PwFRX1oTSBJwoL6r6ppvJzaFzYYwZSSr49sDJZj
-         OXzw==
-X-Gm-Message-State: APjAAAXCEYD0QR6Hr7nlIhst5exHq4npUHaoJnJkJmgqXgOkogysziYX
-        b/npJSk7My1xmAwDiHH2v3c=
-X-Google-Smtp-Source: APXvYqxpOHxbmXPU3eVITd9pgKb9Z6rBwqCROpIc51RhnW7VWDuMfcmxuBM3TI73Byjp3o64Xi3W3g==
-X-Received: by 2002:ae9:ea05:: with SMTP id f5mr13508285qkg.275.1559739195257;
-        Wed, 05 Jun 2019 05:53:15 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id q29sm1693245qkq.77.2019.06.05.05.53.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 05:53:14 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D172C41149; Wed,  5 Jun 2019 09:53:11 -0300 (-03)
-Date:   Wed, 5 Jun 2019 09:53:11 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ben Gainey <ben.gainey@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCHv2] perf jvmti: Fix gcc string overflow warning
-Message-ID: <20190605125311.GE20408@kernel.org>
-References: <20190531080307.22628-1-jolsa@kernel.org>
- <20190531120530.GB17152@kernel.org>
- <20190531131321.GB1281@krava>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uycimCcEQzjnF8sAY15CB1rjUO658nghgDAo0Xg98gY=;
+        b=VIuLwJOVPXNHlR65e+ocz6GgJEknvYVuzODUfiEH1D3+MRAnb34S+CNDozAb8yHTYi
+         U0yJBhFX7eVsA/LBAiaS8plxmUVRXYhPRT1BtRwO+wJ6dV5oMRmX+ytlLPmg8TICTiIE
+         hPxbBvvI7ouIoEd/ksZeszAEGjwmcizIbit2iZ8ClVr0jLGwgM8GlQvgE4RhhSFoHEsz
+         lxec9uZsIG5jIwcf43UMhUEelwa1nFEqU+lk4R/Kv600dat5jJWg4qOISGBoJrVNzpDk
+         dhuOMz0Dp1+DAgjPjgkICZJAJMTqJ5VwqgeDHkgQERvVapHDzxmwpLB8ZdcH4JACoB8d
+         Oxyw==
+X-Gm-Message-State: APjAAAVCtv218sa53ETWo7+qBl2xCJWR+xAQQ4FNe5CQBCQTtQwvjDkV
+        SgEVJCYboDgnMz6xJuCg9hoyTQ==
+X-Google-Smtp-Source: APXvYqyFNJn7u0rlc7fuBS/JBHoswH/Cksr0I7UUMNH8dOfpQeeAAj7ioSr6w1ClZki3MK5UMpczUg==
+X-Received: by 2002:a1c:7f93:: with SMTP id a141mr12477467wmd.131.1559739202495;
+        Wed, 05 Jun 2019 05:53:22 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y133sm20899720wmg.5.2019.06.05.05.53.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Jun 2019 05:53:21 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/meson: fix G12A HDMI PLL settings for 4K60 1000/1001 variations
+Date:   Wed,  5 Jun 2019 14:53:20 +0200
+Message-Id: <20190605125320.8708-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190531131321.GB1281@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 31, 2019 at 03:13:21PM +0200, Jiri Olsa escreveu:
-> On Fri, May 31, 2019 at 09:05:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > I think for these needs flipping that 'n' into a 'l' is good enough.
+The Amlogic G12A HDMI PLL needs some specific settings to lock with
+different fractional values for the 5,4GHz mode.
+
+Handle the 1000/1001 variation fractional case here to avoid having
+the PLL in an non lockable state.
+
+Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/meson/meson_vclk.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index 44250eff8a3f..83fc2fc82001 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -553,8 +553,17 @@ void meson_hdmi_pll_set_params(struct meson_drm *priv, unsigned int m,
  
-> ok, I forgot there's strlcpy.. v2 attached
-
-Thanks, applied v2.
-
-- Arnaldo
- 
-> ---
-> We are getting fake gcc warning when we compile with gcc9 (9.1.1):
-> 
->      CC       jvmti/libjvmti.o
->    In file included from /usr/include/string.h:494,
->                     from jvmti/libjvmti.c:5:
->    In function ‘strncpy’,
->        inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
->    /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
->      106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
->          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
->    jvmti/libjvmti.c:165:26: note: length computed here
->      165 |   size_t file_name_len = strlen(file_name);
->          |                          ^~~~~~~~~~~~~~~~~
->    cc1: all warnings being treated as errors
-> 
-> As per Arnaldo's suggestion using strlcpy, which does
-> the same thing and keeps gcc silent.
-> 
-> Cc: Ben Gainey <ben.gainey@arm.com>
-> Cc: Stephane Eranian <eranian@google.com>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Link: http://lkml.kernel.org/n/tip-sve3b63c550wr907e6ui6gx5@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/jvmti/libjvmti.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-> index aea7b1fe85aa..c441a34cb1c0 100644
-> --- a/tools/perf/jvmti/libjvmti.c
-> +++ b/tools/perf/jvmti/libjvmti.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/compiler.h>
-> +#include <linux/string.h>
->  #include <sys/types.h>
->  #include <stdio.h>
->  #include <string.h>
-> @@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
->  		result[i] = '\0';
->  	} else {
->  		/* fallback case */
-> -		size_t file_name_len = strlen(file_name);
-> -		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
-> +		strlcpy(result, file_name, max_length);
->  	}
->  }
->  
-> -- 
-> 2.21.0
-
+ 		/* G12A HDMI PLL Needs specific parameters for 5.4GHz */
+ 		if (m >= 0xf7) {
+-			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4, 0xea68dc00);
+-			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5, 0x65771290);
++			if (frac < 0x10000) {
++				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
++							0x6a685c00);
++				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
++							0x11551293);
++			} else {
++				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
++							0xea68dc00);
++				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
++							0x65771290);
++			}
+ 			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL6, 0x39272000);
+ 			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL7, 0x55540000);
+ 		} else {
 -- 
+2.21.0
 
-- Arnaldo
