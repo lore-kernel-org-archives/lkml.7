@@ -2,165 +2,107 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5DEC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B83DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F452075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301932075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="CdVn2rxO"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="aHYJ6ng0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfFEVR4 (ORCPT
+        id S1726721AbfFEVSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:17:56 -0400
-Received: from mail-eopbgr790059.outbound.protection.outlook.com ([40.107.79.59]:2512
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726554AbfFEVRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:17:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M6Zhdr1Kn/YAwbuIZrv7cOH5SdjRclBqEpShpueDq0c=;
- b=CdVn2rxOqf/JonUFGechxkMr9ga+/KcyXvxjah7aLidhkBsOydVkntx27mGxFdQm03yVFzMG5xGrysWACVOH9yRBx/kQ+uXZlo0IdspvyAhkWlJh05dRiBtBo8eGomRRaeuwwvr0DMAefnzLwMOTWabGmjoIJCsLssRMW01oxdE=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.31.141) by
- BN7PR08MB3843.namprd08.prod.outlook.com (52.132.5.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Wed, 5 Jun 2019 21:17:48 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::8d6c:f350:4859:e532]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::8d6c:f350:4859:e532%4]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
- 21:17:48 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-Thread-Topic: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-Thread-Index: AQHVGqX7mZWyymp0D0+pRLZPzmjhVqaLH8wwgAD1HYCAAXihMA==
-Date:   Wed, 5 Jun 2019 21:17:48 +0000
-Message-ID: <BN7PR08MB5684B63CABF148C279FD64C1DB160@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <20190604072001.9288-3-bjorn.andersson@linaro.org>
- <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
- <20190604223025.GD4814@minitux>
-In-Reply-To: <20190604223025.GD4814@minitux>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.81.60]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4414cfc2-6c39-416b-dbfb-08d6e9fb42c1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB3843;
-x-ms-traffictypediagnostic: BN7PR08MB3843:|BN7PR08MB3843:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BN7PR08MB38438D51443799382393E3E8DB160@BN7PR08MB3843.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(136003)(39860400002)(346002)(199004)(189003)(7696005)(54906003)(55236004)(71190400001)(76176011)(11346002)(6506007)(14454004)(476003)(9686003)(6436002)(2906002)(76116006)(26005)(6916009)(25786009)(71200400001)(53936002)(99286004)(7416002)(229853002)(14444005)(52536014)(81156014)(4326008)(486006)(68736007)(55016002)(66476007)(66066001)(66556008)(66446008)(74316002)(5660300002)(45080400002)(446003)(478600001)(6246003)(256004)(6116002)(86362001)(8676002)(33656002)(5024004)(6306002)(186003)(102836004)(7736002)(8936002)(316002)(305945005)(81166006)(3846002)(73956011)(66946007)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB3843;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bB0RHptXoY0oN9gfNYpsrwZhlAj/DQvFYUapaXM0Wiztqn7J8GnbHjmFn5ukYsG0t5k8hxl6As7reDo9/Z5KmOlC2M//V0HxktAKzKki1iKF+DqPt2uOSsUvJWCoH+Sf21u1Sff5wDKuZu7fZWYc3W4r3OuehOyNE2oE8yDk+866uDBpvhYIgmguS+Xfg9jS581nCHmogupbw9QKMJ/tiCqore70uXL+77zbdMPH1iBiuxISaFHTFocEg/+jhMBi3kPbbiO/io+XSWgC1n8x/Yfc7uVRZpwHnzOqRMyhClTN6I8VVvooTIVPyAZUfqqod2EKiOUdBB0qd434Dq8IL8+OXvGvW8OXkqgAeD3CtUdIYPky3T1Iftj3L4RO+KRU0KDlkj2CofXleI+ktelCPCihWGoczsj1i5M9kcjEXaQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Jun 2019 17:18:46 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:45326 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFEVSn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:18:43 -0400
+Received: by mail-qk1-f179.google.com with SMTP id s22so145632qkj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 14:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=LwuKD0qRQR6Z1DCIQ+SriQ9WugB9fmYEFY6WJV5RzOU=;
+        b=aHYJ6ng06q78UXrqbo5EJBBIn7SflXbQr7HKsAkPaVh6IVwauI+elhLUuTxL4rsQHk
+         ORjs1TlaeeQRlkujSAjE9Q8XZ/Jy6zoMfykruTXyjTerjV/XSCHvQHbaCpqdUGhXEpiE
+         rKhPJhjJUj+fEhHSqb2/MhhWnoIe2Msg8A0Msdpbqc87nP0qFiZoPj9PUjvxe4MIxDhS
+         VC7JsG+rULIw1kny1V/NpJcaSF4R1nRQOO22tH7ZG25y4QRb56uAQ44FeyyD5GsfcZYd
+         Ju2xwQ90XH6WOfPLLpyjdwIF9iZTUnVrK/FYH7xNadvhZk0MNgJtL177Yzoe5QSDpdZF
+         GKxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=LwuKD0qRQR6Z1DCIQ+SriQ9WugB9fmYEFY6WJV5RzOU=;
+        b=i2t0DrxnmkGDNZCxAfZx+jNSLTkcMe58q7jrefCBksKUhK/EQFxlPvcelR63gr8fQb
+         /gdi4xo45jiJYK1oGzL6Zp2/n/lct/dY25BCfKPGSL9+IeJEiQ6pbMqJf/kQ9Z2K51ip
+         8VPQ8FfjfAfOKaToMtoaqKw2+lXLGoZLWJFS9UTQ/xzEHACKugqph3RG3DgHN/p/8KlO
+         FmQHWdGxSlUCLSvTbuHEBC1otdStCuChxUEcfyMUdbBhLgx56C2pCQPHahnvAmfyGPIN
+         vgBKreVOvMZH/LCIiM7X3jj2BXGpySBsqVT2wPiLuGhLkQ/sC2m4UEUHdX+CQ7SX8PxP
+         DgLw==
+X-Gm-Message-State: APjAAAUhmqlOw3XwfA1k0MKioQg3tGr19NcScojRdN5qybq1HKtRn+hC
+        R6byGVUcf93yeAcE/dHosGuU1A==
+X-Google-Smtp-Source: APXvYqwUWo1vbCti1v8T1dlpOSUFRFYWCwSdehJXnFZBW33Cor6Y/9MBYHpo841CP4uc4HSW0v6jRA==
+X-Received: by 2002:a37:8007:: with SMTP id b7mr15760560qkd.102.1559769522355;
+        Wed, 05 Jun 2019 14:18:42 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id c192sm5339874qkg.33.2019.06.05.14.18.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 14:18:42 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 14:18:38 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [oss-drivers] [PATCH][next] nfp: flower: use struct_size()
+ helper
+Message-ID: <20190605141838.506a453b@cakuba.netronome.com>
+In-Reply-To: <20190605203827.GA22786@embeddedor>
+References: <20190605203827.GA22786@embeddedor>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4414cfc2-6c39-416b-dbfb-08d6e9fb42c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 21:17:48.3179
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: beanhuo@micron.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB3843
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bjorn
-I think I should give up my preview suggestion DME_ENDPOINTRESET.req softwa=
-re reset,  go back to your HW reset.
-Although SW reset can cover most of the requirement, and compatible with di=
-fferent vendor UFS device, for some device
-fatal error cases, UFS internal stuck and would not accept SW Reset. An HW =
-reset is expected. =20
-Please go on your reset way.
+On Wed, 5 Jun 2019 15:38:27 -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct nfp_tun_active_tuns {
+> 	...
+>         struct route_ip_info {
+>                 __be32 ipv4;
+>                 __be32 egress_port;
+>                 __be32 extra[2];
+>         } tun_info[];
+> };
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following form:
+> 
+> sizeof(struct nfp_tun_active_tuns) + sizeof(struct route_ip_info) * count
+> 
+> with:
+> 
+> struct_size(payload, tun_info, count)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Thanks,
-//Bean
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 
->Andy Gross <agross@kernel.org>; Linus Walleij <linus.walleij@linaro.org>;
->Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
->linux-arm-msm@vger.kernel.org; linux-gpio@vger.kernel.org;
->devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
->scsi@vger.kernel.org
->Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
->
->On Tue 04 Jun 01:13 PDT 2019, Bean Huo (beanhuo) wrote:
->> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct
->> >ufs_hba
->> >*hba)
->> > 	int retries =3D MAX_HOST_RESET_RETRIES;
->> >
->> > 	do {
->> >+		/* Reset the attached device */
->> >+		ufshcd_device_reset(hba);
->> >+
->>
->> what's problem you met, and you should reset UFS device here? could you
->give more info?
->>
->> It is true that we don't reset UFS device in case of device fatal
->> error. According to UFS host spec, Host should be device reset except
->> that in addition to resetting UIC. But as so far, We didn't experience a=
-ny
->problems result from this missing reset.
->>
->> We have three UFS device reset ways.  Comparing to this hardware
->> reset, I prefer to use DME_ENDPOINTRESET.req software reset.
->>
->
->Hi Bean,
->
->Thanks for your questions. With some memories we see issues establishing
->the link during bootup, so that's the purpose of issuing this reset.
->
->Unfortunately the downstream Qualcomm patch [1] (which I should have
->remembered to attribute), does not mention why the reset during host
->controller reset is needed - but I'm fairly certain that this scenario wou=
-ld be
->similar to the handover from bootloader to kernel that we do see an issue
->with.
->
->
->[1]
->https://nam01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsource
->.codeaurora.org%2Fquic%2Fla%2Fkernel%2Fmsm-
->4.4%2Fcommit%2F%3Fh%3Dmsm-
->4.4%26id%3D0c82737188e2d63a08196e078e411032dbbc3b89&amp;data=3D02%
->7C01%7Cbeanhuo%40micron.com%7Cf72404eb906440e1f9c408d6e93c401d%7
->Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C636952842324926509&a
->mp;sdata=3DI%2FH7km6b34jyoUa1RVEPApfYt5uSFtHqL3%2BvV1bvryM%3D&amp
->;reserved=3D0
->
->Regards,
->Bjorn
+Thanks!
