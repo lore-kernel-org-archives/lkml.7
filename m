@@ -2,80 +2,141 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFD4C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC92C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCFF208C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC3A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="R3xGb6Gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfFEKcs (ORCPT
+        id S1727231AbfFEKfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:32:48 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12403 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfFEKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:32:47 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 03:32:46 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2019 03:32:42 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hYTDm-0001RK-5f; Wed, 05 Jun 2019 13:32:42 +0300
-Date:   Wed, 5 Jun 2019 13:32:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] x86/cpu: Add Icelake-NNPI to Intel family
-Message-ID: <20190605103242.GU9224@smile.fi.intel.com>
-References: <20190530123827.8218-1-rajneesh.bhardwaj@linux.intel.com>
- <20190604160914.GN9224@smile.fi.intel.com>
- <79e33a93-6180-5a58-0d8c-b34276e710f3@linux.intel.com>
+        Wed, 5 Jun 2019 06:35:31 -0400
+Received: from mail-eopbgr60063.outbound.protection.outlook.com ([40.107.6.63]:30112
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726502AbfFEKfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:35:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n5pKVQkc5GPfN3Lh305t7hry2+ovV3P7LZgqkI0UVzA=;
+ b=R3xGb6Gn09wEdeljziDBzaKdA9ezK83rand4Hxm0sFb8x366aJ/Sn7utikXV39WDAR1LfAOs0kEn3Pd7cxaHq6DrFWmiF2Kc5GGDDAQQsHYKyymITwSa8B4QN28fZMHhdGguEms9j+MkoRulrTgKlI2G+6YJbvtzkQYuT8CQIHU=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4670.eurprd08.prod.outlook.com (10.255.114.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Wed, 5 Jun 2019 10:35:26 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 10:35:26 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH 0/3] drm/komeda: Unify mclk/pclk/pipeline->aclk to one ACLK
+Thread-Topic: [PATCH 0/3] drm/komeda: Unify mclk/pclk/pipeline->aclk to one
+ ACLK
+Thread-Index: AQHVG4pjxvdVY3Ff9ES/w1HGkvX49g==
+Date:   Wed, 5 Jun 2019 10:35:26 +0000
+Message-ID: <20190605103506.22863-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0041.apcprd03.prod.outlook.com
+ (2603:1096:203:2f::29) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cb2de0cb-9317-48f7-6df6-08d6e9a185b0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4670;
+x-ms-traffictypediagnostic: VE1PR08MB4670:
+x-ms-exchange-purlcount: 11
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB46706C64479DEC0FE171C7B7B3160@VE1PR08MB4670.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(366004)(396003)(346002)(199004)(189003)(103116003)(3846002)(110136005)(86362001)(81156014)(81166006)(2501003)(36756003)(66066001)(71200400001)(71190400001)(1076003)(52116002)(316002)(4326008)(99286004)(2906002)(256004)(54906003)(26005)(8676002)(6116002)(2201001)(386003)(68736007)(55236004)(102836004)(25786009)(7736002)(14454004)(6506007)(2616005)(50226002)(486006)(6306002)(53936002)(6512007)(476003)(6486002)(6436002)(305945005)(966005)(8936002)(73956011)(66446008)(64756008)(66556008)(66476007)(66946007)(186003)(478600001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4670;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BD+zxcdp9DFMeoWmkVvK8Sj7wzmuvsmD/mYPRqYjmpdPKL7Wi7zvsNPv7G+o+OwcCwY0MvrvEmcaMHD5KFACkSzsmWLGmEsHiaX9Zcolmorr3wqViXGVFmQ/O9y+nZVTSCUeFLLSrZ14+tcAUicUmg9iFARHJOED3YlCL94WA99lRCZAaV3vrYNs9rEdkm7q8dz+aFbULmGkYFCxP4IgG6iUpUJzN1+GYc7cc94erpCjvWtucWVGx8dvcJdRIEQUA0zNX2X19jIKO3xjMs7qT//7oys/QJjpOW3G5dp++mb+oNMP6loFAuwUVfvn00PLU3NawtkHNiiEVN0/FDqR1PRQQLi6+5v4M6LxkGGgMR4xpLOn4hEK9mzWiZ5LUiwhYj/W+q76d/cnqMYozWrs4xWn8qb1spSzJvfkZgryTCk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79e33a93-6180-5a58-0d8c-b34276e710f3@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb2de0cb-9317-48f7-6df6-08d6e9a185b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 10:35:26.5090
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 12:54:12AM +0530, Bhardwaj, Rajneesh wrote:
-> Hi Andy
-> 
-> On 04-Jun-19 9:39 PM, Andy Shevchenko wrote:
-> > On Thu, May 30, 2019 at 06:08:27PM +0530, Rajneesh Bhardwaj wrote:
-> > > Add the CPUID model number of Icelake Neural Network Processor for Deep
-> > I believe we spell "Ice Lake".
-> 
-> I referred to https://patchwork.kernel.org/patch/10812551/ , https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6e394376ee89233508fa21d006546357f8efee31
-> and many others where it mentioned Icelake. I am fine to change it the way
-> you are suggesting, please confirm if its still needed and i will send a v2.
-
-I think the references have a mistake as well.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Q3VycmVudCBrb21lZGEgZHJpdmVyIHVzZXMgdGhyZWUgZGVkaWNhdGVkIGNsa3MgZm9yIGEgc3Bl
+Y2lmaWMgcHVycG9zZToNCi0gbWNsazogbWFpbiBlbmdpbmUgY2xvY2sNCi0gcGNsazogQVBCIGNs
+b2NrDQotIHBpcGVsaW5lLT5hY2xrOiBBWEkgY2xvY2suDQoNCkJ1dCBwZXIgc3BlYyB0aGUga29t
+ZWRhIEhXIG9ubHkgaGFzIHRocmVlIGlucHV0IGNsa3M6DQotIEFDTEs6IHVzZWQgZm9yIEFYSSBt
+YXN0ZXJzLCBBUEIgc2xhdmUgYW5kIG1vc3QgcGlwZWxpbmUgcHJvY2Vzc2luZw0KLSBQWENMSyBm
+b3IgcGlwZWxpbmUgMDogb3V0cHV0IHBpeGVsIGNsb2NrIGZvciBwaXBlbGluZSAwDQotIFBYQ0xL
+IGZvciBwaXBlbGluZSAxOiBvdXRwdXQgcGl4ZWwgY2xvY2sgZm9yIHBpcGVsaW5lIDENCg0KU28g
+b25lIEFDTEsgaXMgZW5vdWdoLCBubyBuZWVkIHRvIHNwbGl0IGl0IHRvIHRocmVlIG1jbGsvcGNs
+ay9heGljbGsuDQoNCkRlcGVuZHMgb246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9w
+Lm9yZy9zZXJpZXMvNTg3MTAvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9z
+ZXJpZXMvNTkwMDAvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMv
+NTkwMDIvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNTk3NDcv
+DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNTk5MTUvDQotIGh0
+dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjAwODMvDQotIGh0dHBzOi8v
+cGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA2OTgvDQotIGh0dHBzOi8vcGF0Y2h3
+b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4NTYvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZy
+ZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4OTMvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNr
+dG9wLm9yZy9zZXJpZXMvNjEzNzAvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9zZXJpZXMvNjEzNzkvDQoNCkphbWVzIFFpYW4gV2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEp
+ICgzKToNCiAgZHJtL2tvbWVkYTogVW5pZnkgbWNsay9wY2xrL3BpcGVsaW5lLT5hY2xrIHRvIG9u
+ZSBNQ0xLDQogIGRybS9rb21lZGE6IFJlbmFtZSBtYWluIGVuZ2luZSBjbGsgbmFtZSAibWNsayIg
+dG8gImFjbGsiDQogIGR0L2JpbmRpbmdzOiBkcm0va29tZWRhOiBVbmlmeSBtY2xrL3BjbGsvcGlw
+ZWxpbmUtPmFjbGsgdG8gb25lIEFDTEsNCg0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2FybSxrb21l
+ZGEudHh0ICAgICAgICAgICB8IDE2ICsrKy0tLS0NCiAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2Q3
+MS9kNzFfY29tcG9uZW50LmMgICAgfCAxMCArKy0tLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9rb21lZGFfY3J0Yy5jICB8IDQ1ICsrKysrKystLS0tLS0tLS0tLS0NCiAuLi4vZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jICAgfCAzOSArKysrKy0tLS0tLS0t
+LS0tDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuaCAgIHwgIDYg
+Ky0tDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuaCAgIHwgIDYg
+Ky0tDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMgIHwgIDEg
+LQ0KIC4uLi9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oICB8ICA2ICst
+LQ0KIC4uLi9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYyAgICB8ICA0ICst
+DQogOSBmaWxlcyBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspLCA4NSBkZWxldGlvbnMoLSkNCg0K
+LS0NCjIuMTcuMQ0K
