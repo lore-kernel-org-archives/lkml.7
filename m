@@ -2,79 +2,253 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73870C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C1E2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB4B2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:09:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsLf+GJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfFEVIP (ORCPT
+        id S1726667AbfFEVJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:08:15 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:36131 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfFEVIP (ORCPT
+        Wed, 5 Jun 2019 17:09:01 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35068 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfFEVJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:08:15 -0400
-X-Originating-IP: 93.29.109.196
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 9B30F40003;
-        Wed,  5 Jun 2019 21:08:07 +0000 (UTC)
-Message-ID: <5c2217a4e80eaaa6a8eefd8752ce9a86933d0a80.camel@bootlin.com>
-Subject: Re: [PATCH 5/7] media: cedrus: Don't set chroma size for scale &
- rotation
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@bootlin.com
-Cc:     wens@csie.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Wed, 05 Jun 2019 23:08:07 +0200
-In-Reply-To: <20190530211516.1891-6-jernej.skrabec@siol.net>
-References: <20190530211516.1891-1-jernej.skrabec@siol.net>
-         <20190530211516.1891-6-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 5 Jun 2019 17:09:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so11653plo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 14:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=doGqQfOnbpbz6KWyxr0y6OarZe4NFnZU43MXukaW24s=;
+        b=zsLf+GJaoDAXKa5EdGWe2FOH0F+xp5lNHW7YtXxQp3F6tZIgoxWTg4ICtQmSyMUzFS
+         b0EGjQtzqHXwjdTw3FRh9z+9C6OYT11qsbfHgjRZPZakvHnZPBN05Qfz7+TfLQvcmfZy
+         k8JA698NZ2o0hx24JO+WjKTiegX0rZpAXCRvblhsB/qkNq0Pyo3Fld98laxJ++tnYiDP
+         l5VuN6NUy0XCB/5KqMOTCc9277V09UY4OBy3OnP1pl5FX2/+XCRwYGMCFJZjI4mweOty
+         1iAo0dUwojRJmbTkcnex3nPunwVVOrWhwSE9evn6ehy9bWiqnakAnymht15U2Vk1qBfJ
+         tx9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=doGqQfOnbpbz6KWyxr0y6OarZe4NFnZU43MXukaW24s=;
+        b=eBlKhVhdqX4OxZDaIKSl2RjdPfrboPl+hdQVPMtrOf769gcZoLj67uexD69cylWfX9
+         9ZS1zBfIrBOw9E5WyOI+WKoUyIcrPMLuKVS9MuWp7rtoIcCVg0zYuHLgKXQWTsovg3/g
+         RNkmM2P6RGqBcrFTRVMIO3tBBwnP8zIgE4yNY+dX/kJ7/i0GjKeV+4EnvgYxnQhbNxCI
+         kCg0slpRuENkrG071GpYhUy4KsKF6o7s0rig8wWRL6obeQlaZFlKdFaoSCQaGsyg94ZF
+         R3MZ8vsaLq520j4IHj/SPikGjatmaKQ+CfdS8DLu29FioRF0KYOyGEtE0IX0ddTojV0C
+         fUOA==
+X-Gm-Message-State: APjAAAWhSXZ9UHhnUACSZphaD7wRPSxz3AhHhdTou4t567zX601VcB+1
+        es40JIZz3cRNy+Kz7c1cie7fsQ==
+X-Google-Smtp-Source: APXvYqwoS4/fIM8nKfSXqVALkUrziDsBx5YwkF6lBl7eSp+Ql0R6Eq9xI2taS6Dvk0vFthsrEHo8CA==
+X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr7623927plb.76.1559768940538;
+        Wed, 05 Jun 2019 14:09:00 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z68sm5093374pfb.37.2019.06.05.14.08.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 14:09:00 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Patrick Daly <pdaly@codeaurora.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: [RFC 1/2] iommu: arm-smmu: Handoff SMR registers and context banks
+Date:   Wed,  5 Jun 2019 14:08:55 -0700
+Message-Id: <20190605210856.20677-2-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190605210856.20677-1-bjorn.andersson@linaro.org>
+References: <20190605210856.20677-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Boot splash screen or EFI framebuffer requires the display hardware to
+operate while the Linux iommu driver probes. Therefore, we cannot simply
+wipe out the SMR register settings programmed by the bootloader.
 
-Le jeudi 30 mai 2019 à 23:15 +0200, Jernej Skrabec a écrit :
-> Scale and rotation are currently not implemented, so it makes no sense to
-> set chroma size for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Detect which SMR registers are in use during probe, and which context
+banks they are associated with. Reserve these context banks for the
+first Linux device whose stream-id matches the SMR register.
 
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cheers,
+Any existing page-tables will be discarded.
 
-Paul
+Heavily based on downstream implementation by Patrick Daly
+<pdaly@codeaurora.org>.
 
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> index 9c5819def186..9de20ae47916 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -79,9 +79,6 @@ void cedrus_dst_format_set(struct cedrus_dev *dev,
->  		reg = VE_PRIMARY_OUT_FMT_NV12;
->  		cedrus_write(dev, VE_PRIMARY_OUT_FMT, reg);
->  
-> -		reg = VE_CHROMA_BUF_LEN_SDRT(chroma_size / 2);
-> -		cedrus_write(dev, VE_CHROMA_BUF_LEN, reg);
-> -
->  		reg = chroma_size / 2;
->  		cedrus_write(dev, VE_PRIMARY_CHROMA_BUF_LEN, reg);
->  
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/iommu/arm-smmu-regs.h |  2 +
+ drivers/iommu/arm-smmu.c      | 80 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 77 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
+index e9132a926761..8c1fd84032a2 100644
+--- a/drivers/iommu/arm-smmu-regs.h
++++ b/drivers/iommu/arm-smmu-regs.h
+@@ -105,7 +105,9 @@
+ #define ARM_SMMU_GR0_SMR(n)		(0x800 + ((n) << 2))
+ #define SMR_VALID			(1 << 31)
+ #define SMR_MASK_SHIFT			16
++#define SMR_MASK_MASK			0x7fff
+ #define SMR_ID_SHIFT			0
++#define SMR_ID_MASK			0xffff
+ 
+ #define ARM_SMMU_GR0_S2CR(n)		(0xc00 + ((n) << 2))
+ #define S2CR_CBNDX_SHIFT		0
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 5e54cc0a28b3..c8629a656b42 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -135,6 +135,7 @@ struct arm_smmu_s2cr {
+ 	enum arm_smmu_s2cr_type		type;
+ 	enum arm_smmu_s2cr_privcfg	privcfg;
+ 	u8				cbndx;
++	bool				handoff;
+ };
+ 
+ #define s2cr_init_val (struct arm_smmu_s2cr){				\
+@@ -399,9 +400,22 @@ static int arm_smmu_register_legacy_master(struct device *dev,
+ 	return err;
+ }
+ 
+-static int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
++static int __arm_smmu_alloc_cb(struct arm_smmu_device *smmu, int start,
++			       struct device *dev)
+ {
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++	unsigned long *map = smmu->context_map;
++	int end = smmu->num_context_banks;
++	int cbndx;
+ 	int idx;
++	int i;
++
++	for_each_cfg_sme(fwspec, i, idx) {
++		if (smmu->s2crs[idx].handoff) {
++			cbndx = smmu->s2crs[idx].cbndx;
++			goto found_handoff;
++		}
++	}
+ 
+ 	do {
+ 		idx = find_next_zero_bit(map, end, start);
+@@ -410,6 +424,17 @@ static int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
+ 	} while (test_and_set_bit(idx, map));
+ 
+ 	return idx;
++
++found_handoff:
++	for (i = 0; i < smmu->num_mapping_groups; i++) {
++		if (smmu->s2crs[i].cbndx == cbndx) {
++			smmu->s2crs[i].cbndx = 0;
++			smmu->s2crs[i].handoff = false;
++			smmu->s2crs[i].count--;
++		}
++	}
++
++	return cbndx;
+ }
+ 
+ static void __arm_smmu_free_bitmap(unsigned long *map, int idx)
+@@ -759,7 +784,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ }
+ 
+ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+-					struct arm_smmu_device *smmu)
++					struct arm_smmu_device *smmu,
++					struct device *dev)
+ {
+ 	int irq, start, ret = 0;
+ 	unsigned long ias, oas;
+@@ -873,8 +899,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		ret = -EINVAL;
+ 		goto out_unlock;
+ 	}
+-	ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
+-				      smmu->num_context_banks);
++	ret = __arm_smmu_alloc_cb(smmu, start, dev);
+ 	if (ret < 0)
+ 		goto out_unlock;
+ 
+@@ -1264,7 +1289,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 		return ret;
+ 
+ 	/* Ensure that the domain is finalised */
+-	ret = arm_smmu_init_domain_context(domain, smmu);
++	ret = arm_smmu_init_domain_context(domain, smmu, dev);
+ 	if (ret < 0)
+ 		goto rpm_put;
+ 
+@@ -1798,6 +1823,49 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	writel(reg, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+ }
+ 
++static void arm_smmu_read_smr_state(struct arm_smmu_device *smmu)
++{
++	u32 privcfg;
++	u32 cbndx;
++	u32 mask;
++	u32 type;
++	u32 s2cr;
++	u32 smr;
++	u32 id;
++	int i;
++
++	for (i = 0; i < smmu->num_mapping_groups; i++) {
++		smr = readl_relaxed(ARM_SMMU_GR0(smmu) + ARM_SMMU_GR0_SMR(i));
++		mask = (smr >> SMR_MASK_SHIFT) & SMR_MASK_MASK;
++		id = smr & SMR_ID_MASK;
++		if (!(smr & SMR_VALID))
++			continue;
++
++		s2cr = readl_relaxed(ARM_SMMU_GR0(smmu) + ARM_SMMU_GR0_S2CR(i));
++		type = (s2cr >> S2CR_TYPE_SHIFT) & S2CR_TYPE_MASK;
++		cbndx = (s2cr >> S2CR_CBNDX_SHIFT) & S2CR_CBNDX_MASK;
++		privcfg = (s2cr >> S2CR_PRIVCFG_SHIFT) & S2CR_PRIVCFG_MASK;
++		if (type != S2CR_TYPE_TRANS)
++			continue;
++
++		/* Populate the SMR */
++		smmu->smrs[i].mask = mask;
++		smmu->smrs[i].id = id;
++		smmu->smrs[i].valid = true;
++
++		/* Populate the S2CR */
++		smmu->s2crs[i].group = NULL;
++		smmu->s2crs[i].count = 1;
++		smmu->s2crs[i].type = type;
++		smmu->s2crs[i].privcfg = privcfg;
++		smmu->s2crs[i].cbndx = cbndx;
++		smmu->s2crs[i].handoff = true;
++
++		/* Mark the context bank as busy */
++		bitmap_set(smmu->context_map, cbndx, 1);
++	}
++}
++
+ static int arm_smmu_id_size_to_bits(int size)
+ {
+ 	switch (size) {
+@@ -2023,6 +2091,8 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+ 		dev_notice(smmu->dev, "\tStage-2: %lu-bit IPA -> %lu-bit PA\n",
+ 			   smmu->ipa_size, smmu->pa_size);
+ 
++	arm_smmu_read_smr_state(smmu);
++
+ 	return 0;
+ }
+ 
+-- 
+2.18.0
 
