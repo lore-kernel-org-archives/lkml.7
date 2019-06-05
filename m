@@ -2,148 +2,95 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F194DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C33BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2720206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310F6206E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfFEPGh (ORCPT
+        id S1728570AbfFEPGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:06:37 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33090 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbfFEPGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:06:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C82B374;
-        Wed,  5 Jun 2019 08:06:36 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A32C3F246;
-        Wed,  5 Jun 2019 08:06:33 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 16:06:30 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190605150630.vh5pyfpd6y3mfcaa@e110439-lin>
-References: <20190515094459.10317-1-patrick.bellasi@arm.com>
- <20190515094459.10317-13-patrick.bellasi@arm.com>
- <20190531153545.GE374014@devbig004.ftw2.facebook.com>
- <20190603122929.GC19426@darkstar>
- <20190605140943.GM374014@devbig004.ftw2.facebook.com>
+        Wed, 5 Jun 2019 11:06:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28134 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfFEPGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:06:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 08:06:47 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2019 08:06:47 -0700
+Received: from kwong4-mobl.amr.corp.intel.com (unknown [10.252.203.122])
+        by linux.intel.com (Postfix) with ESMTP id 755CC5800BD;
+        Wed,  5 Jun 2019 08:06:46 -0700 (PDT)
+Subject: Re: [PATCH 02/14] ALSA: hdac: fix memory release for SST and SOF
+ drivers
+To:     =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>, alsa-devel@alsa-project.org
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190605134556.10322-1-amadeuszx.slawinski@linux.intel.com>
+ <20190605134556.10322-3-amadeuszx.slawinski@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <190f5c09-e6ae-918e-3fcc-d91a72a895da@linux.intel.com>
+Date:   Wed, 5 Jun 2019 10:06:47 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605140943.GM374014@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190605134556.10322-3-amadeuszx.slawinski@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-Jun 07:09, Tejun Heo wrote:
-> Hello,
-
-Hi,
-
-> On Mon, Jun 03, 2019 at 01:29:29PM +0100, Patrick Bellasi wrote:
-> > On 31-May 08:35, Tejun Heo wrote:
-> > > Hello, Patrick.
-> > > 
-> > > On Wed, May 15, 2019 at 10:44:55AM +0100, Patrick Bellasi wrote:
-> > 
-> > [...]
-> > 
-> > > For proportions (as opposed to weights), we use percentage rational
-> > > numbers - e.g. 38.44 for 38.44%.  I have parser and doc update commits
-> > > pending.  I'll put them on cgroup/for-5.3.
-> > 
-> > That's a point worth discussing with Peter, we already changed one
-> > time from percentages to 1024 scale.
+On 6/5/19 8:45 AM, Amadeusz Sławiński wrote:
+> During the integration of HDaudio support, we changed the way in which
+> we get hdev in snd_hdac_ext_bus_device_init() to use one preallocated
+> with devm_kzalloc(), however it still left kfree(hdev) in
+> snd_hdac_ext_bus_device_exit(). It leads to oopses when trying to
+> rmmod and modprobe. Fix it, by just removing kfree call.
 > 
-> cgroup tries to uss uniform units for its interface files as much as
-> possible even when that deviates from non-cgroup interface.  We can
-> bikeshed the pros and cons for that design choice for sure but I don't
-> think it makes sense to deviate from that at this point unless there
-> are really strong reasons to do so.
+> SOF also uses some of the snd_hdac_ functions for HDAudio support but
+> allocated the memory with kzalloc. A matching fix is provided
+> separately to align all users of the snd_hdac_ library.
 
-that makes sense to me, having a uniform interface has certainly a
-value.
+There are stability issues with this change (already shared in a 
+separate series) and additional findings reported by Libin so this 
+should not be applied for now.
 
-The only additional point I can think about as a (slightly) stronger
-reason is that I guess we would like to have the same API for cgroups
-as well as for the task specific and the system wide settings.
-
-The task specific values comes in via the sched_setattr() syscall:
-
-   [PATCH v9 06/16] sched/core: uclamp: Extend sched_setattr() to support utilization clamping
-   https://lore.kernel.org/lkml/20190515094459.10317-7-patrick.bellasi@arm.com/
-
-where we need to encode each clamp into a __u32 value.
-
-System wide settings are expose similarly to these:
-
-   grep '' /proc/sys/kernel/sched_*
-
-where we have always integer numbers.
-
-AFAIU your proposal will require to use a "scaled percentage" - e.g.
-3844 for 38.44% which however it's still not quite the same as writing
-the string "38.44".
-
-Not sure that's a strong enough argument, is it?
-
-> > Utilization clamps are expressed as percentages by definition,
-> > they are just expressed in a convenient 1024 scale which should not be
-> > alien to people using those knobs.
-> > 
-> > If we wanna use a "more specific" name like uclamp.{min,max} then we
-> > should probably also accept to use a "more specific" metric, don't we?
 > 
-> Heh, this actually made me chuckle.
+> Fixes: 6298542fa33b ("ALSA: hdac: remove memory allocation from snd_hdac_ext_bus_device_init")
+> Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>   sound/hda/ext/hdac_ext_bus.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
+> index c203af71a099..f33ba58b753c 100644
+> --- a/sound/hda/ext/hdac_ext_bus.c
+> +++ b/sound/hda/ext/hdac_ext_bus.c
+> @@ -170,7 +170,6 @@ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_init);
+>   void snd_hdac_ext_bus_device_exit(struct hdac_device *hdev)
+>   {
+>   	snd_hdac_device_exit(hdev);
+> -	kfree(hdev);
+>   }
+>   EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_exit);
+>   
+> 
 
-:)
-
-> It's an interesting bargaining take but I don't think that same word
-> being in two different places makes them tradable entities.
-
-Sure, that was not my intention.
-
-I was just trying to see if the need to be more specific could
-be an argument for having also a more specific value.
-
-> We can go into the weeds with the semantics but how about us using
-> an alternative adjective "misleading" for the cpu.util.min/max names
-> to short-circuit that?
-
-Not quite sure to get what you mean here. Are you pointing out that
-with clamps we don't strictly enforce a bandwidth but we just set a
-bias?
-
-Cheers,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
