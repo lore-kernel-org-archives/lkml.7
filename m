@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B91C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E1C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99CE3206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF89A20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="ihhdUgYK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="JaDIpeKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfFEIhm (ORCPT
+        id S1726747AbfFEIjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:37:42 -0400
-Received: from mx.cs.msu.ru ([188.44.42.42]:49840 "EHLO mail.cs.msu.ru"
+        Wed, 5 Jun 2019 04:39:02 -0400
+Received: from mx.cs.msu.ru ([188.44.42.42]:50326 "EHLO mail.cs.msu.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726777AbfFEIhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:37:41 -0400
+        id S1726554AbfFEIjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:39:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
          s=dkim; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
         In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MHa+mRbcZnPKL+QAvnpfU7FVZcx6TA6DohkB2p0dQdo=; b=ihhdUgYKsY0YXzC0coRSr45TBW
-        hdpJkK8bVEJKr9L+EZxvDclllkaBD2VUYo9ovQvhLwCIvabczOg13QUDunKi0wR5bgy+sKjOIqBMo
-        OMpt8zGsg/kAQYQyHn46oraEPht6fmxvM23dvD6PTYI1bujvHRHSmjcQ5NVFxTcMRRnTxgWa2R/NI
-        Eck48vaIFywYFu5rYUaIiX8ZDRw6MKLEgxB3gFKFgWcrOsR/KlBfrLb0yc5mqVqturJJQFgBJ15Xl
-        nwxHDsh80xb1ABlRZ6gWtkXbqeIyEOzygBEGFH9yDiPHu2xaqufTAMYnRaRum9VfvzwnQXnPnBQMQ
-        l2eDqsmg==;
+        bh=gr0mTLl4nOcKmmGmRaPugNKoyguVPVCtWK6FvFJMIDc=; b=JaDIpeKkwP3iHXf85k6Jj2eVYA
+        GsmSeDJ1uXjAeXLPNo17+wrNx0n8fczLXrDSm0lbQXrzoj2B5LqShyGmWtIXp0lC6VaswNBDGH7vQ
+        bXCMvpkOd/43S5edGhOsjya95zRSULvRY3AwY6TCPoZwchG44FhZWdq8Jpe7dPvoDRedl1XGUQIPc
+        q7acxe0Al+H5O/1LLnM6kpemch2IyncabaJIPZMPZRaUijEEHA7L5oU8xdKudt9Ed0R8yiBlTM2l1
+        GRyOvmuVF+IKKaJEnCjI2JGR3DrFDiVYfbMylGPQsVL0o55Asm0+4JzU5m4FS1Lj5+DdxcT+kIg64
+        9LmAKhog==;
 Received: from [37.204.119.143] (port=55354 helo=localhost.localdomain)
         by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92 (FreeBSD))
         (envelope-from <ar@cs.msu.ru>)
-        id 1hYR9X-0008s7-4J; Wed, 05 Jun 2019 11:20:13 +0300
+        id 1hYR9J-0008s7-Sj; Wed, 05 Jun 2019 11:20:00 +0300
 From:   Arseny Maslennikov <ar@cs.msu.ru>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
@@ -46,8 +46,8 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     "Vladimir D . Seleznev" <vseleznv@altlinux.org>,
         Arseny Maslennikov <ar@cs.msu.ru>
-Date:   Wed,  5 Jun 2019 11:19:06 +0300
-Message-Id: <20190605081906.28938-8-ar@cs.msu.ru>
+Date:   Wed,  5 Jun 2019 11:19:00 +0300
+Message-Id: <20190605081906.28938-2-ar@cs.msu.ru>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190605081906.28938-1-ar@cs.msu.ru>
 References: <20190605081906.28938-1-ar@cs.msu.ru>
@@ -55,7 +55,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 37.204.119.143
 X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: [PATCH 7/7] n_tty: Provide an informational line on VSTATUS receipt
+Subject: [PATCH 1/7] signal.h: Define SIGINFO on all architectures
 X-SA-Exim-Version: 4.2
 X-SA-Exim-Scanned: No (on mail.cs.msu.ru); Unknown failure
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,521 +63,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the three termios local flags isig, icanon, iexten are enabled
-and the local flag nokerninfo is disabled for a tty governed
-by the n_tty line discipline, then on receiving the keyboard status
-character n_tty will generate a status message and write it out to
-the tty before sending SIGINFO to the tty's foreground process group.
+This complementary patch defines SIGINFO as a synonym for SIGPWR
+on every architecture supported by the kernel.
+The particular signal number chosen does not really matter and is only
+required for the related tty functionality to work properly,
+so if it does not suite expectations, any suggestions are warmly
+welcome.
 
-This kerninfo line contains information about the current system load
-as well as some properties of "the most interesting" process in the
-tty's current foreground process group, namely:
- - its PID as seen inside its deepest PID namespace;
-   * the whole process group ought to be in a single PID namespace,
-     so this is actually deterministic
- - its saved command name truncated to 16 bytes (task_struct::comm);
-   * at the time of writing TASK_COMM_LEN == 16
- - its state and some related bits, procps-style;
- - for S and D: its symbolic wait channel, if available; or a short
-   description for other process states instead;
- - its user, system and real rusage time values;
- - its resident set size (as well as the high watermark) in kilobytes.
+SIGPWR looks like a nice candidate for this role, because it is
+defined on every supported arch; it is currently only used to inform
+PID 1 of power failures, and daemons that care about low-level
+events do not tend to have a controlling terminal.
 
-The "most interesting" process is chosen as follows:
- - runnables over everything
- - uninterruptibles over everything else
- - among 2 runnables pick the biggest utime + stime
- - any unresolved ties are decided in favour of greatest PID.
-
-While the kerninfo line is not very useful for debugging the kernel
-itself, since we have much more powerful debugging tools, it still gives
-the user behind the terminal some meaningful feedback to a VSTATUS that
-works even if no processes respond.
+However, on sparcs SIGPWR is a synonym for SIGLOST, a signal unique
+to that architecture, with a narrow set of intended uses that do not
+combine well with interactively requesting status.
+SIGLOST is not used by any kernel code at the moment.
+I'm not sure there is a more reasonable alternative right now.
 
 Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
 ---
- drivers/tty/Makefile       |   3 +-
- drivers/tty/n_tty.c        |  22 +++
- drivers/tty/n_tty_status.c | 354 +++++++++++++++++++++++++++++++++++++
- include/linux/sched.h      |   7 +
- include/linux/tty.h        |   3 +
- 5 files changed, 388 insertions(+), 1 deletion(-)
- create mode 100644 drivers/tty/n_tty_status.c
+ arch/arm/include/uapi/asm/signal.h     | 1 +
+ arch/h8300/include/uapi/asm/signal.h   | 1 +
+ arch/ia64/include/uapi/asm/signal.h    | 1 +
+ arch/m68k/include/uapi/asm/signal.h    | 1 +
+ arch/mips/include/uapi/asm/signal.h    | 1 +
+ arch/parisc/include/uapi/asm/signal.h  | 1 +
+ arch/powerpc/include/uapi/asm/signal.h | 1 +
+ arch/s390/include/uapi/asm/signal.h    | 1 +
+ arch/sparc/include/uapi/asm/signal.h   | 2 ++
+ arch/x86/include/uapi/asm/signal.h     | 1 +
+ arch/xtensa/include/uapi/asm/signal.h  | 1 +
+ include/uapi/asm-generic/signal.h      | 1 +
+ 12 files changed, 13 insertions(+)
 
-diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-index 020b1cd9294f..8bb5efb40b81 100644
---- a/drivers/tty/Makefile
-+++ b/drivers/tty/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_TTY)		+= tty_io.o n_tty.o tty_ioctl.o tty_ldisc.o \
-+obj-$(CONFIG_TTY)		+= tty_io.o tty_ioctl.o tty_ldisc.o \
- 				   tty_buffer.o tty_port.o tty_mutex.o \
- 				   tty_ldsem.o tty_baudrate.o tty_jobctrl.o \
-+				   n_tty.o n_tty_status.o \
- 				   n_null.o
- obj-$(CONFIG_LEGACY_PTYS)	+= pty.o
- obj-$(CONFIG_UNIX98_PTYS)	+= pty.o
-diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-index 7d7d84adcffe..74e6b4bf86bd 100644
---- a/drivers/tty/n_tty.c
-+++ b/drivers/tty/n_tty.c
-@@ -34,6 +34,7 @@
- #include <linux/signal.h>
- #include <linux/fcntl.h>
- #include <linux/sched.h>
-+#include <linux/kallsyms.h>
- #include <linux/interrupt.h>
- #include <linux/tty.h>
- #include <linux/timer.h>
-@@ -79,6 +80,8 @@
- #define ECHO_BLOCK		256
- #define ECHO_DISCARD_WATERMARK	N_TTY_BUF_SIZE - (ECHO_BLOCK + 32)
+diff --git a/arch/arm/include/uapi/asm/signal.h b/arch/arm/include/uapi/asm/signal.h
+index 9b4185ba4f8a..b80b53a17267 100644
+--- a/arch/arm/include/uapi/asm/signal.h
++++ b/arch/arm/include/uapi/asm/signal.h
+@@ -50,6 +50,7 @@ typedef unsigned long sigset_t;
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
  
-+#define STATUS_LINE_LEN (2 * KSYM_NAME_LEN)
-+
- #define SIG_FLUSHING_MASK ( \
- 	rt_sigmask(SIGINT) | rt_sigmask(SIGQUIT) | \
- 	rt_sigmask(SIGTSTP)			 )
-@@ -158,6 +161,8 @@ static inline unsigned char *echo_buf_addr(struct n_tty_data *ldata, size_t i)
- 	return &ldata->echo_buf[i & (N_TTY_BUF_SIZE - 1)];
- }
+diff --git a/arch/h8300/include/uapi/asm/signal.h b/arch/h8300/include/uapi/asm/signal.h
+index e15521037348..7a2b783af22b 100644
+--- a/arch/h8300/include/uapi/asm/signal.h
++++ b/arch/h8300/include/uapi/asm/signal.h
+@@ -50,6 +50,7 @@ typedef unsigned long sigset_t;
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
  
-+static void n_tty_status_line(struct tty_struct *tty);
-+
- /* If we are not echoing the data, perhaps this is a secret so erase it */
- static void zero_buffer(struct tty_struct *tty, u8 *buffer, int size)
- {
-@@ -1300,6 +1305,8 @@ n_tty_receive_char_special(struct tty_struct *tty, unsigned char c)
- 			n_tty_receive_signal_char(tty, SIGTSTP, c);
- 			return 0;
- 		} else if (c == STATUS_CHAR(tty)) {
-+			if (!L_NOKERNINFO(tty))
-+				n_tty_status_line(tty);
- 			n_tty_receive_signal_char(tty, SIGINFO, c);
- 			return 0;
- 		}
-@@ -2489,6 +2496,21 @@ static int n_tty_ioctl(struct tty_struct *tty, struct file *file,
- 	}
- }
+diff --git a/arch/ia64/include/uapi/asm/signal.h b/arch/ia64/include/uapi/asm/signal.h
+index aa98ff1b9e22..b4c98cb17165 100644
+--- a/arch/ia64/include/uapi/asm/signal.h
++++ b/arch/ia64/include/uapi/asm/signal.h
+@@ -45,6 +45,7 @@
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ /* signal 31 is no longer "unused", but the SIGUNUSED macro remains for backwards compatibility */
+ #define	SIGUNUSED	31
+diff --git a/arch/m68k/include/uapi/asm/signal.h b/arch/m68k/include/uapi/asm/signal.h
+index 915cc755a184..a0b4e4108cb8 100644
+--- a/arch/m68k/include/uapi/asm/signal.h
++++ b/arch/m68k/include/uapi/asm/signal.h
+@@ -50,6 +50,7 @@ typedef unsigned long sigset_t;
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
  
-+static void n_tty_status_line(struct tty_struct *tty)
-+{
-+	struct n_tty_data *ldata = tty->disc_data;
-+	char *msg, *buf;
-+	msg = buf = kzalloc(STATUS_LINE_LEN, GFP_KERNEL);
-+	tty_sprint_status_line(tty, buf + 1, STATUS_LINE_LEN - 1);
-+	/* The only current caller of this takes output_lock for us. */
-+	if (ldata->column != 0)
-+		*msg = '\n';
-+	else
-+		msg++;
-+	do_n_tty_write(tty, NULL, msg, strlen(msg));
-+	kfree(buf);
-+}
-+
- static struct tty_ldisc_ops n_tty_ops = {
- 	.magic           = TTY_LDISC_MAGIC,
- 	.name            = "n_tty",
-diff --git a/drivers/tty/n_tty_status.c b/drivers/tty/n_tty_status.c
-new file mode 100644
-index 000000000000..818caf04ad82
---- /dev/null
-+++ b/drivers/tty/n_tty_status.c
-@@ -0,0 +1,354 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* TODO:
-+ *
-+ * - Should we care about TIDs in the same thread group?
-+ */
-+
-+#include <linux/kallsyms.h>
-+#include <linux/pid.h>
-+#include <linux/sched.h>
-+#include <linux/sched/signal.h>
-+#include <linux/sched/loadavg.h>
-+#include <linux/sched/cputime.h>
-+#include <linux/sched/mm.h>
-+#include <linux/slab.h>
-+#include <linux/tty.h>
-+
-+#define BCOMPARE(lbool, rbool) ((lbool) << 1 | (rbool))
-+#define BCOMPARE_NONE 0
-+#define BCOMPARE_RIGHT 1
-+#define BCOMPARE_LEFT 2
-+#define BCOMPARE_BOTH (BCOMPARE_LEFT | BCOMPARE_RIGHT)
-+
-+/*
-+ * Select the most interesting task of two.
-+ *
-+ * The implemented approach is simple for now:
-+ * - pick runnable
-+ * - if no runnables, pick uninterruptible
-+ * - if tie between runnables, pick highest utime + stime
-+ * - if a tie is not broken by the above, pick highest pid nr.
-+ *
-+ * For reference, here's the one used in FreeBSD:
-+ * - pick runnables over anything
-+ * - if both runnables, pick highest cpu utilization
-+ * - if no runnables, pick shortest sleep time (the scheduler
-+ *   actually takes care to maintain this statistic)
-+ * - other ties are decided in favour of youngest process.
-+ */
-+static struct task_struct *__better_proc_R(struct task_struct *a,
-+		struct task_struct *b)
-+{
-+	unsigned long flags;
-+	u64 atime, btime, tgutime, tgstime;
-+	struct task_struct *ret;
-+
-+	if (!lock_task_sighand(a, &flags))
-+		goto out_a_unlocked;
-+	thread_group_cputime_adjusted(a, &tgutime, &tgstime);
-+	atime = tgutime + tgstime;
-+	unlock_task_sighand(a, &flags);
-+
-+	if (!lock_task_sighand(b, &flags))
-+		goto out_b_unlocked;
-+	thread_group_cputime_adjusted(b, &tgutime, &tgstime);
-+	btime = tgutime + tgstime;
-+	unlock_task_sighand(b, &flags);
-+
-+	ret = atime > btime ? a : b;
-+
-+	return ret;
-+
-+out_b_unlocked:
-+out_a_unlocked:
-+	return task_pid_vinr(a) > task_pid_vinr(b) ? a : b;
-+}
-+
-+static struct task_struct *__better_proc(struct task_struct *a,
-+		struct task_struct *b)
-+{
-+	if (!pid_alive(a))
-+		return b;
-+	if (!pid_alive(b))
-+		return a;
-+
-+	switch (BCOMPARE(a->state == TASK_RUNNING,
-+			b->state == TASK_RUNNING)) {
-+	case BCOMPARE_LEFT:
-+		return a;
-+	case BCOMPARE_RIGHT:
-+		return b;
-+	case BCOMPARE_BOTH:
-+		return __better_proc_R(a, b);
-+	}
-+
-+	switch (BCOMPARE(a->state == TASK_UNINTERRUPTIBLE,
-+			b->state == TASK_UNINTERRUPTIBLE)) {
-+	case BCOMPARE_LEFT:
-+		return a;
-+	case BCOMPARE_RIGHT:
-+		return b;
-+	case BCOMPARE_BOTH:
-+		break;
-+	}
-+
-+	/* TODO: Perhaps we should check something else... */
-+	return task_pid_vinr(a) > task_pid_vinr(b) ? a : b;
-+}
-+
-+/*
-+ * Weed out NULLs.
-+ * a and b are pointers to (struct task_struct); therefore no problem
-+ * with triple evaluation.
-+ */
-+#define better_proc(a, b) ((a) ? ((b) ? __better_proc((a), (b)) : (a)) : (b))
-+
-+static int scnprint_load(char *msgp, size_t size)
-+{
-+	unsigned long la[3];
-+
-+	get_avenrun(la, FIXED_1/200, 0);
-+	return scnprintf(msgp, size, "load: %lu.%02lu; ",
-+			LOAD_INT(la[0]), LOAD_FRAC(la[0]));
-+}
-+
-+static int scnprint_task(char *msgp, size_t size, struct task_struct *task)
-+{
-+	char commname[TASK_COMM_LEN];
-+
-+	get_task_comm(commname, task);
-+	return scnprintf(msgp, size, "%d/%s:", task_pid_vinr(task), commname);
-+}
-+
-+static int scnprint_rusage(char *msgp, ssize_t size,
-+		struct task_struct *task, struct mm_struct *mm)
-+{
-+	struct rusage ru;
-+	struct timeval utime, stime;
-+	struct timespec rtime;
-+	u64 now;
-+	int ret = 0;
-+	int psz = 0;
-+
-+	getrusage(task, RUSAGE_BOTH, &ru);
-+	now = ktime_get_ns();
-+
-+	utime = ru.ru_utime;
-+	stime = ru.ru_stime;
-+	rtime.tv_nsec = now - task->start_time;
-+	rtime.tv_sec = rtime.tv_nsec / 1000000000;
-+	rtime.tv_nsec %= 1000000000;
-+
-+	psz = scnprintf(msgp, size,
-+			"%lu.%03lur %lu.%03luu %lu.%03lus",
-+			rtime.tv_sec, rtime.tv_nsec / 1000000,
-+			utime.tv_sec, utime.tv_usec / 1000,
-+			stime.tv_sec, stime.tv_usec / 1000);
-+	ret += psz;
-+	msgp += psz;
-+	size -= psz;
-+
-+	if (mm) {
-+		psz = scnprintf(msgp, size,
-+				" %luk/%luk",
-+				get_mm_rss(mm) * PAGE_SIZE / 1024,
-+				get_mm_hiwater_rss(mm) * PAGE_SIZE / 1024);
-+		ret += psz;
-+	}
-+	return ret;
-+}
-+
-+static int scnprint_state(char *msgp, ssize_t size,
-+		struct task_struct *task, struct mm_struct *mm)
-+{
-+	char stat[8] = {0};
-+	const char *state_descr = "";
-+	struct task_struct *parent = NULL;
-+	struct task_struct *real_parent = NULL;
-+	unsigned long wchan = 0;
-+	int psz = 0;
-+	char symname[KSYM_NAME_LEN];
-+
-+	stat[psz++] = task_state_to_char(task);
-+	if (task_nice(task) < 0)
-+		stat[psz++] = '<';
-+	else if (task_nice(task) > 0)
-+		stat[psz++] = 'N';
-+	if (mm && mm->locked_vm)
-+		stat[psz++] = 'L';
-+	if (get_nr_threads(task) > 1)
-+		stat[psz++] = 'l';
-+
-+	switch (stat[0]) {
-+	case 'R':
-+		if (task_curr(task))
-+			stat[psz++] = '!';
-+		break;
-+	case 'S':
-+	case 'D':
-+		wchan = get_wchan(task);
-+		if (!wchan)
-+			break;
-+		if (!lookup_symbol_name(wchan, symname))
-+			state_descr = symname;
-+		else
-+			state_descr = "*unknown*";
-+		break;
-+	case 'T':
-+		state_descr = "stopped";
-+		break;
-+	case 't':
-+		state_descr = "traced";
-+		break;
-+	case 'Z':
-+		rcu_read_lock();
-+		real_parent = rcu_dereference(task->real_parent);
-+		parent = rcu_dereference(task->parent);
-+		psz = sprintf(symname, "zombie; ppid=%d",
-+			task_tgid_nr_ns(real_parent,
-+				ns_of_pid(task_pid(task))));
-+		if (parent != real_parent)
-+			sprintf(symname + psz, " reaper=%d",
-+				task_tgid_nr_ns(parent,
-+					ns_of_pid(task_pid(task))));
-+		rcu_read_unlock();
-+		state_descr = symname;
-+		break;
-+	case 'I':
-+		/* Can this even happen? */
-+		state_descr = "idle";
-+		break;
-+	default:
-+		state_descr = "unknown";
-+	}
-+
-+	psz = scnprintf(msgp, size, "%s", stat);
-+	msgp += psz;
-+	size -= psz;
-+	if (*state_descr)
-+		psz += scnprintf(msgp, size, wchan ? " [%s]" : " (%s)", state_descr);
-+
-+	return psz;
-+}
-+
-+/**
-+ *	tty_sprint_status_line	-		produce kerninfo line
-+ *	@tty: terminal device
-+ *	@msg: preallocated memory buffer
-+ *	@length: maximum line length
-+ *
-+ *	Reports state of foreground process group in a null-terminated string
-+ *	located at @msg, @length bytes long. If @length is insufficient,
-+ *	the line gets truncated.
-+ */
-+void tty_sprint_status_line(struct tty_struct *t, char *msg, size_t length)
-+{
-+	struct task_struct *tsk = NULL, *mit = NULL;
-+	struct mm_struct *mm;
-+	struct pid *pgrp = NULL;
-+	char *msgp = msg;
-+	int psz = 0;
-+
-+	if (!length)
-+		return;
-+	length--; /* Make room for trailing '\n' */
-+
-+	psz = scnprint_load(msgp, length);
-+	if (psz > 0) {
-+		msgp += psz;
-+		length -= psz;
-+	}
-+	if (!length)
-+		goto finalize_message;
-+
-+	/* Not sure if session pid is protected by ctrl_lock
-+	 * or tasklist_lock...
-+	 */
-+	pgrp = t->session;
-+	if (pgrp == NULL) {
-+		psz = scnprintf(msgp, length, "not a controlling tty");
-+		if (psz > 0)
-+			msgp += psz;
-+		goto finalize_message;
-+	}
-+	pgrp = tty_get_pgrp(t);
-+	if (pgrp == NULL) {
-+		psz = scnprintf(msgp, length, "no foreground process group");
-+		if (psz > 0)
-+			msgp += psz;
-+		goto finalize_message;
-+	}
-+	/* empty foreground pgid check? */
-+
-+	/* If TTYSL_ENUMERATE_PGRP is defined,
-+	 * just enumerate all processes in foreground process group
-+	 * for now for debugging purposes.
-+	 */
-+	read_lock(&tasklist_lock);
-+	do_each_pid_task(pgrp, PIDTYPE_PGID, tsk)
-+	{
-+		/* Select the most interesting task. */
-+		if (tsk == better_proc(mit, tsk))
-+			mit = tsk;
-+#ifdef TTYSL_ENUMERATE_PGRP
-+		psz = sprintf(msgp, "%d, ", task_pid_vinr(tsk));
-+		if (psz > 0)
-+			msgp += psz;
-+#endif
-+	} while_each_pid_task(pgrp, PIDTYPE_PGID, tsk);
-+	read_unlock(&tasklist_lock);
-+#ifdef TTYSL_ENUMERATE_PGRP
-+	msgp -= 2;
-+	*msgp++ = ';';
-+	*msgp++ = ' ';
-+#endif
-+
-+	if (!pid_alive(mit))
-+		goto finalize_message;
-+
-+	/* Gather intel on most interesting task. */
-+	/* Can the mm of a foreground process turn out to be NULL?
-+	 * Definitely; for example, if it is a zombie.
-+	 */
-+	mm = get_task_mm(mit);
-+
-+	psz = scnprint_task(msgp, length, mit);
-+	if (psz > 0) {
-+		msgp += psz;
-+		length -= psz;
-+	}
-+	if (!length)
-+		goto finalize_message;
-+	*msgp++ = ' ';
-+	length--;
-+
-+	psz = scnprint_state(msgp, length, mit, mm);
-+	if (psz > 0) {
-+		msgp += psz;
-+		length -= psz;
-+	}
-+	if (!length)
-+		goto finalize_message;
-+	*msgp++ = ' ';
-+	length--;
-+
-+	psz = scnprint_rusage(msgp, length, mit, mm);
-+	if (psz > 0) {
-+		msgp += psz;
-+		length -= psz;
-+	}
-+	if (!length)
-+		goto finalize_message;
-+	*msgp++ = ' ';
-+	length--;
-+
-+	if (!mm)
-+		goto finalize_message;
-+
-+	mmput(mm);
-+
-+finalize_message:
-+	*msgp++ = '\n';
-+	if (pgrp)
-+		put_pid(pgrp);
-+}
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 11837410690f..21bcb7fb0888 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1229,6 +1229,8 @@ static inline struct pid *task_pid(struct task_struct *task)
-  * task_xid_nr()     : global id, i.e. the id seen from the init namespace;
-  * task_xid_vnr()    : virtual id, i.e. the id seen from the pid namespace of
-  *                     current.
-+ * task_xid_vinr()   : virtual inner id, i.e. the id seen from the namespace of
-+ *                     the task itself;
-  * task_xid_nr_ns()  : id seen from the ns specified;
-  *
-  * see also pid_nr() etc in include/linux/pid.h
-@@ -1250,6 +1252,11 @@ static inline pid_t task_pid_vnr(struct task_struct *tsk)
- 	return __task_pid_nr_ns(tsk, PIDTYPE_PID, NULL);
- }
+diff --git a/arch/mips/include/uapi/asm/signal.h b/arch/mips/include/uapi/asm/signal.h
+index 53104b10aae2..975a6f0d3b0b 100644
+--- a/arch/mips/include/uapi/asm/signal.h
++++ b/arch/mips/include/uapi/asm/signal.h
+@@ -43,6 +43,7 @@ typedef unsigned long old_sigset_t;		/* at least 32 bits */
+ #define SIGCHLD		18	/* Child status has changed (POSIX).  */
+ #define SIGCLD		SIGCHLD /* Same as SIGCHLD (System V).	*/
+ #define SIGPWR		19	/* Power failure restart (System V).  */
++#define SIGINFO		SIGPWR	/* Keyboard status request (4.2 BSD). */
+ #define SIGWINCH	20	/* Window size change (4.3 BSD, Sun).  */
+ #define SIGURG		21	/* Urgent condition on socket (4.2 BSD).  */
+ #define SIGIO		22	/* I/O now possible (4.2 BSD).	*/
+diff --git a/arch/parisc/include/uapi/asm/signal.h b/arch/parisc/include/uapi/asm/signal.h
+index d38563a394f2..fe2e00d590ac 100644
+--- a/arch/parisc/include/uapi/asm/signal.h
++++ b/arch/parisc/include/uapi/asm/signal.h
+@@ -22,6 +22,7 @@
+ #define SIGUSR2		17
+ #define SIGCHLD		18
+ #define SIGPWR		19
++#define SIGINFO		SIGPWR
+ #define SIGVTALRM	20
+ #define SIGPROF		21
+ #define SIGIO		22
+diff --git a/arch/powerpc/include/uapi/asm/signal.h b/arch/powerpc/include/uapi/asm/signal.h
+index 85b0a7aa43e7..e7f3885905b4 100644
+--- a/arch/powerpc/include/uapi/asm/signal.h
++++ b/arch/powerpc/include/uapi/asm/signal.h
+@@ -53,6 +53,7 @@ typedef struct {
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
  
-+static inline pid_t task_pid_vinr(struct task_struct *tsk)
-+{
-+	return __task_pid_nr_ns(tsk, PIDTYPE_PID, ns_of_pid(task_pid(tsk)));
-+}
-+
+diff --git a/arch/s390/include/uapi/asm/signal.h b/arch/s390/include/uapi/asm/signal.h
+index 9a14a611ed82..12ee62987971 100644
+--- a/arch/s390/include/uapi/asm/signal.h
++++ b/arch/s390/include/uapi/asm/signal.h
+@@ -58,6 +58,7 @@ typedef unsigned long sigset_t;
+ #define SIGLOST         29
+ */
+ #define SIGPWR          30
++#define SIGINFO         SIGPWR
+ #define SIGSYS		31
+ #define SIGUNUSED       31
  
- static inline pid_t task_tgid_nr(struct task_struct *tsk)
- {
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index ddb97704956d..a8e4df6d64b4 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -725,6 +725,9 @@ extern void __init n_tty_init(void);
- static inline void n_tty_init(void) { }
- #endif
+diff --git a/arch/sparc/include/uapi/asm/signal.h b/arch/sparc/include/uapi/asm/signal.h
+index ff9505923b9a..b655163198bb 100644
+--- a/arch/sparc/include/uapi/asm/signal.h
++++ b/arch/sparc/include/uapi/asm/signal.h
+@@ -71,6 +71,8 @@
+ #define SIGWINCH	28
+ #define SIGLOST		29
+ #define SIGPWR		SIGLOST
++/* XXX: is it OK for SIGINFO to collide with LOST? */
++#define SIGINFO		SIGPWR
+ #define SIGUSR1		30
+ #define SIGUSR2		31
  
-+/* n_tty_status.c */
-+extern void tty_sprint_status_line(struct tty_struct *tty, char *msg, size_t size);
-+
- /* tty_audit.c */
- #ifdef CONFIG_AUDIT
- extern void tty_audit_add_data(struct tty_struct *tty, const void *data,
+diff --git a/arch/x86/include/uapi/asm/signal.h b/arch/x86/include/uapi/asm/signal.h
+index e5745d593dc7..1539bb28826c 100644
+--- a/arch/x86/include/uapi/asm/signal.h
++++ b/arch/x86/include/uapi/asm/signal.h
+@@ -55,6 +55,7 @@ typedef unsigned long sigset_t;
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
+ 
+diff --git a/arch/xtensa/include/uapi/asm/signal.h b/arch/xtensa/include/uapi/asm/signal.h
+index 005dec5bfde4..d644234305de 100644
+--- a/arch/xtensa/include/uapi/asm/signal.h
++++ b/arch/xtensa/include/uapi/asm/signal.h
+@@ -65,6 +65,7 @@ typedef struct {
+ #define SIGPOLL		SIGIO
+ /* #define SIGLOST		29 */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
+ 
+diff --git a/include/uapi/asm-generic/signal.h b/include/uapi/asm-generic/signal.h
+index 5c716a952cbe..9f9a1db0d43c 100644
+--- a/include/uapi/asm-generic/signal.h
++++ b/include/uapi/asm-generic/signal.h
+@@ -43,6 +43,7 @@
+ #define SIGLOST		29
+ */
+ #define SIGPWR		30
++#define SIGINFO		SIGPWR
+ #define SIGSYS		31
+ #define	SIGUNUSED	31
+ 
 -- 
 2.20.1
 
