@@ -2,84 +2,227 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C88FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08F6C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC78320657
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559744570;
-	bh=Z9CZP5xXWiI8Ugx0q+hW8/ZSOf7va2S8m+zW4CVI1oo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BSK40kAzDAuN4KuuHeYZzTxdijTVfX+8ku7i+G94/xPWTD+Ydm6KE3s/B+Qbg4uHN
-	 NFmvnMvq/eb/M3vlW0uw2HjVz5gDAvlIGeXVlVHaQ+VUu/4m3RBiN6ZEV9pTkAH8bZ
-	 EUSXB6IZMl4Xhm+FjQw+HO9HzRk0v1TZ5OliFQj4=
+	by mail.kernel.org (Postfix) with ESMTP id 6A17B2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuEneBRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbfFEOWt (ORCPT
+        id S1728398AbfFEOXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:22:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38254 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728369AbfFEOWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:22:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6684AFC7;
-        Wed,  5 Jun 2019 14:22:47 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 16:22:46 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
-        khalid.aziz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Remove VM_BUG_ON in __alloc_pages_node
-Message-ID: <20190605142246.GH15685@dhcp22.suse.cz>
-References: <20190605060229.GA9468@bharath12345-Inspiron-5559>
- <20190605070312.GB15685@dhcp22.suse.cz>
- <20190605130727.GA25529@bharath12345-Inspiron-5559>
+        Wed, 5 Jun 2019 10:23:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35530 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728147AbfFEOXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:23:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so3857804wrv.2;
+        Wed, 05 Jun 2019 07:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbOPhnIhf4nfTs1vXUxhyXev98Rz11boEidIV7ZETKk=;
+        b=EuEneBRAGkY2tXZgyGWpkYs3pssJaYscTtAV6fF+ZUopRxcgPkJfZKX0HopW6Lkm/B
+         v0O0oJk05l5BeYYV3/wScnTxlxrKSFKaW0n3OY4+sL26NZqwqXPfTXH6OuXcNMc3to6C
+         yB+4q/3CRhEoim7r7L2rNr+uao6W6rGkdQpQ1BG8uZQvPknZ1nwm1MCZV3kjTL/wdY7b
+         +/hbkq+i7KuStkxLx6hlLNVMphhNCy6wf+ePNC8XjiPAMdnVjuoOz9yhynbfwZX2E/oe
+         yMiTYc6btStoKYLTdudtbAG+geL466JIqTD5ww+WAFb4wskkxUKzpZAbglRkWOd6a+A0
+         tXnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbOPhnIhf4nfTs1vXUxhyXev98Rz11boEidIV7ZETKk=;
+        b=b+jVJkFn5QPzD8CQMVtnbS33CRLb9rSg7yEibBBTLICyxON3iPCaQ/+612vi+yyjNt
+         jzGWflzz2wbQ0aRQ2szGD5s++nCXLMHBARCS3TDXvpWiNS2xON+wkQqFo8bU2ZoE/ry4
+         Yw1xIG8d+DTHNiG0DA1pPTSrtIZX7JDx3g3g40eUjBe4tw9nxZE2WtVdzRtxk8tPeIFp
+         rZc5R3hoixjgCcoPf916dyJvnjZrjIAjF5k2GkbmBUMGw8eW/el4QN0PqxlmkOGEPoW0
+         dI3jmkrg1iL+L82o7aEl92BOQUbaOsIOFRKxxXRBiwNgTeUJTUpmRRK6YkBUw1sp2Wle
+         uNSA==
+X-Gm-Message-State: APjAAAUpoZc7LiBxhHXu1bAu0sV9xIcvXUO/BEzySJ1jaxTkEhAkHGLv
+        +/xhRKHITx69ebSuQx4NjlM=
+X-Google-Smtp-Source: APXvYqzLt6ho0E63Grp+IikWcNCxLnkedoLM118ioYRsTDO89bPGBtcLhBRXsyeAz6UrVn2JD1cC1w==
+X-Received: by 2002:a5d:68d2:: with SMTP id p18mr4785213wrw.56.1559744593985;
+        Wed, 05 Jun 2019 07:23:13 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id f10sm34787410wrg.24.2019.06.05.07.23.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 07:23:13 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] driver: core: Allow subsystems to continue deferring probe
+Date:   Wed,  5 Jun 2019 16:23:12 +0200
+Message-Id: <20190605142312.6072-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605130727.GA25529@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05-06-19 18:37:28, Bharath Vedartham wrote:
-> [Not replying inline as my mail is bouncing back]
-> 
-> This patch is based on reading the code rather than a kernel crash. My
-> thought process was that if an invalid node id was passed to
-> __alloc_pages_node, it would be better to add a VM_WARN_ON and fail the
-> allocation rather than crashing the kernel. 
+From: Thierry Reding <treding@nvidia.com>
 
-This makes some sense to me because BUG_ONs are usually a wrong way to
-handle wrong usage of the API. On the other hand VM_BUG_ON is special in
-the way that production although some distributions enable it by default
-IIRC.
+Some subsystems, such as pinctrl, allow continuing to defer probe
+indefinitely. This is useful for devices that depend on resources
+provided by devices that are only probed after the init stage.
 
-> I feel it would be better to fail the allocation early in the hot path
-> if an invalid node id is passed. This is irrespective of whether the
-> VM_[BUG|WARN]_*s are enabled or not. I do not see any checks in the hot
-> path for the node id, which in turn may cause NODE_DATA(nid) to fail to
-> get the pglist_data pointer for the node id. 
-> We can optimise the branch by wrapping it around in unlikely(), if
-> performance is the issue?
+One example of this can be seen on Tegra, where the DPAUX hardware
+contains pinmuxing controls for pins that it shares with an I2C
+controller. The I2C controller is typically used for communication
+with a monitor over HDMI (DDC). However, other instances of the I2C
+controller are used to access system critical components, such as a
+PMIC. The I2C controller driver will therefore usually be a builtin
+driver, whereas the DPAUX driver is part of the display driver that
+is loaded from a module to avoid bloating the kernel image with all
+of the DRM/KMS subsystem.
 
-unlikely will just move the return NULL ouside of the main code flow.
-The check will still be done.
+In this particular case the pins used by this I2C/DDC controller
+become accessible very late in the boot process. However, since the
+controller is only used in conjunction with display, that's not an
+issue.
 
-> What are your thoughts on this? 
+Unfortunately the driver core currently outputs a warning message
+when a device fails to get the pinctrl before the end of the init
+stage. That can be confusing for the user because it may sound like
+an unwanted error occurred, whereas it's really an expected and
+harmless situation.
 
-I don't know. I would leave the code as it is now or remove the
-VM_BUG_ON. I do not remember this would be catching any real issues in
-the past.
+In order to eliminate this warning, this patch allows callers of the
+driver_deferred_probe_check_state() helper to specify that they want
+to continue deferring probe, regardless of whether we're past the
+init stage or not. All of the callers of that function are updated
+for the new signature, but only the pinctrl subsystem passes a true
+value in the new persist parameter if appropriate.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/base/dd.c            | 17 ++++++++++++-----
+ drivers/base/power/domain.c  |  2 +-
+ drivers/iommu/of_iommu.c     |  2 +-
+ drivers/pinctrl/devicetree.c | 10 ++++++----
+ include/linux/device.h       |  2 +-
+ 5 files changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 0df9b4461766..25ffbadf4187 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -238,23 +238,30 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+ /**
+  * driver_deferred_probe_check_state() - Check deferred probe state
+  * @dev: device to check
++ * @persist: Boolean flag indicating whether drivers should keep trying to
++ *   probe after built-in drivers have had a chance to probe. This is useful
++ *   for built-in drivers that rely on resources provided by modular drivers.
+  *
+  * Returns -ENODEV if init is done and all built-in drivers have had a chance
+- * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
+- * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
++ * to probe (i.e. initcalls are done) and unless persist is set, -ETIMEDOUT if
++ * deferred probe debug timeout has expired, or -EPROBE_DEFER if none of those
++ * conditions are met.
+  *
+  * Drivers or subsystems can opt-in to calling this function instead of directly
+  * returning -EPROBE_DEFER.
+  */
+-int driver_deferred_probe_check_state(struct device *dev)
++int driver_deferred_probe_check_state(struct device *dev, bool persist)
+ {
+ 	if (initcalls_done) {
+ 		if (!deferred_probe_timeout) {
+ 			dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+ 			return -ETIMEDOUT;
+ 		}
+-		dev_warn(dev, "ignoring dependency for device, assuming no driver");
+-		return -ENODEV;
++
++		if (!persist) {
++			dev_warn(dev, "ignoring dependency for device, assuming no driver");
++			return -ENODEV;
++		}
+ 	}
+ 	return -EPROBE_DEFER;
+ }
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 33c30c1e6a30..effa5276a773 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2423,7 +2423,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+ 		mutex_unlock(&gpd_list_lock);
+ 		dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+ 			__func__, PTR_ERR(pd));
+-		return driver_deferred_probe_check_state(base_dev);
++		return driver_deferred_probe_check_state(base_dev, false);
+ 	}
+ 
+ 	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index f04a6df65eb8..70f3946b088a 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -117,7 +117,7 @@ static int of_iommu_xlate(struct device *dev,
+ 	 * a proper probe-ordering dependency mechanism in future.
+ 	 */
+ 	if (!ops)
+-		return driver_deferred_probe_check_state(dev);
++		return driver_deferred_probe_check_state(dev, false);
+ 
+ 	return ops->of_xlate(dev, iommu_spec);
+ }
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index f7e354f85518..c808bf567d24 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -111,13 +111,15 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 
+ 		np_pctldev = of_get_next_parent(np_pctldev);
+ 		if (!np_pctldev || of_node_is_root(np_pctldev)) {
++			bool persist = false;
++
+ 			of_node_put(np_pctldev);
+-			ret = driver_deferred_probe_check_state(p->dev);
+ 			/* keep deferring if modules are enabled unless we've timed out */
+-			if (IS_ENABLED(CONFIG_MODULES) && !allow_default && ret == -ENODEV)
+-				ret = -EPROBE_DEFER;
++			if (IS_ENABLED(CONFIG_MODULES) && !allow_default)
++				persist = true;
+ 
+-			return ret;
++			return driver_deferred_probe_check_state(p->dev,
++								 persist);
+ 		}
+ 		/* If we're creating a hog we can use the passed pctldev */
+ 		if (hog_pctldev && (np_pctldev == p->dev->of_node)) {
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e0649f6adf2e..ecf59dfcbfb7 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -340,7 +340,7 @@ struct device *driver_find_device(struct device_driver *drv,
+ 				  int (*match)(struct device *dev, void *data));
+ 
+ void driver_deferred_probe_add(struct device *dev);
+-int driver_deferred_probe_check_state(struct device *dev);
++int driver_deferred_probe_check_state(struct device *dev, bool persist);
+ 
+ /**
+  * struct subsys_interface - interfaces to device functions
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
