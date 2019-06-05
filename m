@@ -2,96 +2,190 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FE7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184ACC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B41206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70E72067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfFEPK1 (ORCPT
+        id S1728157AbfFEPMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:10:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:9770 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbfFEPK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:10:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 08:10:26 -0700
-X-ExtLoop1: 1
-Received: from araresx-wtg1.ger.corp.intel.com (HELO localhost) ([10.252.46.102])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2019 08:10:19 -0700
-Date:   Wed, 5 Jun 2019 18:10:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH 7/9] x86/sgx: Enforce noexec filesystem restriction
- for enclaves
-Message-ID: <20190605151006.GI11331@linux.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-8-sean.j.christopherson@intel.com>
- <20190604162555.GC3811@linux.intel.com>
- <CALCETrUqcQNbRvBe2UqQih8RHnuwn3KaC=xJU1cRsaEVsCQUgw@mail.gmail.com>
+        Wed, 5 Jun 2019 11:12:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33150 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727971AbfFEPMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:12:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B476374;
+        Wed,  5 Jun 2019 08:12:37 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE09C3F246;
+        Wed,  5 Jun 2019 08:12:33 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+To:     "Shenhar, Talel" <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com,
+        hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+ <1559731921-14023-3-git-send-email-talel@amazon.com>
+ <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
+ <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <0915892c-0e53-8f53-e858-b1c3298a4d35@arm.com>
+Date:   Wed, 5 Jun 2019 16:12:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUqcQNbRvBe2UqQih8RHnuwn3KaC=xJU1cRsaEVsCQUgw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:25:10PM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 4, 2019 at 9:26 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Fri, May 31, 2019 at 04:31:57PM -0700, Sean Christopherson wrote:
-> > > Do not allow an enclave page to be mapped with PROT_EXEC if the source
-> > > page is backed by a file on a noexec file system.
-> > >
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> > Why don't you just check in sgx_encl_add_page() that whether the path
-> > comes from noexec and deny if SECINFO contains X?
-> >
+On 05/06/2019 15:38, Shenhar, Talel wrote:
+> Thanks, will publish the fixes on v3.
 > 
-> SECINFO seems almost entirely useless for this kind of thing because
-> of SGX2.  I'm thinking that SECINFO should be completely ignored for
-> anything other than its required architectural purpose.
+> On 6/5/2019 3:22 PM, Marc Zyngier wrote:
+>> Talel,
+>>
+>> On 05/06/2019 11:52, Talel Shenhar wrote:
+>>> The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs
+>>> lines. A FIC (Fabric Interrupt Controller) may be cascaded into another FIC
+>> Really? :-(
+> 
+> Cascading is used for control path events. For data path the HW is not 
+> cascaded (and usually even configured in MSI-X instead of wire interrupts)
+> 
+> 
+>>
+>> +}
+>> +
+>> +static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
+>> +{
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	struct al_fic *fic = gc->private;
+>> +	enum al_fic_state new_state;
+>> +	int ret = 0;
+>> +
+>> +	irq_gc_lock(gc);
+>> +
+>> +	if (!(flow_type & IRQ_TYPE_LEVEL_HIGH) &&
+>> +	    !(flow_type & IRQ_TYPE_EDGE_RISING)) {
+>> And what if this gets passed EDGE_BOTH?
+> 
+> FIC only support two sensing modes, rising-edge and level.
 
-Not exactly sure why using it to pass the RWX bits to EADD ioctl would
-cause anything to SGX2 support.
+Yes, I can tell. Yet, this code will let EDGE_BOTH pass through, even if
+it cannot handle it.
 
-/Jarkko
+> 
+>>
+>>> +	 * This is generally fixed depending on what pieces of HW it's wired up
+>>> +	 * to.
+>>> +	 *
+>>> +	 * We configure it based on the sensitivity of the first source
+>>> +	 * being setup, and reject any subsequent attempt at configuring it in a
+>>> +	 * different way.
+>> Is that a reliable guess? It also strikes me that the DT binding doesn't
+>> allow for the trigger type to be passed, meaning the individual drivers
+>> have to request the trigger as part of their request_irq() call. I'd
+>> rather you have a complete interrupt specifier in DT, and document the
+>> various limitations of the HW.
+> 
+> Indeed we use interrupt specifier that has the level type in it 
+> (dt-binding: "#interrupt-cells: must be 2.") which in turns causes to 
+> this irq_set_type callback.
+
+Well, this isn't what the example in your DT binding shows.
+
+> 
+> Part of the FICs are connected to hws that generate pulse (for those, 
+> FIC shall be configured to rising-edge-triggered) and the others to hws 
+> that keep the line up (for those the FIC shall be configured to 
+> level-triggered).
+> 
+>>
+>>> +	 */
+>>> +	if (fic->state == AL_FIC_CLEAN) {
+>>> +		al_fic_set_trigger(fic, gc, new_state);
+>>> +	} else if (fic->state != new_state) {
+>>> +		pr_err("fic %s state already configured to %d\n",
+>>> +		       fic->name, fic->state);
+>>> +		ret = -EPERM;
+>> Same as above.
+> 
+> Those error messages are control path messages. if we return the same 
+> error value from here and from the previous error, how can we 
+> differentiate between the two error cases by looking at the log?
+> 
+> Having informative printouts seems like a good idea for bad 
+> configuration cases as such, wouldn't you agree?
+
+I completely disagree. The kernel log isn't a dumping ground for this
+kind of pretty useless information. Furthermore, the irq subsystem will
+also shout at you when it gets an error, so no need to add insult to injury.
+
+If you really want to keep them around, turn them into pr_debug.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
