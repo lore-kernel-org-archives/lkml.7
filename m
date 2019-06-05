@@ -2,130 +2,114 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423CBC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796F4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A7A2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FD02075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfFELKw convert rfc822-to-8bit (ORCPT
+        id S1727383AbfFELMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:10:52 -0400
-Received: from mga14.intel.com ([192.55.52.115]:43361 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfFELKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:10:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 04:10:50 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga007.jf.intel.com with ESMTP; 05 Jun 2019 04:10:49 -0700
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 04:10:49 -0700
-Received: from HASMSX109.ger.corp.intel.com (10.184.198.21) by
- FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 04:10:48 -0700
-Received: from hasmsx108.ger.corp.intel.com ([169.254.9.66]) by
- hasmsx109.ger.corp.intel.com ([169.254.3.53]) with mapi id 14.03.0415.000;
- Wed, 5 Jun 2019 14:10:46 +0300
-From:   "Ayoun, Serge" <serge.ayoun@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH 6/9] x86/sgx: Require userspace to provide allowed
- prots to ADD_PAGES
-Thread-Topic: [RFC PATCH 6/9] x86/sgx: Require userspace to provide allowed
- prots to ADD_PAGES
-Thread-Index: AQHVGAkkmG7HFOrZhE6WGVzca6YfCqaM7RtA
-Date:   Wed, 5 Jun 2019 11:10:44 +0000
-Message-ID: <88B7642769729B409B4A93D7C5E0C5E7C64475FB@hasmsx108.ger.corp.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-7-sean.j.christopherson@intel.com>
-In-Reply-To: <20190531233159.30992-7-sean.j.christopherson@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNWY0NjBiOTctZTkxMy00Nzg1LTk4OTgtMmQ1NTAwYTZmZDU0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZndTM0lNaWlzSTNSU3hoc3M5TlNjc2xyXC94cVBuaTFseGdTQ01SeUYzQXlUMHBnOHJkQjhTMGdERTYzZ2tFdkQifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.184.70.11]
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 5 Jun 2019 07:12:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58276 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727183AbfFELMH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:12:07 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x55B1fit039295
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 07:12:05 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sx9nf79rb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 07:12:05 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Wed, 5 Jun 2019 12:12:03 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Jun 2019 12:12:01 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x55BC04O57606338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Jun 2019 11:12:00 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E645A406B;
+        Wed,  5 Jun 2019 11:12:00 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 267D3A4055;
+        Wed,  5 Jun 2019 11:12:00 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.30])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  5 Jun 2019 11:12:00 +0000 (GMT)
+Date:   Wed, 5 Jun 2019 13:11:58 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: avoid build warning with HAVE_NOP_MCOUNT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060511-0020-0000-0000-000003460C28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060511-0021-0000-0000-000021991AB6
+Message-Id: <patch.git-1a82d13f33ac.your-ad-here.call-01559732716-ext-6629@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=837 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906050070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Christopherson, Sean J
-> Sent: Saturday, June 01, 2019 02:32
-> 
->  /**
->   * struct sgx_enclave_add_pages - parameter structure for the
->   *                                %SGX_IOC_ENCLAVE_ADD_PAGES ioctl
-> @@ -39,6 +44,7 @@ struct sgx_enclave_create  {
->   * @secinfo:	address for the SECINFO data (common to all pages)
->   * @nr_pages:	number of pages (must be virtually contiguous)
->   * @mrmask:	bitmask for the measured 256 byte chunks (common to all
-> pages)
-> + * @flags:	flags, e.g. SGX_ALLOW_{READ,WRITE,EXEC} (common to all
-> pages)
->   */
->  struct sgx_enclave_add_pages {
->  	__u64	addr;
-> @@ -46,7 +52,8 @@ struct sgx_enclave_add_pages {
->  	__u64	secinfo;
->  	__u32	nr_pages;
->  	__u16	mrmask;
-> -} __attribute__((__packed__));
-> +	__u16	flags;
-> +};
+Selecting HAVE_NOP_MCOUNT enables -mnop-mcount (if gcc supports it)
+and sets CC_USING_NOP_MCOUNT. Reuse __is_defined (which is suitable for
+testing CC_USING_* defines) to avoid conditional compilation and fix
+the following gcc 9 warning on s390:
 
-You are adding a flags member. The secinfo structure has already a flags member in it.
-Why do you need both - they are both coming from user mode. What kind of scenario would
-require having different values. Seems confusing.
+kernel/trace/ftrace.c:2514:1: warning: ‘ftrace_code_disable’ defined
+but not used [-Wunused-function]
 
----------------------------------------------------------------------
-Intel Israel (74) Limited
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ kernel/trace/ftrace.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a12aff849c04..e77a6c92620f 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2935,14 +2935,13 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
+ 			p = &pg->records[i];
+ 			p->flags = rec_flags;
+ 
+-#ifndef CC_USING_NOP_MCOUNT
+ 			/*
+ 			 * Do the initial record conversion from mcount jump
+ 			 * to the NOP instructions.
+ 			 */
+-			if (!ftrace_code_disable(mod, p))
++			if (!__is_defined(CC_USING_NOP_MCOUNT) &&
++			    !ftrace_code_disable(mod, p))
+ 				break;
+-#endif
+ 
+ 			update_cnt++;
+ 		}
+-- 
+2.21.0
 
