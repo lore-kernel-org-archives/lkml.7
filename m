@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85339C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C81EC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CCB20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020062075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFEGDp (ORCPT
+        id S1726608AbfFEGFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:03:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40143 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfFEGDp (ORCPT
+        Wed, 5 Jun 2019 02:05:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38013 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfFEGFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:03:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so13273301wre.7;
-        Tue, 04 Jun 2019 23:03:43 -0700 (PDT)
+        Wed, 5 Jun 2019 02:05:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t5so921405wmh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:05:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=kmi7s/cfadEQaPuszzFg2P7DZ7ZEaobVt6Q8JtUSPhA=;
-        b=spFbJqhYCz+c6JyzyFM08M14I2mVBwvWs8x5NMj6HOIKHn7IB39Ly1zDUcrezHY9ls
-         DVYH9M2V87YMtXSnKEvrkQmo/ZX4Tr6cNtKhsDlCWTfYnP0/UTeNYUHLMgozKxptqUKJ
-         uJD8zqsL60JiC5pBXW92JmIi1s0wKI4511ltI6x+4HKG63TdSpQJVn4QuHtL8sbEzNPs
-         yg8X0s1YcSeHwmdyor6wgecMRAhtgr4QFE93XakTGePtvxotccZL5IZEo6H4iULuIxSa
-         lfPgz2l05ed/n6D0WvWBIKntohl75fNpFBADpxvhG/FjCNw2XQ+NK+jLPGHbin7lIuhC
-         +vIw==
-X-Gm-Message-State: APjAAAUsLJhKBc6GznoArY8pRQkoa5Vcn2GWflGxzzF/8pL4YRuwCnBQ
-        dsSB+NoycXO7/ShfWhqSdGndTa9k
-X-Google-Smtp-Source: APXvYqwdIzguPpm1CTWizrwfCtGYFPjAAS2cF4w/4qNA7DBbYHtADvd9DLvrI/JDJ8Kvb/hZ1Vpp7w==
-X-Received: by 2002:a5d:684c:: with SMTP id o12mr10280599wrw.305.1559714622475;
-        Tue, 04 Jun 2019 23:03:42 -0700 (PDT)
+        bh=VhpdrklY1lapHIuK8NOWhS5glJHXEOW1eHgVui0fcpE=;
+        b=Kx+iSSk8mU1LzY4oXjScqr60+B4fW2QMTbHKC/EWH4zvl0PH0gZG2erQMDclI15jM6
+         8eztBFg3NYyPCJmefdWnbkp0n8C+DIxrGyz8/YWJyh/Ij9L5i8mc4UjzBk5jJ1XGD8Dv
+         k9c0JIpNtIkNnHcEDpfKtSHyHlBO5KmdaM0tyJrU/wgP5lITD/9Uh0nkNh1XCkPkzhHM
+         BwpuBunCgiSqeZFB/NrJVJaX1pQ+A+eDN7C5yyabySDoE51IZdAkNWiN0XA9+jOVTbld
+         PgGaBQV8XAVnWk1kyBE7a1AMSQVTMlarAnRVn5ykTKBTuKR7j+tEPPxH1UDRMWdKDdRz
+         1SEw==
+X-Gm-Message-State: APjAAAX0aLVQbpeY0YPb5g0bh0dFk5XKtbIAxmVW30mnx82er0AH6kwX
+        ToVa+BBFsl8oDWjWwNwQyKm2cKco
+X-Google-Smtp-Source: APXvYqzEWY133PNSNWoJqoHZ3WTXt6hCgVrrhNJwqwX0YiTkUOAFED/gbCHbYB5ElvL5xMaVFxWNZg==
+X-Received: by 2002:a1c:a483:: with SMTP id n125mr20512407wme.172.1559714719969;
+        Tue, 04 Jun 2019 23:05:19 -0700 (PDT)
 Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id n4sm17590227wrp.61.2019.06.04.23.03.41
+        by smtp.gmail.com with ESMTPSA id j15sm9243851wrn.50.2019.06.04.23.05.18
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 23:03:41 -0700 (PDT)
-Subject: Re: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
-To:     Gen Zhang <blackgod016574@gmail.com>, kvalo@codeaurora.org,
-        eyalreizer@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190523144425.GA26766@zhanggen-UX430UQ>
+        Tue, 04 Jun 2019 23:05:19 -0700 (PDT)
+Subject: Re: [PATCH] dm-region-hash: Fix a missing-check bug in __rh_alloc()
+To:     Gen Zhang <blackgod016574@gmail.com>, agk@redhat.com,
+        snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20190524031248.GA6295@zhanggen-UX430UQ>
 From:   Jiri Slaby <jslaby@suse.cz>
 Openpgp: preference=signencrypt
 Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
@@ -92,12 +92,12 @@ Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
  9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
  VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
  sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <c09bbf1a-61eb-0ead-99ac-f92498a547a5@suse.cz>
-Date:   Wed, 5 Jun 2019 08:03:40 +0200
+Message-ID: <79ec221d-6970-3b30-0660-4a288a4c465e@suse.cz>
+Date:   Wed, 5 Jun 2019 08:05:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190523144425.GA26766@zhanggen-UX430UQ>
+In-Reply-To: <20190524031248.GA6295@zhanggen-UX430UQ>
 Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -106,45 +106,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23. 05. 19, 16:44, Gen Zhang wrote:
-> In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
-> when this allocation fails, ENOMEM is returned. However, 'pdev_data'
-> and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
-> platform_device_alloc() returns NULL, we should also free 'pdev_data'
-> and 'glue' before wl1271_probe() ends to prevent leaking memory.
-> 
-> Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
-> should free 'pdev_data' and 'glue' when 'ret' is error.
-> 
-> Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
-> function normally ends to prevent memory leaking.
+On 24. 05. 19, 5:12, Gen Zhang wrote:
+> In function __rh_alloc(), the pointer nreg is allocated a memory space
+> via kmalloc(). And it is used in the following codes. However, when 
+> there is a memory allocation error, kmalloc() fails. Thus null pointer
+> dereference may happen. And it will cause the kernel to crash. Therefore,
+> we should check the return value and handle the error.
+> Further, in __rh_find(), we should also check the return value and
+> handle the error.
 > 
 > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> 
 > ---
-> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-> index 4d4b0770..232ce5f 100644
-> --- a/drivers/net/wireless/ti/wlcore/sdio.c
-> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
-...
-> @@ -380,11 +382,20 @@ static int wl1271_probe(struct sdio_func *func,
->  		dev_err(glue->dev, "can't add platform device\n");
->  		goto out_dev_put;
->  	}
-> +	platform_device_put(glue->core);
-> +	devm_kfree(&func->dev, glue);
-> +	devm_kfree(&func->dev, pdev_data);
->  	return 0;
+> diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+> index 1f76045..2fa1641 100644
+> --- a/drivers/md/dm-region-hash.c
+> +++ b/drivers/md/dm-region-hash.c
+> @@ -290,8 +290,11 @@ static struct dm_region *__rh_alloc(struct dm_region_hash *rh, region_t region)
+>  	struct dm_region *reg, *nreg;
 >  
->  out_dev_put:
->  	platform_device_put(glue->core);
->  
-> +out_free2:
-> +	devm_kfree(&func->dev, glue);
-> +
-> +out_free1:
-> +	devm_kfree(&func->dev, pdev_data);
+>  	nreg = mempool_alloc(&rh->region_pool, GFP_ATOMIC);
+> -	if (unlikely(!nreg))
+> +	if (unlikely(!nreg)) {
+>  		nreg = kmalloc(sizeof(*nreg), GFP_NOIO | __GFP_NOFAIL);
+> +		if (!nreg)
+> +			return NULL;
 
-Are you aware of purpose of devm allocations?
+What's the purpose of checking NO_FAIL allocations?
 
 thanks,
 -- 
