@@ -2,99 +2,268 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FDDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36C8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916D6206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gqPaAvyp"
+	by mail.kernel.org (Postfix) with ESMTP id 8804D2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfFEMCy (ORCPT
+        id S1727584AbfFEMDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:02:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52116 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEMCw (ORCPT
+        Wed, 5 Jun 2019 08:03:33 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45949 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726305AbfFEMDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:02:52 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55C2lC3059447;
-        Wed, 5 Jun 2019 07:02:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559736167;
-        bh=jLcEIwqk+N/JppM4RqOqttYG4b9AoePGDagEKBj7OCU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gqPaAvypQnQfK0rYuk8QetQqaIACZUTDtmN5DvSbrXyJVgHe0hsejSCbl19LJXBju
-         xE9jOJXGE/SCLV9DkTi85VTOJobU8xt4xmy8Hdsn+fMOqMRPKU1YnwGEODjMOrp4Qz
-         GjVp0fHON8VdiQarDtzMlc8Sq5rAvIKSFzk/OFCE=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55C2ldG066912
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 07:02:47 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 07:02:46 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 07:02:46 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55C2kIK030582;
-        Wed, 5 Jun 2019 07:02:46 -0500
-Subject: Re: [PATCH v5 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-To:     Mark Brown <broonie@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190604174345.14841-1-dmurphy@ti.com>
- <20190604174345.14841-2-dmurphy@ti.com> <20190605100132.GL2456@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7ba7a633-1a39-adcc-e942-12c0eb7c3b16@ti.com>
-Date:   Wed, 5 Jun 2019 07:02:45 -0500
+        Wed, 5 Jun 2019 08:03:32 -0400
+Received: from [IPv6:2001:420:44c1:2579:c806:4d76:5b3c:eea9] ([IPv6:2001:420:44c1:2579:c806:4d76:5b3c:eea9])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id YUdahlLxG3qlsYUddhfn01; Wed, 05 Jun 2019 14:03:30 +0200
+Subject: Re: [PATCH 3/5] media: mtk-vcodec: remove unneeded proxy functions
+To:     Alexandre Courbot <acourbot@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Yunfei Dong <yunfei.dong@mediatek.com>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190604093737.172599-1-acourbot@chromium.org>
+ <20190604093737.172599-4-acourbot@chromium.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <c86d2409-b3f0-b20e-f371-50338f7199d8@xs4all.nl>
+Date:   Wed, 5 Jun 2019 14:03:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190605100132.GL2456@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190604093737.172599-4-acourbot@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKpG5YTmPrv9ECx9caWZmPw9wkF0O/93RuPnuOaSU66y2ZAoV9ShsUwPVF9kfGZTQgDYjiL4ukeiLhetjqbgu8qna2enbKFUhjePWLcpE9pRmktaDyn4
+ eft3zXM5crqve0NuecMlrhRKZ/+KtE7sdwyFL7Iz/JeOSWwJtPPYnpv/qUP2ELySMXV1wmOjUPeXErPSoPoV7DrRFfrAWTIQ3TLQk2ggx6Qm/22acgF2mK/k
+ 97hf0Q+WlQgpVhUbjfkHPv5PTtUZJ4ZINQBDlusRXfvj1M7Y5YLojmyNU+yr9wHtcCz1PavCt2dFA6E34YGcQmYELfHRWB0GgHZ63ZrsQSwsk3qNF2eNWOgY
+ gSi5auLPBbMOPp32s33upW7yibZ+qNjtxrpYLNnmTA/sUUVDPR+4+xQg63qjgObwPy0z5aRKK0pkv/9IMRXoA9569KeqMzsWqSOa3qG6bM3ZvUZSxOO0FPxd
+ I1JeYD+poEknkgxJMGbAHtq5pYz0Eec4EPfvCy2n1ndeQm0awrhL9GRJIV+/Gasq+z4e6rCkd/0kq7qWhLeT9nY4OU2uk+BLjPV9Qg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On 6/4/19 11:37 AM, Alexandre Courbot wrote:
+> We were getting the codec interface through a proxy function that does
+> not bring anything compared to just accessing the interface definition
+> directly, so just do that. Also make the decoder interfaces const.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> ---
+>  .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c    |  9 +--------
+>  drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c |  9 +--------
+>  drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c |  9 +--------
+>  drivers/media/platform/mtk-vcodec/vdec_drv_if.c      | 12 ++++++------
+>  .../media/platform/mtk-vcodec/venc/venc_h264_if.c    |  9 +--------
+>  drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c |  9 +--------
+>  drivers/media/platform/mtk-vcodec/venc_drv_if.c      |  8 ++++----
+>  7 files changed, 15 insertions(+), 50 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> index 0c0660d2560b..85afdd6ab093 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> @@ -481,16 +481,9 @@ static int vdec_h264_get_param(void *h_vdec, enum vdec_get_param_type type,
+>  	return 0;
+>  }
+>  
+> -static struct vdec_common_if vdec_h264_if = {
+> +const struct vdec_common_if vdec_h264_if = {
+>  	.init		= vdec_h264_init,
+>  	.decode		= vdec_h264_decode,
+>  	.get_param	= vdec_h264_get_param,
+>  	.deinit		= vdec_h264_deinit,
+>  };
+> -
+> -struct vdec_common_if *get_h264_dec_comm_if(void);
+> -
+> -struct vdec_common_if *get_h264_dec_comm_if(void)
+> -{
+> -	return &vdec_h264_if;
+> -}
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> index 1e3763881e0d..a8ca762eac76 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> @@ -605,16 +605,9 @@ static void vdec_vp8_deinit(void *h_vdec)
+>  	kfree(inst);
+>  }
+>  
+> -static struct vdec_common_if vdec_vp8_if = {
+> +const struct vdec_common_if vdec_vp8_if = {
+>  	.init		= vdec_vp8_init,
+>  	.decode		= vdec_vp8_decode,
+>  	.get_param	= vdec_vp8_get_param,
+>  	.deinit		= vdec_vp8_deinit,
+>  };
+> -
+> -struct vdec_common_if *get_vp8_dec_comm_if(void);
+> -
+> -struct vdec_common_if *get_vp8_dec_comm_if(void)
+> -{
+> -	return &vdec_vp8_if;
+> -}
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> index 589b2fc91da2..1f99febdfbbe 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> @@ -994,16 +994,9 @@ static int vdec_vp9_get_param(void *h_vdec, enum vdec_get_param_type type,
+>  	return ret;
+>  }
+>  
+> -static struct vdec_common_if vdec_vp9_if = {
+> +const struct vdec_common_if vdec_vp9_if = {
+>  	.init		= vdec_vp9_init,
+>  	.decode		= vdec_vp9_decode,
+>  	.get_param	= vdec_vp9_get_param,
+>  	.deinit		= vdec_vp9_deinit,
+>  };
+> -
+> -struct vdec_common_if *get_vp9_dec_comm_if(void);
+> -
+> -struct vdec_common_if *get_vp9_dec_comm_if(void)
+> -{
+> -	return &vdec_vp9_if;
+> -}
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+> index 5d8d76d55005..aa614eea3cc5 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+> @@ -10,9 +10,9 @@
+>  #include "mtk_vcodec_dec_pm.h"
+>  #include "mtk_vpu.h"
+>  
+> -const struct vdec_common_if *get_h264_dec_comm_if(void);
+> -const struct vdec_common_if *get_vp8_dec_comm_if(void);
+> -const struct vdec_common_if *get_vp9_dec_comm_if(void);
+> +extern const struct vdec_common_if vdec_h264_if;
+> +extern const struct vdec_common_if vdec_vp8_if;
+> +extern const struct vdec_common_if vdec_vp9_if;
+>  
+>  int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+>  {
+> @@ -20,13 +20,13 @@ int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+>  
+>  	switch (fourcc) {
+>  	case V4L2_PIX_FMT_H264:
+> -		ctx->dec_if = get_h264_dec_comm_if();
+> +		ctx->dec_if = &vdec_h264_if;
+>  		break;
+>  	case V4L2_PIX_FMT_VP8:
+> -		ctx->dec_if = get_vp8_dec_comm_if();
+> +		ctx->dec_if = &vdec_vp8_if;
+>  		break;
+>  	case V4L2_PIX_FMT_VP9:
+> -		ctx->dec_if = get_vp9_dec_comm_if();
+> +		ctx->dec_if = &vdec_vp9_if;
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+> index bfe61d5dc1cb..4e1d933395cd 100644
+> --- a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+> @@ -649,16 +649,9 @@ static int h264_enc_deinit(void *handle)
+>  	return ret;
+>  }
+>  
+> -static const struct venc_common_if venc_h264_if = {
+> +const struct venc_common_if venc_h264_if = {
+>  	.init = h264_enc_init,
+>  	.encode = h264_enc_encode,
+>  	.set_param = h264_enc_set_param,
+>  	.deinit = h264_enc_deinit,
+>  };
+> -
+> -const struct venc_common_if *get_h264_enc_comm_if(void);
+> -
+> -const struct venc_common_if *get_h264_enc_comm_if(void)
+> -{
+> -	return &venc_h264_if;
+> -}
+> diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
+> index af23367cf1dd..2d1372ab6486 100644
+> --- a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
+> @@ -455,16 +455,9 @@ static int vp8_enc_deinit(void *handle)
+>  	return ret;
+>  }
+>  
+> -static const struct venc_common_if venc_vp8_if = {
+> +const struct venc_common_if venc_vp8_if = {
+>  	.init = vp8_enc_init,
+>  	.encode = vp8_enc_encode,
+>  	.set_param = vp8_enc_set_param,
+>  	.deinit = vp8_enc_deinit,
+>  };
+> -
+> -const struct venc_common_if *get_vp8_enc_comm_if(void);
+> -
+> -const struct venc_common_if *get_vp8_enc_comm_if(void)
+> -{
+> -	return &venc_vp8_if;
+> -}
+> diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.c b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+> index 318af1b4b6e7..cf5bfa296d20 100644
+> --- a/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+> @@ -11,8 +11,8 @@
+>  #include "mtk_vcodec_enc_pm.h"
+>  #include "mtk_vpu.h"
+>  
+> -const struct venc_common_if *get_h264_enc_comm_if(void);
+> -const struct venc_common_if *get_vp8_enc_comm_if(void);
+> +extern const struct venc_common_if venc_h264_if;
+> +extern const struct venc_common_if venc_vp8_if;
 
-On 6/5/19 5:01 AM, Mark Brown wrote:
-> On Tue, Jun 04, 2019 at 12:43:40PM -0500, Dan Murphy wrote:
->> The use of and enablement of the GPIO can be used across devices.
->> Use the enable_reg in the regulator descriptor for the register to
->> write.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> ---
->>
->> v5 - No changes to the patch changes requested in this patch were done in
->> patch 4 of this series - https://lore.kernel.org/patchwork/patch/1077408/
-> I was expecting this patch to just be completely dropped?  It looks like
-> the end result is very similar, we're still using enable_reg to get the
-> register and I don't see new validation added in patch 4.
+This should be moved to a header. checkpatch gives me:
 
-I can squash patch 1 into 4.
+Applying: media: mtk-vcodec: remove unneeded proxy functions
+WARNING: externs should be avoided in .c files
+#79: FILE: drivers/media/platform/mtk-vcodec/vdec_drv_if.c:14:
++extern const struct vdec_common_if vdec_vp8_if;
 
-Also not sure what you mean by new validation.
+WARNING: externs should be avoided in .c files
+#80: FILE: drivers/media/platform/mtk-vcodec/vdec_drv_if.c:15:
++extern const struct vdec_common_if vdec_vp9_if;
 
-Please comment on patch 4 to what you are looking for
+WARNING: externs should be avoided in .c files
+#156: FILE: drivers/media/platform/mtk-vcodec/venc_drv_if.c:15:
++extern const struct venc_common_if venc_vp8_if;
 
-Dan
+And I agree with checkpatch here.
+
+I'll drop this patch from the series, but I'll take the others.
+
+Regards,
+
+	Hans
+
+>  
+>  int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+>  {
+> @@ -20,10 +20,10 @@ int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+>  
+>  	switch (fourcc) {
+>  	case V4L2_PIX_FMT_VP8:
+> -		ctx->enc_if = get_vp8_enc_comm_if();
+> +		ctx->enc_if = &venc_vp8_if;
+>  		break;
+>  	case V4L2_PIX_FMT_H264:
+> -		ctx->enc_if = get_h264_enc_comm_if();
+> +		ctx->enc_if = &venc_h264_if;
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> 
 
