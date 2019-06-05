@@ -2,119 +2,100 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC09DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D38C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95BC2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A847B206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eydmK6tc"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="vlf6zi91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfFEPUt (ORCPT
+        id S1728441AbfFEPVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:20:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46443 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbfFEPUs (ORCPT
+        Wed, 5 Jun 2019 11:21:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55190 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbfFEPVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:20:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y11so14997553pfm.13;
-        Wed, 05 Jun 2019 08:20:48 -0700 (PDT)
+        Wed, 5 Jun 2019 11:21:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g135so2676607wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:21:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ytP8/UBgkO5jaVHKQWoDG4zyk6kKGN8zAlZwPlNeK+0=;
-        b=eydmK6tc4MgDPycaqdm/O5Q+CSa79lSoqm8NG+ARuvnKj6Z8eUG7QCmZ1QUwQu22zB
-         4zjJyUXjp42Rvpc8fI/wI70hTuR12hqBAb3iFow2sG4zFUlhqmRfLNn7Tng/ZA8WVtXm
-         dTQlYO+ysBAOFfsuS09hjzAhyQz0HjSKRy78XyYNJcwdquIKYgHSisxvxv97JrPYQZN7
-         TpD8WggHqwa+ga5dtlWnDiMbSDzw4C+1lXA5wiVdDk/yvB2mS8UJuv5inoTQDGNH6ZY0
-         u7Zk5kJN2rjKISogeVuP5jCyY6URY525DadPzqA4OCFYTHNmZWsYFsAMlZFrzX7EjThY
-         fHWA==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DGsitu4Q8ELsSoteFe1OlbCf/b8MR09vSmItaqRr+rc=;
+        b=vlf6zi91KMaTR26M8VT2Pu+HH1tYzrODet+yGebCgn9wkmDOiljtE8dZCV4wnpPouw
+         AE+MTMSGPXOON73ttZuPelVWCUMogNqPri0ndLIOLgsFsaFEXZOhx0oteXq1ALr43k1k
+         OCKpkoI2WtihMe3/qEJkJbStk3fQBWNZLUDJPbrWEJU2h4mlwRmK/64c0QIa6jvujuP3
+         x8Kvrvn8W/kpez4tGRfZTlKW/LBspW8ROnYNlpUawpfvDOGn6OAJU6XVjY8EviEJXI3I
+         wo5knrrlUUNaGiEO2XvrUYbDy4U8cqozgwVCnPLfianqAWRANJfj/MLaqTYy9v8OZf4n
+         483g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ytP8/UBgkO5jaVHKQWoDG4zyk6kKGN8zAlZwPlNeK+0=;
-        b=Fb7hwfZyEYMESOiC823ygTCCuWv2Vg2ELufBjxFWFu5QUhIZUZYRTDOyrvxrKj5MX/
-         prr1VmV75BckNN/QF9009P1rdhLZMOqxXpvAsKXb5vYEk4p9beiV449YUflCVs6Y+y6P
-         NDw7ynVDE2y+bk+MVMoggzdggEAv2kfijCX0ipDnp5XQiEpe2p7SzDYLEMc3M+NLqKbZ
-         6cUr9Wa8vr3Zv7Ldv7b9jY0kXK24nU58xfOudp0dIZNZS1wMLvUxlfzIPaPVL8rw1bDB
-         7YHOqxJqrN4QMcBNx4SiROJuqlwjKX0omCN+9m8DmAuWsiuzT6NxaVZ4m2ffUIxaV9Hk
-         pHDw==
-X-Gm-Message-State: APjAAAWQZBBdtPBNazoj5wtGrEsriH55AYjHnGufhzzEAv/aLn54vhis
-        WheVD+ZmaEreYUU7kVpRI3Gz5/xLvVVbrJWatqI=
-X-Google-Smtp-Source: APXvYqy/zQc1MrZjkBcP6ci++gjzvUHIrtBhYRl/S1HiaU61MVgeSgZUwKU+cpn86SZ8W3rEeqyGHdZgpU4Y730Nw10=
-X-Received: by 2002:a17:90a:a596:: with SMTP id b22mr32581985pjq.20.1559748047820;
- Wed, 05 Jun 2019 08:20:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DGsitu4Q8ELsSoteFe1OlbCf/b8MR09vSmItaqRr+rc=;
+        b=RwEihFYMXhMlotHPgQuTnunEYrsY8YyRJY3b1hLtiLw8VmhxSDMCx/rGffdGdaito7
+         K0OFGOPyWJnCve0vwld8zZESjHHOG0IBZXCr5mOmeIktDd11rp6q16+9TzSGjZEvqVuw
+         30osihQwc6/tcWBigQuWCLBlR/izvodWC6s3jAhIWg8xrnh/PgGw5HQdRB8dzF6j0/w6
+         AcABGp6i0CGN9r5/PGBjo/khPpj97nQsQCyRwOS2esO5skf1z3nrLOa9wJbIAvVWPAUp
+         mLv2Nt6CBkUUZk82G69naMx0UoDk28lENWm0aGIcqxXdAI9QzLi5mHLfANY6I/AqZ7TP
+         UVdA==
+X-Gm-Message-State: APjAAAVpAKFXqUs4tlA0dLcl7COKYs9nQzAmnDTP4iQ2hB9Yq5jzJ6Qe
+        8V2YPMPrBQwl9ToDvokUq0h08Q==
+X-Google-Smtp-Source: APXvYqy2VzOaH9kit+HDBQaloY4J6auVF0+RXbW/VUXYiS18ek1SsRzWTJLJ1oHsTbE3WHhzFyYVUA==
+X-Received: by 2002:a1c:e702:: with SMTP id e2mr23042348wmh.38.1559748099240;
+        Wed, 05 Jun 2019 08:21:39 -0700 (PDT)
+Received: from localhost (ip-62-245-91-87.net.upcbroadband.cz. [62.245.91.87])
+        by smtp.gmail.com with ESMTPSA id c5sm21103499wma.19.2019.06.05.08.21.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 08:21:38 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 17:21:37 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib: objagg: Use struct_size() in kzalloc()
+Message-ID: <20190605152137.GE3202@nanopsycho>
+References: <20190605144516.GA3383@embeddedor>
 MIME-Version: 1.0
-References: <20190531043347.4196-1-eduval@amazon.com> <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com> <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com> <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
-In-Reply-To: <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Jun 2019 18:20:37 +0300
-Message-ID: <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive and
- queue messages
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605144516.GA3383@embeddedor>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
-
-> Well, yes, but the point is you would be switching from a simple AND (&) operation
-> to a division...
+Wed, Jun 05, 2019 at 04:45:16PM CEST, gustavo@embeddedor.com wrote:
+>One of the more common cases of allocation size calculations is finding
+>the size of a structure that has a zero-sized array at the end, along
+>with memory for some number of elements for that array. For example:
 >
-> I am keeping the power of 2 dep so that we can keep this with a simple &.
-
-Works for me.
-
-> > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > > >
-> > > > Wouldn't compiler warn you due to unused data?
-> > > > Perhaps drop of_match_ptr() for good...
-> > >
-> > > Not sure what you meant here. I dont see any compiler warning.
-> > > Also, of_match_ptr seams to be well spread in the kernel.
-> >
-> > If this will be compiled with CONFIG_OF=n...
+>struct objagg_stats {
+>	...
+>        struct objagg_obj_stats_info stats_info[];
+>};
 >
-> I see.. I obviously did not test with that config..
+>size = sizeof(*objagg_stats) + sizeof(objagg_stats->stats_info[0]) * count;
+>instance = kzalloc(size, GFP_KERNEL);
 >
-> > Though I didn't check all dependencies to see if it even possible. In
-> > any case of_match_ptr() is redundant in both cases here.
-> > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> > CONFIG_OF, or drop the macro use.
+>Instead of leaving these open-coded and prone to type mistakes, we can
+>now use the new struct_size() helper:
 >
-> I will wrap it into CONFIG_OF..
+>instance = kzalloc(struct_size(instance, stats_info, count), GFP_KERNEL);
+>
+>Notice that, in this case, variable alloc_size is not necessary, hence it
+>is removed.
+>
+>This code was detected with the help of Coccinelle.
+>
+>Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Would be this expected to work in the case of CONFIG_OF=n?
-If no, why to introduce ugly #ifdef:s and additional macros?
-Wouldn't be better to have
-  depends on OF || COMPILE_TEST
-?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Jiri Pirko <jiri@mellanox.com>
