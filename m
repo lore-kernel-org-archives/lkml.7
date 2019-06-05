@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AFEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD7EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C759D2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C7820870
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pjELKVwd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H/GUjC20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfFENXy (ORCPT
+        id S1728243AbfFENX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:23:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50958 "EHLO
+        Wed, 5 Jun 2019 09:23:56 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50948 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbfFENXe (ORCPT
+        with ESMTP id S1728181AbfFENXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:23:34 -0400
+        Wed, 5 Jun 2019 09:23:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TdtUzQw4Xh7pHfYaMHc8uRWdMmIOW2a80o3ly6vU9Hk=; b=pjELKVwdXyyPfzMHoK9Lfi+j7f
-        7tq78mcAfsue4hbA0T6rVyocnkjkMIIpERRHvY/hFtRijHlbPIGF3x6iXNn4cqWc+vrnrC4SvUC6s
-        lQesRhD5MOS1BCjlSxYIvUWBaGD4tHlW6nhYXIYouoWeWyJGy9bVy/yJGZ1rGYRcZo849ev/1t/Pn
-        5ZknIqdltUmPBAHajFM2On0t6crKFfpCcLkVuu9MQ+LDKwbEt9weytZiGfQ/m/naNB0epliwHyXe5
-        DQp2MngaSjahfjnMfKhD9zrszu82UplInvvflWZWHkrAl+ccFZJSbtmFL/yrqIvbO/wTbj4TeC0mW
-        mUIhIq7A==;
+        bh=zgqwSxf3cFqg7sS7YYuXo6uC9XLJ8kJM9DmwUlw85p0=; b=H/GUjC20+gJA0G7HX/SbpQofme
+        ub/zNGSrV++xqvU/y55A+LOIXunZtbrPzfgAsdHN9WGRX4fap6GlpBPotPN230WHXmKoZx+yQpsyF
+        jo2jqKHWi1L9XceqXECDnrCpK/4bZYcXQXngzgoWCUk/p+8J1qt+mVI66NIrYIGHM3hl+djIxhhlS
+        Q12Y89yPnn3/PmdruHupJq7X0chS7wQ2H4hqx5So76Ugjt/d3SkTf7XzWIN2ULJTjQ/ISFwgatnS2
+        gTpfKpipWV7g7+pn1YIz6D4nWj+atIqgFlvrIks6TWMl5Rv5xTgND0q7tU0sQWt6I+xrLh/FRwK5y
+        3abKSusA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYVsJ-0006rR-2V; Wed, 05 Jun 2019 13:22:43 +0000
+        id 1hYVsJ-0006rN-2u; Wed, 05 Jun 2019 13:22:43 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 907EE2008D9FD; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
-Message-Id: <20190605131945.064393024@infradead.org>
+        id 738C1202674D6; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
+Message-Id: <20190605131944.652366009@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 05 Jun 2019 15:08:02 +0200
+Date:   Wed, 05 Jun 2019 15:07:55 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -60,9 +60,8 @@ Cc:     linux-kernel@vger.kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 09/15] compiler.h: Make __ADDRESSABLE() symbol truly unique
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [PATCH 02/15] x86: Move ENCODE_FRAME_POINTER to asm/frame.h
 References: <20190605130753.327195108@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,52 +70,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+In preparation for wider use, move the ENCODE_FRAME_POINTER macros to
+a common header and provide inline asm versions.
 
-The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
-symbol which has a unique name.  However, if the macro is used multiple
-times from within another macro, the line number will always be the
-same, resulting in duplicate symbols.
+These macros are used to encode a pt_regs frame for the unwinder; see
+unwind_frame.c:decode_frame_pointer().
 
-Make the temporary symbols truly unique by using __UNIQUE_ID instead of
-__LINE__.
-
-Cc: Julia Cartwright <julia@ni.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: x86@kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Edward Cree <ecree@solarflare.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/8bc857824f82462a296a8a3c4913a11a7f801e74.1547073843.git.jpoimboe@redhat.com
 ---
- include/linux/compiler.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/calling.h     |   15 -------------
+ arch/x86/entry/entry_32.S    |   16 --------------
+ arch/x86/include/asm/frame.h |   49 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+), 31 deletions(-)
 
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -294,7 +294,7 @@ unsigned long read_word_at_a_time(const
-  */
- #define __ADDRESSABLE(sym) \
- 	static void * __section(".discard.addressable") __used \
--		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
-+		__UNIQUE_ID(__addressable_##sym) = (void *)&sym;
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -172,21 +172,6 @@ For 32-bit we have the following convent
+ 	.endif
+ .endm
  
- /**
-  * offset_to_ptr - convert a relative memory offset to an absolute pointer
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just setting the LSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
+- * the original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER ptregs_offset=0
+-#ifdef CONFIG_FRAME_POINTER
+-	leaq 1+\ptregs_offset(%rsp), %rbp
+-#endif
+-.endm
+-
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 
+ /*
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -246,22 +246,6 @@
+ .Lend_\@:
+ .endm
+ 
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just clearing the MSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
+- * original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER
+-#ifdef CONFIG_FRAME_POINTER
+-	mov %esp, %ebp
+-	andl $0x7fffffff, %ebp
+-#endif
+-.endm
+-
+ .macro RESTORE_INT_REGS
+ 	popl	%ebx
+ 	popl	%ecx
+--- a/arch/x86/include/asm/frame.h
++++ b/arch/x86/include/asm/frame.h
+@@ -22,6 +22,35 @@
+ 	pop %_ASM_BP
+ .endm
+ 
++#ifdef CONFIG_X86_64
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just setting the LSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
++ * the original rbp.
++ */
++.macro ENCODE_FRAME_POINTER ptregs_offset=0
++	leaq 1+\ptregs_offset(%rsp), %rbp
++.endm
++#else /* !CONFIG_X86_64 */
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just clearing the MSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
++ * original ebp.
++ */
++.macro ENCODE_FRAME_POINTER
++	mov %esp, %ebp
++	andl $0x7fffffff, %ebp
++.endm
++#endif /* CONFIG_X86_64 */
++
+ #else /* !__ASSEMBLY__ */
+ 
+ #define FRAME_BEGIN				\
+@@ -30,12 +59,32 @@
+ 
+ #define FRAME_END "pop %" _ASM_BP "\n"
+ 
++#ifdef CONFIG_X86_64
++#define ENCODE_FRAME_POINTER			\
++	"lea 1(%rsp), %rbp\n\t"
++#else /* !CONFIG_X86_64 */
++#define ENCODE_FRAME_POINTER			\
++	"movl %esp, %ebp\n\t"			\
++	"andl $0x7fffffff, %ebp\n\t"
++#endif /* CONFIG_X86_64 */
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #define FRAME_OFFSET __ASM_SEL(4, 8)
+ 
+ #else /* !CONFIG_FRAME_POINTER */
+ 
++#ifdef __ASSEMBLY__
++
++.macro ENCODE_FRAME_POINTER ptregs_offset=0
++.endm
++
++#else /* !__ASSEMBLY */
++
++#define ENCODE_FRAME_POINTER
++
++#endif
++
+ #define FRAME_BEGIN
+ #define FRAME_END
+ #define FRAME_OFFSET 0
 
 
