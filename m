@@ -2,204 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D82C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7918C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BC0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD93206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r/olVyRR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c69GUb5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfFEO4v (ORCPT
+        id S1728541AbfFEO6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:56:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51814 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbfFEO4v (ORCPT
+        Wed, 5 Jun 2019 10:58:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54605 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbfFEO6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:56:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/A9tS22UAZLStKiTTFMj7IvtCjYMEQ8F2dyMiRGGIPY=; b=r/olVyRRmSWFDrtLarGBguDaf
-        CVQRqs6Xx1YqfHzddnQ21lPBDamh1rkA734NkI0ljv7eF5F2exXTgXPRhI6X26JCFxTGPNdsZAdQi
-        imEjfNDwQTU6qFl7EQE0H/+WEkvsyPjJUS3tcbJ4BgCMxWZQUvyBkZnexDUq37MGg7s5mr71x2unt
-        2L8/vLh/LX4SG1PBvVJD8iZw4U+kpyehH119+CpBmBno9xmlow8BMqpESg8q0jyIXNUcOamsGORfv
-        iuLyFaG3O2ARiCXjLbFygJ7/iSltY1dM4vqvEqGAHkjLhTAfFZgr8VAYnDpVynoSTcxwMhehJmY2d
-        EBb49jRTA==;
-Received: from [54.239.6.177] (helo=freeip.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYXKz-0007Pv-HL; Wed, 05 Jun 2019 14:56:25 +0000
-Message-ID: <f6173cde7b01ca7e10d4127e9fd1aac03202f9e2.camel@infradead.org>
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
- Labs Fabric Interrupt Controller Driver
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Talel Shenhar <talel@amazon.com>
-Cc:     nicolas.ferre@microchip.com, jason@lakedaemon.net,
-        marc.zyngier@arm.com, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com,
-        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
-Date:   Wed, 05 Jun 2019 15:56:21 +0100
-In-Reply-To: <20190605125055.GA3184@kroah.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
-         <1559731921-14023-3-git-send-email-talel@amazon.com>
-         <20190605125055.GA3184@kroah.com>
-Content-Type: multipart/signed; micalg="sha-256";
-        protocol="application/x-pkcs7-signature";
-        boundary="=-p81rWSTAIQsBFxejGc6c"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 5 Jun 2019 10:58:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g135so2591193wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 07:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JMXXe6AqnjayglXVoDkqd6XGPAOEachog6ijJh1WH/M=;
+        b=c69GUb5e0zImhjjK5JB+615hWzoFJvTWr+iOyLMJviK5KxLRr6jgx4UWBf5OZDtr5O
+         ULDsZSGivOv11ZfUEV2OsGG9u3/8QETHCb2Ot9NobhSlJtJFqaIUbZhvKqerxqPsf4dv
+         AFV1ijerqAf4dvnIKNg1r/kW2g1/JmNJbdH7hZRndW1J1WB89VlxAIKj+iVTUBOpyvli
+         ZZjKkqgU9LLz8VDcrqr+w10FnSDY4Y0NnQJ/1YUArGkPzxKo8Sc2ToqtEHlHdzCwTBYI
+         eM6KcvHjoI7SK/jyBVSUyHIPMHcjBLp3SOUa2uFBvk1AI4tYhw+gM1c8UL665/Brj68w
+         gRXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JMXXe6AqnjayglXVoDkqd6XGPAOEachog6ijJh1WH/M=;
+        b=TScFG2IIv13+LrkNgEZifgKdCKEWTGKB4R7SdvaKx69oKTPKoAOJjIZtnHMh7wNL92
+         1HdIVsLH9ChHksbE43XrZHlRNlyNVkw5HqSI/VxB0m8TD8O09kdhAVHry5InjNBQEF9z
+         2i7VZHU1nsiZf37SsVRzUZoCWl8G7DBKFVYQOLgAs0LQa0xSsjpE3dsDshfpMFit/cLo
+         wzL7uz3AOfARCaBcr6m34m5tYFlDDiG6yKzcswyKbpFzRPzBw2eo0v47jHtf/tJzu9G2
+         pPFY2oEAAl/FlfZoH2nSRdmIVSW08/vqK6EuqHByB4QHTH6quBAKrzhuCXnrPaReZ9Hx
+         yM4w==
+X-Gm-Message-State: APjAAAUkH/jgYp6o6zhSRJyy0BUcrVUKH0hNhIzW3npC0kZ31Z/PyqAf
+        ZpAwPYSD7P9yf4t+SizV7rxej9Up
+X-Google-Smtp-Source: APXvYqwvCGkjtCVV5oWpvvNG4YlrNQl+LPIGfnSh7pJDigKXy16bUNNk4KEQt0blqoM551eQkLxq6w==
+X-Received: by 2002:a1c:6154:: with SMTP id v81mr22169029wmb.92.1559746710125;
+        Wed, 05 Jun 2019 07:58:30 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id 34sm28309312wre.32.2019.06.05.07.58.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 07:58:29 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 22:58:20 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, agk@redhat.com, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: dm-region-hash: Fix a missing-check bug in __rh_alloc()
+Message-ID: <20190605145820.GA3465@zhanggen-UX430UQ>
+References: <20190524031248.GA6295@zhanggen-UX430UQ>
+ <79ec221d-6970-3b30-0660-4a288a4c465e@suse.cz>
+ <20190605122159.GA32538@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605122159.GA32538@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 05, 2019 at 08:21:59AM -0400, Mike Snitzer wrote:
+> On Wed, Jun 05 2019 at  2:05am -0400,
+> Jiri Slaby <jslaby@suse.cz> wrote:
+> 
+> > On 24. 05. 19, 5:12, Gen Zhang wrote:
+> > > In function __rh_alloc(), the pointer nreg is allocated a memory space
+> > > via kmalloc(). And it is used in the following codes. However, when 
+> > > there is a memory allocation error, kmalloc() fails. Thus null pointer
+> > > dereference may happen. And it will cause the kernel to crash. Therefore,
+> > > we should check the return value and handle the error.
+> > > Further, in __rh_find(), we should also check the return value and
+> > > handle the error.
+> > > 
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > 
+> > > ---
+> > > diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+> > > index 1f76045..2fa1641 100644
+> > > --- a/drivers/md/dm-region-hash.c
+> > > +++ b/drivers/md/dm-region-hash.c
+> > > @@ -290,8 +290,11 @@ static struct dm_region *__rh_alloc(struct dm_region_hash *rh, region_t region)
+> > >  	struct dm_region *reg, *nreg;
+> > >  
+> > >  	nreg = mempool_alloc(&rh->region_pool, GFP_ATOMIC);
+> > > -	if (unlikely(!nreg))
+> > > +	if (unlikely(!nreg)) {
+> > >  		nreg = kmalloc(sizeof(*nreg), GFP_NOIO | __GFP_NOFAIL);
+> > > +		if (!nreg)
+> > > +			return NULL;
+> > 
+> > What's the purpose of checking NO_FAIL allocations?
+> 
+> There isn't, that was already pointed out in a different thread for this
+> same patch (think patch was posted twice):
+> https://www.redhat.com/archives/dm-devel/2019-May/msg00124.html
+> 
+> Mike
+Thanks for your reply. The first thread is not replied for a period, so
+the second one is posted. But I don't know why Jiri replied to the first
+thread.
 
---=-p81rWSTAIQsBFxejGc6c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-06-05 at 14:50 +0200, Greg KH wrote:
-> On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-al-fic.c
-> > @@ -0,0 +1,289 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/**
->=20
-> No need for kernel-doc format style here.
->=20
-> > + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reser=
-ved.
->=20
-> "or its affiliates"?  You know the answer to this, don't keep us in
-> suspense.  Put the proper copyright holder here please, otherwise this
-> is totally useless.
->=20
-> Well, copyright notices are technically useless anyway, but lawyers like
-> to cargo-cult with the best of them, so it should be correct at the
-> least.
-
-The "or its affiliates" form seems to be fairly common; there are
-hundreds of them in the kernel already. I think it's something to do
-with *not* having to manually update copyright notices to keep track of
-the precise legal entities which make up a large corporation, as things
-change.
-
-Is there a particular problem with it, and an ongoing campaign to
-eradicate it from the kernel? Any reason we should actually go and
-spend time dealing with legal nonsense instead of just using the text
-the lawyers have asked us to use?
-
---=-p81rWSTAIQsBFxejGc6c
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-NjA1MTQ1NjIxWjAvBgkqhkiG9w0BCQQxIgQgMFby8SjjawWnoEf9pseB0TP4UD7NorCEzHDNM+lr
-Ujwwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAEsn5X4Mn+p3T5ieiPPq87aTZ2gBbdWNk1eN/PUWbW7m6CXdPvOZqI12xN2WMEKM
-Jzy+D9lbal6OHQTxuOQYDSvPc6kKouKSoYlDLsAFM7xMhJIry6r+l8wNd6wTFQPu/fSzYTXTMSid
-bN9wlFYhaWdYA2uOegNljoPh+nhXx49VqM3H1RIodZSUmENB/HjdDtnSWGkch0czorBXS0SCukIT
-kQcApB/L1ewH5HvTYeRTI3Fw0JfXOf+HRGUkTjmhOk9FUYUEQqGLMyVZ0uBWHZClBL3cKK8z2OME
-bem4Y4LRoVvjIciukc4EKmYam0mk/2JtcH2QzoYXbHi1yGolxGoAAAAAAAA=
-
-
---=-p81rWSTAIQsBFxejGc6c--
-
+Thanks
+Gen
