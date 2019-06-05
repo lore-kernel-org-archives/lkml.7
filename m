@@ -2,148 +2,134 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A4C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF450C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC56206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B337B206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4jgD3qb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Do2WkLTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfFET3b (ORCPT
+        id S1726633AbfFETbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:29:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38255 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFET3b (ORCPT
+        Wed, 5 Jun 2019 15:31:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36488 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFETbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:29:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t5so30462wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:29:29 -0700 (PDT)
+        Wed, 5 Jun 2019 15:31:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so17623738wrs.3;
+        Wed, 05 Jun 2019 12:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
-        b=U4jgD3qb1TiWPeo0I0EQj9YVlGjsjBiUgv3hdUmrYuJZrUIMq1nNLAiutPQCj8EtAU
-         YcN2wBjP/xTv7tUdThX93VYX+jHZw5o551/dyZ5nHxveozxZb7mV7AnbhOP3Xm1aNcgb
-         zWPwwh4cUFyxAGVJHFgITDfzSo0Fijs3mzurFbu3Dxh9EE16inWaZaO31svsntXTWO+E
-         rfQ2q3CIc3i7jCGmbbwjZpRhYeLhJK8BD9iADSXBK+n0GDyNWmK+SIK+418dbmYGmH2y
-         bIn0iv+CbWqXWwlNmyM/unKrXJcIfcEAv7F48JcipbDFhbKp/iNFt0eUPUWKtO7DjtrJ
-         Jocw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CR6XFeOMZJQM4BGrbFMgzErRWLAloeGJOms2+4HdXsU=;
+        b=Do2WkLTKCC2BzOuOF05cX/F6fgrfuLHV7G9WQbaceoXMyM6B9QM2lXqEOTOavv55V3
+         xurN/EW7jPT37o9v4oLDZflJsF99O/M/mBrp++9R5gcY5SpyUoIakgx2kCg1B1BSQ6uP
+         nEYQO9/epO87yvq6UiihlaDKmuKIfF9L7g2ly79KY6aXBizTRxjMVKEXAmmt0XwdbGde
+         PZW5yrldiO/v+T4EUm3G3Q61b+CIYcOohSUkUETLDjA7AmDivB8lX42nGfUuz/SrU6FH
+         Rx7oo12EwoOQPPnFtjrTi4K/Eop59CkEq1Nq2WsT2kI/zN77qq2k41REZdqM1Snq5t6u
+         Q1Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
-        b=AHkoZLCidDRsKK0oi5UB0fN6q5yV258qx7CSwjNLa32xTpHg7nfbCt4FvKhPGgaVpS
-         Gq1USuDaDbvCWHPviz+UG7r+vfrGWY0f/0oeLfTb4a1UmZmMFcC588HRIHRY0Kv7izcz
-         fsoW0jD+Lb5T7xTC59tlc7X65Q/4LH08m8KbjfiRzvEVK1bOg8FzBkI20s+pJA76a/Dv
-         dErANPlfGoBwF2dZBzQGhj+cFc6xnH0DqC7qVK1NR6sARe6WRJknJUiNR2IeOOmOOOSH
-         NXzFXSXNtHDNRfi/cfJj1HI5DR8131tA5g9hRU97ks7vUeVKJ2A4GDUaPYZQF75kyzrK
-         WXwA==
-X-Gm-Message-State: APjAAAXuoysUhE+GjGIx0ocDvBHpGNS3Ycubrb72HyWqcB5G59Z21Juz
-        ce55J4IaH9cz4lMluuTvrW2yaQ==
-X-Google-Smtp-Source: APXvYqz8xLqEZUQ1bW9JTYYNxCZRI9YeEhZeMBTkaYKaXpxE3Ij1iNeqP9qVNZUnCX1dMi5d/0Ok/g==
-X-Received: by 2002:a1c:ca06:: with SMTP id a6mr23888475wmg.48.1559762968778;
-        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id w185sm20968659wma.39.2019.06.05.12.29.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 20:29:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
- SDM845
-Message-ID: <20190605192926.GW4797@dell>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-7-lee.jones@linaro.org>
- <20190605070029.GN22737@tuxbook-pro>
- <20190605083454.GO4797@dell>
- <20190605191453.GJ4814@minitux>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CR6XFeOMZJQM4BGrbFMgzErRWLAloeGJOms2+4HdXsU=;
+        b=FgZLy/61Fd5odn8snXgqGpTJ3fKF8hzYqOccPvXSXIjsDzo6KqEtqXOxOg6/xzgpfb
+         HCiCa0kaSRNe3EGZUBzYYg4q0kKROfHAOiLj35yGQ4zB/zU/up7gHL8oHgqtSzhitc86
+         4nKSWi3FDFX0neRw3l+HlBsa/SjWu14zLZPOADsQKDiwlVUs2hfeQEo9GtUYegzWGqs1
+         8hR470E6+XfwpbC9JCEFNwBZ/e7XtsxlbEq9Mwkv0PP4B+65MyNr75Eq+wKCeEoNOZ4k
+         zglSEtuDpEJmr9Robb3DWuYUuiYSW2KDKl9fEMeuI2B4w3sW9lJNoVVtVpmshfTTXGq+
+         HzOg==
+X-Gm-Message-State: APjAAAVp41IYt621PHYCrwlIDruR47D7bIoClEQJp9rwaHu0py0kJ1kw
+        Qtw4eIGnXCnJOOG7iSZ6CIFS6Lxg
+X-Google-Smtp-Source: APXvYqyqmdfv4Ii73UGu3DMUeTitvp1egPp9n/55aT0sroqdrSMGsgKyNK3L1IVTjJUPVL51dly4cQ==
+X-Received: by 2002:adf:8065:: with SMTP id 92mr9453584wrk.222.1559763100285;
+        Wed, 05 Jun 2019 12:31:40 -0700 (PDT)
+Received: from [192.168.1.17] (ble215.neoplus.adsl.tpnet.pl. [83.28.198.215])
+        by smtp.gmail.com with ESMTPSA id z14sm17991014wrh.86.2019.06.05.12.31.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 12:31:39 -0700 (PDT)
+Subject: Re: [PATCH v6 0/5] LM36274 Introduction
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, broonie@kernel.org,
+        lgirdwood@gmail.com
+Cc:     lee.jones@linaro.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190605125634.7042-1-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <cb41fea8-4cc6-bf0d-8006-6441ba8f2213@gmail.com>
+Date:   Wed, 5 Jun 2019 21:31:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605191453.GJ4814@minitux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190605125634.7042-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+Hi Dan,
 
-> On Wed 05 Jun 01:34 PDT 2019, Lee Jones wrote:
+Thank you for the v6.
+
+Patches 4/5 and 5/5 don't contain amendments I made to
+the respective patches on the ib-leds-mfd-regulator branch
+(that address issues raised by Pavel), so I just kept those
+unchanged. Besides that I updated the remaining ones.
+
+Please check the ib-leds-mfd-regulator branch. I'll create a pull
+request once I get a confirmation from you saying that everything
+is as expected.
+
+Best regards,
+Jacek Anaszewski
+
+On 6/5/19 2:56 PM, Dan Murphy wrote:
+> Hello
 > 
-> > On Wed, 05 Jun 2019, Bjorn Andersson wrote:
-> > 
-> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> > > 
-> > > > When booting with Device Tree, the current default boot configuration
-> > > > table option, the request to boot via 'host mode' comes from the
-> > > > "dr_mode" property.
-> > > 
-> > > This has been the default on the MTP, but this is changing as this is
-> > > causing issues when connected downstream from a hub (the typical
-> > > development case for the primary USB port of a phone like device) and
-> > > more importantly we don't have support for the PMIC blocks that control
-> > > VBUS.
-> > 
-> > My point is not about which mode is currently chosen.  It's more about
-> > the capability of choosing which mode is appropriate for a given
-> > system via DT.
-> > 
-> > > Once these issues are resolved the dr_mode would be "otg".
-> > 
-> > OTG doesn't work on this H/W, so we need to specify "host" mode.
+> The v5 patchset missed adding in the new validation code.
+> Patch 1 of the v5 series was squashed into patch 4 of the v5 series.
+> So this will reduce the patchset by 1.
 > 
-> My objection is that when you say "this H/W" you mean a particular
-> product, but you're making this decision for all SDM845 based products
-> using ACPI.
+> Sorry for the extra noise on the patchsets.  The change was lost when I converted
+> the patches from the mainline branch to the LED branch.
 > 
-> I don't know if there is a Windows phone based on SDM845, but if there
-> is then I don't think forcing it to host would be correct.
-
-You mean if someone wanted to boot Linux on a Windows phone?  Not sure
-how likely that is, but even if a) there is an SDM845 based Windows
-phone and b) someone is crazy enough to run Linux on it, it should be
-trivial for them to conduct some device matching and choose a
-different property based on the result.
-
-[...]
-
-> > > And this driver is used on a range of different Qualcomm platforms, so I
-> > > don't think this is SDM845 specific.
-> > 
-> > ACPI based platforms?
-> > 
-> > All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
+> This change was made on top of the branch
 > 
-> MSM8998 (835) has the same controller, so this should affect those
-> laptops as well.
+> repo: https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+> branch: ti-lmu-led-drivers
+> 
+> 
+> Dan Murphy (5):
+>    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+>    mfd: ti-lmu: Add LM36274 support to the ti-lmu
+>    regulator: lm363x: Add support for LM36274
+>    dt-bindings: leds: Add LED bindings for the LM36274
+>    leds: lm36274: Introduce the TI LM36274 LED driver
+> 
+>   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+>   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+>   drivers/leds/Kconfig                          |   8 +
+>   drivers/leds/Makefile                         |   1 +
+>   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+>   drivers/mfd/Kconfig                           |   5 +-
+>   drivers/mfd/ti-lmu.c                          |  14 ++
+>   drivers/regulator/Kconfig                     |   2 +-
+>   drivers/regulator/lm363x-regulator.c          |  78 +++++++-
+>   include/linux/mfd/ti-lmu-register.h           |  23 +++
+>   include/linux/mfd/ti-lmu.h                    |   4 +
+>   11 files changed, 437 insertions(+), 8 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+>   create mode 100644 drivers/leds/leds-lm36274.c
+> 
 
-This would also be the correct configuration for them too.  OTG
-doesn't make much sense for a laptop form factor.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
