@@ -2,97 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEB3C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63833C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563ED206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559740075;
-	bh=bwcydyMYJ1No+dHcya2GLXBcrKvYZQxWtKphEAHwu5s=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mWwNeMW2UCml0JVrJHssrVmeEGhtT33u0dgcNL0tm78N58H8VnsW2uhGAmTvO7upI
-	 8RMCzTRTnvbvT8HGfa0BYymctILiFI6H6HnRknbFiVLp6cBvLNNwJ8uUJRrtXU1G80
-	 +jzTcb0O6T3RFwVV5s89VpyQS/Wa+bgwU6yZpOEY=
+	by mail.kernel.org (Postfix) with ESMTP id 43E8B206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfFENHy (ORCPT
+        id S1727975AbfFENIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfFENHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:07:54 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B8C206BA;
-        Wed,  5 Jun 2019 13:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559740073;
-        bh=bwcydyMYJ1No+dHcya2GLXBcrKvYZQxWtKphEAHwu5s=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=f5D24ccqZIKyNy0PBAFyG8ZVWbKbfma8oWrLpNaflzyaymCRmBfCgV8DrzGgCC6vO
-         C3tCnLw77VqibgLv6FmI6lqSX7Zn6qgRiWp+8CLcVb/0UrpxOpTwU4EvhYBAzE8/NC
-         PqJDb9bZnB4Ln7CGGxDnFldBk+1fuUeCK+e+zAyE=
-Date:   Wed, 5 Jun 2019 15:07:50 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] few reverts and fixes for 5.2
-In-Reply-To: <20190605124408.8637-1-benjamin.tissoires@redhat.com>
-Message-ID: <nycvar.YFH.7.76.1906051507060.27227@cbobk.fhfr.pm>
-References: <20190605124408.8637-1-benjamin.tissoires@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 5 Jun 2019 09:08:25 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44539 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfFENIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 09:08:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so1338776ljc.11;
+        Wed, 05 Jun 2019 06:08:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yz9OuL+nLEMu3OpVhLYOUZixMuQM2Gz1jkl0HwzACWc=;
+        b=M9/2g71pWTCuGuO91O3KBaZXKeMFozaH+pL3v52JU7CZl/CyC67SgvFwj8xX/SWJZe
+         F63FI8EV3UBAyy152hEXZwjMglIG9BpxmaZYX0SwgzKfhtCE8U/+DaUA3DFqUlDvmBPD
+         cxelXlDFcO04WcmceEtwE12hvuW7UmBA0t1rzFkY8BNFUq2W3S2kgJrG9q0tEtnv2kmP
+         1lxYrqtwz54QLILRrzt1lnempNlwYvsJ6JKLjAXdV8wAHfCZtrcwvz4NnQdd49cZZ7jb
+         yzU+OwKf6YOFvkx2nKvaIwzKsM1SUjxFLZyFmUv1JBfIXSvQglJdRE8DD9U2CDUI6Qzx
+         xdKQ==
+X-Gm-Message-State: APjAAAWS2RxpI6KkKgbTuYKPOFznzZCnLiVauisMCiWd9GIBl7lilqEK
+        3XLyqd9IeKn5Su3+m1VFX9EB7Y/CwwDeQVRB91d/NQ==
+X-Google-Smtp-Source: APXvYqyHzb7fPX9GJKdP7LOu6W54B5uLKXCFgoqcuAX2lZKLhMTm7841KLlt2nzYN5ukIGykWmmzlWhtO8xEHwRCOdI=
+X-Received: by 2002:a2e:7f15:: with SMTP id a21mr3214097ljd.51.1559740102651;
+ Wed, 05 Jun 2019 06:08:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com> <OSAPR01MB30897161EF40942B1E561232D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB30897161EF40942B1E561232D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Jun 2019 15:08:10 +0200
+Message-ID: <CAMuHMdVHpOULpusZeOJvRs8OMoC2JopOqrK9Q8KeCxtyEbz0qA@mail.gmail.com>
+Subject: Re: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000c2cf90058a934a75"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019, Benjamin Tissoires wrote:
+--000000000000c2cf90058a934a75
+Content-Type: text/plain; charset="UTF-8"
 
-> This has been already publicly discussed here, so I am just posting
-> for completeness.
-> 
-> patch 1:
-> request to revert it:
-> https://patchwork.kernel.org/patch/10844177/#22651385
-> 
-> patch 2&3:
-> related thread:
-> https://lkml.org/lkml/2019/5/28/778
-> 
-> patch 4:
-> bug link: https://bugzilla.kernel.org/show_bug.cgi?id=203619
-> and related thread: https://lkml.org/lkml/2019/5/28/778
-> 
-> Cheers,
-> Benjamin
-> 
-> Benjamin Tissoires (3):
->   Revert "HID: Increase maximum report size allowed by
->     hid_field_extract()"
->   Revert "HID: core: Do not call request_module() in async context"
->   Revert "HID: core: Call request_module before doing device_add"
-> 
-> Hans de Goede (1):
->   HID: logitech-dj: Fix 064d:c52f receiver support
+Hi Shimoda-san,
 
-For the set:
+On Wed, Jun 5, 2019 at 2:12 PM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Geert Uytterhoeven, Sent: Wednesday, June 5, 2019 6:25 PM
+> <snip>
+> > Thank you, this seems to fix the warning, so
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Thank you for the testing!
+>
+> > However, the other imbalance (phy-ee080200.usb-phy.6 enabling its
+> > regulator during each system resume phase, but never touching it
+> > otherwise) is still present.
+>
+> Umm, since I'd like to investigate this,
+> would you share your debug print patch?
 
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+Attached.
 
-Thanks,
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Jiri Kosina
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+
+--000000000000c2cf90058a934a75
+Content-Type: text/x-patch; charset="US-ASCII"; name="phy-rcar-gen3-usb2-debug.patch"
+Content-Disposition: attachment; filename="phy-rcar-gen3-usb2-debug.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jwj8z49l0>
+X-Attachment-Id: f_jwj8z49l0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3JlbmVzYXMvcGh5LXJjYXItZ2VuMy11c2IyLmMgYi9k
+cml2ZXJzL3BoeS9yZW5lc2FzL3BoeS1yY2FyLWdlbjMtdXNiMi5jCmluZGV4IGRkMmQ3MjkwY2Zh
+ZGUyOGQuLjFkN2QyOGNmMGE3NzMwZTIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGh5L3JlbmVzYXMv
+cGh5LXJjYXItZ2VuMy11c2IyLmMKKysrIGIvZHJpdmVycy9waHkvcmVuZXNhcy9waHktcmNhci1n
+ZW4zLXVzYjIuYwpAQCAtNDQzLDEwICs0NDMsMTMgQEAgc3RhdGljIGludCByY2FyX2dlbjNfcGh5
+X3VzYjJfcG93ZXJfb24oc3RydWN0IHBoeSAqcCkKIAkJZ290byBvdXQ7CiAKIAlpZiAoY2hhbm5l
+bC0+dmJ1cykgeworZGV2X2luZm8oJnAtPmRldiwgIiVzOiBFbmFibGluZyByZWd1bGF0b3JcbiIs
+IF9fZnVuY19fKTsKIAkJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShjaGFubmVsLT52YnVzKTsKK2Rl
+dl9pbmZvKCZwLT5kZXYsICIlczogcmVndWxhdG9yX2VuYWJsZSgpIHJldHVybmVkICVkXG4iLCBf
+X2Z1bmNfXywgcmV0KTsKIAkJaWYgKHJldCkKIAkJCWdvdG8gb3V0OwogCX0KK2Vsc2UgZGV2X2lu
+Zm8oJnAtPmRldiwgIiVzOiBOb3QgZW5hYmxpbmcgcmVndWxhdG9yXG4iLCBfX2Z1bmNfXyk7CiAK
+IAl2YWwgPSByZWFkbCh1c2IyX2Jhc2UgKyBVU0IyX1VTQkNUUik7CiAJdmFsIHw9IFVTQjJfVVNC
+Q1RSX1BMTF9SU1Q7CkBAIC00NzMsNyArNDc2LDEyIEBAIHN0YXRpYyBpbnQgcmNhcl9nZW4zX3Bo
+eV91c2IyX3Bvd2VyX29mZihzdHJ1Y3QgcGh5ICpwKQogCQlyZXR1cm4gMDsKIAogCWlmIChjaGFu
+bmVsLT52YnVzKQoreworZGV2X2luZm8oJnAtPmRldiwgIiVzOiBEaXNhYmxpbmcgcmVndWxhdG9y
+XG4iLCBfX2Z1bmNfXyk7CiAJCXJldCA9IHJlZ3VsYXRvcl9kaXNhYmxlKGNoYW5uZWwtPnZidXMp
+OworZGV2X2luZm8oJnAtPmRldiwgIiVzOiByZWd1bGF0b3JfZGlzYWJsZSgpIHJldHVybmVkICVk
+XG4iLCBfX2Z1bmNfXywgcmV0KTsKK30KK2Vsc2UgZGV2X2luZm8oJnAtPmRldiwgIiVzOiBOb3Qg
+ZGlzYWJsaW5nIHJlZ3VsYXRvclxuIiwgX19mdW5jX18pOwogCiAJcmV0dXJuIHJldDsKIH0K
+--000000000000c2cf90058a934a75--
