@@ -2,155 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6473C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B460C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7CA208E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55EC02086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="fq+IAMsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfFEN1d (ORCPT
+        id S1727998AbfFENaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:27:33 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:36378 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfFEN1c (ORCPT
+        Wed, 5 Jun 2019 09:30:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37147 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfFENaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:27:32 -0400
-Received: by mail-wr1-f42.google.com with SMTP id n4so16432535wrs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:27:31 -0700 (PDT)
+        Wed, 5 Jun 2019 09:30:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so1818327wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lMvdl6nBbuZIhohZk4JDzoO+gQ8DLgRypV8C5pDMxkg=;
+        b=fq+IAMsSH0vIGZsqJGp440VM8znjVMeRHNNEIA8Klf8lPG97ikOFb1FD9o36dCdjGr
+         YD8l32FsNwKKBWVe8PdHCPaAsIUpvrPzn+JEAiDRK3pQZxjHBbPjscKqoYKNu1wkdRHK
+         6IjGzym7nRxdIzATquNWI1s7nbNbwnsP/8+sufxtWhvTWdhvG7wfdzPRBOlWxU0OsvIr
+         oQuZAe9GShR6ntM5NIXdXoFwfGb05ThW/xyotHeelIXxaOqLiw11cZmJR02HGINOr2lT
+         N1XqHlVGnyspC4qFFZerNY5CglVOQFsulYVoL+TJslvVZXC2cELy/njzwx+kZ3Cpb8/3
+         OGLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8UF6IKh1oi+AJKntkp2Avzsj99+2nJ602b//xWwwYMo=;
-        b=QHTmMCwRqtNXgLDmHNKcy+wofeiiuWQHl484tB5mimcpMieslspQ2JuGNzD0dkgE9c
-         0kWEbceOWwP5PemJiGZwObFFjv+hV8GbJyz21piGd8OWokZc2CVV7vDQh79Fbn9XepnJ
-         Pp2UDIlOqwzfn8oxqHMNIetuY/evyHV4CcN0bG2LJhAOkFjiITSVhxywwW5EEcdrKdYS
-         FbFIApCMtze8K8bFyBG8/uFVeU8OsDMVaYYGbbpCNdMkjo3Ojsz85qnqUkK4fqB/23NJ
-         aNqvBI3yTmkUN3b/7aU7H4xHNocNqrDjzypD699+YOqxGsmIYfAD/r9NH6a7HSUyzMW6
-         fjiA==
-X-Gm-Message-State: APjAAAXpESttmlwaZOvgbuDFi0hgMMBW7eusXwoR5xEhZZhRqbot8g2/
-        E57/G9ljYOzwBcEkcSMJ07lSrw==
-X-Google-Smtp-Source: APXvYqzO7CgrYTcvyVtelP3nLeZ+Ekw3IsfgEuQ6as9WNjO7Znl9iRR9QfVOYT+MaOhBlZ3QYIBaSg==
-X-Received: by 2002:adf:e4d2:: with SMTP id v18mr10605225wrm.189.1559741250343;
-        Wed, 05 Jun 2019 06:27:30 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id u205sm24193031wmu.47.2019.06.05.06.27.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lMvdl6nBbuZIhohZk4JDzoO+gQ8DLgRypV8C5pDMxkg=;
+        b=oJJ1hyFv69pAwA1c4Ihr1cNBytB5ZlZcpofToVlS+dIAKNU5LcWV0XRXKnayhD5k+1
+         m4X+kqMfGwjU1rMxU5HFumr8sAitCGZyhEniWgFrheC0oetpwKS939Fm5BUE36mugj3m
+         8J2qtXmGxt2kHv8PLF8byG/Gso/N0lv0RvkFcZImg9/5zvvSVhzUsoxVVvdXVnJ/Gb3R
+         UJMYfWg62idOLtQIv+P/7myrtBmaCiONei2yzmGRDbSZBtZi3V9DTV9tYaV8uIhY3Kks
+         vXv80ltN/Z/5NakLfffmjxGqoyqqBuYEkduigTCBFjP9J2XYdaBaqzX22wUYnJdR3w97
+         h68g==
+X-Gm-Message-State: APjAAAV1CCQu+DkwZEayeypKWQdLwFDtLOFh3ofIJVjkcskFUpTudbXL
+        AfqxWTgfgtFcUnRB0Na3ttckrmQ0Je4tbw==
+X-Google-Smtp-Source: APXvYqxEKVMAEorXJa5XP/Oiye0IE8d4xOUuMoR1Pi+49KK152RCbMImJDqmRK+VywGsmWzUdxHUqg==
+X-Received: by 2002:adf:ee0b:: with SMTP id y11mr11998457wrn.241.1559741420446;
+        Wed, 05 Jun 2019 06:30:20 -0700 (PDT)
+Received: from localhost.localdomain ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id c17sm16503892wrv.82.2019.06.05.06.30.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 06:27:29 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 15:27:28 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
-Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
-Message-ID: <20190605132728.mihzzw7galqjf5uz@butterfly.localdomain>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-5-minchan@kernel.org>
- <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
- <20190531131226.GA195463@google.com>
- <20190531143545.jwmgzaigd4rbw2wy@butterfly.localdomain>
- <20190531232959.GC248371@google.com>
+        Wed, 05 Jun 2019 06:30:19 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, Christian Brauner <christian@brauner.io>
+Subject: [GIT PULL] pidfd fixes for v5.2-rc4
+Date:   Wed,  5 Jun 2019 15:29:37 +0200
+Message-Id: <20190605132937.29438-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531232959.GC248371@google.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hi Linus,
 
-On Sat, Jun 01, 2019 at 08:29:59AM +0900, Minchan Kim wrote:
-> > > > > /* snip a lot */
-> > > > >
-> > > > >  #ifdef CONFIG_MEMORY_FAILURE
-> > > > >  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> > > > > -		return madvise_inject_error(behavior, start, start + len_in);
-> > > > > +		return madvise_inject_error(behavior,
-> > > > > +					start, start + len_in);
-> > > > 
-> > > > Not sure what this change is about except changing the line length.
-> > > > Note, madvise_inject_error() still operates on "current" through
-> > > > get_user_pages_fast() and gup_pgd_range(), but that was not changed
-> > > > here. I Know you've filtered out this hint later, so technically this
-> > > > is not an issue, but, maybe, this needs some attention too since we've
-> > > > already spotted it?
-> > > 
-> > > It is leftover I had done. I actually modified it to handle remote
-> > > task but changed my mind not to fix it because process_madvise
-> > > will not support it at this moment. I'm not sure it's a good idea
-> > > to change it for *might-be-done-in-future* at this moment even though
-> > > we have spotted.
-> > 
-> > I'd expect to have at least some comments in code on why other hints
-> > are disabled, so if we already know some shortcomings, this information
-> > would not be lost.
-> 
-> Okay, I will add some comment but do not want to fix code piece until
-> someone want to expose the poisoning to external process.
+This is a pull request containing three hopefully uncontroversial fixes:
 
-Fair enough.
+The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
 
-> > > > >  	write = madvise_need_mmap_write(behavior);
-> > > > >  	if (write) {
-> > > > > -		if (down_write_killable(&current->mm->mmap_sem))
-> > > > > +		if (down_write_killable(&mm->mmap_sem))
-> > > > >  			return -EINTR;
-> > > > 
-> > > > Do you still need that trick with mmget_still_valid() here?
-> > > > Something like:
-> > > 
-> > > Since MADV_COLD|PAGEOUT doesn't change address space layout or
-> > > vma->vm_flags, technically, we don't need it if I understand
-> > > correctly. Right?
-> > 
-> > I'd expect so, yes. But.
-> > 
-> > Since we want this interface to be universal and to be able to cover
-> > various needs, and since my initial intention with working in this
-> > direction involved KSM, I'd ask you to enable KSM hints too, and once
-> > (and if) that happens, the work there is done under write lock, and
-> > you'll need this trick to be applied.
-> > 
-> > Of course, I can do that myself later in a subsequent patch series once
-> > (and, again, if) your series is merged, but, maybe, we can cover this
-> > already especially given the fact that KSM hinting is a relatively easy
-> > task in this pile. I did some preliminary tests with it, and so far no
-> > dragons have started to roar.
-> 
-> Then, do you mind sending a patch based upon this series to expose
-> MADV_MERGEABLE to process_madvise? It will have the right description
-> why you want to have such feature which I couldn't provide since I don't
-> have enough material to write the motivation. And the patch also could
-> include the logic to prevent coredump race, which is more proper since
-> finally we need to hold mmap_sem write-side lock, finally.
-> I will pick it up and will rebase since then.
+  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
 
-Sure, I can. Would you really like to have it being based on this exact
-revision, or I should wait till you deal with MADV_COLD & Co and re-iterate
-this part again?
+are available in the Git repository at:
 
-Thanks.
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/pidfd-fixes-v5.2-rc4
 
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+for you to fetch changes up to 1fcd0eb356ad56c4e405f06e31dd9fde2109d5ab:
+
+  tests: fix pidfd-test compilation (2019-06-05 15:06:32 +0200)
+
+The tag contains two small patches to the pidfd samples and test binaries
+respectively. They were lacking appropriate ifdefines for
+__NR_pidfd_send_signal and could hence lead to compilation errors when
+__NR_pidfd_send_signal was not defined.
+This was spotted on mips independently by Guenter Roeck (who was kind
+enough to send a fix for the samples binary) and Arnd who spotted it in
+linux-next.
+Apart from these two patches, there's also a patch to update the comments
+for the pidfd_send_signal() syscall which were slightly wrong/inconsistenly
+worded.
+
+Please consider pulling these changes from the signed pidfd-fixes-v5.2-rc4 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+pidfd fixes for v5.2-rc4
+
+----------------------------------------------------------------
+Christian Brauner (2):
+      signal: improve comments
+      tests: fix pidfd-test compilation
+
+Guenter Roeck (1):
+      samples: fix pidfd-metadata compilation
+
+ kernel/signal.c                            | 11 +++++------
+ samples/pidfd/pidfd-metadata.c             |  4 ++++
+ tools/testing/selftests/pidfd/pidfd_test.c |  4 ++++
+ 3 files changed, 13 insertions(+), 6 deletions(-)
