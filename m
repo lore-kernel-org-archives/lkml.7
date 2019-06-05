@@ -2,104 +2,90 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0369C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50D7206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559752287;
-	bh=FkNXQbZzkZezzTyKAEBo3XvGloGdvQ2na+hhABiS8BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ER2fykvBQPausmdhXzRZoxk6DyxUmq4eDWLyqF6bIeff6WgIKm4Cmq02czH/YcrxI
-	 IF6UjwzczdE8W7GfzsPtI+2y07dSNIEn1dWB4N8vZOUXW96NLC2sbe9k9nh9dib1OZ
-	 BriB2e+DjwZiydx3jsc47EywmRPV0/ZbZ5u34MfU=
+	by mail.kernel.org (Postfix) with ESMTP id 8D7D8206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fsssAC2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfFEQb0 (ORCPT
+        id S1728757AbfFEQbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:31:26 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52354 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728574AbfFEQbZ (ORCPT
+        Wed, 5 Jun 2019 12:31:49 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:38117 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfFEQbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:31:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0gkwr/F7+Rrmms8V/ILU7byci3uqX6ktmxQ4kbGefNU=; b=GwINskzBFe5/BFRa7R9Im1GXK
-        Ehxf1W4hvXZQBy0lDPUgVF7rHRrXjX2+jlVIUm6i4aD3eqzBsRUfHnpuTF3ONQCi6DYTGITDUsW6+
-        Gepa/EE3TovjkAeYyzaNtzTwHQ7JwiQYGeW8dv7Vrlj336J45UxGyO4f64URlKRqFjJYU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYYos-0000xK-4z; Wed, 05 Jun 2019 16:31:22 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id D0DFC440046; Wed,  5 Jun 2019 17:31:20 +0100 (BST)
-Date:   Wed, 5 Jun 2019 17:31:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
-        lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-Message-ID: <20190605163120.GR2456@sirena.org.uk>
-References: <20190604174345.14841-1-dmurphy@ti.com>
- <20190604174345.14841-2-dmurphy@ti.com>
- <20190605100132.GL2456@sirena.org.uk>
- <7ba7a633-1a39-adcc-e942-12c0eb7c3b16@ti.com>
- <054c3715-e85f-e052-faf1-057bf3a67d45@ti.com>
+        Wed, 5 Jun 2019 12:31:49 -0400
+Received: by mail-yw1-f68.google.com with SMTP id r128so4649476ywe.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 09:31:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y1OYtud6ynRddkkX+/uoFR8oepImmq49z7SkEsX+oO8=;
+        b=fsssAC2jxc6N9VdT89cO2W5eloOCThusSzDuCWrmX8rL3p6SjRfShWT9Ro4szdGWzg
+         /OwLlE2zuZq1k+E8NKL6Xu/Yc3B7S/ZovUxRpqbTsCHZMOXnmF0hs/zz2rhKakBnZLfC
+         WxRN7X8xH5uToK3wDHNPnz1yMhJO9l9jPaHQxME5Hqv5eEaBJCkkjhdrboGh8/CUCNm0
+         2W34/DSB6kwzLbcW2AZIaxX8tiZzKXecdR3H9p8CJGlR6wsHg/fnJ0rJFoxBzBmjc5od
+         5u3Xyb8WSMOKFxSX+mkDCMW7LSojKD32zNQwJHPpEcsoz//DqbhhpWOo7EN8uXo3Fc5s
+         GYEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y1OYtud6ynRddkkX+/uoFR8oepImmq49z7SkEsX+oO8=;
+        b=eUId4A5bNi+Xu80p1x9xac2xlpFE2Vu2wgZ3WUmEQdhfDeu7Mj/CseH9y9XP2WSsk0
+         awTxhqWNAc/97oUWwQn5EiUcPgfYrGYfp4massGU3zkIkeJ5DJk0aH+elhV9FSgjgwK5
+         68jLXL7twvArZNla2DaUae8vKBj4FDXoW4eh4qhpO83QOYqeJ7yiruz/2nifpVQT+5t5
+         jjT/+Zme0obi52FpUfNw9hD8NXIbaUZghLN5c0w+VgbQRQcU4X9D6KVXlXEsClwMmS+T
+         AYrktgCO/1LPGii96z4duyruXD0dtPpBmnU26WKUZx5hNCb5mdXVLi9urzy4N/BaoPBh
+         6NCw==
+X-Gm-Message-State: APjAAAV+yNmR2fgYcbyWVT/XKd1Z9w9RrYH1G1T1vG12/9bwnRMSa6zr
+        GqNNOiOQkQ7LsTCsIEdyGWibvOgWucSZ+PtacmNA6w==
+X-Google-Smtp-Source: APXvYqwxp/w9I6RVMYzDSCXTuAeWq+uS/Kgz+ePstY0WG1Azd+0j00estnaPcFznlN81K3EH8wYJ8SzOBLDgFkoIAME=
+X-Received: by 2002:a81:4e94:: with SMTP id c142mr7970493ywb.398.1559752308314;
+ Wed, 05 Jun 2019 09:31:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8+74qwmUvVX309i6"
-Content-Disposition: inline
-In-Reply-To: <054c3715-e85f-e052-faf1-057bf3a67d45@ti.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
+In-Reply-To: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 5 Jun 2019 09:31:37 -0700
+Message-ID: <CALvZod7w+HaG3NKdeTsk93HjJ=sQ=6wQAYAfi9y5F34-9w6V3Q@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] zpool: Add malloc_support_movable to zpool_driver
+To:     Hui Zhu <teawaterz@linux.alibaba.com>,
+        Vitaly Wool <vitalywool@gmail.com>
+Cc:     Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com,
+        Seth Jennings <sjenning@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+>
+> As a zpool_driver, zsmalloc can allocate movable memory because it
+> support migate pages.
+> But zbud and z3fold cannot allocate movable memory.
+>
 
---8+74qwmUvVX309i6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Vitaly
 
-On Wed, Jun 05, 2019 at 07:47:50AM -0500, Dan Murphy wrote:
-> On 6/5/19 7:02 AM, Dan Murphy wrote:
+It seems like z3fold does support page migration but z3fold's malloc
+is rejecting __GFP_HIGHMEM. Vitaly, is there a reason to keep
+rejecting __GFP_HIGHMEM after 1f862989b04a ("mm/z3fold.c: support page
+migration").
 
-> > I can squash patch 1 into 4.
-
-> > Also not sure what you mean by new validation.
-
-> Disregard I understand.=A0 The patch is missing the validation code.
-
-Ah, some git add issues I guess :)  Squashing would help but it's not
-essential I think.
-
---8+74qwmUvVX309i6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz37lYACgkQJNaLcl1U
-h9D24Qf+LRTcByTN28sK2Y77cBUVbJQhwJeOJMTaOFPF2SDpJRBmU2oQZncg72xA
-iMwJgZcDDd1gjQuyDsxRL23e8guALeRL3rQ/MyHT22BhFEGUFJd7Ka0hyOgOpxwv
-R9Y7Gn8jo+Qt3AEcxn4HvHvq6zF/3FjUxUDbSquNchsjrv/flOp0uTbCuc1RQrcZ
-d7I/uj3KhYIWmzN8w/E3wLzLYqfVFoZZ/9/FuSXMXS6BdTsaOwzoQ/VJmQ0IxEhe
-FhFF2TWmvf84nAxKD6rYesFiuMXpM0Ok+v+5E2aI9/odBwHir8mcrMBWdOn3TDBT
-eEUXC5JLELCEeXJdm8Ep+dsNdaSOEw==
-=9Dl3
------END PGP SIGNATURE-----
-
---8+74qwmUvVX309i6--
+thanks,
+Shakeel
