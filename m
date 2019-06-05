@@ -2,73 +2,97 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C65C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F36C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424212086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B982F2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rrPaKBqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfFEH4Z (ORCPT
+        id S1726664AbfFEH5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:56:25 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:57545 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbfFEH4Y (ORCPT
+        Wed, 5 Jun 2019 03:57:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53032 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfFEH5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:56:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TTTzviS_1559721376;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TTTzviS_1559721376)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 05 Jun 2019 15:56:16 +0800
-Subject: Re: [PATCH v2 09/22] docs: zh_CN: avoid duplicate citation references
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>
-References: <cover.1559656538.git.mchehab+samsung@kernel.org>
- <caf96b7ac3c4a3db66b6d6d2651849d2a70e3e76.1559656538.git.mchehab+samsung@kernel.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <826d06c8-8c41-166d-f821-0a457a11ed0b@linux.alibaba.com>
-Date:   Wed, 5 Jun 2019 15:56:16 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Wed, 5 Jun 2019 03:57:02 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x557uwUu000812;
+        Wed, 5 Jun 2019 02:56:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559721418;
+        bh=gYNLZ385lajEbx+E5yp06jfNtbTVTUN+kuz/RIevvJQ=;
+        h=From:To:CC:Subject:Date;
+        b=rrPaKBqrQtuadV5kAEmheIw4iam/vclAcOQkCpBovGPpwuEQSJjhOJ95D0tPbvrik
+         U5H8M3CfD0b2iL7qDG5lMXCF9GdJhzEnalDCQIZ3t++SDZ6XMVgbsoOWAe+Lq945Kg
+         ec4Wq2//pBz3dHx3jqQMwvpDwIBn8B56gow1DZNQ=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x557uwYf121971
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Jun 2019 02:56:58 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
+ 2019 02:56:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 5 Jun 2019 02:56:57 -0500
+Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x557uqoO033893;
+        Wed, 5 Jun 2019 02:56:54 -0500
+From:   Keerthy <j-keerthy@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>, <robh+dt@kernel.org>
+CC:     <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <j-keerthy@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v2 0/4] arm64: dts: ti: am6: Add gpio nodes
+Date:   Wed, 5 Jun 2019 13:27:06 +0530
+Message-ID: <20190605075710.1691-1-j-keerthy@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <caf96b7ac3c4a3db66b6d6d2651849d2a70e3e76.1559656538.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+K3 AM6 platform has 2 instances of gpio banks on main domain
+and 1 instance on wakeup domin. All are capable of generating
+banked interrupts.
 
+This series also adds 2 goio_keys nodes connected to SW6 SW5
+switches and tested for gpio_keys interrupts.
 
-On 2019/6/4 10:17 下午, Mauro Carvalho Chehab wrote:
-> -内核是用C语言 [c-language]_ 编写的。更准确地说，内核通常是用 ``gcc`` [gcc]_
-> -在 ``-std=gnu89`` [gcc-c-dialect-options]_ 下编译的：ISO C90的 GNU 方言（
-> +内核是用C语言 :ref:`c-language <cn_c-language>` 编写的。更准确地说，内核通常是用 ``gcc`` :ref:`gcc <cn_gcc>`
+The series depends on:
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=112791
 
-It looks better to remove ``gcc`` here. otherwise 2 'gcc' words show here is weird. 
+Posting as RFC as it has dependencies to be merged.
 
-> +在 ``-std=gnu89`` :ref:`gcc-c-dialect-options <cn_gcc-c-dialect-options>` 下编译的：ISO C90的 GNU 方言（
->  包括一些C99特性）
->  
-> -这种方言包含对语言 [gnu-extensions]_ 的许多扩展，当然，它们许多都在内核中使用。
-> +这种方言包含对语言 :ref:`gnu-extensions <cn_gnu-extensions>` 的许多扩展，当然，它们许多都在内核中使用。
->  
-> -对于一些体系结构，有一些使用 ``clang`` [clang]_ 和 ``icc`` [icc]_ 编译内核
-> +对于一些体系结构，有一些使用 ``clang`` :ref:`clang <cn_clang>` 和 ``icc`` :ref:`icc <cn_icc>` 编译内核
+Changes in v2:
 
-and remove ``clang``, ``icc`` too.
+  * Added a separate am654 compatible. 
 
->  的支持，尽管在编写此文档时还没有完成，仍需要第三方补丁。
->  
+Keerthy (4):
+  dt-bindings: gpio: davinci: Add k3 am654 compatible
+  arm64: dts: ti: am6-wakeup: Add gpio node
+  arm64: dts: ti: am6-main: Add gpio nodes
+  arm64: dts: ti: am654-base-board: Add gpio_keys node
 
-Thanks
-Alex
+ .../devicetree/bindings/gpio/gpio-davinci.txt | 18 +++++++++++
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 32 +++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    | 15 +++++++++
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 ++++++++++++++++
+ 4 files changed, 92 insertions(+)
+
+-- 
+2.17.1
+
