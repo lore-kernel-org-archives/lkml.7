@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A6CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE34C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF77206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66741206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KaFbLFoO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WTNGd1NA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfFEM4z (ORCPT
+        id S1727973AbfFEM45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:56:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35938 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbfFEM4m (ORCPT
+        Wed, 5 Jun 2019 08:56:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45874 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbfFEM4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:56:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55CuciI099185;
-        Wed, 5 Jun 2019 07:56:38 -0500
+        Wed, 5 Jun 2019 08:56:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55CubYa034600;
+        Wed, 5 Jun 2019 07:56:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559739398;
-        bh=VtWPS57ssdVHDMp8Yb/arf3w3a52NwTmyrcIYl12xpk=;
+        s=ti-com-17Q1; t=1559739397;
+        bh=5Qq7+pXiVPEvJrBCyn/c4N9VN91Ob2nkGG5Tt/beLVU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KaFbLFoOK+4GzcQYU4+4HQ7Ai73PMEGoWMGU9lkz+p7qlfri7oKAviQpWqGLcvO0K
-         FtbwX0DEnYl0DWPrGqtSlGOtNB8VHLwCcfrmjcj/Ttdr47OVZfr9YLXsz109Q+6pBg
-         DeHAh/tjQrA0ICE3WWJWTH2eBN0EP/Fu5RrClhU0=
+        b=WTNGd1NAcX7FzKtnZIttS54v/TV8AAsmyCu9qkiGsreFxgy5trp96QrTivWBM7lGT
+         sqZTIzgGFTboORm1rdKD4o4OC0L2rLmUW1ns0q9ORq207MxiI0KvQNjJhP21qd5CFs
+         QyeISSeTYvoHdwSXyzpm4nJGq398XeKVkUqFFSus=
 Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55CuciJ012186
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55Cubcr087325
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 07:56:38 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
+        Wed, 5 Jun 2019 07:56:37 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
  (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 07:56:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:56:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 07:56:37 -0500
+ Frontend Transport; Wed, 5 Jun 2019 07:56:36 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55CubFR097869;
-        Wed, 5 Jun 2019 07:56:37 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55Cuat9087362;
+        Wed, 5 Jun 2019 07:56:36 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
         <lgirdwood@gmail.com>
 CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v6 5/5] leds: lm36274: Introduce the TI LM36274 LED driver
-Date:   Wed, 5 Jun 2019 07:56:34 -0500
-Message-ID: <20190605125634.7042-6-dmurphy@ti.com>
+Subject: [PATCH v6 2/5] mfd: ti-lmu: Add LM36274 support to the ti-lmu
+Date:   Wed, 5 Jun 2019 07:56:31 -0500
+Message-ID: <20190605125634.7042-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 In-Reply-To: <20190605125634.7042-1-dmurphy@ti.com>
 References: <20190605125634.7042-1-dmurphy@ti.com>
@@ -68,233 +68,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the LM36274 LED driver.  This driver uses the ti-lmu
-MFD driver to probe this LED driver.  The driver configures only the
-LED registers and enables the outputs according to the config file.
-
-The driver utilizes the TI LMU (Lighting Management Unit) LED common
-framework to set the brightness bits.
+Add the LM36274 register support to the ti-lmu MFD driver.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 ---
- drivers/leds/Kconfig        |   8 ++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
- create mode 100644 drivers/leds/leds-lm36274.c
+ drivers/mfd/Kconfig                 |  5 ++---
+ drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
+ include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
+ include/linux/mfd/ti-lmu.h          |  4 ++++
+ 4 files changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 91cb047059a0..61c585049b2d 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -798,6 +798,14 @@ config LEDS_LM3697
- 	  Say Y to enable the LM3697 LED driver for TI LMU devices.
- 	  This supports the LED device LM3697.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 8933485b28e7..a69aca3c2dab 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1335,9 +1335,8 @@ config MFD_TI_LMU
+ 	select REGMAP_I2C
+ 	help
+ 	  Say yes here to enable support for TI LMU chips.
+-
+-	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
+-	  It consists of backlight, LED and regulator driver.
++	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and
++	  LM36274.  It consists of backlight, LED and regulator driver.
+ 	  It provides consistent device controls for lighting functions.
  
-+config LEDS_LM36274
-+	tristate "LED driver for LM36274"
-+	depends on LEDS_TI_LMU_COMMON
-+	depends on MFD_TI_LMU
-+	help
-+	  Say Y to enable the LM36274 LED driver for TI LMU devices.
-+	  This supports the LED device LM36274.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
+ config MFD_OMAP_USB_HOST
+diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
+index 89b1c5b584af..691ab9dd6236 100644
+--- a/drivers/mfd/ti-lmu.c
++++ b/drivers/mfd/ti-lmu.c
+@@ -111,6 +111,17 @@ static const struct mfd_cell lm3695_devices[] = {
+ 	},
+ };
  
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 6c3350404ede..c52934732c1a 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
- obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
- obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
-+obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
-new file mode 100644
-index 000000000000..b47786d36d21
---- /dev/null
-+++ b/drivers/leds/leds-lm36274.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// TI LM36274 LED chip family driver
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+
-+#include <linux/bitops.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/leds.h>
-+#include <linux/leds-ti-lmu-common.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include <linux/mfd/ti-lmu.h>
-+#include <linux/mfd/ti-lmu-register.h>
-+
-+#include <uapi/linux/uleds.h>
-+
-+#define LM36274_MAX_STRINGS	4
-+#define LM36274_BL_EN		BIT(4)
-+
-+/**
-+ * struct lm36274
-+ * @pdev: platform device
-+ * @led_dev: led class device
-+ * @lmu_data: Register and setting values for common code
-+ * @regmap: Devices register map
-+ * @dev: Pointer to the devices device struct
-+ * @led_sources - The LED strings supported in this array
-+ * @num_leds - Number of LED strings are supported in this array
-+ */
-+struct lm36274 {
-+	struct platform_device *pdev;
-+	struct led_classdev led_dev;
-+	struct ti_lmu_bank lmu_data;
-+	struct regmap *regmap;
-+	struct device *dev;
-+
-+	u32 led_sources[LM36274_MAX_STRINGS];
-+	int num_leds;
-+};
-+
-+static int lm36274_brightness_set(struct led_classdev *led_cdev,
-+				enum led_brightness brt_val)
-+{
-+	struct lm36274 *led = container_of(led_cdev, struct lm36274, led_dev);
-+
-+	return ti_lmu_common_set_brightness(&led->lmu_data, brt_val);
-+}
-+
-+static int lm36274_init(struct lm36274 *lm36274_data)
-+{
-+	int enable_val = 0;
-+	int i;
-+
-+	for (i = 0; i < lm36274_data->num_leds; i++)
-+		enable_val |= (1 << lm36274_data->led_sources[i]);
-+
-+	if (!enable_val) {
-+		dev_err(lm36274_data->dev, "No LEDs were enabled\n");
-+		return -EINVAL;
-+	}
-+
-+	enable_val |= LM36274_BL_EN;
-+
-+	return regmap_write(lm36274_data->regmap, LM36274_REG_BL_EN,
-+			    enable_val);
-+}
-+
-+static int lm36274_parse_dt(struct lm36274 *lm36274_data)
-+{
-+	struct fwnode_handle *child = NULL;
-+	char label[LED_MAX_NAME_SIZE];
-+	struct device *dev = &lm36274_data->pdev->dev;
-+	const char *name;
-+	int child_cnt;
-+	int ret = -EINVAL;
-+
-+	/* There should only be 1 node */
-+	child_cnt = device_get_child_node_count(dev);
-+	if (child_cnt != 1)
-+		return ret;
-+
-+	device_for_each_child_node(dev, child) {
-+		ret = fwnode_property_read_string(child, "label", &name);
-+		if (ret)
-+			snprintf(label, sizeof(label),
-+				"%s::", lm36274_data->pdev->name);
-+		else
-+			snprintf(label, sizeof(label),
-+				 "%s:%s", lm36274_data->pdev->name, name);
-+
-+		lm36274_data->num_leds = fwnode_property_read_u32_array(child,
-+							  "led-sources",
-+							  NULL, 0);
-+		if (lm36274_data->num_leds <= 0)
-+			return -ENODEV;
-+
-+		ret = fwnode_property_read_u32_array(child, "led-sources",
-+						     lm36274_data->led_sources,
-+						     lm36274_data->num_leds);
-+		if (ret) {
-+			dev_err(dev, "led-sources property missing\n");
-+			return -EINVAL;
-+		}
-+
-+		fwnode_property_read_string(child, "linux,default-trigger",
-+					&lm36274_data->led_dev.default_trigger);
-+
-+	}
-+
-+	lm36274_data->lmu_data.regmap = lm36274_data->regmap;
-+	lm36274_data->lmu_data.max_brightness = MAX_BRIGHTNESS_11BIT;
-+	lm36274_data->lmu_data.msb_brightness_reg = LM36274_REG_BRT_MSB;
-+	lm36274_data->lmu_data.lsb_brightness_reg = LM36274_REG_BRT_LSB;
-+
-+	lm36274_data->led_dev.name = label;
-+	lm36274_data->led_dev.max_brightness = MAX_BRIGHTNESS_11BIT;
-+	lm36274_data->led_dev.brightness_set_blocking = lm36274_brightness_set;
-+
-+	return ret;
-+}
-+
-+static int lm36274_probe(struct platform_device *pdev)
-+{
-+	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
-+	struct lm36274 *lm36274_data;
-+	int ret;
-+
-+	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
-+				    GFP_KERNEL);
-+	if (!lm36274_data) {
-+		ret = -ENOMEM;
-+		return ret;
-+	}
-+
-+	lm36274_data->pdev = pdev;
-+	lm36274_data->dev = lmu->dev;
-+	lm36274_data->regmap = lmu->regmap;
-+	dev_set_drvdata(&pdev->dev, lm36274_data);
-+
-+	ret = lm36274_parse_dt(lm36274_data);
-+	if (ret) {
-+		dev_err(lm36274_data->dev, "Failed to parse DT node\n");
-+		return ret;
-+	}
-+
-+	ret = lm36274_init(lm36274_data);
-+	if (ret) {
-+		dev_err(lm36274_data->dev, "Failed to init the device\n");
-+		return ret;
-+	}
-+
-+	return devm_led_classdev_register(lm36274_data->dev,
-+					 &lm36274_data->led_dev);
-+}
-+
-+static const struct of_device_id of_lm36274_leds_match[] = {
-+	{ .compatible = "ti,lm36274-backlight", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lm36274_leds_match);
-+
-+static struct platform_driver lm36274_driver = {
-+	.probe  = lm36274_probe,
-+	.driver = {
-+		.name = "lm36274-leds",
++static const struct mfd_cell lm36274_devices[] = {
++	LM363X_REGULATOR(LM36274_BOOST),
++	LM363X_REGULATOR(LM36274_LDO_POS),
++	LM363X_REGULATOR(LM36274_LDO_NEG),
++	{
++		.name          = "lm36274-leds",
++		.id            = LM36274,
++		.of_compatible = "ti,lm36274-backlight",
 +	},
 +};
-+module_platform_driver(lm36274_driver)
 +
-+MODULE_DESCRIPTION("Texas Instruments LM36274 LED driver");
-+MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-+MODULE_LICENSE("GPL v2");
+ #define TI_LMU_DATA(chip, max_reg)		\
+ static const struct ti_lmu_data chip##_data =	\
+ {						\
+@@ -123,6 +134,7 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
+ TI_LMU_DATA(lm3632, LM3632_MAX_REG);
+ TI_LMU_DATA(lm3633, LM3633_MAX_REG);
+ TI_LMU_DATA(lm3695, LM3695_MAX_REG);
++TI_LMU_DATA(lm36274, LM36274_MAX_REG);
+ 
+ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+@@ -191,6 +203,7 @@ static const struct of_device_id ti_lmu_of_match[] = {
+ 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
+ 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
+ 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
++	{ .compatible = "ti,lm36274", .data = &lm36274_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
+@@ -200,6 +213,7 @@ static const struct i2c_device_id ti_lmu_ids[] = {
+ 	{ "lm3632", LM3632 },
+ 	{ "lm3633", LM3633 },
+ 	{ "lm3695", LM3695 },
++	{ "lm36274", LM36274 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
+diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
+index 76998b01764b..076d8dea38fd 100644
+--- a/include/linux/mfd/ti-lmu-register.h
++++ b/include/linux/mfd/ti-lmu-register.h
+@@ -189,4 +189,27 @@
+ #define LM3695_REG_BRT_MSB			0x14
+ 
+ #define LM3695_MAX_REG				0x14
++
++/* LM36274 */
++#define LM36274_REG_REV				0x01
++#define LM36274_REG_BL_CFG_1			0x02
++#define LM36274_REG_BL_CFG_2			0x03
++#define LM36274_REG_BRT_LSB			0x04
++#define LM36274_REG_BRT_MSB			0x05
++#define LM36274_REG_BL_EN			0x08
++
++#define LM36274_REG_BIAS_CONFIG_1		0x09
++#define LM36274_EXT_EN_MASK			BIT(0)
++#define LM36274_EN_VNEG_MASK			BIT(1)
++#define LM36274_EN_VPOS_MASK			BIT(2)
++
++#define LM36274_REG_BIAS_CONFIG_2		0x0a
++#define LM36274_REG_BIAS_CONFIG_3		0x0b
++#define LM36274_REG_VOUT_BOOST			0x0c
++#define LM36274_REG_VOUT_POS			0x0d
++#define LM36274_REG_VOUT_NEG			0x0e
++#define LM36274_VOUT_MASK			0x3F
++
++#define LM36274_MAX_REG				0x13
++
+ #endif
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index 54e9d272e81c..0957598c7d41 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -26,6 +26,7 @@ enum ti_lmu_id {
+ 	LM3632,
+ 	LM3633,
+ 	LM3695,
++	LM36274,
+ 	LMU_MAX_ID,
+ };
+ 
+@@ -67,6 +68,9 @@ enum lm363x_regulator_id {
+ 	LM3632_BOOST,		/* Boost output */
+ 	LM3632_LDO_POS,		/* Positive display bias output */
+ 	LM3632_LDO_NEG,		/* Negative display bias output */
++	LM36274_BOOST,		/* Boost output */
++	LM36274_LDO_POS,	/* Positive display bias output */
++	LM36274_LDO_NEG,	/* Negative display bias output */
+ };
+ 
+ /**
 -- 
 2.21.0.5.gaeb582a983
 
