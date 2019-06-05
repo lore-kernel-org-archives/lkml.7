@@ -2,155 +2,252 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C85C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA4BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DECF2089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF3C20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfFEVdy (ORCPT
+        id S1726626AbfFEVff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:33:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726561AbfFEVdy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:33:54 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x55LWFuI060389
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 17:33:53 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sxhrkjf48-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 17:33:52 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 5 Jun 2019 22:33:50 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 5 Jun 2019 22:33:46 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x55LXjbm54984766
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Jun 2019 21:33:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ABD83A405F;
-        Wed,  5 Jun 2019 21:33:45 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80203A4054;
-        Wed,  5 Jun 2019 21:33:44 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.19])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  5 Jun 2019 21:33:44 +0000 (GMT)
-Date:   Thu, 6 Jun 2019 00:33:42 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        linux-mm@kvack.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
-        cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
-References: <1559656836-24940-1-git-send-email-cai@lca.pw>
- <20190604142338.GC24467@lakrids.cambridge.arm.com>
- <20190604143020.GD24467@lakrids.cambridge.arm.com>
+        Wed, 5 Jun 2019 17:35:35 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:10524 "EHLO mx.allycomm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfFEVff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:35:35 -0400
+Received: from allycomm.com (unknown [IPv6:2601:647:5401:2210::49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.allycomm.com (Postfix) with ESMTPSA id 0998D22214;
+        Wed,  5 Jun 2019 14:35:33 -0700 (PDT)
+From:   Jeff Kletsky <lede@allycomm.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH] mtd: spinand: Support Paragon PN26G01A and PN26G02A
+Date:   Wed,  5 Jun 2019 14:35:15 -0700
+Message-Id: <20190605213516.13516-1-lede@allycomm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604143020.GD24467@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19060521-0020-0000-0000-000003469105
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060521-0021-0000-0000-00002199A1F4
-Message-Id: <20190605213342.GA7023@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=60 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906050136
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:30:20PM +0100, Mark Rutland wrote:
-> On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
-> > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
-> > > The commit "arm64: switch to generic version of pte allocation"
-> > > introduced endless failures during boot like,
-> > > 
-> > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
-> > > -2 parent: cgroup)
-> > > 
-> > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
-> > > and then later memcg finds out those don't belong to any cgroup.
-> > 
-> > Mike, I understood from [1] that this wasn't expected to be a problem,
-> > as the accounting should bypass kernel threads.
-> > 
-> > Was that assumption wrong, or is something different happening here?
-> > 
-> > > backtrace:
-> > >   kobject_add_internal
-> > >   kobject_init_and_add
-> > >   sysfs_slab_add+0x1a8
-> > >   __kmem_cache_create
-> > >   create_cache
-> > >   memcg_create_kmem_cache
-> > >   memcg_kmem_cache_create_func
-> > >   process_one_work
-> > >   worker_thread
-> > >   kthread
-> > > 
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > ---
-> > >  arch/arm64/mm/pgd.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
-> > > index 769516cb6677..53c48f5c8765 100644
-> > > --- a/arch/arm64/mm/pgd.c
-> > > +++ b/arch/arm64/mm/pgd.c
-> > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> > >  	if (PGD_SIZE == PAGE_SIZE)
-> > >  		return (pgd_t *)__get_free_page(gfp);
-> > >  	else
-> > > -		return kmem_cache_alloc(pgd_cache, gfp);
-> > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
-> > 
-> > This is used to allocate PGDs for both user and kernel pagetables (e.g.
-> > for the efi runtime services), so while this may fix the regression, I'm
-> > not sure it's the right fix.
-> 
-> I see that since [1], pgd_alloc() was updated to special-case the
-> init_mm, which is not sufficient for cases like:
-> 
-> 	efi_mm.pgd = pgd_alloc(&efi_mm)
-> 
-> ... which occurs in a kthread.
-> 
-> So let's have a pgd_alloc_kernel() to make that explicit.
+From: Jeff Kletsky <git-commits@allycomm.com>
 
-I've hit "send" before seeing this one :)
+These Paragon chips are very similar to other 1Gb/2Gb chips
+in terms of their layout and command timings.
 
-Well, to be completely on the safe side an explicit pgd_alloc_kernel()
-sounds right. Then it won't be subject to future changes in memcg and will
-always "Do The Right Thing".
+One notable difference is that "Minimum number of valid blocks"
+(Nvb) is 1003 per Gb, rather than the common 1004. As a result,
+the bad-block reservation is 21 per Gb, rather than 20 per Gb.
+
+Datasheets available at
+http://www.xtxtech.com/upfile/2016082517274590.pdf
+http://www.xtxtech.com/upfile/2016082517282329.pdf
+
+Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
+---
+ drivers/mtd/nand/spi/Makefile  |   2 +-
+ drivers/mtd/nand/spi/core.c    |   1 +
+ drivers/mtd/nand/spi/paragon.c | 142 +++++++++++++++++++++++++++++++++
+ include/linux/mtd/spinand.h    |   1 +
+ 4 files changed, 145 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mtd/nand/spi/paragon.c
+
+diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
+index 753125082640..9662b9c1d5a9 100644
+--- a/drivers/mtd/nand/spi/Makefile
++++ b/drivers/mtd/nand/spi/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-spinand-objs := core.o gigadevice.o macronix.o micron.o toshiba.o winbond.o
++spinand-objs := core.o gigadevice.o macronix.o micron.o paragon.o toshiba.o winbond.o
+ obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 556bfdb34455..f0f3528aab8f 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -757,6 +757,7 @@ static const struct spinand_manufacturer *spinand_manufacturers[] = {
+ 	&gigadevice_spinand_manufacturer,
+ 	&macronix_spinand_manufacturer,
+ 	&micron_spinand_manufacturer,
++	&paragon_spinand_manufacturer,
+ 	&toshiba_spinand_manufacturer,
+ 	&winbond_spinand_manufacturer,
+ };
+diff --git a/drivers/mtd/nand/spi/paragon.c b/drivers/mtd/nand/spi/paragon.c
+new file mode 100644
+index 000000000000..dd863dbc593a
+--- /dev/null
++++ b/drivers/mtd/nand/spi/paragon.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Jeff Kletsky
++ *
++ * Author: Jeff Kletsky <git-commits@allycomm.com>
++ */
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/mtd/spinand.h>
++
++
++#define SPINAND_MFR_PARAGON	0xa1
++
++
++#define PN26G0XA_STATUS_ECC_BITMASK		(3 << 4)
++
++#define PN26G0XA_STATUS_ECC_NONE_DETECTED	(0 << 4)
++#define PN26G0XA_STATUS_ECC_1_7_CORRECTED	(1 << 4)
++#define PN26G0XA_STATUS_ECC_ERRORED		(2 << 4)
++#define PN26G0XA_STATUS_ECC_8_CORRECTED		(3 << 4)
++
++
++static SPINAND_OP_VARIANTS(read_cache_variants,
++		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
++
++static SPINAND_OP_VARIANTS(write_cache_variants,
++		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
++		SPINAND_PROG_LOAD(true, 0, NULL, 0));
++
++static SPINAND_OP_VARIANTS(update_cache_variants,
++		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
++		SPINAND_PROG_LOAD(false, 0, NULL, 0));
++
++
++static int pn26g0xa_ooblayout_ecc(struct mtd_info *mtd, int section,
++				   struct mtd_oob_region *region)
++{
++	if (section)
++		return -ERANGE;
++
++	region->offset = 64;
++	region->length = 64;
++
++	return 0;
++}
++
++static int pn26g0xa_ooblayout_free(struct mtd_info *mtd, int section,
++				   struct mtd_oob_region *region)
++{
++	if (section)
++		return -ERANGE;
++
++	region->offset = 1;	/* Reserved byte for BBM */
++	region->length = 63;
++
++	return 0;
++}
++
++static int pn26g0xa_ecc_get_status(struct spinand_device *spinand,
++				   u8 status)
++{
++	switch (status & PN26G0XA_STATUS_ECC_BITMASK) {
++	case PN26G0XA_STATUS_ECC_NONE_DETECTED:
++		return 0;
++
++	case PN26G0XA_STATUS_ECC_1_7_CORRECTED:
++		return 7;	/* Return upper limit by convention */
++
++	case PN26G0XA_STATUS_ECC_8_CORRECTED:
++		return 8;
++
++	case PN26G0XA_STATUS_ECC_ERRORED:
++		return -EBADMSG;
++
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static const struct mtd_ooblayout_ops pn26g0xa_ooblayout = {
++	.ecc = pn26g0xa_ooblayout_ecc,
++	.free = pn26g0xa_ooblayout_free,
++};
++
++
++static const struct spinand_info paragon_spinand_table[] = {
++	SPINAND_INFO("PN26G01A", 0xe1,
++		     NAND_MEMORG(1, 2048, 128, 64, 1024, 21, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_variants,
++					      &update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
++				     pn26g0xa_ecc_get_status)),
++	SPINAND_INFO("PN26G02A", 0xe2,
++		     NAND_MEMORG(1, 2048, 128, 64, 1024, 21, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_variants,
++					      &update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
++				     pn26g0xa_ecc_get_status)),
++};
++
++static int paragon_spinand_detect(struct spinand_device *spinand)
++{
++	u8 *id = spinand->id.data;
++	int ret;
++
++	/* Read ID returns [0][MID][DID] */
++
++	if (id[1] != SPINAND_MFR_PARAGON)
++		return 0;
++
++	ret = spinand_match_and_init(spinand, paragon_spinand_table,
++				     ARRAY_SIZE(paragon_spinand_table),
++				     id[2]);
++	if (ret)
++		return ret;
++
++	return 1;
++}
++
++static const struct spinand_manufacturer_ops paragon_spinand_manuf_ops = {
++	.detect = paragon_spinand_detect,
++};
++
++const struct spinand_manufacturer paragon_spinand_manufacturer = {
++	.id = SPINAND_MFR_PARAGON,
++	.name = "Paragon",
++	.ops = &paragon_spinand_manuf_ops,
++};
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index fbc0423bb4ae..4ea558bd3c46 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -227,6 +227,7 @@ struct spinand_manufacturer {
+ extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
+ extern const struct spinand_manufacturer macronix_spinand_manufacturer;
+ extern const struct spinand_manufacturer micron_spinand_manufacturer;
++extern const struct spinand_manufacturer paragon_spinand_manufacturer;
+ extern const struct spinand_manufacturer toshiba_spinand_manufacturer;
+ extern const struct spinand_manufacturer winbond_spinand_manufacturer;
  
-> Thanks,
-> Mark.
-> 
-
 -- 
-Sincerely yours,
-Mike.
+2.20.1
 
