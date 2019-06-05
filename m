@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F278C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0222C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D30820870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696D920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMqlvux0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUdmC/bv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfFEHFf (ORCPT
+        id S1726841AbfFEHFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:05:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38219 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfFEHFe (ORCPT
+        Wed, 5 Jun 2019 03:05:42 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46621 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbfFEHFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:05:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a186so13590134pfa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:33 -0700 (PDT)
+        Wed, 5 Jun 2019 03:05:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so7608257pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/TiqV4mMjweNF+QK2RThSopUBwGbQaMYJC9n9xdVUsw=;
-        b=FMqlvux0IyVO4Q2gN5is5VAXLp56S9MMHjROii34P7CJIrq248pneh1idjkzxPzSdO
-         y4Eqy/wzHbvhzs8GDgsr4kdWcHYK9YM0/ZO1hUta8o4v4zbl2VGJZvTeVBSmA9ByXw3R
-         gZJZLBz4kejggi8nxi5tqJ8Er+wa83oE7/B/VhGvwhNlqf8VQs1iqO2Z/a286RU19H5n
-         rbfSJYsT4h8qnQQipR0Y6aL2fgQqMAOZA6HhJ1bXSnxrEYRyzxxe4kwkfqgDCW+aEUlJ
-         bCZu+2euB9BrbXow+VX3KQ7WfKVOfcd4t29n98BXEoy3Mw7QKKIpv5qw8M7gdhyBl8AH
-         NSkQ==
+        bh=lnLLdVOlusYEYXI+itkoU5Jat5K5TT8w7N1F2rwe390=;
+        b=XUdmC/bvWolT7eI9YQ2cUFGxT2x+UR40fKEvKzQytbCtCbLnVXn60ri7ZaGHoMx0GJ
+         gHZMwaJ6ULtsNFeV3IRzhIAMLH9gi897sX3lZoyKqf1NqL389JgUcjcA938NcnXuyQxg
+         zyy2gu9IBni0w5Y1sX4HSUvJxt+UaZK+svntZSnv0eWIgJyzhbx0Om8SL83kUCQ4dQlM
+         Up5MZamVlHETacU8vcyB6GOrmyLuxwUD4XYMv1fgLBVVM04j8B1RDH1WDRYwyAhFuFo/
+         SWhV8WXS23ZWu4J6clcwGKBzcCm7bZxM8l3G94IId7hQL6GyPWPH7tOkpvtmA06S5xok
+         yZ4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/TiqV4mMjweNF+QK2RThSopUBwGbQaMYJC9n9xdVUsw=;
-        b=m428mh8taXePxl/ogpXnzfjHR0DSsVSh0qODfN0ijQQlWyGU77ZfsvTeH3hHmP+gr7
-         WPXjBULuEcDNOoHv4GHp9OIilHbvbXkBfeov6S25V2eeQcODXckkXP6EUficyp8A9XOx
-         TqpaEqTOH8meoKifNgFI2hBS8lhwwfIpKNIWOJHO1XH/bnQStUSMKO/5hb6hdmVi/by4
-         6EtDl/99b5veFCITwqgLWY3If82WkNi2w/LPoo10loQaDfbfXywqSl5Km9WUqMGCw3Ak
-         +vQvaV7Ig5n01KABeAPJczm8DLprAgBXHZ5HobNWn82aCjXs5kkbEHRSHUWK8D6kV915
-         1a4g==
-X-Gm-Message-State: APjAAAX9MEZExCzC4Cqvt1scav7CTsbRBNySptHdq55arQFebS9cBGGl
-        nzoQYVPHyF/BUaRGZ2ING4s=
-X-Google-Smtp-Source: APXvYqytj1VIxoAkPQupNhvqAWieA38OdYwJJWqXlQjXPalSXcHewpIiMeC3IL6FgZWct/RVpdiJLQ==
-X-Received: by 2002:a63:6603:: with SMTP id a3mr2510186pgc.239.1559718332791;
-        Wed, 05 Jun 2019 00:05:32 -0700 (PDT)
+        bh=lnLLdVOlusYEYXI+itkoU5Jat5K5TT8w7N1F2rwe390=;
+        b=s3XfI9oiNNQewZFWgkjZjNYbAvF6h/zcX/5I+Na64FO7FGdQjLKS/TMGRBaeqklyPe
+         Zl39YUBWgg9iUL3hHhUZbxt3hQkJ1Hv39KyA/9zysqBimDAR/xxQ4WBayrnwOL/y7hQ6
+         U0JWRSEHJGtndEaspdCAsFQeCIe7Au7kL2CU3ocYL7JxQ+ZZTmc07zG9yjuXXlAtbOmq
+         0kCq5UhV46pY2dodWYNDMqrCUIRYngQWkmXhdrB4pjJMjxx9tatyPrFcUdAtt7dG0Gze
+         tJcEWk6w960LWlJmFLH4bHksq73JBWTtGVNIaErp1n4u+tIz7HWLbE6sih0qUtT98oop
+         sT4Q==
+X-Gm-Message-State: APjAAAVQb+/KyyAP4e4INcy9ybLuY3Hjty9eRRzRriuaICBbF/P5iPJC
+        2RipCUXolTXXRG8csitVgHQ=
+X-Google-Smtp-Source: APXvYqxosOSGK/X48hpPYA1EtlqllcZl4FXcITFWzaZyuWAPxItNSho0urmjq/AA02M7XKgLnhenPQ==
+X-Received: by 2002:a17:902:988b:: with SMTP id s11mr14564567plp.216.1559718337640;
+        Wed, 05 Jun 2019 00:05:37 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.31
+        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 00:05:32 -0700 (PDT)
+        Wed, 05 Jun 2019 00:05:37 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/15] drm/bridge: tc358767: Simplify AUX data write
-Date:   Wed,  5 Jun 2019 00:04:59 -0700
-Message-Id: <20190605070507.11417-8-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 10/15] drm/bridge: tc358767: Add support for address-only I2C transfers
+Date:   Wed,  5 Jun 2019 00:05:02 -0700
+Message-Id: <20190605070507.11417-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190605070507.11417-1-andrew.smirnov@gmail.com>
 References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
@@ -83,34 +83,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify AUX data write by dropping index arithmetic and shifting and
-replacing it with a call to a helper function that does three things:
-
-    1. Copies user-provided data into a write buffer
-    2. Optionally fixes the endianness of the write buffer (not needed
-       on LE hosts)
-    3. Transfers contenst of the write buffer to up to 4 32-bit
-       registers on the chip
-
-Note that separate data endianness fix:
-
-    tmp = (tmp << 8) | buf[i];
-
-that was reserved for DP_AUX_I2C_WRITE looks really strange, since it
-will place data differently depending on the passed user-data
-size. E.g. for a write of 1 byte, data transferred to the chip would
-look like:
-
-[byte0] [dummy1] [dummy2] [dummy3]
-
-whereas for a write of 4 bytes we'd get:
-
-[byte3] [byte2] [byte1] [byte0]
-
-Since there's no indication in the datasheet that I2C write buffer
-should be treated differently than AUX write buffer and no comment in
-the original code explaining why it was done this way, that special
-I2C write buffer transformation was dropped in this patch.
+Transfer size of zero means a request to do an address-only
+transfer. Since the HW support this, we probably shouldn't be just
+ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
+through, since it is supported by the HW as well.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Archit Taneja <architt@codeaurora.org>
@@ -125,93 +101,78 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 59 +++++++++++++++++++------------
- 1 file changed, 37 insertions(+), 22 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index da47d81e7109..260fbcd0271e 100644
+index 90ec33caacbc..7b84fbb72973 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -321,6 +321,32 @@ static int tc_aux_get_status(struct tc_data *tc, u8 *reply)
- 	return 0;
+@@ -145,6 +145,8 @@
+ 
+ /* AUX channel */
+ #define DP0_AUXCFG0		0x0660
++#define DP0_AUXCFG0_BSIZE	GENMASK(11, 8)
++#define DP0_AUXCFG0_ADDR_ONLY	BIT(4)
+ #define DP0_AUXCFG1		0x0664
+ #define AUX_RX_FILTER_EN		BIT(16)
+ 
+@@ -347,6 +349,18 @@ static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
+ 	return size;
  }
  
-+static int tc_aux_write_data(struct tc_data *tc, const void *data,
-+			     size_t size)
++static u32 tc_auxcfg0(struct drm_dp_aux_msg *msg, size_t size)
 +{
-+	u32 auxwdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)] = { 0 };
-+	int ret, i, count = DIV_ROUND_UP(size, sizeof(u32));
++	u32 auxcfg0 = msg->request;
 +
-+	memcpy(auxwdata, data, size);
++	if (size)
++		auxcfg0 |= FIELD_PREP(DP0_AUXCFG0_BSIZE, size - 1);
++	else
++		auxcfg0 |= DP0_AUXCFG0_ADDR_ONLY;
 +
-+	for (i = 0; i < count; i++) {
-+		/*
-+		 * Our regmap is configured as LE
-+		 * for register data, so we need
-+		 * undo any byte swapping that will
-+		 * happened to preserve original
-+		 * byte order.
-+		 */
-+		cpu_to_le32s(&auxwdata[i]);
-+	}
-+
-+	ret = regmap_bulk_write(tc->regmap, DP0_AUXWDATA(0), auxwdata, count);
-+	if (ret)
-+		return ret;
-+
-+	return size;
++	return auxcfg0;
 +}
 +
- static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
+ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
  {
- 	u32 auxrdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)];
-@@ -350,9 +376,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	struct tc_data *tc = aux_to_tc(aux);
- 	size_t size = min_t(size_t, 8, msg->size);
- 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
--	u8 *buf = msg->buffer;
--	u32 tmp = 0;
--	int i = 0;
+@@ -356,9 +370,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	u32 auxstatus;
  	int ret;
  
- 	if (size == 0)
-@@ -362,25 +385,17 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+-	if (size == 0)
+-		return 0;
+-
+ 	ret = tc_aux_wait_busy(tc, 100);
+ 	if (ret)
+ 		return ret;
+@@ -382,8 +393,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	if (ret)
+ 		return ret;
+ 	/* Start transfer */
+-	ret = regmap_write(tc->regmap, DP0_AUXCFG0,
+-			   ((size - 1) << 8) | request);
++	ret = regmap_write(tc->regmap, DP0_AUXCFG0, tc_auxcfg0(msg, size));
  	if (ret)
  		return ret;
  
--	if (request == DP_AUX_I2C_WRITE || request == DP_AUX_NATIVE_WRITE) {
--		/* Store data */
--		while (i < size) {
--			if (request == DP_AUX_NATIVE_WRITE)
--				tmp = tmp | (buf[i] << (8 * (i & 0x3)));
--			else
--				tmp = (tmp << 8) | buf[i];
--			i++;
--			if (((i % 4) == 0) || (i == size)) {
--				ret = regmap_write(tc->regmap,
--						   DP0_AUXWDATA((i - 1) >> 2),
--						   tmp);
--				if (ret)
--					return ret;
--				tmp = 0;
--			}
--		}
--	} else if (request != DP_AUX_I2C_READ &&
--		   request != DP_AUX_NATIVE_READ) {
-+	switch (request) {
-+	case DP_AUX_NATIVE_READ:
-+	case DP_AUX_I2C_READ:
-+		break;
-+	case DP_AUX_NATIVE_WRITE:
-+	case DP_AUX_I2C_WRITE:
-+		ret = tc_aux_write_data(tc, msg->buffer, size);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	default:
- 		return -EINVAL;
- 	}
+@@ -397,8 +407,14 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
  
+ 	if (auxstatus & AUX_TIMEOUT)
+ 		return -ETIMEDOUT;
+-
+-	size = FIELD_GET(AUX_BYTES, auxstatus);
++	/*
++	 * For some reason address-only DP_AUX_I2C_WRITE (MOT), still
++	 * reports 1 byte transferred in its status. To deal we that
++	 * we ignore aux_bytes field if we know that this was an
++	 * address-only transfer
++	 */
++	if (size)
++		size = FIELD_GET(AUX_BYTES, auxstatus);
+ 	msg->reply = FIELD_GET(AUX_STATUS, auxstatus);
+ 
+ 	switch (request) {
 -- 
 2.21.0
 
