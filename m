@@ -2,101 +2,141 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D1EC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D754DC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43AD206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDDB206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559729666;
+	bh=APkitUDO6NhneEPGqH7jNdEURDsXddpavOnGIvm6jws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JqZ5IRsTM6hZ8xjwxrr1zPuo/KtpzNolzv17pZsVUMaXN5Jm9mpfqJLnAgXMLobik
+	 BkYfOUHOsvqlsAHdML1OVd7wMKuQnA1Rc8p/yeQEHniwpCpkh+UH1h9j+wzUNyP84f
+	 iy6AVovVYM5lB9AcyYWir510xSGVR8dTkh7WCYuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfFEKNp (ORCPT
+        id S1727255AbfFEKO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:13:45 -0400
-Received: from verein.lst.de ([213.95.11.211]:41960 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfFEKNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:13:44 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id 5F8F468B05; Wed,  5 Jun 2019 12:13:17 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 12:13:17 +0200
-From:   Torsten Duwe <duwe@lst.de>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 5 Jun 2019 06:14:26 -0400
+Received: from casper.infradead.org ([85.118.1.10]:43670 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfFEKOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:14:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=m0sIXLFzSAfIrEXaXFue9blbUsqtX9lLblTE1dAG10k=; b=C4OhBAaLDWrRiLxo4cZx9Sz+lr
+        c5XBP6tmeYcyBwSgOU0y//iH5IBy40CYjNcoNJ08jMz0sgg1ujjQjkrbdywwwBrwNAe5Vw80XjdWE
+        Q7sbK7CQVQ64wrlbk2N0b6bxKTkfDUWZC+j13o5Ub8apmU7xQDTXRwiRarsjFnG0WxM5rMqlVMDSC
+        l6r33NC2X0lAp7TCg0ebmB4FUKMRrTKkMqEYHroD8LXsdzg6CdiVQ+u2p+2NzZ0JBHLOwnueSsexu
+        UHnZubC4750nf8zCCDFd+ot7HNH2Xl7uMuQe+Yb5KrrnbfSGMJaiWmKDenh4HRuG79/ohFtcn9x/e
+        OtMZNOBQ==;
+Received: from [179.182.172.34] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYSvz-0001tS-17; Wed, 05 Jun 2019 10:14:19 +0000
+Date:   Wed, 5 Jun 2019 07:14:13 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Message-ID: <20190605101317.GA9345@lst.de>
-References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+Message-ID: <20190605071413.779bd821@coco.lan>
+In-Reply-To: <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+        <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+        <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+        <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+        <20190604134213.GA26263@kroah.com>
+        <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+        <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+        <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+        <20190605051040.GA22760@kroah.com>
+        <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
-> On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
-> >
-> > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-> > the I2C controlling signals are connected to I2C0 bus. eDP output goes
-> > to an Innolux N116BGE panel.
-> >
-> > Enable it in the device tree.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> > ---
-> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
-> >  1 file changed, 61 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > index 0ec46b969a75..a0ad438b037f 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > @@ -65,6 +65,21 @@
-> >                 };
-> >         };
-> >
-> > +       panel: panel {
-> > +               compatible ="innolux,n116bge", "simple-panel";
+Em Tue, 04 Jun 2019 22:22:05 -0700
+Joe Perches <joe@perches.com> escreveu:
+
+> On Wed, 2019-06-05 at 07:10 +0200, Greg KH wrote:
+> > On Wed, Jun 05, 2019 at 01:10:41PM +0900, Masahiro Yamada wrote:  
+> > > On Wed, Jun 5, 2019 at 3:21 AM Arnd Bergmann <arnd@arndb.de> wrote:  
+> []
+> > > This means we cannot reliably use uint{8,16,32,64}_t in UAPI headers.  
+> > 
+> > We should not be doing that as they are in the userspace "namespace" of
+> > variables, not in the kernel namespace.  We've been over this many times
+> > in the past :(  
 > 
-> It's still "simple-panel". I believe I already mentioned that Rob
-> asked it to be edp-connector.
+> Just not very successfully...
 > 
-For which there are neither bindings nor drivers.
+> $ git grep -w -P 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
+> 342
 
-Is anybody seriously proposing to hold back support for existing
-(open source!) hardware in favour of an *imaginable* *possibly* better
-solution? Especially when this exact line is already used in some other places?
-(there's a space missing btw...)
 
-I'm more than glad to follow any constructive improvements towards better
-modularity. However there were none so far, and on top of that, it's a laptop.
-I see little advantage in mentioning an internal connector when the panel
-connected is always the same.
+> $ git grep -w -P --name-only 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
+> 13
 
-FWIW, Rob should also have received these patches.
+Out of curiosity, I decided to check those occurrences...
 
-	Torsten
+About half of those 13 files are false-positives:
 
+- bpf.h, pps.h and amdgpu_drm.h use those int types only inside comments;
+- drm.h and coda.h have their own typedefs for those int types;
+- vmwgfx_drm.h includes drm.h (which has the typedefs).
+
+So, only 6 headers actually use posix types in a way that it seems that 
+it would require including stdint.h:
+
+- include/uapi/linux/fuse.h
+
+  This one explicitly includes stdint.h if !__KERNEL__
+
+- include/uapi/linux/netfilter_bridge/ebtables.h,
+  include/uapi/linux/sctp.h,
+  include/uapi/scsi/scsi_netlink.h and
+  include/uapi/scsi/scsi_netlink_fc.h
+
+  They include linux/types.h unconditionally, relying on
+  scripts/headers_install.sh to remove it;
+
+- include/uapi/scsi/scsi_bsg_fc.h
+
+  It doesn't include anything. In other words, it assumes that the c file 
+  would include either linux/types.h or stdint.h.
+
+---
+
+Not saying that this is a good idea, but, as we have already a script that
+it is meant to sanitize uAPI header files when installing them
+(scripts/headers_install.sh), one could modify it (or convert to perl/python)
+in a way that it would be doing something like[1]:
+
+	sed -E
+		...
+		-e 's,//(.*),/* \1 */,'
+
+[1] the actual rule should be more complex than that, in order to avoid 
+replacing // inside /**/ comments.
+
+Thanks,
+Mauro
