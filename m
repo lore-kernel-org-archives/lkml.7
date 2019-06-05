@@ -2,186 +2,142 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D671C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C497C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140B320717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E63320717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfFEJWY (ORCPT
+        id S1726959AbfFEJZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:22:24 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56198 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfFEJWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:22:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AF22A78;
-        Wed,  5 Jun 2019 02:22:23 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 273193F690;
-        Wed,  5 Jun 2019 02:22:23 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 77FAC682572; Wed,  5 Jun 2019 10:22:21 +0100 (BST)
-Date:   Wed, 5 Jun 2019 10:22:21 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v1 1/2] drm/komeda: Add rotation support on Komeda driver
-Message-ID: <20190605092221.GS15316@e110455-lin.cambridge.arm.com>
-References: <1555902945-2877-1-git-send-email-lowry.li@arm.com>
- <1555902945-2877-2-git-send-email-lowry.li@arm.com>
+        Wed, 5 Jun 2019 05:25:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34435 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfFEJZT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:25:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j24so22508660ljg.1;
+        Wed, 05 Jun 2019 02:25:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7rWHLrl9t6asB00nJyBgt2B48bwUF9nZQljQEHED7O8=;
+        b=jBbVj2uu+G6EbGWBtUv3ILe3CKAmHU65jeIFUialus9mihlyjyH5b9bE8VJPlrA8oF
+         wgvUYPwVRKMre9fRYDVpY0vWiHaXLZ8K1l8S6sNRLx2V6Fcj2nEPcjvFJ8jxn2iZODN6
+         OZIh8yqjFzKYiBOp/rE171thsBHRvk3wmTYhiP1PfZ5NtlEq5tDoGCMNc4MA3p8a07yd
+         otE9auPRbm6t2bphZzbFiXe3OxVrHNG3sdgE+inR314eGMkqcRxH06fmmSnlRGnVRF6t
+         lnK/M7WLiPCUVq/O/4Pz3e0x0XbaSeslpuDHZa9SGKavZWyU6VA9nnVFPelCnNDblY7Y
+         O4bA==
+X-Gm-Message-State: APjAAAVFHM8AQL1GT/kA4mTQZEVARh4xCT8jQiRwp4CUeakY60xa1ufy
+        8ES+68oWzTZ+mUW9rYi9ANaifQxZm8uaUjjyv74=
+X-Google-Smtp-Source: APXvYqzQU8N2qZ5wGLc7xREri4uIkFOSmGa+9wlklQ/5UyzL6zyC0h9JKEO0oS4YKKuvodKz3w7w7nUnDTtVy86nhnQ=
+X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr7918047ljr.145.1559726717188;
+ Wed, 05 Jun 2019 02:25:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1555902945-2877-2-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Jun 2019 11:25:05 +0200
+Message-ID: <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
+Subject: Re: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lowry,
+Hi Shimoda-san,
 
-On Mon, Apr 22, 2019 at 04:16:26AM +0100, Lowry Li (Arm Technology China) wrote:
-> - Adds rotation property to plane.
-> - Komeda display rotation support diverges from the specific formats,
-> so need to check the user required rotation type with the format caps
-> and reject the commit if it can not be supported.
-> - In the layer validate flow, sets the rotation value to the layer
-> state. If r90 or r270, swap the width and height of the data flow
-> for next stage.
-> 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h  | 11 +++++++++++
->  .../gpu/drm/arm/display/komeda/komeda_pipeline_state.c   |  7 +++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_plane.c        | 16 ++++++++++++++++
->  3 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> index bc3b2df36..96de22e 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> @@ -79,6 +79,17 @@ struct komeda_format_caps_table {
->  
->  extern u64 komeda_supported_modifiers[];
->  
-> +static inline const char *komeda_get_format_name(u32 fourcc, u64 modifier)
-> +{
-> +	struct drm_format_name_buf buf;
-> +	static char name[64];
-> +
-> +	snprintf(name, sizeof(name), "%s with modifier: 0x%llx.",
-> +		 drm_get_format_name(fourcc, &buf), modifier);
-> +
-> +	return name;
-> +}
+On Wed, Jun 5, 2019 at 6:54 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> The powered flag should be set for any other phys anyway. Otherwise,
+> after we have revised the device tree for the usb phy, the following
+> warning happened during a second system suspend. So, this patch fixes
+> the issue.
+>
+> [   56.026531] unbalanced disables for USB20_VBUS0
+> [   56.031108] WARNING: CPU: 3 PID: 513 at drivers/regulator/core.c:2593 _regula
+> tor_disable+0xe0/0x1c0
+> [   56.040146] Modules linked in: rcar_du_drm rcar_lvds drm_kms_helper drm drm_p
+> anel_orientation_quirks vsp1 videobuf2_vmalloc videobuf2_dma_contig videobuf2_me
+> mops videobuf2_v4l2 videobuf2_common videodev snd_soc_rcar renesas_usbhs snd_soc
+> _audio_graph_card media snd_soc_simple_card_utils crct10dif_ce renesas_usb3 snd_
+> soc_ak4613 rcar_fcp pwm_rcar usb_dmac phy_rcar_gen3_usb3 pwm_bl ipv6
+> [   56.074047] CPU: 3 PID: 513 Comm: kworker/u16:19 Not tainted 5.2.0-rc3-00001-
+> g5f20a19 #6
+> [   56.082129] Hardware name: Renesas Salvator-X board based on r8a7795 ES2.0+ (
+> DT)
+> [   56.089524] Workqueue: events_unbound async_run_entry_fn
+> [   56.094832] pstate: 40000005 (nZcv daif -PAN -UAO)
+> [   56.099617] pc : _regulator_disable+0xe0/0x1c0
+> [   56.104054] lr : _regulator_disable+0xe0/0x1c0
+> [   56.108489] sp : ffff0000121c3ae0
+> [   56.111796] x29: ffff0000121c3ae0 x28: 0000000000000000
+> [   56.117102] x27: 0000000000000000 x26: ffff000010fe0e60
+> [   56.122407] x25: 0000000000000002 x24: 0000000000000001
+> [   56.127712] x23: 0000000000000002 x22: ffff8006f99d4000
+> [   56.133017] x21: ffff8006f99cc000 x20: ffff8006f9846800
+> [   56.138322] x19: ffff8006f9846800 x18: ffffffffffffffff
+> [   56.143626] x17: 0000000000000000 x16: 0000000000000000
+> [   56.148931] x15: ffff0000112f96c8 x14: ffff0000921c37f7
+> [   56.154235] x13: ffff0000121c3805 x12: ffff000011312000
+> [   56.159540] x11: 0000000005f5e0ff x10: ffff0000112f9f20
+> [   56.164844] x9 : ffff0000112d3018 x8 : 00000000000001ad
+> [   56.170149] x7 : 00000000ffffffcc x6 : ffff8006ff768180
+> [   56.175453] x5 : ffff8006ff768180 x4 : 0000000000000000
+> [   56.180758] x3 : ffff8006ff76ef10 x2 : ffff8006ff768180
+> [   56.186062] x1 : 3d2eccbaead8fb00 x0 : 0000000000000000
+> [   56.191367] Call trace:
+> [   56.193808]  _regulator_disable+0xe0/0x1c0
+> [   56.197899]  regulator_disable+0x40/0x78
+> [   56.201820]  rcar_gen3_phy_usb2_power_off+0x3c/0x50
+> [   56.206692]  phy_power_off+0x48/0xd8
+> [   56.210263]  usb_phy_roothub_power_off+0x30/0x50
+> [   56.214873]  usb_phy_roothub_suspend+0x1c/0x50
+> [   56.219311]  hcd_bus_suspend+0x13c/0x168
+> [   56.223226]  generic_suspend+0x4c/0x58
+> [   56.226969]  usb_suspend_both+0x1ac/0x238
+> [   56.230972]  usb_suspend+0xcc/0x170
+> [   56.234455]  usb_dev_suspend+0x10/0x18
+> [   56.238199]  dpm_run_callback.isra.6+0x20/0x68
+> [   56.242635]  __device_suspend+0x110/0x308
+> [   56.246637]  async_suspend+0x24/0xa8
+> [   56.250205]  async_run_entry_fn+0x40/0xf8
+> [   56.254210]  process_one_work+0x1e0/0x320
+> [   56.258211]  worker_thread+0x40/0x450
+> [   56.261867]  kthread+0x124/0x128
+> [   56.265094]  ret_from_fork+0x10/0x18
+> [   56.268661] ---[ end trace 86d7ec5de5c517af ]---
+> [   56.273290] phy phy-ee080200.usb-phy.10: phy poweroff failed --> -5
+>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 549b6b55b005 ("phy: renesas: rcar-gen3-usb2: enable/disable independent irqs")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Can you roll the content of this function inside the if () {.....} part? We
-only have one use for it, I don't see the need to split it into a separate
-function.
+Thank you, this seems to fix the warning, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-With that: Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+However, the other imbalance (phy-ee080200.usb-phy.6 enabling its
+regulator during each system resume phase, but never touching it
+otherwise) is still present.
 
-Best regards,
-Liviu
+Gr{oetje,eeting}s,
 
-> +
->  const struct komeda_format_caps *
->  komeda_get_format_caps(struct komeda_format_caps_table *table,
->  		       u32 fourcc, u64 modifier);
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> index 9b29e9a..8c133e4 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> @@ -317,6 +317,13 @@ struct komeda_pipeline_state *
->  	/* update the data flow for the next stage */
->  	komeda_component_set_output(&dflow->input, &layer->base, 0);
->  
-> +	/*
-> +	 * The rotation has been handled by layer, so adjusted the data flow for
-> +	 * the next stage.
-> +	 */
-> +	if (drm_rotation_90_or_270(st->rot))
-> +		swap(dflow->in_h, dflow->in_w);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-> index 14d6861..5e5bfdb 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-> @@ -9,12 +9,14 @@
->  #include <drm/drm_plane_helper.h>
->  #include "komeda_dev.h"
->  #include "komeda_kms.h"
-> +#include "komeda_framebuffer.h"
->  
->  static int
->  komeda_plane_init_data_flow(struct drm_plane_state *st,
->  			    struct komeda_data_flow_cfg *dflow)
->  {
->  	struct drm_framebuffer *fb = st->fb;
-> +	const struct komeda_format_caps *caps = to_kfb(fb)->format_caps;
->  
->  	memset(dflow, 0, sizeof(*dflow));
->  
-> @@ -35,6 +37,15 @@
->  	dflow->in_w = st->src_w >> 16;
->  	dflow->in_h = st->src_h >> 16;
->  
-> +	dflow->rot = drm_rotation_simplify(st->rotation, caps->supported_rots);
-> +	if (!has_bits(dflow->rot, caps->supported_rots)) {
-> +		DRM_DEBUG_ATOMIC("rotation(0x%x) isn't supported by %s.\n",
-> +				 dflow->rot,
-> +				 komeda_get_format_name(caps->fourcc,
-> +							fb->modifier));
-> +		return -EINVAL;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -233,6 +244,11 @@ static int komeda_plane_add(struct komeda_kms_dev *kms,
->  
->  	drm_plane_helper_add(plane, &komeda_plane_helper_funcs);
->  
-> +	err = drm_plane_create_rotation_property(plane, DRM_MODE_ROTATE_0,
-> +						 layer->supported_rots);
-> +	if (err)
-> +		goto cleanup;
-> +
->  	err = drm_plane_create_alpha_property(plane);
->  	if (err)
->  		goto cleanup;
-> -- 
-> 1.9.1
-> 
+                        Geert
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
