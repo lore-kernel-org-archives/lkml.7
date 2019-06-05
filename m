@@ -2,70 +2,115 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE49C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A38C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57C42083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30ABF2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1d4XTzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfFEWvE (ORCPT
+        id S1726722AbfFEWvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:51:04 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:38138 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFEWvD (ORCPT
+        Wed, 5 Jun 2019 18:51:08 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39286 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFEWvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:51:03 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-64-161-nat.elisa-mobile.fi [85.76.64.161])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id DAC592002F;
-        Thu,  6 Jun 2019 01:50:59 +0300 (EEST)
-Date:   Thu, 6 Jun 2019 01:50:59 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-Message-ID: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+        Wed, 5 Jun 2019 18:51:07 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g9so95249plm.6;
+        Wed, 05 Jun 2019 15:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m6NM6vRBvsiR62/PiVaQJ+iB4s1JWoehmtKqPMKeEx8=;
+        b=S1d4XTzSyWmOYkqplUx/0vq7Xx0Je8vhBd8UGJUrNr6Sq/4+ToclB0jZS0YTUOVqrv
+         Cng7+tgqWmZPqtDfkJ4Bg0M0HgDMjID8suKpCT4IUPrzoB+fUWZtLUH2PW+usNe41SLt
+         5r87ueubtDiWckZw2uS76UKIGr7ghn3LKLQYDjLlf6tQLKYezTByY7DznzAVlxMMYaSQ
+         265frOnEp4l/7aapqyX/cHWEshw4dcMehgDWHuWO8VEVT5P4ZupyXjaWeJC+Nd6AtsVb
+         Q2QAiIk8fZjN1Fq5OrbHQzwmpOroFbB3rFMtvX6GGOabgkOJSnlYjcSArm5LHojPhfd6
+         RwiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m6NM6vRBvsiR62/PiVaQJ+iB4s1JWoehmtKqPMKeEx8=;
+        b=n0/vK6Hzx8yLco8m1+X0VsZGwMeut8LAGhLSqqaWV4SinZZxPreKRUxmvD83gS2Umb
+         TrqkP1hQm1nvnV/HpKRlpn5+G1wJp9cia3Wfpvax7tCS4ERXXr+zeIavKb2CPtewTpFy
+         2MERJuNzDuxJS857EsGHMh8NgzwoQgvOZiItML1yr34EwKV848p9rTTchkRGD9gxmOdm
+         NeWwrJK/RcJ++g6itTYMNSixKa14kOXskwUkAAE+tG8lf5iUUu2S3Bo0AWW9Q3h8qb7c
+         2puL4YKdrv6jY0jMXZO1hVJFXEPciIfUe5RVMpVEZSJRVIBFXUfSa0S7b5ImQcnkyVws
+         Jn8Q==
+X-Gm-Message-State: APjAAAXe8QJJ/gExy7ea2VDudjzdUvN80IQG501iIvnB+ljC+95UxsB3
+        MKSjPbY3HquVeR6HnLdM3t9MIRkA
+X-Google-Smtp-Source: APXvYqxgcKHEEInuS4NNgzBp8UXPMb4hw072HDdBCdISx0NH00LSY0tF4dh91lz6fWmou4XVJ3dUCQ==
+X-Received: by 2002:a17:902:6ac4:: with SMTP id i4mr44287074plt.75.1559775066982;
+        Wed, 05 Jun 2019 15:51:06 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c142sm6047pfb.171.2019.06.05.15.51.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 15:51:06 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 15:51:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] watchdog/hpwdt: cleanups and kdump accommodations
+Message-ID: <20190605225105.GB25183@roeck-us.net>
+References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
+ <20190605223102.GA23382@anatevka>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190605223102.GA23382@anatevka>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 05, 2019 at 04:31:03PM -0600, Jerry Hoemann wrote:
+> On Fri, May 17, 2019 at 02:59:37PM -0600, Jerry Hoemann wrote:
+> > First two changes makes hpwdt more generic.
+> > Next two changes make hpwdt work better with kdump.
+> > 
+> 
+> Hi Guenter,
+> 
+> Did you have feedback on this patch set?
+> 
+I have been out on vacation, and I am still digging myself out of a big hole.
 
-When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN does
-not work anymore:
+Guenter
 
-[   42.004303] b43legacy-phy0: Loading firmware version 0x127, patch level 14 (2005-04-18 02:36:27)
-[   42.184837] b43legacy-phy0 debug: Chip initialized
-[   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit DMA mask
-
-The same happens with the current mainline.
-
-Bisected to:
-
-	commit 65a21b71f948406201e4f62e41f06513350ca390
-	Author: Christoph Hellwig <hch@lst.de>
-	Date:   Wed Feb 13 08:01:26 2019 +0100
-
-	    powerpc/dma: remove dma_nommu_dma_supported
-
-	    This function is largely identical to the generic version used
-	    everywhere else.  Replace it with the generic version.
-
-	    Signed-off-by: Christoph Hellwig <hch@lst.de>
-	    Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-	    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-
-A.
+> Thanks
+> 
+> Jerry
+> 
+> 
+> > 
+> > Jerry Hoemann (6):
+> >   watchdog/hpwdt: Stop hpwdt on unregister.
+> >   watchdog/hpwdt: Advertize max_hw_heartbeat_ms
+> >   watchdog/hpwdt: Have core ping watchdog.
+> >   watchdog/hpwdt: Add module parameter kdumptimeout.
+> >   watchdog/hpwdt: Update documentation
+> >   watchdog/hpwdt: Reflect changes
+> > 
+> >  Documentation/watchdog/hpwdt.txt |  4 +++
+> >  drivers/watchdog/hpwdt.c         | 55 ++++++++++++++++++++++++++++++----------
+> >  2 files changed, 45 insertions(+), 14 deletions(-)
+> > 
+> > -- 
+> > 1.8.3.1
+> 
+> -- 
+> 
+> -----------------------------------------------------------------------------
+> Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+> -----------------------------------------------------------------------------
