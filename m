@@ -2,109 +2,91 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FA5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ADCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA262075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xSvGQ9SI"
+	by mail.kernel.org (Postfix) with ESMTP id 5F9DD206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfFEQT6 (ORCPT
+        id S1728707AbfFEQWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:19:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52097 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfFEQTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:19:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f10so2871720wmb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 09:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=REJ+F/EoJF8y7ON3vJSgKlf1KSRuyaPRK39EHGB3NLk=;
-        b=xSvGQ9SIw52V+xJMZSJu1t5JISloHTwQ/WcAqny7yeQQZs1S1UcR0Y4sA80dMU38y2
-         GM6DmHjk9PmL6JZaXLxXOBZdJrwYcAju226VUJyhkORsLc2qHDvJDwNPAOuow/WANc+E
-         oUSD+9NxBoOjnoS3Po5Z0EKMmRNKI7L6wDIBjxmxNVfNcuift44HPNGuHNE7Z9iOju1K
-         K8ZqdQyUtq/DUKZ0/ICjCuEL0kPB8rNlVPDATjnZAiYnBuCeYFptndmVC6KLQzkHMyiy
-         f7auDVsLTJ8PxPn+kGauN3fZHPjISBgiclFUj9Ek14U5Yy7ebiCeRSNUSX8MwOZ6yUrE
-         0p3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=REJ+F/EoJF8y7ON3vJSgKlf1KSRuyaPRK39EHGB3NLk=;
-        b=gStFvjRsG21YzyDnqe06d/o36+1jXbfZ1P1TcNJeQXn5vVyF/aOPSNV9rfzlmqHI9G
-         y9f7I0meUBuUEsH//HjnkDmnUXY1R0eC8LnW3bkn/a352P4nfNR/UxKJwFbN17hhkPJK
-         ibraClI+h9NgII5Ww/B1eeuh1HLFN5X0cL/VYQqaScL7S9700uSFDBIhpxGV4IBhWUFL
-         n1yhGQuZlEgUokYcNN/xChMc3Db/M4dvSNr/+kBTHeyyTOysOqy62IuZsHaCJP2nxGlT
-         sj+2TL87uCGW1QOoPUjyTpROGUS5EqUDhXXTwAoknaGfe4WfgCO343yf0wBrvfEWurXE
-         TyfA==
-X-Gm-Message-State: APjAAAV9Qbb9SR5bo6DNmtoQWolMFQAgftcek+FxH0fo7JNGgIomlDs8
-        R51dnh5Z0Cl7mIw2m6+sxW2fXA==
-X-Google-Smtp-Source: APXvYqwmf+UWLALwoDRIoedcMvv5gTJrZReDlb+XPS5jcOrSEieCWO3wlZSFz74KYV9MywZPz2GGww==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr20301333wml.97.1559751582725;
-        Wed, 05 Jun 2019 09:19:42 -0700 (PDT)
-Received: from mjourdan-pc.numericable.fr (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
-        by smtp.gmail.com with ESMTPSA id 95sm40062336wrk.70.2019.06.05.09.19.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 09:19:42 -0700 (PDT)
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH v8 3/3] MAINTAINERS: Add meson video decoder
-Date:   Wed,  5 Jun 2019 18:18:58 +0200
-Message-Id: <20190605161858.29372-4-mjourdan@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190605161858.29372-1-mjourdan@baylibre.com>
-References: <20190605161858.29372-1-mjourdan@baylibre.com>
+        Wed, 5 Jun 2019 12:22:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58560 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726670AbfFEQWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:22:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 537BDAD81;
+        Wed,  5 Jun 2019 16:22:07 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 11:22:04 -0500
+From:   Goldwyn Rodrigues <rgoldwyn@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        lsf-pc@lists.linux-foundation.org,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: [Lsf-pc] [LSF/MM TOPIC] The end of the DAX experiment
+Message-ID: <20190605162204.jzou5hry5exly5wx@fiona>
+References: <CAPcyv4jyCDJTpGZB6qVX7_FiaxJfDzWA1cw8dfPjHM2j3j3yqQ@mail.gmail.com>
+ <20190214134622.GG4525@dhcp22.suse.cz>
+ <CAPcyv4gxFKBQ9eVdn+pNEzBXRfw6Qwfmu21H2i5uj-PyFmRAGQ@mail.gmail.com>
+ <20190214191013.GA3420@redhat.com>
+ <CAPcyv4jLTdJyTOy715qvBL_j_deiLoBmu_thkUnFKZKMvZL6hA@mail.gmail.com>
+ <20190214200840.GB12668@bombadil.infradead.org>
+ <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for the meson video decoder for amlogic SoCs.
+Hi Dan/Jerome,
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 12:20 14/02, Dan Williams wrote:
+> On Thu, Feb 14, 2019 at 12:09 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Thu, Feb 14, 2019 at 11:31:24AM -0800, Dan Williams wrote:
+> > > On Thu, Feb 14, 2019 at 11:10 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > I am just again working on my struct page mapping patchset as well as
+> > > > the generic page write protection that sits on top. I hope to be able
+> > > > to post the v2 in couple weeks. You can always look at my posting last
+> > > > year to see more details.
+> > >
+> > > Yes, I have that in mind as one of the contenders. However, it's not
+> > > clear to me that its a suitable fit for filesystem-reflink. Others
+> > > have floated the 'page proxy' idea, so it would be good to discuss the
+> > > merits of the general approaches.
+> >
+> > ... and my preferred option of putting pfn entries in the page cache.
+> 
+> Another option to include the discussion.
+> 
+> > Or is that what you meant by "page proxy"?
+> 
+> Page proxy would be an object that a filesystem could allocate to
+> point back to a single physical 'struct page *'. The proxy would
+> contain an override for page->index.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b8fbf41865c2..7cf3ece9f0cb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10222,6 +10222,14 @@ S:	Maintained
- F:	drivers/mtd/nand/raw/meson_*
- F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
- 
-+MESON VIDEO DECODER DRIVER FOR AMLOGIC SOCS
-+M:	Maxime Jourdan <mjourdan@baylibre.com>
-+L:	linux-media@lists.freedesktop.org
-+L:	linux-amlogic@lists.infradead.org
-+S:	Supported
-+F:	drivers/staging/media/meson/vdec/
-+T:	git git://linuxtv.org/media_tree.git
-+
- METHODE UDPU SUPPORT
- M:	Vladimir Vid <vladimir.vid@sartura.hr>
- S:	Maintained
+Was there any outcome on this and its implementation? I am specifically
+interested in this for DAX support on btrfs/CoW: The TODO comment on
+top of dax_associate_entry() :)
+
+If there are patches/git tree I could use to base my patches on, it would
+be nice.
+
 -- 
-2.21.0
-
+Goldwyn
