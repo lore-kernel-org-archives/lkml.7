@@ -2,154 +2,98 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F4C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596FEC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44F4206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3127C2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNXoPmjl"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MGH5mdQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfFEThH (ORCPT
+        id S1726631AbfFETlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:37:07 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33451 "EHLO
+        Wed, 5 Jun 2019 15:41:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34921 "EHLO
         mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEThG (ORCPT
+        with ESMTP id S1726305AbfFETlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:37:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 14so19454047qtf.0;
-        Wed, 05 Jun 2019 12:37:06 -0700 (PDT)
+        Wed, 5 Jun 2019 15:41:11 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d23so19453320qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O2csJP2e8mT2YZIAsKNMmzTnJtLz0nsfolBkD/FQ0NM=;
-        b=iNXoPmjllI2/CbhIrRsJHG8jG71wQBxSAfnaOyDnT60rEsaUMvW4f2k91xQ4XWIdwC
-         Pm8i3V7NI4ynV+7ThzEN/bQG6dRXwBu8HWxm4KgCHvXdxm2JGDjVv10rGuOQNSMKLvld
-         T5bm8j+sYOoBio994RCOeI2lrTUBnLVTA/wmqp0sO25fY+FAE30GFF+tSVNlsoZlH2/2
-         qhjojyuQjL7qtOJ16BA4aDRB+T7IFnaK4IBsaTjwTLshCovTfnLTCXJlv7hTpQnd0WLt
-         Q+Z8pMLnPOm5kGo/12ntVIQ0QSuDior4Mb1OvxNZW3NQhFN1aVkiwTdqXlhbcocqs5pU
-         yFQg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KIj/CoUDc48PNaB+kzyB9ex343ExxV3vBCdcElq4Uow=;
+        b=MGH5mdQm9xUfkFdxoNyIb94Yhmw78TprqBWKyhsEQo2yYyyDa2lNQQx2da7TA6Lcuu
+         C4FfNDC1aNHvaL9RAXB27MqIuxGyCyH2zFM26XyexO+WeAApzjws2WsaylkE+yvZ1ulM
+         ebZLuL3BF/kXnUZv/muP43AVsfIHHFgLP5sxVnJm+/hOIk1PinaRZ4mlPO3X8D5gAXSe
+         vzWRI3ujSnckUC291z/ihMbiG97r4eO0cMT/3RG6PupXMT/a15HRF1TSt3EzZaSrwETR
+         sLtMuh0kPGnUK1GI3IxaPciELsF7aEOC4+cwv7dr0atM2z4xkMwGVnebapetMcYEU6WM
+         y9DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O2csJP2e8mT2YZIAsKNMmzTnJtLz0nsfolBkD/FQ0NM=;
-        b=BEa43mN8TbuOG5zncDHEI+tO2x1UDUo/Ny7bmcZHIpxlc8pxhku5vBWVHLEk/N+L8t
-         fSBGXx3Q+QRah6UWay6qU831sB44Bb8unrLgkJ0vUIdLz2qlOiRw4MgHoilc2jj9H/xd
-         uEOKMd0HGmxl2FnettwMohwavUnygcQ9/fIW9N8Haw6AF+mJHsnKFuDHfwqq2DQzhiCh
-         aWmXu44v4SxBcF6sUgJ/hmJ99/jhGHD/mMAkj6Nnk8D/ds/sfWPsWOHD/gcZ2JwCV9JU
-         e1LgOekDPvJ6+IbzzSYJfYn3TbieKZLknQ+6k1E04lSDPSXO6Q2k6B0r75dIolB/HFhz
-         jOmA==
-X-Gm-Message-State: APjAAAV4pJztrcLX2eAITXt3LfrwByxrJKk2Jxvaq1Vzi70K1svZDMJ0
-        EOkxVb3XVYHrWs7NAUz2Andl5KQQPxDeWrK0qW0=
-X-Google-Smtp-Source: APXvYqzwXd5uLGh2CZqKB9dUHEats+uYz9LtoxSTgwyhTvw7ooC6Liz3aa7R40tQxs4RPSH9v+WOukKDMKWx2vf72Lo=
-X-Received: by 2002:a0c:95af:: with SMTP id s44mr7864192qvs.162.1559763425613;
- Wed, 05 Jun 2019 12:37:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190605191707.24429-1-krzesimir@kinvolk.io>
-In-Reply-To: <20190605191707.24429-1-krzesimir@kinvolk.io>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 5 Jun 2019 12:36:54 -0700
-Message-ID: <CAEf4BzYUg+FbBfCe-DTLrrT07ifK49NRFhLWye+Ej1JiFYwioQ@mail.gmail.com>
-Subject: Re: [BPF v1] tools: bpftool: Fix JSON output when lookup fails
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     bpf <bpf@vger.kernel.org>, Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        Okash Khawaja <osk@fb.com>,
-        David Calavera <david.calavera@gmail.com>,
-        Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KIj/CoUDc48PNaB+kzyB9ex343ExxV3vBCdcElq4Uow=;
+        b=GX1X2b0nOhcGqJm5iF+AAoLH56xJwW/4lGov5cb2zoEFDaua0qsBxFJfK4tBTyJRbt
+         uTVnUIYnNfoZ1FZeRHl7WFyPNrPdDjEjNOTO6RblZoldqNXFLe/gEAPVl3GxqwXjpwNX
+         OZWqj6ejnICzYMPUXvrSZX/TBWMpBjCWNWsuojgdOiide/CU795mREaKQA3Jlpho4Fr4
+         kQPukHLQtjUw4n4WM3c7FM+Xu0yQVqzPvNslr9DFGhRym/QO7OQbxO2cvHbXagFrXiQB
+         4vye9AF9hMkuSQUehKKsA1FA1pXp9JAsPLzlyFDDvKh1BUoG63gxQZerf6aTwCxf2dLN
+         XrTg==
+X-Gm-Message-State: APjAAAUcFSFWhtweJfvL1FFpe3RT9KaK6q6396PhTg72KpbXynrZtbmO
+        YOX5cDs1MZjCdwm7q5cuipNLEA==
+X-Google-Smtp-Source: APXvYqxpv6VrdKJWfT/6aczVhiQUrH60uScF9E33+q5Og/km0gdK2Bb/a6KWJWJSlDk3afdsUwUAxA==
+X-Received: by 2002:a0c:add1:: with SMTP id x17mr4349349qvc.81.1559763670372;
+        Wed, 05 Jun 2019 12:41:10 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id l40sm6407933qtc.51.2019.06.05.12.41.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 12:41:09 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] x86/cacheinfo: fix a -Wtype-limits warning
+Date:   Wed,  5 Jun 2019 15:40:54 -0400
+Message-Id: <1559763654-5155-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 12:18 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
->
-> In commit 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros
-> into functions") one case of error reporting was special cased, so it
-> could report a lookup error for a specific key when dumping the map
-> element. What the code forgot to do is to wrap the key and value keys
-> into a JSON object, so an example output of pretty JSON dump of a
-> sockhash map (which does not support looking up its values) is:
->
-> [
->     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
->     ],
->     "value": {
->         "error": "Operation not supported"
->     },
->     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
->     ],
->     "value": {
->         "error": "Operation not supported"
->     }
-> ]
->
-> Note the key-value pairs inside the toplevel array. They should be
-> wrapped inside a JSON object, otherwise it is an invalid JSON. This
-> commit fixes this, so the output now is:
->
-> [{
->         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
->         ],
->         "value": {
->             "error": "Operation not supported"
->         }
->     },{
->         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
->         ],
->         "value": {
->             "error": "Operation not supported"
->         }
->     }
-> ]
->
-> Fixes: 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros into functions")
-> Cc: Quentin Monnet <quentin.monnet@netronome.com>
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
+cpuinfo_x86.x86_model is an unsigned type, so compares it against zero
+will generate a compilation warning,
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+arch/x86/kernel/cpu/cacheinfo.c: In function
+'cacheinfo_amd_init_llc_id':
+arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
 
->  tools/bpf/bpftool/map.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-> index 3ec82904ccec..5da5a7311f13 100644
-> --- a/tools/bpf/bpftool/map.c
-> +++ b/tools/bpf/bpftool/map.c
-> @@ -716,12 +716,14 @@ static int dump_map_elem(int fd, void *key, void *value,
->                 return 0;
->
->         if (json_output) {
-> +               jsonw_start_object(json_wtr);
->                 jsonw_name(json_wtr, "key");
->                 print_hex_data_json(key, map_info->key_size);
->                 jsonw_name(json_wtr, "value");
->                 jsonw_start_object(json_wtr);
->                 jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
->                 jsonw_end_object(json_wtr);
-> +               jsonw_end_object(json_wtr);
->         } else {
->                 const char *msg = NULL;
->
-> --
-> 2.20.1
->
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/kernel/cpu/cacheinfo.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index 395d46f78582..c7503be92f35 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -658,8 +658,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
+ 	if (c->x86 < 0x17) {
+ 		/* LLC is at the node level. */
+ 		per_cpu(cpu_llc_id, cpu) = node_id;
+-	} else if (c->x86 == 0x17 &&
+-		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
++	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
+ 		/*
+ 		 * LLC is at the core complex level.
+ 		 * Core complex ID is ApicId[3] for these processors.
+-- 
+1.8.3.1
+
