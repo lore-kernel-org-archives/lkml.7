@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A01BC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61519C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3401420866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3468A2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lJ0+/gYj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lP9miJR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfFEGI3 (ORCPT
+        id S1726695AbfFEGId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:08:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40760 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfFEGI1 (ORCPT
+        Wed, 5 Jun 2019 02:08:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47374 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFEGIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:08:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5568Miq104969;
-        Wed, 5 Jun 2019 01:08:22 -0500
+        Wed, 5 Jun 2019 02:08:32 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5568PZQ060630;
+        Wed, 5 Jun 2019 01:08:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559714902;
-        bh=kP5Be0RWpKNCwHARMR89E7X2icgm84vwwv6LLW4v034=;
+        s=ti-com-17Q1; t=1559714905;
+        bh=e23WnTYvUjw9k/zJtezvgJoxPPb3ZOXliq0JWnFHfqk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lJ0+/gYjUN+7JYcNzbQy/7izVeaVIDq/Xn15lzl0CcdDR+TIdtnz2dHG7tax+fM8g
-         ZP//8YvWk+SnjCqOC+sIB3T89gnD2x8iLuj0+8qwGFHegzRq7bJ/NrWZWHmxZ9rcIQ
-         rtiGyXUSZxpwfmQk44TfC+DKu9ri7mjT7anvJjh0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5568M9g129949
+        b=lP9miJR2kR9Ehv7kxaPt19OOtTChVNhX+A/FaQrcrLc1tXFVSfAk76mKo7c6cDwii
+         7aV4aufI727Jjuo137tlUIDl/JQgsBCATYJbSRDEcfc4lSYxUIc4Ecw9Le2XHbgXQg
+         9iAY73DXFCcQ9k98ixcKIDfQIL8D6KAER1kg2+B4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5568PKd129668
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 01:08:22 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 5 Jun 2019 01:08:25 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 01:08:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 01:08:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 01:08:21 -0500
+ Frontend Transport; Wed, 5 Jun 2019 01:08:24 -0500
 Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5568Dli066906;
-        Wed, 5 Jun 2019 01:08:19 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5568Dlj066906;
+        Wed, 5 Jun 2019 01:08:22 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <t-kristo@ti.com>, <nm@ti.com>, <robh+dt@kernel.org>
 CC:     <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
         <j-keerthy@ti.com>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 2/3] arm64: dts: ti: am6-main: Add gpio nodes
-Date:   Wed, 5 Jun 2019 11:38:45 +0530
-Message-ID: <20190605060846.25314-3-j-keerthy@ti.com>
+Subject: [RFC PATCH 3/3] arm64: dts: ti: am654-base-board: Add gpio_keys node
+Date:   Wed, 5 Jun 2019 11:38:46 +0530
+Message-ID: <20190605060846.25314-4-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190605060846.25314-1-j-keerthy@ti.com>
 References: <20190605060846.25314-1-j-keerthy@ti.com>
@@ -67,55 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add gpio0/1 nodes under main domain. They have 96 and 90 gpios
-respectively and all are capable of generating banked interrupts.
+There are 2 push buttons: SW5 and SW6 that are basically connected to
+WKUP_GPIO0_24 and WKUP_GPIO0_27 respectively. Add the respective
+nodes and the pinctrl data to set the mode to GPIO and Input.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 32 ++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 22154f401930..24cd9005118c 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -350,4 +350,36 @@
- 			ti,sci-rm-range-global-event = <0x1>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index cf1aa276a1ea..ea50b6e36eff 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ 
+ #include "k3-am654.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	compatible =  "ti,am654-evm", "ti,am654";
+@@ -33,6 +34,25 @@
+ 			no-map;
  		};
  	};
 +
-+	main_gpio0:  main_gpio0@600000 {
-+		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x600000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&intr_main_gpio>;
-+		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
-+				<57 261>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <96>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		clocks = <&k3_clks 57 0>;
-+		clock-names = "gpio";
-+	};
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-names = "default";
++		pinctrl-0 = <&push_button_pins_default>;
 +
-+	main_gpio1:  main_gpio1@601000 {
-+		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x601000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&intr_main_gpio>;
-+		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
-+				<58 261>;
-+		interrupt-controller;
-+			#interrupt-cells = <2>;
-+		ti,ngpio = <90>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		clocks = <&k3_clks 58 0>;
-+		clock-names = "gpio";
++		sw5 {
++			label = "GPIO Key USER1";
++			linux,code = <BTN_0>;
++			gpios = <&wkup_gpio0 24 GPIO_ACTIVE_LOW>;
++		};
++
++		sw6 {
++			label = "GPIO Key USER2";
++			linux,code = <BTN_1>;
++			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
++		};
 +	};
  };
+ 
+ &wkup_pmx0 {
+@@ -42,6 +62,13 @@
+ 			AM65X_WKUP_IOPAD(0x00e4, PIN_INPUT, 0) /* (AD6) WKUP_I2C0_SDA */
+ 		>;
+ 	};
++
++	push_button_pins_default: push_button__pins_default {
++		pinctrl-single,pins = <
++			AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
++			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
++		>;
++	};
+ };
+ 
+ &main_pmx0 {
 -- 
 2.17.1
 
