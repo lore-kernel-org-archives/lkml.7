@@ -2,118 +2,217 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFD6C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6876C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000E020874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AF820874
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="XvoSyiJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfFEV2x (ORCPT
+        id S1726626AbfFEVaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:28:53 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:34676 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbfFEV2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:28:52 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x55LPbvS022703;
-        Wed, 5 Jun 2019 16:25:37 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x55LPbpR022702;
-        Wed, 5 Jun 2019 16:25:37 -0500
-Date:   Wed, 5 Jun 2019 16:25:37 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
-        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>
-Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190605212536.GA22510@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com> <20190422215831.GL1236@linux.intel.com> <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com> <20190424002653.GB14422@linux.intel.com> <20190604201232.GA7775@linux.intel.com> <20190605142908.GD11331@linux.intel.com> <20190605145219.GC26328@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605145219.GC26328@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 05 Jun 2019 16:25:37 -0500 (CDT)
+        Wed, 5 Jun 2019 17:30:25 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36391 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfFEVaY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:30:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u12so317171qth.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 14:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W1SwKAzrSsraL2rJYcRqKU9p/AAS2w/6bHcCd/yWVTY=;
+        b=XvoSyiJWJjZ8O1byGZWAjxvlsniWLJz+KAPD8l0fEGvVihiVdIjoMHmThPQX0IAFdH
+         OLqH7L3HbIGle+BLtliIEpNU1RAx77yleEYUd4/aDvcm6TsXvCyho10McqEwwgT+ijpy
+         T+KX7DYWNUWYDeSwUfcf6U1ZHeoKqx6ITYk/euysVAF5CbCqDHfJtMhkCiul5BcuG6lo
+         38k2HB4XhrKWEscKB6syZx8Vk0sEnseixgDsFPzglKe4XEQlkGY+9ucGLOccEbzG/AWX
+         ra2tCcqsL9Av0/NvkHGdxCG6kRAGY7Lt5+1chyd5k4HqT0rAaaP0nLhUgE5Cxjv73qVB
+         vQ+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W1SwKAzrSsraL2rJYcRqKU9p/AAS2w/6bHcCd/yWVTY=;
+        b=c/meYxZezRoIZ75h7yU17tTZxlXd5wiZMZadUr+6f4JGORbX4L5/t7SrhQcq+P3dZp
+         Wta7HTpX71vjv85SLpFJC1QxElAe0w02xe+eB4VIttMq6xDIU6zxzCM7ZwMov0H7hFgV
+         EoqHu5n3CqcKhi6RBBe1dAYjSkXwWpXuZIKaE1lbJGkV8Mqmk0TG1nJWZsqwe1vdlyLT
+         s5V5+1+xNFlc1IniOrVqNK80k1ebpwGk9wpkzs5a2/o+KLgV/TFr2xZkflKVGFFGQlPr
+         bJ661Ygw/y3W0FAu0Omhh4/DlnGy1VEUF3IHPNusBkEVOhkodGPoZ8jiZbNP7ZnYtUoU
+         KNKA==
+X-Gm-Message-State: APjAAAVumhnKIWig5XJ7OV34Lh/Og6gTqgllUERT3qshB4vGth++kIzk
+        WFUzqlXVYedP57tQUYh7ptS9PhmXX0o=
+X-Google-Smtp-Source: APXvYqyr179W7aDtAChmKkptnBIc2kMcBdRREpSZmu+3HLBiaBVJv0h7CtNC7XKvc89sY8BUrLtvGQ==
+X-Received: by 2002:aed:3a87:: with SMTP id o7mr36089666qte.310.1559770223223;
+        Wed, 05 Jun 2019 14:30:23 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v195sm12092964qka.28.2019.06.05.14.30.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 14:30:22 -0700 (PDT)
+Subject: Re: [PATCH] Revert "media: hfi_parser: don't trick gcc with a wrong
+ expected size"
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
+        <linux-media@vger.kernel.org>,
+        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190605201941.4150-1-jonathan@marek.ca>
+ <20190605174044.65ac1e4a@coco.lan>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <c0a251c1-d36a-613b-4573-5939cdfc3ebe@marek.ca>
+Date:   Wed, 5 Jun 2019 17:27:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190605174044.65ac1e4a@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:52:19AM -0700, Sean Christopherson wrote:
+hfi_capabilities /  hfi_profile_level_supported come from hardware so 
+there is no option to dynamically allocate, and using size [1] doesn't 
+cause any bug.
 
-Good afternoon to everyone.
+Your enclosed patch is wrong in a way because MAX_CAP_ENTRIES is not a 
+hardware limit but the size of the statically allocated array used by 
+the driver. I don't think there is any defined hardware limit, otherwise 
+the driver author would've defined it as they did with 
+HFI_MAX_PROFILE_COUNT.
 
-> At this point I don't see the access control stuff impacting the LKM
-> decision.
+A better solution (IMO) if you want to avoid these warnings is to remove 
+those memcpy() and work on the data[] / profile_level[] from the struct 
+directly:
+
+diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c 
+b/drivers/media/platform/qcom/venus/hfi_parser.c
+index 2293d936e49c..ecaa336b2cb9 100644
+--- a/drivers/media/platform/qcom/venus/hfi_parser.c
++++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+@@ -94,16 +94,12 @@ static void
+  parse_profile_level(struct venus_core *core, u32 codecs, u32 domain, 
+void *data)
+  {
+  	struct hfi_profile_level_supported *pl = data;
+-	struct hfi_profile_level *proflevel = pl->profile_level;
+-	struct hfi_profile_level pl_arr[HFI_MAX_PROFILE_COUNT] = {};
+
+  	if (pl->profile_count > HFI_MAX_PROFILE_COUNT)
+  		return;
+
+-	memcpy(pl_arr, proflevel, pl->profile_count * sizeof(*proflevel));
+-
+  	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
+-		       fill_profile_level, pl_arr, pl->profile_count);
++		       fill_profile_level, pl->profile_level, pl->profile_count);
+  }
+
+  static void
+@@ -119,17 +115,12 @@ static void
+  parse_caps(struct venus_core *core, u32 codecs, u32 domain, void *data)
+  {
+  	struct hfi_capabilities *caps = data;
+-	struct hfi_capability *cap = caps->data;
+-	u32 num_caps = caps->num_capabilities;
+-	struct hfi_capability caps_arr[MAX_CAP_ENTRIES] = {};
+
+-	if (num_caps > MAX_CAP_ENTRIES)
++	if (caps->num_capabilities > MAX_CAP_ENTRIES)
+  		return;
+
+-	memcpy(caps_arr, cap, num_caps * sizeof(*cap));
+-
+  	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
+-		       fill_caps, caps_arr, num_caps);
++		       fill_caps, caps->data, caps->num_capabilities);
+  }
+
+  static void fill_raw_fmts(struct venus_caps *cap, const void *fmts,
+
+On 6/5/19 4:41 PM, Mauro Carvalho Chehab wrote:
+> Em Wed,  5 Jun 2019 16:19:40 -0400
+> Jonathan Marek <jonathan@marek.ca> escreveu:
 > 
-> Irrespetive of the access control thing, there are (at least) two issues
-> with using ACPI to probe the driver:
+>> This reverts commit ded716267196862809e5926072adc962a611a1e3.
+>>
+>> This change doesn't make any sense and breaks the driver.
 > 
->   - ACPI probing breaks if there are multiple device, i.e. when KVM adds
->     a raw EPC device.  We could do something like probe the driver via
->     ACPI but manually load the raw EPC device from core SGX code, but IMO
->     taking that approach should be a concious decision.
-
-If that is the case, I assume that ACPI probing will also be
-problematic for kernels that will be running on systems that have the
-SGX accelerator cards that Intel has announced in them.
-
-We haven't seen a solid technical description regarding how SGX
-functionality is to be surfaced via these cards.  However, since the
-SDM/SGX specification indicates that multiple PRM/EPC's are supported,
-the logical assumption would be that each card would be surfaced as a
-separate EPC's.
-
-The focus of this driver will be largely cloud based environments and
-the accelerator cards are designed to fill the gap until multi-socket
-SGX support is available, which has been 'real soon now' for about
-three years.  So it would seem to be a requirement for the driver to
-deal with these cards if it is to be relevant.
-
->   - ACPI probing means core SGX will consume resources for EPC management
->     even if there is no end consumer, e.g. the driver refuses to load due
->     to lack of FLC support.
-
-It isn't relevant to these conversations but there will be a version
-of this driver supported that runs on non-FLC platforms and that will
-support full hardware root of trust via launch enclaves.
-
-Have a good evening.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"System Administration is a few hours of boredom followed by several
- moments of intense fear."
-                                -- Tom ONeil
+> The fix is indeed wrong, but reverting is the wrong thing to do.
+> 
+> The problem is that the driver is trying to write past the
+> allocated area, as reported:
+> 
+> 	drivers/media/platform/qcom/venus/hfi_parser.c:103 parse_profile_level() error: memcpy() 'proflevel' too small (8 vs 128)
+> 	drivers/media/platform/qcom/venus/hfi_parser.c:129 parse_caps() error: memcpy() 'cap' too small (16 vs 512)
+> 
+> If you check the memcpy() logic at the above lines, you'll see that
+> hfi_capability.data may have up to 32 entries, and
+> hfi_profile_level_supported.profile level can have up to it can be up
+> to 16 entries.
+> 
+> So, the buffer should either be dynamically allocated with the real
+> size or we need something like the enclosed patch.
+> 
+> Thanks,
+> Mauro
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 7a3feb5cee00..06a84f266bcc 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -59,7 +59,6 @@ struct venus_format {
+>   
+>   #define MAX_PLANES		4
+>   #define MAX_FMT_ENTRIES		32
+> -#define MAX_CAP_ENTRIES		32
+>   #define MAX_ALLOC_MODE_ENTRIES	16
+>   #define MAX_CODEC_NUM		32
+>   
+> diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
+> index 34ea503a9842..ca8033381515 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_helper.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+> @@ -560,6 +560,8 @@ struct hfi_bitrate {
+>   #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
+>   #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
+>   
+> +#define MAX_CAP_ENTRIES                32
+> +
+>   struct hfi_capability {
+>   	u32 capability_type;
+>   	u32 min;
+> @@ -569,7 +571,7 @@ struct hfi_capability {
+>   
+>   struct hfi_capabilities {
+>   	u32 num_capabilities;
+> -	struct hfi_capability *data;
+> +	struct hfi_capability data[MAX_CAP_ENTRIES];
+>   };
+>   
+>   #define HFI_DEBUG_MSG_LOW	0x01
+> @@ -726,7 +728,7 @@ struct hfi_profile_level {
+>   
+>   struct hfi_profile_level_supported {
+>   	u32 profile_count;
+> -	struct hfi_profile_level *profile_level;
+> +	struct hfi_profile_level profile_level[HFI_MAX_PROFILE_COUNT];
+>   };
+>   
+>   struct hfi_quality_vs_speed {
+> 
+> 
+> 
