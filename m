@@ -2,232 +2,199 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D46AC46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA98C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482692075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79E92075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rfJbcdca"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Qz47mOL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfFELPc (ORCPT
+        id S1727422AbfFELQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:15:32 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35137 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfFELPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:15:32 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s27so6601720pgl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 04:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Os6hgQ4PaEd8eE9dNOjj22ajR4Ww3254gEhIvX/BVAI=;
-        b=rfJbcdca7MvdukSVLWSgPqUMYpqgP1YudYjDRT19/yLtOQ3400RXH6SZ/45JRrILEI
-         u6tl4yVFaZeCTatSfqoAXQ3+sDHl7ZgBXlcmtcWoIVKiTY71K60q+w6kKs4hPLWvTlbz
-         7wwdi8CFKK1z4Gnzz3gLs3onuFrhGV9Wim1EcJfVZLetWNAz9s2tg9rie2UtaE5j5o+D
-         godFUW/vEZiS9cfwka7hJGEWwZsGnCrDFUE2SlvP3EaDra4wGmmwW9c/JKJ+Og0d9I0C
-         GwGm4QY7FTFudi9Nm94JUtyU6gSrgKpFJOEvUqoIdHgU9u22ngyher/+GV9IyGg1TPDQ
-         szVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Os6hgQ4PaEd8eE9dNOjj22ajR4Ww3254gEhIvX/BVAI=;
-        b=TeVop50vuJHFlh+2a+uMyW2V3Xp3V2Op6nrcxnSQCxH5t9Yq/oNlCjMEdVl+qBq1PJ
-         PHWjyPh/KrBXr3pLeZs2CHF1J61q9RXGGHgmB2eNoFM14I4ic6PDL+uTHW8WpZUnbYzf
-         fLn+NdCD2RJCYruy2GoHu3vEjxVFiHVcAXe4050Zj+3S5EC5cCf4EsARLsgSKcLt42ZX
-         HU9mzOZh9lXllvNrZ9pTG65EVn/A7FazYMB9d5r74kwJMYQs4TzMzGqeEGT/ti/eYCv8
-         n+6EAoU3wTxqyymktHlrwI9KSFFibjtL1JMaXTYEaRdsJsZ3mfuAX/iZo5Yx2C6cxwIz
-         B8Jg==
-X-Gm-Message-State: APjAAAVwYVqUSfLQt9l4cahWeYnPkiWUwmTBGl3QAcaDta2N/FWZsix/
-        EoAFCUy8y5dE0RRzdVQc/A4eiQ==
-X-Google-Smtp-Source: APXvYqzm2uya0Csh0G0kg3px1p2uilA/ZfNTrdIjO41m1gNoYp1b5/8pjVJaIfYNjCt/LZbmI0dOPA==
-X-Received: by 2002:a63:4714:: with SMTP id u20mr3596625pga.347.1559733331417;
-        Wed, 05 Jun 2019 04:15:31 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id f21sm2856860pjq.2.2019.06.05.04.15.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 04:15:30 -0700 (PDT)
-From:   Chunyan Zhang <zhang.chunyan@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.Strashko@ti.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [BACKPORT 4.4.y] PM / sleep: prohibit devices probing during suspend/hibernation
-Date:   Wed,  5 Jun 2019 19:14:12 +0800
-Message-Id: <20190605111412.3461-1-zhang.chunyan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Jun 2019 07:16:08 -0400
+Received: from mout.gmx.net ([212.227.15.19]:41417 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727198AbfFELQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:16:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1559733327;
+        bh=WidPIT0SZNPjYuj9HOPHJDftSFPZQwHtj3xUZajHVNk=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Qz47mOL8xxn38DCcmJGvF4A8lrh36vJRDdEmnjLSwHoWa1QldxCfy9msY3BOJD0YH
+         CP70DVdJNAio27WvbzHmbN7QM+99HBLrQTnZ7Jwe5ykrEJpSewngTh9VOyFbKN5Se+
+         sHSJ98Ap5grwrFNMTILLCHitWe2BWl1KbagxfxAk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0LdYdG-1gplU431BC-00ijmr; Wed, 05
+ Jun 2019 13:15:26 +0200
+Subject: Re: [PATCH 4/4] cpufreq: add driver for Raspbery Pi
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        ptesarik@suse.com, sboyd@kernel.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eric@anholt.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+ <20190604173223.4229-5-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <e59ad4c7-504a-a16e-a678-987ab95ed6ea@gmx.net>
+Date:   Wed, 5 Jun 2019 13:15:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190604173223.4229-5-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:TzC75kyyXW/u8yN8BHby1dDco1AlWLyk8HZ+idVHf7/mLW7Uwhu
+ tteNjouk+ic2IyzNdH+U/TkCMeRMJa5z6iDBWnlQk5mgbqRya48viFSJXShkkwWblycVE/y
+ /+67QshbtOjqFeFrCKb3ZHuKXOrN0yZV3Ra83HNret15m2y4BTUx6sdounOFh6r2LscFSiU
+ 2XVk4KAmg2q4IF2wdRQww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1yl8hMCQa1o=:MLciwv6n0EDsG7GZ7jQ982
+ DXWJN4m2nAO9URbT+fDZJsff+PhGnNG9KIJfhikVlOStgr2+TjYyhCt3nwvHIpF23HJ1ry34Q
+ 8JdJ3v72mFI1nY0zESPm1///FUkPo2Aqh7TVWJZITi1N5YC6cxk2DZuK3sLws/YW3ATxzZqf8
+ u+0ANdrZ+CbMP2lz9asDnIj09qrJ2xAR6sJjtMvAFlKDRpE5mJrvmC7jlk4Onc7YB/X5nynGZ
+ bhFt/BZ24LrjYurL3NWiLOWy3k5OI8RWvejL+SxTI10nRNZBlkqeB0IkRNPoV4ibwCn9h34Iq
+ bXb6DF8BUU0wOinZgn5w92tPjk6/pnd4UMSYV3hA0ZM6zx+DhH83fgqebDhA5X7WrS40zR379
+ z22Z1/2qE/SWCxebEXdY3qqhmlRd80AdiYeHbsXt8N270O/hfVk4Gp5H0RbzY6Thtr2/JAR9o
+ /PHrFBDnATskWhaaJpZVd9b/hD1sIfylU1wbg5sCaHfbS30AKrFWPOaLPo7g2oBPDjdiBQfr5
+ LO14yohywerHaknbIjcW7B3zT4DWDw25A/S1RP/B8hza94uVfS9uQd3NxZw/lNkJLwWFOGhsB
+ NyE/cPgaindsUI0MERYcAzImfJoJUS7HYZoakAKo2NKaRPRQOX/zsdXtsmMOjHdXUqbpivVgq
+ Xgh60iKlVOIBoVxpCvSWQoRaVEdc5vaW9NexlWH+JPrEO5ObzGldX1UUEW74VE+Ehgz3b+9f4
+ XutvknOpLY87y7DC7g8EWpGIHIzmI63gzZ28eTYW14CB3QsV8u0EAEXVLG7JEVwpkcLsSA5zR
+ WKXncv4vEymSfH8paY8cBvzhYI+7H0en/P90wkevqu21DMl2zK4I2S7dH0wv5HnjGd4uk6dpy
+ aBr5sWQlU+geennC5OSbVSLT5FARuwATLh9TYpGru91lBztbCfGsat7EZFfgq6ZMK991rRwg2
+ YsQbtiQvLSbdj/otsSYm4SoiFvvf65WAstV5TuzA4tnjmDfod0O8alKbwxO5GkFrbdm7w1Ax9
+ 2A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Strashko, Grygorii" <grygorii.strashko@ti.com>
+Hi Nicolas,
 
-[ Upstream commit 013c074f8642d8e815ad670601f8e27155a74b57 ]
+Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
+> Raspberry Pi's firmware offers and interface though which update it's
+> performance requirements. It allows us to request for specific runtime
+> frequencies, which the firmware might or might not respect, depending on
+> the firmware configuration and thermals.
+>
+> As the maximum and minimum frequencies are configurable in the firmware
+> there is no way to know in advance their values. So the Raspberry Pi
+> cpufreq driver queries them, builds an opp frequency table to then
+> launch cpufreq-dt.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>
+> Changes since RFC:
+>   - Alphabetically ordered relevant stuff
+>   - Updated Kconfig to select firmware interface
+>   - Correctly unref clk_dev after use
+>   - Remove all opps on failure
+>   - Remove use of dev_pm_opp_set_sharing_cpus()
+>
+>  drivers/cpufreq/Kconfig.arm           |  8 +++
+>  drivers/cpufreq/Makefile              |  1 +
+>  drivers/cpufreq/raspberrypi-cpufreq.c | 84 +++++++++++++++++++++++++++
+>  3 files changed, 93 insertions(+)
+>  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+>
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index f8129edc145e..556d432cc826 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
+>  	  The driver implements the cpufreq interface for this HW engine.
+>  	  Say Y if you want to support CPUFreq HW.
+>
+> +config ARM_RASPBERRYPI_CPUFREQ
+> +	tristate "Raspberry Pi cpufreq support"
+> +	select RASPBERRYPI_FIRMWARE
+> +	help
+> +	  This adds the CPUFreq driver for Raspberry Pi
+For the next version please add one patch which enables the driver and
+its dependencies for bcm2835_defconfig and multi_v7_defconfig and
+another patch to build as a module for arm64/defconfig.
+> +
+> +	  If in doubt, say N.
+> +
+>  config ARM_S3C_CPUFREQ
+>  	bool
+>  	help
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 689b26c6f949..121c1acb66c0 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.o
+>  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+=3D qcom-cpufreq-hw.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-kryo.o
+> +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+=3D raspberrypi-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
+> diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/ras=
+pberrypi-cpufreq.c
+> new file mode 100644
+> index 000000000000..2b3a195a9d37
+> --- /dev/null
+> +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Raspberry Pi cpufreq driver
+> + *
+> + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +
+> +static const struct of_device_id machines[] __initconst =3D {
+> +	{ .compatible =3D "raspberrypi,3-model-b-plus" },
+> +	{ .compatible =3D "raspberrypi,3-model-b" },
+> +	{ .compatible =3D "raspberrypi,2-model-b" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int __init raspberrypi_cpufreq_driver_init(void)
+> +{
+> +	struct platform_device *pdev;
+> +	struct device *cpu_dev;
+> +	unsigned long min, max;
+> +	unsigned long rate;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	if (!of_match_node(machines, of_root))
+> +		return -ENODEV;
+> +
+> +	cpu_dev =3D get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		pr_err("Cannot get CPU for cpufreq driver\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	clk =3D clk_get(cpu_dev, 0);
 
-It is unsafe [1] if probing of devices will happen during suspend or
-hibernation and system behavior will be unpredictable in this case.
-So, let's prohibit device's probing in dpm_prepare() and defer their
-probing instead. The normal behavior will be restored in
-dpm_complete().
+Please use NULL in this context
 
-This patch introduces new DD core APIs:
- device_block_probing()
-   It will disable probing of devices and defer their probes instead.
- device_unblock_probing()
-   It will restore normal behavior and trigger re-probing of deferred
-   devices.
+Thanks
 
-[1] https://lkml.org/lkml/2015/9/11/554
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
----
- drivers/base/base.h       |  2 ++
- drivers/base/dd.c         | 48 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/base/power/main.c | 17 +++++++++++++++++
- 3 files changed, 66 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 1782f3a..e05db38 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -131,6 +131,8 @@ extern void device_remove_groups(struct device *dev,
- extern char *make_class_name(const char *name, struct kobject *kobj);
- 
- extern int devres_release_all(struct device *dev);
-+extern void device_block_probing(void);
-+extern void device_unblock_probing(void);
- 
- /* /sys/devices directory */
- extern struct kset *devices_kset;
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index d888741..ddee3456 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -55,6 +55,13 @@ static struct workqueue_struct *deferred_wq;
- static atomic_t deferred_trigger_count = ATOMIC_INIT(0);
- 
- /*
-+ * In some cases, like suspend to RAM or hibernation, It might be reasonable
-+ * to prohibit probing of devices as it could be unsafe.
-+ * Once defer_all_probes is true all drivers probes will be forcibly deferred.
-+ */
-+static bool defer_all_probes;
-+
-+/*
-  * deferred_probe_work_func() - Retry probing devices in the active list.
-  */
- static void deferred_probe_work_func(struct work_struct *work)
-@@ -172,6 +179,30 @@ static void driver_deferred_probe_trigger(void)
- }
- 
- /**
-+ * device_block_probing() - Block/defere device's probes
-+ *
-+ *	It will disable probing of devices and defer their probes instead.
-+ */
-+void device_block_probing(void)
-+{
-+	defer_all_probes = true;
-+	/* sync with probes to avoid races. */
-+	wait_for_device_probe();
-+}
-+
-+/**
-+ * device_unblock_probing() - Unblock/enable device's probes
-+ *
-+ *	It will restore normal behavior and trigger re-probing of deferred
-+ * devices.
-+ */
-+void device_unblock_probing(void)
-+{
-+	defer_all_probes = false;
-+	driver_deferred_probe_trigger();
-+}
-+
-+/**
-  * deferred_probe_initcall() - Enable probing of deferred devices
-  *
-  * We don't want to get in the way when the bulk of drivers are getting probed.
-@@ -279,9 +310,20 @@ static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
- 
- static int really_probe(struct device *dev, struct device_driver *drv)
- {
--	int ret = 0;
-+	int ret = -EPROBE_DEFER;
- 	int local_trigger_count = atomic_read(&deferred_trigger_count);
- 
-+	if (defer_all_probes) {
-+		/*
-+		 * Value of defer_all_probes can be set only by
-+		 * device_defer_all_probes_enable() which, in turn, will call
-+		 * wait_for_device_probe() right after that to avoid any races.
-+		 */
-+		dev_dbg(dev, "Driver %s force probe deferral\n", drv->name);
-+		driver_deferred_probe_add(dev);
-+		return ret;
-+	}
-+
- 	atomic_inc(&probe_count);
- 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
-@@ -387,6 +429,10 @@ int driver_probe_done(void)
-  */
- void wait_for_device_probe(void)
- {
-+	/* wait for the deferred probe workqueue to finish */
-+	if (driver_deferred_probe_enable)
-+		flush_workqueue(deferred_wq);
-+
- 	/* wait for the known devices to complete their probing */
- 	wait_event(probe_waitqueue, atomic_read(&probe_count) == 0);
- 	async_synchronize_full();
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 6c5bc3f..cf4384d 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -966,6 +966,9 @@ void dpm_complete(pm_message_t state)
- 	}
- 	list_splice(&list, &dpm_list);
- 	mutex_unlock(&dpm_list_mtx);
-+
-+	/* Allow device probing and trigger re-probing of deferred devices */
-+	device_unblock_probing();
- 	trace_suspend_resume(TPS("dpm_complete"), state.event, false);
- }
- 
-@@ -1638,6 +1641,20 @@ int dpm_prepare(pm_message_t state)
- 	trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
- 	might_sleep();
- 
-+	/*
-+	 * Give a chance for the known devices to complete their probes, before
-+	 * disable probing of devices. This sync point is important at least
-+	 * at boot time + hibernation restore.
-+	 */
-+	wait_for_device_probe();
-+	/*
-+	 * It is unsafe if probing of devices will happen during suspend or
-+	 * hibernation and system behavior will be unpredictable in this case.
-+	 * So, let's prohibit device's probing here and defer their probes
-+	 * instead. The normal behavior will be restored in dpm_complete().
-+	 */
-+	device_block_probing();
-+
- 	mutex_lock(&dpm_list_mtx);
- 	while (!list_empty(&dpm_list)) {
- 		struct device *dev = to_device(dpm_list.next);
--- 
-1.9.1
 
