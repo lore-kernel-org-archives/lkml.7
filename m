@@ -2,127 +2,96 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E58C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3BB2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14057206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:49:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qJgEQ1wF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFEVsP (ORCPT
+        id S1726671AbfFEVtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:48:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27438 "EHLO mga04.intel.com"
+        Wed, 5 Jun 2019 17:49:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57601 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfFEVsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:48:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 14:48:14 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga007.jf.intel.com with ESMTP; 05 Jun 2019 14:48:13 -0700
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v4] mm/swap: Fix release_pages() when releasing devmap pages
-Date:   Wed,  5 Jun 2019 14:49:22 -0700
-Message-Id: <20190605214922.17684-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726600AbfFEVtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:49:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45K2Vj4lXNz9s3Z;
+        Thu,  6 Jun 2019 07:49:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559771341;
+        bh=lqxXci9/w5LV/fO591yge4/Ea86XzBP77/AfhaqWM9Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qJgEQ1wFd0hs4nqzVi1O5/stfSq4fnxAL08/dPi1THduENXoD2I5gNPN+cArj4Lpd
+         1O6Hble0O1EUPwGoJLQeSAPZxOcUiFaN06ld7jT/9OifT/3aZ1L5Z90W2s6ANoFVog
+         36t2bUFLG/jH1gMmb/gm+r8/QnrBJt5wp6vdcuDuCS+BGq9fXiRCY0DXwL0r/oj4j6
+         9luuVa575g0VMgk2uuSai77lgc7UvH30F1qibD2OEb4UDAbZPY5v381q/aoWZd814C
+         /MV2yFpWhqwYeU9wcnfHa7Ca14NTqG+YYxMTUOaN9+yyyvIL2E4kQierJJbxSP/te+
+         JR5+hMN0TB1xg==
+Date:   Thu, 6 Jun 2019 07:48:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sage Weil <sage@newdream.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the ceph tree
+Message-ID: <20190606074853.69a7b07b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/.obmgY=Il4.cZZcJjqKbo+y"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+--Sig_/.obmgY=Il4.cZZcJjqKbo+y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS
-DAX, and PCI P2PDMA.  Some of these have specific needs to "put" the
-page while others do not.
+Hi Sage,
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be
-processed by this function where we can contain the correct logic for a
-page put.
+In commit
 
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of
-put_devmap_managed_page() means the page did not require special
-processing and should fall to "normal" processing.
+  7b2f936fc828 ("ceph: fix error handling in ceph_get_caps()")
 
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
+Fixes tag
 
-[1] https://lore.kernel.org/lkml/20190523172852.GA27175@iweiny-DESK2.sc.intel.com/
+  Fixes: 1199d7da2d ("ceph: simplify arguments and return semantics of try_=
+get_cap_refs")
 
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+has these problem(s):
 
----
-Changes from V3:
-	Update comment to the one provided by John
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
-Changes from V2:
-	Update changelog for more clarity as requested by Michal
-	Update comment WRT "failing" of put_devmap_managed_page()
+--=20
+Cheers,
+Stephen Rothwell
 
-Changes from V1:
-	Add comment clarifying that put_devmap_managed_page() can still
-	fail.
-	Add Reviewed-by tags.
+--Sig_/.obmgY=Il4.cZZcJjqKbo+y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 7ede3eddc12a..607c48229a1d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
- 
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
- 		}
- 
- 		page = compound_head(page);
--- 
-2.20.1
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz4OMUACgkQAVBC80lX
+0GyEtQf9G0PMBiXfNt9LB1+AgGgRk9+BVIZup9stxuIbY9qoJr/112B25NESkWWu
+JuCKNNKlKuI+f79Sqxi73Avelad/BXDlPurjFlLEfTCeaCIAvR6VcC/i7OPXpA5K
+HJrSqJ6Tei4HLwrc8ODDDoP+hM7Z/bXa+VvL/Us2S7rAdOUwDV7NpswFyoQjP8Df
+SnpFZxETXiLZGN/waTr2mxlX44NSU7siv0+DLaf03NQjhrhQrQk9VlrPOXNvflT9
+8DF8v+5Jv5SWcZ7+oHAclLSJWsLHL/m2+nvUZ9Mas4S/fZXsanMh0VK3y6D6O5Ya
+Tqp5QvqpoIuUJ/oZSLscdyynhH4N/w==
+=dIMC
+-----END PGP SIGNATURE-----
 
+--Sig_/.obmgY=Il4.cZZcJjqKbo+y--
