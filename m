@@ -2,122 +2,114 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FFDC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B630C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431A520693
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559745897;
-	bh=oHxtFKkYS5StAuSisLKCiV0W777DWpUhOPSQSos7mis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BWtkZmFXSTMkkZciY5bsHREsDSxsXP+qWf3+CR55wqgVQ5uqPiSJNf4uqNckMSJDi
-	 c4RAtNh9iPFFvLe3rVRwqYgwgrn4r8e8WuXKkXyc2vJi0Zx3cuNghCcsxE8w/LVTjC
-	 FXvXQIrDbGTDtE6wIvQzrZo+velFN7zM77HZOyzY=
+	by mail.kernel.org (Postfix) with ESMTP id DF78620693
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfFEOo4 (ORCPT
+        id S1728482AbfFEOpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:44:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44807 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfFEOoz (ORCPT
+        Wed, 5 Jun 2019 10:45:21 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.178]:28915 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727960AbfFEOpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:44:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x47so18193542qtk.11;
-        Wed, 05 Jun 2019 07:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5+amuC/f1g13FqxbZK0H3rjZkiafibYvngvdoJHTeaY=;
-        b=Xaqop4NdhGsU31i8w22hqZOGA5bCkTzg6R5/EC23RiUJCzN5dtF4iVkzqxmY+7J7nX
-         AfCP9j3/4u4rffKpsh9eGXyVuhVeR2HrVAZRtK+P1ffC5kcpdY3epjr2QWP3NZjrkenF
-         8W3aRGBFCMgBLy8KknjGQHlImKIdbrIFC8KleevyNJ6JsC2MlBLiwtlvnsN0CSzMZr+n
-         XnEvGmv/FOXw5+56Ja1z6QhroJqSBdPwfOCZ7OYZwnFJSflOfHZgSfFHnITUufXKnTDG
-         R7LviF6TFrc6hpxIXyzLX773qaqqUragn0HHbmEHPg5NaM3JF4cyFtWeET4bCo0kJxrL
-         GGlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5+amuC/f1g13FqxbZK0H3rjZkiafibYvngvdoJHTeaY=;
-        b=naMpvJgK1oNQ+aoogGJgWT698/YYuF+m6lC7fJW2eK25Mzn6UZDZVhrkuWUKVvk+RX
-         e3rtlaPtV+WTiXBGXkAWobaRT3D3uvaGdyqTWWwEVlrvTeLPdRWsY43aaIJdu0O4mHth
-         zKHUrEpadjX5Q+VMMXxbnM/YYZAhn/9KTy7gLX8xvMDnyjbPgAyfqQxSTAoaCgBqxaHN
-         HsbQazDbkq7BLw6kQCfD82ydpmLlGQ6cw3fhfQW7OEySFyfGUOhXbfWI5r7EDEn7/afB
-         qHOHijo7Amah+uSbIplUxIBACkcUnZjEDRxx5nJ0301SODDuWNRfHfhpb6OT5j92HTBU
-         eUVA==
-X-Gm-Message-State: APjAAAWBlGIAeS2VKtWLd3fI6Yggf73ZxJjGmwEF3jLSO8lwYHAH0+4o
-        EJkXhdGf1wYlVB7211+8Slk=
-X-Google-Smtp-Source: APXvYqyHClRti1uqD1HXPdrPMGuakIUjLA2LyMPf4+a8tjzEnJIhKWBZFVZfpe9h9fo08DyAFybxXQ==
-X-Received: by 2002:a0c:be87:: with SMTP id n7mr14243540qvi.65.1559745893929;
-        Wed, 05 Jun 2019 07:44:53 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c027])
-        by smtp.gmail.com with ESMTPSA id n19sm9375766qkg.58.2019.06.05.07.44.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 07:44:52 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 07:44:50 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190605144450.GN374014@devbig004.ftw2.facebook.com>
-References: <20190515094459.10317-1-patrick.bellasi@arm.com>
- <20190515094459.10317-13-patrick.bellasi@arm.com>
- <20190531153545.GE374014@devbig004.ftw2.facebook.com>
- <20190603122725.GB19426@darkstar>
- <20190605140324.GL374014@devbig004.ftw2.facebook.com>
- <20190605143805.olk2ta5p2jnd4mjt@e110439-lin>
+        Wed, 5 Jun 2019 10:45:20 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 854432CE0CF
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2019 09:45:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YXAFhfh8P4FKpYXAFhzcUD; Wed, 05 Jun 2019 09:45:19 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=52510 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYXAE-000ldx-M1; Wed, 05 Jun 2019 09:45:18 -0500
+Date:   Wed, 5 Jun 2019 09:45:16 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jiri Pirko <jiri@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] lib: objagg: Use struct_size() in kzalloc()
+Message-ID: <20190605144516.GA3383@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605143805.olk2ta5p2jnd4mjt@e110439-lin>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYXAE-000ldx-M1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:52510
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-On Wed, Jun 05, 2019 at 03:39:50PM +0100, Patrick Bellasi wrote:
-> Which means we will enforce the effective values as:
-> 
->    /tg1/tg11:
-> 
->          util_min.effective=0
->             i.e. keep the child protection since smaller than parent
-> 
->          util_max.effective=800
->             i.e. keep parent limit since stricter than child
->
-> Please shout if I got it wrong, otherwise I'll update v10 to
-> implement the above logic.
+struct objagg_stats {
+	...
+        struct objagg_obj_stats_info stats_info[];
+};
 
-Everything sounds good to me.  Please note that cgroup interface files
-actually use literal "max" for limit/protection max settings so that 0
-and "max" mean the same things for all limit/protection knobs.
+size = sizeof(*objagg_stats) + sizeof(objagg_stats->stats_info[0]) * count;
+instance = kzalloc(size, GFP_KERNEL);
 
-Thanks.
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
 
+instance = kzalloc(struct_size(instance, stats_info, count), GFP_KERNEL);
+
+Notice that, in this case, variable alloc_size is not necessary, hence it
+is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ lib/objagg.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/lib/objagg.c b/lib/objagg.c
+index 576be22e86de..55621fb82e0a 100644
+--- a/lib/objagg.c
++++ b/lib/objagg.c
+@@ -605,12 +605,10 @@ const struct objagg_stats *objagg_stats_get(struct objagg *objagg)
+ {
+ 	struct objagg_stats *objagg_stats;
+ 	struct objagg_obj *objagg_obj;
+-	size_t alloc_size;
+ 	int i;
+ 
+-	alloc_size = sizeof(*objagg_stats) +
+-		     sizeof(objagg_stats->stats_info[0]) * objagg->obj_count;
+-	objagg_stats = kzalloc(alloc_size, GFP_KERNEL);
++	objagg_stats = kzalloc(struct_size(objagg_stats, stats_info,
++					   objagg->obj_count), GFP_KERNEL);
+ 	if (!objagg_stats)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
-tejun
+2.21.0
+
