@@ -2,122 +2,102 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F819C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B40BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3225E2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:16:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y86THFYY"
+	by mail.kernel.org (Postfix) with ESMTP id 606A32075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfFEXQL (ORCPT
+        id S1726701AbfFEXSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 19:16:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34367 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfFEXQL (ORCPT
+        Wed, 5 Jun 2019 19:18:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46818 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfFEXSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 19:16:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c85so260488pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 16:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=83uaEygo28oePM8F3N5NKuuyzBb7fPbGLBzqyFLAQQA=;
-        b=y86THFYYFuCwg4NjgtAt7q46z+gYvfpS6JqQFp2TWNQo+PZyW2UuCmgfYs5ihF7zsV
-         XumG9iIAEVLK8uyQS3mak0JKMY1b+ReeQfrKxAmqp22LDWu3HffTgFEiYsvFl7qalEFB
-         arlU6GJSju0p8Q1UH6cfZbyy5D62Wv10AChwbI1AaZ5GaGOCgHYdqsa3X30OAgKJG58s
-         6JALkoJuHNPpb2z9+j7A+1zNGbPGpiODmwm/iohB98CcqGrtJytsgbA/azm2orw4oGLZ
-         IwGC80IxpqcR3MrG1W+XPElhPBNJ6TFFKPlNKhhJRGrYkuSHAZrdeW4H1J6o62wMhLLl
-         HWmg==
+        Wed, 5 Jun 2019 19:18:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y11so226165pfm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 16:18:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=83uaEygo28oePM8F3N5NKuuyzBb7fPbGLBzqyFLAQQA=;
-        b=q9M21/d2RgKosUmZ0oQV6RMuWP77pjNbGF7LKBFq+/9Zwrhp0vLm64zs7SITNa9L15
-         g/x1NxKztdz8xtbQ2NDkIu4EJ9fcsHXY9vaXIpZSkD9QVg9E1ZGcyhN64qSWc5iYki/7
-         Mg/C3p1ZL+io6g5igwfbprzLiVAb1J996csT8Y2koIGY4djd2fWiz++HMRCZCdBFqeZt
-         10CTHDPJCLPglGRrcV6C4iVJzssORc3/02n2AEndgAo1xWmaReVAE3Gt1oAhZTMKWx2e
-         XPyXS5EKkU1Acbm2qFNsDiHBY5iJDCtPWwELd5wzaE0JWdMKfAZofjUjnsUitrSdJvGq
-         c4hA==
-X-Gm-Message-State: APjAAAXNdceLd2BfyTZLQWZQTi4abG9MlKhdzRumFba/4dQD5evwOQ3R
-        d3vUHQFr0dbe0EbOUINw6sNSZA==
-X-Google-Smtp-Source: APXvYqyrieihJjw0LyM7b9fHrzgoFMOxImgwdOC+BxMvC1MGA+JrHx/r56FAICY9eUBKenRtbDPxJg==
-X-Received: by 2002:a62:e417:: with SMTP id r23mr18453641pfh.160.1559776570125;
-        Wed, 05 Jun 2019 16:16:10 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v4sm48956pff.45.2019.06.05.16.16.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 16:16:09 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 16:16:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3 v2] arm64: dts: qcom: pm8998: Use qcom,pm8998-pon
- binding for second gen pon
-Message-ID: <20190605231607.GL4814@minitux>
-References: <20190603222319.62842-1-john.stultz@linaro.org>
- <20190603222319.62842-3-john.stultz@linaro.org>
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=wTIcqb3SuSLYyX4jaiouQi6Jmmzy6iFQXQcUcQGoiGQ=;
+        b=tqAMBJgBk6zNGfdnm33ks2F0SplQzz2iEsOE9HhMbNBy9Jxp/NkPDlp05KFR49+Hue
+         EcC7bbvnf03kWcYvYPU/+iTJtdGTBDT7ki5cNywtUBc/u4OTT3DnU4OQUGwJRriNt0m7
+         35z4y1vhgmlGJ9GkY/COU/F6uCvwvB5OniY4gPSFuZdmqd4cCy+1Gc8WeKtdGWoJkz9+
+         RtEPRhuq/2+c9hkvalUdxV9gojWa+43z3cWOTaHtMTwwifOD8sOuQ8zAkybiIm6Qx9Aw
+         1dFIW8OwWDfA9h+7h07DSuKMNQyJbegsxe4SsJJb4DNrYFjVXCD5CUQVYRUXugoaUnWw
+         3zrg==
+X-Gm-Message-State: APjAAAWGdpZWYjtA+g1J0VSwmaDtBfNKfqfv4wpa9pOTKg9EVXyBKYJF
+        rniTxJ3pf+1ynYd1UIz98RtaMpUL9ZY=
+X-Google-Smtp-Source: APXvYqz0UPjUzr2DqEeL3AT5OsS9mUtNgNeT44235duzwripPH47MW2Kti8j0fnIBEI9E3FD7pmQSw==
+X-Received: by 2002:a62:7995:: with SMTP id u143mr50098061pfc.61.1559776715772;
+        Wed, 05 Jun 2019 16:18:35 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id y13sm37199pfb.143.2019.06.05.16.18.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 16:18:35 -0700 (PDT)
+Subject: [PATCH] RISC-V: Break load reservations during switch_to
+Date:   Wed,  5 Jun 2019 16:17:35 -0700
+Message-Id: <20190605231735.26581-1-palmer@sifive.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603222319.62842-3-john.stultz@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+Cc:     linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:      linux-riscv@lists.infradead.org,
+         Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+         me@carlosedp.com, joel@sing.id.au
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 03 Jun 15:23 PDT 2019, John Stultz wrote:
+The comment describes why in detail.  This was found because QEMU never
+gives up load reservations, the issue is unlikely to manifest on real
+hardware.
 
-> This changes pm8998 to use the new qcom,pm8998-pon compatible
-> string for the pon in order to support the gen2 pon
-> functionality properly.
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+Thanks to Carlos Eduardo for finding the bug!
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+---
+ arch/riscv/kernel/entry.S | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> index d3ca35a940fb6..051a52df80f9e 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> @@ -39,7 +39,7 @@
->  		#size-cells = <0>;
->  
->  		pm8998_pon: pon@800 {
-> -			compatible = "qcom,pm8916-pon";
-> +			compatible = "qcom,pm8998-pon";
->  
->  			reg = <0x800>;
->  			mode-bootloader = <0x2>;
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 1c1ecc238cfa..e9fc3480e6b4 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -330,6 +330,24 @@ ENTRY(__switch_to)
+ 	add   a3, a0, a4
+ 	add   a4, a1, a4
+ 	REG_S ra,  TASK_THREAD_RA_RA(a3)
++	/*
++	 * The Linux ABI allows programs to depend on load reservations being
++	 * broken on context switches, but the ISA doesn't require that the
++	 * hardware ever breaks a load reservation.  The only way to break a
++	 * load reservation is with a store conditional, so we emit one here.
++	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
++	 * know this will always fail, but just to be on the safe side this
++	 * writes the same value that was unconditionally written by the
++	 * previous instruction.
++	 */
++#if (TASK_THREAD_RA_RA != 0)
++# error "The offset between ra and ra is non-zero"
++#endif
++#if (__riscv_xlen == 64)
++	sc.d  x0, ra, 0(a3)
++#else
++	sc.w  x0, ra, 0(a3)
++#endif
+ 	REG_S sp,  TASK_THREAD_SP_RA(a3)
+ 	REG_S s0,  TASK_THREAD_S0_RA(a3)
+ 	REG_S s1,  TASK_THREAD_S1_RA(a3)
+-- 
+2.21.0
+
