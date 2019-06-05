@@ -2,66 +2,171 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D195DC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEBDC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3184206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D312075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPgOTuOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfFEJyA (ORCPT
+        id S1727169AbfFEJz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:54:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60524 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbfFEJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:54:00 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4A76F85360;
-        Wed,  5 Jun 2019 09:54:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DA7832C8CA;
-        Wed,  5 Jun 2019 09:53:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <21350864823e07cc951e1dc7f0601baa09920ac4.1559656538.git.mchehab+samsung@kernel.org>
-References: <21350864823e07cc951e1dc7f0601baa09920ac4.1559656538.git.mchehab+samsung@kernel.org> <cover.1559656538.git.mchehab+samsung@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     dhowells@redhat.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        keyrings@vger.kernel.org
-Subject: Re: [PATCH v2 15/22] docs: security: core.rst: Fix several warnings
+        Wed, 5 Jun 2019 05:55:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38032 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfFEJz3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:55:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t5so1601108wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=T2lb6BFKyo6qFGuGkYXia4Pk+2dP0QxKBCkXd6OlypE=;
+        b=CPgOTuOq7c9MOvfUWJ5q/1+tOxgwn+XFG+0Um2QDTbUUUZanzLWDdj11nBOM2fIwB7
+         kEstullEcq59rr+WijeSFS9WnI3Qt9gjYsTf935hVMLJqfnOazzwxLxIHcji5TjkcosG
+         Y9XeYmQEDs6JbYlcEA7MiiEoYVV0BhB9r3suWTxQwm2++AJs9fMMbvBXj41wWMXxBHMd
+         Jf9fOl3L6hWXn6ofOl5x36eliDoR4Kpmq+BhUX/CuX//P1ZfkmcraAPARmc95tEHq9iI
+         iCz+Nm6D2SuuWiuOfBEm9CAkUqn9XEWtOrlUjSO+W80Dvqivdf9+b0ODE40uSn7iXy5B
+         3ZfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=T2lb6BFKyo6qFGuGkYXia4Pk+2dP0QxKBCkXd6OlypE=;
+        b=m0II5/8uzM0X1dXxwY7F/JStq/rfpWdSbyVJ02yaxhKx9EIvqlmTMm/Esw+UIbO9Iq
+         YmXWgv0Kcr7XRNjbzIj16xIy0rr7kbkNrOzBhoaMhsjEq95P05HS4RygQVqiSEgvavip
+         7GmRvKrwyUtcaaMpfOD+DHcqC9oOiXAFJIFdZy2ztOhHr1fUnAivv7YlDt7WnAeh3F3W
+         ASB2QoOXurDKmaX7M7pFSn862pDbk1TXfshGg2/QH7krg8CCx8iSM3WSFMkBgMRZjG8X
+         iHrTShFfuzyXb6Z5knwYqg2sH1zXqTlWVW7wXk/Zpln/lrq7Y8jBXvCXAcfIzcj1Jwo1
+         uVFA==
+X-Gm-Message-State: APjAAAWB8fMpsfJqNIACzEs37PCUTgnYisNzERG9TfJ20dEA9YPSjC82
+        ZNEBr4OGQHw83xS495WTxH1FjQ==
+X-Google-Smtp-Source: APXvYqwb15JLdo1InhCZA1cwpY0KvOYdXxpte37lxvn/nhB25qLp3J8HUS7DEBlgQIXew3zQcT8Cbw==
+X-Received: by 2002:a1c:dc07:: with SMTP id t7mr15208355wmg.164.1559728526806;
+        Wed, 05 Jun 2019 02:55:26 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id z14sm7127245wre.96.2019.06.05.02.55.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 02:55:26 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 10:55:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 6/8] usb: dwc3: qcom: Add support for booting with ACPI
+Message-ID: <20190605095524.GS4797@dell>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-6-lee.jones@linaro.org>
+ <20190605063507.GM22737@tuxbook-pro>
+ <20190605070928.GJ4797@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <26616.1559728436.1@warthog.procyon.org.uk>
-Date:   Wed, 05 Jun 2019 10:53:56 +0100
-Message-ID: <26617.1559728436@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 05 Jun 2019 09:54:00 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605070928.GJ4797@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+On Wed, 05 Jun 2019, Lee Jones wrote:
 
-> +  *  ``asym_eds_op`` and ``asym_verify_signature``::
-> +
-> +       int (*asym_eds_op)(struct kernel_pkey_params *params,
-> +			  const void *in, void *out);
-> +       int (*asym_verify_signature)(struct kernel_pkey_params *params,
-> +				    const void *in, const void *in2);
+> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
+> 
+> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > [..]
+> > > @@ -373,7 +416,7 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
+> > >  
+> > >  	qcom->num_clocks = count;
+> > >  
+> > > -	if (!count)
+> > > +	if (!count || ACPI_HANDLE(dev))
+> > >  		return 0;
+> > 
+> > Afaict you call this with count = of_count_phandle_with_args(), which
+> > should be 0. But why not skip calling this at all?
+> 
+> Actually count can be <0, which is why I must have needed it at the
+> beginning.  There is another patch in this set which checks for
+> errors, thus the ACPI_HANDLE() call should now be superfluous.  I
+> will test and remove it.
 
-That's redundant and shouldn't be necessary.
+Just looked into this - it is still required.
 
-David
+of_count_phandle_with_args() returns an error not to be heeded in the
+ACPI case.  So the logic goes:
+
+[This patch]
+ * It's fine to boot DT with no clocks to initialise (return 0)
+ * There are no clocks to enable when booting ACPI (return 0)
+
+[Another patch]
+ * It's not fine to boot DT and for 'count < 0' (return count)
+
+> > >  	qcom->clks = devm_kcalloc(dev, qcom->num_clocks,
+> > > @@ -409,12 +452,28 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
+> > > +	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
+> > > +	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
+> > > +	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
+> > > +	.hs_phy_irq_index = 1,
+> > > +	.dp_hs_phy_irq_index = 4,
+> > > +	.dm_hs_phy_irq_index = 3,
+> > > +	.ss_phy_irq_index = 2
+> > > +};
+> > > +
+> > > +static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
+> > > +	{ "QCOM2430", (unsigned long)&sdm845_acpi_pdata },
+> > > +	{ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
+> > 
+> > Analog to of_device_get_match_data() there seems to be a
+> > acpi_device_get_match_data(), if you use this you should be able to
+> > have you acpi_device_id array next to the of_device_id.
+> 
+> Do you mean "Analogous"?
+> 
+> I will try to group them, thanks.
+> 
+> > > +
+> > >  static int dwc3_qcom_probe(struct platform_device *pdev)
+> > 
+> > It seems that all that's left unconditional on ACPI_HANDLE() in this
+> > function are the optional pieces and the tail. Wouldn't it be cleaner to
+> > split it out in different functions?
+> 
+> There are ~50 lines of shared code in dwc3_qcom_probe(), most of it is
+> interspersed between the configuration table (DT, ACPI) pieces, which
+> is why it's formatted in the current way.
+> 
+> I can split a few things out into separate functions if you think
+> it'll help.
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
