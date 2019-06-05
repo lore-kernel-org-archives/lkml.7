@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D35C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4156D2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D914720693
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfFEN7s (ORCPT
+        id S1728237AbfFEOBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:59:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12385 "EHLO mga02.intel.com"
+        Wed, 5 Jun 2019 10:01:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:57638 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfFEN7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:59:48 -0400
+        id S1727883AbfFEOA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:00:59 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 06:59:45 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 07:00:57 -0700
 X-ExtLoop1: 1
 Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Jun 2019 06:59:41 -0700
-Date:   Wed, 5 Jun 2019 22:01:32 +0800
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2019 07:00:52 -0700
+Date:   Wed, 5 Jun 2019 22:02:44 +0800
 From:   Philip Li <philip.li@intel.com>
 To:     kernel test robot <lkp@intel.com>
 Cc:     Uladzislau Rezki <urezki@gmail.com>,
@@ -45,23 +45,23 @@ Cc:     Uladzislau Rezki <urezki@gmail.com>,
         Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@elte.hu>,
         lkp@01.org, Roman Gushchin <guro@fb.com>
 Subject: Re: [LKP] [mm/vmalloc.c]  728e0fbf26: kernel_BUG_at_mm/vmalloc.c
-Message-ID: <20190605140132.GA19267@intel.com>
-References: <20190605135020.44j2fedl6ilnbxcg@inn2.lkp.intel.com>
+Message-ID: <20190605140244.GB19267@intel.com>
+References: <20190604235450.3dde7yw5woeng7kk@inn2.lkp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605135020.44j2fedl6ilnbxcg@inn2.lkp.intel.com>
+In-Reply-To: <20190604235450.3dde7yw5woeng7kk@inn2.lkp.intel.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 09:50:20PM +0800, kernel test robot wrote:
+On Wed, Jun 05, 2019 at 07:54:51AM +0800, kernel test robot wrote:
 > 
 > FYI, we noticed the following commit (built with gcc-7):
-kindly ignore the duplicated report if you had already received one, we
-are working on the fix of this problem.
+kindly ignore the duplicated report, we are working on the fix
+of this problem. sorry for the inconvenience.
 
 > 
 > commit: 728e0fbf263e3ed359c10cb13623390564102881 ("mm/vmalloc.c: get rid of one single unlink_va() when merge")
@@ -77,13 +77,13 @@ are working on the fix of this problem.
 > +-------------------------------------------------+------------+------------+
 > |                                                 | 1ed20f4bc2 | 728e0fbf26 |
 > +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 6          | 0          |
-> | boot_failures                                   | 10         | 17         |
-> | BUG:kernel_reboot-without-warning_in_test_stage | 10         |            |
-> | kernel_BUG_at_mm/vmalloc.c                      | 0          | 17         |
-> | invalid_opcode:#[##]                            | 0          | 17         |
-> | RIP:__free_vmap_area                            | 0          | 17         |
-> | Kernel_panic-not_syncing:Fatal_exception        | 0          | 17         |
+> | boot_successes                                  | 0          | 0          |
+> | boot_failures                                   | 6          | 14         |
+> | BUG:kernel_reboot-without-warning_in_test_stage | 6          |            |
+> | kernel_BUG_at_mm/vmalloc.c                      | 0          | 14         |
+> | invalid_opcode:#[##]                            | 0          | 14         |
+> | RIP:__free_vmap_area                            | 0          | 14         |
+> | Kernel_panic-not_syncing:Fatal_exception        | 0          | 14         |
 > +-------------------------------------------------+------------+------------+
 > 
 > 
