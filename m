@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B4C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC608C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB6420717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AD02075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hZ8MIFGc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DjtDAC+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfFETJb (ORCPT
+        id S1726990AbfFETJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:09:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48690 "EHLO
+        Wed, 5 Jun 2019 15:09:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49232 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfFETJa (ORCPT
+        with ESMTP id S1726660AbfFETJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:09:30 -0400
+        Wed, 5 Jun 2019 15:09:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AE7g989qIO1VkopksP3RSlALL0SU6gZzEPZFVDK3h6g=; b=hZ8MIFGcrOz/Vqrtdj0cEeO+RW
-        rlhkacZFkVFvFSik93oBnuuJJgxSt8Jxs8Gg6t0gJfCcf3N4IRga5hDuyw47FRdJa9H5Y3XI5A+By
-        uaB29+VcBqDZ/AGq7+o1Coz5x8V7ulIklnzC3zym3Hz6r0A4QAknVC1294KixPRfw3MLPfGGsYNjZ
-        wdSoljVPRL7SS/KfFTZmrI8NBIosnNsY9SwI1J5Y3m6u5/vGvU8RNZ/zoR1BJhRtyu1SaxhJ98HWY
-        hF/o8M5J8UFSjCHu0Q770Bchg1OLtXK22vwknekIgTSpieGddGwb3wOWFuBMeXY47TwSdRLFm2zuf
-        2nHKjAOg==;
+        bh=iu6giSDQep7gyGP1lDKtlc6IYXmVnaTVrX/CCTaVb0M=; b=DjtDAC+Fj3ONzc3f/LuiTUKvxo
+        SDHshO4T3HLu3MQm0sH37Fbdepe5vHrMh2X85ZIRB3VKOFCMD6eu9hbSHPVXb/JEZlTVz4fb/QaOO
+        BDhpIj3EXUQVUT2d08hdmc3vkXIK09a1I2y36ZeBdJojaOBtTGQKqMEq1bBjcQ9+oxSMJ6wh9XndQ
+        XFFmfRdMT7PK47VLSVOApDsSWhQlhOShT9lQkQ27wwQ5dQ9Reu8WMtU3dBcEwVqIH/+3N3VSUo+dA
+        Al21lR6b/0ULA1Vne9lErcUCQ0iQn/gB9iDUQXUDKnuMLXYjLzLH5ccM+azrWJFGQdvlsLAuQBjnS
+        RkEjsxRA==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYbHh-0005zB-51; Wed, 05 Jun 2019 19:09:17 +0000
+        id 1hYbHo-00067d-E1; Wed, 05 Jun 2019 19:09:25 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Sebastian Ott <sebott@linux.ibm.com>,
@@ -52,9 +52,9 @@ Cc:     Sebastian Ott <sebott@linux.ibm.com>,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
         usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
-Date:   Wed,  5 Jun 2019 21:08:33 +0200
-Message-Id: <20190605190836.32354-11-hch@lst.de>
+Subject: [PATCH 12/13] usb-storage: set virt_boundary_mask in the scsi host
+Date:   Wed,  5 Jun 2019 21:08:35 +0200
+Message-Id: <20190605190836.32354-13-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190605190836.32354-1-hch@lst.de>
 References: <20190605190836.32354-1-hch@lst.de>
@@ -67,115 +67,63 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This ensures all proper DMA layer handling is taken care of by the
-SCSI midlayer.  Note that the effect is global, as the IOMMU merging
-is based off a paramters in struct device.  We could still turn if off
-if no PCIe devices are present, but I don't know how to find that out.
-
-Also remove the bogus nomerges flag, merges do take the virt_boundary
-into account.
+SCSI midlayer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c   | 46 +++++----------------
- drivers/scsi/megaraid/megaraid_sas_fusion.c |  7 ++++
- 2 files changed, 18 insertions(+), 35 deletions(-)
+ drivers/usb/storage/scsiglue.c | 10 ----------
+ drivers/usb/storage/usb.c      | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 3dd1df472dc6..20b3b3f8bc16 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -1870,39 +1870,6 @@ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
- 	}
- }
- 
--/*
-- * megasas_set_nvme_device_properties -
-- * set nomerges=2
-- * set virtual page boundary = 4K (current mr_nvme_pg_size is 4K).
-- * set maximum io transfer = MDTS of NVME device provided by MR firmware.
-- *
-- * MR firmware provides value in KB. Caller of this function converts
-- * kb into bytes.
-- *
-- * e.a MDTS=5 means 2^5 * nvme page size. (In case of 4K page size,
-- * MR firmware provides value 128 as (32 * 4K) = 128K.
-- *
-- * @sdev:				scsi device
-- * @max_io_size:				maximum io transfer size
-- *
-- */
--static inline void
--megasas_set_nvme_device_properties(struct scsi_device *sdev, u32 max_io_size)
--{
--	struct megasas_instance *instance;
--	u32 mr_nvme_pg_size;
--
--	instance = (struct megasas_instance *)sdev->host->hostdata;
--	mr_nvme_pg_size = max_t(u32, instance->nvme_page_size,
--				MR_DEFAULT_NVME_PAGE_SIZE);
--
--	blk_queue_max_hw_sectors(sdev->request_queue, (max_io_size / 512));
--
--	blk_queue_flag_set(QUEUE_FLAG_NOMERGES, sdev->request_queue);
--	blk_queue_virt_boundary(sdev->request_queue, mr_nvme_pg_size - 1);
--}
--
--
- /*
-  * megasas_set_static_target_properties -
-  * Device property set by driver are static and it is not required to be
-@@ -1961,8 +1928,10 @@ static void megasas_set_static_target_properties(struct scsi_device *sdev,
- 		max_io_size_kb = le32_to_cpu(instance->tgt_prop->max_io_size_kb);
- 	}
- 
--	if (instance->nvme_page_size && max_io_size_kb)
--		megasas_set_nvme_device_properties(sdev, (max_io_size_kb << 10));
-+	if (instance->nvme_page_size && max_io_size_kb) {
-+		blk_queue_max_hw_sectors(sdev->request_queue,
-+				(max_io_size_kb << 10) / 512);
-+	}
- 
- 	scsi_change_queue_depth(sdev, device_qd);
- 
-@@ -6258,6 +6227,7 @@ static int megasas_start_aen(struct megasas_instance *instance)
- static int megasas_io_attach(struct megasas_instance *instance)
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index 59190d88fa9f..02c3b66b3f78 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -65,7 +65,6 @@ static const char* host_info(struct Scsi_Host *host)
+ static int slave_alloc (struct scsi_device *sdev)
  {
- 	struct Scsi_Host *host = instance->host;
-+	u32 nvme_page_size = instance->nvme_page_size;
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
  
  	/*
- 	 * Export parameters required by SCSI mid-layer
-@@ -6298,6 +6268,12 @@ static int megasas_io_attach(struct megasas_instance *instance)
- 	host->max_lun = MEGASAS_MAX_LUN;
- 	host->max_cmd_len = 16;
- 
-+	if (nvme_page_size) {
-+		if (nvme_page_size > MR_DEFAULT_NVME_PAGE_SIZE)
-+			nvme_page_size = MR_DEFAULT_NVME_PAGE_SIZE;
-+		host->virt_boundary_mask = nvme_page_size - 1;
-+	}
-+
- 	/*
- 	 * Notify the mid-layer about the new controller
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -74,15 +73,6 @@ static int slave_alloc (struct scsi_device *sdev)
  	 */
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 4dfa0685a86c..a9ff3a648e7b 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -1935,6 +1935,13 @@ megasas_is_prp_possible(struct megasas_instance *instance,
- 			build_prp = true;
- 	}
+ 	sdev->inquiry_len = 36;
  
-+/*
-+ * XXX: All the code following should go away.  The block layer guarantees
-+ * merging according to the virt boundary.  And while we might have had some
-+ * issues with that in the past we fixed them, and any new bug should be fixed
-+ * in the core code as well.
-+ */
+-	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+ 	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+index 9a79cd9762f3..b0f23f4f58e3 100644
+--- a/drivers/usb/storage/usb.c
++++ b/drivers/usb/storage/usb.c
+@@ -1050,6 +1050,16 @@ int usb_stor_probe2(struct us_data *us)
+ 	usb_autopm_get_interface_no_resume(us->pusb_intf);
+ 	snprintf(us->scsi_name, sizeof(us->scsi_name), "usb-storage %s",
+ 					dev_name(&us->pusb_intf->dev));
 +
- /*
-  * Below code detects gaps/holes in IO data buffers.
-  * What does holes/gaps mean?
++	/*
++	 * USB has unusual scatter-gather requirements: the length of each
++	 * scatterlist element except the last must be divisible by the
++	 * Bulk maxpacket value.  Fortunately this value is always a
++	 * power of 2.  Inform the block layer about this requirement.
++	 */
++	us_to_host(us)->virt_boundary_mask =
++		usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0) - 1;
++
+ 	result = scsi_add_host(us_to_host(us), dev);
+ 	if (result) {
+ 		dev_warn(dev,
 -- 
 2.20.1
 
