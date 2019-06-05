@@ -2,106 +2,102 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FDC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ABAC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE1820717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8308820652
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZHiWZLHH"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bx6s5UzF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfFEKtj (ORCPT
+        id S1727247AbfFEKw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:49:39 -0400
-Received: from mout.gmx.net ([212.227.15.15]:37749 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfFEKtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:49:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1559731760;
-        bh=v/j4Z2eD2GD0zhfPgdWBU+2pAksyhmUHHesaJHOcPaE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZHiWZLHHyxs88AT8AMdw01q3xTaXgiAve8Y2VyJolxMQ9Wab/woTcgutxaXQ9rydX
-         R5atdDl5Q6WImQ8mjSTLSGwxSjXd/aLjkT/4EHQslHbc2ksCXeQD9/opLGZBRrNwj+
-         XD6WOUExB2+WBhkZgM9AFzRx9/zdwVC7eJcc9m2w=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx001
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MhhwJ-1hBhZU3L4V-00MtYC; Wed, 05
- Jun 2019 12:49:19 +0200
-Subject: Re: [PATCH 1/4] clk: bcm2835: remove pllb
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
- <20190604173223.4229-2-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <b597c584-76a6-d681-512b-da46306f567c@gmx.net>
-Date:   Wed, 5 Jun 2019 12:49:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 06:52:29 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:28861 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727160AbfFEKw2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:52:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559731947; x=1591267947;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=Z765gJrGCQWNcstd9xr84qW2Pj376xBDQSMf8K7Obcg=;
+  b=bx6s5UzFy5adjJKntwzkAeX9KoIhG9NdTnZ31m0/c1Y/LHZv5uTXM+2S
+   Tl8pUVRhm5awqIOV6wd1sJr/9TP3A6ScfyKqyTF5jMoZqWbw5yJq5a2bJ
+   pQrq8LWkv88lEU22MtiCNhp3ppirMgYQ6jldJ1NKj5rnKR5ElE6NZ0eNc
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
+   d="scan'208";a="803708477"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Jun 2019 10:52:25 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 8BBCDA2123;
+        Wed,  5 Jun 2019 10:52:22 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 10:52:21 +0000
+Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.162.246) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 10:52:12 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
+        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
+        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
+        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>,
+        Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v2 0/2] Amazon's Annapurna Labs Fabric Interrupt Controller
+Date:   Wed, 5 Jun 2019 13:51:59 +0300
+Message-ID: <1559731921-14023-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190604173223.4229-2-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:q8hji9dsXrh1VvUv+Ij0VE8pGv10bixoURYgbVqiiyW6VNg1c3H
- uzsDyRSLniYuAR79+VWAGy3LAZ6TxbkjdbMIVBCR72yyzT4LmXgYetMVMzshusahVERQ/G/
- GNCzfEdHdKAqyT84AfMp49VTuGtWbw1x0mB0DQoPcPloIN0hzbqOqGDdd8XMcbkA5CVbCYy
- neVdpYuk6bP2BuD/kpG5g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q/sl8JaOVvU=:XZ0LNFl/HcVox4CcPVZBtn
- oncvuIZLNyw6OVvwgAaL7yKjeOOTz7+hOcFhhqfbIjCU8tVZhkNatbOZ6IoGgC3AZm4rEAJ8d
- bYD5v/lXmPk/RLQVdN+FeWIgjyhVupsWYoUdazFjYzygYpToKWUsGI6gGoZHTcqDNGfr4gwYi
- v+pvRR/FDN1HXD84TtKKlSCsm7T5fVBNPoe/VqwD8wVEEthM6fOi6CTAb/vJ6rltJ7L3jvztK
- Z7roAs4ZjsfzzqjMIw13xwuQgAzeDG36VuW6tAUpSevh7PCT9pQBM0cgYZjqR1vGOVwDxqB/u
- vvu0Wvg2sJHSk8l4n3eGpkbL1ZYY78A/+xid7ECTWfnAtyboluVJxB13R1EkRx2C0U8Rfkiii
- PA7By/H6LdQymoRJIBZMxlTKEN8cPKh4HviYHzPbPwBgsPjovnSQtDPWPsxfy682DcL+96/a2
- uOyjlPPU1NtDzvZsbJlthbDqjiAinxLOYZbqLLZJa3OdtSGE2hrT1nWzWgG9cQnwbIXZZ8GY2
- hydmKeAO9XfMGyzWRFkuMSicxKlj4SXV5lvkxbGsuck6wg9piexaEmhuUexm5kKzilhd6zkJb
- gOOSBahC5NcVPemuDSrX28iYaZ7ImBY385Jk3OkoAR+PomvZfrrTcmpNIcUFgU8H/LnypX+fy
- zYdSK0fIEkJ2wfUWDs4p+YFWq/lV22d+RBu4zskSSx79HaeQmdDp1HtAQ4cUIl/qBpRna7xuV
- EqbylGUNEJ2Nw+1medUtMH1L4zSI98qJphLTkwBNPOLPylOHekYfVVVDNfIndwL6xHx1l/MRg
- W0FyCtJF+U7hvMwN7GhBhai60PSpmWH8kG3GmGCoESQwNfbsJoMgXIzlV87MHMCxdo+YbcURp
- 7F+SLdhWad0CcwOvcdi2ypAi8UM7WszHogSEJB1B++++DPGVV2QVOvze/gm7ppQ3TBg+C0S0M
- 9+p6cmVLNpSKWeUbUZSDpzOmL5hwTIEka6PeOj9V5t8ShFr7mYD1XYKMMwzpjWh1cJYhiuIvx
- yw==
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.246]
+X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
-> Raspberry Pi's firmware controls this pll, we should use the firmware
-> interface to access it.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/clk/bcm/clk-bcm2835.c | 25 -------------------------
->  1 file changed, 25 deletions(-)
->
-> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835=
-.c
-> index 770bb01f523e..ccb0319fc2e9 100644
-> --- a/drivers/clk/bcm/clk-bcm2835.c
-> +++ b/drivers/clk/bcm/clk-bcm2835.c
-> @@ -1651,31 +1651,6 @@ static const struct bcm2835_clk_desc clk_desc_arr=
-ay[] =3D {
->  		.fixed_divider =3D 1,
->  		.flags =3D CLK_SET_RATE_PARENT),
->
-> -	/* PLLB is used for the ARM's clock. */
-How about leaving a short comment, that these clocks are now handled by
-a different driver?
+This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
+Controller.
+
+The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
+inputs/sources. This FIC may be cascaded into another FIC or connected
+directly to the main CPU Interrupt Controller (e.g. GIC).
+
+Changes since v1:
+=================
+- removing unused exported APIs
+- updating cover letter and commit message accordingly
+
+
+
+Talel Shenhar (2):
+  dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+  irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
+    Controller Driver
+
+ .../interrupt-controller/amazon,al-fic.txt         |  22 ++
+ MAINTAINERS                                        |   6 +
+ drivers/irqchip/Kconfig                            |  11 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-al-fic.c                       | 289 +++++++++++++++++++++
+ 5 files changed, 329 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+ create mode 100644 drivers/irqchip/irq-al-fic.c
+
+-- 
+2.7.4
+
