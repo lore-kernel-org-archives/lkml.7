@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628ADC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F8EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366A52086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0705E20872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WaZgcoce"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r+9XiNyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfFENXb (ORCPT
+        id S1728193AbfFENXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:23:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50914 "EHLO
+        Wed, 5 Jun 2019 09:23:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50946 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbfFENX3 (ORCPT
+        with ESMTP id S1728180AbfFENXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:23:29 -0400
+        Wed, 5 Jun 2019 09:23:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6vcpd/Yrl9598aZ1kT1YSLwwTRxt5Xg91scKOkavI0E=; b=WaZgcoceQDoG8x4MRnr/wmaQ4w
-        YW0NogyHLAJbcu+UwLiuKz6BwIn+2m9ehMf9zvY2nCO5X+eE7r3MunHDyRXTUhnZy9zkT0bq/JEsO
-        o2ZkRkEIIS1zFz610iab/DzB6IaI2COfZ1Ha2wznL550TEIl0ZbgnAj+2G4vnf7d/KsjvVX9epvPy
-        qmERb9gJ8yCHWd5IgZTkx6c+xwnbvNpvTBLCes8JvJmKCJJ487N3BChp6aIUro9W6Xg5y0jf7NM9k
-        EElzkgVMuj5PYyKop76NE+SkA0Aug7/gkeLRqWttNU1/vktv0v5yDBEemCfZaprAKRLxRpb7NykVV
-        th1MaCfQ==;
+        bh=XCOFf8t/Vr4PnHMu/Ezv4KPVfApDXfi03GXCz9r25CY=; b=r+9XiNyHFRAsEQeWC5KbV3g/48
+        XwsGkecIlhpZfTfTzHvZB4D2czHyZW1Wnkd0UKuv/1JWER1d+yPoQPPE7o3MGS0MpSqLNTYbU4eh1
+        hQk6BOQiclJ5xWJT3zbHPojxY988P8BfqSlnXPOPP0+3gLhY4i4BMT273AOFg1Xo6cTWoElPlvoG0
+        t5zJrPII5+1DhBiQ3nxJnU94R+m/MDvivh2P9JDmEIwI0KafynXAp/5MOIxlGx9dLyf3RTdXVL71f
+        +P0PWcaV6/nmc021kudgxo900nl+WWig3xApYyau3zT60N1LGFiY+YIzDGyNlsc7P6v4QOStNB6cb
+        K8DdEEJA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYVsJ-0006rQ-2J; Wed, 05 Jun 2019 13:22:43 +0000
+        id 1hYVsJ-0006rT-2f; Wed, 05 Jun 2019 13:22:43 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 88F672073F418; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
-Message-Id: <20190605131944.946978563@infradead.org>
+        id 942882075075E; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
+Message-Id: <20190605131945.125037517@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 05 Jun 2019 15:08:00 +0200
+Date:   Wed, 05 Jun 2019 15:08:03 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -60,8 +60,9 @@ Cc:     linux-kernel@vger.kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: [PATCH 07/15] x86: Add int3_emulate_call() selftest
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 10/15] static_call: Add basic static call infrastructure
 References: <20190605130753.327195108@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -70,117 +71,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given that the entry_*.S changes for this functionality are somewhat
-tricky, make sure the paths are tested every boot, instead of on the
-rare occasion when we trip an INT3 while rewriting text.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Requested-by: Andy Lutomirski <luto@kernel.org>
+Static calls are a replacement for global function pointers.  They use
+code patching to allow direct calls to be used instead of indirect
+calls.  They give the flexibility of function pointers, but with
+improved performance.  This is especially important for cases where
+retpolines would otherwise be used, as retpolines can significantly
+impact performance.
+
+The concept and code are an extension of previous work done by Ard
+Biesheuvel and Steven Rostedt:
+
+  https://lkml.kernel.org/r/20181005081333.15018-1-ard.biesheuvel@linaro.org
+  https://lkml.kernel.org/r/20181006015110.653946300@goodmis.org
+
+There are two implementations, depending on arch support:
+
+ 1) out-of-line: patched trampolines (CONFIG_HAVE_STATIC_CALL)
+ 2) basic function pointers
+
+For more details, see the comments in include/linux/static_call.h.
+
+Cc: x86@kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Julia Cartwright <julia@ni.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Edward Cree <ecree@solarflare.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/a01f733889ebf4bc447507ab8041a60378eaa89f.1547073843.git.jpoimboe@redhat.com
 ---
- arch/x86/kernel/alternative.c |   81 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 77 insertions(+), 4 deletions(-)
+ arch/Kconfig                      |    3 
+ include/linux/static_call.h       |  135 ++++++++++++++++++++++++++++++++++++++
+ include/linux/static_call_types.h |   13 +++
+ 3 files changed, 151 insertions(+)
+ create mode 100644 include/linux/static_call.h
+ create mode 100644 include/linux/static_call_types.h
 
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -614,11 +614,83 @@ extern struct paravirt_patch_site __star
- 	__stop_parainstructions[];
- #endif	/* CONFIG_PARAVIRT */
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
+ 	  the chance of application behavior change because of timing
+ 	  differences. The counts are reported via debugfs.
  
++config HAVE_STATIC_CALL
++	bool
++
+ source "kernel/gcov/Kconfig"
+ 
+ source "scripts/gcc-plugins/Kconfig"
+--- /dev/null
++++ b/include/linux/static_call.h
+@@ -0,0 +1,135 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_STATIC_CALL_H
++#define _LINUX_STATIC_CALL_H
++
 +/*
-+ * Self-test for the INT3 based CALL emulation code.
++ * Static call support
 + *
-+ * This exercises int3_emulate_call() to make sure INT3 pt_regs are set up
-+ * properly and that there is a stack gap between the INT3 frame and the
-+ * previous context. Without this gap doing a virtual PUSH on the interrupted
-+ * stack would corrupt the INT3 IRET frame.
++ * Static calls use code patching to hard-code function pointers into direct
++ * branch instructions.  They give the flexibility of function pointers, but
++ * with improved performance.  This is especially important for cases where
++ * retpolines would otherwise be used, as retpolines can significantly impact
++ * performance.
 + *
-+ * See entry_{32,64}.S for more details.
++ *
++ * API overview:
++ *
++ *   DECLARE_STATIC_CALL(key, func);
++ *   DEFINE_STATIC_CALL(key, func);
++ *   static_call(key, args...);
++ *   static_call_update(key, func);
++ *
++ *
++ * Usage example:
++ *
++ *   # Start with the following functions (with identical prototypes):
++ *   int func_a(int arg1, int arg2);
++ *   int func_b(int arg1, int arg2);
++ *
++ *   # Define a 'my_key' reference, associated with func_a() by default
++ *   DEFINE_STATIC_CALL(my_key, func_a);
++ *
++ *   # Call func_a()
++ *   static_call(my_key, arg1, arg2);
++ *
++ *   # Update 'my_key' to point to func_b()
++ *   static_call_update(my_key, func_b);
++ *
++ *   # Call func_b()
++ *   static_call(my_key, arg1, arg2);
++ *
++ *
++ * Implementation details:
++ *
++ *    This requires some arch-specific code (CONFIG_HAVE_STATIC_CALL).
++ *    Otherwise basic indirect calls are used (with function pointers).
++ *
++ *    Each static_call() site calls into a trampoline associated with the key.
++ *    The trampoline has a direct branch to the default function.  Updates to a
++ *    key will modify the trampoline's branch destination.
 + */
-+static void __init int3_magic(unsigned int *ptr)
++
++#include <linux/types.h>
++#include <linux/cpu.h>
++#include <linux/static_call_types.h>
++
++#ifdef CONFIG_HAVE_STATIC_CALL
++#include <asm/static_call.h>
++extern void arch_static_call_transform(void *site, void *tramp, void *func);
++#endif
++
++
++#define DECLARE_STATIC_CALL(key, func)					\
++	extern struct static_call_key key;				\
++	extern typeof(func) STATIC_CALL_TRAMP(key)
++
++
++#if defined(CONFIG_HAVE_STATIC_CALL)
++
++struct static_call_key {
++	void *func, *tramp;
++};
++
++#define DEFINE_STATIC_CALL(key, _func)					\
++	DECLARE_STATIC_CALL(key, _func);				\
++	struct static_call_key key = {					\
++		.func = _func,						\
++		.tramp = STATIC_CALL_TRAMP(key),			\
++	};								\
++	ARCH_DEFINE_STATIC_CALL_TRAMP(key, _func)
++
++#define static_call(key, args...) STATIC_CALL_TRAMP(key)(args)
++
++static inline void __static_call_update(struct static_call_key *key, void *func)
 +{
-+	*ptr = 1;
++	cpus_read_lock();
++	WRITE_ONCE(key->func, func);
++	arch_static_call_transform(NULL, key->tramp, func);
++	cpus_read_unlock();
 +}
 +
-+extern __initdata unsigned long int3_selftest_ip; /* defined in asm below */
++#define static_call_update(key, func)					\
++({									\
++	BUILD_BUG_ON(!__same_type(func, STATIC_CALL_TRAMP(key)));	\
++	__static_call_update(&key, func);				\
++})
 +
-+static int __init
-+int3_exception_notify(struct notifier_block *self, unsigned long val, void *data)
-+{
-+	struct die_args *args = data;
-+	struct pt_regs *regs = args->regs;
++#define EXPORT_STATIC_CALL(key)						\
++	EXPORT_SYMBOL(STATIC_CALL_TRAMP(key))
 +
-+	if (!regs || user_mode(regs))
-+		return NOTIFY_DONE;
++#define EXPORT_STATIC_CALL_GPL(key)					\
++	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(key))
 +
-+	if (val != DIE_INT3)
-+		return NOTIFY_DONE;
 +
-+	if (regs->ip - INT3_INSN_SIZE != int3_selftest_ip)
-+		return NOTIFY_DONE;
++#else /* Generic implementation */
 +
-+	int3_emulate_call(regs, (unsigned long)&int3_magic);
-+	return NOTIFY_STOP;
-+}
++struct static_call_key {
++	void *func;
++};
 +
-+static void __init int3_selftest(void)
-+{
-+	static __initdata struct notifier_block int3_exception_nb = {
-+		.notifier_call	= int3_exception_notify,
-+		.priority	= INT_MAX-1, /* last */
-+	};
-+	unsigned int val = 0;
-+
-+	BUG_ON(register_die_notifier(&int3_exception_nb));
-+
-+	/*
-+	 * Basically: int3_magic(&val); but really complicated :-)
-+	 *
-+	 * Stick the address of the INT3 instruction into int3_selftest_ip,
-+	 * then trigger the INT3, padded with NOPs to match a CALL instruction
-+	 * length.
-+	 */
-+	asm volatile ("1: int3; nop; nop; nop; nop\n\t"
-+		      ".pushsection .init.data,\"aw\"\n\t"
-+		      ".align " __ASM_SEL(4, 8) "\n\t"
-+		      ".type int3_selftest_ip, @object\n\t"
-+		      ".size int3_selftest_ip, " __ASM_SEL(4, 8) "\n\t"
-+		      "int3_selftest_ip:\n\t"
-+		      __ASM_SEL(.long, .quad) " 1b\n\t"
-+		      ".popsection\n\t"
-+		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
-+
-+	BUG_ON(val != 1);
-+
-+	unregister_die_notifier(&int3_exception_nb);
-+}
-+
- void __init alternative_instructions(void)
- {
--	/* The patching is not fully atomic, so try to avoid local interruptions
--	   that might execute the to be patched code.
--	   Other CPUs are not running. */
-+	int3_selftest();
-+
-+	/*
-+	 * The patching is not fully atomic, so try to avoid local
-+	 * interruptions that might execute the to be patched code.
-+	 * Other CPUs are not running.
-+	 */
- 	stop_nmi();
- 
- 	/*
-@@ -643,10 +715,11 @@ void __init alternative_instructions(voi
- 					    _text, _etext);
- 	}
- 
--	if (!uniproc_patched || num_possible_cpus() == 1)
-+	if (!uniproc_patched || num_possible_cpus() == 1) {
- 		free_init_pages("SMP alternatives",
- 				(unsigned long)__smp_locks,
- 				(unsigned long)__smp_locks_end);
++#define DEFINE_STATIC_CALL(key, _func)					\
++	DECLARE_STATIC_CALL(key, _func);				\
++	struct static_call_key key = {					\
++		.func = _func,						\
 +	}
- #endif
- 
- 	apply_paravirt(__parainstructions, __parainstructions_end);
++
++#define static_call(key, args...)					\
++	((typeof(STATIC_CALL_TRAMP(key))*)(key.func))(args)
++
++static inline void __static_call_update(struct static_call_key *key, void *func)
++{
++	WRITE_ONCE(key->func, func);
++}
++
++#define static_call_update(key, func)					\
++({									\
++	BUILD_BUG_ON(!__same_type(func, STATIC_CALL_TRAMP(key)));	\
++	__static_call_update(&key, func);				\
++})
++
++#define EXPORT_STATIC_CALL(key) EXPORT_SYMBOL(key)
++#define EXPORT_STATIC_CALL_GPL(key) EXPORT_SYMBOL_GPL(key)
++
++#endif /* CONFIG_HAVE_STATIC_CALL */
++
++#endif /* _LINUX_STATIC_CALL_H */
+--- /dev/null
++++ b/include/linux/static_call_types.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _STATIC_CALL_TYPES_H
++#define _STATIC_CALL_TYPES_H
++
++#include <linux/stringify.h>
++
++#define STATIC_CALL_TRAMP_PREFIX ____static_call_tramp_
++#define STATIC_CALL_TRAMP_PREFIX_STR __stringify(STATIC_CALL_TRAMP_PREFIX)
++
++#define STATIC_CALL_TRAMP(key) __PASTE(STATIC_CALL_TRAMP_PREFIX, key)
++#define STATIC_CALL_TRAMP_STR(key) __stringify(STATIC_CALL_TRAMP(key))
++
++#endif /* _STATIC_CALL_TYPES_H */
 
 
