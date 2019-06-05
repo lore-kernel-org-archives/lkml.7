@@ -2,179 +2,87 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E962C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D13C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256B9206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VzxwyZGN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AhttVGMI"
+	by mail.kernel.org (Postfix) with ESMTP id 6A5D3206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfFEOH6 (ORCPT
+        id S1728353AbfFEOIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:07:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51154 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFEOH6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:07:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 71635609CD; Wed,  5 Jun 2019 14:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559743677;
-        bh=NSod75b8DJcTQooBObsabB98SlwnE/yB22rLx7b7vo4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VzxwyZGNZQA4zeBv/BThAhOh4uQbB2NV8zcoA2TC+zvKtIofIn3LXJaG+ewtqJxvh
-         NaTwokrhZVSDgQ7r2AAWTJteIzwF4ri0ToLKOXwp4hhtdIvNwZSizFetVFjbgNUTiG
-         XPYs4T09OT0NHzPW3k2rr0/7uAAzuM3KmD0bJFKA=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37D4560213;
-        Wed,  5 Jun 2019 14:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559743676;
-        bh=NSod75b8DJcTQooBObsabB98SlwnE/yB22rLx7b7vo4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AhttVGMIKT/YAg18mc+nO6i4RoK8LFyfN6scj22jM6vBiFF/l/SCvUpWt04O0KpV6
-         +mUF+hnGMTEYjCt+Tb22tm+q3krR2EIA03Z09X19U2zXgJXI2dAaykEhNOFKJRgSXJ
-         U++evfu2CgTkylaAVJE29JBFO0j69VAJJsdQLidw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37D4560213
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
- SDM845
-To:     Lee Jones <lee.jones@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     balbi@kernel.org, wsa+renesas@sang-engineering.com,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        david.brown@linaro.org, alokc@codeaurora.org,
-        kramasub@codeaurora.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        andy.gross@linaro.org, jlhugo@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-7-lee.jones@linaro.org>
- <20190605070029.GN22737@tuxbook-pro> <20190605083454.GO4797@dell>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <d9ba98e6-3caf-62fc-45ca-944cb718b7e4@codeaurora.org>
-Date:   Wed, 5 Jun 2019 08:07:54 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 5 Jun 2019 10:08:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:38356 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfFEOIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:08:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 07:08:15 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga007.jf.intel.com with ESMTP; 05 Jun 2019 07:08:15 -0700
+Date:   Wed, 5 Jun 2019 07:08:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+Message-ID: <20190605140815.GA26328@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-3-sean.j.christopherson@intel.com>
+ <20190604114951.GC30594@linux.intel.com>
+ <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190605083454.GO4797@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/2019 2:34 AM, Lee Jones wrote:
-> On Wed, 05 Jun 2019, Bjorn Andersson wrote:
-> 
->> On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
->>
->>> When booting with Device Tree, the current default boot configuration
->>> table option, the request to boot via 'host mode' comes from the
->>> "dr_mode" property.
->>
->> This has been the default on the MTP, but this is changing as this is
->> causing issues when connected downstream from a hub (the typical
->> development case for the primary USB port of a phone like device) and
->> more importantly we don't have support for the PMIC blocks that control
->> VBUS.
-> 
-> My point is not about which mode is currently chosen.  It's more about
-> the capability of choosing which mode is appropriate for a given
-> system via DT.
-> 
->> Once these issues are resolved the dr_mode would be "otg".
-> 
-> OTG doesn't work on this H/W, so we need to specify "host" mode.
+On Tue, Jun 04, 2019 at 03:10:22PM -0700, Xing, Cedric wrote:
+> A bit off topic here. This mmap()/mprotect() discussion reminds me a question
+> (guess for Jarkko): Now that vma->vm_file->private_data keeps a pointer to
+> the enclave, why do we store it again in vma->vm_private? It isn't a big deal
+> but non-NULL vm_private does prevent mprotect() from merging adjacent VMAs. 
 
-How have you made that determination?
+vma->vm_ops->close also prevents merging, and we need that to refcount the
+enclave and mm.
 
-> 
->>> A property of the same name can be used inside
->>> ACPI tables too.  However it is missing from the SDM845's ACPI tables
->>> so we have to supply this information using Platform Device Properites
->>> instead.
->>>
->>
->> Afaict this would install a fall-back property, so in the case that we
->> have specified dr_mode in DT (or ACPI) that would take precedence. So
-> 
-> That's correct.
-> 
->> the commit message should reflect that this redefines the default choice
->> to be "host", rather than "otg".
-> 
-> No problem. >
->> Which is in conflict with what's described for dr_mode in
->> Documentation/devicetree/bindings/usb/generic.txt
-> 
-> This implementation only affects ACPI based platforms.  When booting
-> with DT, the description in that DT related document is still
-> accurate.
-> 
->> And this driver is used on a range of different Qualcomm platforms, so I
->> don't think this is SDM845 specific.
-> 
-> ACPI based platforms?
-> 
-> All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
->   
->>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>> ---
->>>   drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
->>>   1 file changed, 12 insertions(+)
->>>
->>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->>> index 349bf549ee44..f21fdd6cdd1a 100644
->>> --- a/drivers/usb/dwc3/dwc3-qcom.c
->>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->>> @@ -468,6 +468,11 @@ static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
->>>   };
->>>   MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
->>>   
->>> +static const struct property_entry dwc3_qcom_acpi_properties[] = {
->>> +	PROPERTY_ENTRY_STRING("dr_mode", "host"),
->>> +	{}
->>> +};
->>> +
->>>   static int dwc3_qcom_probe(struct platform_device *pdev)
->>>   {
->>>   	struct device_node	*np = pdev->dev.of_node, *dwc3_np;
->>> @@ -603,6 +608,13 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->>>   			goto platform_unalloc;
->>>   		}
->>>   
->>> +		ret = platform_device_add_properties(qcom->dwc3,
->>> +						     dwc3_qcom_acpi_properties);
->>> +		if (ret < 0) {
->>> +			dev_err(&pdev->dev, "failed to add properties\n");
->>> +			goto platform_unalloc;
->>> +		}
->>> +
->>>   		ret = platform_device_add(qcom->dwc3);
->>>   		if (ret) {
->>>   			dev_err(&pdev->dev, "failed to add device\n");
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+We also rely on nullifying vma->vm_private_data in the unlikely event that
+adding a new mm to the enclave fails on kzalloc().
