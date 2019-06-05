@@ -3,117 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF32EC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2C820866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D77420872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559777485;
-	bh=Gv90T7rcmE4D6Bw1Jj/m4qXdxlWX226iKT0AddgAoBM=;
+	s=default; t=1559777600;
+	bh=Z3tddQB2KosKS8slNYJZDj6XrnlD8q21sPK71MNMMsk=;
 	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=Wx8C2PxJ6MwO2QzJ0qXTw0ldx/Wj9IzOEq2HonoUV/zEH05o+f+CPKRslkQWa8gjp
-	 joL3GlpCFBsAE/zXjXCLDkvULjZFK+QJkFboZgPo2rzInJgqpo4d3jq19P8TPQafKl
-	 UQLRLts1Pi8HB7PfVYKqeE1BAZrChy371hAvMdxg=
+	b=Bi4mjU5HmpZ6cIf+8YwyfGjXmvze2Nuuy3N8I3dpyUodSXeCJv8MPdPaSr3Xn+zKy
+	 i/XQWpkvNbrSXXwzJBJwBaxZD99xT3YVe/7/5Drgq5pPR0/bqY2s6VvQNZk+iJrUdS
+	 /id+3alLKTcD0iQPYYOYAKjkYmeI3/ZhK588ZmOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfFEXbZ (ORCPT
+        id S1726671AbfFEXdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 19:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
+        Wed, 5 Jun 2019 19:33:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbfFEXbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 19:31:24 -0400
+        id S1726532AbfFEXdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 19:33:19 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC6DD2083E;
-        Wed,  5 Jun 2019 23:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06CE62083E;
+        Wed,  5 Jun 2019 23:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559777483;
-        bh=Gv90T7rcmE4D6Bw1Jj/m4qXdxlWX226iKT0AddgAoBM=;
+        s=default; t=1559777599;
+        bh=Z3tddQB2KosKS8slNYJZDj6XrnlD8q21sPK71MNMMsk=;
         h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=mM5nhpZ30n+cxkI7tGpiNIXusTJq40P+ZToze2Ml4tuE1e8D3nnDJWADhN9un3TPo
-         v5/nKmAeqfuuxIVQtsEYXWXH7zgGrtg+l7fV9B34O07X6PDhbdVXnJ9yb5picEb4+c
-         m45rcdzn9aga9qLDnbJIJxCdOTFbpptCwNv8Si60=
+        b=tPZr8Ui7o0n3eqomnLmPN3LKzIgBLT939aDKAzBV/YX19ItuCL8Dx9Yq6IeoEj1PK
+         hCXYqWjBSoia4X1vANS7sLgrpOrpNfbU/q/42gitpFSMITnKrLtYpuAXp1D1WdfVhH
+         Q2kldMWUVIvEsMA3p2mzFiYEiePFTu9fhqXn/HVw=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-4-git-send-email-skomatineni@nvidia.com> <20190529232810.14A5224366@mail.kernel.org> <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
-        jonathanh@nvidia.com, linus.walleij@linaro.org,
-        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
-        tglx@linutronix.de, thierry.reding@gmail.com
+In-Reply-To: <20190604015928.23157-1-Anson.Huang@nxp.com>
+References: <20190604015928.23157-1-Anson.Huang@nxp.com>
+Cc:     Linux-imx@nxp.com
+To:     Anson.Huang@nxp.com, abel.vesa@nxp.com, aisheng.dong@nxp.com,
+        bjorn.andersson@linaro.org, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, dinguyen@kernel.org,
+        enric.balletbo@collabora.com, festevam@gmail.com,
+        horms+renesas@verge.net.au, jagan@amarulasolutions.com,
+        kernel@pengutronix.de, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com,
+        mturquette@baylibre.com, olof@lixom.net, ping.bai@nxp.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org,
+        will.deacon@arm.com
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
+Subject: Re: [PATCH V3 1/4] dt-bindings: imx: Add clock binding doc for i.MX8MN
 User-Agent: alot/0.8.1
-Date:   Wed, 05 Jun 2019 16:31:22 -0700
-Message-Id: <20190605233123.AC6DD2083E@mail.kernel.org>
+Date:   Wed, 05 Jun 2019 16:33:18 -0700
+Message-Id: <20190605233319.06CE62083E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-05-31 12:52:44)
+Quoting Anson.Huang@nxp.com (2019-06-03 18:59:25)
+> From: Anson Huang <Anson.Huang@nxp.com>
 >=20
-> On 5/29/19 4:28 PM, Stephen Boyd wrote:
-> > Quoting Sowjanya Komatineni (2019-05-28 16:08:47)
-> >> +               WARN_ON(1);
-> >> +               return;
-> >> +       }
-> >> +
-> >> +       parent_rate =3D clk_hw_get_rate(parent);
-> >> +
-> >> +       if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
-> >> +               WARN_ON(1);
-> >> +}
-> >> +#endif
-> >> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> >> index 09bccbb9640c..e4d124cc5657 100644
-> >> --- a/drivers/clk/tegra/clk.h
-> >> +++ b/drivers/clk/tegra/clk.h
-> >> @@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *p=
-ll, u8 p_div);
-> >>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
-> >>                   u8 frac_width, u8 flags);
-> >>  =20
-> >> +#ifdef CONFIG_PM_SLEEP
-> > Can you remove this ifdef? It just complicates compilation testing.
-> OK, Will fix in next version
-> >> +void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
-> >> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
-> >> +void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
-> >> +void tegra_clk_plle_tegra210_resume(struct clk *c);
-> >> +void tegra_clk_sync_state_pll(struct clk *c);
-> >> +void tegra_clk_sync_state_pll_out(struct clk *clk);
-> > Do these APIs need to operate on struct clk? Why can't they operate on
-> > clk_hw or why can't we drive the suspend/resume sequence from the clk
-> > provider driver itself?
-> >
-> Yes can change to use clk_hw.
+> Add the clock binding doc for i.MX8MN.
 >=20
-> By clk provider driver, are you referring to clk-tegra210?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes.
+> ---
+>  .../devicetree/bindings/clock/imx8mn-clock.txt     |  29 +++
 
-I guess so.
+Can this be yaml?
 
+>  include/dt-bindings/clock/imx8mn-clock.h           | 215 +++++++++++++++=
+++++++
+>  2 files changed, 244 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx8mn-clock.=
+txt
+>  create mode 100644 include/dt-bindings/clock/imx8mn-clock.h
 >=20
-> clk-terga210 driver has suspend/resume implementation. These API's are=20
-> for corresponding clock specific implementations (clk-pll, clk-pll-out,=20
-> clk-divider) for enabling and restoring to proper rate and are invoked=20
-> during clk-tegra210 driver resume.
-
-Yes, so when the clk provider suspends it needs to do something? Our
-handling of clk rates and other state like enable/disable over
-suspend/resume isn't really well thought out or implemented so far. TI
-has some code to do some stuff, but otherwise I haven't seen drivers
-handling this. Ideally it would be something generic in the framework so
-that drivers don't have to work around stuff.
