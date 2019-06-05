@@ -2,90 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0369C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FE8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7D8206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fsssAC2j"
+	by mail.kernel.org (Postfix) with ESMTP id 752BF206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfFEQbt (ORCPT
+        id S1728768AbfFEQcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:31:49 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38117 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFEQbt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:31:49 -0400
-Received: by mail-yw1-f68.google.com with SMTP id r128so4649476ywe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 09:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y1OYtud6ynRddkkX+/uoFR8oepImmq49z7SkEsX+oO8=;
-        b=fsssAC2jxc6N9VdT89cO2W5eloOCThusSzDuCWrmX8rL3p6SjRfShWT9Ro4szdGWzg
-         /OwLlE2zuZq1k+E8NKL6Xu/Yc3B7S/ZovUxRpqbTsCHZMOXnmF0hs/zz2rhKakBnZLfC
-         WxRN7X8xH5uToK3wDHNPnz1yMhJO9l9jPaHQxME5Hqv5eEaBJCkkjhdrboGh8/CUCNm0
-         2W34/DSB6kwzLbcW2AZIaxX8tiZzKXecdR3H9p8CJGlR6wsHg/fnJ0rJFoxBzBmjc5od
-         5u3Xyb8WSMOKFxSX+mkDCMW7LSojKD32zNQwJHPpEcsoz//DqbhhpWOo7EN8uXo3Fc5s
-         GYEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y1OYtud6ynRddkkX+/uoFR8oepImmq49z7SkEsX+oO8=;
-        b=eUId4A5bNi+Xu80p1x9xac2xlpFE2Vu2wgZ3WUmEQdhfDeu7Mj/CseH9y9XP2WSsk0
-         awTxhqWNAc/97oUWwQn5EiUcPgfYrGYfp4massGU3zkIkeJ5DJk0aH+elhV9FSgjgwK5
-         68jLXL7twvArZNla2DaUae8vKBj4FDXoW4eh4qhpO83QOYqeJ7yiruz/2nifpVQT+5t5
-         jjT/+Zme0obi52FpUfNw9hD8NXIbaUZghLN5c0w+VgbQRQcU4X9D6KVXlXEsClwMmS+T
-         AYrktgCO/1LPGii96z4duyruXD0dtPpBmnU26WKUZx5hNCb5mdXVLi9urzy4N/BaoPBh
-         6NCw==
-X-Gm-Message-State: APjAAAV+yNmR2fgYcbyWVT/XKd1Z9w9RrYH1G1T1vG12/9bwnRMSa6zr
-        GqNNOiOQkQ7LsTCsIEdyGWibvOgWucSZ+PtacmNA6w==
-X-Google-Smtp-Source: APXvYqwxp/w9I6RVMYzDSCXTuAeWq+uS/Kgz+ePstY0WG1Azd+0j00estnaPcFznlN81K3EH8wYJ8SzOBLDgFkoIAME=
-X-Received: by 2002:a81:4e94:: with SMTP id c142mr7970493ywb.398.1559752308314;
- Wed, 05 Jun 2019 09:31:48 -0700 (PDT)
+        Wed, 5 Jun 2019 12:32:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:34638 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfFEQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:32:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EA8A374;
+        Wed,  5 Jun 2019 09:32:08 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9ED53F5AF;
+        Wed,  5 Jun 2019 09:32:05 -0700 (PDT)
+Subject: Re: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
+        rppt@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, ebiederm@xmission.com, horms@verge.net.au,
+        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-mm@kvack.org, wangkefeng.wang@huawei.com
+References: <20190507035058.63992-1-chenzhou10@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <51995efd-8469-7c15-0d5e-935b63fe2d9f@arm.com>
+Date:   Wed, 5 Jun 2019 17:32:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
-In-Reply-To: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 5 Jun 2019 09:31:37 -0700
-Message-ID: <CALvZod7w+HaG3NKdeTsk93HjJ=sQ=6wQAYAfi9y5F34-9w6V3Q@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] zpool: Add malloc_support_movable to zpool_driver
-To:     Hui Zhu <teawaterz@linux.alibaba.com>,
-        Vitaly Wool <vitalywool@gmail.com>
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com,
-        Seth Jennings <sjenning@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190507035058.63992-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
->
-> As a zpool_driver, zsmalloc can allocate movable memory because it
-> support migate pages.
-> But zbud and z3fold cannot allocate movable memory.
->
+Hi!
 
-Cc: Vitaly
+On 07/05/2019 04:50, Chen Zhou wrote:
+> We use crashkernel=X to reserve crashkernel below 4G, which will fail
+> when there is no enough memory. Currently, crashkernel=Y@X can be used
+> to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
+> are requierd, capture kernel will boot failure because of no low memory.
 
-It seems like z3fold does support page migration but z3fold's malloc
-is rejecting __GFP_HIGHMEM. Vitaly, is there a reason to keep
-rejecting __GFP_HIGHMEM after 1f862989b04a ("mm/z3fold.c: support page
-migration").
+> When crashkernel is reserved above 4G in memory, kernel should reserve
+> some amount of low memory for swiotlb and some DMA buffers. So there may
+> be two crash kernel regions, one is below 4G, the other is above 4G.
 
-thanks,
-Shakeel
+This is a good argument for supporting the 'crashkernel=...,low' version.
+What is the 'crashkernel=...,high' version for?
+
+Wouldn't it be simpler to relax the ARCH_LOW_ADDRESS_LIMIT if we see 'crashkernel=...,low'
+in the kernel cmdline?
+
+I don't see what the 'crashkernel=...,high' variant is giving us, it just complicates the
+flow of reserve_crashkernel().
+
+If we called reserve_crashkernel_low() at the beginning of reserve_crashkernel() we could
+use crashk_low_res.end to change some limit variable from ARCH_LOW_ADDRESS_LIMIT to
+memblock_end_of_DRAM().
+I think this is a simpler change that gives you what you want.
+
+
+> Then
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+
+Won't this break if your kdump kernel doesn't know what the extra parameters are?
+Or if it expects two ranges, but only gets one? These DT properties should be treated as
+ABI between kernel versions, we can't really change it like this.
+
+I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
+think the simplest thing to do is to add an 'linux,low-memory-range' that we
+memblock_add() after memblock_cap_memory_range() has been called.
+If its missing, or the new kernel doesn't know what its for, everything keeps working.
+
+
+> Besides, we need to modify kexec-tools:
+>   arm64: support more than one crash kernel regions(see [1])
+
+> I post this patch series about one month ago. The previous changes and
+> discussions can be retrived from:
+
+Ah, this wasn't obvious as you've stopped numbering the series. Please label the next one
+'v6' so that we can describe this as 'v5'. (duplicate numbering would be even more confusing!)
+
+
+Thanks,
+
+James
