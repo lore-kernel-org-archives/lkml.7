@@ -2,113 +2,101 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D87CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EBDC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F402D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KDcC91za"
+	by mail.kernel.org (Postfix) with ESMTP id BBBC72067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFEPMt (ORCPT
+        id S1728269AbfFEPNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:12:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48864 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfFEPMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:12:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55FCk3g110054;
-        Wed, 5 Jun 2019 10:12:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559747566;
-        bh=Inienvm9gOICy/UB/TwfBQ4GevAD5jXz3rtnGwbNT90=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KDcC91zaBAjY/jDaPnJQ0EoR31zRKscNxb/XRkXrPYvL8s2RBdRidzoQNzzifAyCM
-         d3kRjmo41zmEUCGoYYdXtQnNWvPGKQYFHD65e6EnbKLPToph+3UpdUisGFJauJxUCh
-         +FVT7kaeRH8zHJrm81GfgDqDUettVt0Z7kFWtJhY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55FCkS1051136
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 10:12:46 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 10:12:46 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 10:12:46 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55FChC3053628;
-        Wed, 5 Jun 2019 10:12:44 -0500
-Subject: Re: [PATCH v2 2/3] gpio: davinci: Add new compatible for K3 AM654
- SoCs
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>, <lokeshvutla@ti.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190605080259.2462-1-j-keerthy@ti.com>
- <20190605080259.2462-3-j-keerthy@ti.com>
- <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <96dbfd50-2a45-e3dc-3928-47fbc52f9269@ti.com>
-Date:   Wed, 5 Jun 2019 20:43:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 5 Jun 2019 11:13:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:33182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727971AbfFEPNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:13:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76A5A374;
+        Wed,  5 Jun 2019 08:13:08 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A19E3F246;
+        Wed,  5 Jun 2019 08:13:05 -0700 (PDT)
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     Borislav Petkov <bp@alien8.de>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <d897559e-fcc7-6733-e117-e81ef3739ab1@arm.com>
+Date:   Wed, 5 Jun 2019 16:13:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190531051400.GA2275@cz.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi guys,
 
-
-On 05/06/19 7:56 PM, Bartosz Golaszewski wrote:
-> śr., 5 cze 2019 o 10:02 Keerthy <j-keerthy@ti.com> napisał(a):
->>
->> Add new compatible for K3 AM654 SoCs.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/gpio/gpio-davinci.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 0977590eb996..fc494a84a29d 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -632,6 +632,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>
->>   static const struct of_device_id davinci_gpio_ids[] = {
->>          { .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
->> +       { .compatible = "ti,am654-gpio", keystone_gpio_get_irq_chip},
+On 31/05/2019 06:14, Borislav Petkov wrote:
+> On Fri, May 31, 2019 at 01:15:33AM +0000, Herrenschmidt, Benjamin wrote:
+>> This isn't terribly helpful, there's nothing telling anybody which of
+>> those files corresponds to an ARM SoC :-)
 > 
-> Please add a patch adding this compatible to the binding document as well.
-
-https://patchwork.kernel.org/patch/10976445/
-
-Posted but did not add you in Cc. Sorry about that.
-
-- Keerthy
+> drivers/edac/altera_edac.c is one example.
 > 
-> Bart
+> Also, James and I have a small writeup on how an arm driver should look
+> like, we just need to polish it up and post it.
 > 
->>          { .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
->>          { /* sentinel */ },
->>   };
->> --
->> 2.17.1
+> James?
+
+Yes I should get on with that. Its mostly for platforms which end up with multiple
+piecemeal drivers and some co-ordination is needed. It doesn't look like that will be a
+problem here.
+
+
+>> That said ...
 >>
+>> You really want a single EDAC driver that contains all the stuff for
+>> the caches, the memory controller, etc... ?
+
+This has to be platform specific as it has integration-time dependencies and firmware
+dependencies. Doing it as a platform driver matched from the machine-compatible may be
+more straightforward today.
+
+The DT will already say "compatible = arm,cortex-a57" for the Alpine-v2, what that
+'edac_l1_l2' node is telling us is the integration/firmware stuff has been done, and the
+imp-def instructions can be used.
+
+
+Thanks,
+
+James
