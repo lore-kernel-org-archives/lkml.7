@@ -2,147 +2,169 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB29C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1C1C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3AF20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F9620828
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kHgvB8bm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFECHr (ORCPT
+        id S1726566AbfFECJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 22:07:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17667 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbfFECHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 22:07:47 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A6FC6F678460A6BB1D76;
-        Wed,  5 Jun 2019 10:07:44 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Jun 2019
- 10:07:40 +0800
-Subject: Re: [PATCH net] tcp: avoid creating multiple req socks with the same
- tuples
-To:     Eric Dumazet <edumazet@google.com>
-References: <20190604145543.61624-1-maowenan@huawei.com>
- <CANn89iK+4QC7bbku5MUczzKnWgL6HG9JAT6+03Q2paxBKhC4Xw@mail.gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <4d406802-d8a2-2d92-90c3-d56b8a23c2b2@huawei.com>
-Date:   Wed, 5 Jun 2019 10:06:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 4 Jun 2019 22:09:55 -0400
+Received: from ozlabs.org ([203.11.71.1]:56093 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFECJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 22:09:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45JXL702ynz9sCJ;
+        Wed,  5 Jun 2019 12:09:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559700591;
+        bh=XsGZewjxRk1dW1RfQaD9llUnChOqp7IO3x6ZtA3FviI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kHgvB8bmDJJt8gh/l6f0AmIL0cDVzuPhzv5sszIL6XaFdl+uF8YFhxo1GHU+qt3c+
+         mOWaG022sU6l/dIhAd1YM4Dwbnvp6IVaHcbvvhBYlCWkpPXmwjSx2gVWCaiAoBh1cD
+         va5Gh9/Csil/DhzcichPvxjY71SQ2eHLcu/kYYB0vFOG/9L36u2fhLYU/haIfsnvkp
+         wbSwff9ToT1RdsOYx3SsCYaXIzGAqZb7Twad7oFgLVkzwIBW9PuDTa/cz1fAKf4ftl
+         l/HumZqSt0fYGmeFkKQZXxcBGazQgIiSREo9rMJt+TZ2QZHdIlvaQuHx/ojEQhjWXZ
+         VUVa04yqJI++w==
+Date:   Wed, 5 Jun 2019 12:09:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>
+Subject: linux-next: build failure after merge of the tpmdd tree
+Message-ID: <20190605120946.43b44032@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CANn89iK+4QC7bbku5MUczzKnWgL6HG9JAT6+03Q2paxBKhC4Xw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Gb31PL/gttZQcWVCL4d94hY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Gb31PL/gttZQcWVCL4d94hY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2019/6/4 23:24, Eric Dumazet wrote:
-> On Tue, Jun 4, 2019 at 7:47 AM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> There is one issue about bonding mode BOND_MODE_BROADCAST, and
->> two slaves with diffierent affinity, so packets will be handled
->> by different cpu. These are two pre-conditions in this case.
->>
->> When two slaves receive the same syn packets at the same time,
->> two request sock(reqsk) will be created if below situation happens:
->> 1. syn1 arrived tcp_conn_request, create reqsk1 and have not yet called
->> inet_csk_reqsk_queue_hash_add.
->> 2. syn2 arrived tcp_v4_rcv, it goes to tcp_conn_request and create reqsk2
->> because it can't find reqsk1 in the __inet_lookup_skb.
->>
->> Then reqsk1 and reqsk2 are added to establish hash table, and two synack with different
->> seq(seq1 and seq2) are sent to client, then tcp ack arrived and will be
->> processed in tcp_v4_rcv and tcp_check_req, if __inet_lookup_skb find the reqsk2, and
->> tcp ack packet is ack_seq is seq1, it will be failed after checking:
->> TCP_SKB_CB(skb)->ack_seq != tcp_rsk(req)->snt_isn + 1)
->> and then tcp rst will be sent to client and close the connection.
->>
->> To fix this, do lookup before calling inet_csk_reqsk_queue_hash_add
->> to add reqsk2 to hash table, if it finds the existed reqsk1 with the same five tuples,
->> it removes reqsk2 and does not send synack to client.
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  net/ipv4/tcp_input.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index 08a477e74cf3..c75eeb1fe098 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -6569,6 +6569,15 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
->>                 bh_unlock_sock(fastopen_sk);
->>                 sock_put(fastopen_sk);
->>         } else {
->> +               struct sock *sk1 = req_to_sk(req);
->> +               struct sock *sk2 = NULL;
->> +               sk2 = __inet_lookup_established(sock_net(sk1), &tcp_hashinfo,
->> +                                                                       sk1->sk_daddr, sk1->sk_dport,
->> +                                                                       sk1->sk_rcv_saddr, sk1->sk_num,
->> +                                                                       inet_iif(skb),inet_sdif(skb));
->> +               if (sk2 != NULL)
->> +                       goto drop_and_release;
->> +
->>                 tcp_rsk(req)->tfo_listener = false;
->>                 if (!want_cookie)
->>                         inet_csk_reqsk_queue_hash_add(sk, req,
-> 
-> This issue has been discussed last year.
-Can you share discussion information?
+After merging the tpmdd tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-> 
-> I am afraid your patch does not solve all races.
-> 
-> The lookup you add is lockless, so this is racy.
-it's right, it has already in race region.
-> 
-> Really the only way to solve this is to make sure that _when_ the
-> bucket lock is held,
-> we do not insert a request socket if the 4-tuple is already in the
-> chain (probably in inet_ehash_insert())
-> 
+include/linux/tpm_eventlog.h: In function '__calc_tpm2_event_size':
+drivers/firmware/efi/tpm.c:7:35: error: implicit declaration of function 'e=
+arly_memremap'; did you mean 'early_memtest'? [-Werror=3Dimplicit-function-=
+declaration]
+ #define TPM_MEMREMAP(start, size) early_memremap(start, size)
+                                   ^~~~~~~~~~~~~~
+include/linux/tpm_eventlog.h:182:13: note: in expansion of macro 'TPM_MEMRE=
+MAP'
+   mapping =3D TPM_MEMREMAP((unsigned long)marker_start,
+             ^~~~~~~~~~~~
+In file included from drivers/firmware/efi/tpm.c:13:
+include/linux/tpm_eventlog.h:182:11: warning: assignment to 'void *' from '=
+int' makes pointer from integer without a cast [-Wint-conversion]
+   mapping =3D TPM_MEMREMAP((unsigned long)marker_start,
+           ^
+drivers/firmware/efi/tpm.c:8:35: error: implicit declaration of function 'e=
+arly_memunmap'; did you mean 'early_memtest'? [-Werror=3Dimplicit-function-=
+declaration]
+ #define TPM_MEMUNMAP(start, size) early_memunmap(start, size)
+                                   ^~~~~~~~~~~~~~
+include/linux/tpm_eventlog.h:207:4: note: in expansion of macro 'TPM_MEMUNM=
+AP'
+    TPM_MEMUNMAP(mapping, mapping_size);
+    ^~~~~~~~~~~~
+In file included from drivers/firmware/efi/tpm.c:13:
+include/linux/tpm_eventlog.h:209:12: warning: assignment to 'void *' from '=
+int' makes pointer from integer without a cast [-Wint-conversion]
+    mapping =3D TPM_MEMREMAP((unsigned long)marker,
+            ^
+include/linux/tpm_eventlog.h:243:11: warning: assignment to 'void *' from '=
+int' makes pointer from integer without a cast [-Wint-conversion]
+   mapping =3D TPM_MEMREMAP((unsigned long)marker,
+           ^
+In file included from ./arch/arm/include/generated/asm/early_ioremap.h:1,
+                 from drivers/firmware/efi/tpm.c:15:
+include/asm-generic/early_ioremap.h: At top level:
+include/asm-generic/early_ioremap.h:13:14: error: conflicting types for 'ea=
+rly_memremap'
+ extern void *early_memremap(resource_size_t phys_addr,
+              ^~~~~~~~~~~~~~
+drivers/firmware/efi/tpm.c:7:35: note: previous implicit declaration of 'ea=
+rly_memremap' was here
+ #define TPM_MEMREMAP(start, size) early_memremap(start, size)
+                                   ^~~~~~~~~~~~~~
+include/linux/tpm_eventlog.h:182:13: note: in expansion of macro 'TPM_MEMRE=
+MAP'
+   mapping =3D TPM_MEMREMAP((unsigned long)marker_start,
+             ^~~~~~~~~~~~
+In file included from ./arch/arm/include/generated/asm/early_ioremap.h:1,
+                 from drivers/firmware/efi/tpm.c:15:
+include/asm-generic/early_ioremap.h:20:13: warning: conflicting types for '=
+early_memunmap'
+ extern void early_memunmap(void *addr, unsigned long size);
+             ^~~~~~~~~~~~~~
+drivers/firmware/efi/tpm.c:8:35: note: previous implicit declaration of 'ea=
+rly_memunmap' was here
+ #define TPM_MEMUNMAP(start, size) early_memunmap(start, size)
+                                   ^~~~~~~~~~~~~~
+include/linux/tpm_eventlog.h:207:4: note: in expansion of macro 'TPM_MEMUNM=
+AP'
+    TPM_MEMUNMAP(mapping, mapping_size);
+    ^~~~~~~~~~~~
+drivers/firmware/efi/tpm.c: In function 'efi_tpm_eventlog_init':
+drivers/firmware/efi/tpm.c:81:10: warning: passing argument 1 of 'tpm2_calc=
+_event_log_size' makes pointer from integer without a cast [-Wint-conversio=
+n]
+  tbl_size =3D tpm2_calc_event_log_size(efi.tpm_final_log
+                                      ~~~~~~~~~~~~~~~~~
+          + sizeof(final_tbl->version)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          + sizeof(final_tbl->nr_events),
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/firmware/efi/tpm.c:20:43: note: expected 'void *' but argument is o=
+f type 'long unsigned int'
+ static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
+                                     ~~~~~~^~~~
+cc1: some warnings being treated as errors
 
-put lookup code in spin_lock() of inet_ehash_insert(), is it ok like this?
-will it affect performance?
+Caused by commit
 
-in inet_ehash_insert():
-...
-        spin_lock(lock);
-+       reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
-+                                                       sk->sk_daddr, sk->sk_dport,
-+                                                       sk->sk_rcv_saddr, sk->sk_num,
-+                                                       sk_bound_dev_if, sk_bound_dev_if);
-+       if (reqsk) {
-+               spin_unlock(lock);
-+               return ret;
-+       }
-+
-        if (osk) {
-                WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
-                ret = sk_nulls_del_node_init_rcu(osk);
-	}
-	if (ret)
-		__sk_nulls_add_node_rcu(sk, list);
-	spin_unlock(lock);
-...
+  b25b956d13d5 ("tpm: Reserve the TPM final events table")
 
-> This needs more tricky changes than your patch.
-> 
-> .
-> 
+I have used the tpmdd tree from next-20190604 for today.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Gb31PL/gttZQcWVCL4d94hY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz3JGoACgkQAVBC80lX
+0GxZJQf/VdioND2pmbnKziKHT63gh5B4gQlwbhX5DiLduP2le3dnY53nt1IC8h5K
+VBYdGTQ/UpaQHJ2vPj3JL00lEAYzQVkVOb5zbME8l1teqsgRcRf9Z4tWYypu9Qe2
+ey48XkW4dKqtx2aQavn/6vb9Q6U4bXad7F17y5DtBU9T+3PE8BiAvbd1b6kLsovL
+GCuhXRLHi5Sa2K/uVIFEr3wpLf5jBzl4/OZfV+Z98Z3z5b+g/plQlhm10pJFg50B
+sLe1gitKyc73JfUCGC6a0bfqM5PO/eZ7aRGbvzrSDSPV6V8/jtzqip6a66SbCIMD
+Q4jszoxkKOPLjLp2JktmjGf4dkIYsw==
+=pU8e
+-----END PGP SIGNATURE-----
+
+--Sig_/Gb31PL/gttZQcWVCL4d94hY--
