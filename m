@@ -2,53 +2,56 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716EFC28D19
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D53208C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB6E20883
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfFESmI (ORCPT
+        id S1726685AbfFESmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:42:08 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:43988 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfFESmI (ORCPT
+        Wed, 5 Jun 2019 14:42:12 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:54151 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfFESmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Jun 2019 14:42:08 -0400
-Received: by mail-it1-f199.google.com with SMTP id z66so2539941itc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 11:42:07 -0700 (PDT)
+Received: by mail-io1-f72.google.com with SMTP id h3so516861iob.20
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 11:42:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3okqULPcAgdoeedd1PDGpImOC3L3SFyDDmY6mEYAMdQ=;
-        b=ZbCOnSvfh8o+fGRvTGvgrgB/eINbU+fFWUTGlPH9ZX1dQ4jCUTU/2Tr9uCKOYiMvXc
-         Y/9VEopHL1X7GZ2h6Dsfq5MlMnEGr/n/mSl4HFHU8kIijKm7hGxVgwoPCcr9/rrrvJCt
-         /mkpaZ8psyIKuB6+0TBoYSPv62AlXq0uVXboUlAkx0lV9dDpnnrT514lWzNoGegJpuAm
-         XtRjjvm6d4wZBu43lXHb59opCKaLWEOI0z1xyw6dtiSg9Fuwi+X5AdSow/LNpSspVPNt
-         LyaAzqQHS5EQW14cF6ejl1pa+ucNhb6VNAR9fBpAoBD2RFVt8W+DBp88vPipjiErbFKz
-         kXfw==
-X-Gm-Message-State: APjAAAXduIWakD6k1gcGvS9Q90VaCYNA10IvDCCTTSIAS/OmEsw5rrOr
-        OZoowTCA8+iOdRcwfAq3Hy9GV3Aplkcrkyf9t039pBZvEatd
-X-Google-Smtp-Source: APXvYqwEFmJdggWYL1n939zpSWwWRp+XTc3vYWE5BXtDYnmUdcQJb6IK6F4InNX6cGWQFTFgfPt1ph5OOjamCntrNzXYrpHbxKQE
+        bh=5KA20MEac/BauzP5Z3rFMyap7DfHakSuH0HNa8THrMI=;
+        b=HygSnhW7Y9zR1dOvBxDIdBU1MYMlnhC6s2RgkU7A/O0WMa/N8p8E5917EWQ3m5Q3pC
+         N6n/e6sl6C0Kzos5BcOzm8gAlx3vW+63aNBilgVnNuC/Xsk+I6ENIq0Doq31bif2xc45
+         6WcFJxTH4diufsN3bTpxNHnyhMZlfR7cYmIonNI3E4EjVDtGugldiPfv+8oWzvA0U+u4
+         EnrcO16pcU+KTuMgcGcjQ6qlkJ/fehLbpQjghB8y/8w/nJZy+/dLmBDMMzFWP/M4W7J4
+         OQgkmAJNyyCk+g/k6uSmgs7nWwJjtwzl6ZhRjBPa7TGAl6b2sndkQolorant8lUdouA1
+         wFKA==
+X-Gm-Message-State: APjAAAVWy0PdcsidHAf0g4M3mwZUIizg7UZtTmNxKRDTqlqa5hHPLMJk
+        hyYj6DXylINAbGKh7cMEWH1e8pUSPD0lc7qmU4vK+o6wwFcW
+X-Google-Smtp-Source: APXvYqyQSToVWrtyBHNgFhFwGOm5JXoKFHnoYyxvEB9G9+8LsxYuPtrQVn8OefRIrXAsQWOuxHoYjg0+w1iLcvYseLENP3looVku
 MIME-Version: 1.0
-X-Received: by 2002:a02:1649:: with SMTP id a70mr28077698jaa.116.1559760127379;
+X-Received: by 2002:a5d:958d:: with SMTP id a13mr17604654ioo.288.1559760127802;
  Wed, 05 Jun 2019 11:42:07 -0700 (PDT)
 Date:   Wed, 05 Jun 2019 11:42:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000053d7e9058a97f4ca@google.com>
-Subject: memory leak in cfserl_create
-From:   syzbot <syzbot+7ec324747ce876a29db6@syzkaller.appspotmail.com>
-To:     alexios.zavras@intel.com, allison@lohutok.net, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        rfontana@redhat.com, swinslow@gmail.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <0000000000005a4b99058a97f42e@google.com>
+Subject: KASAN: use-after-free Read in unregister_shrinker
+From:   syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bfields@fieldses.org,
+        bfields@redhat.com, chris@chrisdown.name,
+        daniel.m.jordan@oracle.com, guro@fb.com, hannes@cmpxchg.org,
+        jlayton@kernel.org, ktkhai@virtuozzo.com, laoar.shao@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
+        mhocko@suse.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,69 +62,135 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    788a0249 Merge tag 'arc-5.2-rc4' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=123efa5aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d5c73825cbdc7326
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ec324747ce876a29db6
+HEAD commit:    b2924447 Add linux-next specific files for 20190605
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e867eea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=83a43746cebef3508b49
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171ca536a00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122965aa00000
+
+The bug was bisected to:
+
+commit db17b61765c2c63b9552d316551550557ff0fcfd
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Fri May 17 13:03:38 2019 +0000
+
+     nfsd4: drc containerization
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110cd22ea00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=130cd22ea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=150cd22ea00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7ec324747ce876a29db6@syzkaller.appspotmail.com
+Reported-by: syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com
+Fixes: db17b61765c2 ("nfsd4: drc containerization")
 
-TDEV_CHANGE): hsr_slave_1: link becomes ready
-2019/06/05 07:03:42 executed programs: 14
-2019/06/05 07:03:48 executed programs: 15
-2019/06/05 07:03:56 executed programs: 30
-BUG: memory leak
-unreferenced object 0xffff88810d22ca00 (size 128):
-   comm "syz-executor.1", pid 7571, jiffies 4294948034 (age 9.460s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d4b3552e>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000d4b3552e>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000d4b3552e>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000d4b3552e>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000409297cb>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000409297cb>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000409297cb>] cfserl_create+0x24/0x76 net/caif/cfserl.c:36
-     [<000000000b6ebed9>] caif_device_notify+0x347/0x3bc  
-net/caif/caif_dev.c:388
-     [<0000000052e58523>] notifier_call_chain+0x66/0xb0 kernel/notifier.c:95
-     [<0000000016b2101e>] __raw_notifier_call_chain kernel/notifier.c:396  
-[inline]
-     [<0000000016b2101e>] raw_notifier_call_chain+0x2e/0x40  
-kernel/notifier.c:403
-     [<0000000041e2ecf0>] call_netdevice_notifiers_info+0x33/0x70  
-net/core/dev.c:1749
-     [<00000000f45634e0>] call_netdevice_notifiers_extack  
-net/core/dev.c:1761 [inline]
-     [<00000000f45634e0>] call_netdevice_notifiers net/core/dev.c:1775  
-[inline]
-     [<00000000f45634e0>] register_netdevice+0x445/0x600 net/core/dev.c:8734
-     [<0000000043f37c7e>] ldisc_open+0x1f7/0x350  
-drivers/net/caif/caif_serial.c:359
-     [<0000000048b48475>] tty_ldisc_open.isra.0+0x40/0x70  
-drivers/tty/tty_ldisc.c:469
-     [<000000001b540e53>] tty_set_ldisc+0x149/0x240  
-drivers/tty/tty_ldisc.c:596
-     [<00000000987d85c0>] tiocsetd drivers/tty/tty_io.c:2332 [inline]
-     [<00000000987d85c0>] tty_ioctl+0x366/0xa30 drivers/tty/tty_io.c:2592
-     [<00000000bdb74dbb>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000bdb74dbb>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000bdb74dbb>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<0000000021ef067c>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d1d65c38>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d1d65c38>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d1d65c38>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<000000001056684e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000010a5606e>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+==================================================================
+BUG: KASAN: use-after-free in __list_del_entry_valid+0xe6/0xf5  
+lib/list_debug.c:51
+Read of size 8 at addr ffff88808a5bd128 by task syz-executor.2/12471
 
+CPU: 0 PID: 12471 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190605  
+#9
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
+  __list_del_entry include/linux/list.h:117 [inline]
+  list_del include/linux/list.h:125 [inline]
+  unregister_shrinker+0xb2/0x2e0 mm/vmscan.c:443
+  nfsd_reply_cache_shutdown+0x26/0x360 fs/nfsd/nfscache.c:194
+  nfsd_exit_net+0x170/0x4b0 fs/nfsd/nfsctl.c:1272
+  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
+  setup_net+0x400/0x740 net/core/net_namespace.c:333
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7ae73e1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459279
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
+RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7ae73e26d4
+R13: 00000000004c84ef R14: 00000000004decb0 R15: 00000000ffffffff
+
+Allocated by task 12460:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  __do_kmalloc mm/slab.c:3654 [inline]
+  __kmalloc+0x15c/0x740 mm/slab.c:3663
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  ops_init+0xff/0x410 net/core/net_namespace.c:120
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 12460:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x106/0x2a0 mm/slab.c:3753
+  ops_init+0xd1/0x410 net/core/net_namespace.c:135
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88808a5bcdc0
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 872 bytes inside of
+  1024-byte region [ffff88808a5bcdc0, ffff88808a5bd1c0)
+The buggy address belongs to the page:
+page:ffffea0002296f00 refcount:1 mapcount:0 mapping:ffff8880aa400ac0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000249ea08 ffffea000235a588 ffff8880aa400ac0
+raw: 0000000000000000 ffff88808a5bc040 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808a5bd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808a5bd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808a5bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                   ^
+  ffff88808a5bd180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff88808a5bd200: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+==================================================================
 
 
 ---
@@ -131,5 +200,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
