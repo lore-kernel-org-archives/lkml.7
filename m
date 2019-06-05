@@ -2,162 +2,168 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7527CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EBFC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BADA2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:32:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QLL5tU8D"
+	by mail.kernel.org (Postfix) with ESMTP id BAF1D2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfFEOcR (ORCPT
+        id S1728412AbfFEOcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:32:17 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:58587 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFEOcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:32:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559745136; x=1591281136;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XNFcFvZp+FLfITJoF+AIM8yN6QrQMB3mYowCFh64VQc=;
-  b=QLL5tU8DfhW/SxBUsohJj/kG/MAf69SZduyCsCMTFtVLlua15gUBkmVG
-   NcdzDbeqVlZqOmlPqpW8V4ssEJZ8+sJCrP+Qs+auPj0boRa5xGZxfR21h
-   LdUPcgiVu6xJpuV61Ev7PO+1pmeUHYNHWj6a6Ghts7GvR+yfvmt/QR5Ws
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="678308820"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-3714e498.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Jun 2019 14:32:02 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-3714e498.us-west-2.amazon.com (Postfix) with ESMTPS id 3B1C8A2753;
-        Wed,  5 Jun 2019 14:32:01 +0000 (UTC)
-Received: from EX13D05UWB004.ant.amazon.com (10.43.161.208) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 14:32:00 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D05UWB004.ant.amazon.com (10.43.161.208) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 14:32:00 +0000
-Received: from localhost (10.85.18.74) by mail-relay.amazon.com (10.43.61.243)
- with Microsoft SMTP Server id 15.0.1367.3 via Frontend Transport; Wed, 5 Jun
- 2019 14:31:58 +0000
-Date:   Wed, 5 Jun 2019 07:31:58 -0700
-From:   Eduardo Valentin <eduval@amazon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Eduardo Valentin <eduval@amazon.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Message-ID: <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
- <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
+        Wed, 5 Jun 2019 10:32:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:32776 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728314AbfFEOcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:32:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 054BC374;
+        Wed,  5 Jun 2019 07:32:21 -0700 (PDT)
+Received: from [10.37.12.195] (unknown [10.37.12.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C1F23F246;
+        Wed,  5 Jun 2019 07:32:17 -0700 (PDT)
+Subject: Re: [PATCH v6 00/19] Unify vDSOs across more architectures
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <CAK8P3a11DE0sXteZoaP_N=mDhx3tXitGKddn1ogtFqJBYO-SCA@mail.gmail.com>
+ <d96667d5-e43b-d33a-fbd0-5acfb4904316@arm.com>
+ <CAK8P3a3nxd7F5zLyD1SVarKjjKC0qvMEN8wP6R7zHY9HKdoe0w@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <ea965b5e-9be8-02e9-5dc0-ebbb330bcc2c@arm.com>
+Date:   Wed, 5 Jun 2019 15:32:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAK8P3a3nxd7F5zLyD1SVarKjjKC0qvMEN8wP6R7zHY9HKdoe0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
-> >
-> > Hey Andry,
-> >
-> > Long time no seeing :-)
+On 6/4/19 1:12 PM, Arnd Bergmann wrote:
+> On Tue, Jun 4, 2019 at 2:05 PM Vincenzo Frascino
+> <vincenzo.frascino@arm.com> wrote:
+>> On 31/05/2019 09:46, Arnd Bergmann wrote:
+>>> On Thu, May 30, 2019 at 4:15 PM Vincenzo Frascino
+>>> <vincenzo.frascino@arm.com> wrote:
+>>> One open question I touched in my review is whether we want to
+>>> have a vdso version of clock_getres() in all architectures or not.
+>>> I'd prefer to leave it out because there is very little advantage to
+>>> it over the system call (the results don't change at runtime and
+>>> can easily be cached by libc if performance ever matters), and
+>>> it takes up a small amount of memory for the implementation.
+>>>
+>>
+>> I thought about it and I ended up with what proposed in this patchset mainly for
+>> symmetry across all the architectures since in the end they use the same common
+>> code.
+>>
+>> It seems also that there is some performance impact (i.e.):
+>>
+>> clock-getres-monotonic:    libc(system call): 296 nsec/call
+>> clock-getres-monotonic:    libc(vdso): 5 nsec/call
+>>
+>>
+>> I agree with you though when you say that caching it in the libc is a
+>> possibility to overcome the performance impact.
 > 
-> True!
+> It's clear that the vdso version is much faster, my point was that
+> I could not think of any use case that cared about it being fast.
 > 
-> 
-> > > > +#define MQ_MSGBUF_SIZE             CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> > > > +#define MQ_QUEUE_SIZE              CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> > >
-> > > > +#define MQ_QUEUE_NEXT(x)   (((x) + 1) & (MQ_QUEUE_SIZE - 1))
-> > >
-> > > Also possible ((x + 1) % ..._SIZE)
-> >
-> > Right.. but I suppose the original idea is to avoid divisions on the hotpath.
-> >
-> > So, I am actually fine with the limitation of only using power of 2.
-> 
-> The original code implies that anyway, so, my proposal doesn't
-> restrict it any farther.
 
-Well, yes, but the point is you would be switching from a simple AND (&) operation
-to a division...
+I do not know of any use case that cares, my point was that since we need to
+implement it in the generic library for some architectures, for symmetry we can
+extend it to all the architectures that support the generic vdso library.
 
-I am keeping the power of 2 dep so that we can keep this with a simple &.
+> If there is a good reason for it, I also don't mind adding a
+> clock_getres_time64() vdso version everywhere.
 
-> > > > +   {
-> > > > +           .compatible = "i2c-slave-mqueue",
-> > > > +   },
-> > >
-> > > > +   { },
-> > >
-> > > No need for comma here.
-> >
-> > It does not hurt to have it either :-)
-> 
-> It's just a protection against some weird cases of adding entries
-> behind the terminator.
-
-Fair..
+Totally agree on this.
 
 > 
-> > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > >
-> > > Wouldn't compiler warn you due to unused data?
-> > > Perhaps drop of_match_ptr() for good...
-> >
-> >
-> > Not sure what you meant here. I dont see any compiler warning.
-> > Also, of_match_ptr seams to be well spread in the kernel.
+>>> We shouldn't just need it for consistency because all callers
+>>> would require implementing a fallback to the system call
+>>> anyway, to deal with old kernels.
+>>>
+>>
+>> A way to address this issue would be to use versioning, which seems supported in
+>> the vdso library (i.e. arch/x86/entry/vdso/vdso32/vdso32.lds.S).
+>>
+>> For example for x86 (vdso32) we would have something like:
+>>
+>> VERSION
+>> {
+>>         LINUX_5.3 (being optimistic here :) ) {
+>>         global:
+>>                 __vdso_clock_getres;
+>>                 __vdso_clock_gettime64;
+>>         };
+>>         LINUX_2.6 {
+>>         global:
+>>                 __vdso_clock_gettime;
+>>                 __vdso_gettimeofday;
+>>                 __vdso_time;
+>>         };
+>>
+>>         LINUX_2.5 {
+>>         global:
+>>                 __kernel_vsyscall;
+>>                 __kernel_sigreturn;
+>>                 __kernel_rt_sigreturn;
+>>         local: *;
+>>         };
+>> }
+>>
+>> What do you think? Would this be a viable solution?
 > 
-> If this will be compiled with CONFIG_OF=n...
+> I actually never understood the point of symbol versioning
+> in the vdso. What does that gain us? Note that there are
+> no conflicting symbol names between the versions, and
+> that nothing enforces the kernel headers to match the
+> symbol version used when linking.
+>
 
-I see.. I obviously did not test with that config..
+My understanding, based on [1] and [2] is that the version defines the minimum
+kernel version from when a specific symbols is exposed and whenever this symbol
+is requested from the vDSO the correct version needs to be specified.
+Every "new" library, dealing with an "old" kernel, compliant with the exposed
+ABI should implement the vDSO calls in this way and provide a fallback if the
+vDSO function is not present (i.e. [3]).
 
-> Though I didn't check all dependencies to see if it even possible. In
-> any case of_match_ptr() is redundant in both cases here.
-> Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> CONFIG_OF, or drop the macro use.
+[1] Documentation/ABI/stable/vdso
+[2] tools/testing/selftests/vDSO/parse_vdso.c
+[3]
+https://github.com/lattera/glibc/blob/master/sysdeps/unix/sysv/linux/aarch64/gettimeofday.c
 
-I will wrap it into CONFIG_OF..
 
+>       Arnd
 > 
-> P.S. Taking into account the last part, I would wait for v7 with that
-> fixed followed by fixing other nits.
-
-I agree, the warn on CONFIG_OF=n is enough to spin out an extra version.
-I will include the other nits too.
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
 
 -- 
-All the best,
-Eduardo Valentin
+Regards,
+Vincenzo
