@@ -2,185 +2,166 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C56AC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C77BC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6953920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505D72083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:54:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KGG4kw7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFEHuj (ORCPT
+        id S1726599AbfFEHy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:50:39 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:48125 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725294AbfFEHuj (ORCPT
+        Wed, 5 Jun 2019 03:54:56 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35741 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbfFEHy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:50:39 -0400
-X-UUID: 3bcae11531cc4d9c8364f18a8d0872fc-20190605
-X-UUID: 3bcae11531cc4d9c8364f18a8d0872fc-20190605
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1696416894; Wed, 05 Jun 2019 15:50:33 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 5 Jun
- 2019 15:50:32 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 5 Jun 2019 15:50:31 +0800
-Message-ID: <1559721031.8487.99.camel@mhfsdcap03>
-Subject: Re: [PATCH] USB: move usb debugfs directory creation to the usb
- common core
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 5 Jun 2019 15:50:31 +0800
-In-Reply-To: <20190604115919.GA24346@kroah.com>
-References: <20190604093258.GB30054@kroah.com>
-         <20190604115919.GA24346@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 5 Jun 2019 03:54:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so9395562plo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aiue8tHWiumr4g0nytcyTjYaJHwPhuqRgFXgCDSDwM0=;
+        b=KGG4kw7mp5EISlgpPMNpn5iOHG3+VLhZMDhZ+778rosnxJtQ2DdjdZ5tkcWiWRFGGX
+         13t7oW58cPGQVxfvPViY7GfglNUiaobpnuA5U9Lhk/zaJJvJa8iiwJxVGhf39no86EP+
+         tHTVDIzoVY5+6E11qiOyJvAD7RzmosldNH4nY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aiue8tHWiumr4g0nytcyTjYaJHwPhuqRgFXgCDSDwM0=;
+        b=eDzgyR6xekyuf4AxZa/HE+0/FBynI6cRSkGmWA9djHMxr+x+1IPvrlmNpqYKybEsH8
+         rjYF9EiBOxCfLm7cdbKawmJWugbG6IF2FdV2l9tO6aJCXiHqSXkXKzEz593cm+Ywq1cD
+         kT87IrMoeh5yjVfJPqv6+Xf2TTets16I9vXavNZ9rWFEAh5PB3LnrSxCIdP4vlhIStp4
+         3EWnxcaMhgBUz/7I24V1LMx9jXY3+wXLL3zX/amlMN05tNpvJ3PEovIJ3OTPOX0AUb0f
+         yuLxB5Kwo6h7Khvp1cF0QYmnWKutqSNrXVo7s3c9nWbA2lB6JCxiELr/FNByc32ip6lj
+         xvRg==
+X-Gm-Message-State: APjAAAWGYFczKiIAlf1aQrlKp9NCeoMm2LgBZG1fLpP1oWrrdXh2wkxP
+        kxIWGQW8yjT5Wb5cJpOnK7JCLA==
+X-Google-Smtp-Source: APXvYqx1Gbz9qsU2PuuHu8YloVvKfIX0ptj4e8Hzpp+GXSquNY3RQsHEhI2ABswO9YBHJkaCFOSHnA==
+X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr25322779plo.124.1559721294846;
+        Wed, 05 Jun 2019 00:54:54 -0700 (PDT)
+Received: from [10.230.40.234] ([192.19.215.250])
+        by smtp.gmail.com with ESMTPSA id 11sm28366590pfu.155.2019.06.05.00.54.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 00:54:54 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] mmc: core: API for temporarily disabling
+ auto-retuning due to errors
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     brcm80211-dev-list.pdl@broadcom.com,
+        linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        linux-wireless@vger.kernel.org,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Avri Altman <avri.altman@wdc.com>
+References: <20190603183740.239031-1-dianders@chromium.org>
+ <20190603183740.239031-3-dianders@chromium.org>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <25fe1725-76fa-2739-1427-b0e8823ea4ae@broadcom.com>
+Date:   Wed, 5 Jun 2019 09:54:48 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190603183740.239031-3-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-04 at 13:59 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 04, 2019 at 11:32:58AM +0200, Greg Kroah-Hartman wrote:
-> > The USB gadget subsystem wants to use the USB debugfs root directory, so
-> > move it to the common "core" USB code so that it is properly initialized
-> > and removed as needed.
-> > 
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > ---
-> > 
-> > This should be the "correct" version of this, Chunfeng, can you test
-> > this to verify it works for you?
-> > 
-> > 
-> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > index 18f5dcf58b0d..3b5e4263ffef 100644
-> > --- a/drivers/usb/common/common.c
-> > +++ b/drivers/usb/common/common.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/usb/of.h>
-> >  #include <linux/usb/otg.h>
-> >  #include <linux/of_platform.h>
-> > +#include <linux/debugfs.h>
-> >  
-> >  static const char *const ep_type_names[] = {
-> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> > @@ -291,4 +292,21 @@ struct device *usb_of_get_companion_dev(struct device *dev)
-> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
-> >  #endif
-> >  
-> > +struct dentry *usb_debug_root;
-> > +EXPORT_SYMBOL_GPL(usb_debug_root);
-> > +
-> > +static int usb_common_init(void)
-> > +{
-> > +	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > +	return 0;
-> > +}
-> > +
-> > +static void usb_common_exit(void)
-> > +{
-> > +	debugfs_remove_recursive(usb_debug_root);
-> > +}
-> > +
-> > +module_init(usb_common_init);
-I tested this patch.
-
-Here use module_init() indeed have a race as Felipe said before.
-usbcore uses subsys_initcall(), and have a higher priority than
-module_init(), so when usbcore tries to create "devices" file,
-usb_debug_root is not created.
-
-after I replace it by postcore_initcall() (debugfs uses
-core_initcall()), test two cases:
-
-1. buildin usbcore/udc-core
-
-    "usb" directory is created, and usb/devices file is also created by
-usbcore
-
-2. build both usbcore and gadget as ko
-
-    usbcore.ko, udc-core.ko and usb-common.ko are created. 
-
-   2.1 
-       insmod usb-common.ko   // "usb" directory is created
-       insmod usb-core.ko   // usb/devices file is created
-
-   2.2
-       rmmod usb-common.ko  // failed, usb_common is in use by usb-core
-
-   2.3 
-       rmmod usb-core.ko   // usb/devices file is destroyed
-       rmmod usb-common.ko  // usb directory is destroyed
-
-   2.4 
-       insmod usb-common.ko   // "usb" directory is created
-       insmod udc-core.ko
-
-   2.5
-       rmmod usb-common.ko  // failed, usb_common is in use by udc-core
-
-   2.6 
-       rmmod udc-core.ko
-       rmmod usb-common.ko  // usb directory is destroyed
-
-they are all in line with expectations
-
-
-> > +module_exit(usb_common_exit);
-> > +
-> >  MODULE_LICENSE("GPL");
-> > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> > index 7fcb9f782931..f3d6b1ab80cb 100644
-> > --- a/drivers/usb/core/usb.c
-> > +++ b/drivers/usb/core/usb.c
-> > @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
-> >  	.notifier_call = usb_bus_notify,
-> >  };
-> >  
-> > -struct dentry *usb_debug_root;
-> > -EXPORT_SYMBOL_GPL(usb_debug_root);
-> > +static struct dentry *usb_devices_root;
-> >  
-> >  static void usb_debugfs_init(void)
-> >  {
-> > -	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
-> > -			    &usbfs_devices_fops);
-> > +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-> > +					       NULL, &usbfs_devices_fops);
-> >  }
-> >  
-> >  static void usb_debugfs_cleanup(void)
-> >  {
-> > -	debugfs_remove_recursive(usb_debug_root);
-> > +	debugfs_remove_recursive(usb_devices_root);
+On 6/3/2019 8:37 PM, Douglas Anderson wrote:
+> Normally when the MMC core sees an "-EILSEQ" error returned by a host
+> controller then it will trigger a retuning of the card.  This is
+> generally a good idea.
 > 
-> That should just be debugfs_remove();
+> However, if a command is expected to sometimes cause transfer errors
+> then these transfer errors shouldn't cause a re-tuning.  This
+> re-tuning will be a needless waste of time.  One example case where a
+> transfer is expected to cause errors is when transitioning between
+> idle (sometimes referred to as "sleep" in Broadcom code) and active
+> state on certain Broadcom WiFi cards.  Specifically if the card was
+> already transitioning between states when the command was sent it
+> could cause an error on the SDIO bus.
 > 
-> I'll fix it up after someone tests this :)
+> Let's add an API that the SDIO card drivers can call that will
+> temporarily disable the auto-tuning functionality.  Then we can add a
+> call to this in the Broadcom WiFi driver and any other driver that
+> might have similar needs.
 > 
-> thanks,
+> NOTE: this makes the assumption that the card is already tuned well
+> enough that it's OK to disable the auto-retuning during one of these
+> error-prone situations.  Presumably the driver code performing the
+> error-prone transfer knows how to recover / retry from errors.  ...and
+> after we can get back to a state where transfers are no longer
+> error-prone then we can enable the auto-retuning again.  If we truly
+> find ourselves in a case where the card needs to be retuned sometimes
+> to handle one of these error-prone transfers then we can always try a
+> few transfers first without auto-retuning and then re-try with
+> auto-retuning if the first few fail.
 > 
-> greg k-h
+> Without this change on rk3288-veyron-minnie I periodically see this in
+> the logs of a machine just sitting there idle:
+>    dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
+> 
+> Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Note that are are a whole boatload of different ways that we could
+> provide an API for the Broadcom WiFi SDIO driver.  This patch
+> illustrates one way but if maintainers feel strongly that this is too
+> ugly and have a better idea then I can give it a shot too.  From a
+> purist point of view I kinda felt that the "expect errors" really
+> belonged as part of the mmc_request structure, but getting it into
+> there meant changing a whole pile of core SD/MMC APIs.  Simply adding
+> it to the host seemed to match the current style better and was a less
+> intrusive change.
 
+Hi Doug,
+
+Sorry for bringing this up, but there used to be an issue with retuning 
+in general, ie. the device handled tuning command 19 only once after 
+startup. I guess that is no longer an issue given your results. I guess 
+the problem goes away when you disable device sleep functionality. No 
+what you want in terms of power consumption, but would be good to know. 
+You can disable it with below patch.
+
+Regards,
+Arend
+---
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c 
+b/drivers
+index 15a40fd..18e90bd 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -307,7 +307,7 @@ struct rte_console {
+  #define BRCMF_IDLE_ACTIVE      0       /* Do not request any SD clock 
+change
+                                          * when idle
+                                          */
+-#define BRCMF_IDLE_INTERVAL    1
++#define BRCMF_IDLE_INTERVAL    0
+
+  #define KSO_WAIT_US 50
+  #define MAX_KSO_ATTEMPTS (PMU_MAX_TRANSITION_DLY/KSO_WAIT_US)
 
