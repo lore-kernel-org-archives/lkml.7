@@ -2,307 +2,205 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE1EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B73C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAB1206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D919206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0aEakLf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JA89mj9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfFEMWR (ORCPT
+        id S1727820AbfFEMXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:22:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45554 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfFEMWR (ORCPT
+        Wed, 5 Jun 2019 08:23:02 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43040 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfFEMXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:22:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so4520001wre.12;
-        Wed, 05 Jun 2019 05:22:14 -0700 (PDT)
+        Wed, 5 Jun 2019 08:23:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w33so5471965edb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=DvgCCFQ9wkrUX0d59Rfw9DyyHz0+9YJgb1Ow1lECTGk=;
-        b=Y0aEakLfRKAqCkO3WmlVeT2xZGhHpRIPFlY/HErrQFZHRATh1TM83RrAvKHM/ig06f
-         k8Csbb5nbhZhcDa2v7120y4JGXmS18DF4RYJOo6zq1nLhOlus/FNyvr/KU7Df7+qVh+P
-         uL19pkmm1BHDRZDg4x8F26D31ooN+d0RGWaugRV9WvKa6ZiCZpoOqUzTd1WeA5Kr+V9/
-         JaVzjzZAfwSzdXwE41fwaatXZfkuu7msT4XgI93z2Y7If1gR/U5brwbl5mVUD2jtIzY9
-         wY+eOsD/gKZ0AGfbHXiIdImBb3yk6VCz1U+yi3uHKRVzn/zq00y6TL58lvCHTR+lOT0B
-         2mdQ==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kn7L2PqRa1fGEOO9Zxax19qGHTC2cJnJMInOPgMzeKs=;
+        b=JA89mj9LtX/N7h/odMfvFdmQTVWkpB+/hAE8l3AaDFbfhzVkI0Oy43kpxX8jQpzBEt
+         SbBr0vvdZFJRPGbB/VO47hbZ0Nhs+ROK46P1Gf1TALc3nVYUUrKgWDDv65ETI3G7aeUF
+         Vizn5WJyb8jur9B45ljnu7e1s6ik1ATeJT+x4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DvgCCFQ9wkrUX0d59Rfw9DyyHz0+9YJgb1Ow1lECTGk=;
-        b=FaOF/Z211AJKa1UgaZI9BBuWDwRsFRAjKxNBvIok23yd8Rnmz8RUmIqp8vIuWksWlh
-         QUyzFuLGxm2ZIdTPwD1hhBmiKw8VUJLXRWH7QsmTo+cLdhBr5Lu9/2wZxtoLLOemJ8ao
-         6H2C9ZPZIAOwGufwFeBonFODV8UARLEVM6LeaZKBmFV/TnTvC45M1fBvJhDM1LNzjRMh
-         e50Go6MdkfStpJoNcYxh1r6Z8LfS122Fgt7N5xOh2AR7i77hPGdNaa8ZYrP4noa1tzVc
-         aqpQeLp1tlajKp5ZX52PMhhchvvJgfVa2x6MmX1TK9dqTVZ273uOIDn2XVt2fmtRfG0W
-         z+kQ==
-X-Gm-Message-State: APjAAAWWW7Lc5pRfsXRfyKTe2v3xohi1jtxgtZf5qD7GMSCPM81+J/ic
-        5GRjlO3oAh57046XyCO9mbzyeHz/whE=
-X-Google-Smtp-Source: APXvYqwy+5wP1uFRBAjxKOurJ0Nc5ekJHfGMxY5Ty0DG0b6r2sQ9ywRMirOnCOFGYVaeETpsJAThqw==
-X-Received: by 2002:adf:c982:: with SMTP id f2mr25989210wrh.235.1559737334248;
-        Wed, 05 Jun 2019 05:22:14 -0700 (PDT)
-Received: from [172.16.8.139] (host-78-151-217-120.as13285.net. [78.151.217.120])
-        by smtp.gmail.com with ESMTPSA id p16sm37262352wrg.49.2019.06.05.05.22.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:22:13 -0700 (PDT)
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Subject: Re: [PATCH 10/25] vfs: fsinfo sample: Mount listing program [ver #13]
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-Cc:     raven@themaw.net, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mszeredi@redhat.com
-References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
- <155905634517.1662.7843563955043166854.stgit@warthog.procyon.org.uk>
-Message-ID: <9eeb6b39-c4a1-6e3d-246a-e1cf97d84b33@gmail.com>
-Date:   Wed, 5 Jun 2019 13:22:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=kn7L2PqRa1fGEOO9Zxax19qGHTC2cJnJMInOPgMzeKs=;
+        b=bEFgYK/L8JQ1UJiTqZYuVX4YvWaqYq1XzU8De08yu98f94xGjbtLQxbzxfTol/3CO2
+         f17aa6u6DGs7JdVH9cDO/5dqu8U5/iXjzQDZdOxrOlG64pPRaMQ/e/7jD6ZeT0On7bpC
+         zfDgFfiC37gv10IJW7RKwqanJIs6JURTaeh6Xg19kTt46NctW57YIOTCrZhD2AlHqVhb
+         dsA1P3MrdopKC1DRzYJtlIcbrOsKLahWMfFib0XHvdcfiyWoBXEq6eBx5LipkCzIy7cO
+         3d4Rf9oUSVBzoyN0nN0EwPCJGqlovWBT3qi1QD7xZ4B4kCs82V+2hsNWsDVnV1t8vZJB
+         MREQ==
+X-Gm-Message-State: APjAAAUp6Q/wsiiGwB0wLXuVvlDhlaMLIMI7sXq0wV/iFvyqkJZAlGex
+        3nNQwMrreHExli/BZq+Mbzr1wQ==
+X-Google-Smtp-Source: APXvYqxSH/zkD/h6sKRvHharGsaYNwbos67OvbuVupAmgBDFYXgLxqjWvfdInzHGD1vuxOUTsRjoww==
+X-Received: by 2002:a05:6402:1819:: with SMTP id g25mr33808810edy.56.1559737379986;
+        Wed, 05 Jun 2019 05:22:59 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id r9sm5062445eds.61.2019.06.05.05.22.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 05:22:59 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 14:22:57 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Simon Ser <simon.ser@intel.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        18oliveira.charles@gmail.com
+Subject: Re: [PATCH V2] drm/vkms: Avoid extra discount in the timestamp value
+Message-ID: <20190605122257.GQ21222@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Simon Ser <simon.ser@intel.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, 18oliveira.charles@gmail.com
+References: <20190605024543.pcsnkf74mmgfhtuh@smtp.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <155905634517.1662.7843563955043166854.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605024543.pcsnkf74mmgfhtuh@smtp.gmail.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/2019 16:12, David Howells wrote:
-> Implement a program to demonstrate mount listing using the new fsinfo()
-> syscall,
+On Tue, Jun 04, 2019 at 11:45:43PM -0300, Rodrigo Siqueira wrote:
+> After the commit def35e7c5926 ("drm/vkms: Bugfix extra vblank frame")
+> some of the crc tests started to fail in the vkms with the following
+> error:
+> 
+>  [drm:drm_crtc_add_crc_entry [drm]] *ERROR* Overflow of CRC buffer,
+>     userspace reads too slow.
+>  [drm] failed to queue vkms_crc_work_handle
+>  ...
+> 
+> The aforementioned commit fixed the extra vblank added by
+> `drm_crtc_arm_vblank_event()` which is invoked inside
+> `vkms_crtc_atomic_flush()` if the vblank event count was zero, otherwise
+> `drm_crtc_send_vblank_event()` is invoked. The fix was implemented in
+> `vkms_get_vblank_timestamp()` by subtracting one period from the current
+> timestamp, as the code snippet below illustrates:
+> 
+>  if (!in_vblank_irq)
+>   *vblank_time -= output->period_ns;
+> 
+> The above fix works well when `drm_crtc_arm_vblank_event()` is invoked.
+> However, it does not properly work when `drm_crtc_send_vblank_event()`
+> executes since it subtracts the correct timestamp, which it shouldn't.
+> In this case, the `drm_crtc_accurate_vblank_count()` function will
+> returns the wrong frame number, which generates the aforementioned
+> error. Such decrease in `get_vblank_timestamp()` produce a negative
+> number in the following calculation within `drm_update_vblank_count()`:
+> 
+>  u64 diff_ns = ktime_to_ns(ktime_sub(t_vblank, vblank->time));
+> 
+> After this operation, the DIV_ROUND_CLOSEST_ULL macro is invoked using
+> diff_ns with a negative number, which generates an undefined result;
+> therefore, the returned frame is a huge and incorrect number. Finally,
+> the code below is part of the `vkms_crc_work_handle()`, note that the
+> while loop depends on the returned value from
+> `drm_crtc_accurate_vblank_count()` which may cause the loop to take a
+> long time to finish in case of huge value.
+> 
+>  frame_end = drm_crtc_accurate_vblank_count(crtc);
+>  while (frame_start <= frame_end)
+>    drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+> 
+> This commit fixes this issue by checking if the vblank timestamp
+> corresponding to the current software vblank counter is equal to the
+> current vblank; if they are equal, it means that
+> `drm_crtc_send_vblank_event()` was invoked and vkms does not need to
+> discount the extra vblank, otherwise, `drm_crtc_arm_vblank_event()` was
+> executed and vkms have to discount the extra vblank. This fix made the
+> CRC tests work again whereas keep all tests from kms_flip working as
+> well.
+> 
+> V2: Update commit message
+> 
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
 
-Great. I understand this is only for demonstration, but IMO the output 
-would be clearer with a few tweaks:
+Thanks a lot for typing up this commit message. I'm still not following
+what's going on (this stuff is tricky), but now I think I can at least ask
+useful scenarios.
 
-> for example:
->
-> # ./test-mntinfo
+For my understanding: Things go wrong when in the function
+vkms_crtc_atomic_flush() the call to drm_crtc_vblank_get() returns 0, and
+we call drm_crtc_send_vblank_event() directly? I'm not 100% from your
+description above whether that's the failure case where everything blows
+up.
 
-Can we have a header please?  E.g.
+The other part I'm having a hard time understanding: If we are in the case
+where we call drm_crtc_send_vblank_event() directly, how do we end up in
+the vkms_get_vblank_timestamp().
 
-   MNT                                    ID       NOTIFS   TYPE DEVICE
-   -------------------------------------- -------- -------- ---- ------
+From what I can see there's not caller to where we sample a new vblank ...
+I think a full backtrace that hits the new condition you're adding to
+understand when exactly we're hitting it would be perfect.
 
-
-> ROOT                                          5d        c ext4 8:12
->   \_ sys                                       13        8 sysfs 0:13
->   |   \_ kernel/security                       16        0 securityfs 0:7
-
-I assume ID is the same ID which is shown in /proc/mounts.  But it's 
-shown as decimal there.  Can we match that?
-
-And can we show NOTIFS in decimal as well? I find counters easier to 
-read in decimal :-).
-
-I.e. change "%8x" to "%10d" in both cases.
-
-major:minor is also more often seen formatted as "%d:%d": in 
-/proc/self/mountinfo, lsblk, and ls -l.  I don't feel as strongly about 
-this one though.
-
-Thanks
-Alan
-
->   |   \_ fs/cgroup                             1a       10 tmpfs 0:17
->   |   |   \_ unified                           1b        0 cgroup2 0:18
->   |   |   \_ systemd                           1c        0 cgroup 0:19
->   |   |   \_ freezer                           20        0 cgroup 0:1d
->   |   |   \_ cpu,cpuacct                       21        0 cgroup 0:1e
->   |   |   \_ memory                            22        0 cgroup 0:1f
->   |   |   \_ cpuset                            23        0 cgroup 0:20
->   |   |   \_ hugetlb                           24        0 cgroup 0:21
->   |   |   \_ net_cls,net_prio                  25        0 cgroup 0:22
->   |   |   \_ blkio                             26        0 cgroup 0:23
->   |   |   \_ perf_event                        27        0 cgroup 0:24
->   |   |   \_ devices                           28        0 cgroup 0:25
->   |   |   \_ rdma                              29        0 cgroup 0:26
->   |   \_ fs/pstore                             1d        0 pstore 0:1a
->   |   \_ firmware/efi/efivars                  1e        0 efivarfs 0:1b
->   |   \_ fs/bpf                                1f        0 bpf 0:1c
->   |   \_ kernel/config                         5a        0 configfs 0:10
->   |   \_ fs/selinux                            2a        0 selinuxfs 0:12
->   |   \_ kernel/debug                          2e        0 debugfs 0:8
->   \_ dev                                       15        4 devtmpfs 0:6
->   |   \_ shm                                   17        0 tmpfs 0:14
->   |   \_ pts                                   18        0 devpts 0:15
->   |   \_ hugepages                             2b        0 hugetlbfs 0:27
->   |   \_ mqueue                                2c        0 mqueue 0:11
->   \_ run                                       19        1 tmpfs 0:16
->   |   \_ user/0                               1b4        0 tmpfs 0:2d
->   \_ proc                                      14        1 proc 0:4
->   |   \_ sys/fs/binfmt_misc                    2d        0 autofs 0:28
->   \_ tmp                                       2f      7d0 tmpfs 0:29
->   \_ var/cache/fscache                         71        0 tmpfs 0:2a
->   \_ boot                                      74        0 ext4 8:15
->   \_ home                                      74        0 ext4 8:15
->   \_ var/lib/nfs/rpc_pipefs                    bf        0 rpc_pipefs 0:2b
->   \_ mnt                                      15b        5 tmpfs 0:2c
->   |   \_ foo                                  164        0 tmpfs 0:2e
->   |   \_ foo1                                 16d        0 tmpfs 0:2f
->   |   \_ foo2                                 176        0 tmpfs 0:30
->   |   \_ foo3                                 17f        0 tmpfs 0:31
->   |   \_ foo4                                 188        1 tmpfs 0:32
->   |       \_ ""                               191        0 tmpfs 0:33
->   \_ afs                                      19a        2 afs 0:34
->       \_ procyon.org.uk                       1a3        0 afs 0:35
->       \_ grand.central.org                    1ac        0 afs 0:36
->
-> Signed-off-by: David Howells<dhowells@redhat.com>
 > ---
->
->   samples/vfs/Makefile       |    3 +
->   samples/vfs/test-mntinfo.c |  239 ++++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 242 insertions(+)
->   create mode 100644 samples/vfs/test-mntinfo.c
+>  drivers/gpu/drm/vkms/vkms_crtc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index 7508815fac11..3ce60e66673e 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -74,9 +74,13 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+>  {
+>  	struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
+>  	struct vkms_output *output = &vkmsdev->output;
+> +	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+>  
+>  	*vblank_time = output->vblank_hrtimer.node.expires;
+>  
+> +	if (*vblank_time == vblank->time)
+> +		return true;
 
-> diff --git a/samples/vfs/test-mntinfo.c b/samples/vfs/test-mntinfo.c
-> new file mode 100644
-> index 000000000000..00fbefae98fa
-> --- /dev/null
-> +++ b/samples/vfs/test-mntinfo.c
+Ok, I think with the above I do now have a rough idea what's going wrong.
+I think that would be a bug in the drm_vblank.c. Or at least it could be,
+I think I first need to better understand still what's going on here to
+decided that.
 
-> +/*
-> + * Display a mount and then recurse through its children.
-> + */
-> +static void display_mount(unsigned int mnt_id, unsigned int depth, char *path)
-> +{
-> +	struct fsinfo_mount_child *children;
-> +	struct fsinfo_mount_info info;
-> +	struct fsinfo_ids ids;
-> +	unsigned int d;
-> +	size_t ch_size, p_size;
-> +	int i, n, s;
-> +
-> +	get_attr(mnt_id, FSINFO_ATTR_MOUNT_INFO, &info, sizeof(info));
-> +	get_attr(mnt_id, FSINFO_ATTR_IDS, &ids, sizeof(ids));
-> +	if (depth > 0)
-> +		printf("%s", tree_buf);
-> +
-> +	s = strlen(path);
-> +	printf("%s", !s ? "\"\"" : path);
-> +	if (!s)
-> +		s += 2;
-> +	s += depth;
-> +	if (s < 40)
-> +		s = 40 - s;
-> +	else
-> +		s = 1;
-> +	printf("%*.*s", s, s, "");
-> +
-> +	printf("%8x %8x %s %x:%x",
-> +	       info.mnt_id, info.notify_counter,
-> +	       ids.f_fs_name, ids.f_dev_major, ids.f_dev_minor);
-> +	putchar('\n');
-> +
-> +	children = get_attr_alloc(mnt_id, FSINFO_ATTR_MOUNT_CHILDREN, 0, &ch_size);
-> +	n = ch_size / sizeof(children[0]) - 1;
-> +
-> +	bar_buf[depth + 1] = '|';
-> +	if (depth > 0) {
-> +		tree_buf[depth - 4 + 1] = bar_buf[depth - 4 + 1];
-> +		tree_buf[depth - 4 + 2] = ' ';
-> +	}
-> +
-> +	tree_buf[depth + 0] = ' ';
-> +	tree_buf[depth + 1] = '\\';
-> +	tree_buf[depth + 2] = '_';
-> +	tree_buf[depth + 3] = ' ';
-> +	tree_buf[depth + 4] = 0;
-> +	d = depth + 4;
-> +
-> +	for (i = 0; i < n; i++) {
-> +		if (i == n - 1)
-> +			bar_buf[depth + 1] = ' ';
-> +		path = get_attr_alloc(mnt_id, FSINFO_ATTR_MOUNT_SUBMOUNT, i, &p_size);
-> +		display_mount(children[i].mnt_id, d, path + 1);
-> +		free(path);
-> +	}
-> +
-> +	free(children);
-> +	if (depth > 0) {
-> +		tree_buf[depth - 4 + 1] = '\\';
-> +		tree_buf[depth - 4 + 2] = '_';
-> +	}
-> +	tree_buf[depth] = 0;
-> +}
-> +
-> +/*
-> + * Find the ID of whatever is at the nominated path.
-> + */
-> +static unsigned int lookup_mnt_by_path(const char *path)
-> +{
-> +	struct fsinfo_mount_info mnt;
-> +	struct fsinfo_params params = {
-> +		.request = FSINFO_ATTR_MOUNT_INFO,
-> +	};
-> +
-> +	if (fsinfo(AT_FDCWD, path, &params, &mnt, sizeof(mnt)) == -1) {
-> +		perror(path);
-> +		exit(1);
-> +	}
-> +
-> +	return mnt.mnt_id;
-> +}
-> +
-> +/*
-> + *
-> + */
-> +int main(int argc, char **argv)
-> +{
-> +	unsigned int mnt_id;
-> +	char *path;
-> +	bool use_mnt_id = false;
-> +	int opt;
-> +
-> +	while ((opt = getopt(argc, argv, "M"))) {
-> +		switch (opt) {
-> +		case 'M':
-> +			use_mnt_id = true;
-> +			continue;
-> +		}
-> +		break;
-> +	}
-> +
-> +	argc -= optind;
-> +	argv += optind;
-> +
-> +	switch (argc) {
-> +	case 0:
-> +		mnt_id = lookup_mnt_by_path("/");
-> +		path = "ROOT";
-> +		break;
-> +	case 1:
-> +		path = argv[0];
-> +		if (use_mnt_id) {
-> +			mnt_id = strtoul(argv[0], NULL, 0);
-> +			break;
-> +		}
-> +
-> +		mnt_id = lookup_mnt_by_path(argv[0]);
-> +		break;
-> +	default:
-> +		printf("Format: test-mntinfo\n");
-> +		printf("Format: test-mntinfo <path>\n");
-> +		printf("Format: test-mntinfo -M <mnt_id>\n");
-> +		exit(2);
-> +	}
-> +
-> +	display_mount(mnt_id, 0, path);
-> +	return 0;
-> +}
->
->
+I have a bit a hunch this is fallout from our vblank fudging, but I guess
+we'll see.
 
+It's definitely clear that things blow up if the vblank time somehow goes
+backwards, but I don't understand yet how that's possible.
+-Daniel
+> +
+>  	if (!in_vblank_irq)
+>  		*vblank_time -= output->period_ns;
+>  
+> -- 
+> 2.21.0
+> 
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
