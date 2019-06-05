@@ -2,194 +2,193 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C630EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F10EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A538D2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C5E2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="NihaYQqj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tv1rhdLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfFEQkl (ORCPT
+        id S1728761AbfFEQlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:40:41 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:59248 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbfFEQkk (ORCPT
+        Wed, 5 Jun 2019 12:41:01 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:49007 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728263AbfFEQlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:40:40 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hYYxg-0002aW-5g; Wed, 05 Jun 2019 12:40:36 -0400
-Date:   Wed, 5 Jun 2019 12:40:00 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org
-Subject: Re: [PATCH net-next] net: Drop unlikely before IS_ERR(_OR_NULL)
-Message-ID: <20190605164000.GB554@hmswarspite.think-freely.org>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
- <20190605142428.84784-3-wangkefeng.wang@huawei.com>
+        Wed, 5 Jun 2019 12:41:01 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id E2765225BF;
+        Wed,  5 Jun 2019 12:40:57 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 05 Jun 2019 12:40:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        pedrovanzella.com; h=date:from:to:cc:subject:message-id
+        :references:mime-version:content-type:in-reply-to; s=fm3; bh=5yP
+        HObU1x7p68WHeQkuPbjJD/zieFn48zmjQsGDnsxg=; b=NihaYQqjrCWXxo3WST7
+        SMYRnp0eOAoN9XhwY6yjVHzEqediKJMmufkfpT1BBSP3h+lTgSphtsuol9ITJxEB
+        jPq7iPVcV6gQax+3eoPsrgSB+w0fJYK3Ay9rgprFwGELwClXVsEQQoR9KWqpYgNm
+        aiXBBwLZidpJ+s2oO0TyP3gyxWR9kXZJxTlkB05+utYEhOtP/7vhlak2c1W0H9G3
+        Pk7ZJuU3xoq1CmC/LuMtJtCd6K5cSIUua2yrLQaNnihHl1WTiBsvLRYetxrnCPkE
+        buS2fUzsSgk8kbux7Xfp99wW+8pd2OXrdSejZ/g0tf/GKdjgbPe77uC7My0gvfg+
+        mYQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=5yPHOb
+        U1x7p68WHeQkuPbjJD/zieFn48zmjQsGDnsxg=; b=Tv1rhdLG3S4kHFo8FjMjPd
+        oK8HEOa+MvdXGtc0t8iICQzLf7T17DfxHnl7260eqc5H3X9x3muLldcdN6GVSpIu
+        ufjUm5ffk07p1mtGn9reTjlr3xeqK4DmlGF8qTU61LoJqaanr0bgyUtpyq/d602T
+        l9QScmOHrExyizz7aWnO2HjOvfxi1Me3z9CsXkg/nD9EaAsjMudiQ2TXr3xQyOnx
+        o8hFvrbDnCiCrwPJv27IrSqfHIdGU/TEsyJjnK8LOPfvfdvB9DSleo+coh+56rBL
+        HYxgr1g9ABOgugHfNVP78O/lSe2LZWbogDVHpn8+xuf05Akt2qabwnHCXn7YZZqw
+        ==
+X-ME-Sender: <xms:mfD3XI1Vx-bO4skfN3-w64rRZNcvWt6kxnZA3axhlm5KalS8ktbK-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudegvddguddtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehgtderredtredvnecuhfhrohhmpefrvggu
+    rhhoucggrghniigvlhhlrgcuoehpvggurhhosehpvggurhhovhgrnhiivghllhgrrdgtoh
+    hmqeenucffohhmrghinhepphgvughrohhvrghniigvlhhlrgdrtghomhenucfkphepjedt
+    rddvjedrvdejrddugeelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpvggurhhosehpvg
+    gurhhovhgrnhiivghllhgrrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:mfD3XH_yifrb0TLMZQwPzJORJO7CW7FmtFKuYy9-Bf3valUFN1uAOw>
+    <xmx:mfD3XJei-n4cxhKtqKMSViBCGNvLNY9NA2z8i6n6Se43714YcnoVIQ>
+    <xmx:mfD3XDEzAvATprnBXlKMDt4HlOIyao_BUGx9NnzFgfP0ymVmvxej6g>
+    <xmx:mfD3XIiu9j4T-7Eu9ggQf2Su1nB1IDJyxDEFsaxgTRHFJXXRtUfjYQ>
+Received: from localhost (toroon020aw-lp130-02-70-27-27-149.dsl.bell.ca [70.27.27.149])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 34256380089;
+        Wed,  5 Jun 2019 12:40:57 -0400 (EDT)
+Date:   Wed, 5 Jun 2019 12:40:56 -0400
+From:   Pedro Vanzella <pedro@pedrovanzella.com>
+To:     linux-input@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] HID: hid-logitech-hidpp: subscribe to battery
+ voltage change events
+Message-ID: <20190605164056.ofueguibhjknm5wm@Fenrir>
+References: <20190604232827.26008-1-pedro@pedrovanzella.com>
+ <20190604232827.26008-2-pedro@pedrovanzella.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lbwwonzdknit5xhi"
 Content-Disposition: inline
-In-Reply-To: <20190605142428.84784-3-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190604232827.26008-2-pedro@pedrovanzella.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:24:26PM +0800, Kefeng Wang wrote:
-> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
-> so no need to do that again from its callers. Drop it.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> Cc: Vlad Yasevich <vyasevich@gmail.com>
-> Cc: Neil Horman <nhorman@tuxdriver.com>
-> Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-sctp@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  include/net/udp.h           | 2 +-
->  net/ipv4/fib_semantics.c    | 2 +-
->  net/ipv4/inet_hashtables.c  | 2 +-
->  net/ipv4/udp.c              | 2 +-
->  net/ipv4/udp_offload.c      | 2 +-
->  net/ipv6/inet6_hashtables.c | 2 +-
->  net/ipv6/udp.c              | 2 +-
->  net/sctp/socket.c           | 4 ++--
->  8 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/net/udp.h b/include/net/udp.h
-> index 79d141d2103b..bad74f780831 100644
-> --- a/include/net/udp.h
-> +++ b/include/net/udp.h
-> @@ -480,7 +480,7 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
->  	 * CB fragment
->  	 */
->  	segs = __skb_gso_segment(skb, features, false);
-> -	if (unlikely(IS_ERR_OR_NULL(segs))) {
-> +	if (IS_ERR_OR_NULL(segs)) {
->  		int segs_nr = skb_shinfo(skb)->gso_segs;
->  
->  		atomic_add(segs_nr, &sk->sk_drops);
-> diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-> index b80410673915..cd35bd0a4d8a 100644
-> --- a/net/ipv4/fib_semantics.c
-> +++ b/net/ipv4/fib_semantics.c
-> @@ -1295,7 +1295,7 @@ struct fib_info *fib_create_info(struct fib_config *cfg,
->  		goto failure;
->  	fi->fib_metrics = ip_fib_metrics_init(fi->fib_net, cfg->fc_mx,
->  					      cfg->fc_mx_len, extack);
-> -	if (unlikely(IS_ERR(fi->fib_metrics))) {
-> +	if (IS_ERR(fi->fib_metrics)) {
->  		err = PTR_ERR(fi->fib_metrics);
->  		kfree(fi);
->  		return ERR_PTR(err);
-> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-> index c4503073248b..97824864e40d 100644
-> --- a/net/ipv4/inet_hashtables.c
-> +++ b/net/ipv4/inet_hashtables.c
-> @@ -316,7 +316,7 @@ struct sock *__inet_lookup_listener(struct net *net,
->  				    saddr, sport, htonl(INADDR_ANY), hnum,
->  				    dif, sdif);
->  done:
-> -	if (unlikely(IS_ERR(result)))
-> +	if (IS_ERR(result))
->  		return NULL;
->  	return result;
->  }
-> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-> index 189144346cd4..8983afe2fe9e 100644
-> --- a/net/ipv4/udp.c
-> +++ b/net/ipv4/udp.c
-> @@ -478,7 +478,7 @@ struct sock *__udp4_lib_lookup(struct net *net, __be32 saddr,
->  					  htonl(INADDR_ANY), hnum, dif, sdif,
->  					  exact_dif, hslot2, skb);
->  	}
-> -	if (unlikely(IS_ERR(result)))
-> +	if (IS_ERR(result))
->  		return NULL;
->  	return result;
->  }
-> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-> index 06b3e2c1fcdc..0112f64faf69 100644
-> --- a/net/ipv4/udp_offload.c
-> +++ b/net/ipv4/udp_offload.c
-> @@ -208,7 +208,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
->  		gso_skb->destructor = NULL;
->  
->  	segs = skb_segment(gso_skb, features);
-> -	if (unlikely(IS_ERR_OR_NULL(segs))) {
-> +	if (IS_ERR_OR_NULL(segs)) {
->  		if (copy_dtor)
->  			gso_skb->destructor = sock_wfree;
->  		return segs;
-> diff --git a/net/ipv6/inet6_hashtables.c b/net/ipv6/inet6_hashtables.c
-> index b2a55f300318..cf60fae9533b 100644
-> --- a/net/ipv6/inet6_hashtables.c
-> +++ b/net/ipv6/inet6_hashtables.c
-> @@ -174,7 +174,7 @@ struct sock *inet6_lookup_listener(struct net *net,
->  				     saddr, sport, &in6addr_any, hnum,
->  				     dif, sdif);
->  done:
-> -	if (unlikely(IS_ERR(result)))
-> +	if (IS_ERR(result))
->  		return NULL;
->  	return result;
->  }
-> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-> index b3418a7c5c74..693518350f79 100644
-> --- a/net/ipv6/udp.c
-> +++ b/net/ipv6/udp.c
-> @@ -215,7 +215,7 @@ struct sock *__udp6_lib_lookup(struct net *net,
->  					  exact_dif, hslot2,
->  					  skb);
->  	}
-> -	if (unlikely(IS_ERR(result)))
-> +	if (IS_ERR(result))
->  		return NULL;
->  	return result;
->  }
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 39ea0a37af09..c7b0f51c19d5 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -985,7 +985,7 @@ static int sctp_setsockopt_bindx(struct sock *sk,
->  		return -EINVAL;
->  
->  	kaddrs = memdup_user(addrs, addrs_size);
-> -	if (unlikely(IS_ERR(kaddrs)))
-> +	if (IS_ERR(kaddrs))
->  		return PTR_ERR(kaddrs);
->  
->  	/* Walk through the addrs buffer and count the number of addresses. */
-> @@ -1315,7 +1315,7 @@ static int __sctp_setsockopt_connectx(struct sock *sk,
->  		return -EINVAL;
->  
->  	kaddrs = memdup_user(addrs, addrs_size);
-> -	if (unlikely(IS_ERR(kaddrs)))
-> +	if (IS_ERR(kaddrs))
->  		return PTR_ERR(kaddrs);
->  
->  	/* Allow security module to validate connectx addresses. */
-> -- 
-> 2.20.1
-> 
-> 
-for the SCTP bits
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
+--lbwwonzdknit5xhi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Sorry for littering the list, but please ignore this patch set. I'll
+have one that uses a quirk to detect the right devices in a little
+while.
+
+On 06/04, Pedro Vanzella wrote:
+> Same as with the other ways of reporting battery status,
+> fetch the battery voltage on raw hidpp events.
+>=20
+> Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>=20
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index e68ea44b0d24..1eee206a0aed 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -1313,6 +1313,35 @@ static int hidpp20_query_battery_voltage_info(stru=
+ct hidpp_device *hidpp)
+>  	return 0;
+>  }
+> =20
+> +static int hidpp20_battery_voltage_event(struct hidpp_device *hidpp,
+> +					 u8 *data, int size)
+> +{
+> +	struct hidpp_report *report =3D (struct hidpp_report *)data;
+> +	int status, voltage;
+> +	bool changed;
+> +
+> +	if (report->fap.feature_index !=3D hidpp->battery.voltage_feature_index=
+ ||
+> +	    report->fap.funcindex_clientid !=3D
+> +		    EVENT_BATTERY_LEVEL_STATUS_BROADCAST)
+> +		return 0;
+> +
+> +	status =3D hidpp20_battery_map_status_voltage(report->fap.params,
+> +						    &voltage);
+> +
+> +	hidpp->battery.online =3D status !=3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +
+> +	changed =3D voltage !=3D hidpp->battery.voltage ||
+> +		  status !=3D hidpp->battery.status;
+> +
+> +	if (changed) {
+> +		hidpp->battery.voltage =3D voltage;
+> +		hidpp->battery.status =3D status;
+> +		if (hidpp->battery.ps)
+> +			power_supply_changed(hidpp->battery.ps);
+> +	}
+> +	return 0;
+> +}
+> +
+>  static enum power_supply_property hidpp_battery_props[] =3D {
+>  	POWER_SUPPLY_PROP_ONLINE,
+>  	POWER_SUPPLY_PROP_STATUS,
+> @@ -3181,6 +3210,9 @@ static int hidpp_raw_hidpp_event(struct hidpp_devic=
+e *hidpp, u8 *data,
+>  		ret =3D hidpp_solar_battery_event(hidpp, data, size);
+>  		if (ret !=3D 0)
+>  			return ret;
+> +		ret =3D hidpp20_battery_voltage_event(hidpp, data, size);
+> +		if (ret !=3D 0)
+> +			return ret;
+>  	}
+> =20
+>  	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
+> --=20
+> 2.21.0
+>=20
+
+--=20
+Pedro Vanzella
+pedrovanzella.com
+#include <paranoia.h>
+Don't Panic
+
+--lbwwonzdknit5xhi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEXrNKwhI/eDFBCGo3v5huqi4pBxkFAlz38JAACgkQv5huqi4p
+BxnqRw/9GjTvjivcUXuKcQobp7jlpP4KnUiuNMmXPqQDi0kSADx+MCTbS/AnrXlC
+NEQwWIpYOD8SqS/6JVUHvbeSWIZB2BK8DaLMqejK6FWAoPMGSDLZoxxSbcQZu9np
+zExt2kiIy5+n5aHvJp4bPbELoYWVmXMKuD9sMAkmLElz4aefWF/WqJ31OfQ9re76
+eMi9Cc2gQ+UCG6d0s0gLIq3POj0uWKpyXnbqrwO+T2l/8ZJrXMiBDKLMn2UW4Vgo
+qrwDe+tS6GhTmLp3V+LsHF17s0CDLpHYL6LmgcNbEtw7pqsYJhyqH7y87B25Vcn8
+cqv7HBst3BxaJASjb77Vr1WKObrqs23viBWBilyfyNxWpvTpZrivEjt0+ATh5TpD
+DycgCeIA+HjoMLbHbYRDlwLSAiofxBkKXZ4YHs6aKRuxpiaXRE+2C8f4WuQyXrdH
+R5pbcNkeSbKIeWe9wGzIJalmslRUvnBZSkNDFOTGliojTyPw0EWQf3uDgKnEBbNj
+/xb4MuloTR8YX2x2K1u+8zkxghpQgkadukikMcm+WIWz8VamGevwFztwVUeVTX09
+05aJT3wAM1iBdvE8pxvDNbybW4t+nz+HMdEXSlaaaLC2hJc7BYVJm2OSrjpLRYe3
+J2cYYVXLvbOKyZFvszvvXbgb1NcnFYkJwDydAvl9Dz/l2Zyy3eg=
+=xyZ3
+-----END PGP SIGNATURE-----
+
+--lbwwonzdknit5xhi--
