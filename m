@@ -2,119 +2,152 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036F7C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0060CC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB6520866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81DA2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAcs7pC2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sM7L0sYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfFENWC (ORCPT
+        id S1728073AbfFENXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:22:02 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33424 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFENWB (ORCPT
+        Wed, 5 Jun 2019 09:23:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40772 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFENXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:22:01 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g21so9695475plq.0;
-        Wed, 05 Jun 2019 06:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hXsQr/OkSzH/u4JLYwMI74MVQvCM/DsvMDlyfR8YPSs=;
-        b=vAcs7pC2kqhFsFdLMdboV71PC8Al8p5Fqgrp92x24xcLKrspdV3OUmr94JSM7zHNWH
-         UJpI+hKMpr1bC7hxlNuwVIn3NFxeqATaHm3lbTVOYLA3KMw4fZol2lRcwDxqSi07FKOJ
-         jsn4zOPQ/EbGXeqm9Ze1nw49PjZAyG6azwChEvZ09uXbvyAGipkJioxdlPyENZ2WdlMG
-         Mw7JB+4kDzjCo4VdSGO3Qj6l2ODva8Dh2YwWpK7WkIlgX/Ufd4Wek6h9PRUuFO5LlSqo
-         +CvOsEHO4LCeLTIOsDmZlUVOeIwcUJEqfvJ9RzaX0QaGmggeWQe4KxWOSo0Zm/ZPsVn3
-         XpCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hXsQr/OkSzH/u4JLYwMI74MVQvCM/DsvMDlyfR8YPSs=;
-        b=KqfT+a+n1jGa9S+D19z7LKdrgu+Bwff+VJPZsG+1utfegFvGkHZdsNY9/d76C6Xh44
-         QybgSugm3ThM5VL5HoPjHxEaKq/Mp1XRKZmdo3+up8GfPNR2jEkF0xZU+iXlhFiWBhYl
-         bj4pxHAHKmmzCZnTdxH5lmY8qRNSHBzWw9gl8k7Tf+y6lzSthpd1eG5NVwwRKN4A9BeA
-         s9egZakqlvXDw7OX9qPTQRRJx43S4e072QvLUm8mc6bkIY9xGIt2LzvrEkmE8qDSQbRc
-         hECD80WcWqefxBaxGEQJL9g+rnScJ0QsdgdGxM75aUu5lhR3g5hF9EwTJ/1WXTVNC1j5
-         p5qw==
-X-Gm-Message-State: APjAAAWGXxz2SGrISB/pgFCVnCX5e+8anmUqLSR6yTuu+ZaBg8pRWoqm
-        trOtaT6E8l2+maOHPNJwACk=
-X-Google-Smtp-Source: APXvYqy3yOZ8VjiWRMUeMtJatt8B5MqTPmZEf84WUyyqZ00JqPIqt8WpUbID9fsep+oJRJqxX4KoJA==
-X-Received: by 2002:a17:902:28c9:: with SMTP id f67mr43935186plb.19.1559740921154;
-        Wed, 05 Jun 2019 06:22:01 -0700 (PDT)
-Received: from nishad (p3261240-ipngn21201hodogaya.kanagawa.ocn.ne.jp. [153.202.122.240])
-        by smtp.gmail.com with ESMTPSA id i3sm22254201pfa.175.2019.06.05.06.21.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 06:22:00 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 18:51:53 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: cavium/nitrox - Use the correct style for SPDX
- License Identifier
-Message-ID: <20190605132149.GA5589@nishad>
+        Wed, 5 Jun 2019 09:23:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EBye9IQss/6e+KpbaIme182zs8H9AxKpNDEy2cQ7wwQ=; b=sM7L0sYGt9i59fciZ7LdXWou1x
+        eqWvpZ+yjqcy/4dRro3oD94M1AYNcf7455Qa/CHqn109eJdyVDDOTCGl6vBpRGqGUMzOyi+CFbUSs
+        3iykZt4fBE7KaaV9st7vf/f1ZckQ00VXR4zwnlJaaI4FaWW+ZPhXPpRKBLVRxJlc5aFdCTiqdwD24
+        QhnkgTvVUkjaMH1e+7GQ6cVGD8gl297b3i1Z34LTjtVnIBa4kweGOnG4Go35djgw7kTZelRnULUxz
+        8mWbTEMz9zWhjikjiqFKxnsBi48boBIzxVnYX4cxuN6/OXA4ovrmMSKheU2vYx42xqaxE4fh5ER4J
+        m2epsw9Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYVsL-0004qe-23; Wed, 05 Jun 2019 13:22:45 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id A39AC20757B48; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
+Message-Id: <20190605131945.373256296@infradead.org>
+User-Agent: quilt/0.65
+Date:   Wed, 05 Jun 2019 15:08:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [PATCH 14/15] static_call: Simple self-test module
+References: <20190605130753.327195108@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header files related to Crypto Drivers for Cavium Nitrox
-family CNN55XX devices.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
-
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/crypto/cavium/nitrox/nitrox_debugfs.h | 2 +-
- drivers/crypto/cavium/nitrox/nitrox_mbx.h     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/Kconfig.debug      |    8 ++++++++
+ lib/Makefile           |    1 +
+ lib/test_static_call.c |   41 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+)
 
-diff --git a/drivers/crypto/cavium/nitrox/nitrox_debugfs.h b/drivers/crypto/cavium/nitrox/nitrox_debugfs.h
-index f177b79bbab0..09c4cf2513fb 100644
---- a/drivers/crypto/cavium/nitrox/nitrox_debugfs.h
-+++ b/drivers/crypto/cavium/nitrox/nitrox_debugfs.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __NITROX_DEBUGFS_H
- #define __NITROX_DEBUGFS_H
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1955,6 +1955,14 @@ config TEST_STATIC_KEYS
  
-diff --git a/drivers/crypto/cavium/nitrox/nitrox_mbx.h b/drivers/crypto/cavium/nitrox/nitrox_mbx.h
-index 5008399775a9..7c93d0282174 100644
---- a/drivers/crypto/cavium/nitrox/nitrox_mbx.h
-+++ b/drivers/crypto/cavium/nitrox/nitrox_mbx.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __NITROX_MBX_H
- #define __NITROX_MBX_H
+ 	  If unsure, say N.
  
--- 
-2.17.1
++config TEST_STATIC_CALL
++	tristate "Test static call"
++	depends on m
++	help
++	  Test the static call interfaces.
++
++	  If unsure, say N.
++
+ config TEST_KMOD
+ 	tristate "kmod stress tester"
+ 	depends on m
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -79,6 +79,7 @@ obj-$(CONFIG_TEST_SORT) += test_sort.o
+ obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
++obj-$(CONFIG_TEST_STATIC_CALL) += test_static_call.o
+ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+ obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
+ obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
+--- /dev/null
++++ b/lib/test_static_call.c
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#include <linux/module.h>
++#include <linux/static_call.h>
++#include <asm/bug.h>
++
++static int foo_a(int x)
++{
++	return x+1;
++}
++
++static int foo_b(int x)
++{
++	return x*2;
++}
++
++DEFINE_STATIC_CALL(foo, foo_a);
++
++static int __init test_static_call_init(void)
++{
++	WARN_ON(static_call(foo, 2) != 3);
++
++	static_call_update(foo, foo_b);
++
++	WARN_ON(static_call(foo, 2) != 4);
++
++	static_call_update(foo, foo_a);
++
++	WARN_ON(static_call(foo, 2) != 3);
++
++	return 0;
++}
++module_init(test_static_call_init);
++
++static void __exit test_static_call_exit(void)
++{
++}
++module_exit(test_static_call_exit);
++
++MODULE_AUTHOR("Peter Zijlstra <peterz@infradead.org>");
++MODULE_LICENSE("GPL");
+
 
