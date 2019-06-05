@@ -2,90 +2,89 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F57C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA39C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8158F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314B2206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFEIW1 (ORCPT
+        id S1726695AbfFEIX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:22:27 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:56330 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfFEIW0 (ORCPT
+        Wed, 5 Jun 2019 04:23:28 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:58506 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725294AbfFEIX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:22:26 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 2BD71804F9;
-        Wed,  5 Jun 2019 10:22:23 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 10:22:21 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     airlied@linux.ie, thierry.reding@gmail.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH 1/1] drm/panel: truly: Add additional delay after pulling
- down reset gpio
-Message-ID: <20190605082221.GB15169@ravnborg.org>
-References: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
+        Wed, 5 Jun 2019 04:23:27 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x558JvZW018984;
+        Wed, 5 Jun 2019 03:22:51 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sunsrckqj-1;
+        Wed, 05 Jun 2019 03:22:51 -0500
+Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
+        by mail2.cirrus.com (Postfix) with ESMTP id 93DFA605A68C;
+        Wed,  5 Jun 2019 03:22:50 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 5 Jun
+ 2019 09:22:50 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 5 Jun 2019 09:22:50 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E1B602DA;
+        Wed,  5 Jun 2019 09:22:49 +0100 (BST)
+Date:   Wed, 5 Jun 2019 09:22:49 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>,
+        <jarkko.nikula@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v3 4/6] i2c: core: Move ACPI IRQ handling to probe time
+Message-ID: <20190605082249.GL28362@ediswmail.ad.cirrus.com>
+References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
+ <20190528142900.24147-4-ckeepax@opensource.cirrus.com>
+ <20190604170404.GR9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
-        a=e5mUnYsNAAAA:8 a=u_M7I5vmc8m8u026BJQA:9 a=CjuIK1q_8ugA:10
-        a=pioyyrs4ZptJ924tMmac:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20190604170404.GR9224@smile.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=902 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906050054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vivek,
-
-On Mon, May 27, 2019 at 03:56:16PM +0530, Vivek Gautam wrote:
-> MTP SDM845 panel seems to need additional delay to bring panel
-> to a workable state. Running modetest without this change displays
-> blurry artifacts.
+On Tue, Jun 04, 2019 at 08:04:04PM +0300, Andy Shevchenko wrote:
+> On Tue, May 28, 2019 at 03:28:58PM +0100, Charles Keepax wrote:
+> > Bring the ACPI path in sync with the device tree path and handle all the
+> > IRQ fetching at probe time. This leaves the only IRQ handling at device
+> > registration time being that which is passed directly through the board
+> > info as either a resource or an actual IRQ number.
+> > 
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-added to drm-misc-next
-
-	Sam
-
-> ---
->  drivers/gpu/drm/panel/panel-truly-nt35597.c | 1 +
->  1 file changed, 1 insertion(+)
+> It seems my comments weren't addressed by one or another reason.
+> This one I would rather to split with exporting function as a separate patch.
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> index fc2a66c53db4..aa7153fd3be4 100644
-> --- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> +++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> @@ -280,6 +280,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
->  	gpiod_set_value(ctx->reset_gpio, 1);
->  	usleep_range(10000, 20000);
->  	gpiod_set_value(ctx->reset_gpio, 0);
-> +	usleep_range(10000, 20000);
->  
->  	return 0;
->  }
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+With the switch to passing in i2c_client it makes for some fairly
+awkward gymnastics and "ping pong" programming to do so. I guess
+we could leave the function taking in an acpi_device but just
+felt like a slightly less user friendly interface. Any thoughts?
+
+Thanks,
+Charles
