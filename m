@@ -3,150 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7738BC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC3AC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9F520717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734402075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfFEJfJ (ORCPT
+        id S1727029AbfFEJiw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:35:09 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:59686 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbfFEJfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:35:09 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 7734AA0191;
-        Wed,  5 Jun 2019 11:35:06 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id zXe4_JImFazw; Wed,  5 Jun 2019 11:35:02 +0200 (CEST)
-Subject: Re: [PATCH 2/2 v4] tty/serial/8250: use mctrl_gpio helpers
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>
-References: <20190603083332.12480-1-sr@denx.de>
- <20190603083332.12480-2-sr@denx.de>
- <20190604165224.GP9224@smile.fi.intel.com>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <115804ab-7d7c-a656-e6f4-ad61b3e02705@denx.de>
-Date:   Wed, 5 Jun 2019 11:35:01 +0200
-MIME-Version: 1.0
-In-Reply-To: <20190604165224.GP9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 5 Jun 2019 05:38:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:40805 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726690AbfFEJiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:38:52 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-140-obHVVIjyNKmcrmatuEDzRA-1; Wed, 05 Jun 2019 10:38:49 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 5 Jun 2019 10:38:48 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 5 Jun 2019 10:38:48 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: sched_setaffinity() with > 1024 cpus on gcc-9
+Thread-Topic: sched_setaffinity() with > 1024 cpus on gcc-9
+Thread-Index: AdUbgnpEuljvuI+IR8mR//XAM+iBRw==
+Date:   Wed, 5 Jun 2019 09:38:48 +0000
+Message-ID: <6b42c210ba704118b00d0f44742efddf@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: obHVVIjyNKmcrmatuEDzRA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.19 18:52, Andy Shevchenko wrote:
-> On Mon, Jun 03, 2019 at 10:33:32AM +0200, Stefan Roese wrote:
->> From: Yegor Yefremov <yegorslists@googlemail.com>
->>
->> This patch permits the usage for GPIOs to control
->> the CTS/RTS/DTR/DSR/DCD/RI signals.
-> 
->> +	if (up->gpios) {
-> 
->> +		mctrl_gpio_set(up->gpios, mctrl_gpio);
->> +	}
-> 
-> ...
-> 
->> +	if (up->gpios) {
-> 
->> +		mctrl_gpio = mctrl_gpio_get_outputs(up->gpios, &mctrl_gpio);
-> 
->> +	}
-> 
-> ...
-> 
->> +			gpios = mctrl_gpio_init(&uart->port, 0);
->> +			if (IS_ERR(gpios)) {
->> +				if (PTR_ERR(gpios) != -ENOSYS)
->> +					return PTR_ERR(gpios);
->> +			}
-> 
-> ...
-> 
->> +	if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios,
->> +						UART_GPIO_RTS))) {
-> 
->> +	}
-> 
-> ...
-> 
->> -	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW) {
->> +	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW
->> +		&& IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios,
->> +							UART_GPIO_RTS))) {
-> 
->> }
-> 
-> ...
-> 
->> +	if (up->gpios)
->> +		mctrl_gpio_disable_ms(up->gpios);
-> 
-> ...
-> 
->> +	if (up->gpios)
->> +		mctrl_gpio_enable_ms(up->gpios);
-> 
-> ...
-> 
->> +	if (up->gpios)
->> +		return mctrl_gpio_get(up->gpios, &ret);
-> 
-> 
-> Can we rather make this mimic the gpiod_get_optional() API?
-> 
-> So, if we get an error, it's an error, otherwise with NULL pointer the
-> operations goes to be no-op.
-> 
-> [IS_ERR_OR_NULL() -> IS_ERR(), if (up->gpios) -> /dev/null, etc]
+I suspect that if I compile the following using gcc-9 It'll bleat
+about going beyond the end of the array:
 
-So you want me to drop all "if (up->gpios)" checks? I can do this in
-some cases (e.g. serial8250_disable_ms()). But I would like to keep
-it in other cases, like serial8250_out_MCR(), where this check prevents
-some unnecessary code execution in the "non-gpios mode" (and vice-versa).
+#define _GNU_SOURCE
+#include <sched.h>
 
-Would this be acceptable?
+#define MAX_CPU 2048
 
-BTW: Regarding the OMAP specific code: I'm not the author of this code
-and I don't have access to such hardware to do some tests here. But
-changing IS_ERR_OR_NULL() -> IS_ERR() in this OMAP code does not
-seem correct. IIUTC, these "if" clauses are extended here by
-IS_ERR_OR_NULL(mctrl_gpio_to_gpiod()) to check if the GPIO's are not
-enabled / used. Currently this will probably break, since when called
-with "gpios == NULL", mctrl_gpio_to_gpiod() will crash [1].
-
-If you don't object (or have other suggestions), I'll change this to
-use "up->gpios == 0" instead. This seems to be what the original author
-wanted to achieve.
-
-Okay?
-
-Thanks,
-Stefan
-
-[1]
-
-struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
-				      enum mctrl_gpio_idx gidx)
+int fubar(void)
 {
-	return gpios->gpio[gidx];
+        cpu_set_t *set = CPU_ALLOC(MAX_CPU);
+        CPU_SET_S(MAX_CPU - 2, CPU_ALLOC_SIZE(MAX_CPU), set);
+        return CPU_COUNT_S(CPU_ALLOC_SIZE(MAX_CPU), set);
 }
+
+I can't test since I don't have a copy of gcc-9.
+
+The whole interface for > 1024 cpus looks horrid though.
+Reading version 5.01 on the man page.
+I'd have thought that if the application provided a short mask
+to sched_setaffinity() the rest would be deemed to be zeros.
+And that if an overlong mask is passed to sched_getaffinity()
+the extra bytes/longs would either be zerod or unchanged.
+
+       Be aware that CPU_ALLOC(3) may allocate a slightly larger CPU set
+       than requested (because CPU sets are implemented as bit masks
+       allocated in units of sizeof(long)).  Consequently,
+       sched_getaffinity() can set bits beyond the requested allocation
+       size, because the kernel sees a few additional bits.  Therefore, the
+       caller should iterate over the bits in the returned set, counting
+       those which are set, and stop upon reaching the value returned by
+       CPU_COUNT(3) (rather than iterating over the number of bits requested
+       to be allocated).
+
+A short mask to sched_getaffinity() should also do something
+more sensible than just returning an error.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
