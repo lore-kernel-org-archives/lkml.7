@@ -2,212 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C00C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8A12083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:25:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPrd/xgn"
+	by mail.kernel.org (Postfix) with ESMTP id BE2C820866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559777485;
+	bh=Gv90T7rcmE4D6Bw1Jj/m4qXdxlWX226iKT0AddgAoBM=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=Wx8C2PxJ6MwO2QzJ0qXTw0ldx/Wj9IzOEq2HonoUV/zEH05o+f+CPKRslkQWa8gjp
+	 joL3GlpCFBsAE/zXjXCLDkvULjZFK+QJkFboZgPo2rzInJgqpo4d3jq19P8TPQafKl
+	 UQLRLts1Pi8HB7PfVYKqeE1BAZrChy371hAvMdxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfFEXZ2 (ORCPT
+        id S1726741AbfFEXbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 19:25:28 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:56226 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfFEXZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 19:25:28 -0400
-Received: by mail-it1-f194.google.com with SMTP id i21so267646ita.5;
-        Wed, 05 Jun 2019 16:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+WWUao+0KYKJX7/eCyyrGifWT6Z32ta9Z0LQFgrFodk=;
-        b=sPrd/xgnfWj8aOIB6h6viaBvaeccIwX4YNlrf2bwLiCoBmGVbA9nKJG5+UCyALqqiz
-         nFlZNWmPqfL1yyJwRWeZ7yLRTytcqNDRn8nb11oLYfXVVCoHHqTxxs5Qj/AaIsw9BwAJ
-         XIvCCUhyKGADDjVS60sEt5Hw0G0fegqPJh7Ke2CheWlPbTBOP74gSQD/3iIR6P2kuu3M
-         UKSN3S4PYkKuk8s9mROHVMM3hDVgR1Q7OE3Kc998hiKqwMSFyRrKGNA/qJl8Vozs3JsU
-         YMNuX9sQdAWdg+q3XURtApz1N85A7oPP34f8tOUXZa+gCZDTDx/8utlP7TspmDAW8EhG
-         huQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+WWUao+0KYKJX7/eCyyrGifWT6Z32ta9Z0LQFgrFodk=;
-        b=lJBVdJUgAx5bUlhu0BAPnNrqTLS6lxikZyMbE90+uPnpPldjFz5HHDtoDTjsfRdfv7
-         G60IhzO1WlJP56FD2/tyu/OE8dPU+ExPDobt8ZNdM0YlSfTAcEmG/XNrT5ssAhfbUNWo
-         kpko7deGJOI0m+Kt39noC03uZICEY2tgM8YIUk6aQtqZ0o6FS1PuglpFpUK9kKWWQL7r
-         msPH0yvFnxUUDvhSRgV8gqvCWC2Y1OMcR/APNXTk/weXIJNwVnm3A48BLqW6BzEnDEwF
-         U3ip9FNqMkaWnWPTOpp4I26KUnqVCURHNm9WbdCNmfg9pTfoneFU9O4lsHLK6JwtTWUm
-         MqLA==
-X-Gm-Message-State: APjAAAXVp6pdtb81Tw9oYioCXSsb8j5bvEYx71Wrq6hp3I3teR007MXs
-        9+9gxpNe1YdR0kkUmxDBHrND7GPp5KDq3roSllk=
-X-Google-Smtp-Source: APXvYqwpdcZVyBlfikTfWGuw0wAUUPxpTv7H6zcpYDq+kqKd32iTlgG/bPmu0brEdKgxbIA1aMDsfwK3+FbkIf0KMnM=
-X-Received: by 2002:a24:6c4a:: with SMTP id w71mr29571756itb.128.1559777127054;
- Wed, 05 Jun 2019 16:25:27 -0700 (PDT)
+        Wed, 5 Jun 2019 19:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726543AbfFEXbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 19:31:24 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC6DD2083E;
+        Wed,  5 Jun 2019 23:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559777483;
+        bh=Gv90T7rcmE4D6Bw1Jj/m4qXdxlWX226iKT0AddgAoBM=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=mM5nhpZ30n+cxkI7tGpiNIXusTJq40P+ZToze2Ml4tuE1e8D3nnDJWADhN9un3TPo
+         v5/nKmAeqfuuxIVQtsEYXWXH7zgGrtg+l7fV9B34O07X6PDhbdVXnJ9yb5picEb4+c
+         m45rcdzn9aga9qLDnbJIJxCdOTFbpptCwNv8Si60=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160605.9970-1-jeffrey.l.hugo@gmail.com> <20190521164324.GA2085@tuxbook-pro>
-In-Reply-To: <20190521164324.GA2085@tuxbook-pro>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 5 Jun 2019 17:25:15 -0600
-Message-ID: <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-4-git-send-email-skomatineni@nvidia.com> <20190529232810.14A5224366@mail.kernel.org> <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
+        jonathanh@nvidia.com, linus.walleij@linaro.org,
+        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
+        tglx@linutronix.de, thierry.reding@gmail.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
+User-Agent: alot/0.8.1
+Date:   Wed, 05 Jun 2019 16:31:22 -0700
+Message-Id: <20190605233123.AC6DD2083E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:42 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
->
-> > There needs to be coordination between hid-quirks and the elan_i2c driver
-> > about which devices are handled by what drivers.  Currently, both use
-> > whitelists, which results in valid devices being unhandled by default,
-> > when they should not be rejected by hid-quirks.  This is quickly becoming
-> > an issue.
+Quoting Sowjanya Komatineni (2019-05-31 12:52:44)
+>=20
+> On 5/29/19 4:28 PM, Stephen Boyd wrote:
+> > Quoting Sowjanya Komatineni (2019-05-28 16:08:47)
+> >> +               WARN_ON(1);
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       parent_rate =3D clk_hw_get_rate(parent);
+> >> +
+> >> +       if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
+> >> +               WARN_ON(1);
+> >> +}
+> >> +#endif
+> >> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> >> index 09bccbb9640c..e4d124cc5657 100644
+> >> --- a/drivers/clk/tegra/clk.h
+> >> +++ b/drivers/clk/tegra/clk.h
+> >> @@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *p=
+ll, u8 p_div);
+> >>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+> >>                   u8 frac_width, u8 flags);
+> >>  =20
+> >> +#ifdef CONFIG_PM_SLEEP
+> > Can you remove this ifdef? It just complicates compilation testing.
+> OK, Will fix in next version
+> >> +void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
+> >> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
+> >> +void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
+> >> +void tegra_clk_plle_tegra210_resume(struct clk *c);
+> >> +void tegra_clk_sync_state_pll(struct clk *c);
+> >> +void tegra_clk_sync_state_pll_out(struct clk *clk);
+> > Do these APIs need to operate on struct clk? Why can't they operate on
+> > clk_hw or why can't we drive the suspend/resume sequence from the clk
+> > provider driver itself?
 > >
-> > Since elan_i2c has a maintained whitelist of what devices it will handle,
-> > use that to implement a blacklist in hid-quirks so that only the devices
-> > that need to be handled by elan_i2c get rejected by hid-quirks, and
-> > everything else is handled by default.  The downside is the whitelist and
-> > blacklist need to be kept in sync.
-> >
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Jiri, the two patches in this series doesn't have a build time
-> dependency, so if you take this one through your tree I'll take 2/2
-> through arm-soc.
+> Yes can change to use clk_hw.
+>=20
+> By clk provider driver, are you referring to clk-tegra210?
 
-Ping?  Is this good from the HID perspective?  I would really like to
-see this queued for 5.3.
+I guess so.
 
->
-> Regards,
-> Bjorn
->
-> > Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
-> >  drivers/input/mouse/elan_i2c_core.c |  4 ++
-> >  2 files changed, 58 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> > index 77ffba48cc73..656485e08eb7 100644
-> > --- a/drivers/hid/hid-quirks.c
-> > +++ b/drivers/hid/hid-quirks.c
-> > @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
-> >               break;
-> >       case USB_VENDOR_ID_ELAN:
-> >               /*
-> > -              * Many Elan devices have a product id of 0x0401 and are handled
-> > -              * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> > -              * is not (and cannot be) handled by that driver ->
-> > -              * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> > +              * Blacklist of everything that gets handled by the elan_i2c
-> > +              * input driver.  This should be kept in sync with the whitelist
-> > +              * that exists in that driver.  This avoids disabling valid
-> > +              * touchpads and other ELAN devices.
-> >                */
-> > -             if (hdev->product == 0x0401 &&
-> > -                 strncmp(hdev->name, "ELAN0800", 8) != 0)
-> > -                     return true;
-> > -             /* Same with product id 0x0400 */
-> > -             if (hdev->product == 0x0400 &&
-> > -                 strncmp(hdev->name, "QTEC0001", 8) != 0)
-> > +             if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
-> > +                (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0100", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0600", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0601", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0602", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0603", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0604", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0605", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0606", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0607", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0608", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0609", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060F", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0610", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0611", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0612", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0613", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0614", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0615", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0616", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0617", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0618", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0619", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061A", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061D", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061E", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061F", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0620", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0621", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0622", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0623", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0624", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0625", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0626", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0627", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0628", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0629", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062A", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062D", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0631", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0632", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN1000", 8) == 0 ||
-> > +                 strncmp(hdev->name, "elan,ekth3000", 13) == 0))
-> >                       return true;
-> >               break;
-> >       }
-> > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> > index f9525d6f0bfe..3ded19528cd4 100644
-> > --- a/drivers/input/mouse/elan_i2c_core.c
-> > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, elan_id);
-> >
-> > +/*
-> > + * when these whtielists get updated, the corresponding blacklist in hid-quirks
-> > + * needs to be updated to match.
-> > + */
-> >  #ifdef CONFIG_ACPI
-> >  static const struct acpi_device_id elan_acpi_id[] = {
-> >       { "ELAN0000", 0 },
-> > --
-> > 2.17.1
-> >
+>=20
+> clk-terga210 driver has suspend/resume implementation. These API's are=20
+> for corresponding clock specific implementations (clk-pll, clk-pll-out,=20
+> clk-divider) for enabling and restoring to proper rate and are invoked=20
+> during clk-tegra210 driver resume.
+
+Yes, so when the clk provider suspends it needs to do something? Our
+handling of clk rates and other state like enable/disable over
+suspend/resume isn't really well thought out or implemented so far. TI
+has some code to do some stuff, but otherwise I haven't seen drivers
+handling this. Ideally it would be something generic in the framework so
+that drivers don't have to work around stuff.
