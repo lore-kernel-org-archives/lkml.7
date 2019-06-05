@@ -2,84 +2,134 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D4C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAB6C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67962086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RoF9qG4c"
+	by mail.kernel.org (Postfix) with ESMTP id 40866206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559741687;
+	bh=o8lToEz46I/+28kwT0hSuUzum1uvFsV9UImUt4RT1B4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pmNd3GzqeAYO41DvnBNyvTETyAeKVmtnOMJ7sakbEL9jvbri2uviAGYwK2s2o9nqh
+	 pcMAWPInmvZFLfemTtqYTzlClAN5jFoXgo4LTWvmjeAW6+yh48s//IjwRgpUXznvUz
+	 +F8jrUcrFHEiAu8JSE7g4/XkjxsKegFSmOuiMRwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfFENan (ORCPT
+        id S1727978AbfFENeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:30:43 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:44108 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727936AbfFENal (ORCPT
+        Wed, 5 Jun 2019 09:34:46 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35992 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFENep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:30:41 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BEFD6C00D5;
-        Wed,  5 Jun 2019 13:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559741451; bh=UhTawoCdKVO1mzPVVGAymhkIq1eb9QymySNnrhn2TNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RoF9qG4c4kadyU3NLa1zb5OZ4T800SHI489ZNakns+wGbwBjbtWGT90n1wg8BDMYr
-         LTRgSbF565MeC5bsMZRKI/N6/n0VAPeuseodT8j89/GZ7gMyOrTMFomg3YcbN5Ux3d
-         dPJ28FmBlQKpyOBLf0bdPiNTT8yGQfPxutcLISFmtBlm8ThpNXicbJly3nO+rPHb8e
-         LNhvF2uf+aVnpRre6OtRCAVtW6Jjaor9m5NcJTUctvqXOCEbi35rJVfQtjeMQqqF3e
-         6UQTKEMGOAeAjPBRXFkyGn5JgegwSWm1MZ7XgBb998Ev2p5FJThluQJHwBbMWddPf4
-         b3WIX1MDnxkZw==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3DDD6A0232;
-        Wed,  5 Jun 2019 13:30:39 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id DD7783FEC6;
-        Wed,  5 Jun 2019 15:30:38 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [RFC net-next 0/2] net: stmmac: Convert to phylink
-Date:   Wed,  5 Jun 2019 15:30:27 +0200
-Message-Id: <cover.1559741195.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Jun 2019 09:34:45 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so5134881qkl.3;
+        Wed, 05 Jun 2019 06:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=grBBM9ViaanFgHPLnFrQHKU04qolbq9KsWYNsIIwRqA=;
+        b=u107NaP8nG876tIG6Q2fL9N9piNv7X1C8ktfs1g7H/hDLqed+pH6cxVRLLRNznbtm7
+         Mcs4Os2HbvpEVPU71DOG2dkTQkQFj1DTVQD1xbFBWjw7WF0h97y/V1UlSvaIuFEftNWK
+         dbxnDMpwhY3GY20Mb6DEdwg3rrwqciAvdHqjQnpRY/BolbgE4M1jaiF1ZPvawQvLAFJc
+         mcV6vpbo4mCioqlrX32FS6meK6OqhxdlRBo/hp2jYyy/9ZG4eFC4e6hRV5mikW8QsOPd
+         e+yXKMeMNN+lIamY359iclpNA/oUtZ93ElA4TD7urYgkhnKxGU0Z8kzqejtn6DHL6ifZ
+         Vxsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=grBBM9ViaanFgHPLnFrQHKU04qolbq9KsWYNsIIwRqA=;
+        b=khGQHwe9CYIf0BQhjf5E9rh4DUxyspB4gGqGoeMAC9xVfOOK40FQz33aHP2wM+XIEI
+         jxYfLy4F97OoDou7UN1d7WbYiGU+atVE4VM/PyuHzjmE435A4eHdOQSRm84JInqn0qUg
+         WOqh1wGGvpdJ36PUITGmpl9E8IvCkUlRgARdlDHg8VSQclB2/QamHFP/YADmkHcHalRY
+         8GOJKo8P+4TI4bClX+G0zZyoZDkfBWRXByOreJS0PqtCO+e/GTzqEfvWJcTRaeNSfuW9
+         7IgE+KYhLd3cy8VGEe39UGSfzAOhqBmGggVXf9RtL3FfAaevpTMcC9E4/M6+z5A5EVo9
+         K+6g==
+X-Gm-Message-State: APjAAAUHeVZqrLqioCL8ap9lQ2xclXDsuvbxnHJ9Hu1Ukl0SUz8CzPws
+        T8qvRHAQneWaS1CnLdFHOGs=
+X-Google-Smtp-Source: APXvYqwl1p5ZrcCZPQK3a1Eh2kpFD9I7pupsFV3QFAqHHQm23X4++11e1P8XI1bGH2GOwoL1JUr5vA==
+X-Received: by 2002:a37:4804:: with SMTP id v4mr34301359qka.330.1559741684282;
+        Wed, 05 Jun 2019 06:34:44 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:c027])
+        by smtp.gmail.com with ESMTPSA id d16sm13121896qtd.73.2019.06.05.06.34.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 06:34:43 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 06:34:42 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, lizefan@huawei.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH] sched/core: Fix cpu controller for !RT_GROUP_SCHED
+Message-ID: <20190605133442.GJ374014@devbig004.ftw2.facebook.com>
+References: <20190605114935.7683-1-juri.lelli@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605114935.7683-1-juri.lelli@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For review and testing only.
+Hello,
 
-This converts stmmac to use phylink. Besides the code redution this will
-allow to gain more flexibility.
+On Wed, Jun 05, 2019 at 01:49:35PM +0200, Juri Lelli wrote:
+> On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
+> move RT tasks between cgroups to which cpu controller has been attached;
+> but it is oddly possible to first move tasks around and then make them
+> RT (setschedule to FIFO/RR).
+> 
+> E.g.:
+> 
+>   # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
+>   # chrt -fp 10 $$
+>   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   bash: echo: write error: Invalid argument
+>   # chrt -op 0 $$
+>   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   # chrt -fp 10 $$
+>   # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   2345
+>   2598
+>   # chrt -p 2345
+>   pid 2345's current scheduling policy: SCHED_FIFO
+>   pid 2345's current scheduling priority: 10
+> 
+> Existing code comes with a comment saying the "we don't support RT-tasks
+> being in separate groups". Such comment is however stale and belongs to
+> pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
+> !RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
+> are not performed at all in these cases.
+> 
+> Make moving RT tasks between cpu controller groups viable by removing
+> special case check for RT (and DEADLINE) tasks.
+> 
+> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> ---
+> Hi,
+> 
+> Although I'm pretty assertive in the changelog, I actually wonder what
+> am I missing here and why (if) current behavior is needed and makes
+> sense.
+> 
+> Any input?
 
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Yeah, RT tasks being transprent to the cpu controller when
+!RT_GROUP_SCHED makes sense to me, especially given that the rules
+around it are already inconsistent.  Please feel free to add
 
-Jose Abreu (2):
-  net: stmmac: Prepare to convert to phylink
-  net: stmmac: Convert to phylink
+  Acked-by: Tejun Heo <tj@kernel.org>
 
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |   3 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   4 +-
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  72 +---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 389 +++++++++------------
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  21 +-
- 5 files changed, 189 insertions(+), 300 deletions(-)
+Thanks.
 
 -- 
-2.7.4
-
+tejun
