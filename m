@@ -2,201 +2,139 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1976C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D91C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBED2070D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FU5fDu6M"
+	by mail.kernel.org (Postfix) with ESMTP id E313E2070D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfFED1P (ORCPT
+        id S1726603AbfFEDar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 23:27:15 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:35598 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfFED1O (ORCPT
+        Tue, 4 Jun 2019 23:30:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45748 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726354AbfFEDaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 23:27:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559705233; x=1591241233;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VXjX19MVgR+03nnn2b8Q+rJ+rQtez95FczrcM8VTBYg=;
-  b=FU5fDu6MCrgqbu/UZlG6Gpkg+MC8M6QEzGOA3TXG7CV0h9Apk6CDx35o
-   CSuTcM3v2vSo62WvH6/tVFIA+/RJ5wlwBlgnNf3pwbB4hvnLqwaoNmJH1
-   0w/V8rvxXGlVpoV96NzlMFfQkTchaJMUPvrlfTtwYcBcat9dL6mvxbZkR
-   c=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="769017448"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Jun 2019 03:27:11 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id 96D3CA230D;
-        Wed,  5 Jun 2019 03:27:10 +0000 (UTC)
-Received: from EX13D05UWB003.ant.amazon.com (10.43.161.26) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 03:27:10 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D05UWB003.ant.amazon.com (10.43.161.26) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 03:27:09 +0000
-Received: from localhost (10.85.18.74) by mail-relay.amazon.com
- (10.43.161.249) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Wed, 5 Jun 2019 03:27:09 +0000
-Date:   Tue, 4 Jun 2019 20:27:09 -0700
-From:   Eduardo Valentin <eduval@amazon.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-CC:     Eduardo Valentin <eduval@amazon.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        <jarkko.nikula@linux.intel.com>, <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Message-ID: <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
+        Tue, 4 Jun 2019 23:30:46 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x553M6AA083504
+        for <linux-kernel@vger.kernel.org>; Tue, 4 Jun 2019 23:30:45 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sx2dv69t9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:30:45 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 5 Jun 2019 04:30:44 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Jun 2019 04:30:40 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x553UdK632375164
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Jun 2019 03:30:39 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7A60B2066;
+        Wed,  5 Jun 2019 03:30:39 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5469B205F;
+        Wed,  5 Jun 2019 03:30:39 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.212.108])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Jun 2019 03:30:39 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 848C816C3783; Tue,  4 Jun 2019 20:30:39 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 20:30:39 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Reply-To: paulmck@linux.ibm.com
+References: <20150921204327.GH4029@linux.vnet.ibm.com>
+ <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <20190603000617.GD28207@linux.ibm.com>
+ <20190603030324.kl3bckqmebzis2vw@gondor.apana.org.au>
+ <CAHk-=wj2t+GK+DGQ7Xy6U7zMf72e7Jkxn4_-kGyfH3WFEoH+YQ@mail.gmail.com>
+ <CAHk-=wgZcrb_vQi5rwpv+=wwG+68SRDY16HcqcMtgPFL_kdfyQ@mail.gmail.com>
+ <20190603195304.GK28207@linux.ibm.com>
+ <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
+ <20190604211449.GU28207@linux.ibm.com>
+ <20190605022117.kw6tldcwhdkyqd6u@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604171611.GS9224@smile.fi.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190605022117.kw6tldcwhdkyqd6u@gondor.apana.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060503-0072-0000-0000-000004379A56
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011217; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01213397; UDB=6.00637747; IPR=6.00994469;
+ MB=3.00027186; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-05 03:30:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060503-0073-0000-0000-00004C7F4EC0
+Message-Id: <20190605033039.GY28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=919 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906050019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Andry,
+On Wed, Jun 05, 2019 at 10:21:17AM +0800, Herbert Xu wrote:
+> On Tue, Jun 04, 2019 at 02:14:49PM -0700, Paul E. McKenney wrote:
+> >
+> > Yeah, I know, even with the "volatile" keyword, it is not entirely clear
+> > how much reordering the compiler is allowed to do.  I was relying on
+> > https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html, which says:
+> 
+> The volatile keyword doesn't give any guarantees of this kind.
+> The key to ensuring ordering between unrelated variable/register
+> reads/writes is the memory clobber:
+> 
+> 	6.47.2.6 Clobbers and Scratch Registers
+> 
+> 	...
+> 
+> 	"memory" The "memory" clobber tells the compiler that the assembly
+> 	code performs memory reads or writes to items other than those
+> 	listed in the input and output operands (for example, accessing
+> 	the memory pointed to by one of the input parameters). To ensure
+> 	memory contains correct values, GCC may need to flush specific
+> 	register values to memory before executing the asm. Further,
+> 	the compiler does not assume that any values read from memory
+> 	before an asm remain unchanged after that asm; it reloads them as
+> 	needed. Using the "memory" clobber effectively forms a read/write
+> 	memory barrier for the compiler.
+> 
+> 	Note that this clobber does not prevent the processor from
+> 	doing speculative reads past the asm statement. To prevent that,
+> 	you need processor-specific fence instructions.
+> 
+> IOW you need a barrier().
 
-Long time no seeing :-)
+Understood.  Does the patch I sent out a few hours ago cover it?  Or is
+something else needed?
 
-On Tue, Jun 04, 2019 at 08:16:11PM +0300, Andy Shevchenko wrote:
-> On Thu, May 30, 2019 at 09:33:46PM -0700, Eduardo Valentin wrote:
-> > From: Haiyue Wang <haiyue.wang@linux.intel.com>
-> > 
-> > Some protocols over I2C are designed for bi-directional transferring
-> > messages by using I2C Master Write protocol. Like the MCTP (Management
-> > Component Transport Protocol) and IPMB (Intelligent Platform Management
-> > Bus), they both require that the userspace can receive messages from
-> > I2C dirvers under slave mode.
-> > 
-> > This new slave mqueue backend is used to receive and queue messages, it
-> > will exposes these messages to userspace by sysfs bin file.
-> > 
-> > Note: DT interface and a couple of minor fixes here and there
-> > by Eduardo, so I kept the original authorship here.
-> 
-> > +#define MQ_MSGBUF_SIZE		CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> > +#define MQ_QUEUE_SIZE		CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> 
-> > +#define MQ_QUEUE_NEXT(x)	(((x) + 1) & (MQ_QUEUE_SIZE - 1))
-> 
-> Also possible ((x + 1) % ..._SIZE)
+Other than updates to the RCU requirements documentation, which is
+forthcoming.
 
-Right.. but I suppose the original idea is to avoid divisions on the hotpath.
+							Thanx, Paul
 
-So, I am actually fine with the limitation of only using power of 2.
-
-> 
-> > +	mq = dev_get_drvdata(container_of(kobj, struct device, kobj));
-> 
-> kobj_to_dev()
-
-Well, yeah, I guess this is a nit, but I can add that in case of a real need for a v7.
-
-> 
-> > +static int i2c_slave_mqueue_probe(struct i2c_client *client,
-> > +				  const struct i2c_device_id *id)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct mq_queue *mq;
-> > +	int ret, i;
-> > +	void *buf;
-> > +
-> > +	mq = devm_kzalloc(dev, sizeof(*mq), GFP_KERNEL);
-> > +	if (!mq)
-> > +		return -ENOMEM;
-> > +
-> 
-> > +	BUILD_BUG_ON(!is_power_of_2(MQ_QUEUE_SIZE));
-> 
-> Perhaps start function with this kind of assertions?
-> 
-
-
-same here, in case I see a huge ask for a v7, I can move this up.
-
-> > +
-> > +	buf = devm_kmalloc_array(dev, MQ_QUEUE_SIZE, MQ_MSGBUF_SIZE,
-> > +				 GFP_KERNEL);
-> > +	if (!buf)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < MQ_QUEUE_SIZE; i++)
-> > +		mq->queue[i].buf = buf + i * MQ_MSGBUF_SIZE;
-> 
-> 
-> Just wondering if kfifo API can bring an advantage here?
-> 
-
-Well, then again, I suppose the idea is simplify here, not if we need to go
-kfifo as the Protocol on top of this is perfectly fine with the current
-discipline of just having a simple drop of older messages.
-
-
-> > +	return 0;
-> > +}
-> 
-> > +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> > +	{
-> > +		.compatible = "i2c-slave-mqueue",
-> > +	},
-> 
-> > +	{ },
-> 
-> No need for comma here.
-
-It does not hurt to have it either :-)
-
-> 
-> > +};
-> 
-> > +
-> > +static struct i2c_driver i2c_slave_mqueue_driver = {
-> > +	.driver = {
-> > +		.name	= "i2c-slave-mqueue",
-> 
-> > +		.of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> 
-> Wouldn't compiler warn you due to unused data?
-> Perhaps drop of_match_ptr() for good...
-
-
-Not sure what you meant here. I dont see any compiler warning.
-Also, of_match_ptr seams to be well spread in the kernel.
-> 
-> > +	},
-> > +	.probe		= i2c_slave_mqueue_probe,
-> > +	.remove		= i2c_slave_mqueue_remove,
-> > +	.id_table	= i2c_slave_mqueue_id,
-> > +};
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-
--- 
-All the best,
-Eduardo Valentin
