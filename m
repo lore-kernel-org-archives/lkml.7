@@ -2,108 +2,64 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA9FC46470
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA9C28CC3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EDA20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFBKmpMV"
+	by mail.kernel.org (Postfix) with ESMTP id 627692070D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfFEDUY (ORCPT
+        id S1726605AbfFEDXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 23:20:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33442 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfFEDUX (ORCPT
+        Tue, 4 Jun 2019 23:23:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56484 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfFEDXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 23:20:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g21so9164433plq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 20:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=KQxqODuHQSQtSovTOjbNPCaPMCE8H5PhPgJ8g/Tl5K8=;
-        b=TFBKmpMV7EF0aCUjJUfIw6n8vOUKtCRAD2rjDvT7B3eNZN3+Vynr+gc+weeg3cdbMc
-         GmyvgqAuNBBG5F30zfe4tR37tZbfIpqT9NlHqMQ4ymdtnCAR0m2hmHaBlucR9u8rkpbp
-         CjUbJ1Vd1YSASQHoRe9jClWUn5SVkgcsZTBrs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=KQxqODuHQSQtSovTOjbNPCaPMCE8H5PhPgJ8g/Tl5K8=;
-        b=eoGFiSDAXVvr63Z0FnSPGU6Y6RVgNLKhyL4WaNHdII+2M8gK/toEcqhiQLKsnqhel7
-         biY0j2+WrCGCgnRrjfB+L8yMyNWIYukCs+tjLqqibi4Zj2xi3VZtpij9vR3AMciSPJLA
-         YXuAkKh8YXffJU2+zXiWupJBZiRwvQlNp5n0FlOsXDucltWHfjmpz9IpDf0DthwGRwmD
-         H/XA/ydf+AVUMh4zsB1MnP9pCwAAJKwxYn+ocbQiXTTxv9rv+mSWO3PAAGfIG/KFI3sn
-         RRXm9nb+kdBgESqut6bzlJa2YgI0KUBqcEc4ZKHBmkERcEkzpaRHNFF5JfXNCC84XAMl
-         ZKtg==
-X-Gm-Message-State: APjAAAWO50Ve3dY1FfaCfzoLuQVeTtWS+5Ri3LdSJTI3KQl1CxnKZqak
-        Lb5bBGjU8VbdWYodc5BlBFzHqA==
-X-Google-Smtp-Source: APXvYqykLZu9VnTaUPCU45TKVYxiMnHtmMWT98CP2FahCw+wcqXd2E+4GI9WD2LayUPEOMq8WrJiYA==
-X-Received: by 2002:a17:902:18a:: with SMTP id b10mr40528391plb.277.1559704823277;
-        Tue, 04 Jun 2019 20:20:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o192sm13448583pgo.74.2019.06.04.20.20.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 20:20:22 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 20:20:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>, stable@vger.kernel.org
-Subject: [GIT PULL] pstore fixes for v5.2-rc4
-Message-ID: <201906042018.72255CAF94@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Tue, 4 Jun 2019 23:23:00 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2AD9E150488C5;
+        Tue,  4 Jun 2019 20:22:59 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 20:22:58 -0700 (PDT)
+Message-Id: <20190604.202258.1443410652869724565.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        richardcochran@gmail.com, john.stultz@linaro.org,
+        tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA
+ driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190604170756.14338-1-olteanv@gmail.com>
+References: <20190604170756.14338-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Jun 2019 20:22:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Tue,  4 Jun 2019 20:07:39 +0300
 
-Please pull these pstore fixes for v5.2-rc4. They've been in linux-next
-for a bit now and catch some pstore corner cases found recently.
+> This patchset adds the following:
+> 
+>  - A timecounter/cyclecounter based PHC for the free-running
+>    timestamping clock of this switch.
+> 
+>  - A state machine implemented in the DSA tagger for SJA1105, which
+>    keeps track of metadata follow-up Ethernet frames (the switch's way
+>    of transmitting RX timestamps).
 
-Thanks!
+This series doesn't apply cleanly to net-next, please respin.
 
--Kees
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.2-rc4
-
-for you to fetch changes up to 8880fa32c557600f5f624084152668ed3c2ea51e:
-
-  pstore/ram: Run without kernel crash dump region (2019-05-31 01:19:06 -0700)
-
-----------------------------------------------------------------
-pstore fixes for v5.2-rc4
-
-- Avoid NULL deref when unloading/reloading ramoops module (Pi-Hsun Shih)
-- Run ramoops without crash dump region
-
-----------------------------------------------------------------
-Kees Cook (1):
-      pstore/ram: Run without kernel crash dump region
-
-Pi-Hsun Shih (1):
-      pstore: Set tfm to NULL on free_buf_for_compression
-
- fs/pstore/platform.c |  7 +++++--
- fs/pstore/ram.c      | 36 +++++++++++++++++++++++-------------
- 2 files changed, 28 insertions(+), 15 deletions(-)
-
--- 
-Kees Cook
+Thank you.
