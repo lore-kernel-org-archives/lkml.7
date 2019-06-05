@@ -2,98 +2,95 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CB5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0975AC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9EB2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bZD59ZmW"
+	by mail.kernel.org (Postfix) with ESMTP id DC4B72075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfFEKCA (ORCPT
+        id S1727210AbfFEKCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:02:00 -0400
-Received: from mout.gmx.net ([212.227.15.15]:53403 "EHLO mout.gmx.net"
+        Wed, 5 Jun 2019 06:02:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36542 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfFEKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:02:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1559728900;
-        bh=UsET9Lll5M+CoTqv+pj38b2HWnBKUKBonnb58LGMBT4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=bZD59ZmWY0Ntwhnge76QXnUAewp8/FaivB+KFTadt2z1WLIpRJTlz9brY9UOo3mDL
-         sVe8Cr8xZ1m5qfcG/T1YyyBqb40gGEvMxtqaTVdFrbXtguM54zJJ9pQiJUS5kckjVr
-         FzcaSXguUpZX0EjeNG0El4SLnzdH1AAj42k2nCt4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1fn0-1gb2dQ1uGm-0124AV; Wed, 05
- Jun 2019 12:01:40 +0200
-Subject: Re: [PATCH 3/4] clk: bcm2835: register Raspberry Pi's firmware clk
- device
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
- <20190604173223.4229-4-nsaenzjulienne@suse.de> <87muiwzyrw.fsf@anholt.net>
- <17ea99902e4329db735080d1a8fc04f5c06c9bf0.camel@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <d4e0e290-5fa7-899b-c26b-691bfc32e864@gmx.net>
-Date:   Wed, 5 Jun 2019 12:01:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726690AbfFEKCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:02:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 50645307D90D;
+        Wed,  5 Jun 2019 10:02:12 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6E49A5C225;
+        Wed,  5 Jun 2019 10:02:09 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  5 Jun 2019 12:02:11 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 12:02:07 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
+        william.kucharski@oracle.com
+Subject: Re: [PATCH uprobe, thp v2 2/5] uprobe: use original page when all
+ uprobes are removed
+Message-ID: <20190605100207.GD32406@redhat.com>
+References: <20190604165138.1520916-1-songliubraving@fb.com>
+ <20190604165138.1520916-3-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <17ea99902e4329db735080d1a8fc04f5c06c9bf0.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:9f2lQD4Z7CpbaiYWLkTMJigUa1MziLg6+z/wwaBIURmsxQgOUS5
- k2FYvw7vOfvcPi/PmfQ5fixRnOqThMuOv787Vl764hF59L8a6jmBs3NRYyoG5HAmJmv1b19
- +yvY6j7zCQUeWKyarSDtHkN+zou8bvDUL9jpBSvvfE2bD/YQ3lvm5FBWwjvJQYKdwvyBmXc
- V6NMtKpN71rZbBuSV6twg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q4vxgRBg+Vk=:cSI8li99sc0SeLjZq6PBGa
- QZ6f42LRJFJJLcLD3cqQ8mY9OEKdD44MaT+Er+v3fQmuJoT1RMTdK/A6F4hvNqYD6DywuhSi3
- SaPRxALtUr+Jp8Fv3AkeUimHwzkgvjVgyZSMkef1mrCxUR1SF2WtZH5TX1wyITT77lYaQY/7b
- bj2m1VkzdVei2lLjOs5R7JOSgQM8rnWjSZBTBf3I9lVQxdo4DtJQVHJm+dMFaMagUTr7P16Wt
- EQRLvSSuISvwt0+t9lPSNz/WPyhNu9p+d/JPPEvNdTSWjLw3u54YIG2luGQkVwm68b6nSKUpj
- rejoSwSaq1rF1Wj6ofqdiTzytKDTf1n9MIjU4f36vJ0W6+KW6Ns61IoBDksQ6zuEI6yWCNTPx
- l/h0E8kgwSrVGvfEMVjCjtk384eYtQNYIwuLACSVtJ8r0JFcDcHNL1/mBPfhynGjTdvEKX4gw
- qYV14E7sCt3VgpUARbVj09YuuYBGVtum9phmcLP30a/2GUNA+FDnIaW7WmAle/QcuKyOC2ve1
- l7GEtohDJ9bYkv6HYiCbo8cde1FpaXWWcrLcdqnl8wg8jaWpbyhT5YZXRsPkiJIn4H0fIKuDt
- tpDash5HSLSInyq365xvLH7gwPG3oqGltwG/jGQ8+cfWFZ2UMJf0s065E4Zcnuvo3vRf8/3yb
- fM5KF4eLre3UJUebDgvSIz3PsguDzVEHxpc3kLrRAaR0YBXH1IO/ddwM1PZa88kZTAH62DOsi
- 3fYq4DY8NaCvPXGyEjQQlgqITKRqGCYE806FquBDfKpn7taRiIeY3QkuYwmKZ1f/EsbSwGvj+
- KzVe9aMC6XbYTzOpYpKTR2S/Ct6/Ll4KoaLySUJdExAdxfXJ85uFEkAvupGEamOJdryZE2IVy
- 2sJq5Qt9Y9Yp8uRN4iJa2bSAGUOrjOAIYEsd6A5rdVpaBMeoMFi5q/ChR4IOWnafHIpXKCpxp
- iYT9j/hHGM4FBvpD0s6Tuk7bFIsm1niuLu+E7jHnI2y7iRXyTdqdc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604165138.1520916-3-songliubraving@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 05 Jun 2019 10:02:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 05.06.19 um 11:11 schrieb Nicolas Saenz Julienne:
-> On Tue, 2019-06-04 at 17:00 -0700, Eric Anholt wrote:
->> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
->>
->>> Registers clk-raspberrypi as a platform device as part of the driver's
->>> probe sequence.
->> Similar to how we have VCHI register platform devices for the services
->> VCHI provides, shouldn't we have the firmware driver register the device
->> for clk_raspberrypi?  Or put the clk provider in the fw driver instead
->> of a separate driver (no opinion on my part).
-> Makes sense to me, I'll move the platform driver registration into the firmware
-> driver.
-Fine. Please keep in mind that you might need to add a MODULE_ALIAS
-otherwise autoload won't work.
+On 06/04, Song Liu wrote:
+>
+> Currently, uprobe swaps the target page with a anonymous page in both
+> install_breakpoint() and remove_breakpoint(). When all uprobes on a page
+> are removed, the given mm is still using an anonymous page (not the
+> original page).
+
+Agreed, it would be nice to avoid this,
+
+> @@ -461,9 +471,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  			unsigned long vaddr, uprobe_opcode_t opcode)
+>  {
+>  	struct uprobe *uprobe;
+> -	struct page *old_page, *new_page;
+> +	struct page *old_page, *new_page, *orig_page = NULL;
+>  	struct vm_area_struct *vma;
+>  	int ret, is_register, ref_ctr_updated = 0;
+> +	pgoff_t index;
+>  
+>  	is_register = is_swbp_insn(&opcode);
+>  	uprobe = container_of(auprobe, struct uprobe, arch);
+> @@ -501,6 +512,19 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  	copy_highpage(new_page, old_page);
+>  	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+>  
+> +	index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
+> +	orig_page = find_get_page(vma->vm_file->f_inode->i_mapping, index);
+
+I think you should take is_register into account, if it is true we are going
+to install the breakpoint so we can avoid find_get_page/pages_identical.
+
+> +	if (orig_page) {
+> +		if (pages_identical(new_page, orig_page)) {
+> +			/* if new_page matches orig_page, use orig_page */
+> +			put_page(new_page);
+> +			new_page = orig_page;
+
+Hmm. can't we simply unmap the page in this case?
+
+Oleg.
+
