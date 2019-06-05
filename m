@@ -2,147 +2,116 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD0CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0952C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA4D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06B72075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="nLxOUTMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfFEEGX (ORCPT
+        id S1726652AbfFEEGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 00:06:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9533 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbfFEEGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 00:06:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 21:06:22 -0700
-X-ExtLoop1: 1
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2019 21:06:20 -0700
-Date:   Wed, 5 Jun 2019 12:04:46 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Tina Zhang <tina.zhang@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com
-Subject: Re: [RFC PATCH v2 1/3] vfio: Use capability chains to handle device
- specific irq
-Message-ID: <20190605040446.GW9684@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20190604095534.10337-1-tina.zhang@intel.com>
- <20190604095534.10337-2-tina.zhang@intel.com>
+        Wed, 5 Jun 2019 00:06:49 -0400
+Received: from mail-eopbgr1400131.outbound.protection.outlook.com ([40.107.140.131]:31440
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725294AbfFEEGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 00:06:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QzRw9pf2OfyvOVRgkWwWnQL0J2UKXOuShxVzeg3UszQ=;
+ b=nLxOUTMtQld7edhPgWa+mZtuaquvj13wN8+2k4shuLweNK3nxjJHkzlm48M8BGcP2K5mc1OtLc5KcAoEuDyug4wtgVIivbFgyH/W2VTXb0nZrVrWk4iWqq8MM41XGU27BFgUJ5WuXmY7mIqDsX7rbD+ZSmA9bDPf8DMdH458ZI4=
+Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com (52.134.247.150) by
+ OSAPR01MB4724.jpnprd01.prod.outlook.com (20.179.177.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Wed, 5 Jun 2019 04:06:44 +0000
+Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com
+ ([fe80::19ad:b6ce:a287:dc85]) by OSAPR01MB3089.jpnprd01.prod.outlook.com
+ ([fe80::19ad:b6ce:a287:dc85%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 04:06:44 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: rcar_gen3_phy_usb2: unbalanced disables for USB20_VBUS0
+Thread-Topic: rcar_gen3_phy_usb2: unbalanced disables for USB20_VBUS0
+Thread-Index: AQHVGwA/6yZMGZVP4EW1AZzw0OBf96aMbWQg
+Date:   Wed, 5 Jun 2019 04:06:44 +0000
+Message-ID: <OSAPR01MB30890E4B76F9605F3726C676D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+References: <CAMuHMdUObtKUVDohLT501TarPRC6eDnxBqqB5Tj_Tb+-4fwbkw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUObtKUVDohLT501TarPRC6eDnxBqqB5Tj_Tb+-4fwbkw@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 928ca3fe-6801-4301-b5af-08d6e96b3903
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSAPR01MB4724;
+x-ms-traffictypediagnostic: OSAPR01MB4724:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <OSAPR01MB47246B1632FCF714AB6CCA4FD8160@OSAPR01MB4724.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(346002)(396003)(366004)(376002)(199004)(189003)(33656002)(74316002)(316002)(8676002)(305945005)(229853002)(6116002)(446003)(486006)(73956011)(66556008)(53936002)(76116006)(76176011)(66476007)(186003)(11346002)(66446008)(64756008)(6436002)(81166006)(66946007)(66066001)(476003)(14454004)(3846002)(966005)(26005)(71190400001)(52536014)(7736002)(2906002)(5660300002)(54906003)(102836004)(6506007)(7696005)(99286004)(25786009)(256004)(81156014)(6306002)(8936002)(71200400001)(9686003)(6916009)(4326008)(478600001)(55016002)(14444005)(6246003)(86362001)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB4724;H:OSAPR01MB3089.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WOlcF+FWqtpp+3oZhU8Fmr/lN7NHT0ANSpn2CHjdCmc/+mta+thslkCBvaZ7EOyAv/02lmHiwMWYzShuDBjpcE5I/qe8J4zv2N9JxnLv8KZVs/QEcltpzFRTaUhuUilAQGDP16sorOM+yD49jm8wp2kNCNDoBCjFlm2eDcV9QOVrOVccbWp9fMF66GPdKtM37JrAaJddnhUMt4uEP7FEid/w1Wxbw9kxTCf0ATHHz9ow37UytVbJhOzMmq7CWykz55MKtP16TizrOqrQeNkZNBo9OYB2d/qfk6DbMl8eW0tqy/QUuav0MXyzujnu8p9EObVpT/AIV/PhRemoQi5wDH3UZDRJfZfMEUnuIU4e4YrjyEi5NAYhXdA7C/XggQSaph16elgAIv3ZLgLsrLLPsYaabLNM1N654qiEbdkgLW4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bE2XbrxqIoa/xW9+"
-Content-Disposition: inline
-In-Reply-To: <20190604095534.10337-2-tina.zhang@intel.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 928ca3fe-6801-4301-b5af-08d6e96b3903
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 04:06:44.3562
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4724
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---bE2XbrxqIoa/xW9+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019.06.04 17:55:32 +0800, Tina Zhang wrote:
-> Caps the number of irqs with fixed indexes and uses capability chains
-> to chain device specific irqs.
->=20
-> VFIO vGPU leverages this mechanism to trigger primary plane and cursor
-> plane page flip event to the user space.
->=20
-> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> ---
->  include/uapi/linux/vfio.h | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 02bb7ad6e986..9b5e25937c7d 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -444,11 +444,31 @@ struct vfio_irq_info {
->  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
->  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
->  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
-> +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
->  	__u32	index;		/* IRQ index */
-> +	__u32	cap_offset;	/* Offset within info struct of first cap */
->  	__u32	count;		/* Number of IRQs within this index */
-
-This would break ABI for get irq info. I think irq cap chain can just follow
-vfio_irq_info.
-
->  };
->  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
-> =20
-> +/*
-> + * The irq type capability allows irqs unique to a specific device or
-> + * class of devices to be exposed.
-> + *
-> + * The structures below define version 1 of this capability.
-> + */
-> +#define VFIO_IRQ_INFO_CAP_TYPE      3
-> +
-> +struct vfio_irq_info_cap_type {
-> +	struct vfio_info_cap_header header;
-> +	__u32 type;     /* global per bus driver */
-> +	__u32 subtype;  /* type specific */
-> +};
-> +
-> +#define VFIO_IRQ_TYPE_GFX				(1)
-> +#define VFIO_IRQ_SUBTYPE_GFX_PRI_PLANE_FLIP		(1)
-> +#define VFIO_IRQ_SUBTYPE_GFX_CUR_PLANE_FLIP		(2)
-> +
-
-Really need to split for different planes? I'd like a VFIO_IRQ_SUBTYPE_GFX_=
-DISPLAY_EVENT
-so user space can probe change for all.
-
->  /**
->   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_ir=
-q_set)
->   *
-> @@ -550,7 +570,8 @@ enum {
->  	VFIO_PCI_MSIX_IRQ_INDEX,
->  	VFIO_PCI_ERR_IRQ_INDEX,
->  	VFIO_PCI_REQ_IRQ_INDEX,
-> -	VFIO_PCI_NUM_IRQS
-> +	VFIO_PCI_NUM_IRQS =3D 5	/* Fixed user ABI, IRQ indexes >=3D5 use   */
-> +				/* device specific cap to define content */
->  };
-> =20
->  /*
-> --=20
-> 2.17.1
->=20
-
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---bE2XbrxqIoa/xW9+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXPc/XgAKCRCxBBozTXgY
-J14tAJ4spOUUHHjI7VDGf6v2HLVSukewqwCfQAqvU+E12da+D4hdzCsT6skO92Q=
-=7ecn
------END PGP SIGNATURE-----
-
---bE2XbrxqIoa/xW9+--
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIHJlcG9ydCENCg0K
+PiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4sIFNlbnQ6IFdlZG5lc2RheSwgSnVuZSA1LCAyMDE5
+IDM6MDYgQU0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gVXNpbmcgYSB0cmVlIGJhc2Vk
+IG9uIHJlbmVzYXMtZHJpdmVycy0yMDE5LTA2LTA0LXY1LjItcmMzLCBJIHN0YXJ0ZWQgc2VlaW5n
+DQo+IHRoZSBmb2xsb3dpbmcgd2FybmluZyBkdXJpbmcgYSBzZWNvbmQgc3lzdGVtIHN1c3BlbmQg
+KHMyaWRsZSk6DQo8c25pcD4NCj4gU28gZmFyIEkndmUgc2VlbiB0aGlzIG9uIFNhbHZhdG9yLVgg
+d2l0aCBSLUNhciBIMyBFUzEuMCBvciBNMy1XLCBhbmQNCj4gb24gU2FsdmF0b3ItWFMgd2l0aCBS
+LUNhciBNMy1OLCBidXQgbm90ICh5ZXQ/KSBvbiBIMyBFUzIuMC4NCg0KSSBjb3VsZCByZXByb2R1
+Y2UgdGhpcyBpc3N1ZSBvbiBSLUNhciBIMyBFUzMuMCB3aXRoIFN1c3BlbmQtdG8tUkFNLg0KIyBJ
+J20gc2lsbHkgYnV0IEkgY291bGQgbm90IHVzZSBzMmlkbGUgdGhhdCBkaWRuJ3Qgd2FrZSB1cCBi
+eSByYXZiLg0KIyBodHRwczovL2VsaW51eC5vcmcvUi1DYXIvQm9hcmRzL1NhbHZhdG9yLVgjU3Vz
+cGVuZC10by1JZGxlDQoNCj4gVW5mb3J0dW5hdGVseSB0aGUgaXNzdWUgc2VlbXMgdG8gYmUgZmFp
+cmx5IHRpbWluZy1zZW5zaXRpdmUsIHNvIEkgZmFpbGVkDQo+IHRvIGJpc2VjdCBpdC4NCj4gDQo+
+IEkgaGF2ZSBhZGRlZCBzb21lIGRlYnVnLiAgV2hpbGUgdGhpcyBkaWRuJ3QgaGVscCBtZSBmaW5k
+aW5nIHRoZSBjYXVzZQ0KPiBvZiB0aGUgYWJvdmUgd2FybmluZywgaXQgZGlkIGRpc2NvdmVyIGFu
+b3RoZXIgaW1iYWxhbmNlOg0KDQpUaGFuayB5b3UgZm9yIHRyeWluZyBpdC4gSSBoYXZlIGludmVz
+dGlnYXRlZCB0aGlzIGlzc3VlIGFuZCB0aGVuIEkgZm91bmQgdGhlIHJvb3QgY2F1c2UuDQoNCkFm
+dGVyIHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2FzIGFwcGxpZWQsIG11bHRpcGxlIHBoeSBkZXZpY2Vz
+IGFyZSBnZW5lcmF0ZWQuDQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC9nZWVydC9yZW5lc2FzLWRyaXZlcnMuZ2l0L2NvbW1pdC9kcml2ZXJzL3BoeS9yZW5l
+c2FzL3BoeS1yY2FyLWdlbjMtdXNiMi5jP2g9cmVuZXNhcy1kcml2ZXJzLTIwMTktMDYtMDQtdjUu
+Mi1yYzMmaWQ9NTQ5YjZiNTViMDA1NTgxODNjZWY0YWYyYzJiYjYxZDRmMmZmZTUwOA0KDQpCdXQs
+IG9uIHRoZSBwb3dlcl9vbiBmdW5jdGlvbiwgaXQgc2hvdWxkIHNldCB0aGUgInBvd2VyZWQiIGZs
+YWcgZm9yIGFueSBvdGhlciBwaHlzIGFueXdheS4NCk90aGVyd2lzZSwgc3VjaCBhIHN0cmFuZ2Ug
+aW1iYWxhbmNlIGJlaGF2aW9yIGhhcHBlbmVkLg0KVGhlIHBvd2VyZWQgZmxhZyBpcyBuZWVkZWQg
+dG8gYXZvaWQgbXVsdGlwbGUgIlBMTF9SU1QiIHJlZ2lzdGVyIHNldHRpbmcuDQojIEkgdGhpbmsg
+cmVndWxhdG9yX3tlbixkaXN9YWJsZSgpIGRvbid0IG5lZWQgc3VjaCBhIGNvbmRpdGlvbiB0aG91
+Z2guDQoNCkknbGwgc3VibWl0IGEgYnVnZml4IHBhdGNoIHdpdGggeW91ciBSZXBvcnRlZC1ieSB0
+YWcgbGF0ZXIuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
