@@ -2,155 +2,178 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF15CC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200C9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8344206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01212067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559736328;
-	bh=/yBmtrGUuJzqyyuL9TNw1yQTPdC8StAgllWcH1SusIc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XbtwC3zWkP0+xr1HhkNxgdc+cd1AZ/r+SXsEDPcdtvP9PEZo5sxiOCfL6atv+Ixif
-	 mucjy6MstLmxuHQa90zwuOey/2xkslAkT2N01K7GjgShDdQxmh1d3DRxNIoBQGPgJ8
-	 zkMtzpsa6EJlQkuphW2WVDJR9raiwn9uhRGwJk7g=
+	s=default; t=1559736521;
+	bh=NdwYAOyD7/sJLIDuRhnx6c2lB4v+nhPbxDELVygZbV8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gaitcMLC+bWz28BOvRHFl2uCASWJ9gJ+TDj+1QxlqWDznDb8w2iw+dDsERchmob3q
+	 QDT97Pr4U6QjMpFz2tkqY7aLFwehDys0UrDLPwcwyU1fV+TrDBvvhbiWIvDaE62Hq4
+	 all98fdxiQyCPIr0qP5x6BhI+T9AaQMhkVg/ajko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfFEMF2 (ORCPT
+        id S1727483AbfFEMIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfFEMF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:05:27 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A922070B;
-        Wed,  5 Jun 2019 12:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559736326;
-        bh=/yBmtrGUuJzqyyuL9TNw1yQTPdC8StAgllWcH1SusIc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=guT85f4kOCTPb7g81M3ETpUzM46V6ZvoSK6lz1RMVBeCDQghdR68z71f6y5vw/JMe
-         hBoKRQNUzUSI2mUI4gsVQC3gw40VC/BGvj4DjQ+8IU9/ArFF4DfpxjRp6yNl9ePaYr
-         ORaChhw/4HzRut9ppSgk9Q+2IxW5+2r+XCDoPE8c=
-Received: by mail-lj1-f181.google.com with SMTP id o13so22867425lji.5;
-        Wed, 05 Jun 2019 05:05:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAWJA76UXrff0DojScbOXJlNyiB3IDhjlx2NZoh1oFwix9V4Awna
-        lSdDmUy5aaFf3xXyladn07xf69McZHI4jGc0IJM=
-X-Google-Smtp-Source: APXvYqyy3PzIshgd+hJHZQBaDG/tn3wI/iXAXb04vhvfCuOj9XnQLbiv+Uyq+aBSr59JP990kgt/YLqRWBcifg7dsew=
-X-Received: by 2002:a2e:9cc4:: with SMTP id g4mr21556488ljj.47.1559736323980;
- Wed, 05 Jun 2019 05:05:23 -0700 (PDT)
+        Wed, 5 Jun 2019 08:08:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36974 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfFEMIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:08:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DC8D6AC8C;
+        Wed,  5 Jun 2019 12:08:37 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 14:08:37 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: dump memory.stat during cgroup OOM
+Message-ID: <20190605120837.GE15685@dhcp22.suse.cz>
+References: <20190604210509.9744-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-4-matheus@castello.eng.br>
- <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com> <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
-In-Reply-To: <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 5 Jun 2019 14:05:12 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfpSEq+eOGsZjQQociuemzb1=E4_OetfCEvLyNxVxJpmQ@mail.gmail.com>
-Message-ID: <CAJKOXPfpSEq+eOGsZjQQociuemzb1=E4_OetfCEvLyNxVxJpmQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604210509.9744-1-hannes@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Jun 2019 at 00:42, Matheus Castello <matheus@castello.eng.br> wrote:
->
->
->
-> On 5/29/19 11:46 AM, Krzysztof Kozlowski wrote:
-> > On Mon, 27 May 2019 at 04:46, Matheus Castello <matheus@castello.eng.br> wrote:
-> >>
-> >> For configuration of fuel gauge alert for a low level state of charge
-> >> interrupt we add a function to config level threshold and a device tree
-> >> binding property to set it in flatned device tree node.
-> >>
-> >> Now we can use "maxim,alert-low-soc-level" property with the values from
-> >> 1% up to 32% to configure alert interrupt threshold.
-> >>
-> >> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> >> ---
-> >>   drivers/power/supply/max17040_battery.c | 52 +++++++++++++++++++++++--
-> >>   1 file changed, 49 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> >> index b7433e9ca7c2..2f4851608cfe 100644
-> >> --- a/drivers/power/supply/max17040_battery.c
-> >> +++ b/drivers/power/supply/max17040_battery.c
-> >> @@ -29,6 +29,9 @@
-> >>   #define MAX17040_DELAY         1000
-> >>   #define MAX17040_BATTERY_FULL  95
-> >>
-> >> +#define MAX17040_ATHD_MASK             0xFFC0
-> >> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
-> >> +
-> >>   struct max17040_chip {
-> >>          struct i2c_client               *client;
-> >>          struct delayed_work             work;
-> >> @@ -43,6 +46,8 @@ struct max17040_chip {
-> >>          int soc;
-> >>          /* State Of Charge */
-> >>          int status;
-> >> +       /* Low alert threshold from 32% to 1% of the State of Charge */
-> >> +       u32 low_soc_alert_threshold;
-> >>   };
-> >>
-> >>   static int max17040_get_property(struct power_supply *psy,
-> >> @@ -99,6 +104,28 @@ static void max17040_reset(struct i2c_client *client)
-> >>          max17040_write_reg(client, MAX17040_CMD, 0x0054);
-> >>   }
-> >>
-> >> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
-> >> +       u32 level)
-> >> +{
-> >> +       int ret;
-> >> +       u16 data;
-> >> +
-> >> +       /* check if level is between 1% and 32% */
-> >> +       if (level > 0 && level < 33) {
-> >> +               level = 32 - level;
-> >> +               data = max17040_read_reg(client, MAX17040_RCOMP);
-> >> +               /* clear the alrt bit and set LSb 5 bits */
-> >> +               data &= MAX17040_ATHD_MASK;
-> >> +               data |= level;
-> >> +               max17040_write_reg(client, MAX17040_RCOMP, data);
-> >> +               ret = 0;
->
-> I will put the return of max17040_write_reg on ret, instead of ret = 0.
->
-> >> +       } else {
-> >> +               ret = -EINVAL;
-> >> +       }
-> >
-> > This is unusual way of handling error... when you parse DTS, you
-> > accept any value for "level" (even incorrect one). You validate the
-> > value later when setting it and show an error... however you ignore
-> > the error of max17040_write_reg() here... This is correct but looks
-> > unusual.
-> >
->
-> Ok, so would it be better to check the level value in
-> "max17040_get_of_data" and return an error there if the input is wrong?
+On Tue 04-06-19 17:05:09, Johannes Weiner wrote:
+> The current cgroup OOM memory info dump doesn't include all the memory
+> we are tracking, nor does it give insight into what the VM tried to do
+> leading up to the OOM. All that useful info is in memory.stat.
 
-I think yes. It looks more natural - validate the value as early as
-possible and fail the probe which gives the information about point of
-failure.
+I agree that other memcg counters can provide a useful insight for the OOM
+situation.
 
-Best regards,
-Krzysztof
+> Furthermore, the recursive printing for every child cgroup can
+> generate absurd amounts of data on the console for larger cgroup
+> trees, and it's not like we provide a per-cgroup breakdown during
+> global OOM kills.
+
+The idea was that this information might help to identify which subgroup
+is the major contributor to the OOM at a higher level. I have to confess
+that I have never really used that information myself though.
+
+> When an OOM kill is triggered, print one set of recursive memory.stat
+> items at the level whose limit triggered the OOM condition.
+> 
+> Example output:
+> 
+[...]
+> memory: usage 1024kB, limit 1024kB, failcnt 75131
+> swap: usage 0kB, limit 9007199254740988kB, failcnt 0
+> Memory cgroup stats for /foo:
+> anon 0
+> file 0
+> kernel_stack 36864
+> slab 274432
+> sock 0
+> shmem 0
+> file_mapped 0
+> file_dirty 0
+> file_writeback 0
+> anon_thp 0
+> inactive_anon 126976
+> active_anon 0
+> inactive_file 0
+> active_file 0
+> unevictable 0
+> slab_reclaimable 0
+> slab_unreclaimable 274432
+> pgfault 59466
+> pgmajfault 1617
+> workingset_refault 2145
+> workingset_activate 0
+> workingset_nodereclaim 0
+> pgrefill 98952
+> pgscan 200060
+> pgsteal 59340
+> pgactivate 40095
+> pgdeactivate 96787
+> pglazyfree 0
+> pglazyfreed 0
+> thp_fault_alloc 0
+> thp_collapse_alloc 0
+
+I am not entirely happy with that many lines in the oom report though. I
+do see that you are trying to reduce code duplication which is fine but
+would it be possible to squeeze all of these counters on a single line?
+The same way we do for the global OOM report?
+
+> Tasks state (memory values in pages):
+> [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
+> [    200]     0   200     1121      884    53248       29             0 bash
+> [    209]     0   209      905      246    45056       19             0 stress
+> [    210]     0   210    66442       56   499712    56349             0 stress
+> oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),oom_memcg=/foo,task_memcg=/foo,task=stress,pid=210,uid=0
+> Memory cgroup out of memory: Killed process 210 (stress) total-vm:265768kB, anon-rss:0kB, file-rss:224kB, shmem-rss:0kB
+> oom_reaper: reaped process 210 (stress), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/memcontrol.c | 289 ++++++++++++++++++++++++++----------------------
+>  1 file changed, 157 insertions(+), 132 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 6de8ca735ee2..0907a96ceddf 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -66,6 +66,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/file.h>
+>  #include <linux/tracehook.h>
+> +#include <linux/seq_buf.h>
+>  #include "internal.h"
+>  #include <net/sock.h>
+>  #include <net/ip.h>
+> @@ -1365,27 +1366,114 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
+>  	return false;
+>  }
+>  
+> -static const unsigned int memcg1_stats[] = {
+> -	MEMCG_CACHE,
+> -	MEMCG_RSS,
+> -	MEMCG_RSS_HUGE,
+> -	NR_SHMEM,
+> -	NR_FILE_MAPPED,
+> -	NR_FILE_DIRTY,
+> -	NR_WRITEBACK,
+> -	MEMCG_SWAP,
+> -};
+> +static char *memory_stat_format(struct mem_cgroup *memcg)
+> +{
+> +	struct seq_buf s;
+> +	int i;
+>  
+> -static const char *const memcg1_stat_names[] = {
+> -	"cache",
+> -	"rss",
+> -	"rss_huge",
+> -	"shmem",
+> -	"mapped_file",
+> -	"dirty",
+> -	"writeback",
+> -	"swap",
+> -};
+> +	seq_buf_init(&s, kvmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
+
+What is the reason to use kvmalloc here? It doesn't make much sense to
+me to use it for the page size allocation TBH.
+
+Other than that this looks sane to me.
+-- 
+Michal Hocko
+SUSE Labs
