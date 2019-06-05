@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F30C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB40C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E8020870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E96220870
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SLtS7Ah2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gSP05FFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfFENYI (ORCPT
+        id S1728258AbfFENYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:24:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40858 "EHLO
+        Wed, 5 Jun 2019 09:24:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40852 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbfFENXX (ORCPT
+        with ESMTP id S1727936AbfFENXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:23:23 -0400
+        Wed, 5 Jun 2019 09:23:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rsNrTIABkLRMEzMMSZMXSpmmsRd5mUIHqFf2DjcZdgI=; b=SLtS7Ah2uggsxJB6P/hDRB1vyp
-        2zEraMFbT3UhVXC0LMT6ygAg91gL99yWIWo7cHaXhLKntC5ZTFTH2pOuYmM0V1i0bTs97PuX+gbrp
-        otS5WhldtOfOIn5GMsCqlYM0yMWXZ2DgihPchUDfPvywxzvh5eFp22YPQkyPRxbMcfbvCUJX4q4d8
-        YcjIaMbQtKU+6AUNX1csU3nY4K/DLhUJx92H2juRf7rRqxZO+SASinjKHhVk6dW0THd4HvGwDcfFP
-        VvLPBQAUZ5rYjCnXkxoU0fANo4uCDWbQcdWy+GWO8zfDCSgbW5vmenGu1A5+aYLJ/XekYdF2QYGF0
-        TvmSXo6Q==;
+        bh=JIsIzwj48fphsMcXPNEG+UUg23CGsIsDLsOawv9r2fg=; b=gSP05FFZXwDr+r9wlS2LIcq1eI
+        Csygbg5EEZB02DUfzutK29NB4VEJPzqKVfS9qaOyLwwYlFmqP/3UVnXevypaD13AR5OXOEZ9GpsTv
+        3BEfJkRCXfG8mGcPyxgW62ubyhlbJAC68mSWxgjOmfZKrtRJcHt2occP/PjVB9/is3IAMYv+diJ4n
+        GQLq+3jXp6dHlaDB33DTEEmOzjt0sAptQSn5aF6eNuELaLv5ksVR7oaMTTdyqtJK9ND1DH5TGEZNp
+        g0zPgNXWMcgJE865V8FYdAm8lk8HU7xqL1xXDxk9Yrwc3spBusU+Ops29zbIxPIGXODacbe09x6kY
+        zytyw5vQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYVsK-0004qZ-Pu; Wed, 05 Jun 2019 13:22:45 +0000
+        id 1hYVsL-0004qd-2N; Wed, 05 Jun 2019 13:22:45 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 977C320757B40; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
-Message-Id: <20190605131945.193241464@infradead.org>
+        id 9FE7C20757B46; Wed,  5 Jun 2019 15:22:39 +0200 (CEST)
+Message-Id: <20190605131945.313688119@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 05 Jun 2019 15:08:04 +0200
+Date:   Wed, 05 Jun 2019 15:08:06 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -62,7 +62,7 @@ Cc:     linux-kernel@vger.kernel.org,
         Edward Cree <ecree@solarflare.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 11/15] static_call: Add inline static call infrastructure
+Subject: [PATCH 13/15] x86/static_call: Add inline static call implementation for x86-64
 References: <20190605130753.327195108@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -73,21 +73,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Add infrastructure for an arch-specific CONFIG_HAVE_STATIC_CALL_INLINE
-option, which is a faster version of CONFIG_HAVE_STATIC_CALL.  At
-runtime, the static call sites are patched directly, rather than using
-the out-of-line trampolines.
+Add the inline static call implementation for x86-64.  For each key, a
+temporary trampoline is created, named __static_call_tramp_<key>.  The
+trampoline has an indirect jump to the destination function.
 
-Compared to out-of-line static calls, the performance benefits are more
-modest, but still measurable.  Steven Rostedt did some tracepoint
-measurements:
+Objtool uses the trampoline naming convention to detect all the call
+sites.  It then annotates those call sites in the .static_call_sites
+section.
 
-  https://lkml.kernel.org/r/20181126155405.72b4f718@gandalf.local.home
-
-This code is heavily inspired by the jump label code (aka "static
-jumps"), as some of the concepts are very similar.
-
-For more details, see the comments in include/linux/static_call.h.
+During boot (and module init), the call sites are patched to call
+directly into the destination function.  The temporary trampoline is
+then no longer used.
 
 Cc: x86@kernel.org
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -95,540 +91,430 @@ Cc: Julia Cartwright <julia@ni.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Cc: Jason Baron <jbaron@akamai.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Edward Cree <ecree@solarflare.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: David Laight <David.Laight@ACULAB.COM>
 Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Nadav Amit <namit@vmware.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/c70ea8c00b93dadcb97b9d83659cf204121372d6.1547073843.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/62188c62f6dda49ca2e20629ee8e5a62a6c0b500.1543200841.git.jpoimboe@redhat.com
 ---
- arch/Kconfig                      |    4 
- include/asm-generic/vmlinux.lds.h |    7 
- include/linux/module.h            |   10 +
- include/linux/static_call.h       |   63 +++++++
- include/linux/static_call_types.h |    9 +
- kernel/Makefile                   |    1 
- kernel/module.c                   |    5 
- kernel/static_call.c              |  316 ++++++++++++++++++++++++++++++++++++++
- 8 files changed, 414 insertions(+), 1 deletion(-)
- create mode 100644 kernel/static_call.c
+ arch/x86/Kconfig                                |    3 
+ arch/x86/include/asm/static_call.h              |   28 ++++-
+ arch/x86/kernel/asm-offsets.c                   |    6 +
+ arch/x86/kernel/static_call.c                   |   12 +-
+ include/linux/static_call.h                     |    2 
+ tools/objtool/Makefile                          |    3 
+ tools/objtool/check.c                           |  125 +++++++++++++++++++++++-
+ tools/objtool/check.h                           |    2 
+ tools/objtool/elf.h                             |    1 
+ tools/objtool/include/linux/static_call_types.h |   19 +++
+ tools/objtool/sync-check.sh                     |    1 
+ 11 files changed, 193 insertions(+), 9 deletions(-)
+ create mode 100644 tools/objtool/include/linux/static_call_types.h
 
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -930,6 +930,10 @@ config LOCK_EVENT_COUNTS
- config HAVE_STATIC_CALL
- 	bool
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -199,6 +199,7 @@ config X86
+ 	select HAVE_STACKPROTECTOR		if CC_HAS_SANE_STACKPROTECTOR
+ 	select HAVE_STACK_VALIDATION		if X86_64
+ 	select HAVE_STATIC_CALL
++	select HAVE_STATIC_CALL_INLINE		if HAVE_STACK_VALIDATION
+ 	select HAVE_RSEQ
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+@@ -213,6 +214,7 @@ config X86
+ 	select RTC_MC146818_LIB
+ 	select SPARSE_IRQ
+ 	select SRCU
++	select STACK_VALIDATION			if HAVE_STACK_VALIDATION && (HAVE_STATIC_CALL_INLINE || RETPOLINE)
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select THREAD_INFO_IN_TASK
+ 	select USER_STACKTRACE_SUPPORT
+@@ -439,7 +441,6 @@ config GOLDFISH
+ config RETPOLINE
+ 	bool "Avoid speculative indirect branches in kernel"
+ 	default y
+-	select STACK_VALIDATION if HAVE_STACK_VALIDATION
+ 	help
+ 	  Compile kernel with the retpoline compiler options to guard against
+ 	  kernel-to-user data leaks by avoiding speculative indirect
+--- a/arch/x86/include/asm/static_call.h
++++ b/arch/x86/include/asm/static_call.h
+@@ -2,6 +2,20 @@
+ #ifndef _ASM_STATIC_CALL_H
+ #define _ASM_STATIC_CALL_H
  
-+config HAVE_STATIC_CALL_INLINE
-+	bool
-+	depends on HAVE_STATIC_CALL
++#include <asm/asm-offsets.h>
 +
- source "kernel/gcov/Kconfig"
- 
- source "scripts/gcc-plugins/Kconfig"
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -311,6 +311,12 @@
- 	KEEP(*(__jump_table))						\
- 	__stop___jump_table = .;
- 
-+#define STATIC_CALL_DATA						\
-+	. = ALIGN(8);							\
-+	__start_static_call_sites = .;					\
-+	KEEP(*(.static_call_sites))					\
-+	__stop_static_call_sites = .;
++#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
++
++/*
++ * This trampoline is only used during boot / module init, so it's safe to use
++ * the indirect branch without a retpoline.
++ */
++#define __ARCH_STATIC_CALL_TRAMP_JMP(key, func)				\
++	ANNOTATE_RETPOLINE_SAFE						\
++	"jmpq *" __stringify(key) "+" __stringify(SC_KEY_func) "(%rip) \n"
++
++#else /* !CONFIG_HAVE_STATIC_CALL_INLINE */
 +
  /*
-  * Allow architectures to handle ro_after_init data on their
-  * own by defining an empty RO_AFTER_INIT_DATA.
-@@ -320,6 +326,7 @@
- 	__start_ro_after_init = .;					\
- 	*(.data..ro_after_init)						\
- 	JUMP_TABLE_DATA							\
-+	STATIC_CALL_DATA						\
- 	__end_ro_after_init = .;
- #endif
+  * Manually construct a 5-byte direct JMP to prevent the assembler from
+  * optimizing it into a 2-byte JMP.
+@@ -12,9 +26,19 @@
+ 	".long " #func " - " __ARCH_STATIC_CALL_JMP_LABEL(key) "\n"	\
+ 	__ARCH_STATIC_CALL_JMP_LABEL(key) ":"
  
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -21,6 +21,7 @@
- #include <linux/rbtree_latch.h>
- #include <linux/error-injection.h>
- #include <linux/tracepoint-defs.h>
-+#include <linux/static_call_types.h>
- 
- #include <linux/percpu.h>
- #include <asm/module.h>
-@@ -472,6 +473,10 @@ struct module {
- 	unsigned int num_ftrace_callsites;
- 	unsigned long *ftrace_callsites;
- #endif
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+	int num_static_call_sites;
-+	struct static_call_site *static_call_sites;
-+#endif
- 
- #ifdef CONFIG_LIVEPATCH
- 	bool klp; /* Is this a livepatch module? */
-@@ -728,6 +733,11 @@ static inline bool within_module(unsigne
- {
- 	return false;
- }
++#endif /* !CONFIG_HAVE_STATIC_CALL_INLINE */
 +
-+static inline bool within_module_init(unsigned long addr, const struct module *mod)
-+{
-+	return false;
-+}
+ /*
+- * This is a permanent trampoline which does a direct jump to the function.
+- * The direct jump get patched by static_call_update().
++ * For CONFIG_HAVE_STATIC_CALL_INLINE, this is a temporary trampoline which
++ * uses the current value of the key->func pointer to do an indirect jump to
++ * the function.  This trampoline is only used during boot, before the call
++ * sites get patched by static_call_update().  The name of this trampoline has
++ * a magical aspect: objtool uses it to find static call sites so it can create
++ * the .static_call_sites section.
++ *
++ * For CONFIG_HAVE_STATIC_CALL, this is a permanent trampoline which
++ * does a direct jump to the function.  The direct jump gets patched by
++ * static_call_update().
+  */
+ #define ARCH_DEFINE_STATIC_CALL_TRAMP(key, func)			\
+ 	asm(".pushsection .text, \"ax\"				\n"	\
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -12,6 +12,7 @@
+ #include <linux/hardirq.h>
+ #include <linux/suspend.h>
+ #include <linux/kbuild.h>
++#include <linux/static_call.h>
+ #include <asm/processor.h>
+ #include <asm/thread_info.h>
+ #include <asm/sigframe.h>
+@@ -104,4 +105,9 @@ static void __used common(void)
+ 	OFFSET(TSS_sp0, tss_struct, x86_tss.sp0);
+ 	OFFSET(TSS_sp1, tss_struct, x86_tss.sp1);
+ 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
++
++#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
++	BLANK();
++	OFFSET(SC_KEY_func, static_call_key, func);
++#endif
+ }
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -10,16 +10,22 @@
+ void arch_static_call_transform(void *site, void *tramp, void *func)
+ {
+ 	unsigned char opcodes[CALL_INSN_SIZE];
+-	unsigned char insn_opcode;
++	unsigned char insn_opcode, expected;
+ 	unsigned long insn;
+ 	s32 dest_relative;
  
- /* Get/put a kernel symbol (calls should be symmetric) */
- #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak)); &(x); })
+ 	mutex_lock(&text_mutex);
+ 
+-	insn = (unsigned long)tramp;
++	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE)) {
++		insn = (unsigned long)site;
++		expected = 0xE8; /* CALL */
++	} else {
++		insn = (unsigned long)tramp;
++		expected = 0xE9; /* JMP */
++	}
+ 
+ 	insn_opcode = *(unsigned char *)insn;
+-	if (insn_opcode != 0xE9) {
++	if (insn_opcode != expected) {
+ 		WARN_ONCE(1, "unexpected static call insn opcode 0x%x at %pS",
+ 			  insn_opcode, (void *)insn);
+ 		goto unlock;
 --- a/include/linux/static_call.h
 +++ b/include/linux/static_call.h
-@@ -47,6 +47,12 @@
-  *    Each static_call() site calls into a trampoline associated with the key.
-  *    The trampoline has a direct branch to the default function.  Updates to a
-  *    key will modify the trampoline's branch destination.
-+ *
-+ *    If the arch has CONFIG_HAVE_STATIC_CALL_INLINE, then the call sites
-+ *    themselves will be patched at runtime to call the functions directly,
-+ *    rather than calling through the trampoline.  This requires objtool or a
-+ *    compiler plugin to detect all the static_call() sites and annotate them
-+ *    in the .static_call_sites section.
-  */
+@@ -59,7 +59,7 @@
+ #include <linux/cpu.h>
+ #include <linux/static_call_types.h>
  
- #include <linux/types.h>
-@@ -64,7 +70,62 @@ extern void arch_static_call_transform(v
- 	extern typeof(func) STATIC_CALL_TRAMP(key)
+-#ifdef CONFIG_HAVE_STATIC_CALL
++#if defined(CONFIG_HAVE_STATIC_CALL) && !defined(COMPILE_OFFSETS)
+ #include <asm/static_call.h>
+ extern void arch_static_call_transform(void *site, void *tramp, void *func);
+ #endif
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -33,7 +33,8 @@ all: $(OBJTOOL)
  
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
++	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include \
++	    -I$(srctree)/tools/objtool/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -15,6 +15,7 @@
  
--#if defined(CONFIG_HAVE_STATIC_CALL)
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+
-+struct static_call_key {
-+	void *func, *tramp;
-+	/*
-+	 * List of modules (including vmlinux) and their call sites associated
-+	 * with this key.
-+	 */
-+	struct list_head site_mods;
-+};
-+
-+struct static_call_mod {
-+	struct list_head list;
-+	struct module *mod; /* for vmlinux, mod == NULL */
-+	struct static_call_site *sites;
-+};
-+
-+extern void __static_call_update(struct static_call_key *key, void *func);
-+extern int static_call_mod_init(struct module *mod);
-+
-+#define DEFINE_STATIC_CALL(key, _func)					\
-+	DECLARE_STATIC_CALL(key, _func);				\
-+	struct static_call_key key = {					\
-+		.func = _func,						\
-+		.tramp = STATIC_CALL_TRAMP(key),			\
-+		.site_mods = LIST_HEAD_INIT(key.site_mods),		\
-+	};								\
-+	ARCH_DEFINE_STATIC_CALL_TRAMP(key, _func)
-+
-+/*
-+ * __ADDRESSABLE() is used to ensure the key symbol doesn't get stripped from
-+ * the symbol table so objtool can reference it when it generates the
-+ * static_call_site structs.
-+ */
-+#define static_call(key, args...)					\
-+({									\
-+	__ADDRESSABLE(key);						\
-+	STATIC_CALL_TRAMP(key)(args);					\
-+})
-+
-+#define static_call_update(key, func)					\
-+({									\
-+	BUILD_BUG_ON(!__same_type(func, STATIC_CALL_TRAMP(key)));	\
-+	__static_call_update(&key, func);				\
-+})
-+
-+#define EXPORT_STATIC_CALL(key)						\
-+	EXPORT_SYMBOL(key);						\
-+	EXPORT_SYMBOL(STATIC_CALL_TRAMP(key))
-+
-+#define EXPORT_STATIC_CALL_GPL(key)					\
-+	EXPORT_SYMBOL_GPL(key);						\
-+	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(key))
-+
-+
-+#elif defined(CONFIG_HAVE_STATIC_CALL)
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
++#include <linux/static_call_types.h>
  
- struct static_call_key {
- 	void *func, *tramp;
---- a/include/linux/static_call_types.h
-+++ b/include/linux/static_call_types.h
-@@ -10,4 +10,13 @@
- #define STATIC_CALL_TRAMP(key) __PASTE(STATIC_CALL_TRAMP_PREFIX, key)
- #define STATIC_CALL_TRAMP_STR(key) __stringify(STATIC_CALL_TRAMP(key))
+ #define FAKE_JUMP_OFFSET -1
  
-+/*
-+ * The static call site table needs to be created by external tooling (objtool
-+ * or a compiler plugin).
-+ */
+@@ -584,6 +585,10 @@ static int add_jump_destinations(struct
+ 			/* sibling call */
+ 			insn->call_dest = rela->sym;
+ 			insn->jump_dest = NULL;
++			if (rela->sym->static_call_tramp) {
++				list_add_tail(&insn->static_call_node,
++					      &file->static_call_list);
++			}
+ 			continue;
+ 		}
+ 
+@@ -1271,6 +1276,24 @@ static int read_retpoline_hints(struct o
+ 	return 0;
+ }
+ 
++static int read_static_call_tramps(struct objtool_file *file)
++{
++	struct section *sec;
++	struct symbol *func;
++
++	for_each_sec(file, sec) {
++		list_for_each_entry(func, &sec->symbol_list, list) {
++			if (func->bind == STB_GLOBAL &&
++			    !strncmp(func->name, STATIC_CALL_TRAMP_PREFIX_STR,
++				     strlen(STATIC_CALL_TRAMP_PREFIX_STR)))
++				func->static_call_tramp = true;
++		}
++
++	}
++
++	return 0;
++}
++
+ static void mark_rodata(struct objtool_file *file)
+ {
+ 	struct section *sec;
+@@ -1337,6 +1360,10 @@ static int decode_sections(struct objtoo
+ 	if (ret)
+ 		return ret;
+ 
++	ret = read_static_call_tramps(file);
++	if (ret)
++		return ret;
++
+ 	return 0;
+ }
+ 
+@@ -2071,6 +2098,11 @@ static int validate_branch(struct objtoo
+ 				if (is_fentry_call(insn))
+ 					break;
+ 
++				if (insn->call_dest->static_call_tramp) {
++					list_add_tail(&insn->static_call_node,
++						      &file->static_call_list);
++				}
++
+ 				ret = dead_end_function(file, insn->call_dest);
+ 				if (ret == 1)
+ 					return 0;
+@@ -2382,6 +2414,89 @@ static int validate_reachable_instructio
+ 	return 0;
+ }
+ 
++static int create_static_call_sections(struct objtool_file *file)
++{
++	struct section *sec, *rela_sec;
++	struct rela *rela;
++	struct static_call_site *site;
++	struct instruction *insn;
++	char *key_name;
++	struct symbol *key_sym;
++	int idx;
++
++	sec = find_section_by_name(file->elf, ".static_call_sites");
++	if (sec) {
++		WARN("file already has .static_call_sites section, skipping");
++		return 0;
++	}
++
++	if (list_empty(&file->static_call_list))
++		return 0;
++
++	idx = 0;
++	list_for_each_entry(insn, &file->static_call_list, static_call_node)
++		idx++;
++
++	sec = elf_create_section(file->elf, ".static_call_sites",
++				 sizeof(struct static_call_site), idx);
++	if (!sec)
++		return -1;
++
++	rela_sec = elf_create_rela_section(file->elf, sec);
++	if (!rela_sec)
++		return -1;
++
++	idx = 0;
++	list_for_each_entry(insn, &file->static_call_list, static_call_node) {
++
++		site = (struct static_call_site *)sec->data->d_buf + idx;
++		memset(site, 0, sizeof(struct static_call_site));
++
++		/* populate rela for 'addr' */
++		rela = malloc(sizeof(*rela));
++		if (!rela) {
++			perror("malloc");
++			return -1;
++		}
++		memset(rela, 0, sizeof(*rela));
++		rela->sym = insn->sec->sym;
++		rela->addend = insn->offset;
++		rela->type = R_X86_64_PC32;
++		rela->offset = idx * sizeof(struct static_call_site);
++		list_add_tail(&rela->list, &rela_sec->rela_list);
++		hash_add(rela_sec->rela_hash, &rela->hash, rela->offset);
++
++		/* find key symbol */
++		key_name = insn->call_dest->name + strlen(STATIC_CALL_TRAMP_PREFIX_STR);
++		key_sym = find_symbol_by_name(file->elf, key_name);
++		if (!key_sym) {
++			WARN("can't find static call key symbol: %s", key_name);
++			return -1;
++		}
++
++		/* populate rela for 'key' */
++		rela = malloc(sizeof(*rela));
++		if (!rela) {
++			perror("malloc");
++			return -1;
++		}
++		memset(rela, 0, sizeof(*rela));
++		rela->sym = key_sym;
++		rela->addend = 0;
++		rela->type = R_X86_64_PC32;
++		rela->offset = idx * sizeof(struct static_call_site) + 4;
++		list_add_tail(&rela->list, &rela_sec->rela_list);
++		hash_add(rela_sec->rela_hash, &rela->hash, rela->offset);
++
++		idx++;
++	}
++
++	if (elf_rebuild_rela_section(rela_sec))
++		return -1;
++
++	return 0;
++}
++
+ static void cleanup(struct objtool_file *file)
+ {
+ 	struct instruction *insn, *tmpinsn;
+@@ -2407,12 +2522,13 @@ int check(const char *_objname, bool orc
+ 
+ 	objname = _objname;
+ 
+-	file.elf = elf_open(objname, orc ? O_RDWR : O_RDONLY);
++	file.elf = elf_open(objname, O_RDWR);
+ 	if (!file.elf)
+ 		return 1;
+ 
+ 	INIT_LIST_HEAD(&file.insn_list);
+ 	hash_init(file.insn_hash);
++	INIT_LIST_HEAD(&file.static_call_list);
+ 	file.c_file = find_section_by_name(file.elf, ".comment");
+ 	file.ignore_unreachables = no_unreachable;
+ 	file.hints = false;
+@@ -2451,6 +2567,11 @@ int check(const char *_objname, bool orc
+ 		warnings += ret;
+ 	}
+ 
++	ret = create_static_call_sections(&file);
++	if (ret < 0)
++		goto out;
++	warnings += ret;
++
+ 	if (orc) {
+ 		ret = create_orc(&file);
+ 		if (ret < 0)
+@@ -2459,7 +2580,9 @@ int check(const char *_objname, bool orc
+ 		ret = create_orc_sections(&file);
+ 		if (ret < 0)
+ 			goto out;
++	}
+ 
++	if (orc || !list_empty(&file.static_call_list)) {
+ 		ret = elf_write(file.elf);
+ 		if (ret < 0)
+ 			goto out;
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -28,6 +28,7 @@ struct insn_state {
+ struct instruction {
+ 	struct list_head list;
+ 	struct hlist_node hash;
++	struct list_head static_call_node;
+ 	struct section *sec;
+ 	unsigned long offset;
+ 	unsigned int len;
+@@ -49,6 +50,7 @@ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+ 	DECLARE_HASHTABLE(insn_hash, 16);
++	struct list_head static_call_list;
+ 	bool ignore_unreachables, c_file, hints, rodata;
+ };
+ 
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -51,6 +51,7 @@ struct symbol {
+ 	unsigned int len;
+ 	struct symbol *pfunc, *cfunc, *alias;
+ 	bool uaccess_safe;
++	bool static_call_tramp;
+ };
+ 
+ struct rela {
+--- /dev/null
++++ b/tools/objtool/include/linux/static_call_types.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _STATIC_CALL_TYPES_H
++#define _STATIC_CALL_TYPES_H
++
++#include <linux/stringify.h>
++
++#define STATIC_CALL_TRAMP_PREFIX ____static_call_tramp_
++#define STATIC_CALL_TRAMP_PREFIX_STR __stringify(STATIC_CALL_TRAMP_PREFIX)
++
++#define STATIC_CALL_TRAMP(key) __PASTE(STATIC_CALL_TRAMP_PREFIX, key)
++#define STATIC_CALL_TRAMP_STR(key) __stringify(STATIC_CALL_TRAMP(key))
++
++/* The static call site table is created by objtool. */
 +struct static_call_site {
 +	s32 addr;
 +	s32 key;
 +};
 +
- #endif /* _STATIC_CALL_TYPES_H */
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -100,6 +100,7 @@ obj-$(CONFIG_TRACEPOINTS) += trace/
- obj-$(CONFIG_IRQ_WORK) += irq_work.o
- obj-$(CONFIG_CPU_PM) += cpu_pm.o
- obj-$(CONFIG_BPF) += bpf/
-+obj-$(CONFIG_HAVE_STATIC_CALL_INLINE) += static_call.o
++#endif /* _STATIC_CALL_TYPES_H */
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -10,6 +10,7 @@ arch/x86/include/asm/insn.h
+ arch/x86/include/asm/inat.h
+ arch/x86/include/asm/inat_types.h
+ arch/x86/include/asm/orc_types.h
++include/linux/static_call_types.h
+ '
  
- obj-$(CONFIG_PERF_EVENTS) += events/
- 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3117,6 +3117,11 @@ static int find_module_sections(struct m
- 					    sizeof(*mod->ei_funcs),
- 					    &mod->num_ei_funcs);
- #endif
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+	mod->static_call_sites = section_objs(info, ".static_call_sites",
-+					      sizeof(*mod->static_call_sites),
-+					      &mod->num_static_call_sites);
-+#endif
- 	mod->extable = section_objs(info, "__ex_table",
- 				    sizeof(*mod->extable), &mod->num_exentries);
- 
---- /dev/null
-+++ b/kernel/static_call.c
-@@ -0,0 +1,316 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/init.h>
-+#include <linux/static_call.h>
-+#include <linux/bug.h>
-+#include <linux/smp.h>
-+#include <linux/sort.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/cpu.h>
-+#include <linux/processor.h>
-+#include <asm/sections.h>
-+
-+extern struct static_call_site __start_static_call_sites[],
-+			       __stop_static_call_sites[];
-+
-+static bool static_call_initialized;
-+
-+#define STATIC_CALL_INIT 1UL
-+
-+/* mutex to protect key modules/sites */
-+static DEFINE_MUTEX(static_call_mutex);
-+
-+static void static_call_lock(void)
-+{
-+	mutex_lock(&static_call_mutex);
-+}
-+
-+static void static_call_unlock(void)
-+{
-+	mutex_unlock(&static_call_mutex);
-+}
-+
-+static inline void *static_call_addr(struct static_call_site *site)
-+{
-+	return (void *)((long)site->addr + (long)&site->addr);
-+}
-+
-+
-+static inline struct static_call_key *static_call_key(const struct static_call_site *site)
-+{
-+	return (struct static_call_key *)
-+		(((long)site->key + (long)&site->key) & ~STATIC_CALL_INIT);
-+}
-+
-+/* These assume the key is word-aligned. */
-+static inline bool static_call_is_init(struct static_call_site *site)
-+{
-+	return ((long)site->key + (long)&site->key) & STATIC_CALL_INIT;
-+}
-+
-+static inline void static_call_set_init(struct static_call_site *site)
-+{
-+	site->key = ((long)static_call_key(site) | STATIC_CALL_INIT) -
-+		    (long)&site->key;
-+}
-+
-+static int static_call_site_cmp(const void *_a, const void *_b)
-+{
-+	const struct static_call_site *a = _a;
-+	const struct static_call_site *b = _b;
-+	const struct static_call_key *key_a = static_call_key(a);
-+	const struct static_call_key *key_b = static_call_key(b);
-+
-+	if (key_a < key_b)
-+		return -1;
-+
-+	if (key_a > key_b)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static void static_call_site_swap(void *_a, void *_b, int size)
-+{
-+	long delta = (unsigned long)_a - (unsigned long)_b;
-+	struct static_call_site *a = _a;
-+	struct static_call_site *b = _b;
-+	struct static_call_site tmp = *a;
-+
-+	a->addr = b->addr  - delta;
-+	a->key  = b->key   - delta;
-+
-+	b->addr = tmp.addr + delta;
-+	b->key  = tmp.key  + delta;
-+}
-+
-+static inline void static_call_sort_entries(struct static_call_site *start,
-+					    struct static_call_site *stop)
-+{
-+	sort(start, stop - start, sizeof(struct static_call_site),
-+	     static_call_site_cmp, static_call_site_swap);
-+}
-+
-+void __static_call_update(struct static_call_key *key, void *func)
-+{
-+	struct static_call_mod *site_mod;
-+	struct static_call_site *site, *stop;
-+
-+	cpus_read_lock();
-+	static_call_lock();
-+
-+	if (key->func == func)
-+		goto done;
-+
-+	key->func = func;
-+
-+	/*
-+	 * If called before init, leave the call sites unpatched for now.
-+	 * In the meantime they'll continue to call the temporary trampoline.
-+	 */
-+	if (!static_call_initialized)
-+		goto done;
-+
-+	list_for_each_entry(site_mod, &key->site_mods, list) {
-+		if (!site_mod->sites) {
-+			/*
-+			 * This can happen if the static call key is defined in
-+			 * a module which doesn't use it.
-+			 */
-+			continue;
-+		}
-+
-+		stop = __stop_static_call_sites;
-+
-+#ifdef CONFIG_MODULES
-+		if (site_mod->mod) {
-+			stop = site_mod->mod->static_call_sites +
-+			       site_mod->mod->num_static_call_sites;
-+		}
-+#endif
-+
-+		for (site = site_mod->sites;
-+		     site < stop && static_call_key(site) == key; site++) {
-+			void *site_addr = static_call_addr(site);
-+			struct module *mod = site_mod->mod;
-+
-+			if (static_call_is_init(site)) {
-+				/*
-+				 * Don't write to call sites which were in
-+				 * initmem and have since been freed.
-+				 */
-+				if (!mod && system_state >= SYSTEM_RUNNING)
-+					continue;
-+				if (mod && !within_module_init((unsigned long)site_addr, mod))
-+					continue;
-+			}
-+
-+			if (!kernel_text_address((unsigned long)site_addr)) {
-+				WARN_ONCE(1, "can't patch static call site at %pS",
-+					  site_addr);
-+				continue;
-+			}
-+
-+			arch_static_call_transform(site_addr, key->tramp, func);
-+		}
-+	}
-+
-+done:
-+	static_call_unlock();
-+	cpus_read_unlock();
-+}
-+EXPORT_SYMBOL_GPL(__static_call_update);
-+
-+#ifdef CONFIG_MODULES
-+
-+static int static_call_add_module(struct module *mod)
-+{
-+	struct static_call_site *start = mod->static_call_sites;
-+	struct static_call_site *stop = mod->static_call_sites +
-+					mod->num_static_call_sites;
-+	struct static_call_site *site;
-+	struct static_call_key *key, *prev_key = NULL;
-+	struct static_call_mod *site_mod;
-+
-+	if (start == stop)
-+		return 0;
-+
-+	static_call_sort_entries(start, stop);
-+
-+	for (site = start; site < stop; site++) {
-+		void *site_addr = static_call_addr(site);
-+
-+		if (within_module_init((unsigned long)site_addr, mod))
-+			static_call_set_init(site);
-+
-+		key = static_call_key(site);
-+		if (key != prev_key) {
-+			prev_key = key;
-+
-+			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
-+			if (!site_mod)
-+				return -ENOMEM;
-+
-+			site_mod->mod = mod;
-+			site_mod->sites = site;
-+			list_add_tail(&site_mod->list, &key->site_mods);
-+		}
-+
-+		arch_static_call_transform(site_addr, key->tramp, key->func);
-+	}
-+
-+	return 0;
-+}
-+
-+static void static_call_del_module(struct module *mod)
-+{
-+	struct static_call_site *start = mod->static_call_sites;
-+	struct static_call_site *stop = mod->static_call_sites +
-+					mod->num_static_call_sites;
-+	struct static_call_site *site;
-+	struct static_call_key *key, *prev_key = NULL;
-+	struct static_call_mod *site_mod;
-+
-+	for (site = start; site < stop; site++) {
-+		key = static_call_key(site);
-+		if (key == prev_key)
-+			continue;
-+		prev_key = key;
-+
-+		list_for_each_entry(site_mod, &key->site_mods, list) {
-+			if (site_mod->mod == mod) {
-+				list_del(&site_mod->list);
-+				kfree(site_mod);
-+				break;
-+			}
-+		}
-+	}
-+}
-+
-+static int static_call_module_notify(struct notifier_block *nb,
-+				     unsigned long val, void *data)
-+{
-+	struct module *mod = data;
-+	int ret = 0;
-+
-+	cpus_read_lock();
-+	static_call_lock();
-+
-+	switch (val) {
-+	case MODULE_STATE_COMING:
-+		module_disable_ro(mod);
-+		ret = static_call_add_module(mod);
-+		module_enable_ro(mod, false);
-+		if (ret) {
-+			WARN(1, "Failed to allocate memory for static calls");
-+			static_call_del_module(mod);
-+		}
-+		break;
-+	case MODULE_STATE_GOING:
-+		static_call_del_module(mod);
-+		break;
-+	}
-+
-+	static_call_unlock();
-+	cpus_read_unlock();
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+static struct notifier_block static_call_module_nb = {
-+	.notifier_call = static_call_module_notify,
-+};
-+
-+#endif /* CONFIG_MODULES */
-+
-+static void __init static_call_init(void)
-+{
-+	struct static_call_site *start = __start_static_call_sites;
-+	struct static_call_site *stop  = __stop_static_call_sites;
-+	struct static_call_site *site;
-+
-+	if (start == stop) {
-+		pr_warn("WARNING: empty static call table\n");
-+		return;
-+	}
-+
-+	cpus_read_lock();
-+	static_call_lock();
-+
-+	static_call_sort_entries(start, stop);
-+
-+	for (site = start; site < stop; site++) {
-+		struct static_call_key *key = static_call_key(site);
-+		void *site_addr = static_call_addr(site);
-+
-+		if (init_section_contains(site_addr, 1))
-+			static_call_set_init(site);
-+
-+		if (list_empty(&key->site_mods)) {
-+			struct static_call_mod *site_mod;
-+
-+			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
-+			if (!site_mod) {
-+				WARN(1, "Failed to allocate memory for static calls");
-+				goto done;
-+			}
-+
-+			site_mod->sites = site;
-+			list_add_tail(&site_mod->list, &key->site_mods);
-+		}
-+
-+		arch_static_call_transform(site_addr, key->tramp, key->func);
-+	}
-+
-+	static_call_initialized = true;
-+
-+done:
-+	static_call_unlock();
-+	cpus_read_unlock();
-+
-+#ifdef CONFIG_MODULES
-+	if (static_call_initialized)
-+		register_module_notifier(&static_call_module_nb);
-+#endif
-+}
-+early_initcall(static_call_init);
+ check()
 
 
