@@ -2,276 +2,115 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF5C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8290C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AD22075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kez/1+up"
+	by mail.kernel.org (Postfix) with ESMTP id 8013E20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfFEUgD (ORCPT
+        id S1726606AbfFEUif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:36:03 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44860 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEUgD (ORCPT
+        Wed, 5 Jun 2019 16:38:35 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.125]:17657 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726477AbfFEUif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:36:03 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w187so67358qkb.11;
-        Wed, 05 Jun 2019 13:36:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CAnC+wdfkUeaurm1Ol5XgkbBFWcJSDA54dS6qStgNNo=;
-        b=Kez/1+upBfuCN4OBJvZLZoxpT9cEZQmdWuw9GCVS/t4GCB91yKTRfAEHId3fOLhfpc
-         bzfXqY6HOmkhUbgn9I8CV2/bzslaEw8APrDoMP7icqH/Z3zO4Mug+OYHF4/NXl98X0Ib
-         o8oMy4wSDLJe9ZF24yUqipi3sJ3taIlag84pEoWNbYBYAxn1wpaAA0vmXj2W9prrqrhC
-         3xkX9wF9bUoYEefySX/ltmh2bRGxedR+F6g8AgGs+oQFajKfpHiUCli0KHWKNKUX7OQw
-         xaXfIA71YJJjlTHnac0hNw1GwtUk+9iIgpp6EQgjOHgfP9b1gNPMolmrditB0pSWiPK5
-         ZBaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CAnC+wdfkUeaurm1Ol5XgkbBFWcJSDA54dS6qStgNNo=;
-        b=Ehwn7QZD/vzO8Os3DVdiu5Z4hNwuWmMlYdnKrAW8LYMP5ODYxo+/HkVoCppiAql5TI
-         soJlw9XFjiQ+fPoU/Qeba2HM5nJVqIT9sNmUPGL8pH5wNgKrUo7czxUPQnJhi7HWiBJ3
-         oHiDxoY2wUr/AWc79gpA6ZQITGsHLYNU+1pkY6F8jmbMHdoZ21qbirQgfwkjnJOhIUGc
-         sRwYc/m1MhDiZGXBpT6ILoOXcbsVWfobMVIvsu/oRuIQlwqC+dM+ksNQDoE6ysQ9Nb6E
-         AOY9p8GWmjIJumTh+acKf7Tvq5/y0JXKVr6V4AsLjJUWx/l2aO7/eJUCIIW/CJAUBnA6
-         Va0A==
-X-Gm-Message-State: APjAAAV64ttGHSeNkTwzihok2rbOTplyozombYpWnudzgL4wHEKsRV6C
-        DuOfaMyQuL5MrQtnCeQCsDM=
-X-Google-Smtp-Source: APXvYqx9wAT2rnwnZPKWjF3Cc6LRy7IPHIbFjqhvs138P6JEtql0S+NdiL//EvkPyh82nNPbkt3S0w==
-X-Received: by 2002:a37:9ece:: with SMTP id h197mr16112882qke.50.1559766961826;
-        Wed, 05 Jun 2019 13:36:01 -0700 (PDT)
-Received: from renatolg ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id n10sm6932589qtp.81.2019.06.05.13.35.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 13:36:01 -0700 (PDT)
-From:   Renato Lui Geh <renatogeh@gmail.com>
-X-Google-Original-From: Renato Lui Geh <renatogeh@renatolg>
-Date:   Wed, 5 Jun 2019 17:35:56 -0300
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Renato Lui Geh <renatogeh@gmail.com>, lars@metafoo.de,
-        Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, stefan.popa@analog.com,
-        alexandru.Ardelean@analog.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Message-ID: <20190605203554.podktlonhp527iqq@renatolg>
-References: <cover.1558746978.git.renatogeh@gmail.com>
- <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
- <20190526173911.57ae3d11@archlinux>
+        Wed, 5 Jun 2019 16:38:35 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 3829A1C4C4
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2019 15:38:34 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Ycg6hMYd9dnCeYcg6h003k; Wed, 05 Jun 2019 15:38:34 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=34852 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYcg0-0040oS-L4; Wed, 05 Jun 2019 15:38:33 -0500
+Date:   Wed, 5 Jun 2019 15:38:27 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     oss-drivers@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] nfp: flower: use struct_size() helper
+Message-ID: <20190605203827.GA22786@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526173911.57ae3d11@archlinux>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYcg0-0040oS-L4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:34852
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/26, Jonathan Cameron wrote:
->On Fri, 24 May 2019 22:26:30 -0300
->Renato Lui Geh <renatogeh@gmail.com> wrote:
->
->> This patch adds a YAML binding for the Analog Devices AD7780/1 and
->> AD7170/1 analog-to-digital converters.
->>
->> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
->Looks good to me, but I'm still finding my feet with these so will
->leave it for a few days for others to have time to comment.
->
->Michael, looking for a quick reply from you to say if you are happy
->being explicitly listed as maintainer for this one, or if you'd
->rather land it on someone else.  Same applies for patch 2.
->
->Renato, if I seem to have forgotten this in a week or so, feel
->free to give me a poke. I've been known to loose patches entirely!
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Hi Jonathan,
+struct nfp_tun_active_tuns {
+	...
+        struct route_ip_info {
+                __be32 ipv4;
+                __be32 egress_port;
+                __be32 extra[2];
+        } tun_info[];
+};
 
-Just here to give you a poke. :)
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-By the way, in these cases, which would be easier for you? To send you
-an email like I'm doing right now on last week's thread; or to resend
-the entire patch(set)?
+So, replace the following form:
 
-Thanks,
-Renato
->
->Thanks,
->
->Jonathan
->> ---
->> Changes in v2:
->>  - vref-supply to avdd-supply
->>  - remove avdd-supply from required list
->>  - include adc block in an spi block
->>
->>  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
->>  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
->>  2 files changed, 87 insertions(+), 48 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->> deleted file mode 100644
->> index 440e52555349..000000000000
->> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->> +++ /dev/null
->> @@ -1,48 +0,0 @@
->> -* Analog Devices AD7170/AD7171/AD7780/AD7781
->> -
->> -Data sheets:
->> -
->> -- AD7170:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
->> -- AD7171:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
->> -- AD7780:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
->> -- AD7781:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
->> -
->> -Required properties:
->> -
->> -- compatible: should be one of
->> -	* "adi,ad7170"
->> -	* "adi,ad7171"
->> -	* "adi,ad7780"
->> -	* "adi,ad7781"
->> -- reg: spi chip select number for the device
->> -- vref-supply: the regulator supply for the ADC reference voltage
->> -
->> -Optional properties:
->> -
->> -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
->> -		    specified, it will be asserted during driver probe. As the
->> -		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
->> -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
->> -		    the ad778x chips. If specified, it will be asserted during
->> -		    driver probe. As the line is active low, it should be marked
->> -		    GPIO_ACTIVE_LOW.
->> -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
->> -		    for the ad778x chips. If specified, it will be asserted
->> -		    during driver probe. As the line is active low, it should be
->> -		    marked GPIO_ACTIVE_LOW.
->> -
->> -Example:
->> -
->> -adc@0 {
->> -	compatible =  "adi,ad7780";
->> -	reg =	      <0>;
->> -	vref-supply = <&vdd_supply>
->> -
->> -	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
->> -	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
->> -	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->> new file mode 100644
->> index 000000000000..d1109416963c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->> @@ -0,0 +1,87 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
->> +
->> +maintainers:
->> +  - Michael Hennerich <michael.hennerich@analog.com>
->> +
->> +description: |
->> +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
->> +  reading voltage values and status bits from both the ad778x and ad717x series.
->> +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
->> +  ad778x.
->> +
->> +  Specifications on the converters can be found at:
->> +    AD7170:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
->> +    AD7171:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
->> +    AD7780:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
->> +    AD7781:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - adi,ad7170
->> +      - adi,ad7171
->> +      - adi,ad7780
->> +      - adi,ad7781
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  avdd-supply:
->> +    description:
->> +      The regulator supply for the ADC reference voltage.
->> +    maxItems: 1
->> +
->> +  powerdown-gpios:
->> +    description:
->> +      Must be the device tree identifier of the PDRST pin. If
->> +      specified, it will be asserted during driver probe. As the
->> +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
->> +    maxItems: 1
->> +
->> +  adi,gain-gpios:
->> +    description:
->> +      Must be the device tree identifier of the GAIN pin. Only for
->> +      the ad778x chips. If specified, it will be asserted during
->> +      driver probe. As the line is active low, it should be marked
->> +      GPIO_ACTIVE_LOW.
->> +    maxItems: 1
->> +
->> +  adi,filter-gpios:
->> +    description:
->> +      Must be the device tree identifier of the FILTER pin. Only
->> +      for the ad778x chips. If specified, it will be asserted
->> +      during driver probe. As the line is active low, it should be
->> +      marked GPIO_ACTIVE_LOW.
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +    spi0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        adc@0 {
->> +            compatible = "adi,ad7780";
->> +            reg = <0>;
->> +
->> +            avdd-supply      = <&vdd_supply>;
->> +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
->> +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
->> +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
->> +        };
->> +    };
->
+sizeof(struct nfp_tun_active_tuns) + sizeof(struct route_ip_info) * count
+
+with:
+
+struct_size(payload, tun_info, count)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+index 8c67505865a4..a7a80f4b722a 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+@@ -162,8 +162,7 @@ void nfp_tunnel_keep_alive(struct nfp_app *app, struct sk_buff *skb)
+ 	}
+ 
+ 	pay_len = nfp_flower_cmsg_get_data_len(skb);
+-	if (pay_len != sizeof(struct nfp_tun_active_tuns) +
+-	    sizeof(struct route_ip_info) * count) {
++	if (pay_len != struct_size(payload, tun_info, count)) {
+ 		nfp_flower_cmsg_warn(app, "Corruption in tunnel keep-alive message.\n");
+ 		return;
+ 	}
+-- 
+2.21.0
+
