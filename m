@@ -2,151 +2,139 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A544C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2575C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A244206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B15A206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="el4lAoiO"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="mk3PlU3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfFEIj1 (ORCPT
+        id S1726969AbfFEIkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:39:27 -0400
-Received: from mx.cs.msu.ru ([188.44.42.42]:50537 "EHLO mail.cs.msu.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726785AbfFEIj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:39:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
-         s=dkim; h=Subject:Content-Transfer-Encoding:Content-Type:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=hzE1VNpnn5mxhjNCPcsJYlFRxK3YPhV+NqNkyq2FbmY=; b=el4lAoiO+b42FOo9/CzBdPfY0A
-        NhTh8nPwUxDUNG3yG383wJzAUHyiMTbI0z/QHHVJHOXTGAPdEfI5/FW9H1nb2udGNcjevKGToU1d3
-        BSfo2cUa+W2jga5xn7+G9XBN5QURh9ZaI+FKQsFgbZywFZUVLP4VWLNbtkG/x13OD6oTI/srRqgYc
-        HB5A5hClmfgbsUrUCQT/MPYoUfhz1r4w9Oh72m7AwI5Z2k9uL7UM5/Dtp5bqEuuPrPguIbV045g9s
-        euZ7oOzDjgVi89P9XcdRDxcRhy9pepVvxs81XRnpZT8YlbL7JqSGZxknWUsmVto/IGpfoFwVYrgoY
-        YVhi1J/Q==;
-Received: from [37.204.119.143] (port=55354 helo=localhost.localdomain)
-        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92 (FreeBSD))
-        (envelope-from <ar@cs.msu.ru>)
-        id 1hYR9O-0008s7-D2; Wed, 05 Jun 2019 11:20:04 +0300
-From:   Arseny Maslennikov <ar@cs.msu.ru>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Cc:     "Vladimir D . Seleznev" <vseleznv@altlinux.org>,
-        Arseny Maslennikov <ar@cs.msu.ru>
-Date:   Wed,  5 Jun 2019 11:19:02 +0300
-Message-Id: <20190605081906.28938-4-ar@cs.msu.ru>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190605081906.28938-1-ar@cs.msu.ru>
-References: <20190605081906.28938-1-ar@cs.msu.ru>
+        Wed, 5 Jun 2019 04:40:01 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:32776 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfFEIkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:40:00 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
+   d="scan'208";a="35658394"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Jun 2019 01:40:00 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Jun 2019 01:39:59 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 5 Jun 2019 01:39:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sZ4kuQTYUGt9Re2dSCz1OsSrPeQ3KrZk3vR8EDZGnjs=;
+ b=mk3PlU3jHSkNsBs5aaz5xzCuVum11zhv3rE6OW/yeE+lGR5LzkjSaY2cUhU4ZOC0gngXYIpYmi1Je2xJjtwjfSc0PmugPcauYGF7Y0If92Te6ipv2WHnY4Pvk/D/XivfBGA+7OrPSRoTW9DURikH+vfopjVMdCNYyJbpW1UvXtM=
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
+ MWHPR11MB1326.namprd11.prod.outlook.com (10.169.232.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Wed, 5 Jun 2019 08:39:54 +0000
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 08:39:54 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <sam@ravnborg.org>
+CC:     <thierry.reding@gmail.com>, <linux-pwm@vger.kernel.org>,
+        <alexandre.belloni@bootlin.com>, <bbrezillon@kernel.org>,
+        <airlied@linux.ie>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <daniel@ffwll.ch>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
+Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
+Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaZgDjOAgCvdRQCAAF3mAIAAtEsA
+Date:   Wed, 5 Jun 2019 08:39:54 +0000
+Message-ID: <b0c867a3-4bb1-4e3d-cfa1-803c5a8bd607@microchip.com>
+References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190507182713.GA16862@ravnborg.org>
+ <c361b013-2d98-76e3-d30f-cec83000933c@microchip.com>
+ <20190604215424.GA1959@ravnborg.org>
+In-Reply-To: <20190604215424.GA1959@ravnborg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0701CA0035.eurprd07.prod.outlook.com
+ (2603:10a6:800:90::21) To MWHPR11MB1549.namprd11.prod.outlook.com
+ (2603:10b6:301:c::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190605113942134
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c743e925-6302-4e2f-aa4a-08d6e991616f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1326;
+x-ms-traffictypediagnostic: MWHPR11MB1326:
+x-microsoft-antispam-prvs: <MWHPR11MB1326D74F8A03D2FC0CDC7CFE87160@MWHPR11MB1326.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(199004)(189003)(51914003)(54534003)(99286004)(72206003)(25786009)(76176011)(102836004)(52116002)(53936002)(6246003)(54906003)(6436002)(386003)(3846002)(6506007)(53546011)(14454004)(86362001)(6116002)(4326008)(478600001)(31686004)(68736007)(6512007)(8676002)(81156014)(316002)(4744005)(5660300002)(2906002)(8936002)(229853002)(6916009)(81166006)(305945005)(7416002)(6486002)(7736002)(31696002)(66946007)(66556008)(476003)(66446008)(64756008)(486006)(11346002)(446003)(2616005)(26005)(186003)(71190400001)(71200400001)(66066001)(256004)(36756003)(14444005)(73956011)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1326;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M1yxJD/fVKbJnYeHu3n+jVJgevYSam8IO4vG78CJ0uyYzDrupTg6oAmq73fJLejTzF5egI/R9hVx1fSB5WT5VMLaHBlFkereLI+/UmDzzyojkRn1SchKRyRb/ILXKWHnH74TiZoAy5fJDdnu9puYunoYDpjSE/v9ixLO9gtOCMJEK/xBKi+eUXJAFSa1bqqOp2RpRSGdrBiEdcgubzyK9IeB/WtaZ9SbjhKBpCFIdjEMrCxJgzZth5vZGDiTfGgn0ao1mx3mI3Bpj4IQzNyaCzO3Ni1OQt8XTUQvayzpzuJTak0A3UlBUtn204guwj7GEI8y9ZmoMPw0lPzsZz0xCn1rKgwnAt1w+n26lxHyTxmm7fnTp3SikuQJbOn2WWvQDhJQCxCUD5fQXTetKSUVXtWd18T/G0dWDmMzafJDQik=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FEB6224F58D15849822188E05B50093F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 37.204.119.143
-X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: [PATCH 3/7] n_tty: Send SIGINFO to fg pgrp on status request character
-X-SA-Exim-Version: 4.2
-X-SA-Exim-Scanned: No (on mail.cs.msu.ru); Unknown failure
+X-MS-Exchange-CrossTenant-Network-Message-Id: c743e925-6302-4e2f-aa4a-08d6e991616f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 08:39:54.1417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1326
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No kerninfo line is printed yet.
-
-No existing implementation of this on any Unix-like system echoes
-the status character; no existing implementation discards or flushes
-pending input on VSTATUS receipt.
-
-There are existing popular TUI applications (e. g. mutt) that only
-turn off icanon and not iexten, but still do not expect any special
-treatment of the status request character — thus we require all three:
-isig, icanon and iexten to trigger this.
-
-Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
----
- drivers/tty/n_tty.c | 15 +++++++++++++--
- include/linux/tty.h |  1 +
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-index f9c584244f72..29f33798a6cd 100644
---- a/drivers/tty/n_tty.c
-+++ b/drivers/tty/n_tty.c
-@@ -79,6 +79,10 @@
- #define ECHO_BLOCK		256
- #define ECHO_DISCARD_WATERMARK	N_TTY_BUF_SIZE - (ECHO_BLOCK + 32)
- 
-+#define SIG_FLUSHING_MASK ( \
-+	rt_sigmask(SIGINT) | rt_sigmask(SIGQUIT) | \
-+	rt_sigmask(SIGTSTP)			 )
-+#define SIG_FLUSHING(sig) ((1 << sig) & SIG_FLUSHING_MASK)
- 
- #undef N_TTY_TRACE
- #ifdef N_TTY_TRACE
-@@ -1122,7 +1126,7 @@ static void isig(int sig, struct tty_struct *tty)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 
--	if (L_NOFLSH(tty)) {
-+	if (L_NOFLSH(tty) || (!SIG_FLUSHING(sig))) {
- 		/* signal only */
- 		__isig(sig, tty);
- 
-@@ -1244,7 +1248,8 @@ n_tty_receive_signal_char(struct tty_struct *tty, int signal, unsigned char c)
- 	if (I_IXON(tty))
- 		start_tty(tty);
- 	if (L_ECHO(tty)) {
--		echo_char(c, tty);
-+		if (c != STATUS_CHAR(tty))
-+			echo_char(c, tty);
- 		commit_echoes(tty);
- 	} else
- 		process_echoes(tty);
-@@ -1294,6 +1299,9 @@ n_tty_receive_char_special(struct tty_struct *tty, unsigned char c)
- 		} else if (c == SUSP_CHAR(tty)) {
- 			n_tty_receive_signal_char(tty, SIGTSTP, c);
- 			return 0;
-+		} else if (c == STATUS_CHAR(tty)) {
-+			n_tty_receive_signal_char(tty, SIGINFO, c);
-+			return 0;
- 		}
- 	}
- 
-@@ -1848,6 +1856,9 @@ static void n_tty_set_termios(struct tty_struct *tty, struct ktermios *old)
- 			set_bit(INTR_CHAR(tty), ldata->char_map);
- 			set_bit(QUIT_CHAR(tty), ldata->char_map);
- 			set_bit(SUSP_CHAR(tty), ldata->char_map);
-+			if (L_ICANON(tty) && L_IEXTEN(tty)) {
-+				set_bit(STATUS_CHAR(tty), ldata->char_map);
-+			}
- 		}
- 		clear_bit(__DISABLED_CHAR, ldata->char_map);
- 		ldata->raw = 0;
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index bfa4e2ee94a9..38d8ffe7f0e3 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -120,6 +120,7 @@ struct tty_bufhead {
- #define WERASE_CHAR(tty) ((tty)->termios.c_cc[VWERASE])
- #define LNEXT_CHAR(tty)	((tty)->termios.c_cc[VLNEXT])
- #define EOL2_CHAR(tty) ((tty)->termios.c_cc[VEOL2])
-+#define STATUS_CHAR(tty) ((tty)->termios.c_cc[VSTATUS])
- 
- #define _I_FLAG(tty, f)	((tty)->termios.c_iflag & (f))
- #define _O_FLAG(tty, f)	((tty)->termios.c_oflag & (f))
--- 
-2.20.1
-
+DQoNCk9uIDA1LjA2LjIwMTkgMDA6NTQsIFNhbSBSYXZuYm9yZyB3cm90ZToNCj4gSGkgQ2xhdWRp
+dS4NCj4gDQo+IE9uIFR1ZSwgSnVuIDA0LCAyMDE5IGF0IDA0OjE4OjMzUE0gKzAwMDAsIENsYXVk
+aXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBIaSBTYW0sDQo+Pg0KPj4gT24gMDcu
+MDUuMjAxOSAyMToyNywgU2FtIFJhdm5ib3JnIHdyb3RlOg0KPj4+IEV4dGVybmFsIEUtTWFpbA0K
+Pj4+DQo+Pj4NCj4+PiBIaSBUaGllcnJ5Lg0KPj4+DQo+Pj4+ICAgcHdtOiBhdG1lbC1obGNkYzog
+YWRkIGNvbXBhdGlibGUgZm9yIFNBTTlYNjAgSExDREMncyBQV00NCj4+PiBPSyB0byBhZGQgdGhl
+ICJwd206IGF0bWVsLWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBX
+TSINCj4+PiBwYXRjaCB2aWEgZHJtLW1pc2M/DQo+Pj4gVGhlbiB3ZSBjYW4gYWRkIGFsbCA2IHBh
+dGNoZXMgaW4gb25lIGdvLg0KPj4NCj4+IFNpbmNlIHdlIGRvbid0IGhhdmUgYW4gYW5zd2VyIGZy
+b20gVGhpZXJyeSB0aWxsIG5vdywgZG8geW91IHRoaW5rIGl0IGNvdWxkDQo+PiBiZSBmZWFzaWJs
+ZSB0byB0YWtlIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzPyBBZnRlciB0
+aGF0IEkNCj4+IHdpbGwgcmUtc2VuZCB0aGUgUFdNIHBhdGNoIHRvIFBXTSBsaXN0Lg0KPiANCj4g
+VGhhbmtzIGZvciB0aGUgcmVtaW5kZXIuDQo+IA0KPiBQYXRjaGVzIDEsMiBhbmQgNCw1LDYgYXBw
+bGllZCB0byBkcm0tbWlzYy1uZXh0Lg0KPiANCj4gUmV3b3JkZWQgY2hhbmdlbG9nIGEgYml0IGlu
+IHBhdGNoIDYuDQoNClRoYW5rIHlvdSwNCkNsYXVkaXUNCg0KPiANCj4gCVNhbQ0KPiANCg==
