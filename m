@@ -2,92 +2,132 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44158C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7BAC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2148F20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900AE20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M8e3A4pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfFEL0j (ORCPT
+        id S1727456AbfFEL3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:26:39 -0400
-Received: from foss.arm.com ([217.140.101.70]:57890 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfFEL0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:26:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BE41374;
-        Wed,  5 Jun 2019 04:26:38 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D9553F5AF;
-        Wed,  5 Jun 2019 04:26:36 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v2 0/4] iommu: Add device fault reporting API
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Robin Murphy <Robin.Murphy@arm.com>
-References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
- <20190603145951.729600e6@jacob-builder>
-Message-ID: <3d3bc50f-beb3-dda8-dfaa-ecb4dcffd560@arm.com>
-Date:   Wed, 5 Jun 2019 12:26:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 07:29:51 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:18127 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFEL3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:29:51 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x55BThr4023935;
+        Wed, 5 Jun 2019 20:29:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x55BThr4023935
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559734184;
+        bh=bujSVOPDmVIdKwoGDrNqagrzcEvHKAapyl9W5rclyIQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M8e3A4paeWv1Rk+ChhYRKbpXvwUYCnXFa300HtyGKnu30uU09n5eP56Lmb7R2CQD3
+         aciaaB/myHE4qvEJf5yE5wda9vr8QZVcgFGqlWn+ok0fWb5RVVFpootXwQZJmYf3ZH
+         WbkuTAJn3ow0O9cLjtOJsrPebgEd2fFzLKOqWUA/h92hoUMS/S+BH8AG7jn7urVabf
+         jNgH4K0cCVYPDSXE1/PUYHriY74TpLtEfeUBDr1RD2PE2ELqSA4zDhZ50tMBg3zRsv
+         MGf2nGa5A3p6yJYf0XYJuR2iSTlw8CxdUFpCIDpOZCRWGGs9UDykRSbfmMHYMvrvnA
+         kSKlcUSkhGx4g==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id l125so15412314vsl.13;
+        Wed, 05 Jun 2019 04:29:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXePtbcQOYhv3bHI8B2Rmaj2A/uCeJyaeAHeWZ2SGa5Wlvorh3
+        I2DTRA2VZjLZzsrR6rSNizK3IbJe0FEIbENSHM4=
+X-Google-Smtp-Source: APXvYqzJue7ZjLWp60MMqbuwjVbzlIfqBJ8ddQ/y7vWB10W5mIJYautJKHwqVx0dSshy76SivadMhOYQn3yJisMYKyI=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr1403661vsl.155.1559734182801;
+ Wed, 05 Jun 2019 04:29:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190603145951.729600e6@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190605111416.13341-1-jslaby@suse.cz>
+In-Reply-To: <20190605111416.13341-1-jslaby@suse.cz>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 5 Jun 2019 20:29:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
+Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: s390, do not remove autogenerated headers on clean
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2019 22:59, Jacob Pan wrote:
-> On Mon,  3 Jun 2019 15:57:45 +0100
-> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-> 
->> Allow device drivers and VFIO to get notified on IOMMU translation
->> fault, and handle recoverable faults (PCI PRI). Several series require
->> this API (Intel VT-d and Arm SMMUv3 nested support, as well as the
->> generic host SVA implementation).
->>
->> Changes since v1 [1]:
->> * Allocate iommu_param earlier, in iommu_probe_device().
->> * Pass struct iommu_fault to fault handlers, instead of the
->>   iommu_fault_event wrapper.
->> * Removed unused iommu_fault_event::iommu_private.
->> * Removed unnecessary iommu_page_response::addr.
->> * Added iommu_page_response::version, which would allow to introduce a
->>   new incompatible iommu_page_response structure (as opposed to just
->>   adding a flag + field).
->>
->> [1] [PATCH 0/4] iommu: Add device fault reporting API
->>     https://lore.kernel.org/lkml/20190523180613.55049-1-jean-philippe.brucker@arm.com/
->>
->> Jacob Pan (3):
->>   driver core: Add per device iommu param
->>   iommu: Introduce device fault data
->>   iommu: Introduce device fault report API
->>
->> Jean-Philippe Brucker (1):
->>   iommu: Add recoverable fault reporting
->>
-> This interface meet the need for vt-d, just one more comment on 2/4. Do
-> you want to add Co-developed-by you for the three patches from me?
+On Wed, Jun 5, 2019 at 8:14 PM Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> 'make clean' does NOT remove autogenerated headers generated from
+> arch/s390/kernel/syscalls/. For example:
+> asm-offsets.h
+> irq_regs.h
+> irq_work.h
+> unistd_nr.h
+>
+> But 'make clean' DOES currently remove dis-defs.h and facility-defs.h
+> generated from arch/s390/tools/.
+>
+> The issue is that facility-defs.h is included from <asm/facility.h> and
+> builds of external modules fail due to missing header. (When cleaned
+> build directory is used.)
+>
+> Fix this by adding these targets to no-clean-files.
+>
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+>
+> I would love to see comments from KBuild guys as I am not sure if this
+> fix is correct at all.
 
-I'm fine without it, I don't think it adds much to the Signed-off-by,
-which is required
 
-Thanks,
-Jean
+This issue had already been fixed by the side-effect of
+another patch, which is in linux-next.
+
+
+
+See this:
+
+
+commit 10077c9f2dae1afabab2808a0326ecf3e8e5a82c
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri May 17 16:54:27 2019 +0900
+
+    s390: drop meaningless 'targets' from tools Makefile
+
+    'targets' should be specified to include .*.cmd files to evaluate
+    if_changed or friends.
+
+    Here, facility-defs.h and dis-defs.h are generated by filechk.
+
+    Because filechk does not generate .*.cmd file, the 'targets' addition
+    is meaningless. The filechk correctly updates the target when its
+    content is changed.
+
+    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+    Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+
+
+Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
