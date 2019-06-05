@@ -2,133 +2,80 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AFEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D373BC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7D320874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0mGIO0a1"
+	by mail.kernel.org (Postfix) with ESMTP id ADF8820874
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfFEQ4U (ORCPT
+        id S1728762AbfFEQ5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:56:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39435 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbfFEQ4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:56:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g9so9900466plm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 09:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hZ4cGeRHDextu5CN92g1Wv5jExw3YnRMZLIMsV5cvAM=;
-        b=0mGIO0a16PwCvvaR5KVekuEHAAI6Q2Au9fzMg0rq9cIQZseDxcLyQnlnpLFqWAhwqe
-         Yt+8W6m4lRuJQWYFUXD9kuuXHzivkv9+YZ8UX3eujcruue8CDe5Piz47SrGxpOX96mJ0
-         ypMmdVL54li0Got7Cg0OG7+PNhDYXWUkLW82vaBWqVdjlLNaQ8uMIUrLZE072HIgWWHw
-         iSPt/Wakz0VQISfqlzp3LI0Yq1DyQh6PFNSW0qKy89hSNq1VtvE5zOv9q4A7nI4ezK1L
-         e07s/PovVfIg66ebjPwJvd25lYq0FNCUJvMgh1gTZa/ieLe5bRjaMJ7PKI0/rNFseEek
-         lqtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hZ4cGeRHDextu5CN92g1Wv5jExw3YnRMZLIMsV5cvAM=;
-        b=KUoiDBurSJishJRofoJuLPdsEEPgbBcF65DewSSqyQzjG9gRY+LgbmzBIcy/lVjMiG
-         JBDSaKHDFzKCeOWl8nQpnjr+70ggPS6lvHVCuPC709d+9bOsGaSHtPvlr59zN6JY6/7G
-         WWdVoiC/QOpzTcWjf580IAYp93vagaFAQnSyxEAuRpzqLiEW3mb6N/T+7xmlCkdMWuRW
-         X6NSKlTY+iwuwyXit6JXoMxF54651tTWuhPNDR0i/cXTx8pQUD+jARIs4nFXOsXDhwHJ
-         xEUY7NE6DuHQLt62HOSTiVksBgYX9E+rZtlbh4DgKDJh22EBChPQbrX3YsA7kj0Qj1w7
-         nOqQ==
-X-Gm-Message-State: APjAAAUqCDeKsKCGn/33qARU69cV/21e9hxN8Z+f2h1l69AhWycgz79h
-        /dkCTuyfYwjBv+d2OprUf550Cg==
-X-Google-Smtp-Source: APXvYqzQNjLq7UOy1q7ENsNpX55jr/E9IvuPhShPS6v+kZtEcqMLpCvregQ854wv8sSR3be+MXorkw==
-X-Received: by 2002:a17:902:a513:: with SMTP id s19mr41291953plq.261.1559753778277;
-        Wed, 05 Jun 2019 09:56:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:cd0c])
-        by smtp.gmail.com with ESMTPSA id d10sm23208447pgh.43.2019.06.05.09.56.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 09:56:17 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 12:56:16 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 07/10] mm: synchronize access to kmem_cache dying flag
- using a spinlock
-Message-ID: <20190605165615.GC12453@cmpxchg.org>
-References: <20190605024454.1393507-1-guro@fb.com>
- <20190605024454.1393507-8-guro@fb.com>
+        Wed, 5 Jun 2019 12:57:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59712 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728753AbfFEQ5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:57:02 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CCF5730833B2;
+        Wed,  5 Jun 2019 16:56:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E1CF1019606;
+        Wed,  5 Jun 2019 16:56:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com>
+References: <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com> <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com> <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk> <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com> <20192.1559724094@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Rational model for UID based controls
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605024454.1393507-8-guro@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18356.1559753807.1@warthog.procyon.org.uk>
+Date:   Wed, 05 Jun 2019 17:56:47 +0100
+Message-ID: <18357.1559753807@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 05 Jun 2019 16:57:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:44:51PM -0700, Roman Gushchin wrote:
-> Currently the memcg_params.dying flag and the corresponding
-> workqueue used for the asynchronous deactivation of kmem_caches
-> is synchronized using the slab_mutex.
-> 
-> It makes impossible to check this flag from the irq context,
-> which will be required in order to implement asynchronous release
-> of kmem_caches.
-> 
-> So let's switch over to the irq-save flavor of the spinlock-based
-> synchronization.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  mm/slab_common.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 09b26673b63f..2914a8f0aa85 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -130,6 +130,7 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t nr,
->  #ifdef CONFIG_MEMCG_KMEM
->  
->  LIST_HEAD(slab_root_caches);
-> +static DEFINE_SPINLOCK(memcg_kmem_wq_lock);
->  
->  void slab_init_memcg_params(struct kmem_cache *s)
->  {
-> @@ -629,6 +630,7 @@ void memcg_create_kmem_cache(struct mem_cgroup *memcg,
->  	struct memcg_cache_array *arr;
->  	struct kmem_cache *s = NULL;
->  	char *cache_name;
-> +	bool dying;
->  	int idx;
->  
->  	get_online_cpus();
-> @@ -640,7 +642,13 @@ void memcg_create_kmem_cache(struct mem_cgroup *memcg,
->  	 * The memory cgroup could have been offlined while the cache
->  	 * creation work was pending.
->  	 */
-> -	if (memcg->kmem_state != KMEM_ONLINE || root_cache->memcg_params.dying)
-> +	if (memcg->kmem_state != KMEM_ONLINE)
-> +		goto out_unlock;
-> +
-> +	spin_lock_irq(&memcg_kmem_wq_lock);
-> +	dying = root_cache->memcg_params.dying;
-> +	spin_unlock_irq(&memcg_kmem_wq_lock);
-> +	if (dying)
->  		goto out_unlock;
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-What does this lock protect? The dying flag could get set right after
-the unlock.
+> YES!
+
+I'm trying to decide if that's fervour or irritation at this point ;-)
+
+> And it would be really great if you put some thought into what
+> a rational model would be for UID based controls, too.
+
+I have put some thought into it, but I don't see a single rational model.  It
+depends very much on the situation.
+
+In any case, that's what I was referring to when I said I might need to call
+inode_permission().  But UIDs don't exist for all filesystems, for example,
+and there are no UIDs on superblocks, mount objects or hardware events.
+
+Now, I could see that you ignore UIDs on things like keys and
+hardware-triggered events, but how does this interact with things like mount
+watches that see directories that have UIDs?
+
+Are you advocating making it such that process B can only see events triggered
+by process A if they have the same UID, for example?
+
+David
