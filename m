@@ -2,274 +2,139 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8044DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B07C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3A52067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:40:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rjQbWXan"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC6F20872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559767271;
+	bh=pV7bFgGsU1rdajtOm+CDoeKu5isYeHpiQrGOOm3+FTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e2O94wl38Bg3qSGjU9qKPIawLnYPmeoRjy4Jq4pjdMzjBcp6ja7qcxfjPssg0k3uo
+	 ZUvzrPJXj75CXX7o52m4lf2wUwVSWJUbzlKszJMkO0leMeZLnJAVsMd3x9pEA7Nil+
+	 Ipd5l3GDmaed0OTyx+JnhYnFnA4c+VRW7gpLCKeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfFEUk3 (ORCPT
+        id S1726637AbfFEUlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:40:29 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55670 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEUk3 (ORCPT
+        Wed, 5 Jun 2019 16:41:10 -0400
+Received: from casper.infradead.org ([85.118.1.10]:37114 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfFEUlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:40:29 -0400
+        Wed, 5 Jun 2019 16:41:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Bdl+GToplZYKFl2/CZwK1ShFFbX2KkgoYa/IQrkAuz4=; b=rjQbWXan+6Rg3IlYBqU+ZkIeqs
-        1t9EtuwW9iZ++dFEqThm5G+AubmH6Sp2/HBdaWcip/N6nFIu4mRZGVfCJzVOmCRPb0un9kMjCWEvW
-        x8Wd21a9+eUqrO5wN0Nodpu9SAZVA3ViJvHJudrbvifdZyA9aWfKe80I40SxCKiHV+s7Awm/MdwIj
-        XbaxEr6DejPaDSoZ5hIamojbNR0fm/0pHtUXyGZgrlI2AiDBuqHRx6n8WWdtAXB4lvpa44tWVTHUF
-        L64dGlYH7wjSNLbcMwsL85JtoeTMIGtFFIBKYkKE07assZ8unvum/mVH22z9wpJB8rBmP0XCS2Fux
-        HccFHKTQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYchZ-0001Du-8j; Wed, 05 Jun 2019 20:40:05 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DEB6720763536; Wed,  5 Jun 2019 22:40:03 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 22:40:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20190605204003.GC3402@hirez.programming.kicks-ass.net>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
- <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
+        bh=h98u8H7RfP5qJN0kCyqIabwfZ68OoIG1a6EpwEt8FWo=; b=aPJ1cnA0f/UZYVjZUKtwfuWMb5
+        vKz7K7uIjdvvTt7FI5ZNUONLESbeimFe9dKnYZooD2ZYm4yzq9WhVK9bLmYuF/mctvbtMMidzidl8
+        JSgQAjo2NBhYacmYSta7LS2rmcP2ZiuoEIdN4PcItWiVmewmwOx6mH1ijxIfhCX9LrCpw4BxhXU2V
+        IgDqKXg6eVvKxHUHUND4zQ9evsScTrXXBP3dAFdyh0DiQqp6ymensVDZPiffP6KaDAwdpH3YnX6Ft
+        5u69dBOiIjUucOdLQ7k8NaFOACSS9fXysZrWD1wPHn8iplGS4KCaWuoMP0DdkKWIkVcw0wX4tw9zV
+        HbRkufNQ==;
+Received: from [179.182.172.34] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYciZ-00073A-BD; Wed, 05 Jun 2019 20:41:07 +0000
+Date:   Wed, 5 Jun 2019 17:41:02 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-media@vger.kernel.org (open list:QUALCOMM VENUS VIDEO ACCELERATOR
+        DRIVER),
+        linux-arm-msm@vger.kernel.org (open list:QUALCOMM VENUS VIDEO
+        ACCELERATOR DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] Revert "media: hfi_parser: don't trick gcc with a wrong
+ expected size"
+Message-ID: <20190605174044.65ac1e4a@coco.lan>
+In-Reply-To: <20190605201941.4150-1-jonathan@marek.ca>
+References: <20190605201941.4150-1-jonathan@marek.ca>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:21:13PM -0400, Alex Kogan wrote:
+Em Wed,  5 Jun 2019 16:19:40 -0400
+Jonathan Marek <jonathan@marek.ca> escreveu:
 
-> Trying to resume this work, I am looking for concrete steps required
-> to integrate CNA with the paravirt patching.
+> This reverts commit ded716267196862809e5926072adc962a611a1e3.
 > 
-> Looking at alternative_instructions(), I wonder if I need to add
-> another call, something like apply_numa() similar to apply_paravirt(),
-> and do the patch work there.  Or perhaps I should “just" initialize
-> the pv_ops structure with the corresponding
-> numa_queued_spinlock_slowpath() in paravirt.c?
+> This change doesn't make any sense and breaks the driver.
 
-Yeah, just initialize the pv_ops.lock.* thingies to contain the numa
-variant before apply_paravirt() happens.
+The fix is indeed wrong, but reverting is the wrong thing to do.
 
-> Also, the paravirt code is under arch/x86, while CNA is generic (not
-> x86-specific).  Do you still want to see CNA-related patching residing
-> under arch/x86?
-> 
-> We still need a config option (something like NUMA_AWARE_SPINLOCKS) to
-> enable CNA patching under this config only, correct?
+The problem is that the driver is trying to write past the
+allocated area, as reported:
 
-There is the static_call() stuff that could be generic; I posted a new
-version of that today (x86 only for now, but IIRC there's arm64 patches
-for that around somewhere too).
+	drivers/media/platform/qcom/venus/hfi_parser.c:103 parse_profile_level() error: memcpy() 'proflevel' too small (8 vs 128)
+	drivers/media/platform/qcom/venus/hfi_parser.c:129 parse_caps() error: memcpy() 'cap' too small (16 vs 512)
 
-https://lkml.kernel.org/r/20190605130753.327195108@infradead.org
+If you check the memcpy() logic at the above lines, you'll see that
+hfi_capability.data may have up to 32 entries, and
+hfi_profile_level_supported.profile level can have up to it can be up
+to 16 entries.
 
-Which would allow something a little like this:
+So, the buffer should either be dynamically allocated with the real
+size or we need something like the enclosed patch.
 
+Thanks,
+Mauro
 
-diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-index bd5ac6cc37db..01feaf912bd7 100644
---- a/arch/x86/include/asm/qspinlock.h
-+++ b/arch/x86/include/asm/qspinlock.h
-@@ -63,29 +63,7 @@ static inline bool vcpu_is_preempted(long cpu)
- #endif
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 7a3feb5cee00..06a84f266bcc 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -59,7 +59,6 @@ struct venus_format {
  
- #ifdef CONFIG_PARAVIRT
--DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
--
- void native_pv_lock_init(void) __init;
--
--#define virt_spin_lock virt_spin_lock
--static inline bool virt_spin_lock(struct qspinlock *lock)
--{
--	if (!static_branch_likely(&virt_spin_lock_key))
--		return false;
--
--	/*
--	 * On hypervisors without PARAVIRT_SPINLOCKS support we fall
--	 * back to a Test-and-Set spinlock, because fair locks have
--	 * horrible lock 'holder' preemption issues.
--	 */
--
--	do {
--		while (atomic_read(&lock->val) != 0)
--			cpu_relax();
--	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
--
--	return true;
--}
- #else
- static inline void native_pv_lock_init(void)
- {
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 5169b8cc35bb..78be9e474e94 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -531,7 +531,7 @@ static void __init kvm_smp_prepare_cpus(unsigned int max_cpus)
- {
- 	native_smp_prepare_cpus(max_cpus);
- 	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
--		static_branch_disable(&virt_spin_lock_key);
-+		static_call_update(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
- }
+ #define MAX_PLANES		4
+ #define MAX_FMT_ENTRIES		32
+-#define MAX_CAP_ENTRIES		32
+ #define MAX_ALLOC_MODE_ENTRIES	16
+ #define MAX_CODEC_NUM		32
  
- static void __init kvm_smp_prepare_boot_cpu(void)
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 98039d7fb998..ae6d15f84867 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -105,12 +105,10 @@ static unsigned paravirt_patch_jmp(void *insn_buff, const void *target,
- }
- #endif
+diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
+index 34ea503a9842..ca8033381515 100644
+--- a/drivers/media/platform/qcom/venus/hfi_helper.h
++++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+@@ -560,6 +560,8 @@ struct hfi_bitrate {
+ #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
+ #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
  
--DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
--
- void __init native_pv_lock_init(void)
- {
--	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		static_branch_disable(&virt_spin_lock_key);
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		static_call_update(queued_spin_lock_slowpath, __tas_spin_lock_slowpath);
- }
- 
- unsigned paravirt_patch_default(u8 type, void *insn_buff,
-diff --git a/arch/x86/xen/spinlock.c b/arch/x86/xen/spinlock.c
-index 3776122c87cc..86808127b6e6 100644
---- a/arch/x86/xen/spinlock.c
-+++ b/arch/x86/xen/spinlock.c
-@@ -70,7 +70,7 @@ void xen_init_lock_cpu(int cpu)
- 
- 	if (!xen_pvspin) {
- 		if (cpu == 0)
--			static_branch_disable(&virt_spin_lock_key);
-+			static_call_update(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
- 		return;
- 	}
- 
-diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
-index fde943d180e0..8ca4dd9db931 100644
---- a/include/asm-generic/qspinlock.h
-+++ b/include/asm-generic/qspinlock.h
-@@ -65,7 +65,9 @@ static __always_inline int queued_spin_trylock(struct qspinlock *lock)
- 	return likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL));
- }
- 
--extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
-+extern void __queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++#define MAX_CAP_ENTRIES                32
 +
-+DECLARE_STATIC_CALL(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
+ struct hfi_capability {
+ 	u32 capability_type;
+ 	u32 min;
+@@ -569,7 +571,7 @@ struct hfi_capability {
  
- /**
-  * queued_spin_lock - acquire a queued spinlock
-@@ -78,7 +80,7 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
- 	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL)))
- 		return;
+ struct hfi_capabilities {
+ 	u32 num_capabilities;
+-	struct hfi_capability *data;
++	struct hfi_capability data[MAX_CAP_ENTRIES];
+ };
  
--	queued_spin_lock_slowpath(lock, val);
-+	static_call(queued_spin_lock_slowpath, lock, val);
- }
+ #define HFI_DEBUG_MSG_LOW	0x01
+@@ -726,7 +728,7 @@ struct hfi_profile_level {
  
- #ifndef queued_spin_unlock
-@@ -95,13 +97,6 @@ static __always_inline void queued_spin_unlock(struct qspinlock *lock)
- }
- #endif
+ struct hfi_profile_level_supported {
+ 	u32 profile_count;
+-	struct hfi_profile_level *profile_level;
++	struct hfi_profile_level profile_level[HFI_MAX_PROFILE_COUNT];
+ };
  
--#ifndef virt_spin_lock
--static __always_inline bool virt_spin_lock(struct qspinlock *lock)
--{
--	return false;
--}
--#endif
--
- /*
-  * Remapping spinlock architecture specific functions to the corresponding
-  * queued spinlock functions.
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10c6956..0e9e61637d56 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -290,6 +290,20 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
- 
- #endif /* _GEN_PV_LOCK_SLOWPATH */
- 
-+void __tas_spin_lock_slowpath(struct qspinlock *lock, u32 val)
-+{
-+	/*
-+	 * On hypervisors without PARAVIRT_SPINLOCKS support we fall
-+	 * back to a Test-and-Set spinlock, because fair locks have
-+	 * horrible lock 'holder' preemption issues.
-+	 */
-+
-+	do {
-+		while (atomic_read(&lock->val) != 0)
-+			cpu_relax();
-+	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
-+}
-+
- /**
-  * queued_spin_lock_slowpath - acquire the queued spinlock
-  * @lock: Pointer to queued spinlock structure
-@@ -311,7 +325,7 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
-  * contended             :    (*,x,y) +--> (*,0,0) ---> (*,0,1) -'  :
-  *   queue               :         ^--'                             :
-  */
--void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
-+void __queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- {
- 	struct mcs_spinlock *prev, *next, *node;
- 	u32 old, tail;
-@@ -322,9 +336,6 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	if (pv_enabled())
- 		goto pv_queue;
- 
--	if (virt_spin_lock(lock))
--		return;
--
- 	/*
- 	 * Wait for in-progress pending->locked hand-overs with a bounded
- 	 * number of spins so that we guarantee forward progress.
-@@ -558,7 +569,9 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 */
- 	__this_cpu_dec(qnodes[0].mcs.count);
- }
--EXPORT_SYMBOL(queued_spin_lock_slowpath);
-+EXPORT_SYMBOL(__queued_spin_lock_slowpath);
-+
-+DEFINE_STATIC_CALL(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
- 
- /*
-  * Generate the paravirt code for queued_spin_unlock_slowpath().
+ struct hfi_quality_vs_speed {
+
+
+
