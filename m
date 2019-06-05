@@ -2,111 +2,337 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A7C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1634CC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA63A2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5102075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfFEPPl (ORCPT
+        id S1728692AbfFEPQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:15:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43679 "EHLO mga12.intel.com"
+        Wed, 5 Jun 2019 11:16:08 -0400
+Received: from foss.arm.com ([217.140.101.70]:33682 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfFEPPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:15:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 08:15:40 -0700
-X-ExtLoop1: 1
-Received: from araresx-wtg1.ger.corp.intel.com (HELO localhost) ([10.252.46.102])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Jun 2019 08:15:30 -0700
-Date:   Wed, 5 Jun 2019 18:15:24 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
-Message-ID: <20190605151524.GJ11331@linux.intel.com>
-References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
- <20190531233159.30992-3-sean.j.christopherson@intel.com>
- <20190604114951.GC30594@linux.intel.com>
- <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+        id S1728046AbfFEPQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:16:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E69BB374;
+        Wed,  5 Jun 2019 08:16:06 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E1813F246;
+        Wed,  5 Jun 2019 08:16:03 -0700 (PDT)
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
+Date:   Wed, 5 Jun 2019 16:16:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:16:04PM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 4, 2019 at 4:50 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Fri, May 31, 2019 at 04:31:52PM -0700, Sean Christopherson wrote:
-> > > SGX enclaves have an associated Enclave Linear Range (ELRANGE) that is
-> > > tracked and enforced by the CPU using a base+mask approach, similar to
-> > > how hardware range registers such as the variable MTRRs.  As a result,
-> > > the ELRANGE must be naturally sized and aligned.
-> > >
-> > > To reduce boilerplate code that would be needed in every userspace
-> > > enclave loader, the SGX driver naturally aligns the mmap() address and
-> > > also requires the range to be naturally sized.  Unfortunately, SGX fails
-> > > to grant a waiver to the MAP_FIXED case, e.g. incorrectly rejects mmap()
-> > > if userspace is attempting to map a small slice of an existing enclave.
-> > >
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> > Why you want to allow mmap() to be called multiple times? mmap() could
-> > be allowed only once with PROT_NONE and denied afterwards. Is this for
-> > sending fd to another process that would map already existing enclave?
-> >
-> > I don't see any checks for whether the is enclave underneath. Also, I
-> > think that in all cases mmap() callback should allow only PROT_NONE
-> > as permissions for clarity even if it could called multiple times.
-> >
+Hi Hana,
+
+On 30/05/2019 11:15, Hanna Hawa wrote:
+> Add support for error detection and correction for Amazon's Annapurna
+> Labs SoCs for L1/L2 caches.
 > 
-> What's the advantage to only allowing PROT_NONE?  The idea here is to
-> allow a PROT_NONE map followed by some replacemets that overlay it for
-> the individual segments.  Admittedly, mprotect() can do the same
-> thing, but disallowing mmap() seems at least a bit surprising.
+> Amazon's Annapurna Labs SoCs based on ARM CA57 and CA72, the driver
+> support both cortex based on compatible string.
 
-I was merely wondering if it is specifically for the application where a
-client process would mmap(MAP_FIXED) an enclave created by a server
-process.
+> diff --git a/drivers/edac/amazon_al_ca57_edac.c b/drivers/edac/amazon_al_ca57_edac.c
+> new file mode 100644
+> index 0000000..08237c0
+> --- /dev/null
+> +++ b/drivers/edac/amazon_al_ca57_edac.c
+> @@ -0,0 +1,283 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
-/Jarkko
+> +/* Same bit assignments of CPUMERRSR_EL1 and L2MERRSR_EL1 in ARM CA57/CA72 */
+
+Allowing linux to access these implementation-defined registers has come up before:
+https://www.spinics.net/lists/kernel/msg2750349.html
+
+It looks like you've navigated most of the issues. Accessing implementation-defined
+registers is frowned on, but this stuff can't be done generically until v8.2.
+
+This can't be done on 'all A57/A72' because some platforms may not have been integrated to
+have error-checking at L1/L2, (1.3 'Features' of [0] says the ECC protection for L1 data
+cache etc is optional). Even if they did, this stuff needs turning on in L2CTLR_EL1.
+These implementation-defined registers may be trapped by the hypervisor, I assume for your
+platform this is linux booted at EL2, so no hypervisor.
+
+
+> +#define ARM_CA57_CPUMERRSR_INDEX_OFF		(0)
+> +#define ARM_CA57_CPUMERRSR_INDEX_MASK		(0x3FFFF)
+
+(GENMASK() would make it quicker and easier to compare this with the datasheet)
+
+
+> +#define  ARM_CA57_L2_TAG_RAM			0x10
+> +#define  ARM_CA57_L2_DATA_RAM			0x11
+> +#define  ARM_CA57_L2_SNOOP_RAM			0x12
+> +#define  ARM_CA57_L2_DIRTY_RAM			0x14
+
+> +#define  ARM_CA57_L2_INC_PLRU_RAM		0x18
+
+A57 describes this one as 'PF RAM'...
+
+
+> +static inline u64 read_cpumerrsr_el1(void)
+> +{
+> +	u64 val;
+> +
+> +	asm volatile("mrs %0, s3_1_c15_c2_2" : "=r" (val));
+> +
+> +	return val;
+> +}
+
+Linux supports versions of binutils that choke on this syntax.
+See the sys_reg() definitions in arm64's asm/sysreg.h that define something you can feed
+to read_sysreg_s(). It would save having these wrapper functions.
+
+commit 72c583951526 ("arm64: gicv3: Allow GICv3 compilation with older binutils") for the
+story.
+
+
+> +static void al_a57_edac_cpumerrsr(void *arg)
+> +{
+> +	struct edac_device_ctl_info *edac_dev =
+> +		(struct edac_device_ctl_info *)arg;
+> +	int cpu;
+> +	u32 index, way, ramid, repeat, other, fatal;
+> +	u64 val = read_cpumerrsr_el1();
+> +
+> +	/* Return if no valid error */
+> +	if (!((val >> ARM_CA57_CPUMERRSR_VALID_OFF) &
+> +	      ARM_CA57_CPUMERRSR_VALID_MASK))
+> +		return;
+
+| #define ARM_CA57_CPUMERRSR_VALID	BIT(31)
+| if (!(val & ARM_CA57_CPUMERRSR_VALID))
+
+would be easier to read, the same goes for 'fatal' as its a single bit.
+
+
+> +	edac_device_handle_ce(edac_dev, 0, 0, "L2 Error");
+
+How do we know this was corrected?
+
+6.4.8 "Error Correction Code" has "Double-bit ECC errors set the fatal bit." in a
+paragraph talking about the L1 memory system.
+
+"L2 Error" ? Copy and paste?
+
+
+> +	edac_printk(KERN_CRIT, DRV_NAME, "CPU%d L1 %serror detected\n",
+> +		    cpu, (fatal) ? "Fatal " : "");
+> +	edac_printk(KERN_CRIT, DRV_NAME, "RAMID=");
+> +
+> +	switch (ramid) {
+> +	case ARM_CA57_L1_I_TAG_RAM:
+> +		pr_cont("'L1-I Tag RAM' index=%d way=%d", index, way);
+> +		break;
+> +	case ARM_CA57_L1_I_DATA_RAM:
+> +		pr_cont("'L1-I Data RAM' index=%d bank= %d", index, way);
+> +		break;
+
+Is index/way information really useful? I can't replace way-3 on the system, nor can I
+stop it being used. If its useless, I'd rather we don't bother parsing and printing it out.
+
+
+> +	pr_cont(", repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)\n", repeat, other,
+> +		val);
+
+'other' here is another error, but we don't know the ramid.
+'repeat' is another error for the same ramid.
+
+Could we still feed this stuff into edac? This would make the counters accurate if the
+polling frequency isn't quite fast enough.
+
+
+> +	write_cpumerrsr_el1(0);
+> +}
+
+
+> +static void al_a57_edac_l2merrsr(void *arg)
+> +{
+
+> +	edac_device_handle_ce(edac_dev, 0, 0, "L2 Error");
+
+How do we know this is corrected?
+
+If looks like L2CTLR_EL1[20] might force fatal 1/0 to map to uncorrected/corrected. Is
+this what you are depending on here?
+
+(it would be good to have a list of integration-time and firmware dependencies this driver
+has, for the next person who tries to enable it on their system and complains it doesn't
+work for them)
+
+
+> +	edac_printk(KERN_CRIT, DRV_NAME, "CPU%d L2 %serror detected\n",
+> +		    cpu, (fatal) ? "Fatal " : "");
+> +	edac_printk(KERN_CRIT, DRV_NAME, "RAMID=");
+> +
+> +	switch (ramid) {
+> +	case ARM_CA57_L2_TAG_RAM:
+> +		pr_cont("'L2 Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L2_DATA_RAM:
+> +		pr_cont("'L2 Data RAM'");
+> +		break;
+> +	case ARM_CA57_L2_SNOOP_RAM:
+> +		pr_cont("'L2 Snoop RAM'");
+> +		break;
+> +	case ARM_CA57_L2_DIRTY_RAM:
+> +		pr_cont("'L2 Dirty RAM'");
+> +		break;
+> +	case ARM_CA57_L2_INC_PLRU_RAM:
+> +		pr_cont("'L2 Inclusion PLRU RAM'");
+
+The A57 TRM describes this as "Inclusion PF RAM", and notes its only in r1p0 or later,
+(but doesn't say what it is). The A72 TRM describes the same encoding as "Inclusion PLRU
+RAM", which is something to do with its replacement policy. It has control bits that A57's
+version doesn't, so these are not the same thing.
+
+Disambiguating A57/A72 here is a load of faff, 'L2 internal metadata' probably covers both
+cases, but unless these RAMs are replaceable or can be disabled, there isn't much point
+working out which one it was.
+
+
+> +		break;
+> +	default:
+> +		pr_cont("'unknown'");
+> +		break;
+> +	}
+> +
+> +	pr_cont(", cpuid/way=%d, repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)\n",
+> +		way, repeat, other, val);
+
+cpuid could be useful if you can map it back to the cpu number linux has.
+If you can spot that cpu-7 is experiencing more errors than it should, you can leave it
+offline.
+
+To do this you'd need to map each L2MERRSR_EL1's '0-3' range back to the CPUs they
+actually are. The gic's 'ppi-partitions' does this with phandles, e.g.
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml. You could add a
+similar shaped thing to the l2-cacheX node in the DT, (or in your edac node, but it is a
+property of the cache integration).
+
+
+> +	write_l2merrsr_el1(0);
+> +}
+> +
+> +static void al_a57_edac_check(struct edac_device_ctl_info *edac_dev)
+> +{
+> +	int cpu, cluster, last_cluster = -1;
+> +
+> +	/*
+> +	 * Use get_online_cpus/put_online_cpus to prevent the online CPU map
+> +	 * changing while reads the L1/L2 error status
+
+For walking the list of offline cpus, this makes sense. But you schedule work without
+waiting, it may get run after you drop the cpus_read_lock()...,
+
+
+> +	 */
+
+> +	get_online_cpus();
+
+The comment above these helpers is:
+| /* Wrappers which go away once all code is converted */
+
+cpus_read_lock()?
+
+
+> +	for_each_online_cpu(cpu) {
+> +		/* Check L1 errors */
+> +		smp_call_function_single(cpu, al_a57_edac_cpumerrsr, edac_dev,
+> +					 0);
+
+As you aren't testing for big/little, wouldn't on_each_cpu() here be simpler?
+
+As you don't wait, what stops al_a57_edac_cpumerrsr() feeding two errors into
+edac_device_handle_ce() at the same time? Do you need a spinlock in al_a57_edac_cpumerrsr()?
+
+
+> +		cluster = topology_physical_package_id(cpu);
+
+Hmm, I'm not sure cluster==package is guaranteed to be true forever.
+
+If you describe the L2MERRSR_EL1 cpu mapping in your DT you could use that. Otherwise
+pulling out the DT using something like the arch code's parse_cluster().
+
+
+> +		/* Only single CPU will read the L2 error status */
+
+> +		if (cluster != last_cluster) {
+> +			smp_call_function_single(cpu, al_a57_edac_l2merrsr,
+> +						 edac_dev, 0);
+> +			last_cluster = cluster;
+> +		}
+
+Here you depend on the CPUs being listed in cluster-order in the DT. I'm fairly sure the
+numbering is arbitrary: On my Juno 0,3,4,5 are the A53 cluster, and 1,2 are the A57 cluster.
+
+If 1,3,5 were cluster-a and 2,4,6 were cluster-b, you would end up calling
+al_a57_edac_l2merrsr() for each cpu. As you don't wait, they could race.
+
+If you can get a cpu-mask for each cluster, smp_call_function_any() would to the
+pick-one-online-cpu work for you.
+
+
+> +	}
+> +	put_online_cpus();
+> +}
+
+> +static int al_a57_edac_remove(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
+> +
+> +	edac_device_del_device(edac_dev->dev);
+> +	edac_device_free_ctl_info(edac_dev);
+
+Your poll function schedule work on other CPUs and didn't wait, is it possible
+al_a57_edac_l2merrsr() is still using this memory when you free it?
+
+
+> +	return 0;
+> +}
+
+
+> +MODULE_LICENSE("GPL");
+
+| MODULE_LICENSE("GPL v2");
+
+To match the SPDX header?
+
+
+
+Thanks,
+
+James
+
+
+[0]
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0488c/DDI0488C_cortex_a57_mpcore_r1p0_trm.pdf
