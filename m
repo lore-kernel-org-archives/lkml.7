@@ -2,102 +2,95 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B40BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94A7C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606A32075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BA72083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfFEXSh (ORCPT
+        id S1726636AbfFEXX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 19:18:37 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46818 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfFEXSh (ORCPT
+        Wed, 5 Jun 2019 19:23:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52567 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfFEXXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 19:18:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y11so226165pfm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 16:18:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=wTIcqb3SuSLYyX4jaiouQi6Jmmzy6iFQXQcUcQGoiGQ=;
-        b=tqAMBJgBk6zNGfdnm33ks2F0SplQzz2iEsOE9HhMbNBy9Jxp/NkPDlp05KFR49+Hue
-         EcC7bbvnf03kWcYvYPU/+iTJtdGTBDT7ki5cNywtUBc/u4OTT3DnU4OQUGwJRriNt0m7
-         35z4y1vhgmlGJ9GkY/COU/F6uCvwvB5OniY4gPSFuZdmqd4cCy+1Gc8WeKtdGWoJkz9+
-         RtEPRhuq/2+c9hkvalUdxV9gojWa+43z3cWOTaHtMTwwifOD8sOuQ8zAkybiIm6Qx9Aw
-         1dFIW8OwWDfA9h+7h07DSuKMNQyJbegsxe4SsJJb4DNrYFjVXCD5CUQVYRUXugoaUnWw
-         3zrg==
-X-Gm-Message-State: APjAAAWGdpZWYjtA+g1J0VSwmaDtBfNKfqfv4wpa9pOTKg9EVXyBKYJF
-        rniTxJ3pf+1ynYd1UIz98RtaMpUL9ZY=
-X-Google-Smtp-Source: APXvYqz0UPjUzr2DqEeL3AT5OsS9mUtNgNeT44235duzwripPH47MW2Kti8j0fnIBEI9E3FD7pmQSw==
-X-Received: by 2002:a62:7995:: with SMTP id u143mr50098061pfc.61.1559776715772;
-        Wed, 05 Jun 2019 16:18:35 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id y13sm37199pfb.143.2019.06.05.16.18.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 16:18:35 -0700 (PDT)
-Subject: [PATCH] RISC-V: Break load reservations during switch_to
-Date:   Wed,  5 Jun 2019 16:17:35 -0700
-Message-Id: <20190605231735.26581-1-palmer@sifive.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 5 Jun 2019 19:23:25 -0400
+Received: from [192.168.1.110] ([77.2.1.21]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MnaTt-1gsD5h2gbN-00jYtF; Thu, 06 Jun 2019 01:22:40 +0200
+Subject: Re: [PATCH 2/3] drivers: scsi: remove unnecessary #ifdef MODULE
+To:     "Elliott, Robert (Servers)" <elliott@hpe.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "khalid@gonehiking.org" <khalid@gonehiking.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "aacraid@microsemi.com" <aacraid@microsemi.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+References: <1559397700-15585-1-git-send-email-info@metux.net>
+ <1559397700-15585-3-git-send-email-info@metux.net>
+ <AT5PR8401MB1169E817136F8B8587C7A716AB1A0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <d377a82b-4269-e25d-2329-573db355877c@metux.net>
+Date:   Wed, 5 Jun 2019 23:22:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:      linux-riscv@lists.infradead.org,
-         Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
-         me@carlosedp.com, joel@sing.id.au
+In-Reply-To: <AT5PR8401MB1169E817136F8B8587C7A716AB1A0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:jaekdmyV0q8OXz6r78GsYt8MpdcLc2b7djaJTQADjW9KcsKTnTr
+ 7wzYYHu/4yX6GYfdyY9cMfgupQEDbjo5H3ALS3nquim0kfTf+14HZ7nwJAGJ9CZgCbeXBxT
+ LD/q1AJlxJLEn8noXHg2doZ+YoMtmGD4PHOu+E9ONVyw+ldThp50wbmHoHx8M9awmGecgj8
+ hxGR04XtnMvP4o9EJ9qow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vWKltpJs204=:0nJ0fYNT/FkUdt8WwReLvN
+ m59Xkghuq3N+fsmaJgJ1/c246RmrR9XAB3PkwvqlcLlFtteQh1S2yu1ZnFfTi+OCj4mRuHq8u
+ fBk+ZpyqlLWQU3YVtOsbjRuoB+ExRwniu8suLAp64O0VLlZabKxMsETDROGAAoLoew1tf+TwP
+ RX4m+yMn5JfVf4Z4B/fUBIRRo6KRR/NriUxfac5FIv265NxnZmBre2o4MqAEb191cElXyg4WE
+ RNux37jM2IuB2oiVDi1q6siKFGoFegE4e9U0k2fp0eb6rXkg0epM3QYYwqsEwXpaiKzCuv2Qx
+ QyjPNaTIzvTwf2yi6Pz/TwLtXuXhwp66YgmAMIwh0z+T7FtkRrGIHkco3yCJI3wH0YYkjb7qY
+ YqNEdFcwgTpvXVnUyptIZ5HflNwgjb6rKeIOR7uPw20k8VqrzI/YCAThV0evAwNF9QEnR16UA
+ f2D4duZHmBHClZpY0Wz4qzpAGCLje01jFy0560+bUwDP4mUV6bytsT7VmHr3FQ/g+umR/RFrM
+ RuokkZnPuoxbx1V1+qofubE9Goi4bEdxljXM7c1kKF/zzbKdNZi1/X/SjzeUWfb+/wGS5Z2bs
+ 2oEV2jvaLT/3UEGkoEohLVRnF3tuSVAQnlqhbVTdHK/wbsTozAB3xPMKFNFsx0JQDDYcPjXIY
+ aSIcTrC6OlimGIq8qsqCWxz8Z1WtucZFx51fEzX74N+/6mA7ue31Qyqw/eEGDv2Rvaiu4Eaj+
+ eiLTKMEUkT/iRM1IBfjiiKt7LYZcgEjw/81+IOjNNVjbn0+rS8J6elS6UDs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment describes why in detail.  This was found because QEMU never
-gives up load reservations, the issue is unlikely to manifest on real
-hardware.
+On 01.06.19 15:40, Elliott, Robert (Servers) wrote:
 
-Thanks to Carlos Eduardo for finding the bug!
+<snip>
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
----
- arch/riscv/kernel/entry.S | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> I don't see any reply to James' comment that these changes result in
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 1c1ecc238cfa..e9fc3480e6b4 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -330,6 +330,24 @@ ENTRY(__switch_to)
- 	add   a3, a0, a4
- 	add   a4, a1, a4
- 	REG_S ra,  TASK_THREAD_RA_RA(a3)
-+	/*
-+	 * The Linux ABI allows programs to depend on load reservations being
-+	 * broken on context switches, but the ISA doesn't require that the
-+	 * hardware ever breaks a load reservation.  The only way to break a
-+	 * load reservation is with a store conditional, so we emit one here.
-+	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
-+	 * know this will always fail, but just to be on the safe side this
-+	 * writes the same value that was unconditionally written by the
-+	 * previous instruction.
-+	 */
-+#if (TASK_THREAD_RA_RA != 0)
-+# error "The offset between ra and ra is non-zero"
-+#endif
-+#if (__riscv_xlen == 64)
-+	sc.d  x0, ra, 0(a3)
-+#else
-+	sc.w  x0, ra, 0(a3)
-+#endif
- 	REG_S sp,  TASK_THREAD_SP_RA(a3)
- 	REG_S s0,  TASK_THREAD_S0_RA(a3)
- 	REG_S s1,  TASK_THREAD_S1_RA(a3)
+I've missed that mail :(
+
+> static struct definitions that are unused, which should result in
+> complaints by the compiler like:
+>      warning: 'dptids' defined by not used [-Wunused-variable]
+
+hmm, seems that const is missing on dptids ... I'll test that and
+repost fixed vrsion.
+
+--mtx
+
 -- 
-2.21.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
