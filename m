@@ -2,203 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEBFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB1020717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617CE2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KOUFqxnx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ExUde0tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfFEWY7 (ORCPT
+        id S1726613AbfFEWan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:24:59 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35819 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfFEWY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:24:57 -0400
-Received: by mail-it1-f195.google.com with SMTP id n189so117257itd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rhUtpEm6FfHJ/8xuo7UZiivJ8sKeG3d3CbKRTHxlhd4=;
-        b=KOUFqxnxYe+Ka1b9hOIG5/8rTjl9GVuuyCrRATSD+U9e2aGTXMPBoxTEBEHVBhupe7
-         odxEdhYiVzc9oOhxVi9lz5pAhtYCYAUDHj+JFf1CBVkJdcwPVPFXoyifeRVY3KVJ0NwN
-         vG2idK67ggCKGeyTSJ+Qcko+jbXcgwAFuTgSE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rhUtpEm6FfHJ/8xuo7UZiivJ8sKeG3d3CbKRTHxlhd4=;
-        b=YZxrA+Cwz7wef1zOAVE0JrElNWZwree8oa2McjDkFXty0oOBh3NXeUtzZ5aZfl3J7a
-         lIJ0SoNxjgtRSMaOecYgIchL5cm63HEMOsi9utvohw3gY2Pi3Ukzq0WHJFFl+JScrZar
-         JRWOS3XNEQ8bbjmkIBju1OV1sPGOnHJ33vB7p1zJVzaSxruRyU688ZkAkKZXj19BC8Zb
-         ljpbz7a1HU7qel4RVz28twQatyToQk0/vHo+59LiBsa1VyZ9Uzo7zOgyYDg70jem4M8J
-         BSinjbwtM2cGPajMJp7hpv7X1OQ9okNANG2ikFWSgWCyAXrUtrguCEETdruWL+fVAuJL
-         Tu7w==
-X-Gm-Message-State: APjAAAUOn3sUTQbtfczybx/rguVcQ8PVSzu4lEC9dICitcSNIexmdibU
-        ac/9r80ZSxLMAJ7jglZaWKLq0Otebd8z3g==
-X-Google-Smtp-Source: APXvYqwsWr5uH0EdmJKzp/Nlaai83AoM0jxTOABz5CfrBiUTSh8Lc82hA/VDVuVZmEPR9sW2Bi0FWw==
-X-Received: by 2002:a24:6ecd:: with SMTP id w196mr14815683itc.104.1559773490898;
-        Wed, 05 Jun 2019 15:24:50 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:33ce:f5cf:f863:d3a6])
-        by smtp.gmail.com with ESMTPSA id 139sm70322itv.38.2019.06.05.15.24.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 15:24:50 -0700 (PDT)
-From:   Fletcher Woodruff <fletcherw@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ross Zwisler <zwisler@chromium.org>,
-        alsa-devel@alsa-project.org, Ben Zhang <benzh@chromium.org>
-Subject: [PATCH v6 2/4] ASoC: rt5677: move jack-detect init to i2c probe
-Date:   Wed,  5 Jun 2019 16:24:17 -0600
-Message-Id: <20190605222419.54479-3-fletcherw@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-In-Reply-To: <20190605222419.54479-1-fletcherw@chromium.org>
-References: <20190507220115.90395-1-fletcherw@chromium.org>
- <20190605222419.54479-1-fletcherw@chromium.org>
+        Wed, 5 Jun 2019 18:30:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:35291 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEWam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:30:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45K3Ql4H9Bz9s9y;
+        Thu,  6 Jun 2019 08:30:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559773840;
+        bh=fVAWUh+vPwz016H2tMSV2aVqis7jv1k6eHlFiaW+ubY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ExUde0tg6gOt71oZjQHBUrViKft1hEu1XV3k+Wg2Rz+VQkmjZB2DZlF1u5vFKspYf
+         RiYst/klMw02BdlQzb4FWrI/APL9xliHQyqomPs/mlXclrDIygjqPFp9zOagtwBWp9
+         vbY4Nxtcy4CU/ZQ9WG+JmJ+4eTKhcdfWf+S087jx7qqEBLTIlsO3SeOjx2+uyEw1kI
+         bMB5XCuaNIp0Q4LGKZ7IBPBZIqI2VY0TEivHphvoS/zBzYs1dZNIDABP8UJlLiKgVj
+         AEIrpRyGQHOkDDFgvI2zPmuffYPHEYHR6jU3n7fKWjKormFP7fUkRuILg3Tfkq8Jh0
+         O0M7yJZmHh/Jw==
+Date:   Thu, 6 Jun 2019 08:30:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Subject: linux-next: build failure after merge of the hwmon-fixes tree
+Message-ID: <20190606083034.196219f0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/m0o70mjk2qUo7JMK./TCke/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch moves the code to select the gpios for jack detection
-from rt5677_probe to rt5677_init_irq (called from rt5677_i2c_probe).
+--Sig_/m0o70mjk2qUo7JMK./TCke/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It also sets some registers to fix bugs related to jack detection, and
-adds some constants and comments to make it easier to understand what
-certain register settings are controlling.
+Hi Guenter,
 
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
----
- sound/soc/codecs/rt5677.c | 60 ++++++++++++++++++++++-----------------
- sound/soc/codecs/rt5677.h |  6 ++++
- 2 files changed, 40 insertions(+), 26 deletions(-)
+After merging the hwmon-fixes tree, today's linux-next build
+(x86_64 allmodconfig) failed like this:
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 62489a8c3fed6e..65bef50ded1151 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -4716,37 +4716,13 @@ static int rt5677_probe(struct snd_soc_component *component)
- 
- 	snd_soc_component_force_bias_level(component, SND_SOC_BIAS_OFF);
- 
--	regmap_write(rt5677->regmap, RT5677_DIG_MISC, 0x0020);
-+	regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC,
-+			~RT5677_IRQ_DEBOUNCE_SEL_MASK, 0x0020);
- 	regmap_write(rt5677->regmap, RT5677_PWR_DSP2, 0x0c00);
- 
- 	for (i = 0; i < RT5677_GPIO_NUM; i++)
- 		rt5677_gpio_config(rt5677, i, rt5677->pdata.gpio_config[i]);
- 
--	if (rt5677->irq_data) {
--		regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1, 0x8000,
--			0x8000);
--		regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC, 0x0018,
--			0x0008);
--
--		if (rt5677->pdata.jd1_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD1_MASK,
--				rt5677->pdata.jd1_gpio <<
--				RT5677_SEL_GPIO_JD1_SFT);
--
--		if (rt5677->pdata.jd2_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD2_MASK,
--				rt5677->pdata.jd2_gpio <<
--				RT5677_SEL_GPIO_JD2_SFT);
--
--		if (rt5677->pdata.jd3_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD3_MASK,
--				rt5677->pdata.jd3_gpio <<
--				RT5677_SEL_GPIO_JD3_SFT);
--	}
--
- 	mutex_init(&rt5677->dsp_cmd_lock);
- 	mutex_init(&rt5677->dsp_pri_lock);
- 
-@@ -5095,6 +5071,7 @@ static int rt5677_init_irq(struct i2c_client *i2c)
- {
- 	int ret;
- 	struct rt5677_priv *rt5677 = i2c_get_clientdata(i2c);
-+	unsigned int jd_mask = 0, jd_val = 0;
- 
- 	if (!rt5677->pdata.jd1_gpio &&
- 		!rt5677->pdata.jd2_gpio &&
-@@ -5106,6 +5083,37 @@ static int rt5677_init_irq(struct i2c_client *i2c)
- 		return -EINVAL;
- 	}
- 
-+	/*
-+	 * Select RC as the debounce clock so that GPIO works even when
-+	 * MCLK is gated which happens when there is no audio stream
-+	 * (SND_SOC_BIAS_OFF).
-+	 */
-+	regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC,
-+			RT5677_IRQ_DEBOUNCE_SEL_MASK,
-+			RT5677_IRQ_DEBOUNCE_SEL_RC);
-+
-+	/* Enable auto power on RC when GPIO states are changed */
-+	regmap_update_bits(rt5677->regmap, RT5677_GEN_CTRL1, 0xff, 0xff);
-+
-+	/* Select and enable jack detection sources per platform data */
-+	if (rt5677->pdata.jd1_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD1_MASK;
-+		jd_val	|= rt5677->pdata.jd1_gpio << RT5677_SEL_GPIO_JD1_SFT;
-+	}
-+	if (rt5677->pdata.jd2_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD2_MASK;
-+		jd_val	|= rt5677->pdata.jd2_gpio << RT5677_SEL_GPIO_JD2_SFT;
-+	}
-+	if (rt5677->pdata.jd3_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD3_MASK;
-+		jd_val	|= rt5677->pdata.jd3_gpio << RT5677_SEL_GPIO_JD3_SFT;
-+	}
-+	regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1, jd_mask, jd_val);
-+
-+	/* Set GPIO1 pin to be IRQ output */
-+	regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1,
-+			RT5677_GPIO1_PIN_MASK, RT5677_GPIO1_PIN_IRQ);
-+
- 	ret = regmap_add_irq_chip(rt5677->regmap, i2c->irq,
- 		IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT, 0,
- 		&rt5677_irq_chip, &rt5677->irq_data);
-diff --git a/sound/soc/codecs/rt5677.h b/sound/soc/codecs/rt5677.h
-index 183d92b030459f..7a89bfa95dc0bf 100644
---- a/sound/soc/codecs/rt5677.h
-+++ b/sound/soc/codecs/rt5677.h
-@@ -1636,6 +1636,12 @@
- #define RT5677_GPIO6_P_NOR			(0x0 << 0)
- #define RT5677_GPIO6_P_INV			(0x1 << 0)
- 
-+/* General Control (0xfa) */
-+#define RT5677_IRQ_DEBOUNCE_SEL_MASK		(0x3 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_MCLK		(0x0 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_RC		(0x1 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_SLIM		(0x2 << 3)
-+
- /* Virtual DSP Mixer Control (0xf7 0xf8 0xf9) */
- #define RT5677_DSP_IB_01_H			(0x1 << 15)
- #define RT5677_DSP_IB_01_H_SFT			15
--- 
-2.22.0.rc1.311.g5d7573a151-goog
+In file included from include/linux/notifier.h:14,
+                 from arch/x86/include/asm/uprobes.h:13,
+                 from include/linux/uprobes.h:49,
+                 from include/linux/mm_types.h:14,
+                 from include/linux/mmzone.h:21,
+                 from include/linux/gfp.h:6,
+                 from include/linux/xarray.h:14,
+                 from include/linux/radix-tree.h:18,
+                 from include/linux/fs.h:15,
+                 from include/linux/debugfs.h:15,
+                 from drivers/hwmon/pmbus/pmbus_core.c:9:
+drivers/hwmon/pmbus/pmbus_core.c: In function 'pmbus_set_samples':
+drivers/hwmon/pmbus/pmbus_core.c:1975:14: error: 'data' undeclared (first u=
+se in this function); did you mean '_data'?
+  mutex_lock(&data->update_lock);
+              ^~~~
+include/linux/mutex.h:166:44: note: in definition of macro 'mutex_lock'
+ #define mutex_lock(lock) mutex_lock_nested(lock, 0)
+                                            ^~~~
+drivers/hwmon/pmbus/pmbus_core.c:1975:14: note: each undeclared identifier =
+is reported only once for each function it appears in
+  mutex_lock(&data->update_lock);
+              ^~~~
+include/linux/mutex.h:166:44: note: in definition of macro 'mutex_lock'
+ #define mutex_lock(lock) mutex_lock_nested(lock, 0)
+                                            ^~~~
 
+Caused by commit
+
+  8d719d6f3e97 ("hwmon: (pmbus/core) mutex_lock write in pmbus_set_samples")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/m0o70mjk2qUo7JMK./TCke/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz4QooACgkQAVBC80lX
+0GySfQgAkiwS8dok8dNR3tdhI222YRvfJ+hSHENnT7bHokekA14PlpW6Nskfb13B
+1uRx31U7RUHssowIB+PueZyaBnfJuPx1DpI0wwyhB+I5NRFoL9ixsRmJNUmLoxDf
+rtWmTNIY+J8S8nCd5Qt573kXNMG6i1uUISe/RVVnNJ/lCEtsoX/Nwlx2FRYGjSjI
+kj7QgToOYRPd/D44HHEXVO+GdRCn0JEhsL7NevmqJ67o3iBwL4x8SwN6ZIgHTIFS
+FPMcdahwLGgA9eF20ISRbilYS8TnUrxNy9Rjhi+hN47V9E59XZhUCrTR6gwTRGkh
+7Ic6tgWDCTJuqmKPV/VPW8WhzFWu0g==
+=hq3o
+-----END PGP SIGNATURE-----
+
+--Sig_/m0o70mjk2qUo7JMK./TCke/--
