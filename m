@@ -2,132 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7BAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D07BC46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900AE20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4720620717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M8e3A4pa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dl01BDGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfFEL3v (ORCPT
+        id S1727494AbfFELah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:29:51 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:18127 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfFEL3v (ORCPT
+        Wed, 5 Jun 2019 07:30:37 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19331 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFELah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:29:51 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x55BThr4023935;
-        Wed, 5 Jun 2019 20:29:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x55BThr4023935
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559734184;
-        bh=bujSVOPDmVIdKwoGDrNqagrzcEvHKAapyl9W5rclyIQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M8e3A4paeWv1Rk+ChhYRKbpXvwUYCnXFa300HtyGKnu30uU09n5eP56Lmb7R2CQD3
-         aciaaB/myHE4qvEJf5yE5wda9vr8QZVcgFGqlWn+ok0fWb5RVVFpootXwQZJmYf3ZH
-         WbkuTAJn3ow0O9cLjtOJsrPebgEd2fFzLKOqWUA/h92hoUMS/S+BH8AG7jn7urVabf
-         jNgH4K0cCVYPDSXE1/PUYHriY74TpLtEfeUBDr1RD2PE2ELqSA4zDhZ50tMBg3zRsv
-         MGf2nGa5A3p6yJYf0XYJuR2iSTlw8CxdUFpCIDpOZCRWGGs9UDykRSbfmMHYMvrvnA
-         kSKlcUSkhGx4g==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id l125so15412314vsl.13;
-        Wed, 05 Jun 2019 04:29:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXePtbcQOYhv3bHI8B2Rmaj2A/uCeJyaeAHeWZ2SGa5Wlvorh3
-        I2DTRA2VZjLZzsrR6rSNizK3IbJe0FEIbENSHM4=
-X-Google-Smtp-Source: APXvYqzJue7ZjLWp60MMqbuwjVbzlIfqBJ8ddQ/y7vWB10W5mIJYautJKHwqVx0dSshy76SivadMhOYQn3yJisMYKyI=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr1403661vsl.155.1559734182801;
- Wed, 05 Jun 2019 04:29:42 -0700 (PDT)
+        Wed, 5 Jun 2019 07:30:37 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf7a7da0000>; Wed, 05 Jun 2019 04:30:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 04:30:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 04:30:36 -0700
+Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Jun
+ 2019 11:30:33 +0000
+Subject: Re: [PATCH] clk: tegra210: Fix default rates for HDA clocks
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>
+References: <1559121501-8566-1-git-send-email-jonathanh@nvidia.com>
+ <20190529134625.GD17223@ulmo>
+ <5f2b8f8d-f3e5-fab8-8cf0-fa8a3e917845@nvidia.com>
+Message-ID: <f2757c84-363c-cef0-db9d-c4e4423200b5@nvidia.com>
+Date:   Wed, 5 Jun 2019 12:30:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190605111416.13341-1-jslaby@suse.cz>
-In-Reply-To: <20190605111416.13341-1-jslaby@suse.cz>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 5 Jun 2019 20:29:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
-Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: s390, do not remove autogenerated headers on clean
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5f2b8f8d-f3e5-fab8-8cf0-fa8a3e917845@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559734234; bh=0p6mNaMjQPO8lN/MkCvb/luHUOwN9kFQfK7z4rY4vdA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dl01BDGHx9+fNyiOUX2eAW9yEZJO15tTStvOb+pqXTH76B5v114SjSrkN+h+vE+gC
+         Cg2oj9A8y5B9bzGhRTieqpsu55HLrhJLix+58bWEmwDeahaPRnjD9CqaGGAb1hjsDS
+         Jc8hXb1Zm3ysIYx93gRyEzozYe3Fep8XWDhU+Ld3hBvGv+oR3GvsvdtxOhMkqJhoDW
+         1TbiSOjm1BAXipzOFFGmQz3QTPKuZnV/FL2/ClgX3sXsOfZ8OqHqVQ2xbbamGRbqcA
+         bpD19rrTdc7L2LBQb4C1QI4iTgaPBh1ZdYRNWhBNGhRl74IKWytAFwgrIoM9WBXB12
+         hnoTqTFqH5O5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 8:14 PM Jiri Slaby <jslaby@suse.cz> wrote:
->
-> 'make clean' does NOT remove autogenerated headers generated from
-> arch/s390/kernel/syscalls/. For example:
-> asm-offsets.h
-> irq_regs.h
-> irq_work.h
-> unistd_nr.h
->
-> But 'make clean' DOES currently remove dis-defs.h and facility-defs.h
-> generated from arch/s390/tools/.
->
-> The issue is that facility-defs.h is included from <asm/facility.h> and
-> builds of external modules fail due to missing header. (When cleaned
-> build directory is used.)
->
-> Fix this by adding these targets to no-clean-files.
->
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> ---
->
-> I would love to see comments from KBuild guys as I am not sure if this
-> fix is correct at all.
 
+On 31/05/2019 15:58, Jon Hunter wrote:
+> 
+> On 29/05/2019 14:46, Thierry Reding wrote:
+>> On Wed, May 29, 2019 at 10:18:21AM +0100, Jon Hunter wrote:
+>>> Currently the default clock rates for the HDA and HDA2CODEC_2X clocks
+>>> are both 19.2MHz. However, the default rates for these clocks should
+>>> actually be 51MHz and 48MHz, respectively. Correct the default clock
+>>> rates for these clocks by specifying them in the clock init table for
+>>> Tegra210.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>> ---
+>>>  drivers/clk/tegra/clk-tegra210.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>
+>> Does this fix anything? Should this be backported to stable releases?
+> 
+> Good point. We are aligning the clock configuration with what we ship.
+> So I thought for completeness it would be good to test HDA playback
+> across the various sample-rates we support (32kHz to 192kHz) but with or
+> without this patch I am not hearing anything. Let me check on this with
+> Sameer as I would like to see if we need to mark this for stable or not.
+> 
+>> Acked-by: Thierry Reding <treding@nvidia.com>
 
-This issue had already been fixed by the side-effect of
-another patch, which is in linux-next.
+I have confirmed that this does fix HDA playback on Tegra210. Without
+this fix, I am seeing the following messages during playback and
+playback is distorted ...
 
+Write error: -32,Broken pipe
+[   15.069335] tegra-mc 70019000.memory-controller: hdar: read
+@0x0000000000000000: EMEM address decode error (EMEM decode error)
+Write error: -32,Broken pipe
+[   15.465362] tegra-mc 70019000.memory-controller: hdar: read
+@0x0000000000000000: EMEM address decode error (EMEM decode error)
+Write error: -32,Broken pipe
+[   15.858615] tegra-mc 70019000.memory-controller: hdar: read
+@0x0000000000000000: EMEM address decode error (EMEM decode error)
+W
 
+Do you want me to update the change and resend?
 
-See this:
-
-
-commit 10077c9f2dae1afabab2808a0326ecf3e8e5a82c
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri May 17 16:54:27 2019 +0900
-
-    s390: drop meaningless 'targets' from tools Makefile
-
-    'targets' should be specified to include .*.cmd files to evaluate
-    if_changed or friends.
-
-    Here, facility-defs.h and dis-defs.h are generated by filechk.
-
-    Because filechk does not generate .*.cmd file, the 'targets' addition
-    is meaningless. The filechk correctly updates the target when its
-    content is changed.
-
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-    Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-
-
-Thanks.
-
+Jon
 
 -- 
-Best Regards
-Masahiro Yamada
+nvpublic
