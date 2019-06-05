@@ -2,157 +2,211 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08903C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C00C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C8B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2mv7v7h"
+	by mail.kernel.org (Postfix) with ESMTP id E8D54206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfFEK7p (ORCPT
+        id S1727343AbfFELAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:59:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41450 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEK7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:59:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 107so296454otj.8;
-        Wed, 05 Jun 2019 03:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1TtCwBfFQyXH/AsYB9gz6ChIKS/EqRpApjVyf81CS/g=;
-        b=D2mv7v7hNMhlC9bMraAxG/He3p9EsUtRxsdsqeYIbbCxi9Dcy+kNWf8mJfHCxM7uL+
-         svJBNa9wykvm1h6CM/4MzRA2ldCJfJmfnWvyXZxl/o1lUurDplWMXuoChk+Xi/pbbNyS
-         DK5WiCLPeniOcMyMLPTvh3TvfQYThXhZsBkkp7lV/M4kpDw7vpazE4i3TUm67dGMSgJ1
-         LQzBrNcmgV+EJCVqZby5FmlWCKh0Vt+EJsMvGTq5IZM2Nxuq/DepBdy30iUkWtifSiY1
-         FPvDYu7Q+OkHMmURwsMbsLXgLj3+9Xjpba8dpaTWDjCk7TNr47Yb8Dql/p0VtOBrv6z1
-         ah5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1TtCwBfFQyXH/AsYB9gz6ChIKS/EqRpApjVyf81CS/g=;
-        b=QD4QRohOA43Rlz/Qr+lfcBEQyoJt+l5DBLIkDAlIVyMp0zk5UQ5rGYVYss4/adNgMR
-         hzCC17G6TwnEfL6eK8o05DHt8LXnhD3+YzXmouYvq1JzvqO1pEqKYGQkmfGQz5knWOGH
-         jMvcx1X78K1WlBbUJS09K71uar40fBnMQkzPFB6yOBNVuKOp3d9Fx8fpSWyGeoilk3+P
-         qmZjObLHxJgXbM2+yzCfEcmOoyCHX2gYzTbTXF36UFNnCzjvnVT92Vu0WROiVKpopQca
-         w+WgsdXR162RGN2g1XNE9TIXRfBYL927bO7sO7qyjzNCTJIIHTy7aufatqzz77fQEmPf
-         IQgQ==
-X-Gm-Message-State: APjAAAWyBuEzp0B79Bte9EaiP7cPFckWiVFYoa/bO0BfrYOcC0Z2E+Rl
-        YVYtwCZMOpfBDW2s8VqVHBKAgN2jOcco9x5cThg=
-X-Google-Smtp-Source: APXvYqwQE4ag1aM6TUkGURtCIXQYTok7BQJnPWzUcNd6HQ4Zi0w5zXKIhcOyHknnj9LeSh4MJFyZ++ZnbVOeWAy0WHg=
-X-Received: by 2002:a9d:6f05:: with SMTP id n5mr3011494otq.56.1559732384717;
- Wed, 05 Jun 2019 03:59:44 -0700 (PDT)
+        Wed, 5 Jun 2019 07:00:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51198 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727154AbfFELAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:00:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA6AEB048;
+        Wed,  5 Jun 2019 11:00:13 +0000 (UTC)
+Message-ID: <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
+Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
+        viresh.kumar@linaro.org, mturquette@baylibre.com,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+Date:   Wed, 05 Jun 2019 13:00:10 +0200
+In-Reply-To: <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+         <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-wVmio/A9DEF+oH+PeAtt"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-3-git-send-email-wanpengli@tencent.com> <501ef28f-7463-7f49-c219-1c3fdd8cc476@redhat.com>
-In-Reply-To: <501ef28f-7463-7f49-c219-1c3fdd8cc476@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 5 Jun 2019 19:00:10 +0800
-Message-ID: <CANRm+Czco7J1M2gskwgqjtbxcD+R5SkGx_2Lbfi=Z3yQZRwBkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 00:59, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 21/05/19 08:06, Wanpeng Li wrote:
-> >
-> > The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
-> > CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
-> > kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
-> > guest visibility.
->
-> This needs some adjustment so that the default is backwards-compatible:
->
-> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> index e3ae96b52a16..f9b021e16ebc 100644
-> --- a/arch/x86/include/uapi/asm/kvm.h
-> +++ b/arch/x86/include/uapi/asm/kvm.h
-> @@ -378,11 +378,11 @@ struct kvm_sync_regs {
->         struct kvm_vcpu_events events;
->  };
->
-> -#define KVM_X86_QUIRK_LINT0_REENABLED  (1 << 0)
-> -#define KVM_X86_QUIRK_CD_NW_CLEARED    (1 << 1)
-> -#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE  (1 << 2)
-> -#define KVM_X86_QUIRK_OUT_7E_INC_RIP   (1 << 3)
-> -#define KVM_X86_QUIRK_MISC_ENABLE_MWAIT (1 << 4)
-> +#define KVM_X86_QUIRK_LINT0_REENABLED     (1 << 0)
-> +#define KVM_X86_QUIRK_CD_NW_CLEARED       (1 << 1)
-> +#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE     (1 << 2)
-> +#define KVM_X86_QUIRK_OUT_7E_INC_RIP      (1 << 3)
-> +#define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
->
->  #define KVM_STATE_NESTED_GUEST_MODE    0x00000001
->  #define KVM_STATE_NESTED_RUN_PENDING   0x00000002
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index f54d266fd3b5..bfa1341ce6f1 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -137,10 +137,10 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->                 (best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
->                 best->eax &= ~(1 << KVM_FEATURE_PV_UNHALT);
->
-> -       if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT)) {
-> +       if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT)) {
->                 best = kvm_find_cpuid_entry(vcpu, 0x1, 0);
->                 if (best) {
-> -                       if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT)
-> +                       if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_NO_MWAIT)
->                                 best->ecx |= F(MWAIT);
->                         else
->                                 best->ecx &= ~F(MWAIT);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 528935733fe0..0c1498da46c7 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2548,17 +2548,15 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->                 }
->                 break;
->         case MSR_IA32_MISC_ENABLE:
-> -               if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT) &&
-> -                       ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
-> -                       if ((vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT) &&
-> -                               !(data & MSR_IA32_MISC_ENABLE_MWAIT)) {
-> -                               if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
-> -                                       return 1;
-> -                       }
-> +               if (!kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT) &&
-> +                   ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_NO_MWAIT)) {
-> +                       if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
-> +                               return 1;
->                         vcpu->arch.ia32_misc_enable_msr = data;
->                         kvm_update_cpuid(vcpu);
-> +               } else {
-> +                       vcpu->arch.ia32_misc_enable_msr = data;
->                 }
-> -               vcpu->arch.ia32_misc_enable_msr = data;
->                 break;
->         case MSR_IA32_SMBASE:
->                 if (!msr_info->host_initiated)
->
-> Please double check, in the meanwhile I've queued the patch.
 
-Looks good to me, thanks. :)
+--=-wVmio/A9DEF+oH+PeAtt
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Stefan,
+thanks for the review, I took note of your code comments.
+
+On Wed, 2019-06-05 at 11:46 +0200, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
+> > Hi all,
+> > this series aims at adding cpufreq support to the Raspberry Pi family o=
+f
+> > boards.
+> >=20
+> > The previous revision can be found at: https://lkml.org/lkml/2019/5/20/=
+431
+> >=20
+> > The series first factors out 'pllb' from clk-bcm2385 and creates a new
+> > clk driver that operates it over RPi's firmware interface[1]. We are
+> > forced to do so as the firmware 'owns' the pll and we're not allowed to
+> > change through the register interface directly as we might race with th=
+e
+> > over-temperature and under-voltage protections provided by the firmware=
+.
+> it would be nice to preserve such design decision in the driver as a
+> comment, because the cover letter usually get lost.
+> > Next it creates a minimal cpufreq driver that populates the CPU's opp
+> > table, and registers cpufreq-dt. Which is needed as the firmware
+> > controls the max and min frequencies available.
+>=20
+> I tested your series on top of Linux 5.2-rc1 with multi_v7_defconfig and
+> manually enable this drivers. During boot with Raspbian rootfs i'm
+> getting the following:
+>=20
+> [    1.177009] cpu cpu0: failed to get clock: -2
+> [    1.183643] cpufreq-dt: probe of cpufreq-dt failed with error -2
+
+This is surprising, who could be creating a platform_device for cpufreq-dt
+apart from raspberrypi-cpufreq? Just to make things clear, you're using the
+device tree from v5.2-rc1 (as opposed to the Raspbian one)?
+
+> [    1.192117] sdhci: Secure Digital Host Controller Interface driver
+> [    1.198725] sdhci: Copyright(c) Pierre Ossman
+> [    1.207005] Synopsys Designware Multimedia Card Interface Driver
+> [    1.319936] sdhost-bcm2835 3f202000.mmc: loaded - DMA enabled (>1)
+> [    1.326641] sdhci-pltfm: SDHCI platform and OF driver helper
+> [    1.336568] ledtrig-cpu: registered to indicate activity on CPUs
+> [    1.343713] usbcore: registered new interface driver usbhid
+> [    1.350275] usbhid: USB HID core driver
+> [    1.357639] bcm2835-mbox 3f00b880.mailbox: mailbox enabled
+> [    1.367490] NET: Registered protocol family 10
+> [    1.375013] Segment Routing with IPv6
+> [    1.381696] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+> [    1.388980] NET: Registered protocol family 17
+> [    1.395624] can: controller area network core (rev 20170425 abi 9)
+> [    1.402358] NET: Registered protocol family 29
+> [    1.408997] can: raw protocol (rev 20170425)
+> [    1.415599] can: broadcast manager protocol (rev 20170425 t)
+> [    1.422219] can: netlink gateway (rev 20170425) max_hops=3D1
+> [    1.429369] Key type dns_resolver registered
+> [    1.437190] Registering SWP/SWPB emulation handler
+> [    1.444443] Loading compiled-in X.509 certificates
+> [    1.455693] 3f201000.serial: ttyAMA0 at MMIO 0x3f201000 (irq =3D 81,
+> base_baud =3D 0) is a PL011 rev2
+> [    1.462768] serial serial0: tty port ttyAMA0 registered
+> [    1.478755] mmc0: host does not support reading read-only switch,
+> assuming write-enable
+> [    1.488792] mmc0: new high speed SDHC card at address 0007
+> [    1.495766] raspberrypi-firmware soc:firmware: Attached to firmware
+> from 2019-03-27 15:45
+> [    1.496862] mmcblk0: mmc0:0007 SDCIT 14.6 GiB
+> [    1.512768] raspberrypi-clk raspberrypi-clk: CPU frequency range: min
+> 600000000, max 1400000000
+> [    1.513012]  mmcblk0: p1 p2
+> [    1.558085] dwc2 3f980000.usb: 3f980000.usb supply vusb_d not found,
+> using dummy regulator
+> [    1.565355] dwc2 3f980000.usb: 3f980000.usb supply vusb_a not found,
+> using dummy regulator
+> [    1.623246] dwc2 3f980000.usb: DWC OTG Controller
+> [    1.630318] dwc2 3f980000.usb: new USB bus registered, assigned bus
+> number 1
+> [    1.637439] dwc2 3f980000.usb: irq 33, io mem 0x3f980000
+> [    1.645268] hub 1-0:1.0: USB hub found
+> [    1.652317] hub 1-0:1.0: 1 port detected
+> [    1.665867] sdhci-iproc 3f300000.sdhci: allocated mmc-pwrseq
+> [    1.704788] mmc1: SDHCI controller on 3f300000.sdhci [3f300000.sdhci]
+> using PIO
+> [    1.717694] hctosys: unable to open rtc device (rtc0)
+> [    1.724967] sysfs: cannot create duplicate filename
+> '/devices/platform/cpufreq-dt'
+
+For the record, this is raspberrypi-cpufreq creating the platform device fo=
+r
+cpufreq-dt.
+
+> [    1.732120] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+> 5.2.0-rc1-00004-g5aa6d98-dirty #2
+> [    1.739288] Hardware name: BCM2835
+> [    1.746421] [<c0312304>] (unwind_backtrace) from [<c030cc08>]
+> (show_stack+0x10/0x14)
+> [    1.753636] [<c030cc08>] (show_stack) from [<c0e7d358>]
+> (dump_stack+0xb4/0xc8)
+> [    1.760840] [<c0e7d358>] (dump_stack) from [<c0503b64>]
+> (sysfs_warn_dup+0x58/0x64)
+> [    1.768105] [<c0503b64>] (sysfs_warn_dup) from [<c0503c8c>]
+> (sysfs_create_dir_ns+0xd8/0xe8)
+> [    1.775481] [<c0503c8c>] (sysfs_create_dir_ns) from [<c0e82520>]
+> (kobject_add_internal+0xb0/0x2fc)
+> [    1.782958] [<c0e82520>] (kobject_add_internal) from [<c0e827c8>]
+> (kobject_add+0x5c/0xc0)
+> [    1.790534] [<c0e827c8>] (kobject_add) from [<c096b1cc>]
+> (device_add+0xf8/0x608)
+> [    1.798180] [<c096b1cc>] (device_add) from [<c0971098>]
+> (platform_device_add+0x110/0x214)
+> [    1.805945] [<c0971098>] (platform_device_add) from [<c0971ae4>]
+> (platform_device_register_full+0x130/0x148)
+> [    1.813866] [<c0971ae4>] (platform_device_register_full) from
+> [<c15a7a30>] (raspberrypi_cpufreq_driver_init+0x128/0x178)
+> [    1.821916] [<c15a7a30>] (raspberrypi_cpufreq_driver_init) from
+> [<c0302eec>] (do_one_initcall+0x54/0x21c)
+> [    1.830099] [<c0302eec>] (do_one_initcall) from [<c15010f8>]
+> (kernel_init_freeable+0x244/0x2e0)
+> [    1.838312] [<c15010f8>] (kernel_init_freeable) from [<c0e949d4>]
+> (kernel_init+0x8/0x10c)
+> [    1.846541] [<c0e949d4>] (kernel_init) from [<c03010e8>]
+> (ret_from_fork+0x14/0x2c)
+> [    1.854783] Exception stack(0xea89dfb0 to 0xea89dff8)
+> [    1.863036] dfa0:                                     00000000
+> 00000000 00000000 00000000
+> [    1.871450] dfc0: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [    1.879860] dfe0: 00000000 00000000 00000000 00000000 00000013 0000000=
+0
+> [    1.888251] kobject_add_internal failed for cpufreq-dt with -EEXIST,
+> don't try to register things with the same name in the same directory.
+> [    1.896910] cpu cpu0: Failed to create platform device, -17
 
 Regards,
-Wanpeng Li
+Nicolas
+
+
+--=-wVmio/A9DEF+oH+PeAtt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz3oLoACgkQlfZmHno8
+x/7zvQf/V4c0fc8xTLQbkZXFwxALIDGeOBcKtsADEE4B2P4nvhQocKj3gRGMQnrr
+uch5AaY0imgHh3GbWvJhJ6M9MmRkIFtzbLkI49Fk3q0Y6PNcvVJMxyw5W12+gKmS
+f0I11JzHmdW92KUp4FmGqtwWqccv00HyrHv4Vzq2nR9F1ZxnPb919H104fvC3dGe
+iXIWm0TT0/pV59nKzkcbwD3gGcel6CV4cTjCUtOZHSVdkwBWSDeJHt+rM9Z35om8
+35MDL8axJmaxc/uXpYwP1PrI9pxHbNPbbXCdWx32O8aTnRgqd84tKFg2Od4xCrxl
+pHC5UW7M+srr9ZiXTw6IkbA0bNWiWg==
+=yFC9
+-----END PGP SIGNATURE-----
+
+--=-wVmio/A9DEF+oH+PeAtt--
+
