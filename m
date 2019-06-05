@@ -2,114 +2,85 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82647C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773AEC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDC6206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2MeqfgW"
+	by mail.kernel.org (Postfix) with ESMTP id 489EB206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfFEMVx (ORCPT
+        id S1727732AbfFEMWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:21:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39418 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbfFEMVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:21:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so19253749wrt.6;
-        Wed, 05 Jun 2019 05:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Dg/3HqsWx7s1EU5eDa15GxzKTIcT7wt8v77pC4qg7mI=;
-        b=Y2MeqfgWiPCikiSTMSnUJWfwN7LfDeNgLA8XVJatZkojdwXh3D/EP6GSQLh8ziEURG
-         ly9/jBeNGXaEJZwvXz8wqSqOMBLSZK8quH6rdIGPSNPyzNVwoJANDkBSbD8n2AMrqf3R
-         0M4WhZnqVB9XJG2dynHhYP689C32UrQ3+gJee89HJAC9p0uERtvv2fDucH2UayNKSkiP
-         K9Ly1Q67vkDPd8K6TWqngdGD32geaSwKZJG8mdQ/tQUPzSDsjE7PUbFdtUkyDT+1WUjv
-         B2LaOcPE6N39rMufBvvkUWJ+2qmKVCXdu1OaDC+Wrk7RZLjcsVWToLGkpm2FQLEL9hB4
-         A2bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Dg/3HqsWx7s1EU5eDa15GxzKTIcT7wt8v77pC4qg7mI=;
-        b=LAwV6YlLxR9w+6vZ3tHRig9ll+WrAezgVE8/14G0XjPEWrgsaedge7UO96mQW9gVLl
-         LDlz0kQdESWqpNcAYD35bSeQYa48SyLUZ36hIp3EENfnJW62y0T8VroftP4SV7Ow33kF
-         6UcFgEpEGxp92hyG7TPVilhPa8Uitcj94n84Jv2MRRpTySwVShzPRWqAQ9PaWZTbI7AT
-         a6XWpcKbPhEfpGEgGA+iCF7PE1n6lCwbH0GzT7B7k1pvpOvT6NQcDgf+7l9n+1jWHl1I
-         aRMw6nrZrdp9VIWeLIv433C5ksrHs3cLTq0mBYHzV9Co+SGWcosi8NCUbXTQkzTsI4Mo
-         PTDA==
-X-Gm-Message-State: APjAAAWWp/+y1+jgkyvi5YQ5FASNz8eZpNRVhbLi3sSo9Ge4yTCheXpA
-        Xmg9FF0QmHtJBQtxgtTfNvbunZ85Syw=
-X-Google-Smtp-Source: APXvYqx3uZOElXAB0du7JgRrgF64i18zuAuzFkaod+RFJ0hLw9X54jn68OJQMZppa2tR7jOYrYL/Dw==
-X-Received: by 2002:adf:ea87:: with SMTP id s7mr22772565wrm.24.1559737310653;
-        Wed, 05 Jun 2019 05:21:50 -0700 (PDT)
-Received: from [172.16.8.139] (host-78-151-217-120.as13285.net. [78.151.217.120])
-        by smtp.gmail.com with ESMTPSA id n4sm18547625wrp.61.2019.06.05.05.21.49
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:21:50 -0700 (PDT)
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Subject: Re: [PATCH 25/25] fsinfo: Add API documentation [ver #13]
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mszeredi@redhat.com
-References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
- <155905647369.1662.10806818386998503329.stgit@warthog.procyon.org.uk>
-Message-ID: <d88b3276-a81a-d5a6-76d6-1a01376aa31c@gmail.com>
-Date:   Wed, 5 Jun 2019 13:21:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 5 Jun 2019 08:22:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60268 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727422AbfFEMWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:22:05 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C790BA6E13;
+        Wed,  5 Jun 2019 12:22:04 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4935E600CC;
+        Wed,  5 Jun 2019 12:22:00 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 08:21:59 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Gen Zhang <blackgod016574@gmail.com>, agk@redhat.com,
+        dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: dm-region-hash: Fix a missing-check bug in __rh_alloc()
+Message-ID: <20190605122159.GA32538@redhat.com>
+References: <20190524031248.GA6295@zhanggen-UX430UQ>
+ <79ec221d-6970-3b30-0660-4a288a4c465e@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <155905647369.1662.10806818386998503329.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79ec221d-6970-3b30-0660-4a288a4c465e@suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 05 Jun 2019 12:22:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/2019 16:14, David Howells wrote:
-> +Then there are attributes that convey information about the mount topology:
-> +
-> + *  ``FSINFO_ATTR_MOUNT_INFO``
-> +
-> +    This struct-type attribute conveys information about a mount topology node
-> +    rather than a superblock.  This includes the ID of the superblock mounted
-> +    there and the ID of the mount node, its parent, group, master and
-> +    propagation source.  It also contains the attribute flags for the mount and
-> +    a change notification counter so that it can be quickly determined if that
-> +    node changed.
-> +
-> + *  ``FSINFO_ATTR_MOUNT_DEVNAME``
-> +
-> +    This string-type attribute returns the "device name" that was supplied when
-> +    the mount object was created.
-> +
-> + *  ``FSINFO_ATTR_MOUNT_CHILDREN``
-> +
-> +    This is an array-type attribute that conveys a set of structs, each of
-> +    which indicates the mount ID of a child and the change counter for that
-> +    child.  The kernel also tags an extra element on the end that indicates the
-> +    ID and change counter of the queried object.  This allows a conflicting
-> +    change to be quickly detected by comparing the before and after counters.
-> +
-> + *  ``FSINFO_ATTR_MOUNT_SUBMOUNT``
-> +
-> +    This is a string-type attribute that conveys the pathname of the Nth
-> +    mountpoint under the target mount, relative to the mount root or the
-> +    chroot, whichever is closer.  These correspond on a 1:1 basis with the
-> +    eleemnts in the FSINFO_ATTR_MOUNT_CHROOT list.
+On Wed, Jun 05 2019 at  2:05am -0400,
+Jiri Slaby <jslaby@suse.cz> wrote:
 
-FSINFO_ATTR_MOUNT_CHROOT -> FSINFO_ATTR_MOUNT_CHILDREN
+> On 24. 05. 19, 5:12, Gen Zhang wrote:
+> > In function __rh_alloc(), the pointer nreg is allocated a memory space
+> > via kmalloc(). And it is used in the following codes. However, when 
+> > there is a memory allocation error, kmalloc() fails. Thus null pointer
+> > dereference may happen. And it will cause the kernel to crash. Therefore,
+> > we should check the return value and handle the error.
+> > Further, in __rh_find(), we should also check the return value and
+> > handle the error.
+> > 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > 
+> > ---
+> > diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+> > index 1f76045..2fa1641 100644
+> > --- a/drivers/md/dm-region-hash.c
+> > +++ b/drivers/md/dm-region-hash.c
+> > @@ -290,8 +290,11 @@ static struct dm_region *__rh_alloc(struct dm_region_hash *rh, region_t region)
+> >  	struct dm_region *reg, *nreg;
+> >  
+> >  	nreg = mempool_alloc(&rh->region_pool, GFP_ATOMIC);
+> > -	if (unlikely(!nreg))
+> > +	if (unlikely(!nreg)) {
+> >  		nreg = kmalloc(sizeof(*nreg), GFP_NOIO | __GFP_NOFAIL);
+> > +		if (!nreg)
+> > +			return NULL;
+> 
+> What's the purpose of checking NO_FAIL allocations?
 
+There isn't, that was already pointed out in a different thread for this
+same patch (think patch was posted twice):
+https://www.redhat.com/archives/dm-devel/2019-May/msg00124.html
+
+Mike
