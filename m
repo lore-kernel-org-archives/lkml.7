@@ -2,109 +2,111 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79209C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03332C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54326206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:19:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDfdgNba"
+	by mail.kernel.org (Postfix) with ESMTP id CE9B82075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfFERTN (ORCPT
+        id S1726572AbfFERVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:19:13 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43941 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFERTN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:19:13 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cl9so4821455plb.10;
-        Wed, 05 Jun 2019 10:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=B/JvG0ZRDNEBNEcUAraBTtC7NdvBq6Iubs4NTtSOxek=;
-        b=rDfdgNbauu7tZFEVYV7kQxLNvFyCSUWQ7UC3QM6R5p6bIgKreqMVDBgwWMaOEBxIDL
-         96Uh5qcTkghNicBFnqtttNQKz/o2k3mU6z84h0Oz8cblIIdVoG0MosNevlA4Jx/dccUn
-         DLanrfnDs7gqgu9LLefN9tkfsB1JV/0QpmvJ8TjifvOTwig5xwzpcpbNLheZ8phjhZA+
-         4DIZfCocPAF0IKLy9yaO475MMkN09W9CnUFoZmI3JTuEyEnZXbOJQq81JxngkEQwOD3C
-         qnz3lPZpMfku2xZ6OyZOUmgjFXFXQRN2laDJffcS0VDypmBhrIMZ1KkVL6Ah4gRSX6sc
-         /QRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=B/JvG0ZRDNEBNEcUAraBTtC7NdvBq6Iubs4NTtSOxek=;
-        b=L/0xB1s45OjNOkc2yBszik/gD0jq7sIId7E49gIVe7GKY+bz4UzrG6kcp3bcBkaCIG
-         klzyyhO7LVD5cRbyTLDEqzJWo2tamzELVPsH2aq5DBMELzywXYjsTBVPA402nYCjAVHz
-         J3JtibS03WUgzHebNhIJ3z6IXZHZCGudkqXJWbaAZR9jxiBDtwXntYzCXKz6+Bc5PfM+
-         DsURo3cXyJJ9VOZOM8OzKNoEUxvhnbI5bfhycw+iq86gKsG1fjnZW9qosXX0R3fQGW5Q
-         Jz9X99UwrPLHYT9aCZjcbvQHmwNpwTEEnfAmdEC0BNHhIws7AVf7wJWxejD9olRFA5oL
-         rVAw==
-X-Gm-Message-State: APjAAAV93I77x+/QWU7fVhdoCbpTpT+R9jznwFGaX5kIBrY6GilTs26j
-        5QGFhMCroyQeR31ZzUW6w+A=
-X-Google-Smtp-Source: APXvYqzg6UsjNE80K0klM5VcBmYR/EAMwGMU1qa/8PwHFBWS3R8yC4dfX12VduefFKMCfQ0mxDsjkg==
-X-Received: by 2002:a17:902:2aa9:: with SMTP id j38mr8317370plb.206.1559755152756;
-        Wed, 05 Jun 2019 10:19:12 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id n13sm17135548pgh.6.2019.06.05.10.19.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 10:19:11 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 22:49:08 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Thomas Winischhofer <thomas@winischhofer.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: sisusbvga: Remove unneeded variable
-Message-ID: <20190605171908.GA10444@hari-Inspiron-1545>
+        Wed, 5 Jun 2019 13:21:12 -0400
+Received: from foss.arm.com ([217.140.101.70]:35290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbfFERVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 13:21:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F68D374;
+        Wed,  5 Jun 2019 10:21:11 -0700 (PDT)
+Received: from queper01-ThinkPad-T460s (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F4C03F5AF;
+        Wed,  5 Jun 2019 10:21:02 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 18:20:52 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+Message-ID: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+References: <20190114184255.258318-1-mka@chromium.org>
+ <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+ <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+ <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+ <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+ <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by coccicheck
+On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
+> Quoting Amit Kucheria (2019-05-16 04:54:45)
+> > (cc'ing Andy's correct email address)
+> > 
+> > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > > > >
+> > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > > >
+> > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > > > > > that describes this topology.
+> > > > >
+> > > > > This is partly true. There are two groups of gold and silver cores,
+> > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
+> > > > > is one of the early examples of ARM's Dynamiq architecture.
+> > > > >
+> > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > >
+> > > > > I noticed that this patch sneaked through for this merge window but
+> > > > > perhaps we can whip up a quick fix for -rc2?
+> > > > >
+> > > >
+> > > > And please find attached a patch to fix this up. Andy, since this
+> > > > hasn't landed yet (can we still squash this into the original patch?),
+> > > > I couldn't add a Fixes tag.
+> > > >
+> > >
+> > > I had the same concern. Thanks for catching this. I suspect this must
+> > > cause some problem for IPA given that it can't discern between the big
+> > > and little "power clusters"?
+> > 
+> > Both EAS and IPA, I believe. It influences the scheduler's view of the
+> > the topology.
+> 
+> And EAS and IPA are OK with the real topology? I'm just curious if
+> changing the topology to reflect reality will be a problem for those
+> two.
 
-drivers/usb/misc/sisusbvga/sisusb.c:1753:5-8: Unneeded variable: "ret".
-Return "0" on line 1877
+FWIW, neither EAS nor IPA depends on this. Not the upstream version of
+EAS at least (which is used in recent Android kernels -- 4.19+).
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/usb/misc/sisusbvga/sisusb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+But doing this is still required for other things in the scheduler (the
+so-called 'capacity-awareness' code). So until we have a better
+solution, this patch is doing the right thing.
 
-diff --git a/drivers/usb/misc/sisusbvga/sisusb.c b/drivers/usb/misc/sisusbvga/sisusb.c
-index ea06f1f..dfe2ed1 100644
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -1750,7 +1750,7 @@ static int sisusb_setup_screen(struct sisusb_usb_data *sisusb,
- static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
- 		int touchengines)
- {
--	int ret = 0, i, j, modex, bpp, du;
-+	int i, j, modex, bpp, du;
- 	u8 sr31, cr63, tmp8;
- 	static const char attrdata[] = {
- 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-@@ -1874,7 +1874,7 @@ static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
- 
- 	SETIREG(SISCR, 0x34, 0x44);	/* we just set std mode #44 */
- 
--	return ret;
-+	return 0;
- }
- 
- static int sisusb_init_gfxcore(struct sisusb_usb_data *sisusb)
--- 
-2.7.4
+I hope that helps.
 
+Thanks,
+Quentin
