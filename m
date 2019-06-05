@@ -2,169 +2,154 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDDDC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC96C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15218206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCtqBMOb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="ZMlCrKZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfFEIkI (ORCPT
+        id S1726806AbfFEIkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:40:08 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42235 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfFEIkH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:40:07 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so501024wrl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7sYE2J+nNG7NcVyj1SpqdIcPNhqdKRKxo+uFloEUcYA=;
-        b=LCtqBMObpnEJUzXhUa2KBDhhGtP6Z0Je9IZDWPItajoEPZckstJr8HVAGpXh74zze7
-         0U2lov6PpWF2ZgX4m9OiDIkaqFMXirtnwusgz3HFK2Po0H1w5ZbljIi/thGgvdmpWJnC
-         dRANufgc3l16wDWa/fliGfphJD8xHnPpdS7D7k5zrj+LbYrowjiPFvm5n9YWjAqTShL7
-         S4gVW0qZR6Sqce4NauGzvT70h7Xm7Tus3o91Ka/RDLAshZTBNtDYvOfUuadbqiHrNW8V
-         Dc7cJFhnVjzkiLxR7XTBBGKldcYHajIdTpXj4fl1wC3ThKzZW0RekwieUFH+6/d8vBKN
-         g/SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7sYE2J+nNG7NcVyj1SpqdIcPNhqdKRKxo+uFloEUcYA=;
-        b=Crv+oFP/lBA/5VUDKPWKNhTWMao2/speLOgoHSBMOK7pyjR7e0bYomMJwY0eNJ1uQH
-         rCloqwhNvax33bP9qevq7MISnCJz2Grw2K133RgL3KI6zFmUc94NNGdnxW92kMNx9Eka
-         5JFQslZSG1bhxFd8ts6VMmcFpDR3+c/TCwULjJq74TvJx8jAMdhgYBmNjp5fIlgIUu0S
-         Fr4RDIEikYDdZ9G92k2miNde3bqBIwt+YfOPu3zLabzMswWhrT/VC+BsPDxo9/PIM3Ar
-         cgequVg8iFwTdk0NLUL9XjFjEFEuzMuzA69gJK755fuRPfqsJdQ4fjLiGRIEUR8wrTdG
-         th2Q==
-X-Gm-Message-State: APjAAAVFaNvrYyulUGENlLtGCgC2NHkpBgELXxtlfb/MOCfoH3AZ55eo
-        t2TmmHlCVesO8V5bLPk1L0aLTw==
-X-Google-Smtp-Source: APXvYqy94j6MN0e6x+n+ChvdKkGrhMwtb/gKXV7dL/W7PkJmOaG67CUKgq6B2PCEi6giA03uyBSxvg==
-X-Received: by 2002:a5d:4e4d:: with SMTP id r13mr12760599wrt.295.1559724005609;
-        Wed, 05 Jun 2019 01:40:05 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id j66sm24368884wmb.24.2019.06.05.01.40.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 01:40:04 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 09:40:02 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <groeck@google.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>, kernel@collabora.com,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
-        Guido Kiener <guido@kiener-muenchen.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>
-Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
- device to talk with the EC
-Message-ID: <20190605084002.GP4797@dell>
-References: <20190604152019.16100-1-enric.balletbo@collabora.com>
- <20190604152019.16100-4-enric.balletbo@collabora.com>
- <20190604155228.GB9981@kroah.com>
- <beaf3554bb85974eb118d7722ca55f1823b1850c.camel@collabora.com>
- <20190604183527.GA20098@kroah.com>
- <CABXOdTfU9KaBDhQcwvBGWCmVfnd02_ZFmPGtJsCtGQ-iO9A3Qw@mail.gmail.com>
- <20190604185953.GA2061@kroah.com>
- <20190605064839.GH4797@dell>
- <20190605080241.GC9693@kroah.com>
+        Wed, 5 Jun 2019 04:40:45 -0400
+Received: from mx.cs.msu.ru ([188.44.42.42]:51120 "EHLO mail.cs.msu.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbfFEIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:40:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
+         s=dkim; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
+        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JBtc314UesgooPBehJ4MgN+ovha9N0zjMaGxUg7Avfs=; b=ZMlCrKZBdN2eB6AijUgU4Mgf1O
+        82mHsoM2IbV5rxn9iCL5JWbICQQrj9ZK7ObCGZBJE6SJKmyaa9CFkmQMJ/aUKLzsVJvRsWDcsf6VU
+        QZPrhWMEB8pFMM/GDs++eeHS1qHO13GHqsIcg3WwD4JuU+Z98E941D/NMZ64gqXEsO2DiMEcTy91y
+        RZOAbmCAa3Gza9x8h5YfNAE+2noTawb8+5UznHfn/p/VEA+5A3Uikya4tISmlH4NQUtIBiIp4vnNm
+        pSSpSLL9nTNSAHA1Xsyke7etkZ8qAavhHRHRqYQ4P5QOgJRiH6NymV0TCuRZFI3S3i6DSvictKkl4
+        Y9CWPNpQ==;
+Received: from [37.204.119.143] (port=55354 helo=localhost.localdomain)
+        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92 (FreeBSD))
+        (envelope-from <ar@cs.msu.ru>)
+        id 1hYR9U-0008s7-Uv; Wed, 05 Jun 2019 11:20:11 +0300
+From:   Arseny Maslennikov <ar@cs.msu.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Cc:     "Vladimir D . Seleznev" <vseleznv@altlinux.org>,
+        Arseny Maslennikov <ar@cs.msu.ru>
+Date:   Wed,  5 Jun 2019 11:19:05 +0300
+Message-Id: <20190605081906.28938-7-ar@cs.msu.ru>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190605081906.28938-1-ar@cs.msu.ru>
+References: <20190605081906.28938-1-ar@cs.msu.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605080241.GC9693@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-SA-Exim-Connect-IP: 37.204.119.143
+X-SA-Exim-Mail-From: ar@cs.msu.ru
+Subject: [PATCH 6/7] n_tty: ->ops->write: Cut core logic out to a separate function
+X-SA-Exim-Version: 4.2
+X-SA-Exim-Scanned: No (on mail.cs.msu.ru); Unknown failure
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Greg Kroah-Hartman wrote:
+To simplify internal re-use of the line discipline's write method,
+we isolate the work it does to its own function.
 
-> On Wed, Jun 05, 2019 at 07:48:39AM +0100, Lee Jones wrote:
-> > On Tue, 04 Jun 2019, Greg Kroah-Hartman wrote:
-> > > On Tue, Jun 04, 2019 at 11:39:21AM -0700, Guenter Roeck wrote:
-> > > > On Tue, Jun 4, 2019 at 11:35 AM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Tue, Jun 04, 2019 at 01:58:38PM -0300, Ezequiel Garcia wrote:
-> > > > > > Hey Greg,
-> > > > > >
-> > > > > > > > + dev_info(&pdev->dev, "Created misc device /dev/%s\n",
-> > > > > > > > +          data->misc.name);
-> > > > > > >
-> > > > > > > No need to be noisy, if all goes well, your code should be quiet.
-> > > > > > >
-> > > > > >
-> > > > > > I sometimes wonder about this being noise or not, so I will slightly
-> > > > > > hijack this thread for this discussion.
-> > > > > >
-> > > > > > >From a kernel developer point-of-view, or even from a platform
-> > > > > > developer or user with a debugging hat point-of-view, having
-> > > > > > a "device created" or "device registered" message is often very useful.
-> > > > >
-> > > > > For you, yes.  For someone with 30000 devices attached to their system,
-> > > > > it is not, and causes booting to take longer than it should be.
-> > 
-> > Who has 30,000 devices attached to their systems?
-> 
-> More than you might imagine.
-> 
-> > I would argue that
-> > in these special corner-cases, they should knock the log-level *down*
-> > a notch.  For the rest of us who run normal platforms, an extra second
-> > of boot time renders a more forthcoming/useful system than if each of
-> > our devices initialised silently.
-> > 
-> > Personally I like to know what devices I have on my system, and the
-> > kernel log is the first place I look.  As far as I'm concerned, for
-> > the most part, if it's not in the kernel log, I don't have it.
-> 
-> Then you "do not have" lots of devices, as we have been removing these
-> messages for a number of years now :)
-> 
-> >  "Oh wow, I didn't know I had XXX functionality on this platform."
-> > 
-> > In my real job, I am currently enabling some newly released AArch64
-> > based laptops for booting with ACPI.  I must have wasted a day whilst
-> > enabling some of the devices the system relies upon, just to find
-> > out that 90% of them were actually probing semi-fine (at least probe()
-> > was succeeding), just silently. *grumble*
-> 
-> Yup, that's normal.  If you want to see what devices are in the system,
-> look in /sys/devices/ as that is what it is for, not the kernel log.
+Since in-kernel callers might not refer to the tty through a file,
+the struct file* argument might make no sense, so we also stop
+tty_io_nonblock() from dereferencing file too early, allowing
+to pass NULL as the referring file here.
 
-My guess is that less than 1% of Linux users use /sys/devices in this
-way.  It's a very unfriendly interface.  Besides, when enabling a new
-platform, access to sysfs comes too far down the line to be useful in
-the majority of cases.
+Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
+---
+ drivers/tty/n_tty.c | 33 ++++++++++++++++++++++-----------
+ include/linux/tty.h |  2 +-
+ 2 files changed, 23 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+index 29f33798a6cd..7d7d84adcffe 100644
+--- a/drivers/tty/n_tty.c
++++ b/drivers/tty/n_tty.c
+@@ -2309,22 +2309,15 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file,
+  *		  lock themselves)
+  */
+ 
+-static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
+-			   const unsigned char *buf, size_t nr)
++static ssize_t do_n_tty_write(struct tty_struct *tty, struct file *file,
++			      const unsigned char *buf, size_t nr)
+ {
+ 	const unsigned char *b = buf;
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+ 	int c;
+ 	ssize_t retval = 0;
+ 
+-	/* Job control check -- must be done at start (POSIX.1 7.1.1.4). */
+-	if (L_TOSTOP(tty) && file->f_op->write != redirected_tty_write) {
+-		retval = tty_check_change(tty);
+-		if (retval)
+-			return retval;
+-	}
+-
+-	down_read(&tty->termios_rwsem);
++	lockdep_assert_held_read(&tty->termios_rwsem);
+ 
+ 	/* Write out any echoed characters that are still pending */
+ 	process_echoes(tty);
+@@ -2392,10 +2385,28 @@ static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
+ 	remove_wait_queue(&tty->write_wait, &wait);
+ 	if (nr && tty->fasync)
+ 		set_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
+-	up_read(&tty->termios_rwsem);
+ 	return (b - buf) ? b - buf : retval;
+ }
+ 
++static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
++			   const unsigned char *buf, size_t nr)
++{
++	ssize_t retval = 0;
++
++	/* Job control check -- must be done at start (POSIX.1 7.1.1.4). */
++	if (L_TOSTOP(tty) && file->f_op->write != redirected_tty_write) {
++		retval = tty_check_change(tty);
++		if (retval)
++			return retval;
++	}
++
++	down_read(&tty->termios_rwsem);
++	retval = do_n_tty_write(tty, file, buf, nr);
++	up_read(&tty->termios_rwsem);
++
++	return retval;
++}
++
+ /**
+  *	n_tty_poll		-	poll method for N_TTY
+  *	@tty: terminal device
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index 07189f18f93d..ddb97704956d 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -388,7 +388,7 @@ static inline void tty_set_flow_change(struct tty_struct *tty, int val)
+ 
+ static inline bool tty_io_nonblock(struct tty_struct *tty, struct file *file)
+ {
+-	return file->f_flags & O_NONBLOCK ||
++	return (file && file->f_flags & O_NONBLOCK) ||
+ 		test_bit(TTY_LDISC_CHANGING, &tty->flags);
+ }
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
