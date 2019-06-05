@@ -2,108 +2,131 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A615CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575A2C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D617206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NrxzvsRD"
+	by mail.kernel.org (Postfix) with ESMTP id 3B526206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfFEOv0 (ORCPT
+        id S1728519AbfFEOwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:51:26 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:26595 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbfFEOv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:51:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559746285; x=1591282285;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=IZ8RZ0C0aRcyyn2nmwffWRB8xOsqFtkZCpJc5LHuhpo=;
-  b=NrxzvsRDnExhY5qBth68RtXXkAbqc8gCLe1sIV3LwRM8qblLYLVCXgi3
-   +EkOkS40O61q86DZ03lZ6vXrfNUIAFxo8PPxKaQthjGnYJtwntfmIHoeN
-   ubYPs9lfIcg1bHCdxSMGDP0vzRpBil0Jfp4K5g/h2WdZZTgwRTLpDJ2FW
-   w=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="769112211"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Jun 2019 14:51:23 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 29AC7A1CF4;
-        Wed,  5 Jun 2019 14:51:22 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 14:51:21 +0000
-Received: from [10.125.238.52] (10.43.160.65) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 5 Jun
- 2019 14:51:12 +0000
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs
- Fabric Interrupt Controller Driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
-        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
-        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
-        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <jonnyc@amazon.com>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <hanochu@amazon.com>,
-        <barakw@amazon.com>, <talel@amazon.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-3-git-send-email-talel@amazon.com>
- <20190605125055.GA3184@kroah.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
-Date:   Wed, 5 Jun 2019 17:51:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 10:52:22 -0400
+Received: from mga07.intel.com ([134.134.136.100]:27111 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728306AbfFEOwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:52:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 07:52:21 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2019 07:52:20 -0700
+Date:   Wed, 5 Jun 2019 07:52:19 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
+        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
+        "haitao.huang@intel.com" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kai.svahn@intel.com" <kai.svahn@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kai.huang@intel.com" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190605145219.GC26328@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
+ <20190422215831.GL1236@linux.intel.com>
+ <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
+ <20190424002653.GB14422@linux.intel.com>
+ <20190604201232.GA7775@linux.intel.com>
+ <20190605142908.GD11331@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190605125055.GA3184@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D13UWA004.ant.amazon.com (10.43.160.251) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605142908.GD11331@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/5/2019 3:50 PM, Greg KH wrote:
-> On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-al-fic.c
->> @@ -0,0 +1,289 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/**
-> No need for kernel-doc format style here.
-done
+On Wed, Jun 05, 2019 at 05:29:08PM +0300, Jarkko Sakkinen wrote:
+> On Tue, Jun 04, 2019 at 01:12:32PM -0700, Sean Christopherson wrote:
+> > On Tue, Apr 23, 2019 at 05:26:53PM -0700, Sean Christopherson wrote:
+> > > On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
+> > > > On 2019-04-22 14:58, Sean Christopherson wrote:
+> > > > >Where do we stand on removing the ACPI and platform_driver dependencies?
+> > > > >Can we get rid of them sooner rather than later?
+> > > > 
+> > > > You know my position on this...
+> > > > https://www.spinics.net/lists/linux-sgx/msg00624.html . I don't really have
+> > > > any new arguments.
+> > > > 
+> > > > Considering the amount of planned changes for the driver post-merge, I think
+> > > > it's crucial that the driver part can be swapped out with alternative
+> > > > implementations.
+> > > 
+> > > This gets far outside of my area of expertise as I think this is more of
+> > > a policy question as opposed to a technical question, e.g. do we export
+> > > function simply to allow out-of-tree alternatives.
+> > > 
+> > > > >Now that the core SGX code is approaching stability, I'd like to start
+> > > > >sending RFCs for the EPC virtualization and KVM bits to hash out that side
+> > > > >of things.  The ACPI crud is the last chunk of code that would require
+> > > > >non-trivial changes to the core SGX code for the proposed virtualization
+> > > > >implementation.  I'd strongly prefer to get it out of the way before
+> > > > >sending the KVM RFCs.
+> > > > 
+> > > > What kind of changes? Wouldn't KVM just be another consumer of the same API
+> > > > used by the driver?
+> > > 
+> > > Nope, userspace "only" needs to be able to mmap() arbitrary chunks of EPC.
+> > > Except for EPC management, which is already in built into the kernel, the
+> > > EPC virtualization code has effectively zero overlap with the driver.  Of
+> > > course this is all technically speculative since none of this is upstream...
+> > 
+> > Jarkko, can you weigh in with your thoughts on the ACPI stuff?
+> 
+> If there is LKM, then it is required (for loading the LKM).
 >
->> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> "or its affiliates"?  You know the answer to this, don't keep us in
-> suspense.  Put the proper copyright holder here please, otherwise this
-> is totally useless.
->
-> Well, copyright notices are technically useless anyway, but lawyers like
-> to cargo-cult with the best of them, so it should be correct at the
-> least.
+> I think we should see how the access control gets implemented first and
+> see what constraints it introduces. It might help with to make the right
+> decision whether to allow LKM or not.
 
-This is the format we were asked to use and have been using.
+At this point I don't see the access control stuff impacting the LKM
+decision.
 
-I am pinging them with your comment but I am likely not to get immediate 
-response so I'm publishing v3 without changing the "affiliates" for now.
+Irrespetive of the access control thing, there are (at least) two issues
+with using ACPI to probe the driver:
 
->
-> thanks,
->
-> greg k-h
+  - ACPI probing breaks if there are multiple device, i.e. when KVM adds
+    a raw EPC device.  We could do something like probe the driver via
+    ACPI but manually load the raw EPC device from core SGX code, but IMO
+    taking that approach should be a concious decision.
+
+  - ACPI probing means core SGX will consume resources for EPC management
+    even if there is no end consumer, e.g. the driver refuses to load due
+    to lack of FLC support.
+
+It would be very helpful for us to make a decision about LKM support
+sooner rather than later, e.g. to start reworking the core code now and so
+that I can send RFCs for KVM support.  IMO we're just delaying the
+inevitable and slowing down upstreaming in the process.
