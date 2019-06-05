@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85CAC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B44C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8622C2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB806206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XWahJWRj"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AQWjnzxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfFEGzH (ORCPT
+        id S1726682AbfFEGzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:55:07 -0400
+        Wed, 5 Jun 2019 02:55:12 -0400
 Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60934 "EHLO
         smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFEGzH (ORCPT
+        with ESMTP id S1726086AbfFEGzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:55:07 -0400
+        Wed, 5 Jun 2019 02:55:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559717703; x=1591253703;
+  t=1559717709; x=1591253709;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=U37gPBGsU3r/4pGemw3ih0JWEcIVmcxHS+PjEb1YPu4=;
-  b=XWahJWRjIybs9BHtzm9GC9veVA+v2MwUgxXubT/bP56Ik48QbfG9U19A
-   mWS2kqOH1BrRa38NyifvyJpiEjpgSBppRbOMpGHvARypojia4Vqvp+8Ka
-   ZvKYbhR1oQvzi4oCUffFcShr2S4FLAYclxb9ZUjy7bl5dE0rwrIuBbMxu
-   0=;
+  bh=+jzu3rfqIEsHpAlKj+HQyzKuayZFNSN++n05AsZi5qA=;
+  b=AQWjnzxaymypqVRPlG1VzrCvk8hsU/OUllxCS/Ue95ubmvRkv7jpldDY
+   nuPof28zxQiG5e5yQAf0P/VAddta/QqSkKt60P3pq8CnnzERURshUhVnO
+   de+Ce3ZSU9YN1mPQdWm1ddUs1XJVSuCWXWFpwQfnIdR9jS9N7RWnc9+7i
+   Q=;
 X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="803662334"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Jun 2019 06:55:00 +0000
+   d="scan'208";a="803662369"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Jun 2019 06:55:08 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 7BD8DA1F5F;
-        Wed,  5 Jun 2019 06:54:56 +0000 (UTC)
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id D8B7EA26C1;
+        Wed,  5 Jun 2019 06:55:04 +0000 (UTC)
 Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
  EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 06:54:55 +0000
+ id 15.0.1367.3; Wed, 5 Jun 2019 06:55:04 +0000
 Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.160.91) by
  EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 06:54:46 +0000
+ id 15.0.1367.3; Wed, 5 Jun 2019 06:54:54 +0000
 From:   Talel Shenhar <talel@amazon.com>
 To:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
         <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
@@ -57,9 +57,9 @@ CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
         <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
         <hanochu@amazon.com>, <barakw@amazon.com>,
         Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
-Date:   Wed, 5 Jun 2019 09:54:12 +0300
-Message-ID: <1559717653-11258-3-git-send-email-talel@amazon.com>
+Subject: [PATCH 3/3] irqchip: al-fic: Introducing support for MSI-X
+Date:   Wed, 5 Jun 2019 09:54:13 +0300
+Message-ID: <1559717653-11258-4-git-send-email-talel@amazon.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559717653-11258-1-git-send-email-talel@amazon.com>
 References: <1559717653-11258-1-git-send-email-talel@amazon.com>
@@ -73,313 +73,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs
-lines. A FIC (Fabric Interrupt Controller) may be cascaded into another FIC
-or directly to the main CPU Interrupt Controller (e.g. GIC).
-
-This driver introduces support for initialization based on device-tree
-compatibility and run-time for dynamically added FICs (e.g. FICs embedded
-to PCIe devices).
+The FIC supports either a (single) wired output, or generation of an MSI-X
+interrupt per input (for cases where it is embedded in a PCIe device,
+hence, allowing the PCIe drivers to call this API).
+This patch introduces the support for allowing the configuration of MSI-X
+instead of a wire interrupt.
 
 Signed-off-by: Talel Shenhar <talel@amazon.com>
 ---
- MAINTAINERS                    |   7 +
- drivers/irqchip/Kconfig        |  11 ++
- drivers/irqchip/Makefile       |   1 +
- drivers/irqchip/irq-al-fic.c   | 346 +++++++++++++++++++++++++++++++++++++++++
- include/linux/irqchip/al-fic.h |  21 +++
- 5 files changed, 386 insertions(+)
- create mode 100644 drivers/irqchip/irq-al-fic.c
- create mode 100644 include/linux/irqchip/al-fic.h
+ drivers/irqchip/irq-al-fic.c   | 48 +++++++++++++++++++++++++++++++++++++++---
+ include/linux/irqchip/al-fic.h |  2 ++
+ 2 files changed, 47 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f485597..c28a97f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1209,6 +1209,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+AMAZON ANNAPURNA LABS FIC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-+F:	drivers/irqchip/irq-al-fic.c
-+F:	include/linux/irqchip/al-fic.h
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will.deacon@arm.com>
- R:	Robin Murphy <robin.murphy@arm.com>
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 51a5ef0..1e51f0f 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -89,6 +89,17 @@ config ALPINE_MSI
- 	select PCI_MSI
- 	select GENERIC_IRQ_CHIP
- 
-+config AL_FIC
-+	bool "Amazon's Annapurna Labs Fabric Interrupt Controller"
-+	depends on OF || COMPILE_TEST
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_MULTI_HANDLER
-+	select IRQ_DOMAIN_HIERARCHY
-+	select SPARSE_IRQ
-+	help
-+	  Support Amazon's Annapurna Labs Fabric Interrupt Controller.
-+
- config ATMEL_AIC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 794c13d..a20eba5 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- 
-+obj-$(CONFIG_AL_FIC)			+= irq-al-fic.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
 diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-new file mode 100644
-index 0000000..d881d42
---- /dev/null
+index d881d42..e49b912 100644
+--- a/drivers/irqchip/irq-al-fic.c
 +++ b/drivers/irqchip/irq-al-fic.c
-@@ -0,0 +1,346 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/irqchip/al-fic.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+/* FIC Registers */
-+#define AL_FIC_CAUSE		0x00
-+#define AL_FIC_MASK		0x10
-+#define AL_FIC_CONTROL		0x28
-+
-+#define CONTROL_TRIGGER_RISING	BIT(3)
-+#define CONTROL_MASK_MSI_X	BIT(5)
-+
-+#define NR_FIC_IRQS 32
-+
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs Interrupt Controller Driver");
-+MODULE_LICENSE("GPL v2");
-+
-+enum al_fic_state {
-+	AL_FIC_CLEAN = 0,
-+	AL_FIC_CONFIGURED_LEVEL,
-+	AL_FIC_CONFIGURED_RAISING_EDGE,
-+};
-+
-+struct al_fic {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	const char *name;
-+	unsigned int parent_irq;
-+	enum al_fic_state state;
-+};
-+
-+static void al_fic_set_trigger(struct al_fic *fic,
-+			       struct irq_chip_generic *gc,
-+			       enum al_fic_state new_state)
-+{
-+	irq_flow_handler_t handler;
-+	u32 control = readl(fic->base + AL_FIC_CONTROL);
-+
-+	if (new_state == AL_FIC_CONFIGURED_LEVEL) {
-+		handler = handle_level_irq;
-+		control &= ~CONTROL_TRIGGER_RISING;
-+	} else {
-+		handler = handle_edge_irq;
-+		control |= CONTROL_TRIGGER_RISING;
-+	}
-+	gc->chip_types->handler = handler;
-+	fic->state = new_state;
-+	writel(control, fic->base + AL_FIC_CONTROL);
-+}
-+
-+static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct al_fic *fic = gc->private;
-+	enum al_fic_state new_state;
-+	int ret = 0;
-+
-+	irq_gc_lock(gc);
-+
-+	if (!(flow_type & IRQ_TYPE_LEVEL_HIGH) &&
-+	    !(flow_type & IRQ_TYPE_EDGE_RISING)) {
-+		pr_err("fic doesn't support flow type %d\n", flow_type);
-+		ret = -EPERM;
-+		goto err;
-+	}
-+
-+	new_state = (flow_type & IRQ_TYPE_LEVEL_HIGH) ?
-+		AL_FIC_CONFIGURED_LEVEL : AL_FIC_CONFIGURED_RAISING_EDGE;
-+
-+	/* A given FIC instance can be either all level or all edge triggered.
-+	 * This is generally fixed depending on what pieces of HW it's wired up
-+	 * to.
-+	 *
-+	 * We configure it based on the sensitivity of the first source
-+	 * being setup, and reject any subsequent attempt at configuring it in a
-+	 * different way.
-+	 */
-+	if (fic->state == AL_FIC_CLEAN) {
-+		al_fic_set_trigger(fic, gc, new_state);
-+	} else if (fic->state != new_state) {
-+		pr_err("fic %s state already configured to %d\n",
-+		       fic->name, fic->state);
-+		ret = -EPERM;
-+		goto err;
-+	}
-+
-+err:
-+	irq_gc_unlock(gc);
-+
-+	return ret;
-+}
-+
-+static void al_fic_irq_handler(struct irq_desc *desc)
-+{
-+	struct al_fic *fic = irq_desc_get_handler_data(desc);
-+	struct irq_domain *domain = fic->domain;
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	unsigned long pending;
-+	unsigned int irq;
-+	u32 hwirq;
-+
-+	chained_irq_enter(irqchip, desc);
-+
-+	pending = readl(fic->base + AL_FIC_CAUSE);
-+	pending &= ~gc->mask_cache;
-+
-+	for_each_set_bit(hwirq, &pending, domain->revmap_size) {
-+		irq = irq_find_mapping(domain, hwirq);
-+		generic_handle_irq(irq);
-+	}
-+
-+	chained_irq_exit(irqchip, desc);
-+}
-+
-+static int al_fic_register(struct device_node *node,
-+			   struct al_fic *fic)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
-+
-+	fic->domain = irq_domain_add_linear(node,
-+					    NR_FIC_IRQS,
-+					    &irq_generic_chip_ops,
-+					    fic);
-+	if (!fic->domain) {
-+		pr_err("fail to add irq domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(fic->domain,
-+					     NR_FIC_IRQS,
-+					     1, fic->name,
-+					     handle_level_irq,
-+					     0, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("fail to allocate generic chip (%d)\n", ret);
-+		goto err_domain_remove;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(fic->domain, 0);
-+	gc->reg_base = fic->base;
-+	gc->chip_types->regs.mask = AL_FIC_MASK;
-+	gc->chip_types->regs.ack = AL_FIC_CAUSE;
-+	gc->chip_types->chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
-+	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
-+	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
-+	gc->private = fic;
-+
-+	irq_set_chained_handler_and_data(fic->parent_irq,
-+					 al_fic_irq_handler,
-+					 fic);
-+	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(fic->domain);
-+
-+	return ret;
-+}
-+
-+/**
-+ * al_fic_wire_get_domain() - returns the irq_domain assigned to this fic
-+ * @fic: fic context configured to Legacy mode
-+ *
-+ * A fic configured to Legacy mode requires domain to map the hwirqs to virtual
-+ * irqs. This API supplies the domain allocated to this fic.
-+ *
-+ * Returns the irq_domain or ERR_PTR on error.
-+ */
-+struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic)
-+{
-+	if (!fic)
-+		return ERR_PTR(-EINVAL);
-+	if (!fic->domain)
-+		return ERR_PTR(-EPERM);
-+
-+	return fic->domain;
-+}
-+EXPORT_SYMBOL_GPL(al_fic_wire_get_domain);
-+
-+static void al_fic_hw_init(struct al_fic *fic)
-+{
-+	u32 control = CONTROL_MASK_MSI_X;
-+
-+	/* mask out all interrupts */
-+	writel(0xFFFFFFFF, fic->base + AL_FIC_MASK);
-+
-+	/* clear any pending interrupt */
-+	writel(0, fic->base + AL_FIC_CAUSE);
-+
-+	writel(control, fic->base + AL_FIC_CONTROL);
-+}
-+
-+/**
-+ * al_fic_wire_init() - initialize and configure fic in wire mode
-+ * @of_node: optional pointer to interrupt controller's device tree node.
+@@ -19,6 +19,7 @@
+ #define AL_FIC_MASK		0x10
+ #define AL_FIC_CONTROL		0x28
+ 
++#define CONTROL_AUTO_CLEAR	BIT(2)
+ #define CONTROL_TRIGGER_RISING	BIT(3)
+ #define CONTROL_MASK_MSI_X	BIT(5)
+ 
+@@ -193,9 +194,11 @@ struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic)
+ }
+ EXPORT_SYMBOL_GPL(al_fic_wire_get_domain);
+ 
+-static void al_fic_hw_init(struct al_fic *fic)
++static void al_fic_hw_init(struct al_fic *fic,
++			   int use_msi)
+ {
+-	u32 control = CONTROL_MASK_MSI_X;
++	u32 control = (use_msi ? (CONTROL_AUTO_CLEAR | CONTROL_TRIGGER_RISING) :
++		       CONTROL_MASK_MSI_X);
+ 
+ 	/* mask out all interrupts */
+ 	writel(0xFFFFFFFF, fic->base + AL_FIC_MASK);
+@@ -240,7 +243,7 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
+ 	fic->parent_irq = parent_irq;
+ 	fic->name = (name ?: "al-fic-wire");
+ 
+-	al_fic_hw_init(fic);
++	al_fic_hw_init(fic, false);
+ 
+ 	ret = al_fic_register(node, fic);
+ 	if (ret) {
+@@ -260,6 +263,45 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
+ EXPORT_SYMBOL_GPL(al_fic_wire_init);
+ 
+ /**
++ * al_fic_msi_x_init() - initialize and configure fic in msi-x mode
 + * @base: mmio to fic register
 + * @name: name of the fic
-+ * @parent_irq: interrupt of parent
 + *
-+ * This API will configure the fic hardware to to work in wire mode.
-+ * In wire mode, fic hardware is generating a wire ("wired") interrupt.
-+ * Interrupt can be generated based on positive edge or level - configuration is
-+ * to be determined based on connected hardware to this fic.
++ * This API will configure the fic hardware to to work in msi-x mode.
++ * msi-x fic is to be configured for fics that are embedded inside AL PCIE EP.
++ * Those kind of fic are aware of the fact that they live inside PCIE and
++ * familiar with the MSI-X table which is configured as part of
++ * pci_enable_msix_range() and friends.
++ * Interrupt can be generated based on a positive edge or level - configuration
++ * is to be determined based on connected hardware to this fic.
 + *
-+ * Returns fic context that allows the user to obtain the irq_domain by using
-+ * al_fic_wire_get_domain().
++ * Returns pointer to fic context or ERR_PTR in case of error.
 + */
-+struct al_fic *al_fic_wire_init(struct device_node *node,
-+				void __iomem *base,
-+				const char *name,
-+				unsigned int parent_irq)
++struct al_fic *al_fic_msi_x_init(void __iomem *base,
++				 const char *name)
 +{
 +	struct al_fic *fic;
-+	int ret;
 +
 +	if (!base)
 +		return ERR_PTR(-EINVAL);
@@ -389,140 +151,34 @@ index 0000000..d881d42
 +		return ERR_PTR(-ENOMEM);
 +
 +	fic->base = base;
-+	fic->parent_irq = parent_irq;
-+	fic->name = (name ?: "al-fic-wire");
++	fic->name = (name ?: "al-fic-full-fledged");
 +
-+	al_fic_hw_init(fic);
++	al_fic_hw_init(fic, true);
 +
-+	ret = al_fic_register(node, fic);
-+	if (ret) {
-+		pr_err("fail to register irqchip\n");
-+		goto err_free;
-+	}
-+
-+	pr_debug("%s initialized successfully in Legacy mode (parent-irq=%u)\n",
-+		 fic->name, parent_irq);
++	pr_debug("%s initialized successfully in Full-Fledged mode\n",
++		 fic->name);
 +
 +	return fic;
-+
-+err_free:
-+	kfree(fic);
-+	return ERR_PTR(ret);
 +}
-+EXPORT_SYMBOL_GPL(al_fic_wire_init);
++EXPORT_SYMBOL_GPL(al_fic_msi_x_init);
 +
 +/**
-+ * al_fic_cleanup() - free all resources allocated by fic
-+ * @fic: pointer to fic context
-+ *
-+ * This API will release the domain (in case of wire mode) and will free the
-+ * context allocated for this fic.
-+ * Caller should call this API only after all interrupts were released.
-+ *
-+ * Returns 0 on success or negative error code.
-+ */
-+int al_fic_cleanup(struct al_fic *fic)
-+{
-+	if (!fic)
-+		return -EINVAL;
-+
-+	if (fic->domain) {
-+		struct irq_chip_generic *gc;
-+
-+		gc = irq_get_domain_generic_chip(fic->domain, 0);
-+		if (IS_ERR(gc)) {
-+			pr_err("%s was not able to grab gc for fic (%lu)\n",
-+			       __func__, PTR_ERR(gc));
-+			return PTR_ERR(gc);
-+		}
-+
-+		irq_destroy_generic_chip(gc, 0, 0, 0);
-+		irq_domain_remove(fic->domain);
-+	}
-+
-+	kfree(fic);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(al_fic_cleanup);
-+
-+static int __init al_fic_init_dt(struct device_node *node,
-+				 struct device_node *parent)
-+{
-+	int ret;
-+	void __iomem *base;
-+	unsigned int parent_irq;
-+	struct al_fic *fic;
-+
-+	if (!parent) {
-+		pr_err("%s: unsupported - device require a parent\n",
-+		       node->name);
-+		return -EINVAL;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: fail to map memory\n", node->name);
-+		return -ENOMEM;
-+	}
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq) {
-+		pr_err("%s: fail to map irq\n", node->name);
-+		ret = -EINVAL;
-+		goto err_unmap;
-+	}
-+
-+	fic = al_fic_wire_init(node,
-+			       base,
-+			       node->name,
-+			       parent_irq);
-+	if (IS_ERR(fic)) {
-+		pr_err("%s: fail to initialize irqchip (%lu)\n",
-+		       node->name,
-+		       PTR_ERR(fic));
-+		ret = PTR_ERR(fic);
-+		goto err_irq_dispose;
-+	}
-+
-+	return 0;
-+
-+err_irq_dispose:
-+	irq_dispose_mapping(parent_irq);
-+err_unmap:
-+	iounmap(base);
-+
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(al_fic, "amazon,al-fic", al_fic_init_dt);
+  * al_fic_cleanup() - free all resources allocated by fic
+  * @fic: pointer to fic context
+  *
 diff --git a/include/linux/irqchip/al-fic.h b/include/linux/irqchip/al-fic.h
-new file mode 100644
-index 0000000..0833749
---- /dev/null
+index 0833749..a2e89ff 100644
+--- a/include/linux/irqchip/al-fic.h
 +++ b/include/linux/irqchip/al-fic.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/**
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#ifndef _AL_FIC_H_
-+#define _AL_FIC_H_
-+
-+#include <linux/irqdomain.h>
-+
-+struct al_fic;
-+
-+struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
-+
-+struct al_fic *al_fic_wire_init(struct device_node *node,
-+				void __iomem *base,
-+				const char *name,
-+				unsigned int parent_irq);
-+int al_fic_cleanup(struct al_fic *fic);
-+
-+#endif
+@@ -16,6 +16,8 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
+ 				void __iomem *base,
+ 				const char *name,
+ 				unsigned int parent_irq);
++struct al_fic *al_fic_msi_x_init(void __iomem *base,
++				 const char *name);
+ int al_fic_cleanup(struct al_fic *fic);
+ 
+ #endif
 -- 
 2.7.4
 
