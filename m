@@ -2,132 +2,194 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFC2C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C630EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1F420870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A538D2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfFEQhQ (ORCPT
+        id S1728740AbfFEQkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:37:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33036 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728523AbfFEQhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:37:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80392AC3F;
-        Wed,  5 Jun 2019 16:37:14 +0000 (UTC)
-Subject: Re: question: should_compact_retry limit
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>
-References: <6377c199-2b9e-e30d-a068-c304d8a3f706@oracle.com>
- <908c1454-6ae5-87ca-c6a5-e542fbafa866@suse.cz>
- <3bc00340-1e81-4f08-37f8-28388b7fba3b@oracle.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <2ab55bf9-96f0-9616-555a-b7e3a399522b@suse.cz>
-Date:   Wed, 5 Jun 2019 18:33:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 5 Jun 2019 12:40:41 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:59248 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728661AbfFEQkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:40:40 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hYYxg-0002aW-5g; Wed, 05 Jun 2019 12:40:36 -0400
+Date:   Wed, 5 Jun 2019 12:40:00 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org
+Subject: Re: [PATCH net-next] net: Drop unlikely before IS_ERR(_OR_NULL)
+Message-ID: <20190605164000.GB554@hmswarspite.think-freely.org>
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190605142428.84784-3-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <3bc00340-1e81-4f08-37f8-28388b7fba3b@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605142428.84784-3-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 6:05 PM, Mike Kravetz wrote:
-> On 6/5/19 12:58 AM, Vlastimil Babka wrote:
->> On 6/5/19 1:30 AM, Mike Kravetz wrote:
->> Hmm I guess we didn't expect compaction_withdrawn() to be so
->> consistently returned. Do you know what value of compact_result is there
->> in your test?
+On Wed, Jun 05, 2019 at 10:24:26PM +0800, Kefeng Wang wrote:
+> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
+> so no need to do that again from its callers. Drop it.
 > 
-> Added some instrumentation to record values and ran test,
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: Vlad Yasevich <vyasevich@gmail.com>
+> Cc: Neil Horman <nhorman@tuxdriver.com>
+> Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-sctp@vger.kernel.org
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  include/net/udp.h           | 2 +-
+>  net/ipv4/fib_semantics.c    | 2 +-
+>  net/ipv4/inet_hashtables.c  | 2 +-
+>  net/ipv4/udp.c              | 2 +-
+>  net/ipv4/udp_offload.c      | 2 +-
+>  net/ipv6/inet6_hashtables.c | 2 +-
+>  net/ipv6/udp.c              | 2 +-
+>  net/sctp/socket.c           | 4 ++--
+>  8 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> 557904 Total
+> diff --git a/include/net/udp.h b/include/net/udp.h
+> index 79d141d2103b..bad74f780831 100644
+> --- a/include/net/udp.h
+> +++ b/include/net/udp.h
+> @@ -480,7 +480,7 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
+>  	 * CB fragment
+>  	 */
+>  	segs = __skb_gso_segment(skb, features, false);
+> -	if (unlikely(IS_ERR_OR_NULL(segs))) {
+> +	if (IS_ERR_OR_NULL(segs)) {
+>  		int segs_nr = skb_shinfo(skb)->gso_segs;
+>  
+>  		atomic_add(segs_nr, &sk->sk_drops);
+> diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+> index b80410673915..cd35bd0a4d8a 100644
+> --- a/net/ipv4/fib_semantics.c
+> +++ b/net/ipv4/fib_semantics.c
+> @@ -1295,7 +1295,7 @@ struct fib_info *fib_create_info(struct fib_config *cfg,
+>  		goto failure;
+>  	fi->fib_metrics = ip_fib_metrics_init(fi->fib_net, cfg->fc_mx,
+>  					      cfg->fc_mx_len, extack);
+> -	if (unlikely(IS_ERR(fi->fib_metrics))) {
+> +	if (IS_ERR(fi->fib_metrics)) {
+>  		err = PTR_ERR(fi->fib_metrics);
+>  		kfree(fi);
+>  		return ERR_PTR(err);
+> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+> index c4503073248b..97824864e40d 100644
+> --- a/net/ipv4/inet_hashtables.c
+> +++ b/net/ipv4/inet_hashtables.c
+> @@ -316,7 +316,7 @@ struct sock *__inet_lookup_listener(struct net *net,
+>  				    saddr, sport, htonl(INADDR_ANY), hnum,
+>  				    dif, sdif);
+>  done:
+> -	if (unlikely(IS_ERR(result)))
+> +	if (IS_ERR(result))
+>  		return NULL;
+>  	return result;
+>  }
+> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+> index 189144346cd4..8983afe2fe9e 100644
+> --- a/net/ipv4/udp.c
+> +++ b/net/ipv4/udp.c
+> @@ -478,7 +478,7 @@ struct sock *__udp4_lib_lookup(struct net *net, __be32 saddr,
+>  					  htonl(INADDR_ANY), hnum, dif, sdif,
+>  					  exact_dif, hslot2, skb);
+>  	}
+> -	if (unlikely(IS_ERR(result)))
+> +	if (IS_ERR(result))
+>  		return NULL;
+>  	return result;
+>  }
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index 06b3e2c1fcdc..0112f64faf69 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -208,7 +208,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+>  		gso_skb->destructor = NULL;
+>  
+>  	segs = skb_segment(gso_skb, features);
+> -	if (unlikely(IS_ERR_OR_NULL(segs))) {
+> +	if (IS_ERR_OR_NULL(segs)) {
+>  		if (copy_dtor)
+>  			gso_skb->destructor = sock_wfree;
+>  		return segs;
+> diff --git a/net/ipv6/inet6_hashtables.c b/net/ipv6/inet6_hashtables.c
+> index b2a55f300318..cf60fae9533b 100644
+> --- a/net/ipv6/inet6_hashtables.c
+> +++ b/net/ipv6/inet6_hashtables.c
+> @@ -174,7 +174,7 @@ struct sock *inet6_lookup_listener(struct net *net,
+>  				     saddr, sport, &in6addr_any, hnum,
+>  				     dif, sdif);
+>  done:
+> -	if (unlikely(IS_ERR(result)))
+> +	if (IS_ERR(result))
+>  		return NULL;
+>  	return result;
+>  }
+> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+> index b3418a7c5c74..693518350f79 100644
+> --- a/net/ipv6/udp.c
+> +++ b/net/ipv6/udp.c
+> @@ -215,7 +215,7 @@ struct sock *__udp6_lib_lookup(struct net *net,
+>  					  exact_dif, hslot2,
+>  					  skb);
+>  	}
+> -	if (unlikely(IS_ERR(result)))
+> +	if (IS_ERR(result))
+>  		return NULL;
+>  	return result;
+>  }
+> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> index 39ea0a37af09..c7b0f51c19d5 100644
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -985,7 +985,7 @@ static int sctp_setsockopt_bindx(struct sock *sk,
+>  		return -EINVAL;
+>  
+>  	kaddrs = memdup_user(addrs, addrs_size);
+> -	if (unlikely(IS_ERR(kaddrs)))
+> +	if (IS_ERR(kaddrs))
+>  		return PTR_ERR(kaddrs);
+>  
+>  	/* Walk through the addrs buffer and count the number of addresses. */
+> @@ -1315,7 +1315,7 @@ static int __sctp_setsockopt_connectx(struct sock *sk,
+>  		return -EINVAL;
+>  
+>  	kaddrs = memdup_user(addrs, addrs_size);
+> -	if (unlikely(IS_ERR(kaddrs)))
+> +	if (IS_ERR(kaddrs))
+>  		return PTR_ERR(kaddrs);
+>  
+>  	/* Allow security module to validate connectx addresses. */
+> -- 
+> 2.20.1
 > 
-> 549186 COMPACT_DEFERRED
-
-Retrying mindlessly with compaction deferred sounds definitely wrong,
-I'll try to look at it. Thanks.
-
->   8718 COMPACT_PARTIAL_SKIPPED
 > 
-> Do note that this is not my biggest problem with these allocations.  That is
-> should_continue_reclaim returning true more often that in should.  Still
-> trying to get more info on that.  This was just something curious I also
-> discovered.
-> 
+for the SCTP bits
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
