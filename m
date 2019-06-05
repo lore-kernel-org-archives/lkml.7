@@ -6,84 +6,80 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950BCC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC29C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C13F206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EACF206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfFEMof (ORCPT
+        id S1727888AbfFEMoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:44:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46566 "EHLO mx1.redhat.com"
+        Wed, 5 Jun 2019 08:44:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60860 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFEMoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:44:34 -0400
+        id S1727870AbfFEMoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:44:37 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8996F308338F;
-        Wed,  5 Jun 2019 12:44:30 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9814683F51;
+        Wed,  5 Jun 2019 12:44:37 +0000 (UTC)
 Received: from plouf.redhat.com (ovpn-116-164.ams2.redhat.com [10.36.116.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 288D960CD6;
-        Wed,  5 Jun 2019 12:44:27 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E91F360CD6;
+        Wed,  5 Jun 2019 12:44:35 +0000 (UTC)
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/4] Revert "HID: Increase maximum report size allowed by hid_field_extract()"
-Date:   Wed,  5 Jun 2019 14:44:05 +0200
-Message-Id: <20190605124408.8637-2-benjamin.tissoires@redhat.com>
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 3/4] Revert "HID: core: Call request_module before doing device_add"
+Date:   Wed,  5 Jun 2019 14:44:07 +0200
+Message-Id: <20190605124408.8637-4-benjamin.tissoires@redhat.com>
 In-Reply-To: <20190605124408.8637-1-benjamin.tissoires@redhat.com>
 References: <20190605124408.8637-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 05 Jun 2019 12:44:34 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 05 Jun 2019 12:44:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 94a9992f7dbdfb28976b565af220e0c4a117144a.
+This reverts commit a025a18fecd4429f4ca66b1746001263c052ecbb.
 
-The commit allows for more than 32 bits in hid_field_extract(),
-but the return value is a 32 bits int.
-So basically what this commit is doing is just silencing those
-legitimate errors.
+This patch and 4ceabaf79 are giving extended timeouts
+on boot for at least Ubuntu and OpenSuse.
 
-Revert to a previous situation in the hope that a proper
-fix will be impletemented.
+Revert them until we get a better fix.
 
-Fixes: 94a9992f7dbd ("HID: Increase maximum report size allowed by hid_field_extract()")
-Cc: stable@vger.kernel.org # v5.1
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203741
 Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 ---
- drivers/hid/hid-core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/hid/hid-core.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 08d310723e96..205d6b82a706 100644
+index fd9e7a4c107d..210b81a56e1a 100644
 --- a/drivers/hid/hid-core.c
 +++ b/drivers/hid/hid-core.c
-@@ -1311,10 +1311,10 @@ static u32 __extract(u8 *report, unsigned offset, int n)
- u32 hid_field_extract(const struct hid_device *hid, u8 *report,
- 			unsigned offset, unsigned n)
- {
--	if (n > 256) {
--		hid_warn(hid, "hid_field_extract() called with n (%d) > 256! (%s)\n",
-+	if (n > 32) {
-+		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
- 			 n, current->comm);
--		n = 256;
-+		n = 32;
- 	}
+@@ -2361,14 +2361,6 @@ int hid_add_device(struct hid_device *hdev)
+ 	dev_set_name(&hdev->dev, "%04X:%04X:%04X.%04X", hdev->bus,
+ 		     hdev->vendor, hdev->product, atomic_inc_return(&id));
  
- 	return __extract(report, offset, n);
+-	/*
+-	 * Try loading the module for the device before the add, so that we do
+-	 * not first have hid-generic binding only to have it replaced
+-	 * immediately afterwards with a specialized driver.
+-	 */
+-	request_module("hid:b%04Xg%04Xv%08Xp%08X",
+-		       hdev->bus, hdev->group, hdev->vendor, hdev->product);
+-
+ 	hid_debug_register(hdev, dev_name(&hdev->dev));
+ 	ret = device_add(&hdev->dev);
+ 	if (!ret)
 -- 
 2.19.2
 
