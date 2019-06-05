@@ -2,57 +2,57 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AC9C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D0CC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132892067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7A520717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fwuqB6Ok"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W2+O+rSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFEWYk (ORCPT
+        id S1726731AbfFEWYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:24:40 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:33166 "EHLO
+        Wed, 5 Jun 2019 18:24:46 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34297 "EHLO
         mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFEWYj (ORCPT
+        with ESMTP id S1726535AbfFEWYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:24:39 -0400
-Received: by mail-it1-f194.google.com with SMTP id v193so647507itc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:24:39 -0700 (PDT)
+        Wed, 5 Jun 2019 18:24:46 -0400
+Received: by mail-it1-f194.google.com with SMTP id u124so641548itc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eg/tHqhTtymCWtVp4klUI5heciNe2OPuOOg9xhW9fd4=;
-        b=fwuqB6OkAcQAzt2t1vqjNOoHH8r9rtwoZ/9qB2UzqNTmkPrfoxGvdHxCOd9fLWR5ee
-         jgBvK6Stp9bY+Fv8DAzdhvJIy2kYURn+aFJj7t9Xhx+uFGkQIpz1xS9ADd2GTLyWMrac
-         RxoRhHsXHEmSYQ3t5vbDQp9UwP8c1gq07g1ok=
+        bh=VGv1peBnBY+mU2N9Az2Lmrfzzn5EZSvqASNR7aYsSN4=;
+        b=W2+O+rSmjCnTc7n0OLEtYGkSuegR/EfCtycOrEebTz1uEJ+oLNlMuoSDhM3izgbbsw
+         HDnIMwOKchDMkhobtSEheBXXaAyAIW2wv/6TAfGVjmULtTxXan0H7kNb9nf+9vQ8ME0F
+         EoVxTzVQxVCqCouyCXKV6+OvXUCTFD2iw/pR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eg/tHqhTtymCWtVp4klUI5heciNe2OPuOOg9xhW9fd4=;
-        b=J2Yz/+KmNb+InE9PjKs49bdC9rABwDsxAyj5qPw47vnNmQsryb4bBFwxBiQ5gAhS3f
-         SKrJDahifo9+gIUBwmtIRq4AyP0qga0VMRY9cDmW7oqbwaM2sx+5Vf4UeWAYFPf/L4hc
-         Tk92JpXGLxMwZxx0R2ofzjaTU8zR+8JxX/Gk1bfmxgTxscmA1tibUNoXN2yVEjlQ5xD9
-         SmXzOPWXsvElchDoV6i0EMmGe3+urwgAt4jFtaaeMNoF1smbySrAv6BOEYE8hzTtGjDG
-         yA6IFkbhDlPmzUt2/4nIuoJ4aCvLPe39LKwIaM+eLv0QFAQ1+K3eL7fxzD97Ob+BCciQ
-         m2UA==
-X-Gm-Message-State: APjAAAUePVlwayOm3yofgZUIacjz/CYuHoSYHOGmxE/b0vUSa5XCVvO3
-        lIFfucmXQvgWsqMSjQJBjARqKtpHDnzzJw==
-X-Google-Smtp-Source: APXvYqwCuMjfRwW0T7+YoLiD23jxJzgzcbIrrBRdF0nXe44r2Q3l+hqztUJKPTWw6dKjNh8lIRKXsw==
-X-Received: by 2002:a24:7f0d:: with SMTP id r13mr26288230itc.28.1559773479042;
-        Wed, 05 Jun 2019 15:24:39 -0700 (PDT)
+        bh=VGv1peBnBY+mU2N9Az2Lmrfzzn5EZSvqASNR7aYsSN4=;
+        b=aciTISsvkwvDKfzmBdJd1Mc1S9KI7GT69QNNdFK8US11ZQNfIboA1ZeZR7Gzum1eZD
+         BpswXRXmxiaNChy66yS2VLq91QhuUn6AHXkk+XZT0EyJTnvauI4DYZhqJ0q+6ryBc4Rh
+         5S08UoKwzqqs/DRNq4Hku6petAyh7qTx5Ys7xuEjmQOQrDBzl3VbeD9MZ2OPJamV4o1j
+         B5XeKhhcu5k7P/NhrsPUUJEhxhLSlpi8XjYNEMsfBTAZc9N9uOzh6dQvMid6ljvgWnv3
+         ZQgPfleYBsTms8HQmv2SFH3KZGqDReyx7yGenG9ezPY4cRRe8McVT4JO0bWZwxNl639u
+         egNQ==
+X-Gm-Message-State: APjAAAX1HpKvriti8oOMSBYlTxJ2ZhXdDBNZSIFYevxgzoOiw6W6dW1l
+        MRMO4GByyLCvG23LCpQOfCOQQUi0uufhLA==
+X-Google-Smtp-Source: APXvYqzbaWNOFsIui75N1Vncy33qz2nBAIGbYBfV9xneeFN+JtXmGBaBXLDL1odxiyHMOqpF6rRPCA==
+X-Received: by 2002:a24:7ca:: with SMTP id f193mr17297953itf.175.1559773484772;
+        Wed, 05 Jun 2019 15:24:44 -0700 (PDT)
 Received: from localhost ([2620:15c:183:200:33ce:f5cf:f863:d3a6])
-        by smtp.gmail.com with ESMTPSA id n13sm17120ioa.28.2019.06.05.15.24.37
+        by smtp.gmail.com with ESMTPSA id f4sm68593itl.36.2019.06.05.15.24.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 15:24:38 -0700 (PDT)
+        Wed, 05 Jun 2019 15:24:44 -0700 (PDT)
 From:   Fletcher Woodruff <fletcherw@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
@@ -64,12 +64,13 @@ Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
         Curtis Malainey <cujomalainey@chromium.org>,
         Ross Zwisler <zwisler@chromium.org>,
         alsa-devel@alsa-project.org
-Subject: [PATCH v6 0/4] Fix jack detection for Chromebook Pixel
-Date:   Wed,  5 Jun 2019 16:24:15 -0600
-Message-Id: <20190605222419.54479-1-fletcherw@chromium.org>
+Subject: [PATCH v6 1/4] ASoC: rt5677: fall back to DT prop names on error
+Date:   Wed,  5 Jun 2019 16:24:16 -0600
+Message-Id: <20190605222419.54479-2-fletcherw@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-In-Reply-To: <20190507220115.90395-1-fletcherw@chromium.org>
+In-Reply-To: <20190605222419.54479-1-fletcherw@chromium.org>
 References: <20190507220115.90395-1-fletcherw@chromium.org>
+ <20190605222419.54479-1-fletcherw@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,49 +78,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Headphone/mic jack detection doesn't work on the Chromebook Pixel 2015.
+The rt5677 driver uses ACPI-style property names to read from the
+device API. However, these do not match the property names in _DSD
+used on the Chromebook Pixel 2015, which are closer to the Device Tree
+style.  Unify the two functions for reading from the device API so that
+they try ACPI-style names first and fall back to the DT names on error.
 
-This patch changes the irq implementation to support polarity flipping
-and fixes the configuration code so that correct GPIO pins are read
-from ACPI.
+Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
+---
+ sound/soc/codecs/rt5677.c | 74 +++++++++++++++++++--------------------
+ 1 file changed, 37 insertions(+), 37 deletions(-)
 
-With this series, plugging and unplugging the headphone jack switches
-between headphones and speakers automatically, and headset microphones 
-are also detected.
-
-v6:
-  - Move refactoring into its own patch
-  - Reorder patches so that DT property names patch is first
-  - Clarify commit message for patch which implements irq handler
-  - Remove unused work struct 
-  - Make IRQ function return IRQ_HANDLED only if IRQs actually fire
-
-v5:
-  - Fix void* parameter to devm_request_threaded_irq
-
-v4:
-  - Fix incorrect void* cast in rt5677_irq() 
-
-v3:
-  - Update commit message for patch 1/3 to clarify why we implement
-    our own irq_chip.
-
-v2:
-  - Split IRQ change into two patches: adding and fixing potential race
-  - Change config reading code to try both DT and ACPI style names
-
-Ben Zhang (2):
-  ASoC: rt5677: clear interrupts by polarity flip
-  ASoC: rt5677: handle concurrent interrupts
-
-Fletcher Woodruff (2):
-  ASoC: rt5677: fall back to DT prop names on error
-  ASoC: rt5677: move jack-detect init to i2c probe
-
- sound/soc/codecs/rt5677.c | 317 ++++++++++++++++++++++++++------------
- sound/soc/codecs/rt5677.h |  13 +-
- 2 files changed, 234 insertions(+), 96 deletions(-)
-
+diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+index 9b7a1833d3316c..62489a8c3fed6e 100644
+--- a/sound/soc/codecs/rt5677.c
++++ b/sound/soc/codecs/rt5677.c
+@@ -5019,48 +5019,50 @@ static const struct acpi_device_id rt5677_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, rt5677_acpi_match);
+ 
+-static void rt5677_read_acpi_properties(struct rt5677_priv *rt5677,
++static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
+ 		struct device *dev)
+ {
+ 	u32 val;
+ 
+-	if (!device_property_read_u32(dev, "DCLK", &val))
+-		rt5677->pdata.dmic2_clk_pin = val;
++	rt5677->pdata.in1_diff =
++		device_property_read_bool(dev, "IN1") ||
++		device_property_read_bool(dev, "realtek,in1-differential");
+ 
+-	rt5677->pdata.in1_diff = device_property_read_bool(dev, "IN1");
+-	rt5677->pdata.in2_diff = device_property_read_bool(dev, "IN2");
+-	rt5677->pdata.lout1_diff = device_property_read_bool(dev, "OUT1");
+-	rt5677->pdata.lout2_diff = device_property_read_bool(dev, "OUT2");
+-	rt5677->pdata.lout3_diff = device_property_read_bool(dev, "OUT3");
++	rt5677->pdata.in2_diff =
++		device_property_read_bool(dev, "IN2") ||
++		device_property_read_bool(dev, "realtek,in2-differential");
+ 
+-	device_property_read_u32(dev, "JD1", &rt5677->pdata.jd1_gpio);
+-	device_property_read_u32(dev, "JD2", &rt5677->pdata.jd2_gpio);
+-	device_property_read_u32(dev, "JD3", &rt5677->pdata.jd3_gpio);
+-}
++	rt5677->pdata.lout1_diff =
++		device_property_read_bool(dev, "OUT1") ||
++		device_property_read_bool(dev, "realtek,lout1-differential");
+ 
+-static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
+-		struct device *dev)
+-{
+-	rt5677->pdata.in1_diff = device_property_read_bool(dev,
+-			"realtek,in1-differential");
+-	rt5677->pdata.in2_diff = device_property_read_bool(dev,
+-			"realtek,in2-differential");
+-	rt5677->pdata.lout1_diff = device_property_read_bool(dev,
+-			"realtek,lout1-differential");
+-	rt5677->pdata.lout2_diff = device_property_read_bool(dev,
+-			"realtek,lout2-differential");
+-	rt5677->pdata.lout3_diff = device_property_read_bool(dev,
+-			"realtek,lout3-differential");
++	rt5677->pdata.lout2_diff =
++		device_property_read_bool(dev, "OUT2") ||
++		device_property_read_bool(dev, "realtek,lout2-differential");
++
++	rt5677->pdata.lout3_diff =
++		device_property_read_bool(dev, "OUT3") ||
++		device_property_read_bool(dev, "realtek,lout3-differential");
+ 
+ 	device_property_read_u8_array(dev, "realtek,gpio-config",
+-			rt5677->pdata.gpio_config, RT5677_GPIO_NUM);
+-
+-	device_property_read_u32(dev, "realtek,jd1-gpio",
+-			&rt5677->pdata.jd1_gpio);
+-	device_property_read_u32(dev, "realtek,jd2-gpio",
+-			&rt5677->pdata.jd2_gpio);
+-	device_property_read_u32(dev, "realtek,jd3-gpio",
+-			&rt5677->pdata.jd3_gpio);
++				      rt5677->pdata.gpio_config,
++				      RT5677_GPIO_NUM);
++
++	if (!device_property_read_u32(dev, "DCLK", &val) ||
++	    !device_property_read_u32(dev, "realtek,dmic2_clk_pin", &val))
++		rt5677->pdata.dmic2_clk_pin = val;
++
++	if (!device_property_read_u32(dev, "JD1", &val) ||
++	    !device_property_read_u32(dev, "realtek,jd1-gpio", &val))
++		rt5677->pdata.jd1_gpio = val;
++
++	if (!device_property_read_u32(dev, "JD2", &val) ||
++	    !device_property_read_u32(dev, "realtek,jd2-gpio", &val))
++		rt5677->pdata.jd2_gpio = val;
++
++	if (!device_property_read_u32(dev, "JD3", &val) ||
++	    !device_property_read_u32(dev, "realtek,jd3-gpio", &val))
++		rt5677->pdata.jd3_gpio = val;
+ }
+ 
+ static struct regmap_irq rt5677_irqs[] = {
+@@ -5143,20 +5145,18 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
+ 		match_id = of_match_device(rt5677_of_match, &i2c->dev);
+ 		if (match_id)
+ 			rt5677->type = (enum rt5677_type)match_id->data;
+-
+-		rt5677_read_device_properties(rt5677, &i2c->dev);
+ 	} else if (ACPI_HANDLE(&i2c->dev)) {
+ 		const struct acpi_device_id *acpi_id;
+ 
+ 		acpi_id = acpi_match_device(rt5677_acpi_match, &i2c->dev);
+ 		if (acpi_id)
+ 			rt5677->type = (enum rt5677_type)acpi_id->driver_data;
+-
+-		rt5677_read_acpi_properties(rt5677, &i2c->dev);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+ 
++	rt5677_read_device_properties(rt5677, &i2c->dev);
++
+ 	/* pow-ldo2 and reset are optional. The codec pins may be statically
+ 	 * connected on the board without gpios. If the gpio device property
+ 	 * isn't specified, devm_gpiod_get_optional returns NULL.
 -- 
 2.22.0.rc1.311.g5d7573a151-goog
 
