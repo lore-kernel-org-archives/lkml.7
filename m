@@ -2,220 +2,263 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A21C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A298C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABB720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BAF20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfFEGRF (ORCPT
+        id S1726723AbfFEGRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:17:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726554AbfFEGRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:17:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3C086AEA0;
-        Wed,  5 Jun 2019 06:17:03 +0000 (UTC)
+        Wed, 5 Jun 2019 02:17:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbfFEGRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 02:17:08 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x556CF0o140708
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 02:17:06 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sx7rq94p9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:17:06 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 5 Jun 2019 07:17:04 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Jun 2019 07:16:58 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x556Gvcn42533004
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Jun 2019 06:16:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC6B95204E;
+        Wed,  5 Jun 2019 06:16:57 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 27FF352050;
+        Wed,  5 Jun 2019 06:16:57 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 110F4A01BD;
+        Wed,  5 Jun 2019 16:16:56 +1000 (AEST)
+Subject: Re: [PATCH v2 06/22] docs: mark orphan documents as such
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <cover.1559656538.git.mchehab+samsung@kernel.org>
+ <4afa83787acec906c383978dc01f286940e28616.1559656538.git.mchehab+samsung@kernel.org>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Wed, 5 Jun 2019 16:16:55 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <4afa83787acec906c383978dc01f286940e28616.1559656538.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Jun 2019 08:17:02 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Azat Khuzhin <azat@libevent.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] epoll: support pollable epoll from userspace
-In-Reply-To: <3d9903f6-ebf8-6b8b-6251-b3a305dc9f19@kernel.dk>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
- <a2a88f4f-d104-f565-4d6e-1dddc7f79a05@kernel.dk>
- <1d47ee76735f25ae5e91e691195f7aa5@suse.de>
- <e552262b-2069-075e-f7db-cec19a12a363@kernel.dk>
- <8b3bade3c5fffdd8f1ab24940258d4e1@suse.de>
- <3d9903f6-ebf8-6b8b-6251-b3a305dc9f19@kernel.dk>
-Message-ID: <abf62eeb1b0be93404967c1e98190e83@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+X-TM-AS-GCONF: 00
+x-cbid: 19060506-0016-0000-0000-00000284C794
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060506-0017-0000-0000-000032E1DAC1
+Message-Id: <65ffdb35-1179-be57-6258-991a02a67a66@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906050039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-31 23:09, Jens Axboe wrote:
-> On 5/31/19 1:45 PM, Roman Penyaev wrote:
->> On 2019-05-31 18:54, Jens Axboe wrote:
->>> On 5/31/19 10:02 AM, Roman Penyaev wrote:
->>>> On 2019-05-31 16:48, Jens Axboe wrote:
->>>>> On 5/16/19 2:57 AM, Roman Penyaev wrote:
->>>>>> Hi all,
->>>>>> 
->>>>>> This is v3 which introduces pollable epoll from userspace.
->>>>>> 
->>>>>> v3:
->>>>>>     - Measurements made, represented below.
->>>>>> 
->>>>>>     - Fix alignment for epoll_uitem structure on all 64-bit archs
->>>>>> except
->>>>>>       x86-64. epoll_uitem should be always 16 bit, proper
->>>>>> BUILD_BUG_ON
->>>>>>       is added. (Linus)
->>>>>> 
->>>>>>     - Check pollflags explicitly on 0 inside work callback, and do
->>>>>> nothing
->>>>>>       if 0.
->>>>>> 
->>>>>> v2:
->>>>>>     - No reallocations, the max number of items (thus size of the
->>>>>> user
->>>>>> ring)
->>>>>>       is specified by the caller.
->>>>>> 
->>>>>>     - Interface is simplified: -ENOSPC is returned on attempt to 
->>>>>> add
->>>>>> a
->>>>>> new
->>>>>>       epoll item if number is reached the max, nothing more.
->>>>>> 
->>>>>>     - Alloced pages are accounted using user->locked_vm and 
->>>>>> limited
->>>>>> to
->>>>>>       RLIMIT_MEMLOCK value.
->>>>>> 
->>>>>>     - EPOLLONESHOT is handled.
->>>>>> 
->>>>>> This series introduces pollable epoll from userspace, i.e. user
->>>>>> creates
->>>>>> epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets
->>>>>> header
->>>>>> and ring pointers and then consumes ready events from a ring,
->>>>>> avoiding
->>>>>> epoll_wait() call.  When ring is empty, user has to call
->>>>>> epoll_wait()
->>>>>> in order to wait for new events.  epoll_wait() returns -ESTALE if
->>>>>> user
->>>>>> ring has events in the ring (kind of indication, that user has to
->>>>>> consume
->>>>>> events from the user ring first, I could not invent anything 
->>>>>> better
->>>>>> than
->>>>>> returning -ESTALE).
->>>>>> 
->>>>>> For user header and user ring allocation I used vmalloc_user().  I
->>>>>> found
->>>>>> that it is much easy to reuse remap_vmalloc_range_partial() 
->>>>>> instead
->>>>>> of
->>>>>> dealing with page cache (like aio.c does).  What is also nice is
->>>>>> that
->>>>>> virtual address is properly aligned on SHMLBA, thus there should 
->>>>>> not
->>>>>> be
->>>>>> any d-cache aliasing problems on archs with vivt or vipt caches.
->>>>> 
->>>>> Why aren't we just adding support to io_uring for this instead? 
->>>>> Then
->>>>> we
->>>>> don't need yet another entirely new ring, that's is just a little
->>>>> different from what we have.
->>>>> 
->>>>> I haven't looked into the details of your implementation, just
->>>>> curious
->>>>> if there's anything that makes using io_uring a non-starter for 
->>>>> this
->>>>> purpose?
->>>> 
->>>> Afaict the main difference is that you do not need to recharge an fd
->>>> (submit new poll request in terms of io_uring): once fd has been 
->>>> added
->>>> to
->>>> epoll with epoll_ctl() - we get events.  When you have thousands of
->>>> fds
->>>> -
->>>> that should matter.
->>>> 
->>>> Also interesting question is how difficult to modify existing event
->>>> loops
->>>> in event libraries in order to support recharging (EPOLLONESHOT in
->>>> terms
->>>> of epoll).
->>>> 
->>>> Maybe Azat who maintains libevent can shed light on this (currently 
->>>> I
->>>> see
->>>> that libevent does not support "EPOLLONESHOT" logic).
->>> 
->>> In terms of existing io_uring poll support, which is what I'm 
->>> guessing
->>> you're referring to, it is indeed just one-shot.
->> 
->> Yes, yes.
->> 
->>> But there's no reason  why we can't have it persist until explicitly
->>> canceled with POLL_REMOVE.
->> 
->> It seems not so easy.  The main problem is that with only a ring it is
->> impossible to figure out on kernel side what event bits have been
->> already
->> seen by the userspace and what bits are new.  So every new cqe has to
->> be added to a completion ring on each wake_up_interruptible() call.
->> (I mean when fd wants to report that something is ready).
->> 
->> IMO that can lead to many duplicate events (tens? hundreds? honestly 
->> no
->> idea), which userspace has to handle with subsequent read/write calls.
->> It can kill all performance benefits of a uring.
->> 
->> In uepoll this is solved with another piece of shared memory, where
->> userspace atomically clears bits and kernel side sets bits.  If kernel
->> observes that bits were set (i.e. userspace has not seen this event)
->> - new index is added to a ring.
+On 5/6/19 12:17 am, Mauro Carvalho Chehab wrote:
+> Sphinx doesn't like orphan documents:
 > 
-> Those are good points.
+>      Documentation/accelerators/ocxl.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f429-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f746-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f769-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32h743-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32mp157-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/gpu/msm-crash-dump.rst: WARNING: document isn't included in any toctree
+>      Documentation/interconnect/interconnect.rst: WARNING: document isn't included in any toctree
+>      Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
+>      Documentation/powerpc/isa-versions.rst: WARNING: document isn't included in any toctree
+>      Documentation/virtual/kvm/amd-memory-encryption.rst: WARNING: document isn't included in any toctree
+>      Documentation/virtual/kvm/vcpu-requests.rst: WARNING: document isn't included in any toctree
 > 
->> Can we extend the io_uring API to support this behavior?  Also would
->> be great if we can make event path lockless.  On a big number of fds
->> and frequent events - this matters, please take a look, recently I
->> did some measurements:  https://lkml.org/lkml/2018/12/12/305
+> So, while they aren't on any toctree, add :orphan: to them, in order
+> to silent this warning.
 > 
-> Yeah, I'd be happy to entertain that idea, and lockless completions as
-> well. We already do that for polled IO, but consider any "normal"
-> completion to be IRQ driven and hence need locking.
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-I would like to contribute as much as I can. "Subscription" on events
-along with lockless ring seems reasonable to do for io_uring. I still
-tend to think that uepoll and io_uring poll can coexist, at least
-because it can be difficult to adopt current event libraries to async
-nature of "add fd" / "remove add" requests of the io_uring, e.g. when
-epoll_ctl() is called in order to remove fd, the caller expects no
-events come after epoll_ctl() returns. Async behavior can break the
-event loop. What can help is ability to wait on particular request,
-which seems not possible without ugly tricks, right? (Under ugly tricks
-I mean something as: wait for any event, traverse the completion ring
-in order to meet particular completion, repeat if nothing is found).
+ocxl:
 
-Also epoll_ctl() can be called from another thread in order to
-add/remove fd, and I suppose that is also successfully used by event
-loop libraries or users of these libraries (not quite sure though, but
-can imagine why it can be useful). To fix that will require introducing
-locks on submission path of io_uring callers (I mean on user side,
-inside these libraries), which can impact performance for generic
-cases (only submission though).
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-What I want to say is that polling using io_uring can be used in some
-new io/event stacks, but adoption of current event libraries can be
-non trivial, where old plain epoll with a ring can be an easiest way.
-But of course that's only my speculation.
+We should find somewhere to put it...
 
---
-Roman
+> ---
+>   Documentation/accelerators/ocxl.rst             | 2 ++
+>   Documentation/arm/stm32/overview.rst            | 2 ++
+>   Documentation/arm/stm32/stm32f429-overview.rst  | 2 ++
+>   Documentation/arm/stm32/stm32f746-overview.rst  | 2 ++
+>   Documentation/arm/stm32/stm32f769-overview.rst  | 2 ++
+>   Documentation/arm/stm32/stm32h743-overview.rst  | 2 ++
+>   Documentation/arm/stm32/stm32mp157-overview.rst | 2 ++
+>   Documentation/gpu/msm-crash-dump.rst            | 2 ++
+>   Documentation/interconnect/interconnect.rst     | 2 ++
+>   Documentation/laptops/lg-laptop.rst             | 2 ++
+>   Documentation/powerpc/isa-versions.rst          | 2 ++
+>   11 files changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/accelerators/ocxl.rst
+> index 14cefc020e2d..b1cea19a90f5 100644
+> --- a/Documentation/accelerators/ocxl.rst
+> +++ b/Documentation/accelerators/ocxl.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   ========================================================
+>   OpenCAPI (Open Coherent Accelerator Processor Interface)
+>   ========================================================
+> diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+> index 85cfc8410798..f7e734153860 100644
+> --- a/Documentation/arm/stm32/overview.rst
+> +++ b/Documentation/arm/stm32/overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   ========================
+>   STM32 ARM Linux Overview
+>   ========================
+> diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
+> index 18feda97f483..65bbb1c3b423 100644
+> --- a/Documentation/arm/stm32/stm32f429-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f429-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F429 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
+> index b5f4b6ce7656..42d593085015 100644
+> --- a/Documentation/arm/stm32/stm32f746-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f746-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F746 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32f769-overview.rst b/Documentation/arm/stm32/stm32f769-overview.rst
+> index 228656ced2fe..f6adac862b17 100644
+> --- a/Documentation/arm/stm32/stm32f769-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f769-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F769 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
+> index 3458dc00095d..c525835e7473 100644
+> --- a/Documentation/arm/stm32/stm32h743-overview.rst
+> +++ b/Documentation/arm/stm32/stm32h743-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32H743 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
+> index 62e176d47ca7..2c52cd020601 100644
+> --- a/Documentation/arm/stm32/stm32mp157-overview.rst
+> +++ b/Documentation/arm/stm32/stm32mp157-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32MP157 Overview
+>   ===================
+>   
+> diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
+> index 757cd257e0d8..240ef200f76c 100644
+> --- a/Documentation/gpu/msm-crash-dump.rst
+> +++ b/Documentation/gpu/msm-crash-dump.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   =====================
+>   MSM Crash Dump Format
+>   =====================
+> diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/interconnect/interconnect.rst
+> index c3e004893796..56e331dab70e 100644
+> --- a/Documentation/interconnect/interconnect.rst
+> +++ b/Documentation/interconnect/interconnect.rst
+> @@ -1,5 +1,7 @@
+>   .. SPDX-License-Identifier: GPL-2.0
+>   
+> +:orphan:
+> +
+>   =====================================
+>   GENERIC SYSTEM INTERCONNECT SUBSYSTEM
+>   =====================================
+> diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> index aa503ee9b3bc..f2c2ffe31101 100644
+> --- a/Documentation/laptops/lg-laptop.rst
+> +++ b/Documentation/laptops/lg-laptop.rst
+> @@ -1,5 +1,7 @@
+>   .. SPDX-License-Identifier: GPL-2.0+
+>   
+> +:orphan:
+> +
+>   LG Gram laptop extra features
+>   =============================
+>   
+> diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
+> index 812e20cc898c..66c24140ebf1 100644
+> --- a/Documentation/powerpc/isa-versions.rst
+> +++ b/Documentation/powerpc/isa-versions.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   CPU to ISA Version Mapping
+>   ==========================
+>   
+> 
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
