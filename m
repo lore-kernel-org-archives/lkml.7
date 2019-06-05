@@ -2,115 +2,186 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A38C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050E8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30ABF2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BBA2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1d4XTzS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dk9RMmCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfFEWvI (ORCPT
+        id S1726779AbfFEWvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:51:08 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39286 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFEWvH (ORCPT
+        Wed, 5 Jun 2019 18:51:35 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36615 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfFEWvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:51:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g9so95249plm.6;
-        Wed, 05 Jun 2019 15:51:07 -0700 (PDT)
+        Wed, 5 Jun 2019 18:51:33 -0400
+Received: by mail-it1-f196.google.com with SMTP id r135so195130ith.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m6NM6vRBvsiR62/PiVaQJ+iB4s1JWoehmtKqPMKeEx8=;
-        b=S1d4XTzSyWmOYkqplUx/0vq7Xx0Je8vhBd8UGJUrNr6Sq/4+ToclB0jZS0YTUOVqrv
-         Cng7+tgqWmZPqtDfkJ4Bg0M0HgDMjID8suKpCT4IUPrzoB+fUWZtLUH2PW+usNe41SLt
-         5r87ueubtDiWckZw2uS76UKIGr7ghn3LKLQYDjLlf6tQLKYezTByY7DznzAVlxMMYaSQ
-         265frOnEp4l/7aapqyX/cHWEshw4dcMehgDWHuWO8VEVT5P4ZupyXjaWeJC+Nd6AtsVb
-         Q2QAiIk8fZjN1Fq5OrbHQzwmpOroFbB3rFMtvX6GGOabgkOJSnlYjcSArm5LHojPhfd6
-         RwiQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5exRdrUtbUyeCW9OHOiVQExue5bAGFVKBlO3hebfXgU=;
+        b=Dk9RMmCtQVXIS7madhd1BjIGxlHFetVfq7sbOV3EWXN3IwSUE/DPrHYpsPphGlpZdp
+         BHeovziL9pxxS+tTeP0xK6McUug95q9Bg8Y37gyXYPKSOVcLIUnCYGxCzJPSw9Vl+yKo
+         zIUCOhcg+0KFEG0qvEm7ONy/Tn4TbWmjqw05s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m6NM6vRBvsiR62/PiVaQJ+iB4s1JWoehmtKqPMKeEx8=;
-        b=n0/vK6Hzx8yLco8m1+X0VsZGwMeut8LAGhLSqqaWV4SinZZxPreKRUxmvD83gS2Umb
-         TrqkP1hQm1nvnV/HpKRlpn5+G1wJp9cia3Wfpvax7tCS4ERXXr+zeIavKb2CPtewTpFy
-         2MERJuNzDuxJS857EsGHMh8NgzwoQgvOZiItML1yr34EwKV848p9rTTchkRGD9gxmOdm
-         NeWwrJK/RcJ++g6itTYMNSixKa14kOXskwUkAAE+tG8lf5iUUu2S3Bo0AWW9Q3h8qb7c
-         2puL4YKdrv6jY0jMXZO1hVJFXEPciIfUe5RVMpVEZSJRVIBFXUfSa0S7b5ImQcnkyVws
-         Jn8Q==
-X-Gm-Message-State: APjAAAXe8QJJ/gExy7ea2VDudjzdUvN80IQG501iIvnB+ljC+95UxsB3
-        MKSjPbY3HquVeR6HnLdM3t9MIRkA
-X-Google-Smtp-Source: APXvYqxgcKHEEInuS4NNgzBp8UXPMb4hw072HDdBCdISx0NH00LSY0tF4dh91lz6fWmou4XVJ3dUCQ==
-X-Received: by 2002:a17:902:6ac4:: with SMTP id i4mr44287074plt.75.1559775066982;
-        Wed, 05 Jun 2019 15:51:06 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c142sm6047pfb.171.2019.06.05.15.51.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 15:51:06 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 15:51:05 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] watchdog/hpwdt: cleanups and kdump accommodations
-Message-ID: <20190605225105.GB25183@roeck-us.net>
-References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
- <20190605223102.GA23382@anatevka>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5exRdrUtbUyeCW9OHOiVQExue5bAGFVKBlO3hebfXgU=;
+        b=SgoMPIdJl8RKaPKqtJkGcnZmptfiU1q/WpcxIKWHX+zBPyzT0pZULHMqiL4ddmsfI9
+         Y45szx/5C7LLlXlqYisIfpzjfIIri0QbAdoRv3iLTZmSw7yDelZqnXRGgGfsB7zPpGp9
+         4WvonL2rUilw7NGfvHQV8htIkCdHu3UVzBTH2Ioogpa3YBVK2V6osFyZ7H8JG0kfnxQu
+         XJMZbZlMTKmdNUnWRS5fHtbtyLaOv+7eLakv9LtsKJgmcTiUr1AssbdqB19OTNG6cBES
+         o7nbwNexrtpIwPZej8s/8C8hXZ5UWe/Qp7V7Rkp0gzRl9hLSRjzNd7UyrgaBmMhpSToD
+         aiNw==
+X-Gm-Message-State: APjAAAUFiobwv/Jj4/UAl3qcbGR0v9jD0zFqbaB6dZvCa4LWGBtktnQB
+        NQCZRLRLVKv+hCLJxSSGrK90bTg2ks0=
+X-Google-Smtp-Source: APXvYqzzWzJJ2sGT3bZ0I+UnotZyqYFMJ8hbbmwmmwrDsI1u5+C16r7iYGaZGLbBbyy+qlI3OkSXeg==
+X-Received: by 2002:a24:7fcf:: with SMTP id r198mr26781179itc.145.1559775092850;
+        Wed, 05 Jun 2019 15:51:32 -0700 (PDT)
+Received: from mail-it1-f171.google.com (mail-it1-f171.google.com. [209.85.166.171])
+        by smtp.gmail.com with ESMTPSA id z17sm27963iol.73.2019.06.05.15.51.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 15:51:31 -0700 (PDT)
+Received: by mail-it1-f171.google.com with SMTP id r135so194978ith.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:51:30 -0700 (PDT)
+X-Received: by 2002:a24:5a06:: with SMTP id v6mr14776129ita.160.1559775090284;
+ Wed, 05 Jun 2019 15:51:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605223102.GA23382@anatevka>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190603183740.239031-1-dianders@chromium.org>
+ <20190603183740.239031-3-dianders@chromium.org> <25fe1725-76fa-2739-1427-b0e8823ea4ae@broadcom.com>
+In-Reply-To: <25fe1725-76fa-2739-1427-b0e8823ea4ae@broadcom.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 5 Jun 2019 15:51:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vu3p_Y=Q3PLj37nSOU2WH-SyaG5K=f0O_UKu1==Zj-eA@mail.gmail.com>
+Message-ID: <CAD=FV=Vu3p_Y=Q3PLj37nSOU2WH-SyaG5K=f0O_UKu1==Zj-eA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mmc: core: API for temporarily disabling
+ auto-retuning due to errors
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev <netdev@vger.kernel.org>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Avri Altman <avri.altman@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 04:31:03PM -0600, Jerry Hoemann wrote:
-> On Fri, May 17, 2019 at 02:59:37PM -0600, Jerry Hoemann wrote:
-> > First two changes makes hpwdt more generic.
-> > Next two changes make hpwdt work better with kdump.
-> > 
-> 
-> Hi Guenter,
-> 
-> Did you have feedback on this patch set?
-> 
-I have been out on vacation, and I am still digging myself out of a big hole.
+Hi,
 
-Guenter
+On Wed, Jun 5, 2019 at 12:54 AM Arend Van Spriel
+<arend.vanspriel@broadcom.com> wrote:
+>
+> On 6/3/2019 8:37 PM, Douglas Anderson wrote:
+> > Normally when the MMC core sees an "-EILSEQ" error returned by a host
+> > controller then it will trigger a retuning of the card.  This is
+> > generally a good idea.
+> >
+> > However, if a command is expected to sometimes cause transfer errors
+> > then these transfer errors shouldn't cause a re-tuning.  This
+> > re-tuning will be a needless waste of time.  One example case where a
+> > transfer is expected to cause errors is when transitioning between
+> > idle (sometimes referred to as "sleep" in Broadcom code) and active
+> > state on certain Broadcom WiFi cards.  Specifically if the card was
+> > already transitioning between states when the command was sent it
+> > could cause an error on the SDIO bus.
+> >
+> > Let's add an API that the SDIO card drivers can call that will
+> > temporarily disable the auto-tuning functionality.  Then we can add a
+> > call to this in the Broadcom WiFi driver and any other driver that
+> > might have similar needs.
+> >
+> > NOTE: this makes the assumption that the card is already tuned well
+> > enough that it's OK to disable the auto-retuning during one of these
+> > error-prone situations.  Presumably the driver code performing the
+> > error-prone transfer knows how to recover / retry from errors.  ...and
+> > after we can get back to a state where transfers are no longer
+> > error-prone then we can enable the auto-retuning again.  If we truly
+> > find ourselves in a case where the card needs to be retuned sometimes
+> > to handle one of these error-prone transfers then we can always try a
+> > few transfers first without auto-retuning and then re-try with
+> > auto-retuning if the first few fail.
+> >
+> > Without this change on rk3288-veyron-minnie I periodically see this in
+> > the logs of a machine just sitting there idle:
+> >    dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
+> >
+> > Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> > Note that are are a whole boatload of different ways that we could
+> > provide an API for the Broadcom WiFi SDIO driver.  This patch
+> > illustrates one way but if maintainers feel strongly that this is too
+> > ugly and have a better idea then I can give it a shot too.  From a
+> > purist point of view I kinda felt that the "expect errors" really
+> > belonged as part of the mmc_request structure, but getting it into
+> > there meant changing a whole pile of core SD/MMC APIs.  Simply adding
+> > it to the host seemed to match the current style better and was a less
+> > intrusive change.
+>
+> Hi Doug,
+>
+> Sorry for bringing this up, but there used to be an issue with retuning
+> in general, ie. the device handled tuning command 19 only once after
+> startup. I guess that is no longer an issue given your results.
 
-> Thanks
-> 
-> Jerry
-> 
-> 
-> > 
-> > Jerry Hoemann (6):
-> >   watchdog/hpwdt: Stop hpwdt on unregister.
-> >   watchdog/hpwdt: Advertize max_hw_heartbeat_ms
-> >   watchdog/hpwdt: Have core ping watchdog.
-> >   watchdog/hpwdt: Add module parameter kdumptimeout.
-> >   watchdog/hpwdt: Update documentation
-> >   watchdog/hpwdt: Reflect changes
-> > 
-> >  Documentation/watchdog/hpwdt.txt |  4 +++
-> >  drivers/watchdog/hpwdt.c         | 55 ++++++++++++++++++++++++++++++----------
-> >  2 files changed, 45 insertions(+), 14 deletions(-)
-> > 
-> > -- 
-> > 1.8.3.1
-> 
-> -- 
-> 
-> -----------------------------------------------------------------------------
-> Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
-> -----------------------------------------------------------------------------
+Right.  It definitely used to just happen once at bootup and you were
+out of luck if that value was bad for some reason or if conditions
+changed.  In cases in my own personal experience it was actually fine
+to just tune once at bootup once all the tuning bugs in the controller
+were fixed.  ...but I can imagine that some controllers could use
+delay elements that drift more.  ...and in any case if you're getting
+CRC errors trying a re-tuning seems a sensible thing to do anyway
+(unless the CRC error was expected).
+
+Looking at commit bd11e8bd03ca ("mmc: core: Flag re-tuning is needed
+on CRC errors") you can definitely see evidence that tuning can happen
+again after bootup.
+
+
+> I guess
+> the problem goes away when you disable device sleep functionality. No
+> what you want in terms of power consumption, but would be good to know.
+> You can disable it with below patch.
+
+I can try testing this if it's useful, but I'm not sure what it will
+prove.  I definitely don't want to disable device sleep, so it's not a
+long term solution.  Are you just looking for extra evidence that this
+is indeed my problem?  I don't think I need any extra evidence, do I?
+The fact that patch #3 in this series fixes my problems (plus
+debugging I did to arrive at that patch) means we absolutely know that
+brcmf_sdio_kso_control() is responsible for the CRC errors that caused
+the unneeded tuning.  Setting BRCMF_IDLE_INTERVAL to 0 will
+effectively prevent brcmf_sdio_kso_control() from doing anything
+useful (except in full system suspend, but that's not the case I was
+testing anyway).
+
+-Doug
