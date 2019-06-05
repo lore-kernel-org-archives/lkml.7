@@ -2,217 +2,103 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6876C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F86C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2AF820874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="XvoSyiJW"
+	by mail.kernel.org (Postfix) with ESMTP id F0BBA20874
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559770343;
+	bh=fWMGopypMZ/7C4dAWZ6+0bN8QYRsGAbzaarmqrg6gxM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1nyWcZXDx6lxZNlvaiZ6J/XFTzqM5pEXlfEf3MYqcWgteeW73PyHAg7szXZTgJHIx
+	 UFNhvyTGTLF/BCCt7LxEH9SiUfRuO8CCRSlKqsXXgB7xF+gc27PCpVXENTTlfZOn3f
+	 QqyBPoS4L1GkCRH+SYbfcXIoeD4/IovYfJlJBBMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfFEVaZ (ORCPT
+        id S1726638AbfFEVcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:30:25 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36391 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfFEVaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:30:24 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u12so317171qth.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 14:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=W1SwKAzrSsraL2rJYcRqKU9p/AAS2w/6bHcCd/yWVTY=;
-        b=XvoSyiJWJjZ8O1byGZWAjxvlsniWLJz+KAPD8l0fEGvVihiVdIjoMHmThPQX0IAFdH
-         OLqH7L3HbIGle+BLtliIEpNU1RAx77yleEYUd4/aDvcm6TsXvCyho10McqEwwgT+ijpy
-         T+KX7DYWNUWYDeSwUfcf6U1ZHeoKqx6ITYk/euysVAF5CbCqDHfJtMhkCiul5BcuG6lo
-         38k2HB4XhrKWEscKB6syZx8Vk0sEnseixgDsFPzglKe4XEQlkGY+9ucGLOccEbzG/AWX
-         ra2tCcqsL9Av0/NvkHGdxCG6kRAGY7Lt5+1chyd5k4HqT0rAaaP0nLhUgE5Cxjv73qVB
-         vQ+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=W1SwKAzrSsraL2rJYcRqKU9p/AAS2w/6bHcCd/yWVTY=;
-        b=c/meYxZezRoIZ75h7yU17tTZxlXd5wiZMZadUr+6f4JGORbX4L5/t7SrhQcq+P3dZp
-         Wta7HTpX71vjv85SLpFJC1QxElAe0w02xe+eB4VIttMq6xDIU6zxzCM7ZwMov0H7hFgV
-         EoqHu5n3CqcKhi6RBBe1dAYjSkXwWpXuZIKaE1lbJGkV8Mqmk0TG1nJWZsqwe1vdlyLT
-         s5V5+1+xNFlc1IniOrVqNK80k1ebpwGk9wpkzs5a2/o+KLgV/TFr2xZkflKVGFFGQlPr
-         bJ661Ygw/y3W0FAu0Omhh4/DlnGy1VEUF3IHPNusBkEVOhkodGPoZ8jiZbNP7ZnYtUoU
-         KNKA==
-X-Gm-Message-State: APjAAAVumhnKIWig5XJ7OV34Lh/Og6gTqgllUERT3qshB4vGth++kIzk
-        WFUzqlXVYedP57tQUYh7ptS9PhmXX0o=
-X-Google-Smtp-Source: APXvYqyr179W7aDtAChmKkptnBIc2kMcBdRREpSZmu+3HLBiaBVJv0h7CtNC7XKvc89sY8BUrLtvGQ==
-X-Received: by 2002:aed:3a87:: with SMTP id o7mr36089666qte.310.1559770223223;
-        Wed, 05 Jun 2019 14:30:23 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v195sm12092964qka.28.2019.06.05.14.30.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 14:30:22 -0700 (PDT)
-Subject: Re: [PATCH] Revert "media: hfi_parser: don't trick gcc with a wrong
- expected size"
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
-        <linux-media@vger.kernel.org>,
-        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190605201941.4150-1-jonathan@marek.ca>
- <20190605174044.65ac1e4a@coco.lan>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <c0a251c1-d36a-613b-4573-5939cdfc3ebe@marek.ca>
-Date:   Wed, 5 Jun 2019 17:27:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190605174044.65ac1e4a@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 5 Jun 2019 17:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEVcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:32:21 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68B9320872;
+        Wed,  5 Jun 2019 21:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559770341;
+        bh=fWMGopypMZ/7C4dAWZ6+0bN8QYRsGAbzaarmqrg6gxM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tbj8Y7g23X5waBqWUHzub6be7yKGuSeBV4+Bs+ago5RmjFq2q6I5ahJCu1mPAbJFM
+         Ar16J1Rb7r4Aft+hncFL0s/xR5cO1l1G+6faP47VBAZlbz0SGJrdNG7NYX3AdnO8iq
+         gNRLxeirFnRVtKmsWgMUvCBS9NeZJ53GJ2o9u2Rc=
+Date:   Wed, 5 Jun 2019 14:32:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     dsterba@suse.cz
+Cc:     Maninder Singh <maninder1.s@samsung.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        terrelln@fb.com
+Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to
+ functions
+Message-Id: <20190605143219.248ca514546f69946aa2e07e@linux-foundation.org>
+In-Reply-To: <20190605123253.GZ15290@suse.cz>
+References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
+        <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
+        <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
+        <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
+        <20190605115703.GY15290@twin.jikos.cz>
+        <20190605123253.GZ15290@suse.cz>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hfi_capabilities /  hfi_profile_level_supported come from hardware so 
-there is no option to dynamically allocate, and using size [1] doesn't 
-cause any bug.
+On Wed, 5 Jun 2019 14:32:53 +0200 David Sterba <dsterba@suse.cz> wrote:
 
-Your enclosed patch is wrong in a way because MAX_CAP_ENTRIES is not a 
-hardware limit but the size of the statically allocated array used by 
-the driver. I don't think there is any defined hardware limit, otherwise 
-the driver author would've defined it as they did with 
-HFI_MAX_PROFILE_COUNT.
+> > >  
+> > > -static ZSTD_parameters zstd_get_btrfs_parameters(unsigned int level,
+> > > +static ZSTD_parameters *zstd_get_btrfs_parameters(unsigned int level,
+> > >  						 size_t src_len)
+> > >  {
+> > > -	ZSTD_parameters params = ZSTD_getParams(level, src_len, 0);
+> > > +	static ZSTD_parameters params;
+> > 
+> > > +
+> > > +	params = ZSTD_getParams(level, src_len, 0);
+> > 
+> > No thats' broken, the params can't be static as it depends on level and
+> > src_len. What happens if there are several requests in parallel with
+> > eg. different levels?
 
-A better solution (IMO) if you want to avoid these warnings is to remove 
-those memcpy() and work on the data[] / profile_level[] from the struct 
-directly:
+I wondered.  I'll drop the patch series as some more serious thinking
+is needed.
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c 
-b/drivers/media/platform/qcom/venus/hfi_parser.c
-index 2293d936e49c..ecaa336b2cb9 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.c
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-@@ -94,16 +94,12 @@ static void
-  parse_profile_level(struct venus_core *core, u32 codecs, u32 domain, 
-void *data)
-  {
-  	struct hfi_profile_level_supported *pl = data;
--	struct hfi_profile_level *proflevel = pl->profile_level;
--	struct hfi_profile_level pl_arr[HFI_MAX_PROFILE_COUNT] = {};
+> > Would be really great if the mailinglist is CCed when the code is
+> > changed in a non-trivial way.
 
-  	if (pl->profile_count > HFI_MAX_PROFILE_COUNT)
-  		return;
+Well we didn't actually change btrfs until I discovered that Maninder
+had missed it.
 
--	memcpy(pl_arr, proflevel, pl->profile_count * sizeof(*proflevel));
--
-  	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
--		       fill_profile_level, pl_arr, pl->profile_count);
-+		       fill_profile_level, pl->profile_level, pl->profile_count);
-  }
+> So this does not compile fs/btrfs/zstd.o which Andrew probably found
+> too, otherwise btrfs is the only in-tree user of the function outside of
+> lib/ and crypto/.
 
-  static void
-@@ -119,17 +115,12 @@ static void
-  parse_caps(struct venus_core *core, u32 codecs, u32 domain, void *data)
-  {
-  	struct hfi_capabilities *caps = data;
--	struct hfi_capability *cap = caps->data;
--	u32 num_caps = caps->num_capabilities;
--	struct hfi_capability caps_arr[MAX_CAP_ENTRIES] = {};
+Worked for me - I might have sent the wrong version.
 
--	if (num_caps > MAX_CAP_ENTRIES)
-+	if (caps->num_capabilities > MAX_CAP_ENTRIES)
-  		return;
-
--	memcpy(caps_arr, cap, num_caps * sizeof(*cap));
--
-  	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
--		       fill_caps, caps_arr, num_caps);
-+		       fill_caps, caps->data, caps->num_capabilities);
-  }
-
-  static void fill_raw_fmts(struct venus_caps *cap, const void *fmts,
-
-On 6/5/19 4:41 PM, Mauro Carvalho Chehab wrote:
-> Em Wed,  5 Jun 2019 16:19:40 -0400
-> Jonathan Marek <jonathan@marek.ca> escreveu:
-> 
->> This reverts commit ded716267196862809e5926072adc962a611a1e3.
->>
->> This change doesn't make any sense and breaks the driver.
-> 
-> The fix is indeed wrong, but reverting is the wrong thing to do.
-> 
-> The problem is that the driver is trying to write past the
-> allocated area, as reported:
-> 
-> 	drivers/media/platform/qcom/venus/hfi_parser.c:103 parse_profile_level() error: memcpy() 'proflevel' too small (8 vs 128)
-> 	drivers/media/platform/qcom/venus/hfi_parser.c:129 parse_caps() error: memcpy() 'cap' too small (16 vs 512)
-> 
-> If you check the memcpy() logic at the above lines, you'll see that
-> hfi_capability.data may have up to 32 entries, and
-> hfi_profile_level_supported.profile level can have up to it can be up
-> to 16 entries.
-> 
-> So, the buffer should either be dynamically allocated with the real
-> size or we need something like the enclosed patch.
-> 
-> Thanks,
-> Mauro
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 7a3feb5cee00..06a84f266bcc 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -59,7 +59,6 @@ struct venus_format {
->   
->   #define MAX_PLANES		4
->   #define MAX_FMT_ENTRIES		32
-> -#define MAX_CAP_ENTRIES		32
->   #define MAX_ALLOC_MODE_ENTRIES	16
->   #define MAX_CODEC_NUM		32
->   
-> diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-> index 34ea503a9842..ca8033381515 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_helper.h
-> +++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-> @@ -560,6 +560,8 @@ struct hfi_bitrate {
->   #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
->   #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
->   
-> +#define MAX_CAP_ENTRIES                32
-> +
->   struct hfi_capability {
->   	u32 capability_type;
->   	u32 min;
-> @@ -569,7 +571,7 @@ struct hfi_capability {
->   
->   struct hfi_capabilities {
->   	u32 num_capabilities;
-> -	struct hfi_capability *data;
-> +	struct hfi_capability data[MAX_CAP_ENTRIES];
->   };
->   
->   #define HFI_DEBUG_MSG_LOW	0x01
-> @@ -726,7 +728,7 @@ struct hfi_profile_level {
->   
->   struct hfi_profile_level_supported {
->   	u32 profile_count;
-> -	struct hfi_profile_level *profile_level;
-> +	struct hfi_profile_level profile_level[HFI_MAX_PROFILE_COUNT];
->   };
->   
->   struct hfi_quality_vs_speed {
-> 
-> 
-> 
+> I think that Nick Terrell should have been CCed too, as he ported zstd
+> to linux.
