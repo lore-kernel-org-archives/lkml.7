@@ -2,105 +2,141 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0445FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD93C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D238B206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:18:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvnbWzJ/"
+	by mail.kernel.org (Postfix) with ESMTP id BC84D206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfFEOSs (ORCPT
+        id S1728328AbfFEOUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:18:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42865 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbfFEOSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:18:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so4705878pff.9;
-        Wed, 05 Jun 2019 07:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/kbLXj/2o2HvwHqCd08UzWTDA8h4P12DlInHOlJGg0k=;
-        b=bvnbWzJ/IuzTHAp+GV7XYne5Np3trktMt24KYENkCeIZBrssGfAVRyqeHmraxxsC1Q
-         f/gvwDzfGPHsn7OdUUjjuJex480svivtSn+QlMBOYFaNwl3pCgGVX9IC6G+ufO4xDfIt
-         K98LrfRuzeTWTxuYTyYa5clUtIDlo5OiQu7DnLPvGilLyX0C40ORPFH4MMmTbH7ipiHP
-         6rx2VbkLIxpMbE4vsq8GVNqV32pemqR7Lz4sB1lkxa0C+JlusxEcvfQymge3IFuOXo7s
-         mnZ2QVMbPqfbYS9ECvODdvt75DfkrRAelS7dvfKaZPWyw2qHKHlFRivsU2ggvDd5nQCZ
-         vqPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/kbLXj/2o2HvwHqCd08UzWTDA8h4P12DlInHOlJGg0k=;
-        b=kwGk7MwJ5NuWPhaOozVWj4gwwHzNiTscUahKOCVtqfjlH4/EvK38X+hxa3jsKjxgrr
-         armegECMtrr8nSfpy1LP99fb2Ks7zQ1m2XzhBSH0VpxSveQ3cxGy4+3hlmfWwP5o9WqJ
-         3QZadSl/V1MkffdRdGcAs3vbA6sTM1dDzWFXLJ2MX0szub2Ls5vraDfd4m2nHTQwUIr6
-         AiJn1HwzW6++5H/BN0QK1PBxqIc634SxVg6UK9wtzgdy/5TnCPT4NL4Apn73rSz77va3
-         EQO+sFyVjqJPvK4UILOO5Y1mTZ1IoOfGDY7lc33dWx8KxjRs46RcoUAUFiZ+lF6HHFLo
-         8MXA==
-X-Gm-Message-State: APjAAAWAvXMj9ItXHyBw73qhFIZm+ttaS8Wld57NMoMiuwCWpex+0x15
-        xqG7hMmmb9+5k6AqREqzUYg=
-X-Google-Smtp-Source: APXvYqwXDEYq9kiH2wKwVz0PVnlUNFr+xhEr4Q1C1Je3EEQP3udttWvv1qMXVAHIvoGJuvo52Cv1LQ==
-X-Received: by 2002:a17:90a:8982:: with SMTP id v2mr44140003pjn.136.1559744327204;
-        Wed, 05 Jun 2019 07:18:47 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id j2sm26134353pfb.157.2019.06.05.07.18.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 07:18:46 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 19:48:42 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 5 Jun 2019 10:20:04 -0400
+Received: from sauhun.de ([88.99.104.3]:54932 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727893AbfFEOUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:20:04 -0400
+Received: from localhost (p5486CB35.dip0.t-ipconnect.de [84.134.203.53])
+        by pokefinder.org (Postfix) with ESMTPSA id 291123E43B4;
+        Wed,  5 Jun 2019 16:20:01 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 16:20:00 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        alsa-devel@alsa-project.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        linux-input@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        linux-pm@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kees Cook <keescook@chromium.org>,
         Colin Ian King <colin.king@canonical.com>,
-        Mukesh Ojha <mojha@codeaurora.org>, Kangjie Lu <kjlu@umn.edu>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: host: u132-hcd: remove unneeded variable frame
-Message-ID: <20190605141842.GA7212@hari-Inspiron-1545>
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH 06/10] mfd / platform: cros_ec: Reorganize platform and
+ mfd includes
+Message-ID: <20190605142000.GC962@kunai>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-7-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190604152019.16100-7-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below issue reported by coccicheck
 
-drivers/usb/host/u132-hcd.c:2557:6-11: Unneeded variable: "frame".
-Return "0" on line 2560
+--Clx92ZfkiYIKRjnr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/usb/host/u132-hcd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On Tue, Jun 04, 2019 at 05:20:15PM +0200, Enric Balletbo i Serra wrote:
+> There is a bit of mess between cros-ec mfd includes and platform
+> includes. For example, we have a linux/mfd/cros_ec.h include that
+> exports the interface implemented in platform/chrome/cros_ec_proto.c. Or
+> we have a linux/mfd/cros_ec_commands.h file that is non related to the
+> multifunction device (in the sense that is not exporting any function of
+> the mfd device). This causes crossed includes between mfd and
+> platform/chrome subsystems and makes the code difficult to read, apart
+> from creating 'curious' situations where a platform/chrome driver includes
+> a linux/mfd/cros_ec.h file just to get the exported functions that are
+> implemented in another platform/chrome driver.
+>=20
+> In order to have a better separation on what the cros-ec multifunction
+> driver does and what the cros-ec core provides move and rework the
+> affected includes doing:
+>=20
+>  - Move cros_ec_commands.h to include/linux/platform_data/cros_ec_command=
+s.h
+>  - Get rid of the parts that are implemented in the platform/chrome/cros_=
+ec_proto.c
+>    driver from include/linux/mfd/cros_ec.h to a new file
+>    include/linux/platform_data/cros_ec_proto.h
+>  - Update all the drivers with the new includes, so
+>    - Drivers that only need to know about the protocol include
+>      - linux/platform_data/cros_ec_proto.h
+>      - linux/platform_data/cros_ec_commands.h
+>    - Drivers that need to know about the cros-ec mfd device also include
+>      - linux/mfd/cros_ec.h
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index 4a5c9b5..400c40b 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -2554,10 +2554,9 @@ static int u132_get_frame(struct usb_hcd *hcd)
- 		dev_err(&u132->platform_dev->dev, "device is being removed\n");
- 		return -ESHUTDOWN;
- 	} else {
--		int frame = 0;
- 		dev_err(&u132->platform_dev->dev, "TODO: u132_get_frame\n");
- 		mdelay(100);
--		return frame;
-+		return 0;
- 	}
- }
- 
--- 
-2.7.4
+Acked-by: Wolfram Sang <wsa@the-dreams.de> (for the I2C part)
 
+
+--Clx92ZfkiYIKRjnr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz3z5AACgkQFA3kzBSg
+KbYuGA/9GcL4++C/ViixlrJ+2KnwVIZhutol9fcA8YKEeEpGQq42AkU9zJV8pX3y
+U6sLvo3bHeDjA98mwO+aWKCaZIp1W5vZrKdQNqUZ35xvEaIgjhZ2dATu2+ontUAI
+Yv9koHktSt4oTbZlAPmcIwV/vLrhmJgr0FA1B6pS4qFbccYh+ePsTKvYpsjaguox
+vwDsmzJkZJ6AjW51Nx0dvMGJuUX6RLnv14etbz6P1I47cPKG9lYyVOsDiUIHsOPG
+JmhUiCaertI9rrsjaYNQIGrzGbkAozoO0c5klJC5BlnfBvqEfwjgBh5+ccqH1HXL
+WuegitNsfkAX3Y5nSZUsGoC1wtg+pqmLWsNs2eTc1uQAxYOwlleFOiMKXuhUIG2U
+0BMFoJ6/AYCuMkvIPyDdl8UWMjXW8Odreu2Y0h1rF6SuJ+mmI8TfhgfbTG/s1uX7
+qs9bPWwmi1EOJ1AoNv3ouLrC2PT6ES7Kt5mnvi4byXFcwkdq8EKcTfLVpy0xz6l/
+tDTHCxNLCrku2WX32buEW+mHZfCpbNRfcU7/VlTNU8o9i4QYy4WeL/SgaGLDVZvM
+zDFRRhXw2U+mtxRI6yAI/bl0Tl8VJG7cqCHeGuKGeA30siz75gSi6b2n+rCTnkba
+dfCggQuvByFYBOqqO4mnuvTflAYInnad7IyBnbGhS7p7NEkPbgE=
+=Nrms
+-----END PGP SIGNATURE-----
+
+--Clx92ZfkiYIKRjnr--
