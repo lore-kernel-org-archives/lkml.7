@@ -2,118 +2,102 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423D8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A37120657
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5892083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhNVfc8U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HL94Of1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFERwc (ORCPT
+        id S1726633AbfFESAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:52:32 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:47013 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFERwb (ORCPT
+        Wed, 5 Jun 2019 14:00:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53512 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbfFESAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:52:31 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h10so6920233edi.13;
-        Wed, 05 Jun 2019 10:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pYtfOuzsaIuaSCe9W5O3jDRlIoV2Xik6ZeqGacqfMT8=;
-        b=QhNVfc8UAyKCfw0lMsGrvSQB5DGZEG+0lRhcABpf3ISc9fVMumM+I4BxIb88xDw/TS
-         mHTNvYD8cyRctLAPyDv5YpTKHZV/Ep5PgR7x6hHhhNDcK4YQ5t+NPEhKnJZnZzdledlL
-         2F5H69wTnGfZBSqhIM9QxYH+MSQIQtl6w00o1HdYn6+Bfsc+uygnVHUyH8Nd//JfGz5P
-         IqHy4znz3/JCp1YLlMSRymp+VvlIzqdQOQj8rO6dEj2XnGviyvAUaBDxyaauD/uuTAJK
-         wyjIGYtBOyIu5/CsQjCqk1VMv4gg4MP20VCIWGv0utI+OrZSuHulRQL7N74nhfCbK7iM
-         8Y4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pYtfOuzsaIuaSCe9W5O3jDRlIoV2Xik6ZeqGacqfMT8=;
-        b=rmnR6zCE9tJV1hAwRcpZX9xvha/18grDn9WzkfQBqnt/5ejjFglHW7brPg85psblIg
-         O2ubrqYPcX6sp707fkkcTY0Oa5ULXnqNNKUgoyarML/7Uowie2daSBhAy9Q3FSjRndY4
-         96Hvtv/tRM/09sNe2ECC9flaGVlsjg1fIWtSLmaJRPxP4tqlmDEnhPxu6SlkbaQeeIX1
-         uvAhvnjqo2cirfr5H0CcKvmREBz3IUu17uyecjDovYXvGDJk+PbYAiPUpgTFf0bdaNBo
-         /+uKUVOyR1K+nEdSjuAoKGPAgG/cSIKKGVAb+0JhTwhLzsVb3LYYJloEcn/okL/KP5+5
-         imWQ==
-X-Gm-Message-State: APjAAAW1JTWNpmSpW/ZHwWcNuX5kamGfpwC21WxnHWnq8FlkBRgghMh/
-        RHizQ7hi0nW08BHTKTXKK1owVGsR5Ji7NIWgywQ=
-X-Google-Smtp-Source: APXvYqz1ATl70MIRDqfc+yMDdMP5LDqUSNlcwQkf8ecIoqYwEwPl33WK/uyq7xAGxpTBn9bkoJlSP+7ti270ZgnoOxo=
-X-Received: by 2002:a50:987a:: with SMTP id h55mr4460498edb.108.1559757149756;
- Wed, 05 Jun 2019 10:52:29 -0700 (PDT)
+        Wed, 5 Jun 2019 14:00:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Wn6hbzD6Cf/LprvMetYQYPui1bmuJTeex+C2j3IFqVU=; b=HL94Of1QKtkxZTpCwABGGooa2
+        XVtrsEMGwalwBX4XvOYCkNFLP/qupgDioPE+hDpSpdN204B2YSqRktmqd72nW74hbAm5TnqQ6Tvly
+        4DMFCm8MQ9/jxMLEFiQdbsZ9XDbnlZQ5lHvcdDgr90MzrpPpRK9vX4nyN2tALYuk6XH2l8aD9TrQZ
+        yHes24OdR1TEGKiIjZpy8nqCk12U/IJdvKQkUGdQKqv5+1b0FI1ifdQfTED6SqVZGZKxaM8Qbf4bL
+        jSy7yomC6xbFtFkoggx752leMhrLyGqlQgWR31onRoREpKtj87gwwqUucSQHTQCXuRDEQKEVD2w72
+        WS3kzOndw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYaDG-0001Km-5b; Wed, 05 Jun 2019 18:00:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F242220757B40; Wed,  5 Jun 2019 20:00:35 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 20:00:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Message-ID: <20190605180035.GA3402@hirez.programming.kicks-ass.net>
+References: <20190605155922.17153-1-matt@codeblueprint.co.uk>
 MIME-Version: 1.0
-References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
- <20190605174547.b4rwbfrzjqzujxno@localhost> <CA+h21hqeWSqZ0JmoC_w0gu+UJqCxpN7yWktRZsppe8LZ5Q_wMg@mail.gmail.com>
-In-Reply-To: <CA+h21hqeWSqZ0JmoC_w0gu+UJqCxpN7yWktRZsppe8LZ5Q_wMg@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 5 Jun 2019 20:52:18 +0300
-Message-ID: <CA+h21hqB0_r_5zdkEMLTx0iOtxqAC9NSe66R8KxmT6kLdvEy6A@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605155922.17153-1-matt@codeblueprint.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 20:50, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Wed, 5 Jun 2019 at 20:45, Richard Cochran <richardcochran@gmail.com> wrote:
-> >
-> > On Wed, Jun 05, 2019 at 02:33:52PM +0300, Vladimir Oltean wrote:
-> > > In the meantime: Richard, do you have any objections to this patchset?
-> >
-> > I like the fact that you didn't have to change the dsa or ptp
-> > frameworks this time around.  I haven't taken a closer look than that
-> > yet.
-> >
-> > > I was wondering whether the path delay difference between E2E and P2P
-> > > rings any bell to you.
-> >
-> > Can it be that the switch applies corrections in HW?
-> >
->
-> Yes it can be. It was one of the first things I thought of.
-> Normally it updates the correction field with its own residence time
-> in 1-step L2 event messages (but I use 2 step).
-> It also has a bit called IGNORE2STF (ignore 2-step flag) by which it
-> updates the correction field in all L2 event messages (including sync,
-> thereby violating the spec for a switch, as far as I'm aware). But I'm
-> not setting it.
-> I also looked at egress frames with wireshark and the correction field is zero.
->
+On Wed, Jun 05, 2019 at 04:59:22PM +0100, Matt Fleming wrote:
+> SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
+> for any sched domains with a NUMA distance greater than 2 hops
+> (RECLAIM_DISTANCE). The idea being that it's expensive to balance
+> across domains that far apart.
+> 
+> However, as is rather unfortunately explained in
+> 
+>   commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
+> 
+> the value for RECLAIM_DISTANCE is based on node distance tables from
+> 2011-era hardware.
+> 
+> Current AMD EPYC machines have the following NUMA node distances:
+> 
+> node distances:
+> node   0   1   2   3   4   5   6   7
+>   0:  10  16  16  16  32  32  32  32
+>   1:  16  10  16  16  32  32  32  32
+>   2:  16  16  10  16  32  32  32  32
+>   3:  16  16  16  10  32  32  32  32
+>   4:  32  32  32  32  10  16  16  16
+>   5:  32  32  32  32  16  10  16  16
+>   6:  32  32  32  32  16  16  10  16
+>   7:  32  32  32  32  16  16  16  10
+> 
+> where 2 hops is 32.
+> 
+> The result is that the scheduler fails to load balance properly across
+> NUMA nodes on different sockets -- 2 hops apart.
+> 
 
-I also changed around the values of ptp_dst_mac and p2p_dst_mac in
-linuxptp in the hope that I'd throw off whatever hardware parser it
-has to identify the event frames, but I still get negative path delay
-with E2E nonetheless. So it's probably not that.
+> Update the code in sd_init() to account for modern node distances, and
+> maintaining backward-compatible behaviour by respecting
+> RECLAIM_DISTANCE for distances more than 2 hops.
 
-> > Thanks,
-> > Richard
->
-> Thanks,
-> -Vladimir
+And then we had two magic values :/
 
--Vladimir
+Should we not 'fix' RECLAIM_DISTANCE for EPYC or something? Because
+surely, if we want to load-balance agressively over 30, then so too
+should we do node_reclaim() I'm thikning.
