@@ -2,121 +2,148 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3696EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F194DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="oERv5R43"
+	by mail.kernel.org (Postfix) with ESMTP id D2720206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfFEPEM (ORCPT
+        id S1728546AbfFEPGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:04:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38909 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFEPEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:04:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so9804923plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:04:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4r0N0/cqZQsQLzB9riNWHtGeoqNPwixp4EIavL99nJ8=;
-        b=oERv5R43tdTVogKDqW2pbdEh9X3kPQEt8rkO9i+PyA1hnJj546cBlYXzqcNAnkeH2o
-         xDmAZeAaD3jnQjr0VGd/3yJeW9/U0/CoKmRqtd40ETtm22bSXsBnOuB32EKuu31MPb91
-         ZSIW51BWmFZMHfkABF4+vmPS6bIFLD3LSrnjCSMx6330KEtzZiRV2rAVVXuuu5u6ZNF3
-         54Qq+ZfFN/F7mWNAP2jok++5M9n9LfGsg48fbCOmIs1bUlM0G9Lx/jcF9KRHn8EseCjE
-         5m7W7V2GXw5p0rXmC+VRWhzHmSy5HHyIgphZ1oqomuWKlWHVxlDyDSRiGqUbPO44zi0Z
-         IlWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4r0N0/cqZQsQLzB9riNWHtGeoqNPwixp4EIavL99nJ8=;
-        b=JnQAkuwZox6VSYE+E5+cxz0tGyEnHC0TR4ASbgMhCbOFxkg//ap6pAm7kDEW1Z66dG
-         znnkLwLDPO8doAuvU3TAzoyl1DLmCCMfuG2jwP2EHL0l/PSkekNJhFRlXPPFrO9PlPfO
-         0KGpcezwa7pj4gsieJmjOAQvRDNymK6rqN204QDwzpH7B96OU7KC6dnTJgr8E6DFm73W
-         Uu4C/mAg0Zs6jb/d+UAhxdOF5eAGi1YjRe524G2xKQS6hkQRUk2lCsET1B2eD6rliBU/
-         oMcZk48QKpZn9/S0W4DlFO+V17gq1Wwr8M7vseI+KIgJrxIBbdCLpAw+Ec878GYrz5TC
-         F/sg==
-X-Gm-Message-State: APjAAAWp9ZqnQVETdRNlWih4WxrXm4YeWMOtloQYKhGet0SRj4CKqGBq
-        ZwNp5Eb6CVzkww7HODrxoMiiRg1M5pfAxw==
-X-Google-Smtp-Source: APXvYqzBM2bZj69n7MfkaSXw8zh+DTZMgfwk0BMgMehP81PBePSCTHmM2EpXvogAFZyH4IQcEXIAvw==
-X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr44544164plb.155.1559747050554;
-        Wed, 05 Jun 2019 08:04:10 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k1sm4864237pjp.2.2019.06.05.08.04.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 08:04:03 -0700 (PDT)
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
-        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559161526-618-1-git-send-email-cai@lca.pw>
- <20190530080358.GG2623@hirez.programming.kicks-ass.net>
- <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
- <20190603123705.GB3419@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
-Date:   Wed, 5 Jun 2019 09:04:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 11:06:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33090 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728280AbfFEPGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:06:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C82B374;
+        Wed,  5 Jun 2019 08:06:36 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A32C3F246;
+        Wed,  5 Jun 2019 08:06:33 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 16:06:30 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190605150630.vh5pyfpd6y3mfcaa@e110439-lin>
+References: <20190515094459.10317-1-patrick.bellasi@arm.com>
+ <20190515094459.10317-13-patrick.bellasi@arm.com>
+ <20190531153545.GE374014@devbig004.ftw2.facebook.com>
+ <20190603122929.GC19426@darkstar>
+ <20190605140943.GM374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190603123705.GB3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605140943.GM374014@devbig004.ftw2.facebook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 6:37 AM, Peter Zijlstra wrote:
-> On Fri, May 31, 2019 at 03:12:13PM -0600, Jens Axboe wrote:
->> On 5/30/19 2:03 AM, Peter Zijlstra wrote:
-> 
->>> What is the purpose of that patch ?! The Changelog doesn't mention any
->>> benefit or performance gain. So why not revert that?
->>
->> Yeah that is actually pretty weak. There are substantial performance
->> gains for small IOs using this trick, the changelog should have
->> included those. I guess that was left on the list...
-> 
-> OK. I've looked at the try_to_wake_up() path for these exact
-> conditions and we're certainly sub-optimal there, and I think we can put
-> much of this special case in there. Please see below.
-> 
->> I know it's not super kosher, your patch, but I don't think it's that
->> bad hidden in a generic helper.
-> 
-> How about the thing that Oleg proposed? That is, not set a waiter when
-> we know the loop is polling? That would avoid the need for this
-> alltogether, it would also avoid any set_current_state() on the wait
-> side of things.
-> 
-> Anyway, Oleg, do you see anything blatantly buggered with this patch?
-> 
-> (the stats were already dodgy for rq-stats, this patch makes them dodgy
-> for task-stats too)
+On 05-Jun 07:09, Tejun Heo wrote:
+> Hello,
 
-Tested this patch, looks good to me. Made the trace change to make it
-compile, and also moved the cpu = task_cpu() assignment earlier to
-avoid uninitialized use of that variable.
+Hi,
 
-How about the following plan - if folks are happy with this sched patch,
-we can queue it up for 5.3. Once that is in, I'll kill the block change
-that special cases the polled task wakeup. For 5.2, we go with Oleg's
-patch for the swap case.
+> On Mon, Jun 03, 2019 at 01:29:29PM +0100, Patrick Bellasi wrote:
+> > On 31-May 08:35, Tejun Heo wrote:
+> > > Hello, Patrick.
+> > > 
+> > > On Wed, May 15, 2019 at 10:44:55AM +0100, Patrick Bellasi wrote:
+> > 
+> > [...]
+> > 
+> > > For proportions (as opposed to weights), we use percentage rational
+> > > numbers - e.g. 38.44 for 38.44%.  I have parser and doc update commits
+> > > pending.  I'll put them on cgroup/for-5.3.
+> > 
+> > That's a point worth discussing with Peter, we already changed one
+> > time from percentages to 1024 scale.
+> 
+> cgroup tries to uss uniform units for its interface files as much as
+> possible even when that deviates from non-cgroup interface.  We can
+> bikeshed the pros and cons for that design choice for sure but I don't
+> think it makes sense to deviate from that at this point unless there
+> are really strong reasons to do so.
+
+that makes sense to me, having a uniform interface has certainly a
+value.
+
+The only additional point I can think about as a (slightly) stronger
+reason is that I guess we would like to have the same API for cgroups
+as well as for the task specific and the system wide settings.
+
+The task specific values comes in via the sched_setattr() syscall:
+
+   [PATCH v9 06/16] sched/core: uclamp: Extend sched_setattr() to support utilization clamping
+   https://lore.kernel.org/lkml/20190515094459.10317-7-patrick.bellasi@arm.com/
+
+where we need to encode each clamp into a __u32 value.
+
+System wide settings are expose similarly to these:
+
+   grep '' /proc/sys/kernel/sched_*
+
+where we have always integer numbers.
+
+AFAIU your proposal will require to use a "scaled percentage" - e.g.
+3844 for 38.44% which however it's still not quite the same as writing
+the string "38.44".
+
+Not sure that's a strong enough argument, is it?
+
+> > Utilization clamps are expressed as percentages by definition,
+> > they are just expressed in a convenient 1024 scale which should not be
+> > alien to people using those knobs.
+> > 
+> > If we wanna use a "more specific" name like uclamp.{min,max} then we
+> > should probably also accept to use a "more specific" metric, don't we?
+> 
+> Heh, this actually made me chuckle.
+
+:)
+
+> It's an interesting bargaining take but I don't think that same word
+> being in two different places makes them tradable entities.
+
+Sure, that was not my intention.
+
+I was just trying to see if the need to be more specific could
+be an argument for having also a more specific value.
+
+> We can go into the weeds with the semantics but how about us using
+> an alternative adjective "misleading" for the cpu.util.min/max names
+> to short-circuit that?
+
+Not quite sure to get what you mean here. Are you pointing out that
+with clamps we don't strictly enforce a bandwidth but we just set a
+bias?
+
+Cheers,
+Patrick
 
 -- 
-Jens Axboe
+#include <best/regards.h>
 
+Patrick Bellasi
