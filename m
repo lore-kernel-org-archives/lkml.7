@@ -2,111 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9105FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98190C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5AE20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7752075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZxNl0qOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfFELUZ (ORCPT
+        id S1727473AbfFELXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:20:25 -0400
-Received: from foss.arm.com ([217.140.101.70]:57812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727363AbfFELUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:20:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADF07374;
-        Wed,  5 Jun 2019 04:20:24 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EDB53F5AF;
-        Wed,  5 Jun 2019 04:20:24 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id D81B6682412; Wed,  5 Jun 2019 12:20:22 +0100 (BST)
-Date:   Wed, 5 Jun 2019 12:20:22 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v1 2/2] dt/bindings: drm/komeda: Adds SMMU support for
- D71 devicetree
-Message-ID: <20190605112022.GU15316@e110455-lin.cambridge.arm.com>
-References: <1556605118-22700-1-git-send-email-lowry.li@arm.com>
- <1556605118-22700-3-git-send-email-lowry.li@arm.com>
+        Wed, 5 Jun 2019 07:23:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFELXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 07:23:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sVN3EHsvpO4JEKTL1zRRHRBKbHxUnSg7DWieN951vaQ=; b=ZxNl0qOQMb2nfXeNThDfWARnO
+        IjMcoH4MbKtQUU/nYGjzXO/SzWGoG4bwvM6cBsqxqnboCmwXwdmrZT6ztabNtnUgigfRmXDx8fQga
+        0rKqTEt4/6uc2AluHwNMT79+xCxIagqOb/We+wKGSyrnU5U0zj89HIUQ91CjDb3ocZFKE34NA73Xt
+        ht21jsc6XZzCEdyBsoxDu/s7ytcLxb6tZ+TqSKkA+jPRHteOcwa78zZTOL6egPiRNwQtvKPfLFnxB
+        43TAXA7rZyGVZ8LyRQz4qMmoOohTstIupqEoWtffXXODQJqZlI73n1KFz6tSlAtnVI5oGHg9JPstG
+        ajfQGCbTw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYU0u-0005Bg-TM; Wed, 05 Jun 2019 11:23:28 +0000
+Date:   Wed, 5 Jun 2019 04:23:28 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [RFC V2] mm: Generalize notify_page_fault()
+Message-ID: <20190605112328.GB2025@bombadil.infradead.org>
+References: <1559630046-12940-1-git-send-email-anshuman.khandual@arm.com>
+ <87sgsomg91.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556605118-22700-3-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <87sgsomg91.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 07:19:34AM +0100, Lowry Li (Arm Technology China) wrote:
-> Updates the device-tree doc about how to enable SMMU by devicetree.
+On Wed, Jun 05, 2019 at 09:19:22PM +1000, Michael Ellerman wrote:
+> Anshuman Khandual <anshuman.khandual@arm.com> writes:
+> > Similar notify_page_fault() definitions are being used by architectures
+> > duplicating much of the same code. This attempts to unify them into a
+> > single implementation, generalize it and then move it to a common place.
+> > kprobes_built_in() can detect CONFIG_KPROBES, hence notify_page_fault()
+> > need not be wrapped again within CONFIG_KPROBES. Trap number argument can
+> > now contain upto an 'unsigned int' accommodating all possible platforms.
+> ...
 > 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
->  Documentation/devicetree/bindings/display/arm,komeda.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+> You've changed several of the architectures from something like above,
+> where it disables preemption around the call into the below:
 > 
-> diff --git a/Documentation/devicetree/bindings/display/arm,komeda.txt b/Documentation/devicetree/bindings/display/arm,komeda.txt
-> index 02b2265..b12c045 100644
-> --- a/Documentation/devicetree/bindings/display/arm,komeda.txt
-> +++ b/Documentation/devicetree/bindings/display/arm,komeda.txt
-> @@ -11,6 +11,10 @@ Required properties:
->        - "pclk": for the APB interface clock
->  - #address-cells: Must be 1
->  - #size-cells: Must be 0
-> +- iommus: configure the stream id to IOMMU, Must be configured if want to
-> +    enable iommu in display. for how to configure this node please reference
-> +        devicetree/bindings/iommu/arm,smmu-v3.txt,
-> +        devicetree/bindings/iommu/iommu.txt
->  
->  Required properties for sub-node: pipeline@nq
->  Each device contains one or two pipeline sub-nodes (at least one), each
-> @@ -44,6 +48,9 @@ Example:
->  		interrupts = <0 168 4>;
->  		clocks = <&dpu_mclk>, <&dpu_aclk>;
->  		clock-names = "mclk", "pclk";
-> +		iommus = <&smmu 0>, <&smmu 1>, <&smmu 2>, <&smmu 3>,
-> +			<&smmu 4>, <&smmu 5>, <&smmu 6>, <&smmu 7>,
-> +			<&smmu 8>, <&smmu 9>;
->  
->  		dp0_pipe0: pipeline@0 {
->  			clocks = <&fpgaosc2>, <&dpu_aclk>;
-> -- 
-> 1.9.1
 > 
+> Which skips everything if we're preemptible. Is that an equivalent
+> change? If so can you please explain why in more detail.
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+See the discussion in v1 of this patch, which you were cc'd on.
+
+I agree the description here completely fails to mention why the change.
+It should mention commit a980c0ef9f6d8c.
+
+> Also why not have it return bool?
+> 
+> cheers
+> 
