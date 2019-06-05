@@ -2,115 +2,78 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C600C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ECBC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BCB206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7AD206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y2L7xC0K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDJ2fJwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfFEGRa (ORCPT
+        id S1726742AbfFEGRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:17:30 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58912 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFEGR3 (ORCPT
+        Wed, 5 Jun 2019 02:17:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44744 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfFEGRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:17:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x556HQY6070720;
-        Wed, 5 Jun 2019 01:17:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559715446;
-        bh=pE+vAWiG4NGnFWLuFqy3RtWa8WXPpXxgHeHo1YIAJlc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=y2L7xC0K4A+6Ur0hloFWRGCH1EROQDf7rfoIGcd9RMBEHJhaa9PWkjZoSPXLFRWEO
-         OcVpTNWuhhBRkRdbqNNnE/u4b4tU/D6mLFZeJftN8xVgsF8OWPGDLAezkSDTdbICQN
-         SApJRoQbdSaZb6Stio0QsodELVHiD3qVR10JV3rc=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x556HQgX058247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 01:17:26 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 01:17:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 01:17:25 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x556HMls068204;
-        Wed, 5 Jun 2019 01:17:23 -0500
-Subject: Re: [RFC PATCH 1/3] arm64: dts: ti: am6-wakeup: Add gpio node
-To:     Keerthy <j-keerthy@ti.com>, <t-kristo@ti.com>, <nm@ti.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190605060846.25314-1-j-keerthy@ti.com>
- <20190605060846.25314-2-j-keerthy@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
-Date:   Wed, 5 Jun 2019 11:46:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 5 Jun 2019 02:17:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8MOKfPDZiHvrtm5mx7wXDojKN0NUKE9GkL6OvbIkYfk=; b=ZDJ2fJwcq5zM4+WFIIwMSc+Wl
+        AhQTcFyhKkrl5ssuEyrnkRfSEBF8uBP2s+h6UP3vC/zDbUJYGZ48NKk2MWLe1J8B9+WiGJXCRdhhX
+        Aq3nagWNZWdFHIJqlemTN3Mbq7/gkTM6uUfAAdva3O3iB5zunDic/JjH8VIx1UKWw/N89OVIIGWNB
+        1I6XTw3upAWMD1ggLV9QYQk6Kj7tZpESseTLUwBNP5qzIH9V1dlX/pOX26PCzHCf8qBwgPJhzhLAU
+        8MTHiJjzG5oU9bvAfFDYKdgd8MS9e1S1+AgKu/WWPA3E0ZFoXUHP1ffweEMWRFob1cbz9FXrMHgrg
+        3uTxt/oQQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYPF6-0007g4-AF; Wed, 05 Jun 2019 06:17:48 +0000
+Date:   Tue, 4 Jun 2019 23:17:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v3 0/6] sched: Add new tracepoints required for EAS
+ testing
+Message-ID: <20190605061748.GA20661@infradead.org>
+References: <20190604111459.2862-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190605060846.25314-2-j-keerthy@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604111459.2862-1-qais.yousef@arm.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> The following patches add the bare minimum tracepoints required to perform EAS
+> testing in Lisa[1].
 
+What is EAS?  Whhy is "Lisa" not part of the patch submission?
+submission.
 
-On 05/06/19 11:38 AM, Keerthy wrote:
-> Add gpio0 node under wakeup domain. This has 56 gpios
-> and all are capable of generating banked interrupts.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> index f1ca171abdf8..8c6c99e7c6ed 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> @@ -74,4 +74,19 @@
->  		ti,sci-dst-id = <56>;
->  		ti,sci-rm-range-girq = <0x4>;
->  	};
-> +
-> +	wkup_gpio0: wkup_gpio0@42110000 {
-> +		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
+> It is done in this way because adding new TRACE_EVENTS() is no longer accepted
+> AFAIU.
 
-This is not k2g. Can you either create a am6 specific compatible or just use
-ti,keystone-gpio.
+Huh?  We keep adding trace events all the time.  And they actually
+are useful because they are testable.
 
-Thanks and regards,
-Lokesh
-
-> +		reg = <0x42110000 0x100>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&intr_wkup_gpio>;
-> +		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		ti,ngpio = <56>;
-> +		ti,davinci-gpio-unbanked = <0>;
-> +		clocks = <&k3_clks 59 0>;
-> +		clock-names = "gpio";
-> +	};
->  };
-> 
+This series on the other hand adds exports not used in tree, which is
+a big no-go.
