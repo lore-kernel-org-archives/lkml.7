@@ -2,157 +2,90 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6B4C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F57C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F105A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:20:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEsoVwHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8158F206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFEIUx (ORCPT
+        id S1726674AbfFEIW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:20:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35616 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfFEIUw (ORCPT
+        Wed, 5 Jun 2019 04:22:27 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:56330 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFEIW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:20:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so2663123wrv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4N4wbbPbH5vFPQ02lIzPzQHg+yDqqNmeJgiKq0aKWHQ=;
-        b=EEsoVwHJfcVfB0ReGOh4L2CQa6hWhl7NbcxauHoct4OV4K/eJmfkm8ODRylrWf0538
-         cFa6Ud53SF9GDxPzTf2QH8ClrklK6SAbghEFIvkPB08cXK8dmhn83Xof+s2ZK+q518Aj
-         2GSJmz2YyAyeCySlO/be4cLEbL9RVXGU2l/CaV+hYuqsyJZHVcKKnBUKrOw96GNUV40b
-         KNe4oyVp/g92y3oHSnA66Q/gFpFB8Qukzyhelc9SvseBGDW6imI5ONkiObzQkjBsYMub
-         PuXqEPcOMPhEBrpFa02315DvejuZd4l+e3SZjyFqd8VDsFe7rOanchMNtkmv8jUP81la
-         /Ovg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4N4wbbPbH5vFPQ02lIzPzQHg+yDqqNmeJgiKq0aKWHQ=;
-        b=LhpH0YnDqq/kXj2YlpSlTrmOkYWrTIFZlrXTAkmLzRgLk1L+roUJVzCeUJNpYHWbqe
-         1PRbDddVHc79RdR4aW1lbDzi4pfkWbwWL8hB2rY1QOjoVlne9DwayNs8VeFwAaPvxEfm
-         XJJLxsCVe5epjA2KBC7kIVTEH69gmSILKvKM7SVtFUzCfTtRX8i031bBNpln1Ly4T6FE
-         K/xP89TUVQX+b3YYmWW1Vn7inb9o3eqN8Ex/i7vpJp1nmmCkrGNdnHNY3tBuXog0yBjP
-         7ea4HhWxPfnmxfPQBIorwdmilpL78WQxWLPz/lkc07rctcZ+93s8ZQ1+Hs/r/6CC1ci4
-         DI3g==
-X-Gm-Message-State: APjAAAXTVaMa3WDgexn+GS83rDSt/v3AI2JfLmZQE73F18u6k+qAKEVg
-        diAwSbguRsU3vYQtEf2KoXQ1QA==
-X-Google-Smtp-Source: APXvYqx/8oIyrbj4ascfwZpwcyMAKVAvtaBu7KaV63F4l5bAfkhGLPkaQF18jo6DwFQGyXdhimt4dQ==
-X-Received: by 2002:adf:f38a:: with SMTP id m10mr9150235wro.81.1559722850820;
-        Wed, 05 Jun 2019 01:20:50 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id a62sm21930094wmf.19.2019.06.05.01.20.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 01:20:49 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 09:20:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, balbi@kernel.org,
-        wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, david.brown@linaro.org,
-        alokc@codeaurora.org, kramasub@codeaurora.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, andy.gross@linaro.org,
-        jlhugo@gmail.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
-Message-ID: <20190605082047.GM4797@dell>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-2-lee.jones@linaro.org>
- <20190605062020.GL22737@tuxbook-pro>
- <20190605071625.GK4797@dell>
- <20190605075656.GC29637@localhost>
+        Wed, 5 Jun 2019 04:22:26 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 2BD71804F9;
+        Wed,  5 Jun 2019 10:22:23 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 10:22:21 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     airlied@linux.ie, thierry.reding@gmail.com, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH 1/1] drm/panel: truly: Add additional delay after pulling
+ down reset gpio
+Message-ID: <20190605082221.GB15169@ravnborg.org>
+References: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605075656.GC29637@localhost>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
+        a=e5mUnYsNAAAA:8 a=u_M7I5vmc8m8u026BJQA:9 a=CjuIK1q_8ugA:10
+        a=pioyyrs4ZptJ924tMmac:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Johan Hovold wrote:
+Hi Vivek,
 
-> On Wed, Jun 05, 2019 at 08:16:25AM +0100, Lee Jones wrote:
-> > On Tue, 04 Jun 2019, Bjorn Andersson wrote:
-> > 
-> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> > > 
-> > > > The Qualcomm Geni I2C driver currently probes silently which can be
-> > > > confusing when debugging potential issues.  Add a low level (INFO)
-> > > > print when each I2C controller is successfully initially set-up.
-> > > > 
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > ---
-> > > >  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > > index 0fa93b448e8d..e27466d77767 100644
-> > > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > > @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
-> > > >  		return ret;
-> > > >  	}
-> > > >  
-> > > > +	dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> > > > +
-> > > 
-> > > I would prefer that we do not add such prints, as it would be to accept
-> > > the downstream behaviour of spamming the log to the point where no one
-> > > will ever look through it.
-> > 
-> > We should be able to find a middle ground.  Spamming the log with all
-> > sorts of device specific information/debug is obviously not
-> > constructive, but a single liner to advertise that an important
-> > device/controller has been successfully initialised is more helpful
-> > than it is hinderous.
-> > 
-> > This print was added due to the silent initialisation costing me
-> > several hours of debugging ACPI device/driver code (albeit learning a
-> > lot about ACPI as I go) just to find out that it was already doing the
-> > right thing - just very quietly.
+On Mon, May 27, 2019 at 03:56:16PM +0530, Vivek Gautam wrote:
+> MTP SDM845 panel seems to need additional delay to bring panel
+> to a workable state. Running modetest without this change displays
+> blurry artifacts.
 > 
-> No, we don't add noise like this to the logs just because it may be
-> useful while debugging. Even one-liners add up.
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-One line per device is should not cause an issue.
+added to drm-misc-next
 
-Problems occur when developers try to print all kinds of device
-specifics to the boot log.  A simple, single line for such an
-important device/controller has more benefits than drawbacks.
+	Sam
 
-> There are plenty of options for debugging already ranging from adding a
-> temporary dev_info() to the probe function in question to using dynamic
-> debugging to have driver core log every successful probe.
-
-This is what I ended up doing.  It was time consuming to parse though
-a log of that size when you have no paging or keyboard.
-
-> And in this case you say the driver was in fact already bound; that can
-> easily be verified through sysfs too in case things aren't behaving the
-> way you expect.
-
-Not in a non-booting system with no keyboard you can't. ;)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  drivers/gpu/drm/panel/panel-truly-nt35597.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> index fc2a66c53db4..aa7153fd3be4 100644
+> --- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> +++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> @@ -280,6 +280,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
+>  	gpiod_set_value(ctx->reset_gpio, 1);
+>  	usleep_range(10000, 20000);
+>  	gpiod_set_value(ctx->reset_gpio, 0);
+> +	usleep_range(10000, 20000);
+>  
+>  	return 0;
+>  }
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
