@@ -2,106 +2,98 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F31C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CB5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB52206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559728899;
-	bh=LJbGRuypVwYz4+DsIAw5idV6Tie2aPGURWFJm4I9dbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DHENg1b9RLdMhMqvUtZuXWO7FMByzfAK+apBIHloQHGzM+0e4VGIinNfGCspwnaMa
-	 dqQYSN/awjB3yAv0E7ZfimrZ94d/wkTRsYUuj81Nb+mudvv3YdsMfBaXTlBb+N6Jux
-	 kqh+Bx36NpT/9WyU99DgS6YMsnn4Ohx5yErOZzpo=
+	by mail.kernel.org (Postfix) with ESMTP id 1D9EB2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bZD59ZmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfFEKBj (ORCPT
+        id S1727196AbfFEKCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:01:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47124 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfFEKBi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:01:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tt332wNsFzoKP2lgvb/2+DEBQV3HPehR64S+Tdrj8MQ=; b=us+MkBycio5fp/tf/heKrNc/R
-        drxLNZ4z7t3I80R41YHzXZv+kQWCdOYV+A7AGigvaaWiGgRnuk6+SYncpi9e8Txe3v2v9GhHvDPRE
-        nPmXMiTXpz0kPsZH1mEyXrEitmQ4zkJ9N/BtYYblCVZeaB5jN9IayDaw4izvNRSA3cx5s=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYSjd-0008UM-D1; Wed, 05 Jun 2019 10:01:33 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 86D11440046; Wed,  5 Jun 2019 11:01:32 +0100 (BST)
-Date:   Wed, 5 Jun 2019 11:01:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
-        lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-Message-ID: <20190605100132.GL2456@sirena.org.uk>
-References: <20190604174345.14841-1-dmurphy@ti.com>
- <20190604174345.14841-2-dmurphy@ti.com>
+        Wed, 5 Jun 2019 06:02:00 -0400
+Received: from mout.gmx.net ([212.227.15.15]:53403 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbfFEKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:02:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1559728900;
+        bh=UsET9Lll5M+CoTqv+pj38b2HWnBKUKBonnb58LGMBT4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=bZD59ZmWY0Ntwhnge76QXnUAewp8/FaivB+KFTadt2z1WLIpRJTlz9brY9UOo3mDL
+         sVe8Cr8xZ1m5qfcG/T1YyyBqb40gGEvMxtqaTVdFrbXtguM54zJJ9pQiJUS5kckjVr
+         FzcaSXguUpZX0EjeNG0El4SLnzdH1AAj42k2nCt4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1fn0-1gb2dQ1uGm-0124AV; Wed, 05
+ Jun 2019 12:01:40 +0200
+Subject: Re: [PATCH 3/4] clk: bcm2835: register Raspberry Pi's firmware clk
+ device
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
+        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+ <20190604173223.4229-4-nsaenzjulienne@suse.de> <87muiwzyrw.fsf@anholt.net>
+ <17ea99902e4329db735080d1a8fc04f5c06c9bf0.camel@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <d4e0e290-5fa7-899b-c26b-691bfc32e864@gmx.net>
+Date:   Wed, 5 Jun 2019 12:01:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LkBseQZEL/3d2JPd"
-Content-Disposition: inline
-In-Reply-To: <20190604174345.14841-2-dmurphy@ti.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <17ea99902e4329db735080d1a8fc04f5c06c9bf0.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:9f2lQD4Z7CpbaiYWLkTMJigUa1MziLg6+z/wwaBIURmsxQgOUS5
+ k2FYvw7vOfvcPi/PmfQ5fixRnOqThMuOv787Vl764hF59L8a6jmBs3NRYyoG5HAmJmv1b19
+ +yvY6j7zCQUeWKyarSDtHkN+zou8bvDUL9jpBSvvfE2bD/YQ3lvm5FBWwjvJQYKdwvyBmXc
+ V6NMtKpN71rZbBuSV6twg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:q4vxgRBg+Vk=:cSI8li99sc0SeLjZq6PBGa
+ QZ6f42LRJFJJLcLD3cqQ8mY9OEKdD44MaT+Er+v3fQmuJoT1RMTdK/A6F4hvNqYD6DywuhSi3
+ SaPRxALtUr+Jp8Fv3AkeUimHwzkgvjVgyZSMkef1mrCxUR1SF2WtZH5TX1wyITT77lYaQY/7b
+ bj2m1VkzdVei2lLjOs5R7JOSgQM8rnWjSZBTBf3I9lVQxdo4DtJQVHJm+dMFaMagUTr7P16Wt
+ EQRLvSSuISvwt0+t9lPSNz/WPyhNu9p+d/JPPEvNdTSWjLw3u54YIG2luGQkVwm68b6nSKUpj
+ rejoSwSaq1rF1Wj6ofqdiTzytKDTf1n9MIjU4f36vJ0W6+KW6Ns61IoBDksQ6zuEI6yWCNTPx
+ l/h0E8kgwSrVGvfEMVjCjtk384eYtQNYIwuLACSVtJ8r0JFcDcHNL1/mBPfhynGjTdvEKX4gw
+ qYV14E7sCt3VgpUARbVj09YuuYBGVtum9phmcLP30a/2GUNA+FDnIaW7WmAle/QcuKyOC2ve1
+ l7GEtohDJ9bYkv6HYiCbo8cde1FpaXWWcrLcdqnl8wg8jaWpbyhT5YZXRsPkiJIn4H0fIKuDt
+ tpDash5HSLSInyq365xvLH7gwPG3oqGltwG/jGQ8+cfWFZ2UMJf0s065E4Zcnuvo3vRf8/3yb
+ fM5KF4eLre3UJUebDgvSIz3PsguDzVEHxpc3kLrRAaR0YBXH1IO/ddwM1PZa88kZTAH62DOsi
+ 3fYq4DY8NaCvPXGyEjQQlgqITKRqGCYE806FquBDfKpn7taRiIeY3QkuYwmKZ1f/EsbSwGvj+
+ KzVe9aMC6XbYTzOpYpKTR2S/Ct6/Ll4KoaLySUJdExAdxfXJ85uFEkAvupGEamOJdryZE2IVy
+ 2sJq5Qt9Y9Yp8uRN4iJa2bSAGUOrjOAIYEsd6A5rdVpaBMeoMFi5q/ChR4IOWnafHIpXKCpxp
+ iYT9j/hHGM4FBvpD0s6Tuk7bFIsm1niuLu+E7jHnI2y7iRXyTdqdc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---LkBseQZEL/3d2JPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 04, 2019 at 12:43:40PM -0500, Dan Murphy wrote:
-> The use of and enablement of the GPIO can be used across devices.
-> Use the enable_reg in the regulator descriptor for the register to
-> write.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> ---
->=20
-> v5 - No changes to the patch changes requested in this patch were done in
-> patch 4 of this series - https://lore.kernel.org/patchwork/patch/1077408/
-
-I was expecting this patch to just be completely dropped?  It looks like
-the end result is very similar, we're still using enable_reg to get the
-register and I don't see new validation added in patch 4.
-
---LkBseQZEL/3d2JPd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz3kvsACgkQJNaLcl1U
-h9CL4Af/eIXNOUQrDHol0TbFPD7MMFgStTriNhd5Fn+14zkke4yvtU6mzKz4ZNeh
-3kKeUTQRvj9/xVuKjKsFmLteeTCj1hPJ7/oa7M5uo+zFuQWMWnkNulYXSv01yue1
-61zxfIJgaHEbVlI31m0pqLAQTb5opriEJ7eWpH6Iw4aYbiWO3spi0lYrQFf0BXLR
-PT6L9eDXJXE+MrXc2HrzxOXAKtB91oveq2G8WdqXp9svmP2NimUvTMUHo1HPIpUB
-g7t2i9qT2k8+5WXZ/g03DN9IxVgNy29RuAYdyEpMD4vOYmbtJiaxQMknD0TQp7Kf
-Gx3UQmwBAtBfKwQOUMK+mTMQn0O8yQ==
-=A/Jg
------END PGP SIGNATURE-----
-
---LkBseQZEL/3d2JPd--
+Am 05.06.19 um 11:11 schrieb Nicolas Saenz Julienne:
+> On Tue, 2019-06-04 at 17:00 -0700, Eric Anholt wrote:
+>> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
+>>
+>>> Registers clk-raspberrypi as a platform device as part of the driver's
+>>> probe sequence.
+>> Similar to how we have VCHI register platform devices for the services
+>> VCHI provides, shouldn't we have the firmware driver register the device
+>> for clk_raspberrypi?  Or put the clk provider in the fw driver instead
+>> of a separate driver (no opinion on my part).
+> Makes sense to me, I'll move the platform driver registration into the firmware
+> driver.
+Fine. Please keep in mind that you might need to add a MODULE_ALIAS
+otherwise autoload won't work.
