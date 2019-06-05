@@ -2,124 +2,90 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92104C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F307C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677CA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559744827;
-	bh=xQ+fTzSfXc1FsjIDSZCo7lmhvl4x3PaKsTL5+6fMl8M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=McLFQK/1U7aEk8RJCR4FeV2EKqr3phFT7LmQtMuMl31uQfP4FzAVvxAP5Gbdt9F3J
-	 Bpm73yzfIIep/+/l1x+upstHCu4VuyUiX3i52vWcc+q2sNHfP36/a7V98UeJCnoxlO
-	 +gQ5UPMq77/7aI667HMcEz8l6X9zWpK7LypQ0QyI=
+	by mail.kernel.org (Postfix) with ESMTP id 3B5EF2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="egrdri1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfFEO1G (ORCPT
+        id S1728280AbfFEO2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:27:06 -0400
-Received: from casper.infradead.org ([85.118.1.10]:35550 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727961AbfFEO1F (ORCPT
+        Wed, 5 Jun 2019 10:28:55 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45831 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbfFEO2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:27:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lTJZ7yvx2GJn/5Ucl0IpHbkLAJMz/sLGSpI28ny4Qgc=; b=FHC+epX7Epn/9PMwVZpDGE2gYh
-        9bs1PVFxV3ddPcqxWbVbtVC9OvlXVaEiKv7KY+VxKkSrmsSsDkzj5tmUjb8EDKG8oWktusbeahEJ5
-        FssgsPLunzGe9XEtRZSi2BN5xyscJyO5DT53Ckr5gmpQA/jNeap7pVsE2s+NGqS3/u+C4Lh2y+5UV
-        I5zbYGpJnOYqJuDMjEJ6EQ1Eydk7ocvjOoR4FJzl8d0Cq0E6oi6ptgdgGh+ae2j49nUnzwfKBCYsY
-        s5kdPlghAB5sehdD5+zOGJ9trAFcZkO1kaKYvY6mRU10ueKpF2KKukOhKDCj5KAIQ5PTDwdB9p+8S
-        H759F1ug==;
-Received: from [179.182.172.34] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYWsO-0002Er-6a; Wed, 05 Jun 2019 14:26:52 +0000
-Date:   Wed, 5 Jun 2019 11:26:45 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Hans Verkuil <hansverk@cisco.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me
-Subject: Re: [PATCH v4 2/3] media: uapi: Add RGB bus format for the
- GiantPlus GPM940B0 panel
-Message-ID: <20190605112645.5b357630@coco.lan>
-In-Reply-To: <20190603153511.24384-2-paul@crapouillou.net>
-References: <20190603153511.24384-1-paul@crapouillou.net>
-        <20190603153511.24384-2-paul@crapouillou.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 5 Jun 2019 10:28:55 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x7so8763299plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 07:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=d5BFJo1GaCyqaBLV5Vh0Cy/fBc47Eg0ShxO4nO5M6dM=;
+        b=egrdri1FSHktF7zsnB/hbZ/o6P2DAyzWU8XYwT2syRQY37g8yizNtukCbpocjQSCfx
+         qmPNfy4tBFaoXlbtXaRNXq/9z1lnm4X7jYlmir7osyv72vE3HWmoQlchWRVjovjZSZrL
+         0+ZKci5TlPGtxURSSqsA+urIv1YlIN+SzeIFE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d5BFJo1GaCyqaBLV5Vh0Cy/fBc47Eg0ShxO4nO5M6dM=;
+        b=hR56G4WUMlGcJhTCnu60B1I+GlD79h0JuZ64ljdphbPn+aiqnkdE6Nk3vwqIhPo9J1
+         65THlSxZ6tKZ1kq5UnaAGYAWfYhhNuPDR7AEjtwsimMLwZS+XFry8yTOg7SSiGWC2Jqc
+         0Ugu+TD2V4glWBRC+3k2bIwOXdFalv8ueMX7XRzuZr33IRHGdNlkwBO5TMy6ZrfH0zE7
+         6lAp1j7wghhqGxHkGNzLkBWyjjKHZOqLfFk6r2hrpLb3OESUDZI8tICzuntWF6KQLz6K
+         6eU65915kEkYG3Zsp7mWzoMTNFNWAp7WKxo783HilJkpB5zd8bibUojgeuqZgQfYSEa7
+         5BSQ==
+X-Gm-Message-State: APjAAAUzrUlQ3ALNoSMM0O436XcqzETUIucJTwmtYXTYul3TRtZqZAd8
+        YdTXU/iZRnl+zVIB0VxS7n7jIg==
+X-Google-Smtp-Source: APXvYqxBqoln1X0OFP0egG53hQMQLYdRXvN5hLZW9ECtmByzrhR3fX3kly0ePMtkA2u5fNLoxl3djA==
+X-Received: by 2002:a17:902:fa2:: with SMTP id 31mr18931439plz.38.1559744934573;
+        Wed, 05 Jun 2019 07:28:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j23sm11163753pgb.63.2019.06.05.07.28.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 07:28:53 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 07:28:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] x86/asm: Pin sensitive CR4 bits
+Message-ID: <201906050728.89B4834@keescook>
+References: <20190604234422.29391-1-keescook@chromium.org>
+ <20190604234422.29391-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604234422.29391-2-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon,  3 Jun 2019 17:35:10 +0200
-Paul Cercueil <paul@crapouillou.net> escreveu:
-
-> The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-> are transferred sequentially on a 8-bit bus.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: New patch
->     
->     v3: No change
->     
->     v4: Add only MEDIA_BUS_FMT_RGB888_3X8, as we don't have to care about
->         endianness
-
-Same comment as on version 3:
-
-You should also patch the documentation text at:
-
-	Documentation/media/uapi/v4l/subdev-formats.rst
-
-In order to describe the new format that will be included.
-
-
-> 
->  include/uapi/linux/media-bus-format.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-> index 2a6b253cfb05..16c1fa2d89a4 100644
-> --- a/include/uapi/linux/media-bus-format.h
-> +++ b/include/uapi/linux/media-bus-format.h
-> @@ -34,7 +34,7 @@
+On Tue, Jun 04, 2019 at 04:44:21PM -0700, Kees Cook wrote:
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 2c57fffebf9b..6b210be12734 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -366,6 +366,23 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+>  	cr4_clear_bits(X86_CR4_UMIP);
+>  }
 >  
->  #define MEDIA_BUS_FMT_FIXED			0x0001
->  
-> -/* RGB - next is	0x101c */
-> +/* RGB - next is	0x101d */
->  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-> @@ -55,6 +55,7 @@
->  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
->  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
->  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-> +#define MEDIA_BUS_FMT_RGB888_3X8		0x101c
->  #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
->  #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
->  #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+> +DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+> +unsigned long cr4_pinned_bits __ro_after_init;
 
+I missed EXPORT_SYMBOL()s for these -- I will fix in v3.
 
-
-Thanks,
-Mauro
+-- 
+Kees Cook
