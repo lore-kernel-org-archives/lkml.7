@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB3CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA406C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E8220830
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC75A20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 23:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfFEX6N (ORCPT
+        id S1726891AbfFEX6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 19:58:13 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:42552 "EHLO
+        Wed, 5 Jun 2019 19:58:20 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42570 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFEX6M (ORCPT
+        with ESMTP id S1726510AbfFEX6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 19:58:12 -0400
+        Wed, 5 Jun 2019 19:58:18 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AAFCB10081D58;
-        Wed,  5 Jun 2019 16:58:11 -0700 (PDT)
-Date:   Wed, 05 Jun 2019 16:58:11 -0700 (PDT)
-Message-Id: <20190605.165811.1912503294566196521.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 19DF810081D52;
+        Wed,  5 Jun 2019 16:58:17 -0700 (PDT)
+Date:   Wed, 05 Jun 2019 16:58:16 -0700 (PDT)
+Message-Id: <20190605.165816.1306141938926112064.davem@davemloft.net>
 To:     info@metux.net
 Cc:     linux-kernel@vger.kernel.org, kuznet@ms2.inr.ac.ru,
         yoshfuji@linux-ipv6.org, kafai@fb.com, songliubraving@fb.com,
         yhs@fb.com, netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] net: ipv4: drop unneeded likely() call around IS_ERR()
+Subject: Re: [PATCH] net: ipv6: drop unneeded likely() call around IS_ERR()
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1559768945-19902-1-git-send-email-info@metux.net>
-References: <1559768945-19902-1-git-send-email-info@metux.net>
+In-Reply-To: <1559769094-20889-1-git-send-email-info@metux.net>
+References: <1559769094-20889-1-git-send-email-info@metux.net>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Jun 2019 16:58:12 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Jun 2019 16:58:17 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Date: Wed,  5 Jun 2019 23:09:05 +0200
+Date: Wed,  5 Jun 2019 23:11:34 +0200
 
 > From: Enrico Weigelt <info@metux.net>
 > 
