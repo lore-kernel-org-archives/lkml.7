@@ -2,93 +2,135 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E72C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076F9C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4E22075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19512075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZuyN59KQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LxIaZty5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFEHW5 (ORCPT
+        id S1726613AbfFEHXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:22:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55980 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFEHW5 (ORCPT
+        Wed, 5 Jun 2019 03:23:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43932 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfFEHXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:22:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tbIQe82KRWXfpj+AU7ijiA93IgD+ePBUN61009rIGNs=; b=ZuyN59KQFzxjL7oWCjg0GpmXv
-        +lpdH2TaYGNV/c9WX6uV507J13v+WuIJfu8Cxnahf7vEBdqvOoYu7sfDT5nr71ZkOh9Xhzd4u3ivC
-        3eFW5Rwr53aRQ7/RTItN6g33vv+d5Fihe46bSy/EOIpQjUIOZcPdKIa1EKRms40OjA3vyPsSJi5v8
-        GSB2Ixef9VSzk2ZyhA/Jpdf/gfsnWEI1GP75s4uqUsv2+EWi2o07toI1ftj2cSeg8Fca+S/Ds94U7
-        N+oILRkjEXsMFKpFDR/YKaJIkWnM+sQDbRMJ/Se4pebfFmOJmQB4q4rCnY+o0Sb5rIYpyR1yk92BE
-        qbry4b0pg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYQFh-0007oa-Qb; Wed, 05 Jun 2019 07:22:29 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7F197207A17DB; Wed,  5 Jun 2019 09:22:27 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 09:22:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>
-Subject: Re: [PATCH v3 0/6] sched: Add new tracepoints required for EAS
- testing
-Message-ID: <20190605072227.GI3419@hirez.programming.kicks-ass.net>
-References: <20190604111459.2862-1-qais.yousef@arm.com>
- <20190605061748.GA20661@infradead.org>
+        Wed, 5 Jun 2019 03:23:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id k20so19425188ios.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bFlickOGyCE8q2nid47CTokWI0/Tlpvfgy/2BgVqxGM=;
+        b=LxIaZty5SFUHpeOd6VDojbonDevwkb/pcxQ1fTAr8bq2nAGRG0FUXbB1ahd4Cs8yIg
+         oRPSkndInGzFgEmm/7b8+X+6UoxWShv3j+IC09/3LLXcEjsZyFDlSftzMZGeWVKdukuX
+         tRxKQheHKNttUpTHH5/RMjZ+9n5MZjzcjavgM2hp/GDi8kasXudamsoB8q5ZYKcvvRFK
+         oXRYVu3aAEZpJ3wnVIPhImAJzexpje8nEOn7PZhmrjPhy8orFBxeeLwbH0l94g5oP+Bm
+         HWPA8NJ/LOwXgcprZGF5/kFXdsM8GDFUlEgPx3qrwshAgepVR88j0fhlf2GCzx85nK3B
+         zqWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bFlickOGyCE8q2nid47CTokWI0/Tlpvfgy/2BgVqxGM=;
+        b=Ex6bFUOWI7VeIpW7sDLhXvYXiTvHxqJnqyv1+13O7q+OZrWblwEGAY9eQpGs3ijaFo
+         C/EjZpKPmOXRJM2BvihS4xXEQqqeZQSsaW8txHPqnecLhS5JRJhwKaWjNR2Cizsr7cAf
+         uyxhtQerjyDkod2XOUW4p7dPl3NapuTAn/aSX4Eri0Que64dGiVvmAvI/hADvCwIB+35
+         XjCOEoUHf7uqxg6HTRXGb2DhsanRTpL+Um/rxjza8Avye+uQUEEId8csR3cI5Zcep0KZ
+         WVCDqNwQ8YCuH5BvS4HhiDtG3uQTshBMhaU+jYJT2MNT/4/aNIHKHrTH9AJyxK3pCswt
+         7FHw==
+X-Gm-Message-State: APjAAAV2fu7N14LQeatqmn2d6LwXVlCL1NxtsOi3E50u3f7JZ+RCVibo
+        h1JN5aHbVpwr8C+PragIT5DAYjQ/P9eQy6idK20bTQ==
+X-Google-Smtp-Source: APXvYqyvUHNyNwg2/0w1ihfOoePLCRKJbrn5Y6sShasQnJXGkrj6UQ0uvq3+cXzOG4W7XlqhT4twEcbHEF/T3XAEymE=
+X-Received: by 2002:a5d:9402:: with SMTP id v2mr7086874ion.128.1559719391862;
+ Wed, 05 Jun 2019 00:23:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605061748.GA20661@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190604104455.8877-1-lee.jones@linaro.org> <20190604104455.8877-2-lee.jones@linaro.org>
+ <20190605062020.GL22737@tuxbook-pro> <20190605071625.GK4797@dell>
+In-Reply-To: <20190605071625.GK4797@dell>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 5 Jun 2019 09:22:59 +0200
+Message-ID: <CAKv+Gu_YcdePUkkCGdP5DC9rxCUAshgOzU32pViAp2CbmAaJuw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, balbi@kernel.org,
+        wsa+renesas@sang-engineering.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Brown <david.brown@linaro.org>, alokc@codeaurora.org,
+        kramasub@codeaurora.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 11:17:48PM -0700, Christoph Hellwig wrote:
-> > The following patches add the bare minimum tracepoints required to perform EAS
-> > testing in Lisa[1].
-> 
-> What is EAS?  Whhy is "Lisa" not part of the patch submission?
-> submission.
-> 
-> > It is done in this way because adding new TRACE_EVENTS() is no longer accepted
-> > AFAIU.
-> 
-> Huh?  We keep adding trace events all the time.  And they actually
-> are useful because they are testable.
+On Wed, 5 Jun 2019 at 09:16, Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
+>
+> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> >
+> > > The Qualcomm Geni I2C driver currently probes silently which can be
+> > > confusing when debugging potential issues.  Add a low level (INFO)
+> > > print when each I2C controller is successfully initially set-up.
+> > >
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > index 0fa93b448e8d..e27466d77767 100644
+> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> > >             return ret;
+> > >     }
+> > >
+> > > +   dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> > > +
+> >
+> > I would prefer that we do not add such prints, as it would be to accept
+> > the downstream behaviour of spamming the log to the point where no one
+> > will ever look through it.
+>
+> We should be able to find a middle ground.  Spamming the log with all
+> sorts of device specific information/debug is obviously not
+> constructive, but a single liner to advertise that an important
+> device/controller has been successfully initialised is more helpful
+> than it is hinderous.
+>
+> This print was added due to the silent initialisation costing me
+> several hours of debugging ACPI device/driver code (albeit learning a
+> lot about ACPI as I go) just to find out that it was already doing the
+> right thing - just very quietly.
+>
 
-They also form an implicit API/ABI with userspace, and I've been bitten
-by that crap before. No more tracepoints. IIRC viro is also not having
-tracepoints in the vfs.
+I agree.
 
-> This series on the other hand adds exports not used in tree, which is
-> a big no-go.
+There are numerous EHCI drivers IIRC which, if compiled in,
+unconditionally print some blurb, whether you have the hardware or
+not, which is pretty annoying.
 
-I much prefer a few unused exports that expose data in a controlled
-fashion than commit to an implicit ABI through tracepoints. By keeping
-it all in kernel, we're punting to the no-in-kernel-ABI rule.
-
-Basically nobody gives a crap if we break (out-of-tree) modules, but the
-moment we break something userspace we're fscked.
-
+In this case, however, having a single line per successfully probed
+device (containing the dev_name and perhaps the MMIO base address or
+some other identifying feature) is pretty useful, and shouldn't be
+regarded as log spamming imo. dev_info() honours the 'quiet' kernel
+command line parameter, and so you will only see the message if you
+actually look at the log.
