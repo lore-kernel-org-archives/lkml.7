@@ -2,251 +2,177 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15DFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D13C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87684208C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l2pgfRmO"
+	by mail.kernel.org (Postfix) with ESMTP id BCB0220872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfFEQze (ORCPT
+        id S1729040AbfFEQzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:55:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:32890 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbfFEQyb (ORCPT
+        Wed, 5 Jun 2019 12:55:46 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53358 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbfFEQzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:54:31 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190605165430euoutp013abfc3dc17b5749994f0a80a4adff9a9~lW7L6rPXl2985529855euoutp01e
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2019 16:54:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190605165430euoutp013abfc3dc17b5749994f0a80a4adff9a9~lW7L6rPXl2985529855euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559753670;
-        bh=A8HnpCUReEUMVz/IBGX7wvwvTViRcrGotiz3i0a6drk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2pgfRmOPrTccFibGrZyZGTyffgSvWRZm8oLJytrtAM6r4k1JTXvHpN2htaMDf3NB
-         FQ+KMBgaOeEkWRNeQ5IbbbASQARgyjLdyOzB6IOCcHADyXe7mX2GgwNbcy3zK5FYNw
-         00qs9/kD2fiF695UbcmoZzswlIlDSvRBB4/5qIMc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190605165429eucas1p1eb0544e2e097607c9bec9f037eddc5d4~lW7LI5UDj0321003210eucas1p10;
-        Wed,  5 Jun 2019 16:54:29 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id FA.4E.04377.4C3F7FC5; Wed,  5
-        Jun 2019 17:54:29 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61~lW7KSo8ID0349303493eucas1p1b;
-        Wed,  5 Jun 2019 16:54:28 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190605165428eusmtrp28015d54811c9973a3e87aec00032100b~lW7KDDO5n2868028680eusmtrp2I;
-        Wed,  5 Jun 2019 16:54:28 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-ed-5cf7f3c47adf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 62.B2.04146.4C3F7FC5; Wed,  5
-        Jun 2019 17:54:28 +0100 (BST)
-Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190605165427eusmtip166009aede1d12a541a224760be994470~lW7JIBe-F0338903389eusmtip1J;
-        Wed,  5 Jun 2019 16:54:27 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v8 02/13] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-Date:   Wed,  5 Jun 2019 18:53:59 +0200
-Message-Id: <20190605165410.14606-3-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190605165410.14606-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSaUwTURSFfZ2ZzrRYGFsjF3FJmmhcIqAB86LGJSFx9JfBJVERrTIikaJ2
-        AEHUFNSiRYSAyiKLRUmxaFisBIgBhSoimygEw5IgxGiwkrCIuKGOU/Xfl3POvee9l8cQagc1
-        lwmPjOINkboIrVxJVj790rbiyfjnYL+eFhkuzyqlcPfEOwoXONooXDI6hHDG8zwZbknW49Sh
-        DwRuby+jcWuik8Y9xnn4VU2uHI+nOBDOaq+V4XuOfhr3JhTLcYMzicJ1nVtx7zd3PPlsEG3U
-        cJOf0knuhrGD5Kpz+mmuwnZJzqWcG5Fzj0ceyrgrdhvi7jfHc+MVC7Yp9ijXhfIR4TG8wXf9
-        AeURq91JHh/zjS2+8wYZ0egSM1IwwPqD6Wo+ZUZKRs0WIzjXl0mLhpqdQNCSvUkyxhE86c1C
-        fyfO5xhpybAiuFVUTf2bKJ7eZUYMI2d9oMp2QpRns/HQ111HiHmCdcqg9esUKRoadjtYktL+
-        MMkugrIH3X9YxW4AS2IzKZUthJKyR4TICnYjXG+8T4qLgB2kocB6Wy6FAqG0tUkmsQaGG+20
-        xPPgZ3WBSxfAmGJx3eA0DKXmuTJroaGxgxIPTbBLobTGV5I3wd2OBCTKwLrD64+zRJn4jemV
-        mYQkq+CiSS2ll4D98gtX0Ryw3r3uWs6B+VsXkp4qA0FtWYM8DS3M+V92EyEb8uSjBX0YL6yK
-        5E/6CDq9EB0Z5nPomL4C/f5bzdONE1Wo5vvBesQySDtTBeWfg9WULkaI09cjYAjtbJWudyJY
-        rQrVxZ3iDcf2G6IjeKEeeTOk1lMVP2Ngr5oN00XxR3n+OG/468oYxVwjsgflG5NsITMGiNzE
-        HRd4YvM+t67dHmfDvYDzqjJpphyKOqKw9q1f5c6QwMIz2ee7dgWtaihc/MPirlkeYB695GZC
-        +WO5nYeTnYHJLUGm2CZTqPXq/PKvygQckO596qNH5poi8loGq7WMtb7fNpk7Ne27+k7aotQF
-        L4dpfot/rJYUjuhWLiMMgu4XIn6S11cDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xu7pHPn+PMZh9l8ti44z1rBbXvzxn
-        tZh/5ByrxeqPjxktJp+ay2RxpjvXov/xa2aL8+c3sFucbXrDbnGrQcbi8q45bBafe48wWsw4
-        v4/JYu2Ru+wWtxtXsFkcftPOarH/ipfF7d98Ft9OPGJ0EPb49nUSi8fshossHjtn3WX32LSq
-        k82jt/kdm8fBd3uYPPq2rGL02Hy62uPzJrkAzig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMT
-        Sz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jOVb3rAUfNKvWLHyIWMD40eNLkZODgkBE4mWWQ3s
-        XYxcHEICSxkl7n/vZIJIiElM2redHcIWlvhzrYsNougTo0RLawNjFyMHB5uAnsSOVYUgNSIC
-        9RL9by6B1TALNDBLrNl+lRUkISwQKLF33y+wQSwCqhIbtl5nAbF5BewlFjadZoFYIC+xesMB
-        ZhCbU8BBYtrxzWBxIaCaS9d/M09g5FvAyLCKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMJa2
-        Hfu5eQfjpY3BhxgFOBiVeHglNn6PEWJNLCuuzD3EKMHBrCTCm3j7S4wQb0piZVVqUX58UWlO
-        avEhRlOgoyYyS4km5wPjPK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8T
-        B6dUA6PbpPbN3TYS5+qt39W+3mHz9kr1zpIJp83b5R+fkFTTCd0f5v2n3GL/8fWnWRuF78qr
-        Z/WL/bba8erc8fXLfttPXXz54OEHLxykmbqq1Rd7/Tx+0/UJ+ySFKIknTA7L85k2bTaXifr2
-        fsdFN5uFnPzNeoJSU1oqme22bLg64+feoAi7aB8nx89KLMUZiYZazEXFiQCZp5A2uwIAAA==
-X-CMS-MailID: 20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61
-References: <20190605165410.14606-1-l.luba@partner.samsung.com>
-        <CGME20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61@eucas1p1.samsung.com>
+        Wed, 5 Jun 2019 12:55:45 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EFE583C00DD;
+        Wed,  5 Jun 2019 18:55:42 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4PIzeykYxjEW; Wed,  5 Jun 2019 18:55:34 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4C9EC3C00D1;
+        Wed,  5 Jun 2019 18:55:34 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 5 Jun 2019
+ 18:55:34 +0200
+Date:   Wed, 5 Jun 2019 18:55:30 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     David Howells <dhowells@redhat.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kento Kobayashi <Kento.A.Kobayashi@sony.com>,
+        Hui Peng <benquike@gmail.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jan-Marek Glogowski <glogow@fbihome.de>,
+        Bin Liu <b-liu@ti.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jon Flatley <jflat@chromium.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        <yuichi.kusakabe@denso-ten.com>, <yohhei.fukui@denso-ten.com>,
+        <natsumi.kamei@denso-ten.com>, <yasano@jp.adit-jv.com>,
+        <sliu@de.adit-jv.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] usb: hub: report failure to enumerate uevent to userspace
+Message-ID: <20190605165530.GA15790@vmlxhi-102.adit-jv.com>
+References: <20190605090556.17792-1-erosca@de.adit-jv.com>
+ <20190605100337.GA9350@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190605100337.GA9350@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides support for clocks needed for Dynamic Memory Controller
-in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
-GATE entries.
+Hi Greg,
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c | 57 ++++++++++++++++++++++++++--
- 1 file changed, 53 insertions(+), 4 deletions(-)
+We really appreciate your feedback.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 34cce3c5898f..eecbfcc6b3cf 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -134,6 +134,8 @@
- #define SRC_CDREX		0x20200
- #define DIV_CDREX0		0x20500
- #define DIV_CDREX1		0x20504
-+#define GATE_BUS_CDREX0		0x20700
-+#define GATE_BUS_CDREX1		0x20704
- #define KPLL_LOCK		0x28000
- #define KPLL_CON0		0x28100
- #define SRC_KFC			0x28200
-@@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	DIV_CDREX1,
- 	SRC_KFC,
- 	DIV_KFC0,
-+	GATE_BUS_CDREX0,
-+	GATE_BUS_CDREX1,
- };
- 
- static const unsigned long exynos5800_clk_regs[] __initconst = {
-@@ -425,6 +429,9 @@ PNAME(mout_group13_5800_p)	= { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
- PNAME(mout_group14_5800_p)	= { "dout_aclk550_cam", "dout_sclk_sw" };
- PNAME(mout_group15_5800_p)	= { "dout_osc_div", "mout_sw_aclk550_cam" };
- PNAME(mout_group16_5800_p)	= { "dout_osc_div", "mout_mau_epll_clk" };
-+PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
-+					"mout_sclk_mpll", "ff_dout_spll2",
-+					"mout_sclk_spll", "mout_sclk_epll"};
- 
- /* fixed rate clocks generated outside the soc */
- static struct samsung_fixed_rate_clock
-@@ -450,7 +457,7 @@ static const struct samsung_fixed_factor_clock
- static const struct samsung_fixed_factor_clock
- 		exynos5800_fixed_factor_clks[] __initconst = {
- 	FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
--	FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
-+	FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
- };
- 
- static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
-@@ -472,11 +479,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
- 	MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
- 	MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
- 
-+	MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
-+		mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
-+
- 	MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
--			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
-+			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
- 	MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
- 			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
--	MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
-+	MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
- 	MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
- 
- 	MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
-@@ -648,7 +658,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
- 
- 	MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
- 	MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
--	MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
-+	MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
- 	MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
- 	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
- 	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
-@@ -806,8 +816,21 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 			"mout_aclk400_disp1", DIV_TOP2, 4, 3),
- 
- 	/* CDREX Block */
-+	/*
-+	 * The three clocks below are controlled using the same register and
-+	 * bits. They are put into one because there is a need of
-+	 * synchronization between the BUS and DREXs (two external memory
-+	 * interfaces).
-+	 * They are put here to show this HW assumption and for clock
-+	 * information summary completeness.
-+	 */
- 	DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
- 			DIV_CDREX0, 28, 3),
-+	DIV(CLK_DOUT_PCLK_DREX0, "dout_pclk_drex0", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3),
-+	DIV(CLK_DOUT_PCLK_DREX1, "dout_pclk_drex1", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3),
-+
- 	DIV_F(CLK_DOUT_SCLK_CDREX, "dout_sclk_cdrex", "mout_mclk_cdrex",
- 			DIV_CDREX0, 24, 3, CLK_SET_RATE_PARENT, 0),
- 	DIV(CLK_DOUT_ACLK_CDREX1, "dout_aclk_cdrex1", "dout_clk2x_phy0",
-@@ -1170,6 +1193,32 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
- 
- 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
-+
-+	/* CDREX */
-+	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 0, 0, 0),
-+	GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 1, 0, 0),
-+	GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
-+			SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
- };
- 
- static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
+On Wed, Jun 05, 2019 at 12:03:37PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jun 05, 2019 at 11:05:56AM +0200, Eugeniu Rosca wrote:
+> > From: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+> > 
+> > When a USB device fails to enumerate, only a kernel message is printed.
+> > With this patch, a uevent is also generated to notify userspace.
+> > Services can monitor for the event through udev and handle failures
+> > accordingly.
+> > 
+> > The "port_enumerate_fail_notify()" function name follows the syntax of
+> > "port_over_current_notify()" used in v4.20-rc1
+> > commit 201af55da8a398 ("usb: core: added uevent for over-current").
+> > 
+> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> 
+> All we need is one special notifier!  ...
+> 
+> {grumble}
+> 
+> This can end up causing loads of new kobject change events to be added,
+> overloading what uevents were supposed to be in the first place
+> (add/remove of sysfs objects).
+
+I guess that's the case for every other kobject_uevent*(*, KOBJ_CHANGE)
+call in the USB subsystem (in case of either HW or code misbehavior).
+JFTR, there are around 120 such calls in the entire v5.2-rc3 kernel.
+
+> 
+> I just talked with David Howells, and this type of thing really should
+> be tied into the new "notifier" interface/api.  That way you can
+> register for any specific type of event and just get notified of them
+> when they happen.  No need to mess with uevents.
+> 
+> See his posts on linux-api starting with:
+> 	Subject: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
+> for the proposal.
+> 
+> If we added USB (or really any hardware events) to that interface, would
+> it solve the issue you are trying to solve here?
+
+I checked this patch series in linux-fs.git [3], as well as shared my
+thoughts with our security and RFS experts, and we came up with the
+following questions/remarks:
+
+ - Looking at commit [4], it seems that the new "notifier" interface/api
+   forces userspace applications to link against -lkeyutils [5].
+   Assuming the latter is designed for ("Kernel key management") [6],
+   it may look like the keyutils library is being abused to handle
+   the "USB (or really any hardware events)". Do you really plan to
+   extend the scope of the library to handle these new tasks?
+
+ - Currently, to be able to get kobject uevent notifications, our
+   applications must include "libudev.h" and must link against -ludev.
+   By using the feature implemented in [3], we would significantly
+   increase the complexity of those applications, particularly because
+   they would need to arbitrate between two different categories of
+   events received via two different APIs.
+
+ - It is also my assumption that the existing KOBJ_CHANGE events cannot
+   be easily converted to the new API, since this would hurt a dozen of
+   userland applications relying on them.
+
+Overall, I am quite clueless how to proceed with this patch, except to
+keep it in our internal tree, most likely forever. Any
+comments/recommendations would be appreciated.
+
+> 
+> thanks,
+> 
+> greg k-h
+
+[1] linux (v5.2-rc3) git grep KOBJ_CHANGE -- drivers/usb/
+drivers/usb/core/hub.c:	kobject_uevent_env(&hub_dev->kobj, KOBJ_CHANGE, envp);
+drivers/usb/gadget/udc/core.c:	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
+drivers/usb/gadget/udc/core.c:	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
+drivers/usb/phy/phy.c:	kobject_uevent_env(&usb_phy->dev->kobj, KOBJ_CHANGE, envp);
+drivers/usb/typec/class.c:	kobject_uevent(&adev->dev.kobj, KOBJ_CHANGE);
+drivers/usb/typec/class.c:	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
+drivers/usb/typec/class.c:	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
+drivers/usb/typec/class.c:	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
+drivers/usb/typec/class.c:	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
+
+[2] git grep -w KOBJ_CHANGE -- ":\!Documentation" ":\!include" | wc -l
+122
+
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=16a8aad951990
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git
+[6] https://lwn.net/Articles/210502/ ("Kernel key management")
+
 -- 
-2.17.1
-
+Best Regards,
+Eugeniu.
