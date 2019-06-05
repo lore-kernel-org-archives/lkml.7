@@ -2,113 +2,155 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC86C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF15CC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE812067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4sQgWBW"
+	by mail.kernel.org (Postfix) with ESMTP id C8344206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559736328;
+	bh=/yBmtrGUuJzqyyuL9TNw1yQTPdC8StAgllWcH1SusIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XbtwC3zWkP0+xr1HhkNxgdc+cd1AZ/r+SXsEDPcdtvP9PEZo5sxiOCfL6atv+Ixif
+	 mucjy6MstLmxuHQa90zwuOey/2xkslAkT2N01K7GjgShDdQxmh1d3DRxNIoBQGPgJ8
+	 zkMtzpsa6EJlQkuphW2WVDJR9raiwn9uhRGwJk7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfFEMEd (ORCPT
+        id S1727494AbfFEMF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:04:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34256 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEMEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:04:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so5926859pfc.1;
-        Wed, 05 Jun 2019 05:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=S+XpAYVTNEx0HO/g/90uUe+i0p6WBLVE9iQHDtvUdEM=;
-        b=u4sQgWBWTKkH+kT7wbqPOjkD7r12dH61vE0NijxUqFrKerrNHKD8CuocovAOw+e7UC
-         uUrvMY2dSpoo3zCcYpPhkiRuv+3qIntnyg4CH8l1bDSi8P+SRcLYByOVFbzsbgsIlla2
-         YhlDA6CnOZWtLmYvXKS3WOpsGwr1r/qpD7EOxuazGPxUyzzhHiXZF+QJjCZ5okscTaQn
-         8AmOEXowuYaa8VwZcZioE0CGuana8UyNq+vK5pP2T9V7gs10NqED5slesaicfXyqST/i
-         HXS2VRex+r+vIDW3w8N1REl+cqoYhxhliPewyVqkh0uDEWG+VYAq9y3K35vz7yYR+bIP
-         jfew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=S+XpAYVTNEx0HO/g/90uUe+i0p6WBLVE9iQHDtvUdEM=;
-        b=WCatRfWu01gaexEyhMzkBe2jRW6VXZ4fnEPFLS34Akr1DiuIJi7KwFCstsYufsbJa9
-         X7AvuSk7jHKz9w4MoYvS1+SbggjxNmWlqjOHSXCTF0qgjyXiv9Eb98d+I26sCUZbB5rN
-         uZ3nqpN4u4YjfuSCrH14CLIV5moOMYFyBuxxIS52hUx+KxflId4lBE7Kj/zw6jWTqTex
-         55JONL0+FI3SBJzjyzxJPbTGVs3hTxH/sEk9js7PWB9m2xKzrji4cSF28EZtcrX5ONpQ
-         6IlvEFhrb3cddsrSZ44bY7G/8+Cmwx7M5L5K0vWjykvxLI/d3/2kx4rx00M5Ea7t5Phs
-         hOkw==
-X-Gm-Message-State: APjAAAVt0N2u+eJTBOIiYH0mkjHA9NbA5LvBxqK35TEvl8O5yXZeK8Zy
-        UDSGIG83T0NLywCccbETJC0=
-X-Google-Smtp-Source: APXvYqwdDbBf+Zzh7fseqzt+LXp8OuJI9Pty2uvRNXsxW0sbxqQ4IwerZVHmOnqFq8HdhiVQlPFi5Q==
-X-Received: by 2002:a63:fc61:: with SMTP id r33mr3815637pgk.294.1559736271942;
-        Wed, 05 Jun 2019 05:04:31 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id l1sm20407719pgj.67.2019.06.05.05.04.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:04:30 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 17:34:25 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: omap_udc: Remove unneeded variable
-Message-ID: <20190605120425.GA4375@hari-Inspiron-1545>
+        Wed, 5 Jun 2019 08:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727325AbfFEMF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:05:27 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5A922070B;
+        Wed,  5 Jun 2019 12:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559736326;
+        bh=/yBmtrGUuJzqyyuL9TNw1yQTPdC8StAgllWcH1SusIc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=guT85f4kOCTPb7g81M3ETpUzM46V6ZvoSK6lz1RMVBeCDQghdR68z71f6y5vw/JMe
+         hBoKRQNUzUSI2mUI4gsVQC3gw40VC/BGvj4DjQ+8IU9/ArFF4DfpxjRp6yNl9ePaYr
+         ORaChhw/4HzRut9ppSgk9Q+2IxW5+2r+XCDoPE8c=
+Received: by mail-lj1-f181.google.com with SMTP id o13so22867425lji.5;
+        Wed, 05 Jun 2019 05:05:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAWJA76UXrff0DojScbOXJlNyiB3IDhjlx2NZoh1oFwix9V4Awna
+        lSdDmUy5aaFf3xXyladn07xf69McZHI4jGc0IJM=
+X-Google-Smtp-Source: APXvYqyy3PzIshgd+hJHZQBaDG/tn3wI/iXAXb04vhvfCuOj9XnQLbiv+Uyq+aBSr59JP990kgt/YLqRWBcifg7dsew=
+X-Received: by 2002:a2e:9cc4:: with SMTP id g4mr21556488ljj.47.1559736323980;
+ Wed, 05 Jun 2019 05:05:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-4-matheus@castello.eng.br>
+ <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com> <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
+In-Reply-To: <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 5 Jun 2019 14:05:12 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfpSEq+eOGsZjQQociuemzb1=E4_OetfCEvLyNxVxJpmQ@mail.gmail.com>
+Message-ID: <CAJKOXPfpSEq+eOGsZjQQociuemzb1=E4_OetfCEvLyNxVxJpmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the current implementation omap_udc_stop is always
-returning -ENODEV.
+On Mon, 3 Jun 2019 at 00:42, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+>
+>
+> On 5/29/19 11:46 AM, Krzysztof Kozlowski wrote:
+> > On Mon, 27 May 2019 at 04:46, Matheus Castello <matheus@castello.eng.br> wrote:
+> >>
+> >> For configuration of fuel gauge alert for a low level state of charge
+> >> interrupt we add a function to config level threshold and a device tree
+> >> binding property to set it in flatned device tree node.
+> >>
+> >> Now we can use "maxim,alert-low-soc-level" property with the values from
+> >> 1% up to 32% to configure alert interrupt threshold.
+> >>
+> >> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> >> ---
+> >>   drivers/power/supply/max17040_battery.c | 52 +++++++++++++++++++++++--
+> >>   1 file changed, 49 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> >> index b7433e9ca7c2..2f4851608cfe 100644
+> >> --- a/drivers/power/supply/max17040_battery.c
+> >> +++ b/drivers/power/supply/max17040_battery.c
+> >> @@ -29,6 +29,9 @@
+> >>   #define MAX17040_DELAY         1000
+> >>   #define MAX17040_BATTERY_FULL  95
+> >>
+> >> +#define MAX17040_ATHD_MASK             0xFFC0
+> >> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
+> >> +
+> >>   struct max17040_chip {
+> >>          struct i2c_client               *client;
+> >>          struct delayed_work             work;
+> >> @@ -43,6 +46,8 @@ struct max17040_chip {
+> >>          int soc;
+> >>          /* State Of Charge */
+> >>          int status;
+> >> +       /* Low alert threshold from 32% to 1% of the State of Charge */
+> >> +       u32 low_soc_alert_threshold;
+> >>   };
+> >>
+> >>   static int max17040_get_property(struct power_supply *psy,
+> >> @@ -99,6 +104,28 @@ static void max17040_reset(struct i2c_client *client)
+> >>          max17040_write_reg(client, MAX17040_CMD, 0x0054);
+> >>   }
+> >>
+> >> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+> >> +       u32 level)
+> >> +{
+> >> +       int ret;
+> >> +       u16 data;
+> >> +
+> >> +       /* check if level is between 1% and 32% */
+> >> +       if (level > 0 && level < 33) {
+> >> +               level = 32 - level;
+> >> +               data = max17040_read_reg(client, MAX17040_RCOMP);
+> >> +               /* clear the alrt bit and set LSb 5 bits */
+> >> +               data &= MAX17040_ATHD_MASK;
+> >> +               data |= level;
+> >> +               max17040_write_reg(client, MAX17040_RCOMP, data);
+> >> +               ret = 0;
+>
+> I will put the return of max17040_write_reg on ret, instead of ret = 0.
+>
+> >> +       } else {
+> >> +               ret = -EINVAL;
+> >> +       }
+> >
+> > This is unusual way of handling error... when you parse DTS, you
+> > accept any value for "level" (even incorrect one). You validate the
+> > value later when setting it and show an error... however you ignore
+> > the error of max17040_write_reg() here... This is correct but looks
+> > unusual.
+> >
+>
+> Ok, so would it be better to check the level value in
+> "max17040_get_of_data" and return an error there if the input is wrong?
 
-Added changes to return 0 and remove variable status.
+I think yes. It looks more natural - validate the value as early as
+possible and fail the probe which gives the information about point of
+failure.
 
-Issue identified with coccicheck
-drivers/usb/gadget/udc/omap_udc.c:2106:6-12:
-Unneeded variable: "status". Return "- ENODEV" on line 2128
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/usb/gadget/udc/omap_udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/omap_udc.c b/drivers/usb/gadget/udc/omap_udc.c
-index fcf13ef..f36f073 100644
---- a/drivers/usb/gadget/udc/omap_udc.c
-+++ b/drivers/usb/gadget/udc/omap_udc.c
-@@ -2103,7 +2103,6 @@ static int omap_udc_start(struct usb_gadget *g,
- static int omap_udc_stop(struct usb_gadget *g)
- {
- 	unsigned long	flags;
--	int		status = -ENODEV;
- 
- 	if (udc->dc_clk != NULL)
- 		omap_udc_enable_clock(1);
-@@ -2125,7 +2124,7 @@ static int omap_udc_stop(struct usb_gadget *g)
- 	if (udc->dc_clk != NULL)
- 		omap_udc_enable_clock(0);
- 
--	return status;
-+	return 0;
- }
- 
- /*-------------------------------------------------------------------------*/
--- 
-2.7.4
-
+Best regards,
+Krzysztof
