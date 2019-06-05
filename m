@@ -2,134 +2,207 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF450C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC41C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B337B206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407C7206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Do2WkLTK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxPej+Xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFETbm (ORCPT
+        id S1726649AbfFETfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:31:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFETbm (ORCPT
+        Wed, 5 Jun 2019 15:35:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39899 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfFETft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:31:42 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so17623738wrs.3;
-        Wed, 05 Jun 2019 12:31:41 -0700 (PDT)
+        Wed, 5 Jun 2019 15:35:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so43255wma.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CR6XFeOMZJQM4BGrbFMgzErRWLAloeGJOms2+4HdXsU=;
-        b=Do2WkLTKCC2BzOuOF05cX/F6fgrfuLHV7G9WQbaceoXMyM6B9QM2lXqEOTOavv55V3
-         xurN/EW7jPT37o9v4oLDZflJsF99O/M/mBrp++9R5gcY5SpyUoIakgx2kCg1B1BSQ6uP
-         nEYQO9/epO87yvq6UiihlaDKmuKIfF9L7g2ly79KY6aXBizTRxjMVKEXAmmt0XwdbGde
-         PZW5yrldiO/v+T4EUm3G3Q61b+CIYcOohSUkUETLDjA7AmDivB8lX42nGfUuz/SrU6FH
-         Rx7oo12EwoOQPPnFtjrTi4K/Eop59CkEq1Nq2WsT2kI/zN77qq2k41REZdqM1Snq5t6u
-         Q1Hg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+XgTLMQHXUHAlRC15H03l3gn1i1407JWZiEl7Nlddc8=;
+        b=rxPej+XaD2qUwYl11GzFNqf37sO+gbFXWtcskQgkqqRrdfKXJVNXNWMKUOIhNqFjnH
+         sZbnuPbZbo21HKEviDQhbRvQbZn8LburWbITtvsEJE0y8WStht94fUX2bcgyE1Dcm/lf
+         k5OsvlayoxvkYJ1AqrJmd7BisXQpEh/PpaWAqM8L8WIAt844ii2QLM0SNMtFcZBZkWhn
+         uzfcIIQPdraQpVsk2BLRA95nwTaL4V8rxuU+oKOWJ1HzBIE2Nv0AYF5Hx4puT0WNmK/T
+         iiOl87G2kq51FeqFmeOYCg0qMP1lYY6XCF9GnuBHVqQELSUiwfDN0j9gi2dDEg1GG0AL
+         lk4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CR6XFeOMZJQM4BGrbFMgzErRWLAloeGJOms2+4HdXsU=;
-        b=FgZLy/61Fd5odn8snXgqGpTJ3fKF8hzYqOccPvXSXIjsDzo6KqEtqXOxOg6/xzgpfb
-         HCiCa0kaSRNe3EGZUBzYYg4q0kKROfHAOiLj35yGQ4zB/zU/up7gHL8oHgqtSzhitc86
-         4nKSWi3FDFX0neRw3l+HlBsa/SjWu14zLZPOADsQKDiwlVUs2hfeQEo9GtUYegzWGqs1
-         8hR470E6+XfwpbC9JCEFNwBZ/e7XtsxlbEq9Mwkv0PP4B+65MyNr75Eq+wKCeEoNOZ4k
-         zglSEtuDpEJmr9Robb3DWuYUuiYSW2KDKl9fEMeuI2B4w3sW9lJNoVVtVpmshfTTXGq+
-         HzOg==
-X-Gm-Message-State: APjAAAVp41IYt621PHYCrwlIDruR47D7bIoClEQJp9rwaHu0py0kJ1kw
-        Qtw4eIGnXCnJOOG7iSZ6CIFS6Lxg
-X-Google-Smtp-Source: APXvYqyqmdfv4Ii73UGu3DMUeTitvp1egPp9n/55aT0sroqdrSMGsgKyNK3L1IVTjJUPVL51dly4cQ==
-X-Received: by 2002:adf:8065:: with SMTP id 92mr9453584wrk.222.1559763100285;
-        Wed, 05 Jun 2019 12:31:40 -0700 (PDT)
-Received: from [192.168.1.17] (ble215.neoplus.adsl.tpnet.pl. [83.28.198.215])
-        by smtp.gmail.com with ESMTPSA id z14sm17991014wrh.86.2019.06.05.12.31.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 12:31:39 -0700 (PDT)
-Subject: Re: [PATCH v6 0/5] LM36274 Introduction
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, broonie@kernel.org,
-        lgirdwood@gmail.com
-Cc:     lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190605125634.7042-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <cb41fea8-4cc6-bf0d-8006-6441ba8f2213@gmail.com>
-Date:   Wed, 5 Jun 2019 21:31:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+XgTLMQHXUHAlRC15H03l3gn1i1407JWZiEl7Nlddc8=;
+        b=M7LIf5WlfJXEuZ+luzlGeWesfp26ySpEWhbagcWc1D5GAC7DfwsVXwLo8nUu+4Wwmw
+         QCKL0nXrzTY1z105zW4xDWoNUHH5nOtpEiRBfl8fosDUNLgmUwK1z/797gLG8KPTfN70
+         YlBcVRxV8aDzyAb+vVD0/wszQy/tyWYbnOVgkzc/8jL1jWGmNi4DHkFSf1gZ/zxYjmXZ
+         uxh4zEgxhFDpHkR8V4yZztZjodnMhaXKvA2BzM4jbykAMDgEVlN2wsP1L++RngY0FtQO
+         GCyGip7HCEqEyJMVcQEs57JnkQhnyGfwMpxgKm9NkLttLnFUIUs4bEz98raSeWu0+Ez7
+         rr8w==
+X-Gm-Message-State: APjAAAU7wKZe/wH3xWxS3eEG96DUtrxX8End5n1mlkXpwwc3GoxLRDAa
+        ildaLrEX8prBLcqwdCrY2Ll+zA==
+X-Google-Smtp-Source: APXvYqwP7o7VGE+TdqvhZHNouyX2xhkoTgrYZTIp0Ei2POvdABQ8iKlx3+djogE+DbI+YmFupn+u2w==
+X-Received: by 2002:a1c:b707:: with SMTP id h7mr11518255wmf.45.1559763347150;
+        Wed, 05 Jun 2019 12:35:47 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id m17sm10523991wrx.12.2019.06.05.12.35.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 12:35:46 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 20:35:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190605193544.GX4797@dell>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-4-lee.jones@linaro.org>
+ <20190605061721.GK22737@tuxbook-pro>
+ <20190605073133.GL4797@dell>
+ <20190605190614.GI4814@minitux>
 MIME-Version: 1.0
-In-Reply-To: <20190605125634.7042-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605190614.GI4814@minitux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Wed, 05 Jun 2019, Bjorn Andersson wrote:
 
-Thank you for the v6.
+> On Wed 05 Jun 00:31 PDT 2019, Lee Jones wrote:
+> 
+> > On Tue, 04 Jun 2019, Bjorn Andersson wrote:
+> > 
+> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> > > 
+> > > > This patch provides basic support for booting with ACPI instead
+> > > > of the currently supported Device Tree.  When doing so there are a
+> > > > couple of differences which we need to taken into consideration.
+> > > > 
+> > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > > > initialise any of these lines, the firmware will restart the
+> > > > platform.
+> > > > 
+> > > > Secondly, when booting with ACPI, it is expected that the firmware
+> > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > > > their ideal configuration.  Thus, the possible Pin Functions
+> > > > available to this platform are not advertised when providing the
+> > > > higher GPIOD/Pinctrl APIs with pin information.
+> > > > 
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/pinctrl/qcom/Kconfig          |  2 +-
+> > > >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
+> > > >  2 files changed, 35 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> > > > index 2e66ab72c10b..aafbe932424f 100644
+> > > > --- a/drivers/pinctrl/qcom/Kconfig
+> > > > +++ b/drivers/pinctrl/qcom/Kconfig
+> > > > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
+> > > >  
+> > > >  config PINCTRL_SDM845
+> > > >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+> > > > -       depends on GPIOLIB && OF
+> > > > +       depends on GPIOLIB && (OF || ACPI)
+> > > >         select PINCTRL_MSM
+> > > >         help
+> > > >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > > > index c97f20fca5fd..7188bee3cf3e 100644
+> > > > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > > > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > > > @@ -3,6 +3,7 @@
+> > > >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+> > > >   */
+> > > >  
+> > > > +#include <linux/acpi.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/platform_device.h>
+> > > > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+> > > >  	UFS_RESET(ufs_reset, 0x99f000),
+> > > >  };
+> > > >  
+> > > > +static const int sdm845_acpi_reserved_gpios[] = {
+> > > > +	0, 1, 2, 3, 81, 82, 83, 84, -1
+> > > > +};
+> > > > +
+> > > >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> > > >  	.pins = sdm845_pins,
+> > > >  	.npins = ARRAY_SIZE(sdm845_pins),
+> > > > @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> > > >  	.nfunctions = ARRAY_SIZE(sdm845_functions),
+> > > >  	.groups = sdm845_groups,
+> > > >  	.ngroups = ARRAY_SIZE(sdm845_groups),
+> > > > +	.reserved_gpios = sdm845_acpi_reserved_gpios,
+> > > 
+> > > The reason why put these in DT is because the list is board/firmware
+> > > dependent. E.g. the firmware on db845c does not support the peripherals
+> > > that sits on these 8 pins and as such these are not reserved.
+> > 
+> > If we need to be more particular about which platform(s) this affects,
+> > we could add matching based on their differences (some ACPI HID or F/W
+> > version/descriptor, etc) as and when we enable them for booting with
+> > ACPI.
+> > 
+> 
+> You're making an assumption that all SDM845 (the platform) devices using
+> ACPI will have this list of GPIOs reserved for secure firmware to use,
+> this is questionable but I don't have any better suggestion.
 
-Patches 4/5 and 5/5 don't contain amendments I made to
-the respective patches on the ib-leds-mfd-regulator branch
-(that address issues raised by Pavel), so I just kept those
-unchanged. Besides that I updated the remaining ones.
+Yes, I am, since this is the first and currently only device which
+ticks those boxes.  If/when there are others AND if they require a
+different configuration, we can look at the differences and conduct
+some suitable matching on them at the time.
 
-Please check the ib-leds-mfd-regulator branch. I'll create a pull
-request once I get a confirmation from you saying that everything
-is as expected.
+> But you do this by adding a new struct msm_pinctrl_soc_data
+> sdm845_acpi_pinctrl, specifically for the ACPI case. And then, on the
+> line I object to here, you add this list as the list of reserved GPIOs
+> for the DT case as well.
 
-Best regards,
-Jacek Anaszewski
+Ohhhh, now I see what you're getting at.  Yes, that's a mistake left
+over from testing.  That needs removing -- good spot.
 
-On 6/5/19 2:56 PM, Dan Murphy wrote:
-> Hello
+> > > But given that the two structs looks identical now, did you perhaps not
+> > > intend to add.reserved_gpios for the non-ACPI case?
+> > 
+> > Given your example above, I think it's best that we let the
+> > configuration tables advertise these in the first instance.  I only
+> > add them here because it is not possible to obtain them from
+> > elsewhere.
+> > 
 > 
-> The v5 patchset missed adding in the new validation code.
-> Patch 1 of the v5 series was squashed into patch 4 of the v5 series.
-> So this will reduce the patchset by 1.
-> 
-> Sorry for the extra noise on the patchsets.  The change was lost when I converted
-> the patches from the mainline branch to the LED branch.
-> 
-> This change was made on top of the branch
-> 
-> repo: https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
-> branch: ti-lmu-led-drivers
-> 
-> 
-> Dan Murphy (5):
->    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
->    mfd: ti-lmu: Add LM36274 support to the ti-lmu
->    regulator: lm363x: Add support for LM36274
->    dt-bindings: leds: Add LED bindings for the LM36274
->    leds: lm36274: Introduce the TI LM36274 LED driver
-> 
->   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
->   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
->   drivers/leds/Kconfig                          |   8 +
->   drivers/leds/Makefile                         |   1 +
->   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
->   drivers/mfd/Kconfig                           |   5 +-
->   drivers/mfd/ti-lmu.c                          |  14 ++
->   drivers/regulator/Kconfig                     |   2 +-
->   drivers/regulator/lm363x-regulator.c          |  78 +++++++-
->   include/linux/mfd/ti-lmu-register.h           |  23 +++
->   include/linux/mfd/ti-lmu.h                    |   4 +
->   11 files changed, 437 insertions(+), 8 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
->   create mode 100644 drivers/leds/leds-lm36274.c
-> 
+> Then add it for ACPI only - which I still presume you intended to do by
+> adding sdm845_acpi_pinctrl (which is now identical to sdm845_pinctrl).
 
+We're arguing about the same thing - sorry for the confusion.
+
+I will fix this.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
