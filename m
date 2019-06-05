@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D813C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9367CC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310DC20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7356A206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfFELpR (ORCPT
+        id S1728065AbfFELp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:45:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61386 "EHLO
+        Wed, 5 Jun 2019 07:45:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7123 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727828AbfFELoE (ORCPT
+        with ESMTP id S1727725AbfFELoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:44:04 -0400
-X-UUID: 6d200aacf16c447ab6972f4aa6cd1ce9-20190605
-X-UUID: 6d200aacf16c447ab6972f4aa6cd1ce9-20190605
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Wed, 5 Jun 2019 07:44:01 -0400
+X-UUID: 980292e28c8b479f9195ed9d41ca9346-20190605
+X-UUID: 980292e28c8b479f9195ed9d41ca9346-20190605
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 40155994; Wed, 05 Jun 2019 19:43:52 +0800
+        with ESMTP id 618737484; Wed, 05 Jun 2019 19:43:56 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 5 Jun 2019 19:43:50 +0800
+ 15.0.1395.4; Wed, 5 Jun 2019 19:43:55 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 5 Jun 2019 19:43:50 +0800
+ Transport; Wed, 5 Jun 2019 19:43:54 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,15 +44,15 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 16/27] drm/mediatek: add component DITHER
-Date:   Wed, 5 Jun 2019 19:42:55 +0800
-Message-ID: <1559734986-7379-17-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 21/27] drm/mediatek: add ovl0/ovl_2l0 usecase
+Date:   Wed, 5 Jun 2019 19:43:00 +0800
+Message-ID: <1559734986-7379-22-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: CD49CE50A184C606E5AEA14F62A2282F4FF7AFCC3D738B27A6837DBF255A4BAC2000:8
+X-TM-SNTS-SMTP: 4D14F41C5AF6C2B09CBEB1FC3B1957FEFD6C471C5AEE7AFAA708AACD1DFAB3972000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,105 +61,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add component DITHER
+This patch add ovl0/ovl_2l0 usecase
+in ovl->ovl_2l0 direct link usecase:
+1. the crtc support layer number will 4+2
+2. ovl_2l0 background color input select ovl0 when crtc init
+and disable it when crtc finish
+3. config ovl_2l0 layer, if crtc config layer number is
+bigger than ovl0 support layers(max is 4)
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
- 2 files changed, 34 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 5a0ec0f..989024d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -47,6 +47,12 @@
- #define CCORR_RELAY_MODE			BIT(0)
- #define DISP_CCORR_SIZE				0x0030
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 11e3404..9c749c3 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -283,6 +283,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
  
-+#define DISP_DITHER_EN				0x0000
-+#define DITHER_EN				BIT(0)
-+#define DISP_DITHER_CFG				0x0020
-+#define DITHER_RELAY_MODE			BIT(0)
-+#define DISP_DITHER_SIZE			0x0030
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+ 		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
++		enum mtk_ddp_comp_id prev;
 +
- #define DISP_GAMMA_EN				0x0000
- #define DISP_GAMMA_CFG				0x0020
- #define DISP_GAMMA_SIZE				0x0030
-@@ -155,6 +161,24 @@ static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
- 	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
- }
++		if (i > 0)
++			prev = mtk_crtc->ddp_comp[i - 1]->id;
++		else
++			prev = DDP_COMPONENT_ID_MAX;
++
++		if (prev == DDP_COMPONENT_OVL0)
++			mtk_ddp_comp_bgclr_in_on(comp, prev);
  
-+static void mtk_dither_config(struct mtk_ddp_comp *comp, unsigned int w,
-+			      unsigned int h, unsigned int vrefresh,
-+			      unsigned int bpc)
-+{
-+	writel(h << 16 | w, comp->regs + DISP_DITHER_SIZE);
-+	writel(DITHER_RELAY_MODE, comp->regs + DISP_DITHER_CFG);
-+}
-+
-+static void mtk_dither_start(struct mtk_ddp_comp *comp)
-+{
-+	writel(DITHER_EN, comp->regs + DISP_DITHER_EN);
-+}
-+
-+static void mtk_dither_stop(struct mtk_ddp_comp *comp)
-+{
-+	writel_relaxed(0x0, comp->regs + DISP_DITHER_EN);
-+}
-+
- static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
- 			     unsigned int h, unsigned int vrefresh,
- 			     unsigned int bpc)
-@@ -209,6 +233,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
- 	.stop = mtk_ccorr_stop,
- };
+ 		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+ 		mtk_ddp_comp_start(comp);
+@@ -292,9 +301,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+ 	for (i = 0; i < mtk_crtc->layer_nr; i++) {
+ 		struct drm_plane *plane = &mtk_crtc->planes[i];
+ 		struct mtk_plane_state *plane_state;
++		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
++		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
++		unsigned int local_layer;
  
-+static const struct mtk_ddp_comp_funcs ddp_dither = {
-+	.config = mtk_dither_config,
-+	.start = mtk_dither_start,
-+	.stop = mtk_dither_stop,
-+};
+ 		plane_state = to_mtk_plane_state(plane->state);
+-		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
 +
- static const struct mtk_ddp_comp_funcs ddp_gamma = {
- 	.gamma_set = mtk_gamma_set,
- 	.config = mtk_gamma_config,
-@@ -234,6 +264,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
- 	[MTK_DISP_CCORR] = "ccorr",
- 	[MTK_DISP_AAL] = "aal",
- 	[MTK_DISP_GAMMA] = "gamma",
-+	[MTK_DISP_DITHER] = "dither",
- 	[MTK_DISP_UFOE] = "ufoe",
- 	[MTK_DSI] = "dsi",
- 	[MTK_DPI] = "dpi",
-@@ -256,6 +287,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
- 	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
- 	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
-+	[DDP_COMPONENT_DITHER]	= { MTK_DISP_DITHER,	0, &ddp_dither },
- 	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
- 	[DDP_COMPONENT_DPI1]	= { MTK_DPI,		1, NULL },
- 	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index d7ef480..158c1e5 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -30,6 +30,7 @@ enum mtk_ddp_comp_type {
- 	MTK_DISP_WDMA,
- 	MTK_DISP_COLOR,
- 	MTK_DISP_CCORR,
-+	MTK_DISP_DITHER,
- 	MTK_DISP_AAL,
- 	MTK_DISP_GAMMA,
- 	MTK_DISP_UFOE,
-@@ -49,6 +50,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_CCORR,
- 	DDP_COMPONENT_COLOR0,
- 	DDP_COMPONENT_COLOR1,
-+	DDP_COMPONENT_DITHER,
- 	DDP_COMPONENT_DPI0,
- 	DDP_COMPONENT_DPI1,
- 	DDP_COMPONENT_DSI0,
++		if (i >= comp_layer_nr) {
++			comp = mtk_crtc->ddp_comp[1];
++			local_layer = i - comp_layer_nr;
++		} else
++			local_layer = i;
++		mtk_ddp_comp_layer_config(comp , local_layer,
+ 					  plane_state);
+ 	}
+ 
+@@ -320,6 +338,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 					   mtk_crtc->ddp_comp[i]->id);
+ 	mtk_disp_mutex_disable(mtk_crtc->mutex);
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
++		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+ 		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+ 					      mtk_crtc->mmsys_reg_data,
+ 					      mtk_crtc->ddp_comp[i]->id,
+@@ -340,6 +359,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+ 	unsigned int i;
++	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
++	unsigned int local_layer;
+ 
+ 	/*
+ 	 * TODO: instead of updating the registers here, we should prepare
+@@ -362,7 +383,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ 			plane_state = to_mtk_plane_state(plane->state);
+ 
+ 			if (plane_state->pending.config) {
+-				mtk_ddp_comp_layer_config(comp, i, plane_state);
++				if (i >= comp_layer_nr) {
++					comp = mtk_crtc->ddp_comp[1];
++					local_layer = i - comp_layer_nr;
++				} else
++					local_layer = i;
++
++				mtk_ddp_comp_layer_config(comp, local_layer,
++							  plane_state);
+ 				plane_state->pending.config = false;
+ 			}
+ 		}
+@@ -604,6 +632,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 	}
+ 
+ 	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
++	if (mtk_crtc->ddp_comp_nr > 1) {
++		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
++
++		if (comp->funcs->bgclr_in_on)
++			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
++	}
+ 	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+ 					sizeof(struct drm_plane),
+ 					GFP_KERNEL);
 -- 
 1.8.1.1.dirty
 
