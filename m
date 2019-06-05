@@ -2,70 +2,127 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1428AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCBFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DEF20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167F3206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dgEscgVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfFEV4Z (ORCPT
+        id S1726606AbfFEWAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:56:25 -0400
-Received: from gate.crashing.org ([63.228.1.57]:60670 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfFEV4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:56:25 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x55LthpZ022953;
-        Wed, 5 Jun 2019 16:55:44 -0500
-Message-ID: <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
- Fabric Interrupt Controller Driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Talel Shenhar <talel@amazon.com>
-Cc:     nicolas.ferre@microchip.com, jason@lakedaemon.net,
-        marc.zyngier@arm.com, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        Wed, 5 Jun 2019 18:00:08 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38188 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEWAH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:00:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559772004; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xywClfAbICtmWsTPN9rFrgnFtGpCJiSZnGd/4G/sFDU=;
+        b=dgEscgVUN2r30uwN1R3XaCqyqJkLsVj0tUVaV9fmT+7mxuvLtMGzDak4rtnsK05vthIyLm
+        ccfvUwbQNVVu8riTlKwCgXHRlszCXz9vXOs50psbPAFRBvcKKgy2NkNQ5LArLgUwZQjjPE
+        A7NZODVmTXGvqxsvgXaUwW5bsnkmaFo=
+Date:   Wed, 05 Jun 2019 23:59:58 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/3] media: uapi: Add RGB bus format for the GiantPlus
+ GPM940B0 panel
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Hans Verkuil <hansverk@cisco.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
-        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
-Date:   Thu, 06 Jun 2019 07:55:43 +1000
-In-Reply-To: <20190605075927.GA9693@kroah.com>
-References: <1559717653-11258-1-git-send-email-talel@amazon.com>
-         <1559717653-11258-3-git-send-email-talel@amazon.com>
-         <20190605075927.GA9693@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        od@zcrc.me
+Message-Id: <1559771998.1972.0@crapouillou.net>
+In-Reply-To: <20190605112645.5b357630@coco.lan>
+References: <20190603153511.24384-1-paul@crapouillou.net>
+        <20190603153511.24384-2-paul@crapouillou.net>
+        <20190605112645.5b357630@coco.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
-> 
-> > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
-> > +
-> > +struct al_fic *al_fic_wire_init(struct device_node *node,
-> > +				void __iomem *base,
-> > +				const char *name,
-> > +				unsigned int parent_irq);
-> > +int al_fic_cleanup(struct al_fic *fic);
-> 
-> Who is using these new functions?  We don't add new apis that no one
-> uses :(
 
-They will be used by subsequent driver submissions but those aren't
-quite ready yet, so we can hold onto patch 3 for now until they are.
 
-Cheers,
-Ben.
+Le mer. 5 juin 2019 =E0 16:26, Mauro Carvalho Chehab=20
+<mchehab+samsung@kernel.org> a =E9crit :
+> Em Mon,  3 Jun 2019 17:35:10 +0200
+> Paul Cercueil <paul@crapouillou.net> escreveu:
+>=20
+>>  The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB=20
+>> components
+>>  are transferred sequentially on a 8-bit bus.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: New patch
+>>=20
+>>      v3: No change
+>>=20
+>>      v4: Add only MEDIA_BUS_FMT_RGB888_3X8, as we don't have to care=20
+>> about
+>>          endianness
+>=20
+> Same comment as on version 3:
+>=20
+> You should also patch the documentation text at:
+>=20
+> 	Documentation/media/uapi/v4l/subdev-formats.rst
+>=20
+> In order to describe the new format that will be included.
 
+Ouch. Sorry. Will do.
+
+-Paul
+
+>=20
+>>=20
+>>   include/uapi/linux/media-bus-format.h | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>=20
+>>  diff --git a/include/uapi/linux/media-bus-format.h=20
+>> b/include/uapi/linux/media-bus-format.h
+>>  index 2a6b253cfb05..16c1fa2d89a4 100644
+>>  --- a/include/uapi/linux/media-bus-format.h
+>>  +++ b/include/uapi/linux/media-bus-format.h
+>>  @@ -34,7 +34,7 @@
+>>=20
+>>   #define MEDIA_BUS_FMT_FIXED			0x0001
+>>=20
+>>  -/* RGB - next is	0x101c */
+>>  +/* RGB - next is	0x101d */
+>>   #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+>>  @@ -55,6 +55,7 @@
+>>   #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+>>  +#define MEDIA_BUS_FMT_RGB888_3X8		0x101c
+>>   #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
+>>   #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
+>>   #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+>=20
+>=20
+>=20
+> Thanks,
+> Mauro
+
+=
 
