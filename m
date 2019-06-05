@@ -2,92 +2,132 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37494C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFC2C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10137206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wq8tGL5n"
+	by mail.kernel.org (Postfix) with ESMTP id 9F1F420870
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfFEQcL (ORCPT
+        id S1728701AbfFEQhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:32:11 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60800 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfFEQcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:32:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55GW4UZ023032;
-        Wed, 5 Jun 2019 11:32:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559752324;
-        bh=qIDUYTxE6wv44Y20SI9fIey5LVY7ECHQwKd7D9Y/+m0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wq8tGL5n45RFAD1NADQqY/YSJnLPPUvSZBkclCZRk12mcNMFoPh6+SvXFYcBFIvgk
-         t4If8qUyiWtxCUVb655m1Fu5sPrymI2XeLclwINtRWaMzo12hFeTbv/27R0or646l0
-         qus4XywF9srz3/+UfAp3BeSCjsOzDFs1wu1UPzHE=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55GW3eL078024
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 11:32:04 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 11:32:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 11:32:03 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55GW2gX094600;
-        Wed, 5 Jun 2019 11:32:03 -0500
-Subject: Re: [PATCH v5 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-To:     Mark Brown <broonie@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190604174345.14841-1-dmurphy@ti.com>
- <20190604174345.14841-2-dmurphy@ti.com> <20190605100132.GL2456@sirena.org.uk>
- <7ba7a633-1a39-adcc-e942-12c0eb7c3b16@ti.com>
- <054c3715-e85f-e052-faf1-057bf3a67d45@ti.com>
- <20190605163120.GR2456@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c01c0177-6f28-dc2a-bae7-a5d18c30ce5d@ti.com>
-Date:   Wed, 5 Jun 2019 11:32:02 -0500
+        Wed, 5 Jun 2019 12:37:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33036 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728523AbfFEQhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:37:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80392AC3F;
+        Wed,  5 Jun 2019 16:37:14 +0000 (UTC)
+Subject: Re: question: should_compact_retry limit
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Michal Hocko <mhocko@kernel.org>
+References: <6377c199-2b9e-e30d-a068-c304d8a3f706@oracle.com>
+ <908c1454-6ae5-87ca-c6a5-e542fbafa866@suse.cz>
+ <3bc00340-1e81-4f08-37f8-28388b7fba3b@oracle.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2ab55bf9-96f0-9616-555a-b7e3a399522b@suse.cz>
+Date:   Wed, 5 Jun 2019 18:33:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190605163120.GR2456@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bc00340-1e81-4f08-37f8-28388b7fba3b@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On 6/5/19 6:05 PM, Mike Kravetz wrote:
+> On 6/5/19 12:58 AM, Vlastimil Babka wrote:
+>> On 6/5/19 1:30 AM, Mike Kravetz wrote:
+>> Hmm I guess we didn't expect compaction_withdrawn() to be so
+>> consistently returned. Do you know what value of compact_result is there
+>> in your test?
+> 
+> Added some instrumentation to record values and ran test,
+> 
+> 557904 Total
+> 
+> 549186 COMPACT_DEFERRED
 
-On 6/5/19 11:31 AM, Mark Brown wrote:
-> On Wed, Jun 05, 2019 at 07:47:50AM -0500, Dan Murphy wrote:
->> On 6/5/19 7:02 AM, Dan Murphy wrote:
->>> I can squash patch 1 into 4.
->>> Also not sure what you mean by new validation.
->> Disregard I understand.  The patch is missing the validation code.
-> Ah, some git add issues I guess :)  Squashing would help but it's not
-> essential I think.
+Retrying mindlessly with compaction deferred sounds definitely wrong,
+I'll try to look at it. Thanks.
 
-
-More like PEBKAC on this one
-
-
-Dan
+>   8718 COMPACT_PARTIAL_SKIPPED
+> 
+> Do note that this is not my biggest problem with these allocations.  That is
+> should_continue_reclaim returning true more often that in should.  Still
+> trying to get more info on that.  This was just something curious I also
+> discovered.
+> 
 
