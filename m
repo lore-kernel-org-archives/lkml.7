@@ -2,204 +2,122 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FFFC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB6E20883
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576F3206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:42:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFyb5FTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFESmM (ORCPT
+        id S1726722AbfFESms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:42:12 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54151 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfFESmI (ORCPT
+        Wed, 5 Jun 2019 14:42:48 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37526 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfFESms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:42:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id h3so516861iob.20
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 11:42:08 -0700 (PDT)
+        Wed, 5 Jun 2019 14:42:48 -0400
+Received: by mail-it1-f193.google.com with SMTP id s16so5185347ita.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 11:42:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tb3AsUPpK2GIv5fgvYVpcgDU5/gP5sotzobQUmB0Ib4=;
+        b=FFyb5FTwdfq2lfjZ5UNKjnE3e/r2uFUyCmOfyJOpedhml6nw+BGdFwpyxfyHPD0f7/
+         rEO++unxGsKdphMqlpJPq2jyYUMAWpffYXZ2+0gW6fsNLVLp+GWNoKIx4Bvsv/j8a+hW
+         CW8hPN8Yi1Yw8Zek7YkvFBYng6BFuOrxm5I0y57dm/M345vnLUtQtwD4f/O7qOk7IN/1
+         xGwZV922z7gBwDtBR+S0sTufgi3FxQ1oZZRNOq+Raf9ABT81ncZGmTDLtZcQayocqwLM
+         WVMXajhLQmGEr8m6UvDIIw3OGpkM5Zfm7MzgV/uGk3uu95oIKBBZz06Mf4twZHzwCurG
+         LYCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5KA20MEac/BauzP5Z3rFMyap7DfHakSuH0HNa8THrMI=;
-        b=HygSnhW7Y9zR1dOvBxDIdBU1MYMlnhC6s2RgkU7A/O0WMa/N8p8E5917EWQ3m5Q3pC
-         N6n/e6sl6C0Kzos5BcOzm8gAlx3vW+63aNBilgVnNuC/Xsk+I6ENIq0Doq31bif2xc45
-         6WcFJxTH4diufsN3bTpxNHnyhMZlfR7cYmIonNI3E4EjVDtGugldiPfv+8oWzvA0U+u4
-         EnrcO16pcU+KTuMgcGcjQ6qlkJ/fehLbpQjghB8y/8w/nJZy+/dLmBDMMzFWP/M4W7J4
-         OQgkmAJNyyCk+g/k6uSmgs7nWwJjtwzl6ZhRjBPa7TGAl6b2sndkQolorant8lUdouA1
-         wFKA==
-X-Gm-Message-State: APjAAAVWy0PdcsidHAf0g4M3mwZUIizg7UZtTmNxKRDTqlqa5hHPLMJk
-        hyYj6DXylINAbGKh7cMEWH1e8pUSPD0lc7qmU4vK+o6wwFcW
-X-Google-Smtp-Source: APXvYqyQSToVWrtyBHNgFhFwGOm5JXoKFHnoYyxvEB9G9+8LsxYuPtrQVn8OefRIrXAsQWOuxHoYjg0+w1iLcvYseLENP3looVku
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tb3AsUPpK2GIv5fgvYVpcgDU5/gP5sotzobQUmB0Ib4=;
+        b=Fyz8ESBCoa6hC3LQ+BXG2kd3BZluHfDpncFIo2GOXT3XWqGg3q/vCEcqBDTs+6C6s8
+         REY/MtHjX2tqWMt/3gsF7OVEYgCg2LIKwNhfIop1WtJ39bfs69uifY8FI+0lE/6E5eje
+         uUlEliqfs7p2xqLst5XoHPAkweadjx2fIk0Ns2NSaV7+pFcu8de2kU26odVxAfHyPDzc
+         fA1XAFZMLcKhKf+GiaR947ACNir2DqBZTFPyCYV4Lse/1ExWZMSZ3Np/YU2ZPVOGC4Md
+         94VjLi0UzK6yTN4osVXpC+j+M8sOkHhBV+Tb3THkrWkE8dsuPiDWCMOK1tPzYlomhulK
+         qu0Q==
+X-Gm-Message-State: APjAAAWTdvMiGGqxfQnTwtKnRhCbZiotD8MeqPIiT/0k+VBTavEPIr64
+        dxucZgHqsyZTH0UOyLhey7B99FiSrwu6StEPTHlc7Q==
+X-Google-Smtp-Source: APXvYqxakciBcE0cDitL0gdocex8qsiZFZdUy6cXYeX5t4/xGuD1tW+v4IIDXMqIolO29RI1u+y81tpFSB0UKkNdcms=
+X-Received: by 2002:a24:740f:: with SMTP id o15mr12084363itc.76.1559760167133;
+ Wed, 05 Jun 2019 11:42:47 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:958d:: with SMTP id a13mr17604654ioo.288.1559760127802;
- Wed, 05 Jun 2019 11:42:07 -0700 (PDT)
-Date:   Wed, 05 Jun 2019 11:42:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005a4b99058a97f42e@google.com>
-Subject: KASAN: use-after-free Read in unregister_shrinker
-From:   syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bfields@fieldses.org,
-        bfields@redhat.com, chris@chrisdown.name,
-        daniel.m.jordan@oracle.com, guro@fb.com, hannes@cmpxchg.org,
-        jlayton@kernel.org, ktkhai@virtuozzo.com, laoar.shao@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
-        mhocko@suse.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+In-Reply-To: <20190605162626.GA31164@kroah.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 5 Jun 2019 20:42:32 +0200
+Message-ID: <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
+ (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Rolf Eike Beer <eb@emlix.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 5 Jun 2019 at 18:26, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
+> > I decided to dig out a toy project which uses a DragonBoard 410c. This has
+> > been "running" with kernel 4.9, which I would keep this way for unrelated
+> > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was
+> > buildable, which was good enough.
+> >
+> > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> >
+> > aarch64-unknown-linux-gnueabi-ld: ./drivers/firmware/efi/libstub/lib.a(arm64-
+> > stub.stub.o): in function `handle_kernel_image':
+> > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63:
+> > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
+> > aarch64-unknown-linux-gnueabi-ld: ./drivers/firmware/efi/libstub/lib.a(arm64-
+> > stub.stub.o): relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol
+> > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be used
+> > when making a shared object; recompile with -fPIC
+> > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63:
+> > (.init.text+0xc): dangerous relocation: unsupported relocation
+> > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux' failed
+> > -make[1]: *** [vmlinux] Error 1
+> >
+> > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
+> > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be), reverting
+> > this commit fixes the build.
+> >
+> > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.0. See
+> > the attached .config for reference.
+> >
+> > If you have questions or patches just ping me.
+>
+> Does Linus's latest tree also fail for you (or 5.1)?
+>
+> Nick, do we need to add another fix that is in mainline for this to work
+> properly?
+>
 
-syzbot found the following crash on:
+For the record, this is an example of why I think backporting those
+clang enablement patches is a bad idea. We can't actually build those
+kernels with clang, can we? So what is the point? </grumpy>
 
-HEAD commit:    b2924447 Add linux-next specific files for 20190605
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e867eea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
-dashboard link: https://syzkaller.appspot.com/bug?extid=83a43746cebef3508b49
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122965aa00000
-
-The bug was bisected to:
-
-commit db17b61765c2c63b9552d316551550557ff0fcfd
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Fri May 17 13:03:38 2019 +0000
-
-     nfsd4: drc containerization
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110cd22ea00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=130cd22ea00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=150cd22ea00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com
-Fixes: db17b61765c2 ("nfsd4: drc containerization")
-
-==================================================================
-BUG: KASAN: use-after-free in __list_del_entry_valid+0xe6/0xf5  
-lib/list_debug.c:51
-Read of size 8 at addr ffff88808a5bd128 by task syz-executor.2/12471
-
-CPU: 0 PID: 12471 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190605  
-#9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
-  __list_del_entry include/linux/list.h:117 [inline]
-  list_del include/linux/list.h:125 [inline]
-  unregister_shrinker+0xb2/0x2e0 mm/vmscan.c:443
-  nfsd_reply_cache_shutdown+0x26/0x360 fs/nfsd/nfscache.c:194
-  nfsd_exit_net+0x170/0x4b0 fs/nfsd/nfsctl.c:1272
-  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
-  setup_net+0x400/0x740 net/core/net_namespace.c:333
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459279
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7ae73e1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459279
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
-RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7ae73e26d4
-R13: 00000000004c84ef R14: 00000000004decb0 R15: 00000000ffffffff
-
-Allocated by task 12460:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
-  __do_kmalloc mm/slab.c:3654 [inline]
-  __kmalloc+0x15c/0x740 mm/slab.c:3663
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  ops_init+0xff/0x410 net/core/net_namespace.c:120
-  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 12460:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x106/0x2a0 mm/slab.c:3753
-  ops_init+0xd1/0x410 net/core/net_namespace.c:135
-  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88808a5bcdc0
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 872 bytes inside of
-  1024-byte region [ffff88808a5bcdc0, ffff88808a5bd1c0)
-The buggy address belongs to the page:
-page:ffffea0002296f00 refcount:1 mapcount:0 mapping:ffff8880aa400ac0  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000249ea08 ffffea000235a588 ffff8880aa400ac0
-raw: 0000000000000000 ffff88808a5bc040 0000000100000007 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808a5bd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808a5bd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808a5bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                   ^
-  ffff88808a5bd180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff88808a5bd200: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+It would be helpful to get a relocation dump (objdump -r) of
+arm64-stub.o to figure out which symbol needs a 'hidden' annotation to
+prevent GCC from emitting it as a PIC reference requiring a GOT.
+Alternatively, we can just revert this patch from 4.9
