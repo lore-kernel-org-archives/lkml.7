@@ -7,131 +7,113 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330FEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE5E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A06206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TXPo7qdr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pp9uk+YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfFEM4n (ORCPT
+        id S1727913AbfFEM4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:56:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35922 "EHLO
+        Wed, 5 Jun 2019 08:56:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35936 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfFEM4l (ORCPT
+        with ESMTP id S1727642AbfFEM4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Jun 2019 08:56:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55CuapU099176;
-        Wed, 5 Jun 2019 07:56:36 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55Cubj8099180;
+        Wed, 5 Jun 2019 07:56:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559739396;
-        bh=zkjWQDLu4E4CNY/oSn7AHrndHBRdxGIbdSS+ZXLNgQ8=;
+        s=ti-com-17Q1; t=1559739397;
+        bh=MW4TST/iMuLpCixIrt5ZyAqpd2KHqAWFnSQ6CUHkxQU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TXPo7qdrhCINec17rUyLs9jirk4iodOb6cF28lYIWPvyMcbcaFZAinpEal9CzGBKU
-         Umkb02GqfBYkTmqh0c8dhOx8NCEqBqJKEd+haAS2TNOaDV8e3OhAn1wMdlAJ+H5Kq9
-         IXwTei6zntjHxmYz8K7NTPPAhbWoo5VAMEy3HuSo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55CuaxH012160
+        b=Pp9uk+YJbWCOcqXQ6BF+5YHSKTqwsVrMBfdRV/pnAujBKAYiqEMVS/o6llTjh6ySJ
+         in1yY1OsR2jBpaaUNfOHjNqgVU1+D9pkIN/dheLnFnLBmJMmxZaFIbxm6kRQ6W2Mq0
+         CkegS35JiCKzjYloLqokKYrMZoWAWILhca3jY5eQ=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55CubnS130529
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 07:56:36 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 5 Jun 2019 07:56:37 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 07:56:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:56:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 07:56:36 -0500
+ Frontend Transport; Wed, 5 Jun 2019 07:56:37 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55CuaGU108453;
-        Wed, 5 Jun 2019 07:56:36 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55CubGE087372;
+        Wed, 5 Jun 2019 07:56:37 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
         <lgirdwood@gmail.com>
 CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 1/5] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-Date:   Wed, 5 Jun 2019 07:56:30 -0500
-Message-ID: <20190605125634.7042-2-dmurphy@ti.com>
+Subject: [PATCH v6 4/5] dt-bindings: leds: Add LED bindings for the LM36274
+Date:   Wed, 5 Jun 2019 07:56:33 -0500
+Message-ID: <20190605125634.7042-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 In-Reply-To: <20190605125634.7042-1-dmurphy@ti.com>
 References: <20190605125634.7042-1-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the LM36274 backlight driver with regulator support.
-This is a multi-function device for backlight applications.
-
-Backlight properties will be documented in it's a supplemental
-bindings document.
-
-Regulator support is documented in the regulator/lm363x-regulator.txt
-
-http://www.ti.com/lit/ds/symlink/lm36274.pdf
+Add the LM36274 LED specific bindings.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 ---
- .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index 782d3c9812ed..2296b8f24de4 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -8,6 +8,7 @@ TI LMU driver supports lighting devices below.
-   LM3632       Backlight and regulator
-   LM3633       Backlight, LED and fault monitor
-   LM3695       Backlight
-+  LM36274      Backlight and regulator
- 
- Required properties:
-   - compatible: Should be one of:
-@@ -15,11 +16,13 @@ Required properties:
-                 "ti,lm3632"
-                 "ti,lm3633"
-                 "ti,lm3695"
-+		"ti,lm36274"
-   - reg: I2C slave address.
-          0x11 for LM3632
-          0x29 for LM3631
-          0x36 for LM3633
-          0x63 for LM3695
-+         0x11 for LM36274
- 
- Optional properties:
-   - enable-gpios: A GPIO specifier for hardware enable pin.
-@@ -50,12 +53,14 @@ Optional nodes:
-       - compatible: Should be one of:
-                     "ti,lm3633-fault-monitor"
-   - leds: LED properties for LM3633. Please refer to [2].
-+	  LED properties for LM36274. Please refer to [4].
-   - regulators: Regulator properties for LM3631 and LM3632.
-                 Please refer to [3].
- 
- [1] ../leds/backlight/ti-lmu-backlight.txt
- [2] ../leds/leds-lm3633.txt
- [3] ../regulator/lm363x-regulator.txt
-+[4] ../leds/leds-lm36274.txt
- 
- lm3631@29 {
- 	compatible = "ti,lm3631";
-@@ -213,3 +218,52 @@ lm3695@63 {
- 		};
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+new file mode 100644
+index 000000000000..329393700191
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+@@ -0,0 +1,82 @@
++* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated Bias
++
++The LM36274 is an integrated four-channel WLED driver and LCD bias supply.
++The backlight boost provides the power to bias four parallel LED strings with
++up to 29V total output voltage. The 11-bit LED current is programmable via
++the I2C bus and/or controlled via a logic level PWM input from 60 μA to 30 mA.
++
++Parent device properties are documented in ../mfd/ti_lmu.txt
++Regulator properties are documented in ../regulator/lm363x-regulator.txt
++
++Required backlight properties:
++	- compatible:
++		"ti,lm36274-backlight"
++	- reg : 0
++	- #address-cells : 1
++	- #size-cells : 0
++	- led-sources : Indicates which LED strings will be enabled.
++			Values from 0-3, sources is 0 based so strings will be
++			source value + 1.
++
++Optional backlight properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
++controlled by control bank B.
 +
 +lm36274@11 {
 +	compatible = "ti,lm36274";
@@ -139,7 +121,8 @@ index 782d3c9812ed..2296b8f24de4 100644
 +	#size-cells = <0>;
 +	reg = <0x11>;
 +
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++
 +	regulators {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
@@ -181,6 +164,9 @@ index 782d3c9812ed..2296b8f24de4 100644
 +		};
 +	};
 +};
++
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lm36274.pdf
 -- 
 2.21.0.5.gaeb582a983
 
