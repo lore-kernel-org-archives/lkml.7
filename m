@@ -2,113 +2,93 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C3C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0627BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCE020872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:09:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VK6nFpju"
+	by mail.kernel.org (Postfix) with ESMTP id E119F20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFESJI (ORCPT
+        id S1726659AbfFESKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:09:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43127 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFESJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:09:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so6987306edb.10;
-        Wed, 05 Jun 2019 11:09:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3kkJoePojOH2DqUPlKLHgq3td/DufBzIP3M2ebsRF7c=;
-        b=VK6nFpjuXkMWNTERySkphfawJotFUYOdP0wGWCujtfEpKSLNB+6bgIiLCPvDndUyAZ
-         MMJwEvm79kVuVrno3nFwfntAReb3567GHUVpsLnUTFqDih8eDDr+rdN2iCkKruYFgfoA
-         qNzyzwT3PRIRvid3RWRl7OwDT+j2Vr7dVx42+iO1jQMbyPUC6aHw0C/T7hZaOuFL1dNI
-         6o4vTq9T9nKtVIOSfFdnLDpktt9IMUuh6wIm4f6phrK+ztxicqMX5OyHHDLGXFR5HO4w
-         6CLSJaW20N4VGu6P/c5UKEHb2abUbvlBEhSAXZyPk0TwEX6bakluGxB4ncuSUkY362y9
-         MBrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3kkJoePojOH2DqUPlKLHgq3td/DufBzIP3M2ebsRF7c=;
-        b=uNJMEYhpOZkPjRaQ5v4kUq7SORoOkql52EIEJtGWWNQmNkWZkaZmdRZhT3ijm0oO87
-         aPOaZgfabH98xkG7UDwm4pSrMdKV98b6O+lLHLdB8WN7lpbF8AtShZ2txpx7YPltRSF6
-         irfXYcgY8WtXtmLrcqu+oHIuNLJHiWzdIWUJg+za3GtCugAWE9uk0+tvxENzyOvR9lfi
-         fhl/TYx52M13Tf/4kutLy71Lk6fSY/7GE/oz1Jqdive50N2e9ATZixNXR9dPxeJ3rvXG
-         pBaoayCokv3mfyUzWv/Er6JuKry5JhO8sBoHBArTGjs2BxsLsjRFL0Q8lk+J+tAUl3Rw
-         /68w==
-X-Gm-Message-State: APjAAAWRpcpF2PE6yOxFGg+093YpKCR6GHYUz5SJlVLdtEq7sLu8vbvA
-        RmaqX1I5BtXnkeEJFSh9wa22DUY+S30RZJU2KXg=
-X-Google-Smtp-Source: APXvYqyhcKLFHtdseQURsMnPIeyQTO3UV+kTb27MHsqATshvfpU+hXz9sgAp8FqkWUKc1jLYewuy52l6zEXrtVoAHl4=
-X-Received: by 2002:aa7:da4b:: with SMTP id w11mr37188183eds.36.1559758145636;
- Wed, 05 Jun 2019 11:09:05 -0700 (PDT)
+        Wed, 5 Jun 2019 14:10:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35778 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfFESKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 14:10:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80482374;
+        Wed,  5 Jun 2019 11:10:43 -0700 (PDT)
+Received: from [10.37.8.36] (unknown [10.37.8.36])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9984F3F5AF;
+        Wed,  5 Jun 2019 11:10:37 -0700 (PDT)
+Subject: Re: [PATCH 10/13] drivers: Introduce variants of class_find_device()
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
+        a.zummo@towertech.it, alex.aring@gmail.com,
+        alexander.shishkin@linux.intel.com, alexandre.belloni@bootlin.com,
+        andrew@lunn.ch, arnd@arndb.de, dmurphy@ti.com, davem@davemloft.net,
+        f.fainelli@gmail.com, freude@linux.ibm.com,
+        heikki.krogerus@linux.intel.com, heiko.carstens@de.ibm.com,
+        hkallweit1@gmail.com, jacek.anaszewski@gmail.com, jslaby@suse.com,
+        lgirdwood@gmail.com, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wpan@vger.kernel.org, broonie@kernel.org,
+        mcoquelin.stm32@gmail.com, pavel@ucw.cz, peda@axentia.se,
+        stefan@datenfreihafen.org, tomas.winkler@intel.com,
+        rafael.j.wysocki@intel.com
+References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
+ <1559747630-28065-11-git-send-email-suzuki.poulose@arm.com>
+ <20190605161439.GB17272@kroah.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <24e8617f-2e15-bb6c-a6bb-bc9e6b32aa56@arm.com>
+Date:   Wed, 5 Jun 2019 19:13:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com> <20190605174547.b4rwbfrzjqzujxno@localhost>
-In-Reply-To: <20190605174547.b4rwbfrzjqzujxno@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 5 Jun 2019 21:08:54 +0300
-Message-ID: <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190605161439.GB17272@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 20:45, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Wed, Jun 05, 2019 at 02:33:52PM +0300, Vladimir Oltean wrote:
-> > In the meantime: Richard, do you have any objections to this patchset?
->
-> I like the fact that you didn't have to change the dsa or ptp
-> frameworks this time around.  I haven't taken a closer look than that
-> yet.
->
+Hi Greg,
 
-There's one more thing I wanted to ask you if you get the chance to
-take a closer look.
-Currently I'm using a cyclecounter, but I *will* need actual PHC
-manipulations for the time-based shaping and policing features that
-the switch has in hardware. On the other hand I get much tighter sync
-offset using the free-running counter than with hardware-corrected
-timestamps. So as far as I see it, I'll need to have two sets of
-operations.
-How should I design such a dual-PHC device driver? Just register two
-separate clocks, one for the timestamping counter, the other for the
-scheduling/policing PTP clock, and have phc2sys keep them in sync
-externally to the driver? Or implement the hardware corrections
-alongside the timecounter ones, and expose a single PHC (and for
-clock_gettime, just pick one of the time sources)?
+On 06/05/2019 05:14 PM, Greg KH wrote:
+> On Wed, Jun 05, 2019 at 04:13:47PM +0100, Suzuki K Poulose wrote:
+>> +/**
+>> + * class_find_device_by_devt : device iterator for locating a particular device
+>> + * matching the device type.
+>> + * @class: class type
+>> + * @start: device to start search from
+>> + * @devt: device type of the device to match.
+>> + */
+>> +static inline struct device *class_find_device_by_devt(struct class *class,
+>> +						       struct device *start,
+>> +						       dev_t devt)
+>> +{
+>> +	return class_find_device(class, start, &devt, device_match_devt);
+>> +}
+> 
+> Still has the start parameter, despite the changelog saying it would not
+> :(
+> 
 
-> > I was wondering whether the path delay difference between E2E and P2P
-> > rings any bell to you.
->
-> Can it be that the switch applies corrections in HW?
->
-> Thanks,
-> Richard
+Well, I kept the start parameter just for the _devt variants, as
+mentioned in the changelog:
 
-Thanks,
--Vladimir
+" The new wrappers except the lookup by devt, drops the "start" device 
+pointer as none of the existing users need it and the attributes are 
+usually unique. The idea is to stop the proliferation of custom match.."
+
+Somehow I thought the dev_t may be duplicate for devices, which is why
+I didn't change that alone. But that was silly of me to ignore the minor
+number part. I will respin it fixing that.
+
+Suzuki
