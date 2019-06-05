@@ -2,139 +2,169 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2575C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDDDC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B15A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CF0206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="mk3PlU3j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCtqBMOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFEIkB (ORCPT
+        id S1726980AbfFEIkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:40:01 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:32776 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfFEIkA (ORCPT
+        Wed, 5 Jun 2019 04:40:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42235 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfFEIkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:40:00 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
-   d="scan'208";a="35658394"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Jun 2019 01:40:00 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Jun 2019 01:39:59 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 5 Jun 2019 01:39:59 -0700
+        Wed, 5 Jun 2019 04:40:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so501024wrl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZ4kuQTYUGt9Re2dSCz1OsSrPeQ3KrZk3vR8EDZGnjs=;
- b=mk3PlU3jHSkNsBs5aaz5xzCuVum11zhv3rE6OW/yeE+lGR5LzkjSaY2cUhU4ZOC0gngXYIpYmi1Je2xJjtwjfSc0PmugPcauYGF7Y0If92Te6ipv2WHnY4Pvk/D/XivfBGA+7OrPSRoTW9DURikH+vfopjVMdCNYyJbpW1UvXtM=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1326.namprd11.prod.outlook.com (10.169.232.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Wed, 5 Jun 2019 08:39:54 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
- 08:39:54 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <sam@ravnborg.org>
-CC:     <thierry.reding@gmail.com>, <linux-pwm@vger.kernel.org>,
-        <alexandre.belloni@bootlin.com>, <bbrezillon@kernel.org>,
-        <airlied@linux.ie>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <daniel@ffwll.ch>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaZgDjOAgCvdRQCAAF3mAIAAtEsA
-Date:   Wed, 5 Jun 2019 08:39:54 +0000
-Message-ID: <b0c867a3-4bb1-4e3d-cfa1-803c5a8bd607@microchip.com>
-References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
- <20190507182713.GA16862@ravnborg.org>
- <c361b013-2d98-76e3-d30f-cec83000933c@microchip.com>
- <20190604215424.GA1959@ravnborg.org>
-In-Reply-To: <20190604215424.GA1959@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0701CA0035.eurprd07.prod.outlook.com
- (2603:10a6:800:90::21) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190605113942134
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c743e925-6302-4e2f-aa4a-08d6e991616f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1326;
-x-ms-traffictypediagnostic: MWHPR11MB1326:
-x-microsoft-antispam-prvs: <MWHPR11MB1326D74F8A03D2FC0CDC7CFE87160@MWHPR11MB1326.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(199004)(189003)(51914003)(54534003)(99286004)(72206003)(25786009)(76176011)(102836004)(52116002)(53936002)(6246003)(54906003)(6436002)(386003)(3846002)(6506007)(53546011)(14454004)(86362001)(6116002)(4326008)(478600001)(31686004)(68736007)(6512007)(8676002)(81156014)(316002)(4744005)(5660300002)(2906002)(8936002)(229853002)(6916009)(81166006)(305945005)(7416002)(6486002)(7736002)(31696002)(66946007)(66556008)(476003)(66446008)(64756008)(486006)(11346002)(446003)(2616005)(26005)(186003)(71190400001)(71200400001)(66066001)(256004)(36756003)(14444005)(73956011)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1326;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: M1yxJD/fVKbJnYeHu3n+jVJgevYSam8IO4vG78CJ0uyYzDrupTg6oAmq73fJLejTzF5egI/R9hVx1fSB5WT5VMLaHBlFkereLI+/UmDzzyojkRn1SchKRyRb/ILXKWHnH74TiZoAy5fJDdnu9puYunoYDpjSE/v9ixLO9gtOCMJEK/xBKi+eUXJAFSa1bqqOp2RpRSGdrBiEdcgubzyK9IeB/WtaZ9SbjhKBpCFIdjEMrCxJgzZth5vZGDiTfGgn0ao1mx3mI3Bpj4IQzNyaCzO3Ni1OQt8XTUQvayzpzuJTak0A3UlBUtn204guwj7GEI8y9ZmoMPw0lPzsZz0xCn1rKgwnAt1w+n26lxHyTxmm7fnTp3SikuQJbOn2WWvQDhJQCxCUD5fQXTetKSUVXtWd18T/G0dWDmMzafJDQik=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FEB6224F58D15849822188E05B50093F@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7sYE2J+nNG7NcVyj1SpqdIcPNhqdKRKxo+uFloEUcYA=;
+        b=LCtqBMObpnEJUzXhUa2KBDhhGtP6Z0Je9IZDWPItajoEPZckstJr8HVAGpXh74zze7
+         0U2lov6PpWF2ZgX4m9OiDIkaqFMXirtnwusgz3HFK2Po0H1w5ZbljIi/thGgvdmpWJnC
+         dRANufgc3l16wDWa/fliGfphJD8xHnPpdS7D7k5zrj+LbYrowjiPFvm5n9YWjAqTShL7
+         S4gVW0qZR6Sqce4NauGzvT70h7Xm7Tus3o91Ka/RDLAshZTBNtDYvOfUuadbqiHrNW8V
+         Dc7cJFhnVjzkiLxR7XTBBGKldcYHajIdTpXj4fl1wC3ThKzZW0RekwieUFH+6/d8vBKN
+         g/SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7sYE2J+nNG7NcVyj1SpqdIcPNhqdKRKxo+uFloEUcYA=;
+        b=Crv+oFP/lBA/5VUDKPWKNhTWMao2/speLOgoHSBMOK7pyjR7e0bYomMJwY0eNJ1uQH
+         rCloqwhNvax33bP9qevq7MISnCJz2Grw2K133RgL3KI6zFmUc94NNGdnxW92kMNx9Eka
+         5JFQslZSG1bhxFd8ts6VMmcFpDR3+c/TCwULjJq74TvJx8jAMdhgYBmNjp5fIlgIUu0S
+         Fr4RDIEikYDdZ9G92k2miNde3bqBIwt+YfOPu3zLabzMswWhrT/VC+BsPDxo9/PIM3Ar
+         cgequVg8iFwTdk0NLUL9XjFjEFEuzMuzA69gJK755fuRPfqsJdQ4fjLiGRIEUR8wrTdG
+         th2Q==
+X-Gm-Message-State: APjAAAVFaNvrYyulUGENlLtGCgC2NHkpBgELXxtlfb/MOCfoH3AZ55eo
+        t2TmmHlCVesO8V5bLPk1L0aLTw==
+X-Google-Smtp-Source: APXvYqy94j6MN0e6x+n+ChvdKkGrhMwtb/gKXV7dL/W7PkJmOaG67CUKgq6B2PCEi6giA03uyBSxvg==
+X-Received: by 2002:a5d:4e4d:: with SMTP id r13mr12760599wrt.295.1559724005609;
+        Wed, 05 Jun 2019 01:40:05 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id j66sm24368884wmb.24.2019.06.05.01.40.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 01:40:04 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 09:40:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <groeck@google.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>, kernel@collabora.com,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
+        Guido Kiener <guido@kiener-muenchen.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>
+Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
+ device to talk with the EC
+Message-ID: <20190605084002.GP4797@dell>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-4-enric.balletbo@collabora.com>
+ <20190604155228.GB9981@kroah.com>
+ <beaf3554bb85974eb118d7722ca55f1823b1850c.camel@collabora.com>
+ <20190604183527.GA20098@kroah.com>
+ <CABXOdTfU9KaBDhQcwvBGWCmVfnd02_ZFmPGtJsCtGQ-iO9A3Qw@mail.gmail.com>
+ <20190604185953.GA2061@kroah.com>
+ <20190605064839.GH4797@dell>
+ <20190605080241.GC9693@kroah.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c743e925-6302-4e2f-aa4a-08d6e991616f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 08:39:54.1417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1326
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605080241.GC9693@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA1LjA2LjIwMTkgMDA6NTQsIFNhbSBSYXZuYm9yZyB3cm90ZToNCj4gSGkgQ2xhdWRp
-dS4NCj4gDQo+IE9uIFR1ZSwgSnVuIDA0LCAyMDE5IGF0IDA0OjE4OjMzUE0gKzAwMDAsIENsYXVk
-aXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBIaSBTYW0sDQo+Pg0KPj4gT24gMDcu
-MDUuMjAxOSAyMToyNywgU2FtIFJhdm5ib3JnIHdyb3RlOg0KPj4+IEV4dGVybmFsIEUtTWFpbA0K
-Pj4+DQo+Pj4NCj4+PiBIaSBUaGllcnJ5Lg0KPj4+DQo+Pj4+ICAgcHdtOiBhdG1lbC1obGNkYzog
-YWRkIGNvbXBhdGlibGUgZm9yIFNBTTlYNjAgSExDREMncyBQV00NCj4+PiBPSyB0byBhZGQgdGhl
-ICJwd206IGF0bWVsLWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBX
-TSINCj4+PiBwYXRjaCB2aWEgZHJtLW1pc2M/DQo+Pj4gVGhlbiB3ZSBjYW4gYWRkIGFsbCA2IHBh
-dGNoZXMgaW4gb25lIGdvLg0KPj4NCj4+IFNpbmNlIHdlIGRvbid0IGhhdmUgYW4gYW5zd2VyIGZy
-b20gVGhpZXJyeSB0aWxsIG5vdywgZG8geW91IHRoaW5rIGl0IGNvdWxkDQo+PiBiZSBmZWFzaWJs
-ZSB0byB0YWtlIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzPyBBZnRlciB0
-aGF0IEkNCj4+IHdpbGwgcmUtc2VuZCB0aGUgUFdNIHBhdGNoIHRvIFBXTSBsaXN0Lg0KPiANCj4g
-VGhhbmtzIGZvciB0aGUgcmVtaW5kZXIuDQo+IA0KPiBQYXRjaGVzIDEsMiBhbmQgNCw1LDYgYXBw
-bGllZCB0byBkcm0tbWlzYy1uZXh0Lg0KPiANCj4gUmV3b3JkZWQgY2hhbmdlbG9nIGEgYml0IGlu
-IHBhdGNoIDYuDQoNClRoYW5rIHlvdSwNCkNsYXVkaXUNCg0KPiANCj4gCVNhbQ0KPiANCg==
+On Wed, 05 Jun 2019, Greg Kroah-Hartman wrote:
+
+> On Wed, Jun 05, 2019 at 07:48:39AM +0100, Lee Jones wrote:
+> > On Tue, 04 Jun 2019, Greg Kroah-Hartman wrote:
+> > > On Tue, Jun 04, 2019 at 11:39:21AM -0700, Guenter Roeck wrote:
+> > > > On Tue, Jun 4, 2019 at 11:35 AM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Tue, Jun 04, 2019 at 01:58:38PM -0300, Ezequiel Garcia wrote:
+> > > > > > Hey Greg,
+> > > > > >
+> > > > > > > > + dev_info(&pdev->dev, "Created misc device /dev/%s\n",
+> > > > > > > > +          data->misc.name);
+> > > > > > >
+> > > > > > > No need to be noisy, if all goes well, your code should be quiet.
+> > > > > > >
+> > > > > >
+> > > > > > I sometimes wonder about this being noise or not, so I will slightly
+> > > > > > hijack this thread for this discussion.
+> > > > > >
+> > > > > > >From a kernel developer point-of-view, or even from a platform
+> > > > > > developer or user with a debugging hat point-of-view, having
+> > > > > > a "device created" or "device registered" message is often very useful.
+> > > > >
+> > > > > For you, yes.  For someone with 30000 devices attached to their system,
+> > > > > it is not, and causes booting to take longer than it should be.
+> > 
+> > Who has 30,000 devices attached to their systems?
+> 
+> More than you might imagine.
+> 
+> > I would argue that
+> > in these special corner-cases, they should knock the log-level *down*
+> > a notch.  For the rest of us who run normal platforms, an extra second
+> > of boot time renders a more forthcoming/useful system than if each of
+> > our devices initialised silently.
+> > 
+> > Personally I like to know what devices I have on my system, and the
+> > kernel log is the first place I look.  As far as I'm concerned, for
+> > the most part, if it's not in the kernel log, I don't have it.
+> 
+> Then you "do not have" lots of devices, as we have been removing these
+> messages for a number of years now :)
+> 
+> >  "Oh wow, I didn't know I had XXX functionality on this platform."
+> > 
+> > In my real job, I am currently enabling some newly released AArch64
+> > based laptops for booting with ACPI.  I must have wasted a day whilst
+> > enabling some of the devices the system relies upon, just to find
+> > out that 90% of them were actually probing semi-fine (at least probe()
+> > was succeeding), just silently. *grumble*
+> 
+> Yup, that's normal.  If you want to see what devices are in the system,
+> look in /sys/devices/ as that is what it is for, not the kernel log.
+
+My guess is that less than 1% of Linux users use /sys/devices in this
+way.  It's a very unfriendly interface.  Besides, when enabling a new
+platform, access to sysfs comes too far down the line to be useful in
+the majority of cases.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
