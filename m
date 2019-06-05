@@ -2,125 +2,186 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C10C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D671C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC0720866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHXwbjIi"
+	by mail.kernel.org (Postfix) with ESMTP id 140B320717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfFEJV7 (ORCPT
+        id S1727071AbfFEJWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:21:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38830 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfFEJV6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:21:58 -0400
-Received: by mail-io1-f66.google.com with SMTP id x24so19666125ion.5;
-        Wed, 05 Jun 2019 02:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uDjBQkAVbNID/6IEXKOFNSbDIeMHgSat2+m5A0KFo3M=;
-        b=RHXwbjIiFnQT8YPT/t/8R6S8Isf5kbM4MgtKHCD0NGKh7HLa8sPQgTVk8v1qNWpoiF
-         Rhq+9Yl7c1ZJD05i62ck5l4Y0RpNoDGDNJYAqbn8ugHSy9iP9/N6BRYkxY+32oN4YYJp
-         5EtMvW0TcWwmXCiGyXTHksDh/tmoIJfl3gbaU11q8+EgrCPCc9y75svoD2y70J6e8RB7
-         6v1AuZlQcyqU5Kf6d+RnJEP6LR7dtuKsB8Mm048NlWPsa/8jKOyVelcKUBFB5Ab/vhQ5
-         ugL6ThWymA5ec//v8iLYg/N2yHP2fxhwYmJgqYZZHweVhkd7DTPZPR+OBDj7+icJ5t4/
-         W2Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uDjBQkAVbNID/6IEXKOFNSbDIeMHgSat2+m5A0KFo3M=;
-        b=g+lPA+j5B1lomooTS0QnRIXZZDZulY8jRCbYkPN55reubgVPsluOQAg6vKjqVt9vbx
-         gi1yqG1KPICeXab+A5BOofc098zIW5Smg12lJUduB/Jz4ho7nPRC1S1JAdQw7blhp04u
-         wQ5SYdy0h6c8LZKCxtGcGf7nWNuO+QZnCfGud9qYVcn8uDVy+83i31BEqg4R9qTHbmHI
-         qbRKi0Ws3GgYgDUqYBAUV5s13bVG+lmB1YAhRuELbqFbLgUHHe/0TD5rDzOy+AikfXAo
-         B3YwBxby7KT9VhlAdsGk/m+r0UgxTS5Pcwd2wdlwCQ5A3AiAhGl89GaKlHQIubFym2qE
-         pQeQ==
-X-Gm-Message-State: APjAAAU2F6wGWxk8hQABzfIvX5huqvwh9v6tHjXYU/ypjmBpIhaL9ik/
-        d44hyemTlpqeY4/uTvcY20PK58QgCroKVF6mCw==
-X-Google-Smtp-Source: APXvYqzhrwM6pEU0bDIofrePlo2VCS3ovjf/uem6DKwoveAH/lvCKMoeaEMwWSWxTZo0WaInVh5mjHoL5EIGlDYHtoI=
-X-Received: by 2002:a6b:7d09:: with SMTP id c9mr24679346ioq.245.1559726517832;
- Wed, 05 Jun 2019 02:21:57 -0700 (PDT)
+        Wed, 5 Jun 2019 05:22:24 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56198 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfFEJWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:22:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AF22A78;
+        Wed,  5 Jun 2019 02:22:23 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 273193F690;
+        Wed,  5 Jun 2019 02:22:23 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 77FAC682572; Wed,  5 Jun 2019 10:22:21 +0100 (BST)
+Date:   Wed, 5 Jun 2019 10:22:21 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v1 1/2] drm/komeda: Add rotation support on Komeda driver
+Message-ID: <20190605092221.GS15316@e110455-lin.cambridge.arm.com>
+References: <1555902945-2877-1-git-send-email-lowry.li@arm.com>
+ <1555902945-2877-2-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
-References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
- <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de> <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
- <CAEYzJUE0SuO3uHm1TTxfr1kPtLic1ggUPnGFYTSPcwk6nfq82g@mail.gmail.com> <78880cf8-07c6-e00d-0084-ce9c211eeec6@suse.de>
-In-Reply-To: <78880cf8-07c6-e00d-0084-ce9c211eeec6@suse.de>
-From:   =?UTF-8?Q?Bj=C3=B8rn_Forsman?= <bjorn.forsman@gmail.com>
-Date:   Wed, 5 Jun 2019 11:21:46 +0200
-Message-ID: <CAEYzJUFUxgQXDTOf5ai9+9UijEL-Eb+_91UbVPC2hc=8G-++4Q@mail.gmail.com>
-Subject: Re: bcache: oops when writing to writeback_percent without a cache device
-To:     Coly Li <colyli@suse.de>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1555902945-2877-2-git-send-email-lowry.li@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 06:41, Coly Li <colyli@suse.de> wrote:
->
-> On 2019/6/5 1:24 =E4=B8=8A=E5=8D=88, Bj=C3=B8rn Forsman wrote:
-> > On Tue, 4 Jun 2019 at 17:41, Coly Li <colyli@suse.de> wrote:
-> >>
-> >> On 2019/6/4 10:59 =E4=B8=8B=E5=8D=88, Coly Li wrote:
-> >>> On 2019/6/4 7:00 =E4=B8=8B=E5=8D=88, Bj=C3=B8rn Forsman wrote:
-> >>>> Hi all,
-> >>>>
-> >>>> I get a kernel oops from bcache when writing to
-> >>>> /sys/block/bcache0/bcache/writeback_percent and there is no attached
-> >>>> cache device. See the oops itself below my signature.
-> >>>>
-> >>>> This is on Linux 4.19.46. I looked in git and see many commits to
-> >>>> bcache lately, but none seem to address this particular issue.
-> >>>>
-> >>>> Background: I'm writing to .../writeback_percent with
-> >>>> systemd-tmpfiles. I'd rather not replace it with a script that figur=
-es
-> >>>> out whether or not the kernel will oops if writing to the sysfs file
-> >>>> -- the kernel should not oops in the first place.
-> >>>
-> >>> Hi Bjorn,
-> >>>
-> >>> Thank you for the reporting. I believe this is a case we missed in
-> >>> testings. When a bcache device is not attached, it does not make sens=
-e
-> >>> to update the writeback rate in period by the changing of writeback_p=
-ercent.
-> >>>
-> >>> I will post a patch for your testing soon.
-> >>
-> >> Hi Bjorn,
-> >>
-> >> Could you please to try this patch ? Hope it may help a bit.
-> >
-> > Hi Coly,
-> >
-> > Thanks for the quick patch! I tested it on linux 5.2-rc2 and it indeed
-> > fixes the problem.
-> >
-> > There is one typo in the patch/commit message: s/writebac/writeback/
-> >
->
-> Hi Bjorn,
->
-> Thanks for the patch review. Do you mind if I add Reviewed-By: tag with
-> your name and email address ?
+Hi Lowry,
 
-Yes, you can add my Reviewed-By: tag.
+On Mon, Apr 22, 2019 at 04:16:26AM +0100, Lowry Li (Arm Technology China) wrote:
+> - Adds rotation property to plane.
+> - Komeda display rotation support diverges from the specific formats,
+> so need to check the user required rotation type with the format caps
+> and reject the commit if it can not be supported.
+> - In the layer validate flow, sets the rotation value to the layer
+> state. If r90 or r270, swap the width and height of the data flow
+> for next stage.
+> 
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h  | 11 +++++++++++
+>  .../gpu/drm/arm/display/komeda/komeda_pipeline_state.c   |  7 +++++++
+>  drivers/gpu/drm/arm/display/komeda/komeda_plane.c        | 16 ++++++++++++++++
+>  3 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
+> index bc3b2df36..96de22e 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
+> @@ -79,6 +79,17 @@ struct komeda_format_caps_table {
+>  
+>  extern u64 komeda_supported_modifiers[];
+>  
+> +static inline const char *komeda_get_format_name(u32 fourcc, u64 modifier)
+> +{
+> +	struct drm_format_name_buf buf;
+> +	static char name[64];
+> +
+> +	snprintf(name, sizeof(name), "%s with modifier: 0x%llx.",
+> +		 drm_get_format_name(fourcc, &buf), modifier);
+> +
+> +	return name;
+> +}
 
---=20
-Bj=C3=B8rn Forsman
+Can you roll the content of this function inside the if () {.....} part? We
+only have one use for it, I don't see the need to split it into a separate
+function.
+
+With that: Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+
+Best regards,
+Liviu
+
+> +
+>  const struct komeda_format_caps *
+>  komeda_get_format_caps(struct komeda_format_caps_table *table,
+>  		       u32 fourcc, u64 modifier);
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> index 9b29e9a..8c133e4 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> @@ -317,6 +317,13 @@ struct komeda_pipeline_state *
+>  	/* update the data flow for the next stage */
+>  	komeda_component_set_output(&dflow->input, &layer->base, 0);
+>  
+> +	/*
+> +	 * The rotation has been handled by layer, so adjusted the data flow for
+> +	 * the next stage.
+> +	 */
+> +	if (drm_rotation_90_or_270(st->rot))
+> +		swap(dflow->in_h, dflow->in_w);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> index 14d6861..5e5bfdb 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> @@ -9,12 +9,14 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include "komeda_dev.h"
+>  #include "komeda_kms.h"
+> +#include "komeda_framebuffer.h"
+>  
+>  static int
+>  komeda_plane_init_data_flow(struct drm_plane_state *st,
+>  			    struct komeda_data_flow_cfg *dflow)
+>  {
+>  	struct drm_framebuffer *fb = st->fb;
+> +	const struct komeda_format_caps *caps = to_kfb(fb)->format_caps;
+>  
+>  	memset(dflow, 0, sizeof(*dflow));
+>  
+> @@ -35,6 +37,15 @@
+>  	dflow->in_w = st->src_w >> 16;
+>  	dflow->in_h = st->src_h >> 16;
+>  
+> +	dflow->rot = drm_rotation_simplify(st->rotation, caps->supported_rots);
+> +	if (!has_bits(dflow->rot, caps->supported_rots)) {
+> +		DRM_DEBUG_ATOMIC("rotation(0x%x) isn't supported by %s.\n",
+> +				 dflow->rot,
+> +				 komeda_get_format_name(caps->fourcc,
+> +							fb->modifier));
+> +		return -EINVAL;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -233,6 +244,11 @@ static int komeda_plane_add(struct komeda_kms_dev *kms,
+>  
+>  	drm_plane_helper_add(plane, &komeda_plane_helper_funcs);
+>  
+> +	err = drm_plane_create_rotation_property(plane, DRM_MODE_ROTATE_0,
+> +						 layer->supported_rots);
+> +	if (err)
+> +		goto cleanup;
+> +
+>  	err = drm_plane_create_alpha_property(plane);
+>  	if (err)
+>  		goto cleanup;
+> -- 
+> 1.9.1
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
