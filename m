@@ -2,273 +2,278 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B0DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C42C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0D920872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B4F20872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AEjt92SA"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kto5V4C/";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="trQfGH8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfFERdP (ORCPT
+        id S1726734AbfFERdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:33:15 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:54058 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726684AbfFERdP (ORCPT
+        Wed, 5 Jun 2019 13:33:31 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53096 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726510AbfFERda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:33:15 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E3ACEC00F9;
-        Wed,  5 Jun 2019 17:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559756005; bh=SaYLEkJTX4DxqdBIckjC7wQdBOIneyhb13AgIwfGuMg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AEjt92SAcsrkvW0KisKYIKWjCKaSjsWoJMYLikP2L+dV+Zr5gdR8CCQWVNGkUpwXS
-         y4nDB32y16TgHn20Cb1Sk84iJQ1z+3CyVVDoGrDvlpSflbwVcKhBIJzQiUgigosfZT
-         RyYyYH2htFBIu6tE0Vczm/uPO3dLP9f7X+QjfGXa23Csyu3edC6oINzKlghsDg3Kqb
-         y1zNYIcI9q4D5G4Dbm7o9+EwAG9wwOW6I23iiZXjPpujCLDliUXAOeW5CvKpbf6ch0
-         gZ5LQKyJFymKO9HBtlNDnNtQj1BFYGlIHzxGzeUOftYsxDWRkKi60RvIInwfKBBlUT
-         7xLVyfY5/O0yQ==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.20])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8003AA0057;
-        Wed,  5 Jun 2019 17:33:10 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v2] ARC: [plat-hsdk]: unify memory apertures configuration
-Date:   Wed,  5 Jun 2019 20:32:50 +0300
-Message-Id: <20190605173250.11716-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 5 Jun 2019 13:33:30 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x55HXDjD020842;
+        Wed, 5 Jun 2019 10:33:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=NQd/ZrI7OHysa9+zywBc0NoPVivbuTiA3s8wT2Jxq4Y=;
+ b=kto5V4C/V0elVdD6dHMAsm4VhDwt1TTtQhq/8JrkNr241iFgZXjd3ETWvpyrON+dCvOK
+ MJOsoQNi32z3FiPzEK9Fb2kZMPtcVNw76Iqsq62yCdxms0uMPhyNfdgjB8J0LUpiZBBx
+ pcHPF65WKmJoKx05ersvDvWp0Ak3Hi/etZA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sxeckgwwe-11
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 05 Jun 2019 10:33:17 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Jun 2019 10:33:02 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 5 Jun 2019 10:33:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NQd/ZrI7OHysa9+zywBc0NoPVivbuTiA3s8wT2Jxq4Y=;
+ b=trQfGH8YOa4LmX/6mzBHPf+6imT05ZbzrLQ2ldxSP+NEK/17MfHSZ8Kv9Mc7Lo8NzUmd2Qhz+ESIclMPUGXp3qqj2UNyExZyCvNb5zfoOhd4OPW/5CMzczVU9DETQFoS+0YVssjlYeW0O8uCzrMlIhJivWu1caRRTv19aEZ63fg=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3446.namprd15.prod.outlook.com (20.179.59.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Wed, 5 Jun 2019 17:33:00 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 17:33:00 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Greg Thelen <gthelen@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH v4 0/7] mm: reparent slab memory on cgroup removal
+Thread-Topic: [PATCH v4 0/7] mm: reparent slab memory on cgroup removal
+Thread-Index: AQHVCp5GUxFizIu5r06SwCXM6qQb7qaMzloAgACl1QA=
+Date:   Wed, 5 Jun 2019 17:33:00 +0000
+Message-ID: <20190605173256.GB10098@tower.DHCP.thefacebook.com>
+References: <20190514213940.2405198-1-guro@fb.com>
+ <xr93ef48v5ub.fsf@gthelen.svl.corp.google.com>
+In-Reply-To: <xr93ef48v5ub.fsf@gthelen.svl.corp.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR11CA0044.namprd11.prod.outlook.com
+ (2603:10b6:300:115::30) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:a19a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1ff0bcd-3d27-4853-ef35-08d6e9dbdad9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB3446;
+x-ms-traffictypediagnostic: BYAPR15MB3446:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR15MB34465D5762F9393F14C4EF7BBE160@BYAPR15MB3446.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1775;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(136003)(346002)(396003)(376002)(189003)(199004)(81156014)(81166006)(66946007)(256004)(8676002)(66446008)(73956011)(86362001)(53936002)(66476007)(68736007)(6436002)(52116002)(64756008)(478600001)(186003)(14444005)(229853002)(25786009)(966005)(8936002)(6116002)(46003)(76176011)(33656002)(102836004)(6506007)(99286004)(386003)(11346002)(446003)(54906003)(66556008)(486006)(6246003)(6916009)(4326008)(1076003)(6486002)(476003)(5660300002)(2906002)(316002)(6512007)(71190400001)(14454004)(7416002)(6306002)(305945005)(7736002)(71200400001)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3446;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MpgG27Y6kdDTPSAJt5vL3fnkZRp0HUPz1+RSu9SsDAqZSqgsIHK7nkyY1DgdAB3FGgma3tqAe07QytjlaV3zm0fr2IRlmqJPWxBhfk8rGoQeQ8BO1YLBzG5yieOzB/YeOZD8w/t+2TgALDByZPYCNiN92PzkVy8kyYIrMab1Vw85GC6hFQDascNz1pQvFTbKtQhO9PUe7xb4xmco/mVZrieIVcK14u3ey+d3KURCYmtj/T94rewlrqNfhpOKzTOvj5KKUGRKGisjU/giNRzlLmvk1muUZkI8XvmdyCGbiT6KEANJHbuC9YfH9vtJVbFc2ps/cg2KVZjMulbaRLvXu0c+kRGFMfZGUve0I/4X6NHkhDW2LFOG+Z48T+vvrZQ/W34juXnAUO49IFcUBPTVmak61DXor5zc+uLwDntOY1U=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4827968C6C11134CB78F7FF0C1B2FBD3@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ff0bcd-3d27-4853-ef35-08d6e9dbdad9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 17:33:00.1077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3446
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906050110
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HSDK SoC has memory bridge which allows to configure memory map
-for different AXI masters in runtime.
-As of today we adjust memory apertures configuration in U-boot
-so we have different configuration in case of loading kernel
-via U-boot and JTAG.
+On Wed, Jun 05, 2019 at 12:39:24AM -0700, Greg Thelen wrote:
+> Roman Gushchin <guro@fb.com> wrote:
+>=20
+> > # Why do we need this?
+> >
+> > We've noticed that the number of dying cgroups is steadily growing on m=
+ost
+> > of our hosts in production. The following investigation revealed an iss=
+ue
+> > in userspace memory reclaim code [1], accounting of kernel stacks [2],
+> > and also the mainreason: slab objects.
+> >
+> > The underlying problem is quite simple: any page charged
+> > to a cgroup holds a reference to it, so the cgroup can't be reclaimed u=
+nless
+> > all charged pages are gone. If a slab object is actively used by other =
+cgroups,
+> > it won't be reclaimed, and will prevent the origin cgroup from being re=
+claimed.
+> >
+> > Slab objects, and first of all vfs cache, is shared between cgroups, wh=
+ich are
+> > using the same underlying fs, and what's even more important, it's shar=
+ed
+> > between multiple generations of the same workload. So if something is r=
+unning
+> > periodically every time in a new cgroup (like how systemd works), we do
+> > accumulate multiple dying cgroups.
+> >
+> > Strictly speaking pagecache isn't different here, but there is a key di=
+fference:
+> > we disable protection and apply some extra pressure on LRUs of dying cg=
+roups,
+> > and these LRUs contain all charged pages.
+> > My experiments show that with the disabled kernel memory accounting the=
+ number
+> > of dying cgroups stabilizes at a relatively small number (~100, depends=
+ on
+> > memory pressure and cgroup creation rate), and with kernel memory accou=
+nting
+> > it grows pretty steadily up to several thousands.
+> >
+> > Memory cgroups are quite complex and big objects (mostly due to percpu =
+stats),
+> > so it leads to noticeable memory losses. Memory occupied by dying cgrou=
+ps
+> > is measured in hundreds of megabytes. I've even seen a host with more t=
+han 100Gb
+> > of memory wasted for dying cgroups. It leads to a degradation of perfor=
+mance
+> > with the uptime, and generally limits the usage of cgroups.
+> >
+> > My previous attempt [3] to fix the problem by applying extra pressure o=
+n slab
+> > shrinker lists caused a regressions with xfs and ext4, and has been rev=
+erted [4].
+> > The following attempts to find the right balance [5, 6] were not succes=
+sful.
+> >
+> > So instead of trying to find a maybe non-existing balance, let's do rep=
+arent
+> > the accounted slabs to the parent cgroup on cgroup removal.
+> >
+> >
+> > # Implementation approach
+> >
+> > There is however a significant problem with reparenting of slab memory:
+> > there is no list of charged pages. Some of them are in shrinker lists,
+> > but not all. Introducing of a new list is really not an option.
+> >
+> > But fortunately there is a way forward: every slab page has a stable po=
+inter
+> > to the corresponding kmem_cache. So the idea is to reparent kmem_caches
+> > instead of slab pages.
+> >
+> > It's actually simpler and cheaper, but requires some underlying changes=
+:
+> > 1) Make kmem_caches to hold a single reference to the memory cgroup,
+> >    instead of a separate reference per every slab page.
+> > 2) Stop setting page->mem_cgroup pointer for memcg slab pages and use
+> >    page->kmem_cache->memcg indirection instead. It's used only on
+> >    slab page release, so it shouldn't be a big issue.
+> > 3) Introduce a refcounter for non-root slab caches. It's required to
+> >    be able to destroy kmem_caches when they become empty and release
+> >    the associated memory cgroup.
+> >
+> > There is a bonus: currently we do release empty kmem_caches on cgroup
+> > removal, however all other are waiting for the releasing of the memory =
+cgroup.
+> > These refactorings allow kmem_caches to be released as soon as they
+> > become inactive and free.
+> >
+> > Some additional implementation details are provided in corresponding
+> > commit messages.
+> >
+> > # Results
+> >
+> > Below is the average number of dying cgroups on two groups of our produ=
+ction
+> > hosts. They do run some sort of web frontend workload, the memory press=
+ure
+> > is moderate. As we can see, with the kernel memory reparenting the numb=
+er
+> > stabilizes in 60s range; however with the original version it grows alm=
+ost
+> > linearly and doesn't show any signs of plateauing. The difference in sl=
+ab
+> > and percpu usage between patched and unpatched versions also grows line=
+arly.
+> > In 7 days it exceeded 200Mb.
+> >
+> > day           0    1    2    3    4    5    6    7
+> > original     56  362  628  752 1070 1250 1490 1560
+> > patched      23   46   51   55   60   57   67   69
+> > mem diff(Mb) 22   74  123  152  164  182  214  241
+>=20
+> No objection to the idea, but a question...
 
-It isn't really critical in case of existing platform configuration
-as configuration differs for <currently> unused address space
-regions or unused AXI masters. However we may face with this
-issue when we'll bringup new peripherals or touch their address
-space.
+Hi Greg!
 
-Fix that by perform full configuration of memory bridge in HSDK
-platform code. Basically we simply copy memory bridge configuration
-code from U-boot.
+> In patched kernel, does slabinfo (or similar) show the list reparented
+> slab caches?  A pile of zombie kmem_caches is certainly better than a
+> pile of zombie mem_cgroup.  But it still seems like it'll might cause
+> degradation - does cache_reap() walk an ever growing set of zombie
+> caches?
 
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v1->v2:
- * Changes in comments and commit message. No functional change intended.
+It's not a pile of zombie kmem_caches vs a pile of zombie mem_cgroups.
+It's a smaller pile of zombie kmem_caches vs a larger pile of zombie kmem_c=
+aches
+*and* a pile of zombie mem_cgroups. The patchset makes the number of zombie
+kmem_caches lower, not bigger.
 
- arch/arc/plat-hsdk/platform.c | 161 ++++++++++++++++++++++++++++++++--
- 1 file changed, 153 insertions(+), 8 deletions(-)
+Re slabinfo and other debug interfaces: I do not change anything here.
 
-diff --git a/arch/arc/plat-hsdk/platform.c b/arch/arc/plat-hsdk/platform.c
-index 2588b842407c..0e70e47358c6 100644
---- a/arch/arc/plat-hsdk/platform.c
-+++ b/arch/arc/plat-hsdk/platform.c
-@@ -35,8 +35,6 @@ static void __init hsdk_init_per_cpu(unsigned int cpu)
- 
- #define ARC_PERIPHERAL_BASE	0xf0000000
- #define CREG_BASE		(ARC_PERIPHERAL_BASE + 0x1000)
--#define CREG_PAE		(CREG_BASE + 0x180)
--#define CREG_PAE_UPDATE		(CREG_BASE + 0x194)
- 
- #define SDIO_BASE		(ARC_PERIPHERAL_BASE + 0xA000)
- #define SDIO_UHS_REG_EXT	(SDIO_BASE + 0x108)
-@@ -102,20 +100,167 @@ static void __init hsdk_enable_gpio_intc_wire(void)
- 	iowrite32(GPIO_INT_CONNECTED_MASK, (void __iomem *) GPIO_INTEN);
- }
- 
--static void __init hsdk_init_early(void)
-+enum hsdk_axi_masters {
-+	M_HS_CORE = 0,
-+	M_HS_RTT,
-+	M_AXI_TUN,
-+	M_HDMI_VIDEO,
-+	M_HDMI_AUDIO,
-+	M_USB_HOST,
-+	M_ETHERNET,
-+	M_SDIO,
-+	M_GPU,
-+	M_DMAC_0,
-+	M_DMAC_1,
-+	M_DVFS
-+};
-+
-+#define UPDATE_VAL	1
-+
-+/*
-+ * This is modified configuration of AXI bridge. Default settings
-+ * are specified in "Table 111 CREG Address Decoder register reset values".
-+ *
-+ * AXI_M_m_SLV{0|1} - Slave Select register for master 'm'.
-+ * Possible slaves are:
-+ *  - 0  => no slave selected
-+ *  - 1  => DDR controller port #1
-+ *  - 2  => SRAM controller
-+ *  - 3  => AXI tunnel
-+ *  - 4  => EBI controller
-+ *  - 5  => ROM controller
-+ *  - 6  => AXI2APB bridge
-+ *  - 7  => DDR controller port #2
-+ *  - 8  => DDR controller port #3
-+ *  - 9  => HS38x4 IOC
-+ *  - 10 => HS38x4 DMI
-+ * AXI_M_m_OFFSET{0|1} - Addr Offset register for master 'm'
-+ *
-+ * Please read ARC HS Development IC Specification, section 17.2 for more
-+ * information about apertures configuration.
-+ *
-+ * m	master		AXI_M_m_SLV0	AXI_M_m_SLV1	AXI_M_m_OFFSET0	AXI_M_m_OFFSET1
-+ * 0	HS (CBU)	0x11111111	0x63111111	0xFEDCBA98	0x0E543210
-+ * 1	HS (RTT)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 2	AXI Tunnel	0x88888888	0x88888888	0xFEDCBA98	0x76543210
-+ * 3	HDMI-VIDEO	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 4	HDMI-ADUIO	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 5	USB-HOST	0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 6	ETHERNET	0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 7	SDIO		0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 8	GPU		0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 9	DMAC (port #1)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 10	DMAC (port #2)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 11	DVFS		0x00000000	0x60000000	0x00000000	0x00000000
-+ */
-+
-+#define CREG_AXI_M_SLV0(m)  ((void __iomem *)(CREG_BASE + 0x20 * (m)))
-+#define CREG_AXI_M_SLV1(m)  ((void __iomem *)(CREG_BASE + 0x20 * (m) + 0x04))
-+#define CREG_AXI_M_OFT0(m)  ((void __iomem *)(CREG_BASE + 0x20 * (m) + 0x08))
-+#define CREG_AXI_M_OFT1(m)  ((void __iomem *)(CREG_BASE + 0x20 * (m) + 0x0C))
-+#define CREG_AXI_M_UPDT(m)  ((void __iomem *)(CREG_BASE + 0x20 * (m) + 0x14))
-+
-+#define CREG_AXI_M_HS_CORE_BOOT	((void __iomem *)(CREG_BASE + 0x010))
-+
-+#define CREG_PAE		((void __iomem *)(CREG_BASE + 0x180))
-+#define CREG_PAE_UPDT		((void __iomem *)(CREG_BASE + 0x194))
-+
-+static void __init hsdk_init_memory_bridge(void)
- {
-+	u32 reg;
-+
-+	/*
-+	 * M_HS_CORE has one unique register - BOOT.
-+	 * We need to clean boot mirror (BOOT[1:0]) bits in them to avoid first
-+	 * aperture to be masked by 'boot mirror'.
-+	 */
-+	reg = readl(CREG_AXI_M_HS_CORE_BOOT) & (~0x3);
-+	writel(reg, CREG_AXI_M_HS_CORE_BOOT);
-+	writel(0x11111111, CREG_AXI_M_SLV0(M_HS_CORE));
-+	writel(0x63111111, CREG_AXI_M_SLV1(M_HS_CORE));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HS_CORE));
-+	writel(0x0E543210, CREG_AXI_M_OFT1(M_HS_CORE));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HS_CORE));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HS_RTT));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HS_RTT));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HS_RTT));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HS_RTT));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HS_RTT));
-+
-+	writel(0x88888888, CREG_AXI_M_SLV0(M_AXI_TUN));
-+	writel(0x88888888, CREG_AXI_M_SLV1(M_AXI_TUN));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_AXI_TUN));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_AXI_TUN));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_AXI_TUN));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HDMI_VIDEO));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HDMI_VIDEO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HDMI_VIDEO));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HDMI_VIDEO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HDMI_VIDEO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HDMI_AUDIO));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HDMI_AUDIO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HDMI_AUDIO));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HDMI_AUDIO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HDMI_AUDIO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_USB_HOST));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_USB_HOST));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_USB_HOST));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_USB_HOST));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_USB_HOST));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_ETHERNET));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_ETHERNET));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_ETHERNET));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_ETHERNET));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_ETHERNET));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_SDIO));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_SDIO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_SDIO));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_SDIO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_SDIO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_GPU));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_GPU));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_GPU));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_GPU));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_GPU));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_0));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_0));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_0));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_0));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_0));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_1));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_1));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_1));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_1));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_1));
-+
-+	writel(0x00000000, CREG_AXI_M_SLV0(M_DVFS));
-+	writel(0x60000000, CREG_AXI_M_SLV1(M_DVFS));
-+	writel(0x00000000, CREG_AXI_M_OFT0(M_DVFS));
-+	writel(0x00000000, CREG_AXI_M_OFT1(M_DVFS));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DVFS));
-+
- 	/*
- 	 * PAE remapping for DMA clients does not work due to an RTL bug, so
- 	 * CREG_PAE register must be programmed to all zeroes, otherwise it
- 	 * will cause problems with DMA to/from peripherals even if PAE40 is
- 	 * not used.
- 	 */
-+	writel(0x00000000, CREG_PAE);
-+	writel(UPDATE_VAL, CREG_PAE_UPDT);
-+}
- 
--	/* Default is 1, which means "PAE offset = 4GByte" */
--	writel_relaxed(0, (void __iomem *) CREG_PAE);
--
--	/* Really apply settings made above */
--	writel(1, (void __iomem *) CREG_PAE_UPDATE);
-+static void __init hsdk_init_early(void)
-+{
-+	hsdk_init_memory_bridge();
- 
- 	/*
- 	 * Switch SDIO external ciu clock divider from default div-by-8 to
--- 
-2.21.0
+>=20
+> We've found it useful to add a slabinfo_full file which includes zombie
+> kmem_cache with their memcg_name.  This can help hunt down zombies.
 
+I'm not sure we need to add a permanent debug interface, because something =
+like
+drgn ( https://github.com/osandov/drgn ) can be used instead.
+
+If you think that we lack some necessary debug interfaces, I'm totally open
+here, but it's not a part of this patchset. Let's talk about them separatel=
+y.
+
+Thank you for looking into it!
+
+Roman
