@@ -2,171 +2,98 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEBDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A634C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D312075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AA3206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPgOTuOq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xYcIR3XR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfFEJz3 (ORCPT
+        id S1727180AbfFEJ4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:55:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38032 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfFEJz3 (ORCPT
+        Wed, 5 Jun 2019 05:56:40 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:42782 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFEJ4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:55:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t5so1601108wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:55:27 -0700 (PDT)
+        Wed, 5 Jun 2019 05:56:40 -0400
+Received: by mail-lj1-f179.google.com with SMTP id t28so11426874lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:56:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=T2lb6BFKyo6qFGuGkYXia4Pk+2dP0QxKBCkXd6OlypE=;
-        b=CPgOTuOq7c9MOvfUWJ5q/1+tOxgwn+XFG+0Um2QDTbUUUZanzLWDdj11nBOM2fIwB7
-         kEstullEcq59rr+WijeSFS9WnI3Qt9gjYsTf935hVMLJqfnOazzwxLxIHcji5TjkcosG
-         Y9XeYmQEDs6JbYlcEA7MiiEoYVV0BhB9r3suWTxQwm2++AJs9fMMbvBXj41wWMXxBHMd
-         Jf9fOl3L6hWXn6ofOl5x36eliDoR4Kpmq+BhUX/CuX//P1ZfkmcraAPARmc95tEHq9iI
-         iCz+Nm6D2SuuWiuOfBEm9CAkUqn9XEWtOrlUjSO+W80Dvqivdf9+b0ODE40uSn7iXy5B
-         3ZfA==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=aTpgLOLiOcdUseee8sGCuUVr8+ArZkun+6MaGgEufC8=;
+        b=xYcIR3XRYyaHaraWVu3zdo2mKco43ufVFoy+mPt8RfbdAleN3jO/ctNr+7eRIHGQi/
+         wRpa+L3/6L4t1W79cAyYZQ1iky5uU+cC1yT7/nfYSVjbaxocW0PVoz6Fv9AW+dCt2aMv
+         Ampk9dRzdgf7PGveMId9ZlwTO0of3LcOIFhc2zOVC0LMn0X9sunpCPt3kK4JQ5+k+xPX
+         8ucoO+ut5voMT6ZKJuYgHAA7PhUC5nF0oEgarKytBoPastbd2PTqhUc68I9mgzEIfp0I
+         2CZRuvkbwkgrsuG/SJDQ8dBx58HxDd0Sszq7REXxi3M9SRvH8Fs5U8HJEPTmklYQ7K+h
+         gMFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=T2lb6BFKyo6qFGuGkYXia4Pk+2dP0QxKBCkXd6OlypE=;
-        b=m0II5/8uzM0X1dXxwY7F/JStq/rfpWdSbyVJ02yaxhKx9EIvqlmTMm/Esw+UIbO9Iq
-         YmXWgv0Kcr7XRNjbzIj16xIy0rr7kbkNrOzBhoaMhsjEq95P05HS4RygQVqiSEgvavip
-         7GmRvKrwyUtcaaMpfOD+DHcqC9oOiXAFJIFdZy2ztOhHr1fUnAivv7YlDt7WnAeh3F3W
-         ASB2QoOXurDKmaX7M7pFSn862pDbk1TXfshGg2/QH7krg8CCx8iSM3WSFMkBgMRZjG8X
-         iHrTShFfuzyXb6Z5knwYqg2sH1zXqTlWVW7wXk/Zpln/lrq7Y8jBXvCXAcfIzcj1Jwo1
-         uVFA==
-X-Gm-Message-State: APjAAAWB8fMpsfJqNIACzEs37PCUTgnYisNzERG9TfJ20dEA9YPSjC82
-        ZNEBr4OGQHw83xS495WTxH1FjQ==
-X-Google-Smtp-Source: APXvYqwb15JLdo1InhCZA1cwpY0KvOYdXxpte37lxvn/nhB25qLp3J8HUS7DEBlgQIXew3zQcT8Cbw==
-X-Received: by 2002:a1c:dc07:: with SMTP id t7mr15208355wmg.164.1559728526806;
-        Wed, 05 Jun 2019 02:55:26 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id z14sm7127245wre.96.2019.06.05.02.55.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 02:55:26 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 10:55:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 6/8] usb: dwc3: qcom: Add support for booting with ACPI
-Message-ID: <20190605095524.GS4797@dell>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-6-lee.jones@linaro.org>
- <20190605063507.GM22737@tuxbook-pro>
- <20190605070928.GJ4797@dell>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=aTpgLOLiOcdUseee8sGCuUVr8+ArZkun+6MaGgEufC8=;
+        b=loJ7NhEEFNcvlGPwZK97qN5fVXaqk4HSj1Y3+b9eXBsrLtAxHHqrTQsLCu4NnkJw64
+         lojD8hhBoKVUmLZehP4AOOp6pW1IkuJyVbORdYuQMPObC8OtjW5z0jWzAKN8d2gfaOFT
+         7qkuvkldGwgps8JRUFnuK7Emx6NeWv/1QWXzg7pIkbYKvo85YO7KCfNGQmOdiUycQRuU
+         Z1Ni6tIsGWcmeeRJASCZfpsnhUr4qnBMHlIRt0GZcdggPg+HzAZxwjazaGK9cfWqH3rl
+         aJDhQ0iNQ7AoeY2Ee2zLTW3mSfuCv+vTEKwWILAuePAz4DY4pg7aua0mqFoOR6kde3K2
+         ku2A==
+X-Gm-Message-State: APjAAAXZbvfjw+ucrTlo5LWTbtt5zB1KStq2Y+RF0LtMhgcoridqZR8J
+        do9XALXZHYHqHYJ/T2yy+IdF2ieEdnYpCL4EiP2Yiw==
+X-Google-Smtp-Source: APXvYqwnWF5l3td0n7SMWT3OVQ35nHkAIuh7b6vyqeeLI2XK8i46f9Yz0Qu8nSqskWQfhfDgC8spm6+/DFSkJFI6178=
+X-Received: by 2002:a2e:2b11:: with SMTP id q17mr20580986lje.23.1559728597600;
+ Wed, 05 Jun 2019 02:56:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605070928.GJ4797@dell>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Jun 2019 15:26:26 +0530
+Message-ID: <CA+G9fYtTcV9Xa65COdNfA9O+BvZV64fWBvdaamRLZphWEn7FXA@mail.gmail.com>
+Subject: selftests: bpf: test_sock_fields: Error: in_bpf_create_map_xattr(sk_pkt_out_cnt)Invalid
+To:     ast@kernel.org, kafai@fb.com, Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Lee Jones wrote:
+Do you see this failure at your end?
+Our environment is build on host and install them on target device and
+run on Device under test (DUT).
 
-> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
-> 
-> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > [..]
-> > > @@ -373,7 +416,7 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
-> > >  
-> > >  	qcom->num_clocks = count;
-> > >  
-> > > -	if (!count)
-> > > +	if (!count || ACPI_HANDLE(dev))
-> > >  		return 0;
-> > 
-> > Afaict you call this with count = of_count_phandle_with_args(), which
-> > should be 0. But why not skip calling this at all?
-> 
-> Actually count can be <0, which is why I must have needed it at the
-> beginning.  There is another patch in this set which checks for
-> errors, thus the ACPI_HANDLE() call should now be superfluous.  I
-> will test and remove it.
+Did i miss any kernel config fragments ?
 
-Just looked into this - it is still required.
+bpf: test_sock_fields_ #
+# libbpf Error in bpf_create_map_xattr(sk_pkt_out_cnt)Invalid
+argument(22). Retrying without BTF.
+Error: in_bpf_create_map_xattr(sk_pkt_out_cnt)Invalid #
+# libbpf failed to create map (name 'sk_pkt_out_cnt') Invalid argument
+failed: to_create #
+# libbpf failed to load object 'test_sock_fields_kern.o'
+failed: to_load #
+# main(439)FAILbpf_prog_load_xattr() err-22
+err-22: _ #
+[FAIL] 22 selftests bpf test_sock_fields
+selftests: bpf_test_sock_fields [FAIL]
 
-of_count_phandle_with_args() returns an error not to be heeded in the
-ACPI case.  So the logic goes:
+Full test log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190605/testrun/761646/log
 
-[This patch]
- * It's fine to boot DT with no clocks to initialise (return 0)
- * There are no clocks to enable when booting ACPI (return 0)
+Config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/536/config
 
-[Another patch]
- * It's not fine to boot DT and for 'count < 0' (return count)
+Test results for comparison,
+https://qa-reports.linaro.org/lkft/linux-next-oe/tests/kselftest/bpf_test_sock_fields
 
-> > >  	qcom->clks = devm_kcalloc(dev, qcom->num_clocks,
-> > > @@ -409,12 +452,28 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
-> > > +	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
-> > > +	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
-> > > +	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
-> > > +	.hs_phy_irq_index = 1,
-> > > +	.dp_hs_phy_irq_index = 4,
-> > > +	.dm_hs_phy_irq_index = 3,
-> > > +	.ss_phy_irq_index = 2
-> > > +};
-> > > +
-> > > +static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
-> > > +	{ "QCOM2430", (unsigned long)&sdm845_acpi_pdata },
-> > > +	{ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
-> > 
-> > Analog to of_device_get_match_data() there seems to be a
-> > acpi_device_get_match_data(), if you use this you should be able to
-> > have you acpi_device_id array next to the of_device_id.
-> 
-> Do you mean "Analogous"?
-> 
-> I will try to group them, thanks.
-> 
-> > > +
-> > >  static int dwc3_qcom_probe(struct platform_device *pdev)
-> > 
-> > It seems that all that's left unconditional on ACPI_HANDLE() in this
-> > function are the optional pieces and the tail. Wouldn't it be cleaner to
-> > split it out in different functions?
-> 
-> There are ~50 lines of shared code in dwc3_qcom_probe(), most of it is
-> interspersed between the configuration table (DT, ACPI) pieces, which
-> is why it's formatted in the current way.
-> 
-> I can split a few things out into separate functions if you think
-> it'll help.
-> 
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards
+Naresh Kamboju
