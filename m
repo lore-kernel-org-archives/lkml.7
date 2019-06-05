@@ -2,102 +2,91 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99750C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D51BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731A4206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ms2rYs0Q"
+	by mail.kernel.org (Postfix) with ESMTP id 1EF6C206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfFEM3D (ORCPT
+        id S1727744AbfFEMaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:29:03 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44119 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbfFEM3D (ORCPT
+        Wed, 5 Jun 2019 08:30:03 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:37278 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfFEMaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:29:03 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r15so18912520lfm.11;
-        Wed, 05 Jun 2019 05:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8HVlknpI+BmHQFC/piG0dRX/l8wTKMARAJ5WDZfkyic=;
-        b=Ms2rYs0QFqMMCLu3YyyLF5yBWqj+Bpee1W+md7KV21p2AXZ3bbf/lvJA+pCrBEFiyx
-         o+homoHfmpbb9DJ9fBxqDt/Ulc9PmWNmFyuW0qIHuDpT2UgePwuuSBZq9+MaaLvBaxgR
-         Vv3y97dNDm9/OG6FjLG1NFWtj9d44S8QTQaWh+Pn62HoX8yka1RznREopJOgRgS7JKwV
-         b2e73K3hfizwgYJr81tFRDM+sqrBTjiboQ05/nWM3wbRfF9jNVVlvRsyDxJZaoUkyWGt
-         3PK0mSjaoaxIAHjXSGpwzrntQya9c9s8UcIUve80+oHcBQXxOrIGuWkt2mCM+hGX/Oxj
-         n6TQ==
+        Wed, 5 Jun 2019 08:30:02 -0400
+Received: by mail-qk1-f173.google.com with SMTP id d15so4976855qkl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 05:30:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8HVlknpI+BmHQFC/piG0dRX/l8wTKMARAJ5WDZfkyic=;
-        b=it7KJ5B0WmLD3wdqaDXXK6Se3Ttd7CdnKhXBzzXletbkj51oJE5EW0zehwDAULV5Oe
-         jgFnQ31YqgTkDfSymgNvygd8QR8i93DSECl6kJYZEfSl4pSRJzP0jyGm2BCnlZ3C2L8h
-         rDwNqurO91zzquVWJKe39gniimz8/L4V5ckX/eJkAz38ow6x3ugdyvxqOf5XlsTCy1wG
-         E3dFcnoiMghnLOsf6ZgZt3E0NHddHC7d9Oc80ZOPy0NKunzmypbK43H7mqd4giIPfRLc
-         6kPNKXJiWf3BuMtfcQxmW6OfeM0QOSw9bIF3DTmGF6VofTVwsMqAFSV+n1PxZwB2CIF9
-         YFvQ==
-X-Gm-Message-State: APjAAAUIcCEPEoqK5BdxlACl9G1vTJvjsWne8J95Is389Fyoj+Eklmn8
-        Z2+lxguw5JewSsFHWHq4WfM=
-X-Google-Smtp-Source: APXvYqwax0TiKlVgZKW45dW7mssIGKZdV/et3rVrkRpwCOQ/zRog6pHZ2QRxpfApp+D29cc4/5nKFw==
-X-Received: by 2002:a19:6a07:: with SMTP id u7mr16808990lfu.74.1559737741231;
-        Wed, 05 Jun 2019 05:29:01 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id f1sm901969ljf.48.2019.06.05.05.28.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 05:29:00 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] rtc: tegra: Drop MODULE_ALIAS
-Date:   Wed,  5 Jun 2019 15:26:13 +0300
-Message-Id: <20190605122613.21303-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kIAzEohJtJriwCbIUZZo9vfkYvFr6mQlgHKp93Bv63s=;
+        b=EULbMMoNo6CgIbs2ODD03WPIhQXeszKHLtRfZ2CEVeoNh3/3co7Fj4stFuXzgrEsmo
+         FuDyujoJXqftQgC/l7aFBNfsRyYNTkMCCu5w3fnaKDf7FEuwMpf9v80GQueRG3unZAoe
+         kGjjXV6iGLT7+Wos7tkxHScauVizMWQPliVIe3ym4EQBmhVzG90Q9TSdSCX66UiIboPu
+         v9Z5CB+2AUN5R2MmHyVN1J2Tc1k5DC+aHfVuP4RMVt4OesJOH6ovNMSTyDFCLTHDCRRd
+         +lpQa5pwVzXKGpP/AD2EST4yiFeLRG9wJk7q4PEIR9y1cuqHW/o/sKPiMU3or9iCSn08
+         nyog==
+X-Gm-Message-State: APjAAAU5GmYaqk2t/nmZaX75Z3U7UDVBcJx3eG0OhEDuNdhacbv/YdYj
+        gNX5nCmPpw6DSF+pu0VX0310us39YkYKcqO33cRcaw==
+X-Google-Smtp-Source: APXvYqy7DvU2elWDBI9zmbpUy+hrtmlt3IP/EIen41Bl/ne7+i+zpOGvpgNyeoG+k91FO+A9HM667ql0wEDHAYo+dQw=
+X-Received: by 2002:a05:620a:12db:: with SMTP id e27mr21336923qkl.352.1559737801799;
+ Wed, 05 Jun 2019 05:30:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+ <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm> <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
+ <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com> <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
+ <a349dfac-be58-93bd-e44c-080ed935ab06@intel.com> <nycvar.YFH.7.76.1906010014150.1962@cbobk.fhfr.pm>
+ <e158d983-1e7e-4c49-aaab-ff2092d36438@redhat.com> <5471f010-cb42-c548-37e2-2b9c9eba1184@redhat.com>
+ <CAO-hwJKRRpsShw6B-YLmsEnjQ+iYtz+VmZK+VSRcDmiBwnS+oA@mail.gmail.com>
+ <e431dafc-0fb4-4be3-ac29-dcf125929090@redhat.com> <CAO-hwJ+5UYJMnuCS0UL4g45Xc181LraAzc-CMuYB2rcqKGe_Sw@mail.gmail.com>
+ <4548d196-b75f-c4d0-8f3c-3e734b9a758c@redhat.com> <c05929f4-00b6-e098-cd69-cd6539ccd3f1@redhat.com>
+ <CAO-hwJJWWRf8cCLCB3JdfFGCGPnp9ar9HC_QAg7crJ0y+pA-hg@mail.gmail.com> <nycvar.YFH.7.76.1906042307260.27227@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1906042307260.27227@cbobk.fhfr.pm>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 5 Jun 2019 14:29:49 +0200
+Message-ID: <CAO-hwJ+iRYS5+5XiCCG+RJQRCzAaUcxF-xxX-K-H1j+snVpoBw@mail.gmail.com>
+Subject: Re: hid-related 5.2-rc1 boot hang
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RTC driver was converted to OF driver long time ago. The MODULE_ALIAS
-macro has no effect for the OF drivers since the alias is overridden by
-the drivers core to follow the OF naming convention of the driver's alias,
-which is based on the device-tree matching name.
+On Tue, Jun 4, 2019 at 11:08 PM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Tue, 4 Jun 2019, Benjamin Tissoires wrote:
+>
+> > > Which should fix this. It is quite simple and safe, so if we get testing
+> > > feedback relatively soon, we could go with the fix instead of dropping the
+> > > product-id, your call.
+> >
+> > I should receive the M280 tomorrow, hopefully with the C52F. If the
+> > receiver is correct and the tests are successful, I'd prefer to take
+> > this one over the revert :)
+>
+> Agreed at this release phase. And if it doesn't work, immediate revert for
+> now and proper fix for 5.3-rc1.
+>
 
-$ cat /sys/devices/soc0/7000e000.rtc/modalias
-of:NrtcT(null)Cnvidia,tegra20-rtc
+Mouse received, patch tested, patch validated.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/rtc/rtc-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+Honestly, before fully reviewing the patch, I thought it would be more
+5.3 material, but after a thorough review, there is nothing scary in
+it and we can safely push it on top of the 5.2 branch.
 
-diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-index 8bbaea24926e..8fa1b3febf69 100644
---- a/drivers/rtc/rtc-tegra.c
-+++ b/drivers/rtc/rtc-tegra.c
-@@ -419,5 +419,4 @@ module_platform_driver(tegra_rtc_driver);
- 
- MODULE_AUTHOR("Jon Mayo <jmayo@nvidia.com>");
- MODULE_DESCRIPTION("driver for Tegra internal RTC");
--MODULE_ALIAS("platform:tegra_rtc");
- MODULE_LICENSE("GPL");
--- 
-2.21.0
+I'm about to send the other mentioned reverts and push everything in 5.2-fixes
 
+Cheers,
+Benjamin
