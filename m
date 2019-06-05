@@ -2,63 +2,166 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605B5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF5B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8E1206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkwwqWkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfFEMUg (ORCPT
+        id S1727674AbfFEMVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:20:36 -0400
-Received: from foss.arm.com ([217.140.101.70]:58906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727553AbfFEMUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:20:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8788E80D;
-        Wed,  5 Jun 2019 05:20:35 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732363F246;
-        Wed,  5 Jun 2019 05:20:33 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 13:20:31 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ron Rindjunsky <ronrindj@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 0/3] Add support for Graviton TRNG
-Message-ID: <20190605122031.GK15030@fuggles.cambridge.arm.com>
-References: <20190604203100.15050-1-alisaidi@amazon.com>
+        Wed, 5 Jun 2019 08:21:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41970 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfFEMVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:21:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so19253421wrm.8;
+        Wed, 05 Jun 2019 05:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=eMX4q3DpHMhUsdsN4u88JHTPcA/fYwja5qc5UwXeOj0=;
+        b=HkwwqWkbYHshnfYvDhmb8NlPq1PKXNE+NTRxvZwenZ5mdxm93abHvET1ts/6AqvNWM
+         IfefGtgsPVhkwiYXcZgGowa3l3QfD+OKsqASzLS2+wUdHnALs6fu+BOB89zspYmQSBXA
+         ktCUuQYXqnevp2qsxupbzl5wplKboxVDx5VwChJ09eueMX7GNlRFIeQNcX2DpnGBL4nN
+         F/QmyXv+U0ci9q4txpJpnLdJ9gISMBrpAAvVxJVjbX8RWQClrvDeZEPs5VnvQZrc6rsJ
+         FkuQDPfKNkTvAK0TXZRNc0xDGKJkhACetTPcFkPrPUuwDix+0WyWXACGaerBMJEk2+J1
+         XLqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=eMX4q3DpHMhUsdsN4u88JHTPcA/fYwja5qc5UwXeOj0=;
+        b=mgeLlCdWikl5GFWXnkbvo59T8tx6JhPSSLzJhWfmmpx2ttlJSl4O3Koey3nSCRp1JE
+         AfPL0Mzeh4r7vu2px9BDcK+cV+hCf8BhDHFehN/0HIunLKUbOmip7BZ4SXDjGlapUsKQ
+         KqWeD3t3noYFgY8MoS9cV4dKueQo/QqpWfcU0lrWP+4TaTQkgsZ/sv8ZlYuZNHvnLLVV
+         IDqkCGs7f4gR1Py/SA4bqSa05CzwjNxL0iD8kK2tyhCdjw40GeL6BLHBjqElxibQEaEJ
+         POm4741AA2Km6BvR0SyrCmY9iZvZIOK3PxuF+4Is5cq3AVtKV3+fEw0EoIxE8yCEdx6E
+         XhVg==
+X-Gm-Message-State: APjAAAVYOkOeHyLIP3CCJF+a2ol+05/OtiHrEyuNo+WISHUNj/Fm5zmN
+        cCHSNOphyXD2NDt08Ru3lqA=
+X-Google-Smtp-Source: APXvYqyPHvWdNV9UYQ5tB9zJObQjRgwr7QJNszooXaFDn9ZgdymeSnKyWkZI932VnvkKp8F3fqHtFg==
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr9456223wru.87.1559737303220;
+        Wed, 05 Jun 2019 05:21:43 -0700 (PDT)
+Received: from [172.16.8.139] (host-78-151-217-120.as13285.net. [78.151.217.120])
+        by smtp.gmail.com with ESMTPSA id v67sm4961931wme.24.2019.06.05.05.21.41
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 05:21:42 -0700 (PDT)
+From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Subject: Re: [PATCH 09/25] vfs: Allow mount information to be queried by
+ fsinfo() [ver #13]
+To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
+Cc:     raven@themaw.net, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mszeredi@redhat.com
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+ <155905633578.1662.8087594848892366318.stgit@warthog.procyon.org.uk>
+Message-ID: <60136f9f-8eb6-a7f4-11c6-daf988274420@gmail.com>
+Date:   Wed, 5 Jun 2019 13:21:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604203100.15050-1-alisaidi@amazon.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <155905633578.1662.8087594848892366318.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 08:30:57PM +0000, Ali Saidi wrote:
-> AWS Graviton based systems provide an Arm SMC call in the vendor defined
-> hypervisor region to read random numbers from a HW TRNG and return them to the
-> guest. 
-> 
-> We've observed slower guest boot and especially reboot times due to lack of
-> entropy and providing access to a TRNG is meant to address this. 
+On 28/05/2019 16:12, David Howells wrote:
+> Allow mount information, including information about the topology tree to
+> be queried with the fsinfo() system call.  Usage of AT_FSINFO_MOUNTID_PATH
+> allows overlapping mounts to be queried.
+>
+> To this end, four fsinfo() attributes are provided:
+>
+>   (1) FSINFO_ATTR_MOUNT_INFO.
+>
+>       This is a structure providing information about a mount, including:
+>
+> 	- Mounted superblock ID.
+> 	- Mount ID (as AT_FSINFO_MOUNTID_PATH).
+> 	- Parent mount ID.
+> 	- Mount attributes (eg. R/O, NOEXEC).
+> 	- Number of change notifications generated.
+>
+>       Note that the parent mount ID is overridden to the ID of the queried
+>       mount if the parent lies outside of the chroot or dfd tree.
+>
+>   (2) FSINFO_ATTR_MOUNT_DEVNAME.
+>
+>       This a string providing the device name associated with the mount.
+>
+>       Note that the device name may be a path that lies outside of the root.
+>
+>   (3) FSINFO_ATTR_MOUNT_CHILDREN.
+>
+>       This produces an array of structures, one for each child and capped
+>       with one for the argument mount (checked after listing all the
+>       children).  Each element contains the mount ID and the notification
+>       counter of the respective mount object.
+>
+>   (4) FSINFO_ATTR_MOUNT_SUBMOUNT.
+>
+>       This is a 1D array of strings, indexed with struct fsinfo_params::Nth.
+>       Each string is the relative pathname of the corresponding child
+>       returned by FSINFO_ATTR_MOUNT_CHILD.
 
-Curious, but why this over something like virtio-rng?
+FSINFO_ATTR_MOUNT_CHILD -> FSINFO_ATTR_MOUNT_CHILDREN
 
-Will
+
+>       Note that paths in the mount at the base of the tree (whether that be
+>       dfd or chroot) are relative to the base of the tree, not the root
+>       directory of that mount.
+>
+> Signed-off-by: David Howells<dhowells@redhat.com>
+> ---
+>
+>   fs/d_path.c                 |    2
+>   fs/fsinfo.c                 |    9 ++
+>   fs/internal.h               |    9 ++
+>   fs/namespace.c              |  175 +++++++++++++++++++++++++++++++++++++++++++
+>   include/uapi/linux/fsinfo.h |   28 +++++++
+>   samples/vfs/test-fsinfo.c   |   47 +++++++++++-
+>   6 files changed, 266 insertions(+), 4 deletions(-)
+
+> +/*
+> + * Information struct for fsinfo(FSINFO_ATTR_MOUNT_INFO).
+> + */
+> +struct fsinfo_mount_info {
+> +	__u64		f_sb_id;	/* Superblock ID */
+> +	__u32		mnt_id;		/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
+> +	__u32		parent_id;	/* Parent mount identifier */
+> +	__u32		group_id;	/* Mount group ID */
+> +	__u32		master_id;	/* Slave master group ID */
+> +	__u32		from_id;	/* Slave propogated from ID */
+
+propogated -> propagated
+
+> +	__u32		attr;		/* MOUNT_ATTR_* flags */
+> +	__u32		notify_counter;	/* Number of notifications generated. */
+> +	__u32		__reserved[1];
+> +};
+> +
+> +/*
+> + * Information struct element for fsinfo(FSINFO_ATTR_MOUNT_CHILDREN).
+> + * - An extra element is placed on the end representing the parent mount.
+> + */
+> +struct fsinfo_mount_child {
+> +	__u32		mnt_id;		/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
+> +	__u32		notify_counter;	/* Number of notifications generated on mount. */
+> +};
+> +
+>   #endif /* _UAPI_LINUX_FSINFO_H */
