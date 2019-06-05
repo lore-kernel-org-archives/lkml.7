@@ -2,104 +2,198 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3EBC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480DEC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E8F20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559751991;
-	bh=RRuTmiiCL4ohzUXB1ETCVXEBTEd5MWjinBA96qt0pQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XT0h8BC3K/3eAXdgEHBVMrvAxQbUMcaoi2zKW6cjA+XRMpdY9W6PIqz5O/IobPnn2
-	 MV0LQCLa/PkIpnSzG+Uwo42iaj82a5fnuJzhFeQY6aSTSUymRpj33UNk1FEgivmbYT
-	 QXssdS2a0iEUQZZBonAIypgfi6iL87vzSGU1J/1E=
+	by mail.kernel.org (Postfix) with ESMTP id 292C9206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfFEQ0b (ORCPT
+        id S1728723AbfFEQ0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
+        Wed, 5 Jun 2019 12:26:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:34450 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfFEQ0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:26:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28E37206C3;
-        Wed,  5 Jun 2019 16:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559751989;
-        bh=RRuTmiiCL4ohzUXB1ETCVXEBTEd5MWjinBA96qt0pQU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g70kvZ4hhkO9JA7ZPvRvgVMal9GJL5Xzl89Bc4OOuz56PxzyGYFmwuNsefODsCtjX
-         Za+YWKrYj4KvkKj9Hj92BxVEVwwwblgV7qR7NRrVAnJ8gj/yWUlplWQvU4wSj02WqD
-         Qqer/L58HwWoxDc2SjM0ukfHKXRb/KUHBp6zkoLE=
-Date:   Wed, 5 Jun 2019 18:26:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rolf Eike Beer <eb@emlix.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
- (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-Message-ID: <20190605162626.GA31164@kroah.com>
-References: <779905244.a0lJJiZRjM@devpool35>
+        id S1726670AbfFEQ0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:26:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6C75374;
+        Wed,  5 Jun 2019 09:26:35 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 318D83F5AF;
+        Wed,  5 Jun 2019 09:26:33 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 17:26:30 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>,
+        linux-arm-kernel@lists.infradead.org, marek.vasut@gmail.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, trini@konsulko.com,
+        paul.walmsley@sifive.com
+Subject: Re: [v3 PATCH] RISC-V: Add a PE/COFF compliant Image header.
+Message-ID: <20190605162630.GE30925@lakrids.cambridge.arm.com>
+References: <20190523183516.583-1-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <779905244.a0lJJiZRjM@devpool35>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190523183516.583-1-atish.patra@wdc.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
-> I decided to dig out a toy project which uses a DragonBoard 410c. This has 
-> been "running" with kernel 4.9, which I would keep this way for unrelated 
-> reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was 
-> buildable, which was good enough.
+On Thu, May 23, 2019 at 11:35:16AM -0700, Atish Patra wrote:
+> Currently, last stage boot loaders such as U-Boot can accept only
+> uImage which is an unnecessary additional step in automating boot flows.
 > 
-> Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> Add a PE/COFF compliant image header that boot loaders can parse and
+> directly load kernel flat Image. The existing booting methods will continue
+> to work as it is.
 > 
-> aarch64-unknown-linux-gnueabi-ld: ./drivers/firmware/efi/libstub/lib.a(arm64-
-> stub.stub.o): in function `handle_kernel_image':
-> /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63: 
-> undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
-> aarch64-unknown-linux-gnueabi-ld: ./drivers/firmware/efi/libstub/lib.a(arm64-
-> stub.stub.o): relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol 
-> `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be used 
-> when making a shared object; recompile with -fPIC
-> /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63:
-> (.init.text+0xc): dangerous relocation: unsupported relocation
-> /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux' failed
-> -make[1]: *** [vmlinux] Error 1
+> Another goal of this header is to support EFI stub for RISC-V in future.
+> EFI specification needs PE/COFF image header in the beginning of the kernel
+> image in order to load it as an EFI application. In order to support
+> EFI stub, code0 should be replaced with "MZ" magic string and res5(at
+> offset 0x3c) should point to the rest of the PE/COFF header (which will
+> be added during EFI support).
 > 
-> This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from 
-> linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be), reverting 
-> this commit fixes the build.
+> This patch is based on ARM64 boot image header and provides an opprtunity
+> to combine both ARM64 & RISC-V image headers.
 > 
-> This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.0. See 
-> the attached .config for reference.
+> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
 > 
-> If you have questions or patches just ping me.
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> 
+> ---
+> I have not sent out corresponding U-Boot patch as all the changes are
+> compatible with current u-boot support. Once, the kernel header format
+> is agreed upon, I will update the U-Boot patch.
+> 
+> Changes from v2->v3
+> 1. Modified reserved fields to define a header version.
+> 2. Added header documentation.
+> 
+> Changes from v1-v2:
+> 1. Added additional reserved elements to make it fully PE compatible.
+> ---
+>  Documentation/riscv/boot-image-header.txt | 50 ++++++++++++++++++
+>  arch/riscv/include/asm/image.h            | 64 +++++++++++++++++++++++
+>  arch/riscv/kernel/head.S                  | 32 ++++++++++++
+>  3 files changed, 146 insertions(+)
+>  create mode 100644 Documentation/riscv/boot-image-header.txt
+>  create mode 100644 arch/riscv/include/asm/image.h
+> 
+> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
+> new file mode 100644
+> index 000000000000..68abc2353cec
+> --- /dev/null
+> +++ b/Documentation/riscv/boot-image-header.txt
+> @@ -0,0 +1,50 @@
+> +				Boot image header in RISC-V Linux
+> +			=============================================
+> +
+> +Author: Atish Patra <atish.patra@wdc.com>
+> +Date  : 20 May 2019
+> +
+> +This document only describes the boot image header details for RISC-V Linux.
+> +The complete booting guide will be available at Documentation/riscv/booting.txt.
+> +
+> +The following 64-byte header is present in decompressed Linux kernel image.
+> +
+> +	u32 code0;		  /* Executable code */
+> +	u32 code1; 		  /* Executable code */
+> +	u64 text_offset;	  /* Image load offset, little endian */
+> +	u64 image_size;		  /* Effective Image size, little endian */
+> +	u64 flags;		  /* kernel flags, little endian */
+> +	u32 version;		  /* Version of this header */
+> +	u32 res1  = 0;		  /* Reserved */
+> +	u64 res2  = 0;    	  /* Reserved */
+> +	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
+> +	u32 res3;		  /* Reserved for additional RISC-V specific header */
+> +	u32 res4;		  /* Reserved for PE COFF offset */
+> +
+> +This header format is compliant with PE/COFF header and largely inspired from
+> +ARM64 header. Thus, both ARM64 & RISC-V header can be combined into one common
+> +header in future.
+> +
+> +Notes:
+> +- This header can also be reused to support EFI stub for RISC-V in future. EFI
+> +  specification needs PE/COFF image header in the beginning of the kernel image
+> +  in order to load it as an EFI application. In order to support EFI stub,
+> +  code0 should be replaced with "MZ" magic string and res5(at offset 0x3c) should
+> +  point to the rest of the PE/COFF header.
+> +
+> +- version field indicate header version number.
+> +  	Bits 0:15  - Minor version
+> +	Bits 16:31 - Major version
+> +
+> +  This preserves compatibility across newer and older version of the header.
+> +  The current version is defined as 0.1.
+> +
+> +- res3 is reserved for offset to any other additional fields. This makes the
+> +  header extendible in future. One example would be to accommodate ISA
+> +  extension for RISC-V in future. For current version, it is set to be zero.
+> +
+> +- In current header, the flag field has only one field.
+> +	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
+> +
+> +- Image size is mandatory for boot loader to load kernel image. Booting will
+> +  fail otherwise.
+> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> new file mode 100644
+> index 000000000000..61c9f20d2f19
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/image.h
+> @@ -0,0 +1,64 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __ASM_IMAGE_H
+> +#define __ASM_IMAGE_H
+> +
+> +#define RISCV_IMAGE_MAGIC	"RISCV"
+> +
+> +
+> +#define RISCV_IMAGE_FLAG_BE_SHIFT	0
+> +#define RISCV_IMAGE_FLAG_BE_MASK	0x1
+> +
+> +#define RISCV_IMAGE_FLAG_LE		0
+> +#define RISCV_IMAGE_FLAG_BE		1
+> +
+> +
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +#define __HEAD_FLAG_BE		RISCV_IMAGE_FLAG_BE
+> +#else
+> +#define __HEAD_FLAG_BE		RISCV_IMAGE_FLAG_LE
+> +#endif
+> +
+> +#define __HEAD_FLAG(field)	(__HEAD_FLAG_##field << \
+> +				RISCV_IMAGE_FLAG_##field##_SHIFT)
+> +
+> +#define __HEAD_FLAGS		(__HEAD_FLAG(BE))
 
-Does Linus's latest tree also fail for you (or 5.1)?
+If you have a CONFIG_CPU_BIG_ENDIAN kernel, this will not be
+little-endian, nor will other fields in your header (e.g. the image
+size), so I would recommend dropping this for now.
 
-Nick, do we need to add another fix that is in mainline for this to work
-properly?
+To manage that for the image_size field you'll probably need to play the
+same linker trick games we play on arm64.
 
-thanks,
+It's probably worth having:
 
-greg k-h
+#ifdef CONFIG_CPU_BIG_ENDIAN
+#error conversion of header fields to LE not yet implemented
+#endif
+
+... to catch that later.
+
+Thanks,
+Mark,
