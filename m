@@ -2,102 +2,63 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7676FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271B3C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476262075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044F62075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfFEScU (ORCPT
+        id S1726581AbfFESep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:32:20 -0400
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:41419 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725950AbfFEScU (ORCPT
+        Wed, 5 Jun 2019 14:34:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37884 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFESeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:32:20 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C5FBE18224D68;
-        Wed,  5 Jun 2019 18:32:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: love44_4e33dee382858
-X-Filterd-Recvd-Size: 2595
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  5 Jun 2019 18:32:17 +0000 (UTC)
-Message-ID: <44c945bf0573842fe9b2db89407e40c88fcc7eb4.camel@perches.com>
-Subject: Re: [PATCH] block: Drop unlikely before IS_ERR(_OR_NULL)
-From:   Joe Perches <joe@perches.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 05 Jun 2019 11:32:14 -0700
-In-Reply-To: <8221bc17-b0bb-da6f-4343-3e73467252d5@metux.net>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
-         <20190605142428.84784-4-wangkefeng.wang@huawei.com>
-         <8221bc17-b0bb-da6f-4343-3e73467252d5@metux.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
+        Wed, 5 Jun 2019 14:34:44 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CA20B1510A33F;
+        Wed,  5 Jun 2019 11:34:43 -0700 (PDT)
+Date:   Wed, 05 Jun 2019 11:34:41 -0700 (PDT)
+Message-Id: <20190605.113441.1657641162705180640.davem@davemloft.net>
+To:     sean.wang@mediatek.com
+Cc:     rdunlap@infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, blogic@openwrt.org, nbd@openwrt.org,
+        nelson.chang@mediatek.com, lkp@intel.com
+Subject: Re: [PATCH -next] net: ethernet: mediatek: fix mtk_eth_soc build
+ errors & warnings
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1559726369.9003.4.camel@mtkswgap22>
+References: <85d9fdd9-4b7f-6a51-b885-b3a43f199ec9@infradead.org>
+        <1559726369.9003.4.camel@mtkswgap22>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Jun 2019 11:34:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-05 at 18:24 +0000, Enrico Weigelt, metux IT consult
-wrote:
-> On 05.06.19 14:24, Kefeng Wang wrote:
-> 
-> > diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> > index b97b479e4f64..1f7127b03490 100644
-> > --- a/block/blk-cgroup.c
-> > +++ b/block/blk-cgroup.c
-> > @@ -881,7 +881,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
-> >   			blkg_free(new_blkg);
-> >   		} else {
-> >   			blkg = blkg_create(pos, q, new_blkg);
-> > -			if (unlikely(IS_ERR(blkg))) {
-> > +			if (IS_ERR(blkg)) {
-> >   				ret = PTR_ERR(blkg);
-> >   				goto fail_unlock;
-> >   			}
-> > 
-> 
-> I think this cocci script should do such things automatically:
-> 
-> virtual patch
-> virtual context
-> virtual org
-> virtual report
-> 
-> @@
-> expression E;
-> @@
-> - unlikely(IS_ERR(E))
-> + IS_ERR(E)
+From: Sean Wang <sean.wang@mediatek.com>
+Date: Wed, 5 Jun 2019 17:19:29 +0800
 
-Likely change all of these too:
+> Thanks for your help.  But it seems I've already made the same fixup
+> for the problem in
+> http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020301.html
+> as soon as the kbuild test robot reported this.
 
-$ git grep -P '\blikely.*IS_ERR'
-drivers/net/vxlan.c:    if (likely(!IS_ERR(rt))) {
-fs/ntfs/lcnalloc.c:     if (likely(page && !IS_ERR(page))) {
-fs/ntfs/mft.c:  if (likely(!IS_ERR(page))) {
-fs/ntfs/mft.c:  if (likely(!IS_ERR(m)))
-fs/ntfs/mft.c:          if (likely(!IS_ERR(m))) {
-fs/ntfs/mft.c:          if (likely(!IS_ERR(rl2)))
-fs/ntfs/namei.c:                if (likely(!IS_ERR(dent_inode))) {
-fs/ntfs/runlist.c:      if (likely(!IS_ERR(old_rl)))
-net/openvswitch/datapath.c:             if (likely(!IS_ERR(reply))) {
-net/socket.c:   if (likely(!IS_ERR(newfile))) {
+No, that's not how this works.
 
+You fix networking build fixes by sending the fix here to netdev.
 
+Randy submitted the fix properly, so I'm applying his patch to my
+tree.
