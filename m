@@ -6,49 +6,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A700C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43D6C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6811B2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EAA2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfFEGcs (ORCPT
+        id S1726649AbfFEGdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:32:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46621 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfFEGcr (ORCPT
+        Wed, 5 Jun 2019 02:33:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36084 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfFEGdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:32:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so12927541wrw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:32:46 -0700 (PDT)
+        Wed, 5 Jun 2019 02:33:36 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v22so985991wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=3jkuBIFQQ07F1VjyzRvRa/WhrROvZdSv64waFyHMexk=;
-        b=FPj80LqdQmWIP2abeCCncO9m+rDWjqPjU5OQcLIKnZ1+ha4Ehz4h/fs1QGgEbAFalm
-         lXMYAYpkqwwQjUZAeC7ue1UHDyKXv34LDsTxjGv0E1yNNc3Qqr39g8PfR1uvsil1Yew3
-         IVSe3thGjOkmbPu4Jmx86XHdP7i3yyHMtq/n8mPbSGIM8gsHTpSxO1iV3X1DsFQoJATH
-         K8bMeD6oflyZ5/FYObXTtP5OM4BGMq2j+lpgdbspZeUtF1QYqPennqCTWQRJHSNQCALB
-         CMhH43K0ginfoqh5oaQAB9eV0MuMc+U2egCWvV8PV4Z594dhdQH5MR/1R2nDCK/SfimA
-         X4HQ==
-X-Gm-Message-State: APjAAAUVRaKZ1F5da6GkBSYN5qGxPucL2y6DiCDVxKmB156NBLkN0zlG
-        A69R6UKpWCJV7/6Uajd4HIhitH1w
-X-Google-Smtp-Source: APXvYqz3usyDBwsCRvVqeTKUqA3OOwui7lFCuy/jukOlrRX8xG5cbxSKELhnMkLUls3ZbazNhNYnIw==
-X-Received: by 2002:adf:8028:: with SMTP id 37mr23366438wrk.106.1559716365854;
-        Tue, 04 Jun 2019 23:32:45 -0700 (PDT)
+        bh=T2h/VGqAjRwICZp+0RJbdCUtuNW9WWi5WBRX/OLF/0Q=;
+        b=H1jv+fpaODWNUYVFHAzy02G2UU/RluusDC8wGSL1KBiBe88adbnj2QmFIBZN2kYw+w
+         YXonpkXhLwGMuIQUiaYCMXbq/eeg23Rqn7OddN2H45r/WGVWPe7XvdzvlxI4T9lWWT/e
+         rwufYDvESv9qdq8tBYgbphwChjbgLuLA61A8gr8X3LmEtPRN+Dq1r6adUUG/JwlZSv4M
+         zMMdup/+K2QcM+Uxxzn3emYylnsxYcbG6m4az/YuZZYhOi3sUxOhYhjThpmTwEEZaxCH
+         VHZZ5E1TDXQgeuptMY8UqA8SB0k2BSfrMzDAIybup0TtOaLihEwWAn72klG/rDvl7jmG
+         a+EA==
+X-Gm-Message-State: APjAAAXtsHh0a24LM8Cq/fCxLeYsxZrTZCwET5IipT//T1EE14Ix5y1N
+        OFEyImrOU+gYb8dhiujKkhAryaTI
+X-Google-Smtp-Source: APXvYqypTkczMPYwyOSD/EA01HZ794lV3GRn7xGnbSfntxUWYxynCmy3BbsgfdawvjS/H8nHKiislg==
+X-Received: by 2002:a7b:c5d1:: with SMTP id n17mr20973068wmk.84.1559716413482;
+        Tue, 04 Jun 2019 23:33:33 -0700 (PDT)
 Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id s63sm10736869wme.17.2019.06.04.23.32.44
+        by smtp.gmail.com with ESMTPSA id h21sm16836144wmb.47.2019.06.04.23.33.32
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 23:32:45 -0700 (PDT)
-Subject: Re: [PATCH] orangefs-debugfs: fix a missing-check bug in
- debug_string_to_mask()
-To:     Gen Zhang <blackgod016574@gmail.com>, hubcap@omnibond.com,
-        martin@omnibond.com
-Cc:     devel@lists.orangefs.org, linux-kernel@vger.kernel.org
-References: <20190530090455.GA3059@zhanggen-UX430UQ>
+        Tue, 04 Jun 2019 23:33:32 -0700 (PDT)
+Subject: Re: [PATCH] wimax: debug: fix a missing-check bug in d_parse_params()
+To:     Gen Zhang <blackgod016574@gmail.com>,
+        inaky.perez-gonzalez@intel.com
+Cc:     linux-wimax@intel.com, linux-kernel@vger.kernel.org
+References: <20190530093937.GA4457@zhanggen-UX430UQ>
 From:   Jiri Slaby <jslaby@suse.cz>
 Openpgp: preference=signencrypt
 Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
@@ -93,12 +92,12 @@ Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
  9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
  VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
  sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <eb5b0178-626d-e142-c1e4-7805f28e1e24@suse.cz>
-Date:   Wed, 5 Jun 2019 08:32:43 +0200
+Message-ID: <3f496fad-cfc8-2d13-327f-075011e542fc@suse.cz>
+Date:   Wed, 5 Jun 2019 08:33:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190530090455.GA3059@zhanggen-UX430UQ>
+In-Reply-To: <20190530093937.GA4457@zhanggen-UX430UQ>
 Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -107,25 +106,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 05. 19, 11:04, Gen Zhang wrote:
-> In debug_string_to_mask(), 'strsep_fodder' is allocated by kstrdup().
-> It returns NULL when fails. So 'strsep_fodder' should be checked.
+On 30. 05. 19, 11:39, Gen Zhang wrote:
+> In d_parse_params(), 'params_orig' is allocated by kstrdup(). It returns
+> NULL when fails. So 'params_orig' should be checked.
 > 
-> Signed-off-by: Gen Zhang <blackgod016574.gmail>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 > ---
-> diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-> index 87b1a6f..a9a9aac 100644
-> --- a/fs/orangefs/orangefs-debugfs.c
-> +++ b/fs/orangefs/orangefs-debugfs.c
-> @@ -888,6 +888,8 @@ static void debug_string_to_mask(char *debug_string, void *mask, int type)
->  	char *unchecked_keyword;
->  	int i;
->  	char *strsep_fodder = kstrdup(debug_string, GFP_KERNEL);
-> +	if (!strsep_fodder)
-> +		return;
->  	char *original_pointer;
+> diff --git a/include/linux/wimax/debug.h b/include/linux/wimax/debug.h
+> index aaf24ba..bacd6cb 100644
+> --- a/include/linux/wimax/debug.h
+> +++ b/include/linux/wimax/debug.h
+> @@ -496,6 +496,11 @@ void d_parse_params(struct d_level *d_level, size_t d_level_size,
+>  	if (_params == NULL)
+>  		return;
+>  	params_orig = kstrdup(_params, GFP_KERNEL);
+> +	if (!params_orig) {
+> +		printk(KERN_ERR "%s: can't duplicate string '%s'\n",
+> +		       tag, _params);
 
-You should get a compiler error/warning about mixing declarations with code.
+We use pr_err these days.
 
 thanks,
 -- 
