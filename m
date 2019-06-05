@@ -2,177 +2,143 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8E5C28CC3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2422CC46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E22207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22C3206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mWp51IFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFEAS7 (ORCPT
+        id S1726694AbfFEATn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 20:18:59 -0400
-Received: from anholt.net ([50.246.234.109]:50678 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbfFEAS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 20:18:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id F1D8510A04E7;
-        Tue,  4 Jun 2019 17:18:57 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id v6jXS3FLFHVr; Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id A54C710A288F;
-        Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 280592FE3AAE; Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     mbrugger@suse.de, sboyd@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] cpufreq: add driver for Raspbery Pi
-In-Reply-To: <20190604173223.4229-5-nsaenzjulienne@suse.de>
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de> <20190604173223.4229-5-nsaenzjulienne@suse.de>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Tue, 04 Jun 2019 17:18:54 -0700
-Message-ID: <87d0jszxxt.fsf@anholt.net>
+        Tue, 4 Jun 2019 20:19:43 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40109 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfFEATm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 20:19:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so6256194ljh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 17:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wdmJ9l6dKN/M8KJKaReWlFRx3EElIyLoR59kmGQ0ajY=;
+        b=mWp51IFY9ldz1n3pj1fKrjbn8ZSGPWgwyelkcW6/s7v+y0e0DR/V8GR1ZxM1BsBeAX
+         mqVaa/tfXDd/6MEO1OGM22zX0t4jPSi2d71oCngZuhbWkZxio6+sFzeQvWqDrIYIpJuw
+         nH2s7y3MrUSzM3dAVIORTn4j8f2hTE4FKXFXiB6vbyOyWM+8sm7qnuJAdZe0dYu2FmQB
+         G/4Hd50+HcTF52V70z6ii5Z+BoWQp+0M49tLLSAs+EJ/ROKxeK9GHDSjTGCoNxZTB406
+         eMV8PQsiA3EH2MFRRpS50GYwQWxdJ7xN9x1Gd1qekPsZCFSmXsLb0mvz92xMWF6zHTLn
+         it2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wdmJ9l6dKN/M8KJKaReWlFRx3EElIyLoR59kmGQ0ajY=;
+        b=hyg58QQGJB1xJVFpSEOj0igvJyy6RWpGDCeBFxmlLGQWJQh33ti3cS+y3gp9hDDqiI
+         D1eIRYH8350b3FMemsa4S6X06wOONvk4ZjLCC+567LxOjmL9U3Jl+tuOTMwwbBYaF5v9
+         YiXQMFkGudgAIhLP/8UC6Ogg+9/RTcjed4wFApxjqSk+WOZbPqIOecuMKbYTkfISqFHj
+         TcZXbUZspCvWw3yIh7BPLMCIG9ez8WDggxU37cnSz73ubYBMwK4NJPG+VI3dVn4YmCCR
+         M2jzeZ8DHHkdpYLDBfVSGFwvVBT/mIYrKS5v2DK6zUqXN/JYbPryKY8Ev3ahzU/34uiK
+         p5rw==
+X-Gm-Message-State: APjAAAVNLwOSACr6Mkv842JHEwlKg5oNQpTkzq8KldY7jTdpntfLEOms
+        phpVPSQnD2BMUkdPoEnMU+OUe0EXUj/L6uGWODmbqg==
+X-Google-Smtp-Source: APXvYqz12ZqA7QhRnSs7NCGRounbiJim0N2d6mvCnGBaDXvxAiRpIwE1RpZWUzCT4YdYhAmjp6wliW9IQj3YJNSuaRI=
+X-Received: by 2002:a2e:9e8e:: with SMTP id f14mr3500ljk.120.1559693980056;
+ Tue, 04 Jun 2019 17:19:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-4-brendanhiggins@google.com> <20190517174300.7949F20848@mail.kernel.org>
+In-Reply-To: <20190517174300.7949F20848@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 4 Jun 2019 17:19:28 -0700
+Message-ID: <CAFd5g45WrARi7eXsVKyq2eJH5j+wSrCCaHHSHrMptG7+MnNiTg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/18] kunit: test: add string_stream a std::stream
+ like string builder
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
-
-> Raspberry Pi's firmware offers and interface though which update it's
-> performance requirements. It allows us to request for specific runtime
-> frequencies, which the firmware might or might not respect, depending on
-> the firmware configuration and thermals.
+On Fri, May 17, 2019 at 10:43 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> As the maximum and minimum frequencies are configurable in the firmware
-> there is no way to know in advance their values. So the Raspberry Pi
-> cpufreq driver queries them, builds an opp frequency table to then
-> launch cpufreq-dt.
+> Quoting Brendan Higgins (2019-05-14 15:16:56)
+> > A number of test features need to do pretty complicated string printing
+> > where it may not be possible to rely on a single preallocated string
+> > with parameters.
+> >
+> > So provide a library for constructing the string as you go similar to
+> > C++'s std::string.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 >
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->
-> Changes since RFC:
->   - Alphabetically ordered relevant stuff
->   - Updated Kconfig to select firmware interface
->   - Correctly unref clk_dev after use
->   - Remove all opps on failure
->   - Remove use of dev_pm_opp_set_sharing_cpus()
->
->  drivers/cpufreq/Kconfig.arm           |  8 +++
->  drivers/cpufreq/Makefile              |  1 +
->  drivers/cpufreq/raspberrypi-cpufreq.c | 84 +++++++++++++++++++++++++++
->  3 files changed, 93 insertions(+)
->  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
->
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index f8129edc145e..556d432cc826 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
->  	  The driver implements the cpufreq interface for this HW engine.
->  	  Say Y if you want to support CPUFreq HW.
->=20=20
-> +config ARM_RASPBERRYPI_CPUFREQ
-> +	tristate "Raspberry Pi cpufreq support"
-> +	select RASPBERRYPI_FIRMWARE
-> +	help
-> +	  This adds the CPUFreq driver for Raspberry Pi
-> +
-> +	  If in doubt, say N.
-> +
->  config ARM_S3C_CPUFREQ
->  	bool
->  	help
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index 689b26c6f949..121c1acb66c0 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.o
->  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
->  obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+=3D qcom-cpufreq-hw.o
->  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-kryo.o
-> +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+=3D raspberrypi-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
-> diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/rasp=
-berrypi-cpufreq.c
-> new file mode 100644
-> index 000000000000..2b3a195a9d37
-> --- /dev/null
-> +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
-> @@ -0,0 +1,84 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Raspberry Pi cpufreq driver
-> + *
-> + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/cpu.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +
-> +static const struct of_device_id machines[] __initconst =3D {
-> +	{ .compatible =3D "raspberrypi,3-model-b-plus" },
-> +	{ .compatible =3D "raspberrypi,3-model-b" },
-> +	{ .compatible =3D "raspberrypi,2-model-b" },
-> +	{ /* sentinel */ }
-> +};
+> Is there any reason why we can't use the seqfile API for this? These
+> both share a similar goal, formatting strings into a buffer to be read
+> later. Maybe some new APIs would be needed to extract the buffer
+> differently, but I hope we could share the code.
 
-I think I'd skip the compatible string check here.  The firmware's
-clock-management should be well-tested by folks playing with clocking in
-the downstream tree.  There aren't any firmware differences in the
-processing of these clock management packets, to my recollection.
+I can see why you are asking. It seems as though they are trying to do
+*similar* things, and it seems possible that we might be able to
+extract some common functionality out of seq_file that could replace
+this; however, it looks like it would be require a significant
+refactoring of seq_file to separate out the file system specific bits
+from the more general stringbuilder functionality.
 
-Other than that, I'm happy with the series and would give it my
-acked-by.
+In my opinion, a refactoring like this makes no sense in this
+patchset; it probably belongs in its own patchset (preferably as a
+follow on). I also am not sure if the FS people would appreciate
+indirection that serves them no benefit, but I can ask if you like.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> If it can't be used, can you please add the reasoning to the commit text
+> here?
 
------BEGIN PGP SIGNATURE-----
+Will do.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlz3Cm4ACgkQtdYpNtH8
-nugFjg/7BW+vK+pRjIN9r/4ejWmipNwzyurktOyEn+OwCgwTSTkdlvGm/SllSKHr
-3Y4BBLmSFf3xE87lNTkLmpkryi0LyBa1NokmCo0P21QoAkKpg4ZswtA+ti6o2cuR
-oHw+cZ9o0sC3HvBFQknojZ7k/y91lROfQb/0h0FgE+9fQwpf/tfzazbSGHj8BF4x
-Qil0ZEdJaw+dRzAJCSr250SGOqdifxcswEeIjesZZeR1uIOjgm74j9gEMrHagPQq
-86Nq5RqOEe9eIUv7tADT+pFHFqQwmoWp5FSCgGxXhTraJlEf0O2bOUVWE9tXvovl
-3Zz4vcEeyzUz5QTqVHERPyN4gbeHO+6x4QoRQeq7Z7GiIJKCMX74OkoGgNAIR0gT
-N2gnGxiAcSyY8crQkfa4kdf7jCGEWLIkBHo1R2N4ee3yYZP3ncCQeL4YoJ/jv2gG
-I6q9SzydecKAkQyQZaOElK3aJAIOdnuxs3H41r6lPhjB8B+ayevWUJL5ZkyVDlCr
-Ic1HXmyvoTLZQ6/doXsnu9DFSiZj45kUjyymVpvUpoygu8KhcSIdnuuYoidNkvnv
-bpSww6H3sFRU5b5CAPBM/kC7tnxzEK4kWIgZEqP7jA0vtv/2g08k0KwaqgPQDQDa
-sBQ2QqaHMXDXVaDMFEnDFDeFDl8UwhpZqvIhiKwy7iU9LkRH/mE=
-=V302
------END PGP SIGNATURE-----
---=-=-=--
+Thanks!
