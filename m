@@ -2,75 +2,123 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D420C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0FEC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38234206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246B320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvxtMTCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfFEORA (ORCPT
+        id S1728460AbfFEORJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:17:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34576 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728382AbfFEOQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:16:55 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D6C3D9CA05EE12061804;
-        Wed,  5 Jun 2019 22:16:45 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 5 Jun 2019 22:16:38 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        <linux-input@vger.kernel.org>
-Subject: [PATCH] Input: alps: Drop unlikely before IS_ERR(_OR_NULL)
-Date:   Wed, 5 Jun 2019 22:24:28 +0800
-Message-ID: <20190605142428.84784-5-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+        Wed, 5 Jun 2019 10:17:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36272 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfFEORI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:17:08 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a8so6059239edx.3;
+        Wed, 05 Jun 2019 07:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DYFO74imdmleJLw5lYkuA6kO6lk6BDNzHYqBpZMjZ8s=;
+        b=kvxtMTCZdYLS36jfstozpuwwHILmf0b2bvAMNZXohkogm+c2hPkV+4Z95BmSa+Iqxh
+         ZVGQ9C767Mwx8Ubqg7OXp4cc5CZA5jSH642GgtyyWORUHyEr1yHfT+o5w1ktS+0B1E2k
+         VE4Q8MtKaqiEo8ZAclw5warQKFbLbRryMg6MMwGAZdzZ0/aXkoolO6+F5v/FVE8PgoRz
+         wjDdu3SfUhW1O6EVCML5GIKEDN1vkOd1YFIkqUl0szkdzv18oI0Pfv/hKcA64SRN4QKq
+         RO1JzS9ecXpXP+8nLy05iP+IsEluRraqXvXeKhUhfZOANq+Kntu5MISL4uAXjrVMgbTe
+         +6EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DYFO74imdmleJLw5lYkuA6kO6lk6BDNzHYqBpZMjZ8s=;
+        b=gMLwK+UtnG3D0YHfkoAawmZ0YnqD0oJSZGb4hoeJeVFC+EJbDApMRcTCeXXlNA+HBX
+         oPrcqed6BjydKk/mjvxn/IvpwJcfIzAOGn0TBDSVd2l2gqmlwb463OAri8aT6gkW+yhp
+         mdhTKs+UTE7UNGr7fCKhVe/xXCx7l+MJkP6ElDCsz30OoQZbN8/G/HGo0Blh0VocQZws
+         MOx0ffD16YRv7wgbW132hIU/cRBruvPcbigQP/YwatgoxdYYcn8ttUe3x7kOsA5WfM/f
+         M88c/6aW6jJuRcnJL6czYPZvl3JBzEg7KOr+oeBpRkN5kOM21fNbwEjhXnhNmTb5oc4D
+         h3vw==
+X-Gm-Message-State: APjAAAWUUIyfuzaSX62gkF9w30Ur9n35aQvW/oBmlLWdsif/Y0/NEW89
+        WDSumJJuL0aykQ67twmNOwmKjP9QOZIdUW/G//k=
+X-Google-Smtp-Source: APXvYqz++haK8phyFHbXw+7xx+j+S+xiNW3yfgGMolbWak16tppAeVvpIviRn0GFGAEATK3z185Rfr0/uCa7tvr7S5E=
+X-Received: by 2002:a17:906:2ada:: with SMTP id m26mr8080786eje.265.1559744226214;
+ Wed, 05 Jun 2019 07:17:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+ <CAAFQd5Dmr+xyd4dyc_44vJFpNpwK6+MgG+ensoey59HgbxXV6g@mail.gmail.com>
+ <CGME20190605125734epcas1p43b15cc8c556d917ca71b561791861cec@epcas1p4.samsung.com>
+ <CAF6AEGuj=QmEWZVzHMtoDgO0M0t-W9+tay5F4AKYThZqy=nkdA@mail.gmail.com> <95d6e963-7f30-1d9c-99d7-0f6cc1589997@samsung.com>
+In-Reply-To: <95d6e963-7f30-1d9c-99d7-0f6cc1589997@samsung.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 5 Jun 2019 07:16:51 -0700
+Message-ID: <CAF6AEGtb1t4oRXCVvZq_cq1vZCJhgok-Ha+FXrruOOCq4APY_Q@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] of/device: add blacklist for iommu dma_ops
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
-so no need to do that again from its callers. Drop it.
+On Wed, Jun 5, 2019 at 6:18 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Hi Rob,
+>
+> On 2019-06-05 14:57, Rob Clark wrote:
+> > On Tue, Jun 4, 2019 at 11:58 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> >> But first of all, I remember Marek already submitted some patches long
+> >> ago that extended struct driver with some flag that means that the
+> >> driver doesn't want the IOMMU to be attached before probe. Why
+> >> wouldn't that work? Sounds like a perfect opt-out solution.
+> > Actually, yeah.. we should do that.  That is the simplest solution.
+>
+> Tomasz has very good memory. It took me a while to find that old patches:
+>
+> https://patchwork.kernel.org/patch/4677251/
+> https://patchwork.kernel.org/patch/4677941/
+> https://patchwork.kernel.org/patch/4677401/
+>
+> It looks that my idea was a bit ahead of its time ;)
+>
 
-Cc: "Pali Rohár" <pali.rohar@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/input/mouse/alps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+if I re-spin this, was their a reason not to just use bitfields, ie:
 
-diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-index 0a6f7ca883e7..791ef0f826c5 100644
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -1478,7 +1478,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
- 		/* On V2 devices the DualPoint Stick reports bare packets */
- 		dev = priv->dev2;
- 		dev2 = psmouse->dev;
--	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
-+	} else if (IS_ERR_OR_NULL(priv->dev3)) {
- 		/* Register dev3 mouse if we received PS/2 packet first time */
- 		if (!IS_ERR(priv->dev3))
- 			psmouse_queue_work(psmouse, &priv->dev3_register_work,
--- 
-2.20.1
+-    bool suppress_bind_attrs;    /* disables bind/unbind via sysfs */
++    bool suppress_bind_attrs : 1;    /* disables bind/unbind via sysfs */
++    bool has_own_iommu_manager : 1;  /* driver explictly manages IOMMU */
 
+That seems like it would have been a bit less churn and a bit nicer
+looking (IMO at least)
+
+BR,
+-R
