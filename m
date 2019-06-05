@@ -2,158 +2,125 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4341C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449CDC46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702FD2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EDEDrpkj";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="mn+uNOg1"
+	by mail.kernel.org (Postfix) with ESMTP id 1949E2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559727181;
+	bh=9yRQKQmW+n1NU2z2O3UWtAUpNtMId+rKeTGOyyhWZf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2c5OLH8p3b4QvQcl3ENfL9ujC1u5jBnCwFDw+fsZoLFfCTD8Me7fmkaS2Z0KTg3JH
+	 68ZqlsgFdgOzBTrLLI/anpVsfE7QUelSp1EH+ea24StoEocgfrgP4T3t45TjTx40LL
+	 bxjjZLD2Ozp8ej5xyXfRgDxan6DX73reb2ANduVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfFEJch (ORCPT
+        id S1727092AbfFEJdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:32:37 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:42221 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfFEJcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:32:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559727155; x=1591263155;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=S49ZGvfsCAGzg2w+MHzrtpp8i/bDvCsOhxlrQNWnA/I=;
-  b=EDEDrpkjHtJFixb21VPMv2InI2x3CRn31D9Lv+SFj84/uWaGTgO+R3yt
-   u4x8RwzWlZcRy/BXsfW//KS8R7icL8ALrRBp7Ab50aQaUil9ULWbTI7S2
-   5k3jF4SKVjyAE9NmXH1XkqODTNOYBXDMuBt3avTUdXNNKsH+B1oh58t2A
-   FNA3e4maIv+oMaoeSn3U03IqyLs/O0Vm/CIbTogaZ1G57GqATw7e1TSS6
-   VvhgcrNNCNRMBCwUFQeGu1J9OnbBK606hJIcGMOOQAVVjP4nGwRoxisfn
-   qFOtFGekQZucZPU8kDRMg8eS89NaTszoVA+U70CFNoBNKoXhKtoETSo/L
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549900800"; 
-   d="scan'208";a="216132224"
-Received: from mail-sn1nam01lp2054.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.54])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Jun 2019 17:32:34 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEUrWHG8922XedlBsx6DMByA3HjDnspJK8W4joX3FxY=;
- b=mn+uNOg1BWvWoUziHR2uf9Al8auprUPi+CAHCMvLzHGxH5ywH0/mVbs6lRq35fKf/i9HC6qnhPpSCKDTIjjXxnSlf+SjsNQMSF3msyHxp6J7FHAoiIMnszaG2hxkim9WWc0ZjIusIaPAOD64C0cxK2oAgvepBN7ZrvaMt+orRXc=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4207.namprd04.prod.outlook.com (52.135.71.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Wed, 5 Jun 2019 09:32:32 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530%6]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
- 09:32:32 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Topic: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Index: AQHVGqYAlQFsNx0blUeatbYnjFKLiqaMDImAgACCvoCAAAPGAIAAOZng
-Date:   Wed, 5 Jun 2019 09:32:32 +0000
-Message-ID: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
- <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
- <20190605060154.GJ22737@tuxbook-pro>
-In-Reply-To: <20190605060154.GJ22737@tuxbook-pro>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7aafd65c-ff12-49ab-493c-08d6e998bc83
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4207;
-x-ms-traffictypediagnostic: SN6PR04MB4207:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4207B2ACBAB61DAF6543CCEBFC160@SN6PR04MB4207.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39860400002)(189003)(199004)(11346002)(446003)(71200400001)(7416002)(71190400001)(305945005)(66476007)(73956011)(66446008)(64756008)(476003)(66556008)(9686003)(66946007)(76116006)(25786009)(6436002)(486006)(33656002)(186003)(256004)(74316002)(6246003)(81156014)(2906002)(8936002)(26005)(14454004)(81166006)(7736002)(8676002)(54906003)(52536014)(14444005)(86362001)(53936002)(7696005)(6506007)(76176011)(5660300002)(53546011)(66066001)(55016002)(68736007)(4326008)(229853002)(72206003)(478600001)(316002)(3846002)(6116002)(102836004)(6916009)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4207;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h8LDwK5Ny093YImRAW46u2TjaG5YvBWArvn0zDMyBGu0y6hSobMv44WdK5MZeFdW519pCCIPkmj0+aXtV1PPRCZQwTGjXLpjUTzDbdcfFVl2uC35nrsxHSoqgS8kEeQ9pZ6KJZS+9NxK+bV1lbKq2gAu/L755vRIx81pedn1CLI7TLJYTPU5lY9U40GT/Gfb0hwrBnCcevp8O0ggV04OYzRHfYG8U9n2Muvpad6gKrO7BB+4TSZijzS8LfCvjSLTrnrjpwOwew8nHioQoeSO628scn3Z9sMWmEISQbJa5DEVrS+Wd9ygXqbQ6Sm4qJyOgsnVIkHHxpjRZAzXmNKXW7UV2X+gFWJf3nTFsJj5clGhoacdxSi9wxZ2ts8sUX9y1Cxet8cPjsmOrPaaFhtUTVRTQ9WsTwu4s9fyEMy1Xi4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Jun 2019 05:33:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33780 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726690AbfFEJdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:33:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E493CAEA3;
+        Wed,  5 Jun 2019 09:32:57 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 11:32:57 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
+ allocations"
+Message-ID: <20190605093257.GC15685@dhcp22.suse.cz>
+References: <20190503223146.2312-1-aarcange@redhat.com>
+ <20190503223146.2312-3-aarcange@redhat.com>
+ <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
+ <20190520153621.GL18914@techsingularity.net>
+ <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+ <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
+ <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com>
+ <20190531092236.GM6896@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aafd65c-ff12-49ab-493c-08d6e998bc83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 09:32:32.5156
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
->=20
-> > Hi,
-> >
-> > >
-> > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-> > > <bjorn.andersson@linaro.org> wrote:
-> > > >
-> > > > This series exposes the ufs_reset line as a gpio, adds support for =
-ufshcd to
-> > > > acquire and toggle this and then adds this to SDM845 MTP.
-> > > >
-> > > > Bjorn Andersson (3):
-> > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> > > >   scsi: ufs: Allow resetting the UFS device
-> > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-> > >
-> > > Adding similar change as in sdm845-mtp to the not yet upstream
-> > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
-> > >
-> > > Tested-by: John Stultz <john.stultz@linaro.org>
-> > Maybe ufs_hba_variant_ops would be the proper place to add this?
-> >
->=20
-> Are you saying that these memories only need a reset when they are
-> paired with the Qualcomm host controller?
-ufs_hba_variant_ops is for vendors to implement their own vops,
-and as you can see, many of them do.
-Adding hw_reset to that template seems like the proper way
-to do what you are doing.
+On Fri 31-05-19 14:53:35, David Rientjes wrote:
+> On Fri, 31 May 2019, Michal Hocko wrote:
+> 
+> > > The problem which this patch addresses has apparently gone unreported for 
+> > > 4+ years since
+> > 
+> > Can we finaly stop considering the time and focus on the what is the
+> > most reasonable behavior in general case please? Conserving mistakes
+> > based on an argument that we have them for many years is just not
+> > productive. It is very well possible that workloads that suffer from
+> > this simply run on older distribution kernels which are moving towards
+> > newer kernels very slowly.
+> > 
+> 
+> That's fine, but we also must be mindful of users who have used 
+> MADV_HUGEPAGE over the past four years based on its hard-coded behavior 
+> that would now regress as a result.
 
-Thanks,
-Avri
->=20
-> The way it's implemented it here is that the device-reset GPIO is
-> optional and only if you specify it we'll toggle the reset. So if your
-> board design has a UFS memory that requires a reset pulse during
-> initialization you specify this, regardless of which vendor your SoC
-> comes from.
->=20
-> Regards,
-> Bjorn
+Absolutely, I am all for helping those usecases. First of all we need to
+understand what those usecases are though. So far we have only seen very
+vague claims about artificial worst case examples when a remote access
+dominates the overall cost but that doesn't seem to be the case in real
+life in my experience (e.g. numa balancing will correct things or the
+over aggressive node reclaim tends to cause problems elsewhere etc.).
+
+That being said I am pretty sure that a new memory policy as proposed
+previously that would allow for a node reclaim behavior is a way for
+those very specific workloads that absolutely benefit from a local
+access. There are however real life usecases that benefit from THP even
+on remote nodes as explained by Andrea (most notable kvm) and the only
+way those can express their needs is the madvise flag. Not to mention
+that the default node reclaim behavior might cause excessive reclaim
+as demonstrate by Mel and Anrea and that is certainly not desirable in
+itself.
+
+[...]
+> > > My goal is to reach a solution that does not cause anybody to incur 
+> > > performance penalties as a result of it.
+> > 
+> > That is certainly appreciated and I can offer my help there as well. But
+> > I believe we should start with a code base that cannot generate a
+> > swapping storm by a trivial code as demonstrated by Mel. A general idea
+> > on how to approve the situation has been already outlined for a default
+> > case and a new memory policy has been mentioned as well but we need
+> > something to start with and neither of the two is compatible with the
+> > __GFP_THISNODE behavior.
+> > 
+> 
+> Thus far, I haven't seen anybody engage in discussion on how to address 
+> the issue other than proposed reverts that readily acknowledge they cause 
+> other users to regress.  If all nodes are fragmented, the swap storms that 
+> are currently reported for the local node would be made worse by the 
+> revert -- if remote hugepages cannot be faulted quickly then it's only 
+> compounded the problem.
+
+Andrea has outline the strategy to go IIRC. There also has been a
+general agreement that we shouldn't be over eager to fall back to remote
+nodes if the base page size allocation could be satisfied from a local node.
+-- 
+Michal Hocko
+SUSE Labs
