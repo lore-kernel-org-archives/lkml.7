@@ -2,143 +2,119 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08796C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D697C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AB52075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2ZhmDd8"
+	by mail.kernel.org (Postfix) with ESMTP id 6D8572075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfFEBuC (ORCPT
+        id S1726637AbfFEBuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 21:50:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42779 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfFEBuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 21:50:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go2so9063155plb.9;
-        Tue, 04 Jun 2019 18:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=oLcbN+sqNNUljN8SYZgZre8PT46JsMzRtoXG7+KZZ+Y=;
-        b=D2ZhmDd8IgeO63b01TNQ6LlzGQoxkyA0e0DSkKG6rrnq3Q4IhVICRMbR0WZh34tEpd
-         shqUkEkW3hE+q7G5/w0BQZK2RtZYd/at1/P4uPuF7moMYapZZiy5Q3b4CwI6W8j7+r8c
-         OOIOTfogtwO+PbWsYPWQ1X9CNyb+PRMy3ziRqBpFun2YzTqTT5RhAnhmLsv4Mfj278CK
-         H+1/DP8+9calXzBJcBRKUKvIT/mYf3fAoKTxTzmGmlovv5K1MVqkc2yV5ge93FeiIQaS
-         aFBC9is2Zz0zeLbaoFxDZ8r+nwiFUOkI8AYPgenrJSLsf9+HcU3dYAv9umK4oAXEAtfs
-         LuAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=oLcbN+sqNNUljN8SYZgZre8PT46JsMzRtoXG7+KZZ+Y=;
-        b=n2xHymxmRKXn9+iMIY7VBhnesucC1WKI3zmUbtHJkGNrWTlVYhSS60ZcR16L1tAtEC
-         xJ7qKInPcIWHfy5owySCMNiEg+HX+YPp3JloR5arRkx8hCs2iU5oUAMQVZRN+J2r2R90
-         oKfs6q4f6aCxfR4T8BZ8JATE3OCn016/0jDDO97yOu1p8Pxl2cWRhmKcJ8Hw0s7NJ3ON
-         qx0LUJ44q97ArcSD9WtHWtbXj69SfD12n93GTkimPt1rVdV/lY8s6AOkGTl4PI1L/oIo
-         tubn50Q5+uyKk28NmVsvufuh5vGKyNp973VhDBBuEmqS0vSGpk3CZooLHhfdK8YAJb2o
-         ISwA==
-X-Gm-Message-State: APjAAAWMQalEnQwsObgvFc7E7lTveVruyymBZVP/ssZW2Rh/WQOQFmeq
-        HQzgJN28j0hIpdZc88NyBHc=
-X-Google-Smtp-Source: APXvYqyyBoxg5MuZwMd4gEFNxoBQznN4qlivJRyMCm3oDum4O+DVprxx7d0aKb+vDLAWAI8dNK5ysw==
-X-Received: by 2002:a17:902:b201:: with SMTP id t1mr40607734plr.328.1559699401652;
-        Tue, 04 Jun 2019 18:50:01 -0700 (PDT)
-Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
-        by smtp.gmail.com with ESMTPSA id p6sm6884415pfp.88.2019.06.04.18.49.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 18:50:00 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 18:49:58 -0700
-From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     shobhitkukreti@gmail.com
-Subject: [PATCH] media: platform: Fix Warning of Unneeded Semicolon reported
- by coccicheck
-Message-ID: <20190605014955.GA3077@t-1000>
+        Tue, 4 Jun 2019 21:50:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17889 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfFEBuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 21:50:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 18:50:39 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2019 18:50:37 -0700
+Date:   Wed, 5 Jun 2019 09:49:45 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, pbonzini@redhat.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        yu-cheng.yu@intel.com
+Subject: Re: [PATCH v5 5/8] KVM: VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190605014944.GA28360@local-michael-cet-test>
+References: <20190522070101.7636-1-weijiang.yang@intel.com>
+ <20190522070101.7636-6-weijiang.yang@intel.com>
+ <20190604200336.GC7476@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190604200336.GC7476@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fixed the warning in the files below
+On Tue, Jun 04, 2019 at 01:03:36PM -0700, Sean Christopherson wrote:
+> On Wed, May 22, 2019 at 03:00:58PM +0800, Yang Weijiang wrote:
+> > "Load Guest CET state" bit controls whether Guest CET states
+> > will be loaded at Guest entry. Before doing that, KVM needs
+> > to check if CPU CET feature is available to Guest.
+> > 
+> > Note: SHSTK and IBT features share one control MSR:
+> > MSR_IA32_{U,S}_CET, which means it's difficult to hide
+> > one feature from another in the case of SHSTK != IBT,
+> > after discussed in community, it's agreed to allow Guest
+> > control two features independently as it won't introduce
+> > security hole.
+> > 
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 9321da538f65..1c0d487a4037 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -47,6 +47,7 @@
+> >  #include <asm/spec-ctrl.h>
+> >  #include <asm/virtext.h>
+> >  #include <asm/vmx.h>
+> > +#include <asm/cet.h>
+> 
+> Is this include actually needed?  I haven't attempted to compile, but a
+> glance everything should be in cpufeatures.h or vmx.h.
+> 
+  Thanks Sean!
+  My original purpose is to re-use the macro cpu_x86_cet_enabled() to
+  check host CET status, for somehow, the check is not there, but to resolve
+  your below question, I need to use the macro to check it, so will keep
+  this include and add the check in next version.
 
-drivers/media/platform/pxa_camera.c:1391:2-3: Unneeded semicolon
-drivers/media/platform/qcom/venus/vdec_ctrls.c:78:2-3: Unneeded semicolon
-drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c:146:3-4: Unneeded semicolon
+> >  #include "capabilities.h"
+> >  #include "cpuid.h"
+> > @@ -2929,6 +2930,17 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+> >  		if (!nested_vmx_allowed(vcpu) || is_smm(vcpu))
+> >  			return 1;
+> >  	}
+> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
+> > +		if (cr4 & X86_CR4_CET)
+> > +			vmcs_set_bits(VM_ENTRY_CONTROLS,
+> > +				      VM_ENTRY_LOAD_GUEST_CET_STATE);
+> > +		else
+> > +			vmcs_clear_bits(VM_ENTRY_CONTROLS,
+> > +					VM_ENTRY_LOAD_GUEST_CET_STATE);
+> > +	} else if (cr4 & X86_CR4_CET) {
+> > +		return 1;
+> > +	}
+> 
+> Don't we also need to check for host CET support prior to toggling
+> VM_ENTRY_LOAD_GUEST_CET_STATE?
 
-Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
----
- drivers/media/platform/pxa_camera.c                  | 2 +-
- drivers/media/platform/qcom/venus/vdec_ctrls.c       | 2 +-
- drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
-index 6addc5e..1c9bfaa 100644
---- a/drivers/media/platform/pxa_camera.c
-+++ b/drivers/media/platform/pxa_camera.c
-@@ -1388,7 +1388,7 @@ static int pxa_buffer_init(struct pxa_camera_dev *pcdev,
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 	buf->nb_planes = nb_channels;
- 
- 	ret = sg_split(sgt->sgl, sgt->nents, 0, nb_channels,
-diff --git a/drivers/media/platform/qcom/venus/vdec_ctrls.c b/drivers/media/platform/qcom/venus/vdec_ctrls.c
-index f4604b0..90f7620 100644
---- a/drivers/media/platform/qcom/venus/vdec_ctrls.c
-+++ b/drivers/media/platform/qcom/venus/vdec_ctrls.c
-@@ -75,7 +75,7 @@ static int vdec_op_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
-index 075d469..a79250a 100644
---- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
-@@ -143,7 +143,7 @@ int c8sectpfe_frontend_attach(struct dvb_frontend **fe,
- 				"%s: stv0367ter_attach failed for NIM card %s\n"
- 				, __func__, dvb_card_str(tsin->dvb_card));
- 			return -ENODEV;
--		};
-+		}
- 
- 		/*
- 		 * init the demod so that i2c gate_ctrl
-@@ -203,7 +203,7 @@ int c8sectpfe_frontend_attach(struct dvb_frontend **fe,
- 				"%s: stv6110x_attach failed for NIM card %s\n"
- 				, __func__, dvb_card_str(tsin->dvb_card));
- 			return -ENODEV;
--		};
-+		}
- 
- 		stv090x_config.tuner_init = fe2->tuner_init;
- 		stv090x_config.tuner_set_mode = fe2->tuner_set_mode;
--- 
-2.7.4
-
+Yes, need add back the check. v3 patch changed the CET CPUID enumeration to
+guest, and lost the check from then on.
+> 
+> >  
+> >  	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+> >  		return 1;
+> > -- 
+> > 2.17.2
+> > 
