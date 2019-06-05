@@ -2,180 +2,148 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD4AC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202CBC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647AF2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E941E2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="duvNpDje"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B72Gaciq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFEIe7 (ORCPT
+        id S1726835AbfFEIfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:34:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41284 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfFEIe6 (ORCPT
+        Wed, 5 Jun 2019 04:35:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45062 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfFEIfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:34:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so18533756wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:34:57 -0700 (PDT)
+        Wed, 5 Jun 2019 04:35:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j19so13315745qtr.12;
+        Wed, 05 Jun 2019 01:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8g/yZPWG+i1WVLfgMfiKNG8jFuss04L+NM2N8hvdwuU=;
-        b=duvNpDjeQMy8g7ArkYr8qMf4P0vqAOFHxA5m7OA3dSPpU8Whx3HYz22J+tcP5H7fOz
-         1ZznSkXdDIq1nnKilrD3TGhV6t0zrEzaOq/RDvyjaAgxf+XUcwJDO2lqoZatoK/3+uEv
-         E1ftDeSUC01zpeAkA7vyZLU2On3x8YyfiVJahVLLzeMbOahAR0cqVBbKFDa/Ugz1wHB3
-         UMHBitPjZbAQiG/2VorRB9SUdv0NGaqay8xKb1H1u2QaGjKA/kIoGylOE3Bfimw5OUx+
-         2Ymtzqpo1AFcxBExsqvimaZHp7e8G0QiKtMS1YsnBb+6XhWmqv39jUJRcnuuHgtAq/Ek
-         56Gw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HG+CIt6o8yGGbLnlsmSij7gPt1dv9dO42aZ62jE5d9w=;
+        b=B72Gaciqkdjdtm7MB2ws3CYsjdDuK9zAYhageiUCfgwWkx3FDHWDckjRAYQNE5sJbN
+         K7A3eISAk79YAociLc0xKRWyJcrOnP/rH5Ift4b1Dvu8XoqPUMKGZTwH7/N2cfed3kHZ
+         SwMw9WEKlGX1ILrop25xS0cnh3KEkA98TuvwDR3BCkUAYWekfR6cZX0KwemzZlV+JJHy
+         I3LPazBAbAnbvyIYINzZZEXmGEqoBs13Z+jdD+5ys5AhMY+ZvOCMkt3ZNKZzip5wRLwm
+         DNv1IyCYGshCBAYdW/+YOYPPcDq00Q/NTsnK6bHHme+zHAuxKQVPjYdjz731ttzM/wTx
+         HXOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8g/yZPWG+i1WVLfgMfiKNG8jFuss04L+NM2N8hvdwuU=;
-        b=rUknIkOgATZGPvINaLMcAgPjqb2LrkL8hjVJ76v8lzoCefOpCES7eZDBE27x/kEbnl
-         eQzdJGJB+8c6s0Uwv3B8XwUOA6UhMOwaNt5gozrj9jQdC27VTlgriAEezmNBrVqfVM0P
-         21KijOeYGdKozbCSBfP4hyhTZt/Wdu64UzQ9Zbxctnh6Z3BF94AAfurjKdl/0iTJ1gh2
-         ZOYngbm1c6o3uI5F+qS3IxzHazlCD+8bWWKRsr0OiJWXGzxcnOnvvQ4YWOZq1uF2rEGp
-         v53bJe4iXKOFBKWlaRPrwZb5MpUy5cycTPjhZtHhVIv5Qu6YFDAt7+nA1slLVOOcCbYM
-         o9cw==
-X-Gm-Message-State: APjAAAXlRj1nQnQZw0QNmj3i86vUBP8hwpZlZGXfNGJqGkSWC282UeOa
-        Z50w4OEyMDw+RRfEauhRf0jNoQ==
-X-Google-Smtp-Source: APXvYqzBuf1OKbs5PAYFvIiTv6Ji1rE3PaXYvKbhChwv5f9DahKjEOxWETTF4saSPngpiLUNQ3p1Qw==
-X-Received: by 2002:a5d:4e46:: with SMTP id r6mr8473126wrt.290.1559723696792;
-        Wed, 05 Jun 2019 01:34:56 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id 128sm2231857wme.12.2019.06.05.01.34.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 01:34:56 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 09:34:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
- SDM845
-Message-ID: <20190605083454.GO4797@dell>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-7-lee.jones@linaro.org>
- <20190605070029.GN22737@tuxbook-pro>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HG+CIt6o8yGGbLnlsmSij7gPt1dv9dO42aZ62jE5d9w=;
+        b=nGfMyQ69i9/A5XOOoiixNx0VJL9U1Ud6sp6Y20F84FOWt+zoqt2g5JfaQ6R2CV2wFc
+         L2bYkMIDeYjxf6qASddhpTxESWPhlZyE/6kRmS4EE1fXbdep2Jd5M8Nj2vFpQM6MOvYA
+         HvY0j1VxMcoWozgKBwxK8uxbxR/P88f5fFSFqyQynj7grkSuO4zuMJ0RAc7AHBmjjQlv
+         TrbdAne1kEo/1huKHojqfn+cFkbMXO8yCjG/5F+LitNoLb1D/J+5n68PwAQG8Y4SqY6a
+         ubNmunXxjgUccLq8Ozfqgeu74svTSZmznDy9tIK1X5rmW/2yeb5VQ+1WmmkSUZJcpxi/
+         OjtA==
+X-Gm-Message-State: APjAAAVL1xinoLFHPn6NSqGfSmFlHSWuVkkfXj79aibevD7t6iR/A6uI
+        kJ20uyZ+iyUBzk2gKOVRUM8WzJ+B6wbrUe5xgEM=
+X-Google-Smtp-Source: APXvYqxR8YkP6kHq8kFTJ1Do5N/qhuvAcp4wrlpJiebKCCoRjCKpI9qQ0dP+ENUM2f/ksjfFr19uRhOSE5i/Upx+Izg=
+X-Received: by 2002:ac8:3d51:: with SMTP id u17mr10223327qtf.53.1559723711675;
+ Wed, 05 Jun 2019 01:35:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605070029.GN22737@tuxbook-pro>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1548949280-31794-1-git-send-email-xiaoxiang@xiaomi.com>
+ <20190605043452.GI22737@tuxbook-pro> <2d60dd1e-f7a0-ea63-9fda-0ea97aab0406@st.com>
+In-Reply-To: <2d60dd1e-f7a0-ea63-9fda-0ea97aab0406@st.com>
+From:   xiang xiao <xiaoxiang781216@gmail.com>
+Date:   Wed, 5 Jun 2019 16:35:00 +0800
+Message-ID: <CAH2Cfb-sv3SAL8bcczC-Dc3_r58MYZCS7s7zGtn1Qfo3mmBqVg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Enhance virtio rpmsg bus driver buffer allocation
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben Cohen <ohad@wizery.com>, wendy.liang@xilinx.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiang Xiao <xiaoxiang@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+On Wed, Jun 5, 2019 at 3:33 PM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Bjorn,
+>
+> On 6/5/19 6:34 AM, Bjorn Andersson wrote:
+> > On Thu 31 Jan 07:41 PST 2019, Xiang Xiao wrote:
+> >
+> >> Hi,
+> >> This series enhance the buffer allocation by:
+> >> 1.Support the different buffer number in rx/tx direction
+> >> 2.Get the individual rx/tx buffer size from config space
+> >>
+> >> Here is the related OpenAMP change:
+> >> https://github.com/OpenAMP/open-amp/pull/155
+> >>
+> >
+> > This looks pretty reasonable, but can you confirm that it's possible to
+> > use new firmware with an old Linux kernel when introducing this?
+> >
+> >
+> > But ever since we discussed Loic's similar proposal earlier I've been
+> > questioning if the fixed buffer size isn't just an artifact of how we
+> > preallocate our buffers. The virtqueue seems to support arbitrary sizes
+> > of buffers and I see that the receive function in OpenAMP has been fixed
+> > to put back the buffer of the size that was received, rather than 512
+> > bytes. So it seems like Linux would be able to send whatever size
+> > messages to OpenAMP it would handle it.
+> >
+> > The question is if we could do the same in the other direction, perhaps
+> > by letting the OpenAMP side do it's message allocation when it's
+> > sending, rather than Linux pushing inbufs to be filled by the remote.
+>
+> IMHO, both could be useful and could be not correlated.
+> On-the fly buffer allocation seems more efficient but needs an
+> allocator.This can be a generic allocator (with a va to da) for system
+> where large amount of memories are accessible from both side.
+>
+> Now what about system with small shared memory? In this case you have to
+> deal with a limited/optimized memory chunk. To avoid memory
+> fragmentation the allocator should have a pre-reserved buffers pool(so
+> similar to existing implementation). This serie seems useful to optimize
+> the size of the pre-reserved pool.
+>
 
-> On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> 
-> > When booting with Device Tree, the current default boot configuration
-> > table option, the request to boot via 'host mode' comes from the
-> > "dr_mode" property.
-> 
-> This has been the default on the MTP, but this is changing as this is
-> causing issues when connected downstream from a hub (the typical
-> development case for the primary USB port of a phone like device) and
-> more importantly we don't have support for the PMIC blocks that control
-> VBUS.
+Maybe we can reuse rxbuf_size/txbuf_size to trigger the different
+allocation policy:
+1.If buf_size equal 0xfffffff, turn on the dynamic allocator
+2.If buf_size equall 0, turn on the fixed allocator with the default buffer size
+3.otherwise, turn on the fixed allocator with the configed buffer size
+So, both requirement could be satisfied without breaking the compatibility.
 
-My point is not about which mode is currently chosen.  It's more about
-the capability of choosing which mode is appropriate for a given
-system via DT.
-
-> Once these issues are resolved the dr_mode would be "otg".
-
-OTG doesn't work on this H/W, so we need to specify "host" mode.
-
-> > A property of the same name can be used inside
-> > ACPI tables too.  However it is missing from the SDM845's ACPI tables
-> > so we have to supply this information using Platform Device Properites
-> > instead.
-> > 
-> 
-> Afaict this would install a fall-back property, so in the case that we
-> have specified dr_mode in DT (or ACPI) that would take precedence. So
-
-That's correct.
-
-> the commit message should reflect that this redefines the default choice
-> to be "host", rather than "otg".
-
-No problem.
-
-> Which is in conflict with what's described for dr_mode in
-> Documentation/devicetree/bindings/usb/generic.txt
-
-This implementation only affects ACPI based platforms.  When booting
-with DT, the description in that DT related document is still
-accurate.
-
-> And this driver is used on a range of different Qualcomm platforms, so I
-> don't think this is SDM845 specific.
-
-ACPI based platforms?
-
-All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
- 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > index 349bf549ee44..f21fdd6cdd1a 100644
-> > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > @@ -468,6 +468,11 @@ static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
-> >  
-> > +static const struct property_entry dwc3_qcom_acpi_properties[] = {
-> > +	PROPERTY_ENTRY_STRING("dr_mode", "host"),
-> > +	{}
-> > +};
-> > +
-> >  static int dwc3_qcom_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device_node	*np = pdev->dev.of_node, *dwc3_np;
-> > @@ -603,6 +608,13 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
-> >  			goto platform_unalloc;
-> >  		}
-> >  
-> > +		ret = platform_device_add_properties(qcom->dwc3,
-> > +						     dwc3_qcom_acpi_properties);
-> > +		if (ret < 0) {
-> > +			dev_err(&pdev->dev, "failed to add properties\n");
-> > +			goto platform_unalloc;
-> > +		}
-> > +
-> >  		ret = platform_device_add(qcom->dwc3);
-> >  		if (ret) {
-> >  			dev_err(&pdev->dev, "failed to add device\n");
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> >
+> > This would remove the problem of always having suboptimal buffer sizes.
+> >
+> > Regards,
+> > Bjorn
+> >
+> >> Xiang Xiao (3):
+> >>   rpmsg: virtio_rpmsg_bus: allow the different vring size for send/recv
+> >>   rpmsg: virtio_rpmsg_bus: allocate rx/tx buffer separately
+> >>   rpmsg: virtio_rpmsg_bus: get buffer size from config space
+> >>
+> >>  drivers/rpmsg/virtio_rpmsg_bus.c  | 127 +++++++++++++++++++++++---------------
+> >>  include/uapi/linux/virtio_rpmsg.h |  24 +++++++
+> >>  2 files changed, 100 insertions(+), 51 deletions(-)
+> >>  create mode 100644 include/uapi/linux/virtio_rpmsg.h
+> >>
+> >> --
+> >> 2.7.4
+> >>
+>
+> --
+>
+> Regards,
+> Arnaud
