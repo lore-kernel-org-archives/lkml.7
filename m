@@ -3,101 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C88DC28D19
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F49C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536392075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92062075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WM1pOGDd"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="et+aK2S7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfFENNE (ORCPT
+        id S1728031AbfFENNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:13:04 -0400
-Received: from mout.gmx.net ([212.227.15.19]:39985 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfFENND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:13:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1559740362;
-        bh=CsyA08ei/fkFPEU+VZzXBGyaujNAU5Gy3eeVl2SOv88=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=WM1pOGDdgKHjwYyxlipNYIbaCQQ5xTbCWZCxgoWIqcZYbm64B6+KNH/rzHN6GbbcY
-         /0ExKmctWc3eClmLB5jdsIo7/uAydaoxAkNx7p/pRjw8IN0mWSnX08BdEiDX21ROHI
-         4cbr+XBnZSPzu8DFU50iyy134g8nwkS2pfEOLI2E=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0LfSyv-1gnq6q3VcX-00p0wD; Wed, 05
- Jun 2019 15:12:41 +0200
-Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
-        viresh.kumar@linaro.org, mturquette@baylibre.com,
-        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
- <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
- <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
- <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
- <8d6eb920ebcaec2ede413439a7080ae030b7e44e.camel@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <755148da-60f5-2925-b6b3-1ac452e13d9e@gmx.net>
-Date:   Wed, 5 Jun 2019 15:12:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <8d6eb920ebcaec2ede413439a7080ae030b7e44e.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Jun 2019 09:13:32 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43600 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727740AbfFENNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 09:13:32 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C0627C0B50;
+        Wed,  5 Jun 2019 13:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559740422; bh=mh42QUvXWlbA4/Dvy1RLLMUvXyOiaZoLvd+Q77x88KU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=et+aK2S7dIEvIxkpfYu0ZdcdLWn8dgGITMkaVMFivs6/u52mZiqr+BGxXAK2lvAC9
+         d8rYQTkZzzvVSJ8iDq7qF3FNT8ju49oFg3+X1xFmxuHKttMpBY2/z3M2YOQenYPSze
+         hyUETVKNawbMK9vCcI1OKHNodNZ4dmp3SIvhDG0Q7wVhU1w6k16jw9Bge0q+pqEoUy
+         qY9EDKwBmVwnSVqg9/D4JiTU8Lsk9muibY5Q393I5czBTw/62w7EZCni8GvTGYy5LE
+         tIGd2TnoqwZW/XM+h7qxwXgPecdKwvNhGLvvBr3Op/vtyd2BfiBZ0QeArYtXw4FMQa
+         2AIIyW0USLnrQ==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 17C24A0070;
+        Wed,  5 Jun 2019 13:13:27 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 5 Jun 2019 06:13:26 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 5 Jun 2019 15:13:24 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        "Kweh Hock Leong" <hock.leong.kweh@intel.com>
+Subject: RE: [PATCH net-next v6 2/5] net: stmmac: introducing support for
+ DWC xPCS logics
+Thread-Topic: [PATCH net-next v6 2/5] net: stmmac: introducing support for
+ DWC xPCS logics
+Thread-Index: AQHVGsR5qibwMaoNx0yOto7uqjBITaaL1fgAgAE08AA=
+Date:   Wed, 5 Jun 2019 13:13:22 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B93EF69@DE02WEMBXB.internal.synopsys.com>
+References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+ <1559674736-2190-3-git-send-email-weifeng.voon@intel.com>
+ <05cf54dc-7c40-471e-f08a-7fdf5fe4ef54@gmail.com>
+In-Reply-To: <05cf54dc-7c40-471e-f08a-7fdf5fe4ef54@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Provags-ID: V03:K1:T2nRa6wC5hotv0MUYJECymggpzwZZkIP8CPzeYgz+zuUDoRadhn
- e/xr55USxwJa/QCDfYDHD9QP0j5JnINKIzfgCakveqoO2DKlJ4XFLR2AjJnD+0fJUpdK7sl
- XN6RnM+AKMlQqvqZV4sSPKB2yLdldF2uN0EEw039KFt8pVb3BrJSB7WmYhjeqw1EXcdRPfX
- 7Yx2jOQ+/wTUd9pzxjR1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:C+5z9L5eeVA=:PWHJAJrDPJ+7s+qj4HLNvg
- ut19EjEacdchwt67zVwnnPj87yAgk259phrB8MrOsEXEN3pEv7GCtMPfftUmUvu3I6rhW0MD/
- ikmpbWLyr0UMbrtl4tnGfOGqkel0tciLSwoNPfZvEjJ5F10fiHCfgraCG0bvDpYegudUByfh1
- 1Z5p2cg1WKQQ2aji1T6uZBbS7PcauPkA6n5r1xOoGYcSxVckM7A5NQi4koi1l2EvyjjTwkTX1
- KXj9I00PaYFDuiBBvlv3+hviqUNHdA1qpqimcSODtpK3ybQm7yGhQ7o8sdE74ckCuBX2Lsahx
- dFfLBFVrgy/wfCZMozE2AuFPuUDZ13/26ShDYSTT/PY6s28L7qdFej6gMs4P0GqKKo3bhRRrD
- M1pVqxD2S61v44gWdasb4GsoF3c9z1AEpM7WVv3wVw1a85LxpuUrB3jn09AKewmGgrVIHfOxs
- ap0nG1pKEXUDd4V1YMktqWyZ0pEIFT9tCCPJBBspoMsIVwkeuTFmJbcI7UzV7ZXnr+5I9cUla
- n5VkVOygZR1oxuVv8y7Yt1WVE3KALOqLl+zLAT8ta2qaiiINBlCX0t29hJkMtRtH8e5DZ0obV
- ZZETEBpL/qkkwmDe3XvNTOWXEdT43gUkSPa6j7yFW3pbmx6uoARXGvtGQXq0uHTX0BknIx8zJ
- mFbtHsbwTP/YnRSi/14RvBj73wUqRl3inY7+fs1K959A5pvmOw2+zEokSQg8f+erT7P8b0+m5
- heShF8P/T3GLkOrWAQqQCqCv67srOHgqaa54sqr26Btjl7ohsDMWKsq3x2s2xlonVlhyQqHPb
- 8iUhigE6zx8IwafY8MQYWOBeQzYr+vUbr6caawMAMvlJBiGna1LKffzb3h+u8Vm+w62rrx6MA
- l/tVQcOMkgXJCDwb3b6v8rzHRM9wkaKkMk40cSIFeLHcwD6GZVuOw/cYQG4kJ84rxuD0dMKRt
- 0htCukKkImfDp3aWdR2LsamZmUouaahHenfmKsFFgUYAGJUVqn+nM
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 05.06.19 um 14:27 schrieb Nicolas Saenz Julienne:
-> Ok, this looks more more like my fault, probably an overflow error somew=
-here. I
-> saw something similar while testing it on RPI2b. Which board & config wa=
-s this
-> run with?
-It's an RPi 3B+ with multi_v7_defconfig
-> Could you confirm the clk-raspberrypi.c message verifying the max and
-> min frequencies showed up and was correct.
-[=C2=A0=C2=A0=C2=A0 4.253294] raspberrypi-firmware soc:firmware: Attached =
-to firmware
-from 2019-03-27 15:45
-[=C2=A0=C2=A0=C2=A0 4.269727] mmcblk0: mmc0:0007 SDCIT 14.6 GiB
-[=C2=A0=C2=A0=C2=A0 4.282464] raspberrypi-clk raspberrypi-clk: CPU frequen=
-cy range: min
-600000000, max 1400000000
->
-> Regards,
-> Nicolas
->
+RnJvbTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQoNCj4gK1J1c3Nl
+bGwsDQo+IA0KPiBPbiA2LzQvMjAxOSAxMTo1OCBBTSwgVm9vbiBXZWlmZW5nIHdyb3RlOg0KPiA+
+IEZyb206IE9uZyBCb29uIExlb25nIDxib29uLmxlb25nLm9uZ0BpbnRlbC5jb20+DQo+ID4gDQo+
+ID4geFBDUyBpcyBEV0MgRXRoZXJuZXQgUGh5c2ljYWwgQ29kaW5nIFN1YmxheWVyIHRoYXQgbWF5
+IGJlIGludGVncmF0ZWQNCj4gPiBpbnRvIGEgR2JFIGNvbnRyb2xsZXIgdGhhdCB1c2VzIERXQyBF
+UW9TIE1BQyBjb250cm9sbGVyLiBBbiBleGFtcGxlIG9mDQo+ID4gSFcgY29uZmlndXJhdGlvbiBp
+cyBzaG93biBiZWxvdzotDQo+ID4gDQo+ID4gICA8LS0tLS0tLS0tLS0tLS0tLS1HQkUgQ29udHJv
+bGxlci0tLS0tLS0tLS0+fDwtLUV4dGVybmFsIFBIWSBjaGlwLS0+DQo+ID4gDQo+ID4gICArLS0t
+LS0tLS0tLSsgICAgICAgICArLS0tLSsgICAgKy0tLSsgICAgICAgICAgICAgICArLS0tLS0tLS0t
+LS0tLS0rDQo+ID4gICB8ICAgRVFvUyAgIHwgPC1HTUlJLT58IERXIHw8LS0+fFBIWXwgPC0tIFNH
+TUlJIC0tPiB8IEV4dGVybmFsIEdiRSB8DQo+ID4gICB8ICAgTUFDICAgIHwgICAgICAgICB8eFBD
+U3wgICAgfElGIHwgICAgICAgICAgICAgICB8IFBIWSBDaGlwICAgICB8DQo+ID4gICArLS0tLS0t
+LS0tLSsgICAgICAgICArLS0tLSsgICAgKy0tLSsgICAgICAgICAgICAgICArLS0tLS0tLS0tLS0t
+LS0rDQo+ID4gICAgICAgICAgXiAgICAgICAgICAgICAgIF4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgXg0KPiA+ICAgICAgICAgIHwgICAgICAgICAgICAgICB8ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiAgICAgICAgICArLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tTURJTy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rDQo+ID4gDQo+ID4geFBDUyBpcyBhIENs
+YXVzZS00NSBNRElPIE1hbmFnZWFibGUgRGV2aWNlIChNTUQpIGFuZCB3ZSBuZWVkIGEgd2F5IHRv
+DQo+ID4gZGlmZmVyZW50aWF0ZSBpdCBmcm9tIGV4dGVybmFsIFBIWSBjaGlwIHRoYXQgaXMgZGlz
+Y292ZXJlZCBvdmVyIE1ESU8uDQo+ID4gVGhlcmVmb3JlLCB4cGNzX3BoeV9hZGRyIGlzIGludHJv
+ZHVjZWQgaW4gc3RtbWFjIHBsYXRmb3JtIGRhdGENCj4gPiAocGxhdF9zdG1tYWNlbmV0X2RhdGEp
+IGZvciBkaWZmZXJlbnRpYXRpbmcgeFBDUyBmcm9tICdwaHlfYWRkcicgdGhhdA0KPiA+IGJlbG9u
+Z3MgdG8gZXh0ZXJuYWwgUEhZLg0KPiANCj4gQXNzdW1pbmcgdGhpcyBEVyB4UENTIGNhbiBiZSBm
+b3VuZCB3aXRoIGRlc2lnbnMgb3RoZXIgdGhhbiBTVE1NQUMgd291bGQNCj4gbm90IGl0IG1ha2Ug
+c2Vuc2UgdG8gbW9kZWwgdGhpcyBhcyBzb21lIGtpbmQgb2YgUEhZL01ESU8gYnJpZGdlPyBBDQo+
+IGxpdHRsZSBiaXQgbGlrZSB3aGF0IGRyaXZlcnMvbmV0L3BoeS94aWxpbnhfZ21paTJyZ21paS5j
+IHRyaWVzIHRvIGRvPw0KDQpZZXMsIERXIFhQQ1MgaXMgYSBzZXBhcmF0ZSBJUCB0aGF0IGNhbiBi
+ZSBzb2xkIHdpdGhvdXQgdGhlIE1BQy4NCg0KVGhhbmtzLA0KSm9zZSBNaWd1ZWwgQWJyZXUNCg==
