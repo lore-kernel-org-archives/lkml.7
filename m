@@ -7,97 +7,140 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584ACC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A88C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2284020866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685542086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559716508;
-	bh=G1fCjyvuMI8j4lJIOPDrdCk2asa1xcNItBYzsfAa+b8=;
+	s=default; t=1559716679;
+	bh=nBdxQcgsl55tdFVJsUcQMLtU2Dv9DO6ibXfHPVMrREE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BBtaS4HWRd/xqOdPSjorVqG++prx8cepBHIl29PJjiz/5R1Ndlc0c5x3tkqA/O45y
-	 sTHEfJrjtLrD2cA7Qha7eQg4sV+c7jgEiegNZ9bAM+kVwV3hzNCIHmPfVNQUrOWXMM
-	 k4kxEhb9NfmMUbjWy3KsQDnHsIwv+vcgXyD8bk50=
+	b=X08V19rYkEwmG0Zrv9Ww5soNGRNlpIlDEDB0muX2JlMBMOht9o1LM5A+wuxK8l+0s
+	 tIR5i5oYSrS+t2ZN/Cas3ht68p3p6msBtQgDA2DEfBo10AapmPqLlHegM7JBAuSjJL
+	 9hTM1+k4kdBmg3RIU6urnF814ZAXzZqw7xc26+X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfFEGfH (ORCPT
+        id S1726543AbfFEGh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47890 "EHLO mail.kernel.org"
+        Wed, 5 Jun 2019 02:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50973 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfFEGfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:35:07 -0400
+        id S1726086AbfFEGh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 02:37:58 -0400
 Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C5E2083E;
-        Wed,  5 Jun 2019 06:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE7A2075B;
+        Wed,  5 Jun 2019 06:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559716506;
-        bh=G1fCjyvuMI8j4lJIOPDrdCk2asa1xcNItBYzsfAa+b8=;
+        s=default; t=1559716677;
+        bh=nBdxQcgsl55tdFVJsUcQMLtU2Dv9DO6ibXfHPVMrREE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RqRNxR+h7FMuAZfrxmvdDUYFY92bSMASxPOtEC8ZNn/Yd1Qw/C4Fe2BvN/f7Fd/BT
-         rqgjDOQWs+K3DSzeCHuzfduZAxJ6Q/4c8Gl6idrwDC3T70CKVYe9uttwEfTI74Si+d
-         kPn7wVGJ3T0glV1dXNU4ea9sk4EAuEj6GNUwxhds=
-Date:   Wed, 5 Jun 2019 14:34:50 +0800
+        b=XmkNnpCxD3BDra2zyezFe5+AQt5n1xFexhouAFiUgRINOXfn1rH7bC4pY/okgz8jy
+         gojBkSw2gZTSLM3DFI6hWNxyp6nloGD9g6pXMEpvqG8QJlqt9afk78hmO/aOpIQFFx
+         aqR5drVM/8Mv2uW7WF4BSXuwBrWmlYDPsXeHKCW0=
+Date:   Wed, 5 Jun 2019 14:37:42 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding
- for ls1046a-frwy board
-Message-ID: <20190605063449.GG29853@dragon>
-References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
- <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add temperature sensor node
+Message-ID: <20190605063741.GH29853@dragon>
+References: <20190528022633.40124-1-andy.tang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+In-Reply-To: <20190528022633.40124-1-andy.tang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:32:09PM +0000, Pramod Kumar wrote:
-> Add "fsl,ls1046a-frwy" bindings for ls1046afrwy board based on ls1046a SoC
+On Tue, May 28, 2019 at 10:26:33AM +0800, Yuantian Tang wrote:
+> Add nxp sa56004 chip node for temperature monitor.
 > 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-I cannot apply patch from message using 'Content-Transfer-Encoding: base64'.
-
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+> 	- change the node name and add vcc-supply
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 407138ebc0d0..09ff1999ce96 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -241,6 +241,7 @@ properties:
->            - enum:
->                - fsl,ls1046a-qds
->                - fsl,ls1046a-rdb
-> +              - fsl,ls1046a-frwy
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 6571d0483c7a..f12e4f510d6e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -47,6 +47,15 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3_vbus";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+>  	sound {
+>  		compatible = "simple-audio-card";
+>  		simple-audio-card,format = "i2s";
+> @@ -147,6 +156,12 @@
+>  				compatible = "atmel,24c512";
+>  				reg = <0x57>;
+>  			};
+> +
+> +			temperature-sensor@4c {
 
-It might be better to keep the list alphabetically sorted.
+Keep these i2c devices sort in unit-address order.
 
 Shawn
 
->            - const: fsl,ls1046a
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+>  		};
 >  
->        - description: LS1088A based Boards
+>  		i2c@5 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index 235ca3a83dc3..e64c28983ec9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -43,6 +43,15 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3_vbus";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+>  	sound {
+>  		compatible = "simple-audio-card";
+>  		simple-audio-card,format = "i2s";
+> @@ -132,6 +141,12 @@
+>  				compatible = "nxp,pcf2129";
+>  				reg = <0x51>;
+>  			};
+> +
+> +			temperature-sensor@4c {
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+>  		};
+>  	};
+>  };
 > -- 
 > 2.17.1
 > 
