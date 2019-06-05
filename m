@@ -2,121 +2,90 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A00C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9854DC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66A3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7317B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfFELtr (ORCPT
+        id S1727681AbfFELtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:49:47 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34607 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfFELtq (ORCPT
+        Wed, 5 Jun 2019 07:49:53 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44755 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfFELtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:49:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so1598917wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 04:49:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2Ue7OXtzKu1Kff0kNekLMtjlDJwlS2dW920UpK4s3Ms=;
-        b=TCZG8lPvVDdqs/WNGs4b4/uBnx8MPnxI4ByTaNKVenD2KcQjcyttR6vQcJzvg60l7J
-         YIvImRtXT5+wy+/oX7tPB74M31uXPJPS+SOqnjO9VpSUBTAt6dMTFxnZBGATHA+ZOdSS
-         3rG3pE7T8Aq1TgAnWARnB2emL+7CfPH69AVWmE5mNZYOxeoUukVd8Tt73aRLG3+zKm8D
-         6DMUwM/MmkJE+jEfOlTv47f6YKoGyGEhW4RFHKH7Oj0dZdgZxavibj7I2Wey3kPosglH
-         e+XXqAUdOhrhBHOv2+B9w07/HwlFZgSgjM/NcJDIVm9o71kXZ+tZV4G2YbYQVvBEGR15
-         H+dQ==
-X-Gm-Message-State: APjAAAUUgiLoMMiU5vrJOM488MubkjVjBjLY+H96GUWcdro+Qbkfc1wr
-        xzMV23oY8TtZi0FyRCVy4rTbDg==
-X-Google-Smtp-Source: APXvYqzzwHQb34R7sFsjS5HGKPSwoEyCFLR1Wtv5JbBmSIVcnS1uLVQYiBHhDTy1DFXU4jHyMwncXA==
-X-Received: by 2002:a1c:99ca:: with SMTP id b193mr8387665wme.31.1559735384686;
-        Wed, 05 Jun 2019 04:49:44 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.29.174.33])
-        by smtp.gmail.com with ESMTPSA id h17sm17236079wrq.79.2019.06.05.04.49.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 04:49:44 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     rostedt@goodmis.org, tj@kernel.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, bristot@redhat.com, lizefan@huawei.com,
-        cgroups@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH] sched/core: Fix cpu controller for !RT_GROUP_SCHED
-Date:   Wed,  5 Jun 2019 13:49:35 +0200
-Message-Id: <20190605114935.7683-1-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
+        Wed, 5 Jun 2019 07:49:53 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 80F091BF203;
+        Wed,  5 Jun 2019 11:49:48 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 13:49:48 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] clk: sunxi-ng: sun50i-h6-r: Fix incorrect W1 clock
+ gate register
+Message-ID: <20190605114948.a4m7g5zwdr23qgth@flea>
+References: <20190604154036.23211-1-megous@megous.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4kypn3dccdwbnuyz"
+Content-Disposition: inline
+In-Reply-To: <20190604154036.23211-1-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-move RT tasks between cgroups to which cpu controller has been attached;
-but it is oddly possible to first move tasks around and then make them
-RT (setschedule to FIFO/RR).
 
-E.g.:
+--4kypn3dccdwbnuyz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
-  # chrt -fp 10 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  bash: echo: write error: Invalid argument
-  # chrt -op 0 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  # chrt -fp 10 $$
-  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  2345
-  2598
-  # chrt -p 2345
-  pid 2345's current scheduling policy: SCHED_FIFO
-  pid 2345's current scheduling priority: 10
+On Tue, Jun 04, 2019 at 05:40:36PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> The current code defines W1 clock gate to be at 0x1cc, overlaying it
+> with the IR gate.
+>
+> Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
+> causing interrupt floods on H6 (because interrupt flags can't be cleared,
+> due to IR module's bus being disabled).
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU")
 
-Existing code comes with a comment saying the "we don't support RT-tasks
-being in separate groups". Such comment is however stale and belongs to
-pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-are not performed at all in these cases.
+Applied, thanks
 
-Make moving RT tasks between cpu controller groups viable by removing
-special case check for RT (and DEADLINE) tasks.
+Maxime
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
-Hi,
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Although I'm pretty assertive in the changelog, I actually wonder what
-am I missing here and why (if) current behavior is needed and makes
-sense.
+--4kypn3dccdwbnuyz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Any input?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPesXAAKCRDj7w1vZxhR
+xS0aAQDbqtubHM34CsRCm1ZafQXbbm/Co2Y9BfB0fqhizBC8EgD/ZVKxdfqHoRKr
+cdCJa+8u/cSpVJrFqhwWKTQ01004pwA=
+=OHOD
+-----END PGP SIGNATURE-----
 
-Juri
----
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 29984d8c41f0..37386b8bd1ad 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6464,10 +6464,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		if (!sched_rt_can_attach(css_tg(css), task))
- 			return -EINVAL;
--#else
--		/* We don't support RT-tasks being in separate groups */
--		if (task->sched_class != &fair_sched_class)
--			return -EINVAL;
- #endif
- 		/*
- 		 * Serialize against wake_up_new_task() such that if its
--- 
-2.17.2
-
+--4kypn3dccdwbnuyz--
