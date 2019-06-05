@@ -2,128 +2,127 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645EEC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0D42067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9AJGRyI"
+	by mail.kernel.org (Postfix) with ESMTP id CA3BB2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfFEVqZ (ORCPT
+        id S1726635AbfFEVsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:46:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34717 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEVqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:46:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h2so85719pgg.1;
-        Wed, 05 Jun 2019 14:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wVHClWl83LJ+u63GhFAh1l0RQa+NY4Hk0/D4slzQzV0=;
-        b=t9AJGRyI9SEqXVZAmAUs3ZqRfMyaQekOOYs/ZD8huILdYj5wezynTdJTEzpTaQUA/I
-         IbX+nUZ8ZaR/gQjgV5WnQno2tB8vpSEvZl23fY6+Z1hEAqgk339Wlry8xPCHVIauNMHu
-         cf/EDc3o3byv2vPvlFwqZtdgw3s3H/IP6IxQvgX/J2GeTw4lxPhrQx335Kto4tpXqLcJ
-         3rI0w4PqFGXWAymbzWX64UaOdqZ/D+MokoA7stnLz1sBybjFZpSQm7bIrhkxhLdrxpaB
-         psLHnY3mcGuu5Tu2zUUcgdYV3swchhXSiUZyFSGQ0B4BT9pBU1audVh2HGoS7ME1rhMP
-         moqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wVHClWl83LJ+u63GhFAh1l0RQa+NY4Hk0/D4slzQzV0=;
-        b=k0b4TMedpb8DvC9yYyfhstvXL3x0SBgsZrOUWZFcighLF5/LN9L6/8DOCGM2CaH7FG
-         V0fLsPzHKDEPFwyS4mbWXJRtQ5/jgff8Um6XjXBhZlVUziStR1tlaJBm3Rby6sCFd/07
-         OKXaZdwoQIVlg38YhL9Uyq/oeueQxhl2mZjtrTQyarBd79FT0OdmYtV/GiYpbVpZAnh0
-         gl2i/DVN6X9fA/w9Ap76nvfGdFMj1NWp9XxUU4HGt1RTYDidfz0cWYUI55j8XTOVm/CD
-         p0HO2AdqY+sksewnX3shh+hOPoYkeVGop3q8rI1Av+oTLPXuy0cjoNaZL2TzXejyPJo9
-         RtYw==
-X-Gm-Message-State: APjAAAURa+1Y+G2bLRg2PJ6zzTOgW7yMX982zv70bjjJX0EhU/wdXXYx
-        ouBsda/S+Efp61aBFBEoIS4=
-X-Google-Smtp-Source: APXvYqz+eJgUTibPNjLvxTAaqTSeA0VFGgm+wTGI1UNNuJwrIeGZusYtqZ067RvWqrF8dFnX/afUZg==
-X-Received: by 2002:a17:90a:dd42:: with SMTP id u2mr47466072pjv.118.1559771184444;
-        Wed, 05 Jun 2019 14:46:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z15sm6282401pge.40.2019.06.05.14.46.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 14:46:23 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 14:46:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     laurentiu.tudor@nxp.com
-Cc:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
-        noring@nocrew.org, JuergenUrban@gmx.de
-Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
- memory
-Message-ID: <20190605214622.GA22254@roeck-us.net>
-References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
- <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+        Wed, 5 Jun 2019 17:48:15 -0400
+Received: from mga04.intel.com ([192.55.52.120]:27438 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEVsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:48:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 14:48:14 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga007.jf.intel.com with ESMTP; 05 Jun 2019 14:48:13 -0700
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v4] mm/swap: Fix release_pages() when releasing devmap pages
+Date:   Wed,  5 Jun 2019 14:49:22 -0700
+Message-Id: <20190605214922.17684-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529102843.13174-4-laurentiu.tudor@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 01:28:41PM +0300, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> 
-> In preparation for dropping the existing "coherent" dma mem declaration
-> APIs, replace the current dma_declare_coherent_memory() based mechanism
-> with the creation of a genalloc pool that will be used in the OHCI
-> subsystem as replacement for the DMA APIs.
-> 
-> For context, see thread here: https://lkml.org/lkml/2019/4/22/357
-> 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-This patch results in usb access failures when trying to boot from the
-sm501-usb controller on sh4 with qemu.
+release_pages() is an optimized version of a loop around put_page().
+Unfortunately for devmap pages the logic is not entirely correct in
+release_pages().  This is because device pages can be more than type
+MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS
+DAX, and PCI P2PDMA.  Some of these have specific needs to "put" the
+page while others do not.
 
-usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 08 7c 00 00 f0 00
-print_req_error: I/O error, dev sda, sector 2172 flags 80700
-usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 01 da 00 00 f0 00
-print_req_error: I/O error, dev sda, sector 474 flags 84700
-usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 02 da 00 00 f0 00
-print_req_error: I/O error, dev sda, sector 730 flags 84700
-usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 0b 50 00 00 f0 00
-print_req_error: I/O error, dev sda, sector 2896 flags 84700
+This logic to handle any special needs is contained in
+put_devmap_managed_page().  Therefore all devmap pages should be
+processed by this function where we can contain the correct logic for a
+page put.
 
-Qemu command line is:
+Handle all device type pages within release_pages() by calling
+put_devmap_managed_page() on all devmap pages.  If
+put_devmap_managed_page() returns true the page has been put and we
+continue with the next page.  A false return of
+put_devmap_managed_page() means the page did not require special
+processing and should fall to "normal" processing.
 
-The qemu command line is:
+This was found via code inspection while determining if release_pages()
+and the new put_user_pages() could be interchangeable.[1]
 
-qemu-system-sh4 -M r2d \
-        -kernel ./arch/sh/boot/zImage \
-	-snapshot \
-	-usb -device usb-storage,drive=d0 \
-	-drive file=rootfs.ext2,if=none,id=d0,format=raw \
-	-append 'panic=-1 slub_debug=FZPUA root=/dev/sda rootwait console=ttySC1,115200 earlycon=scif,mmio16,0xffe80000 noiotrap' \
-	-serial null -serial stdio \
-	-net nic,model=rtl8139 -net user -nographic -monitor null
+[1] https://lore.kernel.org/lkml/20190523172852.GA27175@iweiny-DESK2.sc.intel.com/
 
-Reverting this patch as well as "USB: drop HCD_LOCAL_MEM flag" fixes the
-problem. Reverting "USB: drop HCD_LOCAL_MEM flag" alone does not help.
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Guenter
+---
+Changes from V3:
+	Update comment to the one provided by John
+
+Changes from V2:
+	Update changelog for more clarity as requested by Michal
+	Update comment WRT "failing" of put_devmap_managed_page()
+
+Changes from V1:
+	Add comment clarifying that put_devmap_managed_page() can still
+	fail.
+	Add Reviewed-by tags.
+
+ mm/swap.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/mm/swap.c b/mm/swap.c
+index 7ede3eddc12a..607c48229a1d 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
+ 		if (is_huge_zero_page(page))
+ 			continue;
+ 
+-		/* Device public page can not be huge page */
+-		if (is_device_public_page(page)) {
++		if (is_zone_device_page(page)) {
+ 			if (locked_pgdat) {
+ 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+ 						       flags);
+ 				locked_pgdat = NULL;
+ 			}
+-			put_devmap_managed_page(page);
+-			continue;
++			/*
++			 * ZONE_DEVICE pages that return 'false' from
++			 * put_devmap_managed_page() do not require special
++			 * processing, and instead, expect a call to
++			 * put_page_testzero().
++			 */
++			if (put_devmap_managed_page(page))
++				continue;
+ 		}
+ 
+ 		page = compound_head(page);
+-- 
+2.20.1
+
