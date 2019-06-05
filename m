@@ -2,138 +2,179 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA2DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E962C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B832086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256B9206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="cGZP17p9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VzxwyZGN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AhttVGMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfFEOHF (ORCPT
+        id S1728341AbfFEOH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:07:05 -0400
-Received: from mail-eopbgr30099.outbound.protection.outlook.com ([40.107.3.99]:52096
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727936AbfFEOHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:07:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vhwehZCIMQe6/ktqYy5gw8qYUa7Zw/A7ecCCCivFD3Q=;
- b=cGZP17p9ZS/cNGq+h7U3kV6DpQgvr5WoZ5KDeumW3yc1vdHgkhjH9ZkD3aJgqt7neKcXAsXVytEN7R4MFfFogY5n1wVWuCXHsVshtrzzZdXQuOc9lRhsGivIT69LSRSQ5zsDJAwOdn4QPbH8en5Zl1abirZzH7CmgGqFuGdVwao=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2382.EURPRD10.PROD.OUTLOOK.COM (20.177.62.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Wed, 5 Jun 2019 14:06:52 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1965.011; Wed, 5 Jun 2019
- 14:06:52 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Esben Haabendal <esben@haabendal.dk>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: [PATCH v10 3/3] watchdog: make the device time out at open_deadline
- when open_timeout is used
-Thread-Topic: [PATCH v10 3/3] watchdog: make the device time out at
- open_deadline when open_timeout is used
-Thread-Index: AQHVG6fowaQY4GjN3k2RR2MpldVesg==
-Date:   Wed, 5 Jun 2019 14:06:44 +0000
-Message-ID: <20190605140628.618-4-rasmus.villemoes@prevas.dk>
-References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0202CA0034.eurprd02.prod.outlook.com
- (2603:10a6:3:e4::20) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f27fdba-4e8c-4ca4-b417-08d6e9bf0a56
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2382;
-x-ms-traffictypediagnostic: VI1PR10MB2382:
-x-microsoft-antispam-prvs: <VI1PR10MB23826AF529C4A4EEECE746178A160@VI1PR10MB2382.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39850400004)(346002)(396003)(136003)(189003)(199004)(6436002)(66066001)(76176011)(5660300002)(52116002)(478600001)(107886003)(71200400001)(71190400001)(6486002)(74482002)(3846002)(6116002)(44832011)(72206003)(2501003)(6512007)(54906003)(6666004)(486006)(2906002)(102836004)(73956011)(110136005)(8976002)(6506007)(99286004)(7736002)(386003)(53936002)(64756008)(446003)(316002)(476003)(66946007)(66556008)(81156014)(8676002)(81166006)(66446008)(11346002)(66476007)(4326008)(14454004)(50226002)(25786009)(2616005)(305945005)(26005)(36756003)(68736007)(42882007)(186003)(256004)(8936002)(14444005)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2382;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aIJhPhczU9vmCCv+r9GSnDXX3EwyIPoN7uRNcUHISe6GnUG9BjwwkxSYp54InA8/GLa7iltAXjR9h5obUUynVdIxX+XGBK/1lyvWP/uh87t9z3qJTqjQatSSxUjtg/n5JQqAHaHyn3otAphR+xOW0HVjUscVSqvhOFztn2I/JbkF/Q7v9lRopnUSk24W0r9ssyBBB/7r8Vd+WMkdnIiiOdmN0A1zBodssjBzLm7DNKGP6pgVMEJOQo6vZX08uf2S6leE8XMl2hRDLzVOoZIYCp8uUq1tEGZjkD4ZJtwYV6aQsc2nVBnnwEFn4qVhD5S/1eQo3PIDM4xVThIuLA9OUiIaVhTKC8CZoXzHJRFHEaezgqQieBxe+saxpBJ6W7JihhhyREmGH2tJRqhYGjfyy91fqTRqw6wumyFnJn1S1W0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 5 Jun 2019 10:07:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51154 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFEOH6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:07:58 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 71635609CD; Wed,  5 Jun 2019 14:07:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559743677;
+        bh=NSod75b8DJcTQooBObsabB98SlwnE/yB22rLx7b7vo4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VzxwyZGNZQA4zeBv/BThAhOh4uQbB2NV8zcoA2TC+zvKtIofIn3LXJaG+ewtqJxvh
+         NaTwokrhZVSDgQ7r2AAWTJteIzwF4ri0ToLKOXwp4hhtdIvNwZSizFetVFjbgNUTiG
+         XPYs4T09OT0NHzPW3k2rr0/7uAAzuM3KmD0bJFKA=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37D4560213;
+        Wed,  5 Jun 2019 14:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559743676;
+        bh=NSod75b8DJcTQooBObsabB98SlwnE/yB22rLx7b7vo4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AhttVGMIKT/YAg18mc+nO6i4RoK8LFyfN6scj22jM6vBiFF/l/SCvUpWt04O0KpV6
+         +mUF+hnGMTEYjCt+Tb22tm+q3krR2EIA03Z09X19U2zXgJXI2dAaykEhNOFKJRgSXJ
+         U++evfu2CgTkylaAVJE29JBFO0j69VAJJsdQLidw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37D4560213
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
+ SDM845
+To:     Lee Jones <lee.jones@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     balbi@kernel.org, wsa+renesas@sang-engineering.com,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        david.brown@linaro.org, alokc@codeaurora.org,
+        kramasub@codeaurora.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        andy.gross@linaro.org, jlhugo@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-7-lee.jones@linaro.org>
+ <20190605070029.GN22737@tuxbook-pro> <20190605083454.GO4797@dell>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <d9ba98e6-3caf-62fc-45ca-944cb718b7e4@codeaurora.org>
+Date:   Wed, 5 Jun 2019 08:07:54 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f27fdba-4e8c-4ca4-b417-08d6e9bf0a56
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 14:06:44.4131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2382
+In-Reply-To: <20190605083454.GO4797@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiB0aGUgd2F0Y2hkb2cgZGV2aWNlIGlzIG5vdCBvcGVuIGJ5IHVzZXJzcGFjZSwgdGhlIGtl
-cm5lbCB0YWtlcw0KY2FyZSBvZiBwaW5naW5nIGl0LiBXaGVuIHRoZSBvcGVuX3RpbWVvdXQgZmVh
-dHVyZSBpcyBpbiB1c2UsIHdlIHNob3VsZA0KZW5zdXJlIHRoYXQgdGhlIGhhcmR3YXJlIGZpcmVz
-IGNsb3NlIHRvIG9wZW5fdGltZW91dCBzZWNvbmRzIGFmdGVyIHRoZQ0Ka2VybmVsIGhhcyBhc3N1
-bWVkIHJlc3BvbnNpYmlsaXR5IGZvciB0aGUgZGV2aWNlLg0KDQpUbyBkbyB0aGlzLCBzaW1wbHkg
-cmV1c2UgdGhlIGxvZ2ljIHRoYXQgaXMgYWxyZWFkeSBpbiBwbGFjZSBmb3INCmVuc3VyaW5nIHRo
-ZSBzYW1lIHRoaW5nIHdoZW4gdXNlcnNwYWNlIGlzIHJlc3BvbnNpYmxlIGZvciByZWd1bGFybHkN
-CnBpbmdpbmcgdGhlIGRldmljZToNCg0KLSBXaGVuIHdhdGNoZG9nX2FjdGl2ZSh3ZGQpLCB0aGlz
-IHBhdGNoIGRvZXNuJ3QgY2hhbmdlIGFueXRoaW5nLg0KDQotIFdoZW4gIXdhdGNoZG9jX2FjdGl2
-ZSh3ZGQpLCB0aGUgInZpcnR1YWwgdGltZW91dCIgc2hvdWxkIGJlIHRha2VuIHRvDQpiZSAtPm9w
-ZW5fZGVhZGxpbmUiLiBXaGVuIHRoZSBvcGVuX3RpbWVvdXQgZmVhdHVyZSBpcyBub3QgdXNlZCBv
-ciB0aGUNCmRldmljZSBoYXMgYmVlbiBvcGVuZWQgYXQgbGVhc3Qgb25jZSwgLT5vcGVuX2RlYWRs
-aW5lIGlzIEtUSU1FX01BWCwNCmFuZCB0aGUgYXJpdGhtZXRpYyBlbmRzIHVwIHJldHVybmluZyBr
-ZWVwYWxpdmVfaW50ZXJ2YWwgYXMgd2UgdXNlZCB0by4NCg0KVGhpcyBoYXMgYmVlbiB0ZXN0ZWQg
-b24gYSBXYW5kYm9hcmQgd2l0aCB2YXJpb3VzIGNvbWJpbmF0aW9ucyBvZg0Kb3Blbl90aW1lb3V0
-IGFuZCB0aW1lb3V0LXNlYyBwcm9wZXJ0aWVzIGZvciB0aGUgb24tYm9hcmQgd2F0Y2hkb2cgYnkN
-CmJvb3Rpbmcgd2l0aCAnaW5pdD0vYmluL3NoJywgdGltZXN0YW1waW5nIHRoZSBsaW5lcyBvbiB0
-aGUgc2VyaWFsDQpjb25zb2xlLCBhbmQgY29tcGFyaW5nIHRoZSB0aW1lc3RhbXAgb2YgdGhlICdp
-bXgyLXdkdCAyMGJjMDAwLndkb2c6DQp0aW1lb3V0IG5ubiBzZWMnIGxpbmUgd2l0aCB0aGUgdGlt
-ZXN0YW1wIG9mIHRoZSAnVS1Cb290IFNQTCAuLi4nDQpsaW5lICh3aGljaCBhcHBlYXJzIGp1c3Qg
-YWZ0ZXIgcmVzZXQpLg0KDQpTdWdnZXN0ZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNr
-LXVzLm5ldD4NClNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1v
-ZXNAcHJldmFzLmRrPg0KLS0tDQogZHJpdmVycy93YXRjaGRvZy93YXRjaGRvZ19kZXYuYyB8IDEx
-ICsrKysrKy0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlv
-bnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvd2F0Y2hkb2dfZGV2LmMgYi9k
-cml2ZXJzL3dhdGNoZG9nL3dhdGNoZG9nX2Rldi5jDQppbmRleCAzMzRiODEwZGIyY2YuLmVkZmI4
-ODQwNDRlMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvd2F0Y2hkb2dfZGV2LmMNCisr
-KyBiL2RyaXZlcnMvd2F0Y2hkb2cvd2F0Y2hkb2dfZGV2LmMNCkBAIC0xMzMsMTQgKzEzMywxNSBA
-QCBzdGF0aWMga3RpbWVfdCB3YXRjaGRvZ19uZXh0X2tlZXBhbGl2ZShzdHJ1Y3Qgd2F0Y2hkb2df
-ZGV2aWNlICp3ZGQpDQogCWt0aW1lX3QgdmlydF90aW1lb3V0Ow0KIAl1bnNpZ25lZCBpbnQgaHdf
-aGVhcnRiZWF0X21zOw0KIA0KLQl2aXJ0X3RpbWVvdXQgPSBrdGltZV9hZGQod2RfZGF0YS0+bGFz
-dF9rZWVwYWxpdmUsDQotCQkJCSBtc190b19rdGltZSh0aW1lb3V0X21zKSk7DQorCWlmICh3YXRj
-aGRvZ19hY3RpdmUod2RkKSkNCisJCXZpcnRfdGltZW91dCA9IGt0aW1lX2FkZCh3ZF9kYXRhLT5s
-YXN0X2tlZXBhbGl2ZSwNCisJCQkJCSBtc190b19rdGltZSh0aW1lb3V0X21zKSk7DQorCWVsc2UN
-CisJCXZpcnRfdGltZW91dCA9IHdkX2RhdGEtPm9wZW5fZGVhZGxpbmU7DQorDQogCWh3X2hlYXJ0
-YmVhdF9tcyA9IG1pbl9ub3RfemVybyh0aW1lb3V0X21zLCB3ZGQtPm1heF9od19oZWFydGJlYXRf
-bXMpOw0KIAlrZWVwYWxpdmVfaW50ZXJ2YWwgPSBtc190b19rdGltZShod19oZWFydGJlYXRfbXMg
-LyAyKTsNCiANCi0JaWYgKCF3YXRjaGRvZ19hY3RpdmUod2RkKSkNCi0JCXJldHVybiBrZWVwYWxp
-dmVfaW50ZXJ2YWw7DQotDQogCS8qDQogCSAqIFRvIGVuc3VyZSB0aGF0IHRoZSB3YXRjaGRvZyB0
-aW1lcyBvdXQgd2RkLT50aW1lb3V0IHNlY29uZHMNCiAJICogYWZ0ZXIgdGhlIG1vc3QgcmVjZW50
-IHBpbmcgZnJvbSB1c2Vyc3BhY2UsIHRoZSBsYXN0DQotLSANCjIuMjAuMQ0KDQo=
+On 6/5/2019 2:34 AM, Lee Jones wrote:
+> On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+> 
+>> On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+>>
+>>> When booting with Device Tree, the current default boot configuration
+>>> table option, the request to boot via 'host mode' comes from the
+>>> "dr_mode" property.
+>>
+>> This has been the default on the MTP, but this is changing as this is
+>> causing issues when connected downstream from a hub (the typical
+>> development case for the primary USB port of a phone like device) and
+>> more importantly we don't have support for the PMIC blocks that control
+>> VBUS.
+> 
+> My point is not about which mode is currently chosen.  It's more about
+> the capability of choosing which mode is appropriate for a given
+> system via DT.
+> 
+>> Once these issues are resolved the dr_mode would be "otg".
+> 
+> OTG doesn't work on this H/W, so we need to specify "host" mode.
+
+How have you made that determination?
+
+> 
+>>> A property of the same name can be used inside
+>>> ACPI tables too.  However it is missing from the SDM845's ACPI tables
+>>> so we have to supply this information using Platform Device Properites
+>>> instead.
+>>>
+>>
+>> Afaict this would install a fall-back property, so in the case that we
+>> have specified dr_mode in DT (or ACPI) that would take precedence. So
+> 
+> That's correct.
+> 
+>> the commit message should reflect that this redefines the default choice
+>> to be "host", rather than "otg".
+> 
+> No problem. >
+>> Which is in conflict with what's described for dr_mode in
+>> Documentation/devicetree/bindings/usb/generic.txt
+> 
+> This implementation only affects ACPI based platforms.  When booting
+> with DT, the description in that DT related document is still
+> accurate.
+> 
+>> And this driver is used on a range of different Qualcomm platforms, so I
+>> don't think this is SDM845 specific.
+> 
+> ACPI based platforms?
+> 
+> All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
+>   
+>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>>> ---
+>>>   drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
+>>>   1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+>>> index 349bf549ee44..f21fdd6cdd1a 100644
+>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>>> @@ -468,6 +468,11 @@ static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
+>>>   };
+>>>   MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
+>>>   
+>>> +static const struct property_entry dwc3_qcom_acpi_properties[] = {
+>>> +	PROPERTY_ENTRY_STRING("dr_mode", "host"),
+>>> +	{}
+>>> +};
+>>> +
+>>>   static int dwc3_qcom_probe(struct platform_device *pdev)
+>>>   {
+>>>   	struct device_node	*np = pdev->dev.of_node, *dwc3_np;
+>>> @@ -603,6 +608,13 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+>>>   			goto platform_unalloc;
+>>>   		}
+>>>   
+>>> +		ret = platform_device_add_properties(qcom->dwc3,
+>>> +						     dwc3_qcom_acpi_properties);
+>>> +		if (ret < 0) {
+>>> +			dev_err(&pdev->dev, "failed to add properties\n");
+>>> +			goto platform_unalloc;
+>>> +		}
+>>> +
+>>>   		ret = platform_device_add(qcom->dwc3);
+>>>   		if (ret) {
+>>>   			dev_err(&pdev->dev, "failed to add device\n");
+> 
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
