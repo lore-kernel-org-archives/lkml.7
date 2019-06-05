@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5492C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E650C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E33D20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369B9206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 11:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfFELoK (ORCPT
+        id S1727914AbfFELoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 07:44:10 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27627 "EHLO
+        Wed, 5 Jun 2019 07:44:13 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7431 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727835AbfFELoF (ORCPT
+        with ESMTP id S1727843AbfFELoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 07:44:05 -0400
-X-UUID: bec418a395ff48cd99c9db9495641cfe-20190605
-X-UUID: bec418a395ff48cd99c9db9495641cfe-20190605
+        Wed, 5 Jun 2019 07:44:06 -0400
+X-UUID: ae3bf05384cf49a582a2984982586be8-20190605
+X-UUID: ae3bf05384cf49a582a2984982586be8-20190605
 Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 961807151; Wed, 05 Jun 2019 19:43:59 +0800
+        with ESMTP id 751171304; Wed, 05 Jun 2019 19:43:59 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 5 Jun 2019 19:43:59 +0800
+ 15.0.1395.4; Wed, 5 Jun 2019 19:43:58 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 5 Jun 2019 19:43:58 +0800
+ Transport; Wed, 5 Jun 2019 19:43:57 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,9 +44,9 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 26/27] drm/mediatek: add clock property check before get it
-Date:   Wed, 5 Jun 2019 19:43:05 +0800
-Message-ID: <1559734986-7379-27-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 25/27] drm/mediatek: add connection from RDMA1 to DSI0
+Date:   Wed, 5 Jun 2019 19:43:04 +0800
+Message-ID: <1559734986-7379-26-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
@@ -60,34 +60,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add clock property check before get it
+This patch add connection from RDMA1 to DSI0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 9986c61..28274d2 100644
+index adafa41..9986c61 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -689,10 +689,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 	for (i = 0; i < 10; i++)
- 		ddp->mutex[i].id = i;
- 
--	ddp->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(ddp->clk)) {
--		dev_err(dev, "Failed to get clock\n");
--		return PTR_ERR(ddp->clk);
-+	if (of_find_property(dev->of_node, "clocks", &i)) {
-+		ddp->clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(ddp->clk)) {
-+			dev_err(dev, "Failed to get clock\n");
-+			return PTR_ERR(ddp->clk);
-+		}
+@@ -452,6 +452,9 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
+ 	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_COLOR0) {
+ 		*addr = DISP_REG_RDMA0_SOUT_SEL_IN(data);
+ 		value = DISP_REG_RDMA0_SOUT_COLOR0(data);
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
++		*addr = DISP_REG_RDMA1_SOUT_SEL_IN(data);
++		value = DISP_REG_RDMA1_SOUT_DSI0(data);
+ 	} else {
+ 		value = 0;
  	}
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
 1.8.1.1.dirty
 
