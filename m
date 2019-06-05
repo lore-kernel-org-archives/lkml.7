@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D89C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FEDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A9020848
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD6F20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9JKg/oN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mML4dgqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfFEBKY (ORCPT
+        id S1726714AbfFEBKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 21:10:24 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39470 "EHLO
+        Tue, 4 Jun 2019 21:10:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39468 "EHLO
         mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfFEBKJ (ORCPT
+        with ESMTP id S1726399AbfFEBKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 21:10:09 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i125so4146407qkd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 18:10:08 -0700 (PDT)
+        Tue, 4 Jun 2019 21:10:08 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i125so4146373qkd.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uYuZk3WfkaKX49xvAd+SIaFxKGOozQxDXCkeJBh9dxI=;
-        b=g9JKg/oNEjc8gCZny9L+JKTZ8IXlkOb51oA5UCsAk79uHj9HxL0oJj2T093uVL7U3W
-         tZaNJOL1EEnXV4E8dyhLzfNhkFSjmBojQG3rfhszbSwx9mFqXkbAjQBh+j4MewBbn8HD
-         VbMUwl99PQ/FRT6A/sMFPO9v6vzSKa2DEDi1bHidQjB2cRAgQE9yvrMtx0BIkYBsm796
-         vD9qFJ3339QGhxRMCDVCLQYo0AEIljJOqawv29YvvpQMeSIZdDvW2uWPNcJLT01MZduy
-         Tw+3DH+cPK5FlS8H4d9VovuS9XKhN1vAjbL9yTiTiGRduStKYceXbbvXqciOqY8LWyEG
-         d7tw==
+        bh=zQKkpwtYkmsAlAHS1/A4fUvJkej14tNEkYhCxUI7UmE=;
+        b=mML4dgqZiU8wAr0d5ViMsn+/5YALz6+FqkNUxcR95xosVUMIBi6CodrS3m6LUmE7yq
+         N0F3JXgJcb1GrLlzx5hFiCb0Vy7BGKqS09iQ8rxnyjB1ogbN/tXJBEs0BTvdZhyFodrE
+         vlN2ULSryR+pLbKQ2+otlPq6cGq3E4yw8AW59O6bwCneCoXbyoTguYBOdEgou7Q1hXJe
+         ZH9flwTsYEX4uhJPyhF/UI9IT1KYIBswMCgdS2x0kGXn3NFKogznM2Q9kJwEuE6dhDjY
+         rVjphXLFxgl7LTBv3lmLRWsggp/UsoU8fcYAwJVXddBeunRLMW6wfZNdqtXo8GFUc8a/
+         FwGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uYuZk3WfkaKX49xvAd+SIaFxKGOozQxDXCkeJBh9dxI=;
-        b=QEDnZijeciCGX8j2bx2uZc6elBwcMq95IRWA5C61RObz6BtzDrg/FsRdtb1fITf7ka
-         LCubVwksMbdmVr3v4vJ1Pdj1Cc1aTdCdho0DA/THB4suZHTOSBp3RxnSUkXk5CVw7w07
-         fdFCYXhTxBxayJLiYRiWLLFnZh6e1Esy+oQSVxxljWZULXzEzaxgPRhT8yh7MIhDVq5z
-         tB1AUed/kAMMzzIHIH7ARujLEy2cki3RtIZjEmuvZ4vy8c+bYq84ONvgz6Eg3TJZrDD8
-         j2PPMlZm0KlTXJge6loVk1VOmxWM8397QYhZVN99Q517iZWPHRbp0fvsyP7b6OnqZ6EY
-         qQeg==
-X-Gm-Message-State: APjAAAX9J8pIOgjvunxY15hB2VPu/MEn2/WNWdtB59cL1ayBKjEhE/gX
-        gNhaLj11EdXHZ7optHeWP58=
-X-Google-Smtp-Source: APXvYqxaaBOsP/tJ5p9FEY7HcHhhanA8z99jbfvf4pfydxtj/y3fVkTaELzh94+xa25rVwaoUK5JMA==
-X-Received: by 2002:ae9:f20c:: with SMTP id m12mr29856938qkg.58.1559697008489;
-        Tue, 04 Jun 2019 18:10:08 -0700 (PDT)
+        bh=zQKkpwtYkmsAlAHS1/A4fUvJkej14tNEkYhCxUI7UmE=;
+        b=es2T0DJsVePi77lyIHq4+XMQVj5kC6lPL10RBVnH/67AF4QPto+45LzGqAcSfljWi4
+         ItU9st05DLxcmBqLGk77uHjBeZFCCE11rPfAggNFdEVZ9Kt9z09RvC1my4jgWWmR3J2m
+         JnqHuQFKV/gBEfIeoafqDZ0CyvRBDDlQ7omdhZb00vrYTtV5ccsI0b/oLhSG0rtAWw4R
+         CalYJIh35k8p+QXZw8EWpS+d8rJRqVUQDoBv7shH2QnmW8uG36/Qv692nJwthGxF1XSE
+         f+yAuMqtogody98l2wURMJFkSMsPKDt/hjTh4fN8W2jOAsqUb9bQhs/niByuXVhwT0MJ
+         MmWw==
+X-Gm-Message-State: APjAAAXIthHQ2CwG7yuvw+eYYd+rd/ZYCG35IoxNbt0SC9By/k3BOiq0
+        qk/C6wVCSnyJfy2tCfOt4TJOOSYcUco=
+X-Google-Smtp-Source: APXvYqzPJdWBc2QIMT3Y6iL4ReXMlGY1hQuJNW76I+wcdqm0YiOxcQSdaP6E9QroOX3kgbi3s4xLBQ==
+X-Received: by 2002:a37:6086:: with SMTP id u128mr10837297qkb.270.1559697007568;
+        Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
 Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id v41sm7169401qta.78.2019.06.04.18.10.07
+        by smtp.gmail.com with ESMTPSA id v41sm7169401qta.78.2019.06.04.18.10.06
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 18:10:08 -0700 (PDT)
+        Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
 From:   Geordan Neukum <gneukum1@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Geordan Neukum <gneukum1@gmail.com>,
         Mao Wenan <maowenan@huawei.com>,
         Jeremy Sowden <jeremy@azazel.net>, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] staging: kpc2000: kpc_spi: remove unnecessary struct member chip_select
-Date:   Wed,  5 Jun 2019 01:09:11 +0000
-Message-Id: <1980fe831f6444a6bf47928bdc9e09c8fe3b6da1.1559696611.git.gneukum1@gmail.com>
+Subject: [PATCH 3/6] staging: kpc2000: kpc_spi: remove unnecessary struct member word_len
+Date:   Wed,  5 Jun 2019 01:09:10 +0000
+Message-Id: <16f6ea93695137a9347203f66aff36874730cc26.1559696611.git.gneukum1@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559696611.git.gneukum1@gmail.com>
 References: <cover.1559696611.git.gneukum1@gmail.com>
@@ -77,34 +77,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The structure kp_spi_controller_state, defined in the kpc2000_spi
-driver, contains a member named chip_select which is never used after
+driver, contains a member named word_len which is never used after
 initialization. Therefore, it should be removed for simplicity's sake.
 
 Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 ---
- drivers/staging/kpc2000/kpc2000_spi.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/staging/kpc2000/kpc2000_spi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 61296335313b..07b0327d8bef 100644
+index 1d89cb3b861f..61296335313b 100644
 --- a/drivers/staging/kpc2000/kpc2000_spi.c
 +++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -109,7 +109,6 @@ struct kp_spi {
- 
+@@ -110,7 +110,6 @@ struct kp_spi {
  struct kp_spi_controller_state {
  	void __iomem   *base;
--	unsigned char   chip_select;
+ 	unsigned char   chip_select;
+-	int             word_len;
  	s64             conf_cache;
  };
  
-@@ -267,7 +266,6 @@ kp_spi_setup(struct spi_device *spidev)
- 			return -ENOMEM;
+@@ -269,7 +268,6 @@ kp_spi_setup(struct spi_device *spidev)
  		}
  		cs->base = kpspi->base;
--		cs->chip_select = spidev->chip_select;
+ 		cs->chip_select = spidev->chip_select;
+-		cs->word_len = spidev->bits_per_word;
  		cs->conf_cache = -1;
  		spidev->controller_state = cs;
  	}
+@@ -369,7 +367,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+ 			if (transfer->bits_per_word) {
+ 				word_len = transfer->bits_per_word;
+ 			}
+-			cs->word_len = word_len;
+ 			sc.bitfield.wl = word_len-1;
+ 
+ 			/* ...chip select */
 -- 
 2.21.0
 
