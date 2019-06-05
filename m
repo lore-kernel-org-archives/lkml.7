@@ -2,105 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5467C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423D8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B00206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A37120657
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:52:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="A58mg5Kv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhNVfc8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfFERup (ORCPT
+        id S1726655AbfFERwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:50:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46992 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFERup (ORCPT
+        Wed, 5 Jun 2019 13:52:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:47013 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfFERwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:50:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so15239002pfm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 10:50:45 -0700 (PDT)
+        Wed, 5 Jun 2019 13:52:31 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h10so6920233edi.13;
+        Wed, 05 Jun 2019 10:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BKkTOGYV6rc7HowFTZvE8K9UA+VQIzhyINAMJ9kdHbs=;
-        b=A58mg5KvGYwm+JBY3RSS+1AD82Y6/IErsmfVz+hwmDnRrfIcKyTkZXJ+n5GC4KOSxx
-         58ShR5prsog+E6KZmvxbfUojKwQCR9kzcfcZDj110/L2LQSbzSWQcYsqK92VDr0TasCY
-         sN/YvM9py6T9rgBWWfRWDBDxoULa3vUO7HgSLBD9p+QxvlG903CtNAe2wI4TuqFff0w3
-         UBBKzgvjjXxVlFAmnwUw4OYrddRtTxSLhBaQEdxH0jipTizDEJJOx2xqSYN7U8pQY/6X
-         3bY6psXdI6sEZl3yCKIExSP2me3Ym9b+R1hiyh8ghrAOuy7i9DrGYdp/BljCRUL5jGqG
-         RssQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pYtfOuzsaIuaSCe9W5O3jDRlIoV2Xik6ZeqGacqfMT8=;
+        b=QhNVfc8UAyKCfw0lMsGrvSQB5DGZEG+0lRhcABpf3ISc9fVMumM+I4BxIb88xDw/TS
+         mHTNvYD8cyRctLAPyDv5YpTKHZV/Ep5PgR7x6hHhhNDcK4YQ5t+NPEhKnJZnZzdledlL
+         2F5H69wTnGfZBSqhIM9QxYH+MSQIQtl6w00o1HdYn6+Bfsc+uygnVHUyH8Nd//JfGz5P
+         IqHy4znz3/JCp1YLlMSRymp+VvlIzqdQOQj8rO6dEj2XnGviyvAUaBDxyaauD/uuTAJK
+         wyjIGYtBOyIu5/CsQjCqk1VMv4gg4MP20VCIWGv0utI+OrZSuHulRQL7N74nhfCbK7iM
+         8Y4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BKkTOGYV6rc7HowFTZvE8K9UA+VQIzhyINAMJ9kdHbs=;
-        b=VSSKHoH5mRlNlkK78XVlbxevzAJq0VKp5jOlW4hJ1Lp8kWtE4xkQfv/jUqnfxvasxE
-         VI2zmYYo2dexkivLdVY91+0ut/TDB3AuS+5iA+dP+i1GShbf3Avh6zVuALt8IER9TfVp
-         8dcTm8Lcs7eXoAGWxxwnRMzEWZoYLWs5FsLfU5mNFNcgw2llfoAisASduyYpsqk+hsX0
-         HhaiPPOCL6ehKnfLld29BCRAHTgpXfV3p4QWXtyvm50WNisetsZdxipH34xPVbCyGHdk
-         Z3T7Zb1VCLoBd9PZ2OEfBWwBhVVOxmCgMQOo8Cp6IVT2mOOQMgBBXKAl4xP0Sd+L8XRp
-         e8UQ==
-X-Gm-Message-State: APjAAAU7JM6jvwdw/N6ZdQX5kXnSSGgzeeDJMiXiwkCKIPPPEf/FD5pD
-        prw0G3pJSuWmjRVl56gj+02xfQ==
-X-Google-Smtp-Source: APXvYqzGIXQYJbJ/EW9Im5FYNNE63sdg510YUZvGCK/jMI7JQvTrBWq/YpqXuCCeNqPGEqB/0tbO6g==
-X-Received: by 2002:a65:5004:: with SMTP id f4mr6334708pgo.268.1559757044629;
-        Wed, 05 Jun 2019 10:50:44 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:da9d:67ff:fec6:ee6b])
-        by smtp.gmail.com with ESMTPSA id d7sm12013736pfq.0.2019.06.05.10.50.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 10:50:44 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Loys Ollivier <lollivier@baylibre.com>
-Subject: [PATCH] RISC-V: defconfig: enable clocks, serial console
-Date:   Wed,  5 Jun 2019 10:50:42 -0700
-Message-Id: <20190605175042.13719-1-khilman@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pYtfOuzsaIuaSCe9W5O3jDRlIoV2Xik6ZeqGacqfMT8=;
+        b=rmnR6zCE9tJV1hAwRcpZX9xvha/18grDn9WzkfQBqnt/5ejjFglHW7brPg85psblIg
+         O2ubrqYPcX6sp707fkkcTY0Oa5ULXnqNNKUgoyarML/7Uowie2daSBhAy9Q3FSjRndY4
+         96Hvtv/tRM/09sNe2ECC9flaGVlsjg1fIWtSLmaJRPxP4tqlmDEnhPxu6SlkbaQeeIX1
+         uvAhvnjqo2cirfr5H0CcKvmREBz3IUu17uyecjDovYXvGDJk+PbYAiPUpgTFf0bdaNBo
+         /+uKUVOyR1K+nEdSjuAoKGPAgG/cSIKKGVAb+0JhTwhLzsVb3LYYJloEcn/okL/KP5+5
+         imWQ==
+X-Gm-Message-State: APjAAAW1JTWNpmSpW/ZHwWcNuX5kamGfpwC21WxnHWnq8FlkBRgghMh/
+        RHizQ7hi0nW08BHTKTXKK1owVGsR5Ji7NIWgywQ=
+X-Google-Smtp-Source: APXvYqz1ATl70MIRDqfc+yMDdMP5LDqUSNlcwQkf8ecIoqYwEwPl33WK/uyq7xAGxpTBn9bkoJlSP+7ti270ZgnoOxo=
+X-Received: by 2002:a50:987a:: with SMTP id h55mr4460498edb.108.1559757149756;
+ Wed, 05 Jun 2019 10:52:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
+ <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
+ <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
+ <20190605174547.b4rwbfrzjqzujxno@localhost> <CA+h21hqeWSqZ0JmoC_w0gu+UJqCxpN7yWktRZsppe8LZ5Q_wMg@mail.gmail.com>
+In-Reply-To: <CA+h21hqeWSqZ0JmoC_w0gu+UJqCxpN7yWktRZsppe8LZ5Q_wMg@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 5 Jun 2019 20:52:18 +0300
+Message-ID: <CA+h21hqB0_r_5zdkEMLTx0iOtxqAC9NSe66R8KxmT6kLdvEy6A@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable PRCI clock driver and serial console by default, so the default
-upstream defconfig is bootable to a serial console.
+On Wed, 5 Jun 2019 at 20:50, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Wed, 5 Jun 2019 at 20:45, Richard Cochran <richardcochran@gmail.com> wrote:
+> >
+> > On Wed, Jun 05, 2019 at 02:33:52PM +0300, Vladimir Oltean wrote:
+> > > In the meantime: Richard, do you have any objections to this patchset?
+> >
+> > I like the fact that you didn't have to change the dsa or ptp
+> > frameworks this time around.  I haven't taken a closer look than that
+> > yet.
+> >
+> > > I was wondering whether the path delay difference between E2E and P2P
+> > > rings any bell to you.
+> >
+> > Can it be that the switch applies corrections in HW?
+> >
+>
+> Yes it can be. It was one of the first things I thought of.
+> Normally it updates the correction field with its own residence time
+> in 1-step L2 event messages (but I use 2 step).
+> It also has a bit called IGNORE2STF (ignore 2-step flag) by which it
+> updates the correction field in all L2 event messages (including sync,
+> thereby violating the spec for a switch, as far as I'm aware). But I'm
+> not setting it.
+> I also looked at egress frames with wireshark and the correction field is zero.
+>
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
----
- arch/riscv/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+I also changed around the values of ptp_dst_mac and p2p_dst_mac in
+linuxptp in the hope that I'd throw off whatever hardware parser it
+has to identify the event frames, but I still get negative path delay
+with E2E nonetheless. So it's probably not that.
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 2fd3461e50ab..4f02967e55de 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -49,6 +49,8 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
-+CONFIG_SERIAL_SIFIVE=y
-+CONFIG_SERIAL_SIFIVE_CONSOLE=y
- CONFIG_HVC_RISCV_SBI=y
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=y
-@@ -64,6 +66,8 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_STORAGE=y
- CONFIG_USB_UAS=y
- CONFIG_VIRTIO_MMIO=y
-+CONFIG_CLK_SIFIVE=y
-+CONFIG_CLK_SIFIVE_FU540_PRCI=y
- CONFIG_SIFIVE_PLIC=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.21.0
+> > Thanks,
+> > Richard
+>
+> Thanks,
+> -Vladimir
 
+-Vladimir
