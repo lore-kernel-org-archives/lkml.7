@@ -4,93 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D593C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3DBC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164C52075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9105520863
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B+vfXSTU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gVFi7n4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfFECYJ (ORCPT
+        id S1726597AbfFECZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 22:24:09 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:55768 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfFECYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 22:24:08 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x552DpeE048287;
-        Wed, 5 Jun 2019 02:21:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=7u0fqKpO3Y/6UfFmgymXRbjPTDuNK68XzOqEUVtqxRY=;
- b=B+vfXSTUbVuGJ8aREp/JPBa5s9UsLB1ltByTR8TzKVfhUtWWCWCZXJYkjEOIvyB1/KlN
- o/ELxy8YMcvnMtT16octI+gbW4HxicWdeoY8taSsznQDf8srO1qWLVK9T4J1VrWjBhpm
- Z7WoUYZ3Oxhni72ZbkQxgWwWWQiTyls94zzBciLHt3sMB25pTUax+jRJJqBoI9fXXe/j
- j/TdIxpn1y4h4yCkNjJ5ozTXeGpzJUJC4Q2cUKYZuwAKHTFnGQdJH6KSCS4AdK1GJSHA
- lSQ8UAmy+fyTNnZPEGsFzYhOMRuV6EoAAm5RKM3LrwfkAWnWoi+tF4iMus55ofzWIXVV lA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2suevdghw9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 02:21:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x552KVx5117073;
-        Wed, 5 Jun 2019 02:21:52 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2swnh9wt7k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 02:21:52 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x552LocA018967;
-        Wed, 5 Jun 2019 02:21:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Jun 2019 19:21:50 -0700
-To:     John Garry <john.garry@huawei.com>
-Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 0/6] hisi_sas: Some misc patches
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1559123927-160502-1-git-send-email-john.garry@huawei.com>
-Date:   Tue, 04 Jun 2019 22:21:48 -0400
-In-Reply-To: <1559123927-160502-1-git-send-email-john.garry@huawei.com> (John
-        Garry's message of "Wed, 29 May 2019 17:58:41 +0800")
-Message-ID: <yq1zhmwrcub.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 4 Jun 2019 22:25:06 -0400
+Received: from mail-eopbgr60064.outbound.protection.outlook.com ([40.107.6.64]:35814
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726354AbfFECZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 22:25:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WP44AFfGfS/Dl7DZmYj2i+WklCHcuM18wzZpVSFDxYQ=;
+ b=gVFi7n4ON71QxbkKwLDJXJj6om0v8CQRKGo/IYx+dtF/dCx5amCP68KOpKxLJlP3b57qE3v4ZFD7mRZHT+eJ81c2yzoBzkIWlDPGw0M+jdPEBtNRt7Gv6aUGYGRaauekXLkxB0ltwbfhKimUj5dWkKyrrkiCbNdDkNCvFtv2lf8=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6670.eurprd04.prod.outlook.com (20.179.235.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.17; Wed, 5 Jun 2019 02:25:02 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a13e:6f61:e9e6:16d7]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a13e:6f61:e9e6:16d7%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 02:25:02 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "vkoul@kernel.org" <vkoul@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 5/8] dmaengine: fsl-edma: add drvdata for vf610
+Thread-Topic: [PATCH v3 5/8] dmaengine: fsl-edma: add drvdata for vf610
+Thread-Index: AQHVFf3r7/Xb7jxz/ECdaeOw3gnZcaaLd3OAgAFveAA=
+Date:   Wed, 5 Jun 2019 02:25:02 +0000
+Message-ID: <1559730524.24019.11.camel@nxp.com>
+References: <20190529090848.34350-1-yibin.gong@nxp.com>
+         <20190529090848.34350-6-yibin.gong@nxp.com>
+         <20190604123331.GE15118@vkoul-mobl>
+In-Reply-To: <20190604123331.GE15118@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5eef4971-2cef-41bc-4b97-08d6e95d03e7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6670;
+x-ms-traffictypediagnostic: VE1PR04MB6670:
+x-microsoft-antispam-prvs: <VE1PR04MB66707006ABC29C7E5D7F474F89160@VE1PR04MB6670.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(366004)(136003)(376002)(199004)(189003)(14454004)(6246003)(53546011)(6436002)(25786009)(5660300002)(54906003)(229853002)(53936002)(6506007)(86362001)(11346002)(186003)(7416002)(76176011)(76116006)(1730700003)(64756008)(66476007)(66556008)(66446008)(5640700003)(81156014)(81166006)(6512007)(4326008)(6486002)(91956017)(8676002)(316002)(71190400001)(50226002)(8936002)(71200400001)(66066001)(66946007)(446003)(73956011)(6916009)(486006)(2351001)(7736002)(305945005)(2501003)(36756003)(99286004)(68736007)(2906002)(26005)(4744005)(256004)(3846002)(103116003)(102836004)(476003)(6116002)(478600001)(2616005)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6670;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: joe5DdmRg2PzTPEbrlGD/5ABWreANdEOZbZyYo60HQSZM2cAXEpSKBu4zFeGMcbU4xRjIc9WXfQI3I99QEEKFv9OU1HYjFxmemR/jtCrligbCxrHx6vkszxovrEcepjsXHtYROoLZVdXFO//+kA7V5URj3P32V6mO6+u6PNIlA6NuEoLrGys53zRpmqO8RmDGynKVvJ3iUQ3m++yFxA2TpRYOWWFOB+i/DFiCDi2K/O4KY92LkmEB0iPJH6m0ru6b1uNOFwZ7max7fwBwX7SXbPHqTJu4XYfgY2wjQmAmrtQPFHdmAm96xM7R4zSE02Wy7C7HSS7E7caLpKfQH2ete9i3SKrQLLriLyNryghiZ0BCLX/DpROm8ydCF7p3amvF30w8M8K2/G3hA6QTx2uIboznR1Jk5UNwS2U+EHMeoA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D5076106775FA4C8D1276EB52B6257E@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=827
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906050012
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=879 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906050012
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5eef4971-2cef-41bc-4b97-08d6e95d03e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 02:25:02.4774
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-John,
-
-> This patchset introduces some misc patches for the driver. Nothing
-> particularly stands out, maybe apart from a patch to delete a PHY's
-> timer when necessary.
-
-Applied to 5.3/scsi-queue, thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+T24g5LqMLCAyMDE5LTA2LTA0IGF0IDE4OjAzICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
+biAyOS0wNS0xOSwgMTc6MDgsIHlpYmluLmdvbmdAbnhwLmNvbSB3cm90ZToNCj4gDQo+ID4gDQo+
+ID4gQEAgLTIwNSw4ICsyMjgsOSBAQCBzdGF0aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0K
+PiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiDCoAlpZiAoIWZzbF9lZG1hKQ0KPiA+IMKg
+CQlyZXR1cm4gLUVOT01FTTsNCj4gPiDCoA0KPiA+IC0JZnNsX2VkbWEtPnZlcnNpb24gPSB2MTsN
+Cj4gPiAtCWZzbF9lZG1hLT5kbWFtdXhfbnIgPSBETUFNVVhfTlI7DQo+ID4gKwlmc2xfZWRtYS0+
+ZHJ2ZGF0YSA9IGRydmRhdGE7DQo+ID4gKwlmc2xfZWRtYS0+dmVyc2lvbiA9IGRydmRhdGEtPnZl
+cnNpb247DQo+ID4gKwlmc2xfZWRtYS0+ZG1hbXV4X25yID0gZHJ2ZGF0YS0+ZG1hbXV4czsNCj4g
+QW5kIGNhbiB3ZSBhdm9pZCB0aGUgZHVwbGljYXRpb24gaGVyZSwgeW91IGhhdmUgdmVyc2lvbiBh
+bmQgZG1hbXV4cw0KPiByZXByZXNlbnRlZCBpbiB0d28gcGxhY2VzLiBCdXQgcmlnaHQgbm93IGl0
+IGxvb2tzIGxvZ2ljYWwgc28gdGhlDQo+IHJlbW92YWwNCj4gc2hvdWxkIGJlIGRvbmUgYWZ0ZXIg
+dGhpcyBzZXJpZXMNClRvIGF2b2lkIG1vcmUgY29kZSBjaGFuZ2VzIGluIG90aGVyIGVkbWEgZHJp
+dmVyIHN1Y2ggYXMgbWNmLWVkbWEuYyBhbmQNCmZzbC1lZG1hLWNvbW1vbi5jKHJlcGxhY2UgYWxs
+IHZlcnNpb24vZG1hbXV4X25yIHdpdGggbmV3DQonZHJ2ZGF0YScpLG1lYW53aGlsZSwgbm8gYm9h
+cmQgdG8gdGVzdCBtY2YtZWRtYSBzbyBJIGtlZXANCid2ZXJzaW9uJy8nZG1hbXV4JyBoZXJlIGlu
+IHRoZSBsYXN0IG1pbnV0ZS4gQnV0IGlmIHlvdSBzdGljaywgSSB3b3VsZA0KdHJ5IHRvIHJlZmlu
+ZSBpdCBpbiBuZXh0IHZlcnNpb24uwqANCj4g
