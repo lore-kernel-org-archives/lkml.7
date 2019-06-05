@@ -2,102 +2,237 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75368C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFEDC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41CDC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826CB206E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hPtw3Y2E"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AekuQ7Te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfFEO0h (ORCPT
+        id S1728371AbfFEO05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:26:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34748 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbfFEO0h (ORCPT
+        Wed, 5 Jun 2019 10:26:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33402 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbfFEO0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:26:37 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z24so898158oto.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 07:26:36 -0700 (PDT)
+        Wed, 5 Jun 2019 10:26:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so7255526wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 07:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kL4eMTZZT/wE0hkK6FB5FP6G9IkYTdMLMu0xfJfFr7U=;
-        b=hPtw3Y2E/pyB1XksMc4M9rKgdTFSwDoAiNpq17NbygQ4SdKgCaa47EOQAjcHTYcAKM
-         IfYPvJCb6gfPNiZyLRemhD3EvfH+m8QxJi2ap0FmTZ3g7j4p1Ptza2VCOdWBC72AcVhR
-         hvCUjIvTt8mEYQXDq5fSTuOwuP68R9N0DdKrTWbkv+zYR/5jYq7gMGkAgRiTHY4OZ1TM
-         kjGraZRqrdmV8g2jGWNX9tdZ38yodTXxaDHkIQdI/F+L2T1qM7f8L4o0kTPXxqyZDLyV
-         zlRnw7m0GS9IdXnaEZP5yMIy5OnR0jDbPACnZCiiZJwQH1qyDiNGTMLE+7MHeOs3fDt8
-         VZPQ==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Bs+tzef5D9LsAaEUKxOI16OSgzvoEEZ28efFCeNQDyg=;
+        b=AekuQ7TelbxpyxkUVaQL1mo/Jz3B3kFc6SB94xlJidg0qBETRYuoFvfTQbpddgiER9
+         BOkpUOD+pYfobI+oosehosQ+7HK7h0kM3LSe1VHM7M+zBBNCz1Q0ze0Kveo3mbCFAtGl
+         xcm/lCgWkWF+wnTx9hk0djex4IITvRoMQiA8/qnbiJSl4rE1Is1he/M6Yq2RR1tfB9nw
+         F8Ps7j/ErOyzxXaUK1q3y7t9EQruZkagN9LbFJ8JrmylDkqe+L1vuzvqySCxUkorKXdh
+         3eAKtmuwe4Vw0k0bVvgYDlPXWyUT7e5BcWD8xuKzFi0qZX5KBMgwCr0GGZxnx224Iieo
+         W/Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kL4eMTZZT/wE0hkK6FB5FP6G9IkYTdMLMu0xfJfFr7U=;
-        b=sbm1wQg15JnzneB/v5MO3iGA50G++lZ1tQlDl6xuZUBU3thkLEBMI3pQMhpqlyVaBF
-         n7wFTYevOMwzORnhF9U+LkTgeAzu6535GG8HrYn5WrzRTAboWFxRq1s+VxUIZweJwM6Z
-         /xDNMhcW5ZNIrua57zoKQyeW8eEdCDuP4rwg8R4s1x28BQuvhytJxDw3JtXQ/XT7m6Rd
-         vaDLYiOqowCu0nz+IuXxCq5b3VHdBBYokdhIRAGdUS8fU8ifF0CJK3yV26lSeJmp7yNg
-         JEs9Mt8YeQtDctWycVTq0sHtftX4r4O5cAMDLVkZYE6e7p/K6FY8FXXBODElmfwJDiD4
-         7ofA==
-X-Gm-Message-State: APjAAAWcLTY3VZq2WCIN+3CUNntQnlCRluA2gID0lqU1Xvw9Ne0QRQNI
-        mqSUzU3A5NpYnYskxg21qXF4x7xxkTczBD4T6n/lPY5E
-X-Google-Smtp-Source: APXvYqw0kmvusudeqy9V/YEc9PQOJ92G0SUc1WeRY1/0tv+zokrX949p13XS9w+Bkx+NZCHWYyFvZUgH6PJ3gksG+9I=
-X-Received: by 2002:a9d:6c5a:: with SMTP id g26mr10316423otq.194.1559744796485;
- Wed, 05 Jun 2019 07:26:36 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Bs+tzef5D9LsAaEUKxOI16OSgzvoEEZ28efFCeNQDyg=;
+        b=mQTZicOdhVpKHE6nL8USL6Eh13d/Hhk5YaBAGaTwQrWpo4V3lzXch0xZY1wdLCeMIc
+         QkDjCY9h9UhZyqqJpN8ou9TfnQqiUZ/MSG2n4bGfyyvR9jMU+GP52KhDeBqd6X1ZJbXU
+         yt2nxeBBNnh/0sWdoUl1aLRobmwQLgJ8aHRhStJdNz3V1A/dFLvuN5KqsJyjTxabjDol
+         bZdEjepR5bWo8iriPVk5i3+xF2YvS5pq/yPB/lafNHwjqsnhZO53LIjzRwk+dLBwTfl9
+         Vm4xqrpH5rpXB7f6Y2a/SVXV4JocS1+lrNOFhESIpyN59+zuCwJ1jNFd2RPL5E/0KC7K
+         +T/Q==
+X-Gm-Message-State: APjAAAUPtkQEXypSrpcL0j75r61h9dF3TeJ4cudb1yMb2FOQzCpXaXds
+        7X3SF5UGSqnusk23APCkg06Bwg==
+X-Google-Smtp-Source: APXvYqwnNsmI8DAgrs9Y/2ugZHRMHhGYeAIvoMNeCngZoSw/6mAsAmnoYC8X1pd+TGthPq4tRXMHvA==
+X-Received: by 2002:a5d:610e:: with SMTP id v14mr26142418wrt.343.1559744812814;
+        Wed, 05 Jun 2019 07:26:52 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v63sm1961072wmb.30.2019.06.05.07.26.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 07:26:52 -0700 (PDT)
+Subject: Re: [PATCH 06/10] mfd / platform: cros_ec: Reorganize platform and
+ mfd includes
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        alsa-devel@alsa-project.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        linux-input@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        linux-pm@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jiri Kosina <jikos@kernel.org>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-7-enric.balletbo@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <9054d7c4-883b-b9b5-4c94-02b8d627c337@baylibre.com>
+Date:   Wed, 5 Jun 2019 16:26:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190605080259.2462-1-j-keerthy@ti.com> <20190605080259.2462-3-j-keerthy@ti.com>
-In-Reply-To: <20190605080259.2462-3-j-keerthy@ti.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 5 Jun 2019 16:26:25 +0200
-Message-ID: <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] gpio: davinci: Add new compatible for K3 AM654 SoCs
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, lokeshvutla@ti.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190604152019.16100-7-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 5 cze 2019 o 10:02 Keerthy <j-keerthy@ti.com> napisa=C5=82(a):
->
-> Add new compatible for K3 AM654 SoCs.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+On 04/06/2019 17:20, Enric Balletbo i Serra wrote:
+> There is a bit of mess between cros-ec mfd includes and platform
+> includes. For example, we have a linux/mfd/cros_ec.h include that
+> exports the interface implemented in platform/chrome/cros_ec_proto.c. Or
+> we have a linux/mfd/cros_ec_commands.h file that is non related to the
+> multifunction device (in the sense that is not exporting any function of
+> the mfd device). This causes crossed includes between mfd and
+> platform/chrome subsystems and makes the code difficult to read, apart
+> from creating 'curious' situations where a platform/chrome driver includes
+> a linux/mfd/cros_ec.h file just to get the exported functions that are
+> implemented in another platform/chrome driver.
+> 
+> In order to have a better separation on what the cros-ec multifunction
+> driver does and what the cros-ec core provides move and rework the
+> affected includes doing:
+> 
+>  - Move cros_ec_commands.h to include/linux/platform_data/cros_ec_commands.h
+>  - Get rid of the parts that are implemented in the platform/chrome/cros_ec_proto.c
+>    driver from include/linux/mfd/cros_ec.h to a new file
+>    include/linux/platform_data/cros_ec_proto.h
+>  - Update all the drivers with the new includes, so
+>    - Drivers that only need to know about the protocol include
+>      - linux/platform_data/cros_ec_proto.h
+>      - linux/platform_data/cros_ec_commands.h
+>    - Drivers that need to know about the cros-ec mfd device also include
+>      - linux/mfd/cros_ec.h
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  drivers/gpio/gpio-davinci.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 0977590eb996..fc494a84a29d 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -632,6 +632,7 @@ static int davinci_gpio_irq_setup(struct platform_dev=
-ice *pdev)
->
->  static const struct of_device_id davinci_gpio_ids[] =3D {
->         { .compatible =3D "ti,keystone-gpio", keystone_gpio_get_irq_chip}=
-,
-> +       { .compatible =3D "ti,am654-gpio", keystone_gpio_get_irq_chip},
+> 
+>  drivers/extcon/extcon-usbc-cros-ec.c          |   3 +-
+>  drivers/hid/hid-google-hammer.c               |   4 +-
+>  drivers/i2c/busses/i2c-cros-ec-tunnel.c       |   4 +-
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |   3 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |   3 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
+>  drivers/iio/light/cros_ec_light_prox.c        |   3 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |   3 +-
+>  drivers/input/keyboard/cros_ec_keyb.c         |   4 +-
+>  .../media/platform/cros-ec-cec/cros-ec-cec.c  |   4 +-
+>  drivers/mfd/cros_ec_dev.c                     |   3 +-
+>  drivers/platform/chrome/cros_ec.c             |   3 +-
+>  drivers/platform/chrome/cros_ec_chardev.c     |   4 +-
+>  drivers/platform/chrome/cros_ec_debugfs.c     |   3 +-
+>  drivers/platform/chrome/cros_ec_i2c.c         |   4 +-
+>  drivers/platform/chrome/cros_ec_lightbar.c    |   3 +-
+>  drivers/platform/chrome/cros_ec_lpc.c         |   4 +-
+>  drivers/platform/chrome/cros_ec_lpc_reg.c     |   4 +-
+>  drivers/platform/chrome/cros_ec_proto.c       |   3 +-
+>  drivers/platform/chrome/cros_ec_rpmsg.c       |   4 +-
+>  drivers/platform/chrome/cros_ec_spi.c         |   4 +-
+>  drivers/platform/chrome/cros_ec_sysfs.c       |   3 +-
+>  drivers/platform/chrome/cros_ec_trace.c       |   2 +-
+>  drivers/platform/chrome/cros_ec_trace.h       |   4 +-
+>  drivers/platform/chrome/cros_ec_vbc.c         |   3 +-
+>  drivers/platform/chrome/cros_usbpd_logger.c   |   5 +-
+>  drivers/power/supply/cros_usbpd-charger.c     |   5 +-
+>  drivers/pwm/pwm-cros-ec.c                     |   4 +-
+>  drivers/rtc/rtc-cros-ec.c                     |   3 +-
+>  .../linux/iio/common/cros_ec_sensors_core.h   |   3 +-
+>  include/linux/mfd/cros_ec.h                   | 306 -----------------
+>  .../{mfd => platform_data}/cros_ec_commands.h |   0
+>  include/linux/platform_data/cros_ec_proto.h   | 315 ++++++++++++++++++
+>  sound/soc/codecs/cros_ec_codec.c              |   4 +-
+>  34 files changed, 379 insertions(+), 351 deletions(-)
+>  rename include/linux/{mfd => platform_data}/cros_ec_commands.h (100%)
+>  create mode 100644 include/linux/platform_data/cros_ec_proto.h
+> 
 
-Please add a patch adding this compatible to the binding document as well.
-
-Bart
-
->         { .compatible =3D "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
->         { /* sentinel */ },
->  };
-> --
-> 2.17.1
->
+Acked-by: Neil Armstrong <narmstrong@baylibre.com> # for the cros-ec-cec part
