@@ -2,84 +2,154 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E20C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F4C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9326206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44F4206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:37:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNXoPmjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfFETg5 (ORCPT
+        id S1726761AbfFEThH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:36:57 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53610 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFETg4 (ORCPT
+        Wed, 5 Jun 2019 15:37:07 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33451 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEThG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:36:56 -0400
-Received: by mail-it1-f193.google.com with SMTP id m187so5378092ite.3;
-        Wed, 05 Jun 2019 12:36:56 -0700 (PDT)
+        Wed, 5 Jun 2019 15:37:06 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 14so19454047qtf.0;
+        Wed, 05 Jun 2019 12:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O2csJP2e8mT2YZIAsKNMmzTnJtLz0nsfolBkD/FQ0NM=;
+        b=iNXoPmjllI2/CbhIrRsJHG8jG71wQBxSAfnaOyDnT60rEsaUMvW4f2k91xQ4XWIdwC
+         Pm8i3V7NI4ynV+7ThzEN/bQG6dRXwBu8HWxm4KgCHvXdxm2JGDjVv10rGuOQNSMKLvld
+         T5bm8j+sYOoBio994RCOeI2lrTUBnLVTA/wmqp0sO25fY+FAE30GFF+tSVNlsoZlH2/2
+         qhjojyuQjL7qtOJ16BA4aDRB+T7IFnaK4IBsaTjwTLshCovTfnLTCXJlv7hTpQnd0WLt
+         Q+Z8pMLnPOm5kGo/12ntVIQ0QSuDior4Mb1OvxNZW3NQhFN1aVkiwTdqXlhbcocqs5pU
+         yFQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kwLHe6pw2ihYaqYwiNpoJsGqzozTnZa4V+fIZmXgIP4=;
-        b=cKbCbfQspxY9eoiFMAsfwqFQ557wQejiKva0hGHspXK+PRb0bDb+o5yjN5kA66GxWs
-         EjsiLj0MBwdcUoLvoG+Pda9CLa/WDF8JnUROS1WaUMddhml0glS6c+Ueav5c9ks71WA5
-         xMETpmFrKK1QUwrmdP7Ay/yrn0HdSuqBIFY6L9lMOeafRB140dXz1V3LH+9bSGbM1aMn
-         TxHRdW8k/kh2ioPlcWeHSmwK3megESXCyog9Zbtj9JX+mBW0N1F4hks7Pw2824LxWAU+
-         H/yrBVMGELLeowfgDelUEkTd++XxkZQ1L5tOwJHiWpXjFDYqv/dWd+CJlY/xreNG22eB
-         5phA==
-X-Gm-Message-State: APjAAAVq6zvBOH5Nj0076oHLTXUEi6SBhvM5KTvao0AKJuEyjHbH1q97
-        eUIZR2HeLJ/26YNpAmYhCMSrmSCfSl1OPzwk/7c=
-X-Google-Smtp-Source: APXvYqx6Oah+YT6T5psZ1qhPIYRGZiWlfwqb5jPRk8MHOTrYaBqYOjTVp1LlSMJ3g0urFLpxp888Ebd0l1PeShpDBNg=
-X-Received: by 2002:a24:7f0d:: with SMTP id r13mr25805755itc.28.1559763415651;
- Wed, 05 Jun 2019 12:36:55 -0700 (PDT)
+        bh=O2csJP2e8mT2YZIAsKNMmzTnJtLz0nsfolBkD/FQ0NM=;
+        b=BEa43mN8TbuOG5zncDHEI+tO2x1UDUo/Ny7bmcZHIpxlc8pxhku5vBWVHLEk/N+L8t
+         fSBGXx3Q+QRah6UWay6qU831sB44Bb8unrLgkJ0vUIdLz2qlOiRw4MgHoilc2jj9H/xd
+         uEOKMd0HGmxl2FnettwMohwavUnygcQ9/fIW9N8Haw6AF+mJHsnKFuDHfwqq2DQzhiCh
+         aWmXu44v4SxBcF6sUgJ/hmJ99/jhGHD/mMAkj6Nnk8D/ds/sfWPsWOHD/gcZ2JwCV9JU
+         e1LgOekDPvJ6+IbzzSYJfYn3TbieKZLknQ+6k1E04lSDPSXO6Q2k6B0r75dIolB/HFhz
+         jOmA==
+X-Gm-Message-State: APjAAAV4pJztrcLX2eAITXt3LfrwByxrJKk2Jxvaq1Vzi70K1svZDMJ0
+        EOkxVb3XVYHrWs7NAUz2Andl5KQQPxDeWrK0qW0=
+X-Google-Smtp-Source: APXvYqzwXd5uLGh2CZqKB9dUHEats+uYz9LtoxSTgwyhTvw7ooC6Liz3aa7R40tQxs4RPSH9v+WOukKDMKWx2vf72Lo=
+X-Received: by 2002:a0c:95af:: with SMTP id s44mr7864192qvs.162.1559763425613;
+ Wed, 05 Jun 2019 12:37:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412105320.2924-1-kernel@esmil.dk> <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
-In-Reply-To: <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Wed, 5 Jun 2019 21:36:44 +0200
-Message-ID: <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com>
-Subject: Re: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-spi@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>
+References: <20190605191707.24429-1-krzesimir@kinvolk.io>
+In-Reply-To: <20190605191707.24429-1-krzesimir@kinvolk.io>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 5 Jun 2019 12:36:54 -0700
+Message-ID: <CAEf4BzYUg+FbBfCe-DTLrrT07ifK49NRFhLWye+Ej1JiFYwioQ@mail.gmail.com>
+Subject: Re: [BPF v1] tools: bpftool: Fix JSON output when lookup fails
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc:     bpf <bpf@vger.kernel.org>, Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        Okash Khawaja <osk@fb.com>,
+        David Calavera <david.calavera@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark
+On Wed, Jun 5, 2019 at 12:18 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
+>
+> In commit 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros
+> into functions") one case of error reporting was special cased, so it
+> could report a lookup error for a specific key when dumping the map
+> element. What the code forgot to do is to wrap the key and value keys
+> into a JSON object, so an example output of pretty JSON dump of a
+> sockhash map (which does not support looking up its values) is:
+>
+> [
+>     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
+>     ],
+>     "value": {
+>         "error": "Operation not supported"
+>     },
+>     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
+>     ],
+>     "value": {
+>         "error": "Operation not supported"
+>     }
+> ]
+>
+> Note the key-value pairs inside the toplevel array. They should be
+> wrapped inside a JSON object, otherwise it is an invalid JSON. This
+> commit fixes this, so the output now is:
+>
+> [{
+>         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
+>         ],
+>         "value": {
+>             "error": "Operation not supported"
+>         }
+>     },{
+>         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
+>         ],
+>         "value": {
+>             "error": "Operation not supported"
+>         }
+>     }
+> ]
+>
+> Fixes: 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros into functions")
+> Cc: Quentin Monnet <quentin.monnet@netronome.com>
+> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> ---
 
-On Wed, 8 May 2019 at 12:34, Mark Brown <broonie@kernel.org> wrote:
->
-> The patch
->
->    spi: rockchip: turn down tx dma bursts
->
-> has been applied to the spi tree at
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-I've tried looking in the for-next and for-5.x branches here, and I
-can't seem to find this patch.
-Am I missing something?
-
-It fixes a problem introduced in 4.19, so it'd be nice if it could
-make it to stable trees eventually.
-
-/Emil
+>  tools/bpf/bpftool/map.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+> index 3ec82904ccec..5da5a7311f13 100644
+> --- a/tools/bpf/bpftool/map.c
+> +++ b/tools/bpf/bpftool/map.c
+> @@ -716,12 +716,14 @@ static int dump_map_elem(int fd, void *key, void *value,
+>                 return 0;
+>
+>         if (json_output) {
+> +               jsonw_start_object(json_wtr);
+>                 jsonw_name(json_wtr, "key");
+>                 print_hex_data_json(key, map_info->key_size);
+>                 jsonw_name(json_wtr, "value");
+>                 jsonw_start_object(json_wtr);
+>                 jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
+>                 jsonw_end_object(json_wtr);
+> +               jsonw_end_object(json_wtr);
+>         } else {
+>                 const char *msg = NULL;
+>
+> --
+> 2.20.1
+>
