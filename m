@@ -2,95 +2,103 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EFEC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A919C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7345F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559718196;
-	bh=LvrC2wPTwJLBJguYmdQfn8G6H/mGovzxa8sZBtIgO1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FTKN+IAFkfOOU2X2U8fXSZitVUSOhrkBp4swfG4so9prfuWHavFqnMUlbhRMZpToy
-	 /7JVLgNfeOUbV57CmBmkpNVeeTCL+k4zp02mgkElLFBrmiukPAcdPYGX3NfNCvn3f2
-	 O+3J6xF/x9xPbN8pH2sV7QpeDbsZLyA5hkcLgSgU=
+	by mail.kernel.org (Postfix) with ESMTP id D8D16206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFEHDP (ORCPT
+        id S1726691AbfFEHDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:03:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37936 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726407AbfFEHDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:03:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0D4C8ADE0;
-        Wed,  5 Jun 2019 07:03:14 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 09:03:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
-        khalid.aziz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Remove VM_BUG_ON in __alloc_pages_node
-Message-ID: <20190605070312.GB15685@dhcp22.suse.cz>
-References: <20190605060229.GA9468@bharath12345-Inspiron-5559>
+        Wed, 5 Jun 2019 03:03:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41036 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFEHDW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 03:03:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id s21so11480494lji.8;
+        Wed, 05 Jun 2019 00:03:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=osYzYbwPlOcKrG/PC8H8GWv1Nj5R7QK9wL1yUwsonBc=;
+        b=YT9K87TS1L+r1EFiLLaUcKL8P/rkxIMlZ93iEwCfuAYiJnvNDcEs2wA2ZNyUqgCIVd
+         nEayUOWpuRmJzTs1Z8ua2vVuPkX5iPqZ+o/d9pCD5a4sZ+3sWiZQOTtaEjSQHFLLvPGb
+         Pcuv2hy2c/4qckaFv6e1SjjkRG0gUfwwTF/2+QbB1BWziPFmZ6H0OYsw7DB+/ZE0VUnI
+         d2nyjwOw1Bm5s5RCcZiS2QjRmyDS9eqtg+TnQ9BNqARq/p5dlJSQ6n28jZdurULaNTsK
+         ZqAio89WnFnkskA1tjPJCcG4jZcyeui7DwWZF2uc/XA+vQV6r9cP8vfvzHqd8rhQsvnB
+         rvtA==
+X-Gm-Message-State: APjAAAXM+1p2medbe9z2hpTbwWXCIR3N+4L3s9m558Agz+nYqPbufqZK
+        YNdLlhAp9O92ecGR47b051a011brEq7mjYvLW6KbAzwDfrI=
+X-Google-Smtp-Source: APXvYqzwh3fVGm1fjYzMw1AVnfNmxjP5Iwroc9j1hk1lhsXlBthTB4FsB5COji/H7zBPGwhpbTYrkhgAtBN8C7k+/Jw=
+X-Received: by 2002:a2e:6e01:: with SMTP id j1mr19452629ljc.135.1559718199961;
+ Wed, 05 Jun 2019 00:03:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605060229.GA9468@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAMuHMdUObtKUVDohLT501TarPRC6eDnxBqqB5Tj_Tb+-4fwbkw@mail.gmail.com>
+ <OSAPR01MB30890E4B76F9605F3726C676D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB30890E4B76F9605F3726C676D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Jun 2019 09:03:07 +0200
+Message-ID: <CAMuHMdXWsNfj1UYXDyh4ZJ0E2Z0jobug4jJ4uTpUa1X4d+Hocw@mail.gmail.com>
+Subject: Re: rcar_gen3_phy_usb2: unbalanced disables for USB20_VBUS0
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05-06-19 11:32:29, Bharath Vedartham wrote:
-> In __alloc_pages_node, there is a VM_BUG_ON on the condition (nid < 0 ||
-> nid >= MAX_NUMNODES). Remove this VM_BUG_ON and add a VM_WARN_ON, if the
-> condition fails and fail the allocation if an invalid NUMA node id is
-> passed to __alloc_pages_node.
+Hi Shimoda-san,
 
-What is the motivation of the patch? VM_BUG_ON is not enabled by default
-and your patch adds a branch to a really hot path. Why is this an
-improvement for something that shouldn't happen in the first place?
+On Wed, Jun 5, 2019 at 6:06 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Geert Uytterhoeven, Sent: Wednesday, June 5, 2019 3:06 AM
+> > Using a tree based on renesas-drivers-2019-06-04-v5.2-rc3, I started seeing
+> > the following warning during a second system suspend (s2idle):
+> <snip>
+> > So far I've seen this on Salvator-X with R-Car H3 ES1.0 or M3-W, and
+> > on Salvator-XS with R-Car M3-N, but not (yet?) on H3 ES2.0.
+>
+> I could reproduce this issue on R-Car H3 ES3.0 with Suspend-to-RAM.
+> # I'm silly but I could not use s2idle that didn't wake up by ravb.
+> # https://elinux.org/R-Car/Boards/Salvator-X#Suspend-to-Idle
 
-> 
-> The check (nid < 0 || nid >= MAX_NUMNODES) also considers NUMA_NO_NODE
-> as an invalid nid, but the caller of __alloc_pages_node is assumed to
-> have checked for the case where nid == NUMA_NO_NODE.
-> 
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> ---
->  include/linux/gfp.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index 5f5e25f..075bdaf 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -480,7 +480,11 @@ __alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
->  static inline struct page *
->  __alloc_pages_node(int nid, gfp_t gfp_mask, unsigned int order)
->  {
-> -	VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES);
-> +	if (nid < 0 || nid >= MAX_NUMNODES) {
-> +		VM_WARN_ON(nid < 0 || nid >= MAX_NUMNODES);
-> +		return NULL; 
-> +	}
-> +
->  	VM_WARN_ON((gfp_mask & __GFP_THISNODE) && !node_online(nid));
->  
->  	return __alloc_pages(gfp_mask, order, nid);
-> -- 
-> 2.7.4
-> 
+With CONFIG_PM_DEBUG=y and CONFIG_PM_TEST_SUSPEND=y, you can use
 
--- 
-Michal Hocko
-SUSE Labs
+     echo platform > /sys/power/pm_test
+
+to configure the system to wake up from s2idle after 5 seconds.
+This allows to loop s2idle without user intervention.
+
+> Thank you for trying it. I have investigated this issue and then I found the root cause.
+>
+> After the following patch was applied, multiple phy devices are generated.
+> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/drivers/phy/renesas/phy-rcar-gen3-usb2.c?h=renesas-drivers-2019-06-04-v5.2-rc3&id=549b6b55b00558183cef4af2c2bb61d4f2ffe508
+>
+> But, on the power_on function, it should set the "powered" flag for any other phys anyway.
+> Otherwise, such a strange imbalance behavior happened.
+> The powered flag is needed to avoid multiple "PLL_RST" register setting.
+> # I think regulator_{en,dis}able() don't need such a condition though.
+>
+> I'll submit a bugfix patch with your Reported-by tag later.
+
+Thank you very much!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
