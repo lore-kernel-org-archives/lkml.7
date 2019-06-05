@@ -2,91 +2,143 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19CFC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E2CC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B040E2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oFzHm/8J"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC8F20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559714423;
+	bh=su8k6bM1KzrD1rvDqDrPDiZKbk24uNLXNFln/Ozpo1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AFsotn5UQd/ecEsN1J51LdK4mb4RhbBbtWr2eIFahDSDIlP3El2h5Wi8cnCT8gKtl
+	 8YGzTZTxmmRY5Xsg39qQbfgZrOWnCrTKdrlQtqZ+trjeVlVNdlS5tTkaB4sjfm6gYf
+	 XE2bzdxP6edOnVi3RtyCSFqEJafYn/tMH6LOnlxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfFEFzf (ORCPT
+        id S1726595AbfFEGAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:55:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49118 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfFEFzc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:55:32 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x555tUUv002609;
-        Wed, 5 Jun 2019 00:55:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559714130;
-        bh=hIv3m0nvpBJjbhu7oWIXqB0Efd9SLUjlr+sYX36ES7k=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oFzHm/8JLOkafo6DNDnsbggA5CY4l8R9Zpl3lij+T1JcLXcjX6JlyIlpJb3GgTs0T
-         kLYST2p2Rhvk/WrFIyY8eEXq8rPQZkGuh+cvOxHAhs00Zm1BIjpc5z8fwicZoG+/XH
-         2O/E1x85zriJPZMh1P2iY2BuSyl+vJDdbbaEeob0=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x555tUTw115719
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 00:55:30 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 00:55:29 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 00:55:29 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x555tMHd049531;
-        Wed, 5 Jun 2019 00:55:28 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
-CC:     <lokeshvutla@ti.com>, <linux-gpio@vger.kernel.org>,
-        <t-kristo@ti.com>, <j-keerthy@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] gpio: Davinci: Add K3 dependencies
-Date:   Wed, 5 Jun 2019 11:25:19 +0530
-Message-ID: <20190605055519.24079-3-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190605055519.24079-1-j-keerthy@ti.com>
-References: <20190605055519.24079-1-j-keerthy@ti.com>
+        Wed, 5 Jun 2019 02:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfFEGAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 02:00:22 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABB3F2075B;
+        Wed,  5 Jun 2019 06:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559714421;
+        bh=su8k6bM1KzrD1rvDqDrPDiZKbk24uNLXNFln/Ozpo1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JXHukabfHuZjrkXdPv62iMvyXZv1uWJ520l8/EWOms4QMQ2e/n7ostXn3475SbRLP
+         SSCxjYxJGlvRXmj5oKOkx9dRu/BPE7kYHnUhCASi7bXfYV213sJXcLXZaWX9jCTbMP
+         btHR7IFw0S5FmRIBmPdSkwdAT+hL73VDPMDHUb/g=
+Date:   Wed, 5 Jun 2019 14:00:02 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+ into scu node
+Message-ID: <20190605060000.GA29853@dragon>
+References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
+ <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
+ <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add K3 dependencies to enable the driver on K3 platforms.
+On Tue, Jun 04, 2019 at 09:06:28AM +0000, Anson Huang wrote:
+> Hi, Shawn
+> 	The driver and binding doc are already reviewed and waiting for DT patch, will you help review this DT patch?
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm fine with it.  Should I just pick this patch up, or is there any
+dependency we need to handle?
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 62f3fe06cd2f..28dba62e2219 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -174,7 +174,7 @@ config GPIO_CLPS711X
- config GPIO_DAVINCI
- 	bool "TI Davinci/Keystone GPIO support"
- 	default y if ARCH_DAVINCI
--	depends on ARM && (ARCH_DAVINCI || ARCH_KEYSTONE)
-+	depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || ARCH_K3)
- 	help
- 	  Say yes here to enable GPIO support for TI Davinci/Keystone SoCs.
- 
--- 
-2.17.1
+Shawn
 
+> 
+> Thanks,
+> Anson
+> 
+> > -----Original Message-----
+> > From: Anson Huang
+> > Sent: Sunday, May 12, 2019 6:11 PM
+> > To: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
+> > linux@roeck-us.net; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > kernel@pengutronix.de; festevam@gmail.com; Aisheng Dong
+> > <aisheng.dong@nxp.com>; ulf.hansson@linaro.org; Daniel Baluta
+> > <daniel.baluta@nxp.com>; Peng Fan <peng.fan@nxp.com>;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > watchdog@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> > Cc: dl-linux-imx <linux-imx@nxp.com>
+> > Subject: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+> > into scu node
+> > 
+> > i.MX system controller watchdog has pretimeout function which depends on
+> > i.MX SCU driver, so it should be a subnode of SCU.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > No change, just resend patch with correct encoding.
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > index 0683ee2..b17c22e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > @@ -149,6 +149,11 @@
+> >  		rtc: rtc {
+> >  			compatible = "fsl,imx8qxp-sc-rtc";
+> >  		};
+> > +
+> > +		watchdog {
+> > +			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+> > +			timeout-sec = <60>;
+> > +		};
+> >  	};
+> > 
+> >  	timer {
+> > @@ -517,9 +522,4 @@
+> >  			power-domains = <&pd IMX_SC_R_GPIO_7>;
+> >  		};
+> >  	};
+> > -
+> > -	watchdog {
+> > -		compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+> > -		timeout-sec = <60>;
+> > -	};
+> >  };
+> > --
+> > 2.7.4
+> 
