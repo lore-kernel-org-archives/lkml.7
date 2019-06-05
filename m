@@ -3,136 +3,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF372C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED77BC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FC0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B9B206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOPqHF5I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLqJztNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfFEIlJ (ORCPT
+        id S1726934AbfFEIlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:41:09 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13934 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfFEIlI (ORCPT
+        Wed, 5 Jun 2019 04:41:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43539 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfFEIlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:41:08 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf780210006>; Wed, 05 Jun 2019 01:41:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 01:41:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 01:41:07 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Jun
- 2019 08:40:32 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Subject: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as TIMER_DEFERRABLE
- (431235818bc3)
-Message-ID: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
-Date:   Wed, 5 Jun 2019 09:40:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 04:41:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so12005723pgv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Of66HISeBHbGXVTt6r8XmW0SQD2//sxmzE7ajnq8+VY=;
+        b=jLqJztNddE4ASMQCZ4oIbM6zJCju7pciSxDMfJDOS1jlm9qFl4nTQXYrCV5wtD6Z9y
+         QAdIX2dASyE5g9kYNNl2DOMD7ZISEzjZSpg2Ua8+CE0eFch8lpoCf2ELZncUrn9Duujm
+         hTxp/O127500ED/VBydrL0tAXClUXL5WsFmZm9LeL9GsIQSciI9V9AI6RxodZBx/duDL
+         ZFUnScFpSKK8UEoKPvXVn1Xa2b73DTasjNSe/u2//l/jzkKBKPlI39d4hVdnGS7oYuU5
+         cUA0LtE4aXXBxUIGxqViLtyqDiqKlr/Z9H3b1e17EsAEJ76py2cdSaVoAXuV5m2yLPNO
+         jISw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Of66HISeBHbGXVTt6r8XmW0SQD2//sxmzE7ajnq8+VY=;
+        b=lIGwZrTBnSnB2aEG8YNnAhzsUbKwh8E47ftdlLuFEwIYxiAIdtzc+bVuid6yNMnMGD
+         DS6JZNd0nBaAfaJYpR3/uuOaMTEFcoZoL/orgNuNhjRDZ7dK8RPuHdKm+hLG9lE7k0kW
+         HxplAMhtuxcYevarMNvSTJ9117av8fAzxkRkVPGOe0UwCpXn5hZHSBrhH1EwMUX6FGkt
+         /cu8pOryJLWqOuK0qM2xG5dkZBeHA9g7x1jfMSreBjWb7+D850d/+5UAKlLdecKkX9cq
+         fjR2LdJmMyJeW3tnIoeWqcDg0d9BAqhGmWxIF5fcQvIpbGSw4PLp9dDGgnWrp3UenB+7
+         TiBA==
+X-Gm-Message-State: APjAAAUqxwmTfQOcpZEI1GkBBjY1YfJO8t0zhKZq7IpzGSOXSjvam2c9
+        54/1HLe28CiXTariaa7oXjhVsXkxx3okRH58bdg=
+X-Google-Smtp-Source: APXvYqw2cGWfqNk2TcNR1wnnhGY1S425oBQZz+W+/xP2oadAUadHPqsUOvfw5GT9ZCMAE1dBGWbCsyb58V90sSPgSOs=
+X-Received: by 2002:a63:fb05:: with SMTP id o5mr2929532pgh.203.1559724074704;
+ Wed, 05 Jun 2019 01:41:14 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559724065; bh=AIuJqCcqbmoKjuvUB+D3xWpbfEEAbUrVWqGYxh7A6ug=;
-        h=X-PGP-Universal:To:CC:From:Subject:Message-ID:Date:User-Agent:
-         MIME-Version:X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Language:Content-Transfer-Encoding;
-        b=UOPqHF5IysgiyQWNntAV8ouXo9RL/4MxkYeGphb3Uuxog9u4/ETf0mRoZK8IvhFUh
-         9p9NCWJJVHhLJYNdRMNP5b58cf3yFtLlJLMSoTv8QOUXkFuRdv1jpc8OkIoYYkP64a
-         fp1hrDV5IeXvEFiymGAnlsXQYjo4bwCMIjj/l3IJAdwhH5M2VtYMFHN5MlyJHrdc2F
-         dpGraaIyGuyZdhX61O960e9ElAX7lvtjvU+lhrLuwCbjiTbUpAC08W4+ZxAR0axe1+
-         oeUEV6C/9gorHMK2hJ1JAGc4P+Jj3bWx3ZkDYnP9J0eEjCIIuijUYe2ETlaK/tYps9
-         dTL2EVvnyeL4w==
+References: <20190602162546.3470-1-benniciemanuel78@gmail.com>
+In-Reply-To: <20190602162546.3470-1-benniciemanuel78@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Jun 2019 11:41:03 +0300
+Message-ID: <CAHp75VfEREXJTr_QpADTsqBr10t16SaJqeM+tbxp6QZgc8Gfjg@mail.gmail.com>
+Subject: Re: [PATCH] pci: hotplug: ibmphp: Fix 'line over 80 characters' Warning
+To:     benniciemanuel78@gmail.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joe Perches <joe@perches.com>, Lukas Wunner <lukas@wunner.de>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Trond,
+On Sun, Jun 2, 2019 at 7:25 PM Emanuel Bennici
+<benniciemanuel78@gmail.com> wrote:
+>
+> Fix checkpatch.pl 'line over 80 characters' Warning in ibmphp_ebda.c and
+> ibmphp_hpc.c
 
-I have been noticing intermittent failures with a system suspend test on
-some of our machines that have a NFS mounted root file-system. Bisecting
-this issue points to your commit 431235818bc3 ("SUNRPC: Declare RPC
-timers as TIMER_DEFERRABLE") and reverting this on top of v5.2-rc3 does
-appear to resolve the problem.
+I'm not sure it's needed.
+And actually some of the changes are the regressions in order of
+readability ratio.
 
-The cause of the suspend failure appears to be a long delay observed
-sometimes when resuming from suspend, and this is causing our test to
-timeout. For example, in a failing case I see something like the
-following ...
+> +                               debug("dev->device = %x, "
+> +                                     "dev->subsystem_device = %x\n",
 
-[   69.667385] PM: suspend entry (deep)
+Don't split string literals like this.
 
-[   69.675642] Filesystems sync: 0.000 seconds
+> -       if ((pslot == NULL)
+> -           || ((pstatus == NULL) && (cmd != READ_ALLSTAT) && (cmd != READ_BUSSTATUS))) {
+> +       if ((pslot == NULL) || ((pstatus == NULL) && (cmd != READ_ALLSTAT) &&
+> +                               (cmd != READ_BUSSTATUS))) {
 
-[   69.684983] Freezing user space processes ... (elapsed 0.001 seconds) done.
+No, no, this breaks readability a lot.
+In the former it's clearly shown the logic between conditionals, while
+in the latter it's a mess.
 
-[   69.697880] OOM killer disabled.
+> +                                       err("%s - Error ctrl_read failed\n",
+> +                                               __func__);
 
-[   69.705670] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+Really, no advantage on this line even for 80 characters.
 
-[   69.719043] printk: Suspending console(s) (use no_console_suspend to debug)
+> +                       err("%s - Exit Error:invalid bus, rc[%d]\n",
+> +                               __func__, rc);
 
-[   69.758911] Disabling non-boot CPUs ...
+Same here.
 
-[   69.761875] IRQ 17: no longer affine to CPU3
+> -               debug("%s - ctlr id[%x] physical[%lx] logical[%lx] i2c[%x]\n", __func__,
+> -               ctlr_ptr->ctlr_id, (ulong) (ctlr_ptr->u.wpeg_ctlr.wpegbbar), (ulong) wpg_bbar,
+> -               ctlr_ptr->u.wpeg_ctlr.i2c_addr);
+> +               debug("%s - ctlr id[%x] physical[%lx] logical[%lx] i2c[%x]\n",
+> +                       __func__, ctlr_ptr->ctlr_id,
+> +                       (ulong) (ctlr_ptr->u.wpeg_ctlr.wpegbbar),
+> +                       (ulong) wpg_bbar, ctlr_ptr->u.wpeg_ctlr.i2c_addr);
 
-[   69.762609] Entering suspend state LP1
+Here better to fix explicit casts (perhaps it means wrong specifiers
+being used).
 
-[   69.762636] Enabling non-boot CPUs ...
+> +               if ((poldslot->status & 0x20) &&
+> +                   (SLOT_CONNECT(poldslot->status) == HPC_SLOT_CONNECTED)
+> +                   && (SLOT_PRESENT(poldslot->status)))
 
-[   69.763600] CPU1 is up
+Here you are not consistent in a way where to put logical operation.
 
-[   69.764517] CPU2 is up
+> +                               memcpy((void *) &myslot, (void *) pslot,
+> +                                      sizeof(struct slot));
 
-[   69.765532] CPU3 is up
+Why spaces after ) here?
 
-[   69.845832] mmc1: queuing unknown CIS tuple 0x80 (50 bytes)
+> +                               debug("%s - call process_changeinstatus for"
+> +                                     "slot[%d]\n", __func__, i);
 
-[   69.854223] mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
+Do not split string literals like this.
 
-[   69.857238] mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
-
-[   69.892700] mmc1: queuing unknown CIS tuple 0x02 (1 bytes)
-
-[   70.407286] OOM killer enabled.
-
-[   70.414674] Restarting tasks ... done.
-
-[   70.423232] PM: suspend exit
-
-[   73.533252] asix 1-1:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xCDE1
-
-[  105.461852] nfs: server 192.168.99.1 not responding, still trying
-
-[  105.462347] nfs: server 192.168.99.1 not responding, still trying
-
-[  105.484809] nfs: server 192.168.99.1 OK
-
-[  105.486454] nfs: server 192.168.99.1 OK
-
-
-So it would appear that making these timers deferrable is having an impact
-when resuming from suspend. Do you have any thoughts on this?
-
-Thanks
-Jon
+-- 
+With Best Regards,
+Andy Shevchenko
