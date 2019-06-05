@@ -2,133 +2,112 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C7DC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B102FC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC212083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559721427;
-	bh=nZTb+pe9Pj6+xuEXUBrJbzHn+ceZ8+HnL9qaYBHrt1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kMQ3f3nFSbMScsQEFbAjPPY3pfFFtLGagkqvNh+Dv/quDIfsHIasnpT52RARhFK+N
-	 FkOaeK/RYt4Ayf3pUVGOLxFzKRHcnkTZUcBOvzN0be2iel7w/zKdzA7o76OqvIkg4P
-	 iJ/4uXo/1aeMj2hce3LYRFWCB/GXtSb+7iQ13U2E=
+	by mail.kernel.org (Postfix) with ESMTP id 8938D20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YfvuyRdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfFEH5G (ORCPT
+        id S1726724AbfFEH5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:57:06 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35317 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfFEH5C (ORCPT
+        Wed, 5 Jun 2019 03:57:12 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33120 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbfFEH5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:57:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a25so18391858lfg.2;
-        Wed, 05 Jun 2019 00:57:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BIGkKcYfLrKZMcNofxFte/MwlnM+iUUU8rGg0Es0KCI=;
-        b=jRpSbB4kywIBITbYWEf6/kRotgyPwypZ2xiTiMXOl0E1rybviEi2ONR4DIJ00lXGXR
-         vVEMTcbSgDoasqjGTmiV+73RyS5JhIw9ARxsVeFOV5gxOTGpzSCvaFC9llO0HrbV2G85
-         xeEVV0vodGNT1ter+ADBS8kqHyHPHJzh1tdGU1OsSUvngS/3vNlHNFdAlmivn4cDzRAO
-         JhGlzf6bvGgm02RPkVP7GcaXSQ3PRqocVtumxDV/6arnynLI7jXjoxrtJewwW5IjbNo5
-         gumC2sFZ7TpXE5xr6u5astLFgKblMLTLBRAixPPthRfP35JYDUz3qjFYVdLp+obMcfCb
-         xvMg==
-X-Gm-Message-State: APjAAAUm9WVT9+7h4UsT9IecKmTSFSbtIuxArhNiu2foPLMIAubZ/r2S
-        0vwQekxBQJhpVLhGInycVgk=
-X-Google-Smtp-Source: APXvYqyJTHFtU2ZPnYiQSPpENJAgbw8I3+7lh4a0s29uA2IVhDFXd/5pYXop0LCfMkGc18+7XLWDyw==
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr17636778lfu.141.1559721419930;
-        Wed, 05 Jun 2019 00:56:59 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id t22sm4189527lje.58.2019.06.05.00.56.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 00:56:59 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hYQn2-00063e-Gt; Wed, 05 Jun 2019 09:56:57 +0200
-Date:   Wed, 5 Jun 2019 09:56:56 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, balbi@kernel.org,
-        wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, david.brown@linaro.org,
-        alokc@codeaurora.org, kramasub@codeaurora.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, andy.gross@linaro.org,
-        jlhugo@gmail.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
-Message-ID: <20190605075656.GC29637@localhost>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-2-lee.jones@linaro.org>
- <20190605062020.GL22737@tuxbook-pro>
- <20190605071625.GK4797@dell>
+        Wed, 5 Jun 2019 03:57:09 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x557v3P2030264;
+        Wed, 5 Jun 2019 02:57:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559721423;
+        bh=ALlSRG9PtHqP0CSYBVSNGSRcHisohKsxS4M0ZG0uyH0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=YfvuyRdrRo2Ak6iSZGBfIu5h16Y7UhXF4/vKKlnX6DXWay0dUc6bMVGf1mnQSX2+k
+         xbt9vGdUST8DRO3bUJfiagtC/UOdYJ8HOqRdPwyg4yxecBBjXVa4FYjS799/l1LFxp
+         RQXi17CZw10gf2ZSKEBlq7JOH1XJz8FWC2+ZM8Bo=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x557v3XR057832
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Jun 2019 02:57:03 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
+ 2019 02:57:02 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 5 Jun 2019 02:57:02 -0500
+Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x557uqoP033893;
+        Wed, 5 Jun 2019 02:56:58 -0500
+From:   Keerthy <j-keerthy@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>, <robh+dt@kernel.org>
+CC:     <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <j-keerthy@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v2 1/4] dt-bindings: gpio: davinci: Add k3 am654 compatible
+Date:   Wed, 5 Jun 2019 13:27:07 +0530
+Message-ID: <20190605075710.1691-2-j-keerthy@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190605075710.1691-1-j-keerthy@ti.com>
+References: <20190605075710.1691-1-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605071625.GK4797@dell>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 08:16:25AM +0100, Lee Jones wrote:
-> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
-> 
-> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> > 
-> > > The Qualcomm Geni I2C driver currently probes silently which can be
-> > > confusing when debugging potential issues.  Add a low level (INFO)
-> > > print when each I2C controller is successfully initially set-up.
-> > > 
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > index 0fa93b448e8d..e27466d77767 100644
-> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > +	dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> > > +
-> > 
-> > I would prefer that we do not add such prints, as it would be to accept
-> > the downstream behaviour of spamming the log to the point where no one
-> > will ever look through it.
-> 
-> We should be able to find a middle ground.  Spamming the log with all
-> sorts of device specific information/debug is obviously not
-> constructive, but a single liner to advertise that an important
-> device/controller has been successfully initialised is more helpful
-> than it is hinderous.
-> 
-> This print was added due to the silent initialisation costing me
-> several hours of debugging ACPI device/driver code (albeit learning a
-> lot about ACPI as I go) just to find out that it was already doing the
-> right thing - just very quietly.
+The patch adds k3 am654 compatible, specific properties and
+an example.
 
-No, we don't add noise like this to the logs just because it may be
-useful while debugging. Even one-liners add up.
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ .../devicetree/bindings/gpio/gpio-davinci.txt  | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-There are plenty of options for debugging already ranging from adding a
-temporary dev_info() to the probe function in question to using dynamic
-debugging to have driver core log every successful probe.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+index 553b92a7e87b..bc6b4b62df83 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+@@ -5,6 +5,7 @@ Required Properties:
+ 			"ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
+ 						66AK2E SoCs
+ 			"ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
++			"ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
+ 
+ - reg: Physical base address of the controller and the size of memory mapped
+        registers.
+@@ -145,3 +146,20 @@ gpio0: gpio@260bf00 {
+ 	ti,ngpio = <32>;
+ 	ti,davinci-gpio-unbanked = <32>;
+ };
++
++Example for K3 AM654:
++
++wkup_gpio0: wkup_gpio0@42110000 {
++	compatible = "ti,am654-gpio", "ti,keystone-gpio";
++	reg = <0x42110000 0x100>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-parent = <&intr_wkup_gpio>;
++	interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	ti,ngpio = <56>;
++	ti,davinci-gpio-unbanked = <0>;
++	clocks = <&k3_clks 59 0>;
++	clock-names = "gpio";
++};
+-- 
+2.17.1
 
-And in this case you say the driver was in fact already bound; that can
-easily be verified through sysfs too in case things aren't behaving the
-way you expect.
-
-Johan
