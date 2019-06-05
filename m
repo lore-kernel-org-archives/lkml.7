@@ -2,145 +2,226 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E0EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A715C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708842067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559767957;
-	bh=aWxiKKVSC9AphkuiaOaLX6Ay4IYwlczyOloFLQans2Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jb21akf9HnNC9LoPdcCx3Qc0uob+GPaDrVlq/ZViyQB0U3sIuBqmaeErMRl9edkYb
-	 wh7KkIcylpuPr3BEuJK8L8DIlGZwNoEEcxAW/kHbS7BllPAh6r81mrwRGJG/c+Xn7V
-	 Mkz5Hm7ggByFt/SjLEcJ8s8KvpM/OGzqplc2awT0=
+	by mail.kernel.org (Postfix) with ESMTP id 1A45D2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oz62Fmi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFEUwg (ORCPT
+        id S1726631AbfFEUx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:52:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40957 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEUwg (ORCPT
+        Wed, 5 Jun 2019 16:53:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38849 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEUx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:52:36 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a21so9211774ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 13:52:34 -0700 (PDT)
+        Wed, 5 Jun 2019 16:53:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f97so10157839plb.5;
+        Wed, 05 Jun 2019 13:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UUmYALqkTRB8jq7IIMd1ZI8226gJUFMqe5N7OQkgNTM=;
-        b=J6I3fdUNthnJVyG7CfnsGTfIcfhMYjMulzndseXmCbWp7tpKaoZkjdDbzmTRNbfUMW
-         Ta2PYyn27ITZEjrTzc5xpqHaJE1nHsmbxK3SWbYkVDysjJw91k1K5oDu5Yi/Tbvx0anb
-         0awWmAj64oDxZvHbFUdnduJwtHnovffhcyAwo=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u8N6Q41OiLcavLt+0q1xule6fZDeSNemkAiEUTe+VLU=;
+        b=oz62Fmi7q6fXV+AdZQHLj6MqnTHxsNXPyJJo/z4m1353OWNU1OdFu0qOrot06pmoFj
+         uj5jifiFiGcxP9bubch1QgmkdZY8S9/IVawQN9Rolt8ojng0ygKwUee+gGxsvD63H5y0
+         dciYIYl4SarFMOJARtRj/rmNdeqvJu5wFnIpXy1l70Nqm7eBLsZKajePA/6ZLZ+uD0cO
+         jvbZQCREKFU9uFoZSfadxhNaPYhQdiylX+SM0z8g74YrFB0O09Y9NsrGB3QUbOFHWZQX
+         2qliRkWW14kbIaWijQI0y7LFfH4GXOIjj+N0CJ2ojCG1TdK2JRl3epv9E4BCe9RM1+r5
+         74Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UUmYALqkTRB8jq7IIMd1ZI8226gJUFMqe5N7OQkgNTM=;
-        b=uRTUNrXxNzPcqXenj5UmYkH/6VkS7sa3gRZdf4XNnQpY/luYP88oFsP1GvWErE6+30
-         48ZYEvjxq+g7OpIgxMLwvrNdzuMkYKu/+HygiHBciwdcqYpv4zJ2owgGoDPFMvWw6HGg
-         xMsimh6TpGSKALnrc0v2N4qIVEmWgq1zbAfprqcIxD+7gCR+kycCucbAQCkQ69OoNCYp
-         /3K1W5Gbs33mb0uE5WHIaq4I0e5wBlCNCgEF25KOrcYoEqbpbNS5zo+kqnConLtJYSYE
-         cwrWu3Z4HEV5d9fmZ06s54VfNDRAoqFh1TejM68gQtatnTRWBQIxJ0hdpqoNswsGKSK8
-         BO5w==
-X-Gm-Message-State: APjAAAUhhLiczYOM3IVmv+VOyaOZ5JKPCCMsLRazIQucGu5KkrhW8PT6
-        qk+0tY6F1gFynCOX2kPSTrsX9spS3tw=
-X-Google-Smtp-Source: APXvYqy1kQE6frQ4qxvuSRLRGyBWQaCOrmq7YoahOg22UxNNCT7kP6lnbUOEjZorBgM5u69+ovMRtg==
-X-Received: by 2002:a2e:8041:: with SMTP id p1mr23060948ljg.121.1559767953502;
-        Wed, 05 Jun 2019 13:52:33 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id z9sm1012817lja.70.2019.06.05.13.52.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 13:52:32 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id m15so16138668ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 13:52:31 -0700 (PDT)
-X-Received: by 2002:a2e:6109:: with SMTP id v9mr22673470ljb.205.1559767951604;
- Wed, 05 Jun 2019 13:52:31 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u8N6Q41OiLcavLt+0q1xule6fZDeSNemkAiEUTe+VLU=;
+        b=r818SmgcY1C5UKPmq+SN8VYG9FwXgOYNt1z2y42y3ua5vmd1t+et9YHg95p0HhdcTl
+         NgqL9wtUvshy9/ZGSf4tizjNpapf/biY6M0Muj5aodxvqpJeUWaQqkmazyOdt3I7f+Dx
+         f6vYQEwSAKkOZxuMywEjvebP5AxgQ2ya1JEYohjNQuIzZ8gbyRUCI9IdTul57ArwSG2T
+         C7nmqYJbKMpVp7RzD80C+Cd2OsfU5xRi2hSacZv+/6upUR4Fdlwtah0TnWwHu2KYPd7e
+         9Ei21zotUDTrSEpGjA4YNSV7LgepkJm2ClTB1fO9rSSghr7DkUV2HH+KZVGhk1pbKMkJ
+         SJZw==
+X-Gm-Message-State: APjAAAU275XAlszIyiUabxR0594CMcuXzuQqtVEDoR6udY9PwcyQAKe+
+        14vs0dgY9DH2OsQEmfhcrSA=
+X-Google-Smtp-Source: APXvYqz/No7Hs+aBNYPsXns2P18ky9I5q8MeYanNL5i5oJxPZ/HzmhVn/fp0FkHJ2h0P9QzM/jQuyA==
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr45821288plf.246.1559768006885;
+        Wed, 05 Jun 2019 13:53:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q12sm33692528pgs.22.2019.06.05.13.53.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 13:53:26 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 13:53:25 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
+        jia.sui@advantech.com.cn, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (nct7904) Fix the incorrect value of tcpu_mask in
+ nct7904_data struct.
+Message-ID: <20190605205325.GA340@roeck-us.net>
+References: <20190531102048.28691-1-Amy.Shih@advantech.com.tw>
 MIME-Version: 1.0
-References: <20190520205918.22251-1-longman@redhat.com> <20190520205918.22251-16-longman@redhat.com>
- <20190604092008.GJ3402@hirez.programming.kicks-ass.net> <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
- <20190604173853.GG3419@hirez.programming.kicks-ass.net> <f7f9b778-4f1a-7460-a7ae-1d4e3dd37181@redhat.com>
- <20190604181426.GH3419@hirez.programming.kicks-ass.net> <db89a086-3719-cea5-e24e-339085728c29@redhat.com>
- <46e44f43-87fd-251b-3b83-89a8bb3b407f@redhat.com> <20190605201901.GB3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190605201901.GB3402@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Jun 2019 13:52:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgqfXUeKkjT-TJRubxU5KNt9CLi88QSXhXT0H=3v4uF3g@mail.gmail.com>
-Message-ID: <CAHk-=wgqfXUeKkjT-TJRubxU5KNt9CLi88QSXhXT0H=3v4uF3g@mail.gmail.com>
-Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
- optimistic spinning
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531102048.28691-1-Amy.Shih@advantech.com.tw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 1:19 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Urgh, that's another things that's been on the TODO list for a long long
-> time, write code to verify the alignment of allocations :/ I'm
-> suspecting quite a lot of that goes wrong all over the place.
+On Fri, May 31, 2019 at 10:20:47AM +0000, Amy.Shih@advantech.com.tw wrote:
+> From: "amy.shih" <amy.shih@advantech.com.tw>
+> 
+> Detect the multi-function of voltage, thermal diode and thermistor
+> from register VT_ADC_MD_REG to set value of tcpu_mask in nct7904_data
+> struct, set temp[1-5]_input the input values TEMP_CH1~4 and LTD of
+> temperature. Set temp[6~13]_input the input values of DTS temperature
+> that correspond to sensors TCPU1~8.
+> 
+Applied.
 
-On x86, we only guarantee 8-byte alignment from things like kmalloc(), iirc.
+Thanks,
+Guenter
 
-That ends up actually being a useful thing for small allocations,
-which do happen.
-
-On the whole, I would suggest against cmpxchg2 unless it's something
-_really_ special. And would definitely strongly suggest against it for
-something like a rwsem. Requiring 16-byte alignment just because your
-data structure has a lock is nasty. Of course, we could probably
-fairly easily change our kmalloc alignment rules to be "still just 8
-bytes for small allocations, 16 bytes for anything that is >=64 bytes"
-or whatever.
-
-At least nobody is hopefully crazy enough to put one of those things
-on the stack, where we *definitely* don't want to increase alignment
-issues.
-
-And before people say "surely small allocations aren't normal" - take
-a look at slaballoc. Small allocations (<= 32 bytes) are actually not
-all that uncommon, and you want them dense in the cache and dense in
-memory to not waste either. arm64 has some insane alignment issues
-(128 byte alignment due to DMA coherency issues, iirc), and it hurts
-them badly.
-
-Right now my machine has 400k 8-byte allocations, if I read things right.
-
-You also find some core slab caches that are small and that don't need
-16-byte alignment. A quick script finds things like
-ext4_extent_status, which is 40 bytes, not horribly uncommon (I've
-apparently got 250k of those things on my system), and currently fits
-102 entries per page *because* it's  not excessively aligned. Or
-Acpi-Parse, which I apparently have 350k of, and is 56 bytes, and fits
-73 per page exactly because it only needs 8-byte alignment (but
-admittedly a 16-byte alignment would waste some memory, but guarantee
-it doesn't cross a cacheline, so _maybe_ it would be ok).
-
-16-byte alignment really isn't a good idea when you have data sizes
-that are clearly smaller than even a cacheline.
-
-So I *really* don't want to force excessive alignment. We'd have to
-add some special static tooling to say "this kmalloc is assigned to a
-pointer which requires 16-byte alignment" and make it use a separate
-slab cache with that explicit alignment for that.
-
-                Linus
+> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+> ---
+>  drivers/hwmon/nct7904.c | 72 +++++++++++++++++++++++++++++++++++------
+>  1 file changed, 63 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index 04516789b070..6a74df6841f0 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -4,6 +4,9 @@
+>   * Copyright (c) 2015 Kontron
+>   * Author: Vadim V. Vlasov <vvlasov@dev.rtsoft.ru>
+>   *
+> + * Copyright (c) 2019 Advantech
+> + * Author: Amy.Shih <amy.shih@advantech.com.tw>
+> + *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License as published by
+>   * the Free Software Foundation; either version 2 of the License, or
+> @@ -59,6 +62,8 @@
+>  #define T_CPU1_HV_REG		0xA0	/* Bank 0; 2 regs (HV/LV) per sensor */
+>  
+>  #define PRTS_REG		0x03	/* Bank 2 */
+> +#define PFE_REG			0x00	/* Bank 2; PECI Function Enable */
+> +#define TSI_CTRL_REG		0x50	/* Bank 2; TSI Control Register */
+>  #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
+>  #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
+>  
+> @@ -74,6 +79,8 @@ struct nct7904_data {
+>  	u32 vsen_mask;
+>  	u32 tcpu_mask;
+>  	u8 fan_mode[FANCTL_MAX];
+> +	u8 enable_dts;
+> +	u8 has_dts;
+>  };
+>  
+>  /* Access functions */
+> @@ -238,11 +245,15 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  
+>  	switch (attr) {
+>  	case hwmon_temp_input:
+> -		if (channel == 0)
+> +		if (channel == 4)
+>  			ret = nct7904_read_reg16(data, BANK_0, LTD_HV_REG);
+> +		else if (channel < 5)
+> +			ret = nct7904_read_reg16(data, BANK_0,
+> +						 TEMP_CH1_HV_REG + channel * 4);
+>  		else
+>  			ret = nct7904_read_reg16(data, BANK_0,
+> -					T_CPU1_HV_REG + (channel - 1) * 2);
+> +						 T_CPU1_HV_REG + (channel - 5)
+> +						 * 2);
+>  		if (ret < 0)
+>  			return ret;
+>  		temp = ((ret & 0xff00) >> 5) | (ret & 0x7);
+> @@ -258,11 +269,11 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+>  	const struct nct7904_data *data = _data;
+>  
+>  	if (attr == hwmon_temp_input) {
+> -		if (channel == 0) {
+> -			if (data->vsen_mask & BIT(17))
+> +		if (channel < 5) {
+> +			if (data->tcpu_mask & BIT(channel))
+>  				return 0444;
+>  		} else {
+> -			if (data->tcpu_mask & BIT(channel - 1))
+> +			if (data->has_dts & BIT(channel - 5))
+>  				return 0444;
+>  		}
+>  	}
+> @@ -469,6 +480,7 @@ static int nct7904_probe(struct i2c_client *client,
+>  	struct device *dev = &client->dev;
+>  	int ret, i;
+>  	u32 mask;
+> +	u8 val, bit;
+>  
+>  	data = devm_kzalloc(dev, sizeof(struct nct7904_data), GFP_KERNEL);
+>  	if (!data)
+> @@ -502,10 +514,52 @@ static int nct7904_probe(struct i2c_client *client,
+>  	data->vsen_mask = mask;
+>  
+>  	/* CPU_TEMP attributes */
+> -	ret = nct7904_read_reg16(data, BANK_0, DTS_T_CTRL0_REG);
+> -	if (ret < 0)
+> -		return ret;
+> -	data->tcpu_mask = ((ret >> 8) & 0xf) | ((ret & 0xf) << 4);
+> +	ret = nct7904_read_reg(data, BANK_0, VT_ADC_CTRL0_REG);
+> +
+> +	if ((ret & 0x6) == 0x6)
+> +		data->tcpu_mask |= 1; /* TR1 */
+> +	if ((ret & 0x18) == 0x18)
+> +		data->tcpu_mask |= 2; /* TR2 */
+> +	if ((ret & 0x20) == 0x20)
+> +		data->tcpu_mask |= 4; /* TR3 */
+> +	if ((ret & 0x80) == 0x80)
+> +		data->tcpu_mask |= 8; /* TR4 */
+> +
+> +	/* LTD */
+> +	ret = nct7904_read_reg(data, BANK_0, VT_ADC_CTRL2_REG);
+> +	if ((ret & 0x02) == 0x02)
+> +		data->tcpu_mask |= 0x10;
+> +
+> +	/* Multi-Function detecting for Volt and TR/TD */
+> +	ret = nct7904_read_reg(data, BANK_0, VT_ADC_MD_REG);
+> +
+> +	for (i = 0; i < 4; i++) {
+> +		val = (ret & (0x03 << i)) >> (i * 2);
+> +		bit = (1 << i);
+> +		if (val == 0)
+> +			data->tcpu_mask &= ~bit;
+> +	}
+> +
+> +	/* PECI */
+> +	ret = nct7904_read_reg(data, BANK_2, PFE_REG);
+> +	if (ret & 0x80) {
+> +		data->enable_dts = 1; //Enable DTS & PECI
+> +	} else {
+> +		ret = nct7904_read_reg(data, BANK_2, TSI_CTRL_REG);
+> +		if (ret & 0x80)
+> +			data->enable_dts = 0x3; //Enable DTS & TSI
+> +	}
+> +
+> +	/* Check DTS enable status */
+> +	if (data->enable_dts) {
+> +		data->has_dts =
+> +			nct7904_read_reg(data, BANK_0, DTS_T_CTRL0_REG) & 0xF;
+> +		if (data->enable_dts & 0x2) {
+> +			data->has_dts |=
+> +			(nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG) & 0xF)
+> +								<< 4;
+> +		}
+> +	}
+>  
+>  	for (i = 0; i < FANCTL_MAX; i++) {
+>  		ret = nct7904_read_reg(data, BANK_3, FANCTL1_FMR_REG + i);
