@@ -2,175 +2,186 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FE8C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2639C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEFA20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2F42075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LnC7DlOA"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="p47Tf+Fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfFEHbk (ORCPT
+        id S1726653AbfFEHdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:31:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36707 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFEHbj (ORCPT
+        Wed, 5 Jun 2019 03:33:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44838 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbfFEHdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:31:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v22so1138952wml.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=IWnG5mk+FSYYj2lHa0zQw85I3E1T6olPRsvdmWWZtDA=;
-        b=LnC7DlOAeqIU6jCar36+vJfnaBNJe7XDi+C9PTCBaCI6KbsqmLbikd0R4ff2IsEJrd
-         KXDU+/9i/2/3H1156mWXbRspGIKTixZGHqqBSfwvQSbknV1dXCvlxMJcXa0bwG95q18r
-         Dvn1fLNcMEz8cnM83vCka5cC2NsTRflgoRIxCS58wYgGh6EIKIFolkHw6lC0zeqHhwoZ
-         C5WhuwIxioR/vJCvvBa8ptAsN2IQYEGK+45vS1tGxq2gI3LCo/PkEGHyPvTx+LBX3umY
-         i8BcoGDi3C3mbCMjmj75qj+L1JYcTf2IkZtDp57NqjuyLaG2qdUm2YtKhyXE/eHv5cxy
-         4zeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=IWnG5mk+FSYYj2lHa0zQw85I3E1T6olPRsvdmWWZtDA=;
-        b=YEnPU263w+kpBJrnqqAjF3quJQUW10+BGcC7s+OADBggmeZZlHrlLap7X33LwK4MG4
-         KyrgfVbkBVOXqMpEC5prgMYAj3xSi2bhgcaSJND3v1wmzHI9sGioGFzyccOGacuCKE2j
-         s9STZhvlWfHWzG7536UIvOl7Zwhj9EgpY+0MgH7z4YiTUpG/Qti3BUyDId5FvK6YY2pc
-         rZcloa/bHgYdPbof/0qIu7x5L7zUeslLRawWVEDJlV2yBfec+KTd1LSDhjuYJU6o9FC9
-         aPtnJJR60DlR3cbtR5pj872m34ubGQTNEChKZTiKiqk2ZCXhgzE6CEbe7nnbc2IhCVco
-         UKWA==
-X-Gm-Message-State: APjAAAX8Yvdu3m67nRLmakaUzNach84Ef+/h+a1UEqxO9/E5xJsQWWTf
-        sdKcKO5hbaxcy75n9P021YUKHQ==
-X-Google-Smtp-Source: APXvYqyCnKW0jfvwBVA6aJcAK6VfcLrnJuvLPQVDIWk0oxlDsnBP0uEq+gISa827spE4AsPpgFfkTQ==
-X-Received: by 2002:a1c:6c08:: with SMTP id h8mr14401084wmc.62.1559719896073;
-        Wed, 05 Jun 2019 00:31:36 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id u11sm13722491wrn.1.2019.06.05.00.31.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 00:31:35 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 08:31:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Message-ID: <20190605073133.GL4797@dell>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
- <20190604104455.8877-4-lee.jones@linaro.org>
- <20190605061721.GK22737@tuxbook-pro>
+        Wed, 5 Jun 2019 03:33:21 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x557RTD3028451;
+        Wed, 5 Jun 2019 09:33:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=kgiD5DsEkdJ2rPmS1bY7rGKG5TseCbpWmlOHsd3SkeU=;
+ b=p47Tf+FrWqSUFqFeXCqvGz+9VUfT3KkMMkuNuwIF68Aia+CjH3rby5g/8qL9muDVi/t1
+ Yb5FkegG5BQAa6pSnBD09Q16oZfRhVx1AnGcui2gMsW6eJhvZyajeI8PYuYNt+GWxh8/
+ S6Ajioanc6goaoKqpwREDRbVR3vwRU9MgvlgnGwZnl+/n+2jTb8dV9qKs4137EB9oKy5
+ zgTkrwzEeO0DP68s7lpab42M6LPYwOdwaxB8d8lkKFR4pKJuvgy0usXJiys7BNYO9dOp
+ JfaAJE9xkKBl/z362nDfEMIFKg9tn/ywZUhvKSAI/Zg1l/xLiL6ABrMZwQLgNkhSQp2B HA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sunds55jj-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 05 Jun 2019 09:33:18 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DC94738;
+        Wed,  5 Jun 2019 07:33:16 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A7F27161A;
+        Wed,  5 Jun 2019 07:33:16 +0000 (GMT)
+Received: from [10.48.0.131] (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 5 Jun
+ 2019 09:33:15 +0200
+Subject: Re: [PATCH 0/3] Enhance virtio rpmsg bus driver buffer allocation
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Xiang Xiao <xiaoxiang781216@gmail.com>
+CC:     <ohad@wizery.com>, <wendy.liang@xilinx.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Xiang Xiao <xiaoxiang@xiaomi.com>
+References: <1548949280-31794-1-git-send-email-xiaoxiang@xiaomi.com>
+ <20190605043452.GI22737@tuxbook-pro>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8mOik8I/F6EW8XyQAA2P
+Message-ID: <2d60dd1e-f7a0-ea63-9fda-0ea97aab0406@st.com>
+Date:   Wed, 5 Jun 2019 09:33:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190605043452.GI22737@tuxbook-pro>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605061721.GK22737@tuxbook-pro>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Jun 2019, Bjorn Andersson wrote:
+Hi Bjorn,
 
-> On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+On 6/5/19 6:34 AM, Bjorn Andersson wrote:
+> On Thu 31 Jan 07:41 PST 2019, Xiang Xiao wrote:
 > 
-> > This patch provides basic support for booting with ACPI instead
-> > of the currently supported Device Tree.  When doing so there are a
-> > couple of differences which we need to taken into consideration.
-> > 
-> > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > initialise any of these lines, the firmware will restart the
-> > platform.
-> > 
-> > Secondly, when booting with ACPI, it is expected that the firmware
-> > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > their ideal configuration.  Thus, the possible Pin Functions
-> > available to this platform are not advertised when providing the
-> > higher GPIOD/Pinctrl APIs with pin information.
-> > 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/pinctrl/qcom/Kconfig          |  2 +-
-> >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
-> >  2 files changed, 35 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> > index 2e66ab72c10b..aafbe932424f 100644
-> > --- a/drivers/pinctrl/qcom/Kconfig
-> > +++ b/drivers/pinctrl/qcom/Kconfig
-> > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
-> >  
-> >  config PINCTRL_SDM845
-> >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-> > -       depends on GPIOLIB && OF
-> > +       depends on GPIOLIB && (OF || ACPI)
-> >         select PINCTRL_MSM
-> >         help
-> >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > index c97f20fca5fd..7188bee3cf3e 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > @@ -3,6 +3,7 @@
-> >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> >   */
-> >  
-> > +#include <linux/acpi.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
-> >  	UFS_RESET(ufs_reset, 0x99f000),
-> >  };
-> >  
-> > +static const int sdm845_acpi_reserved_gpios[] = {
-> > +	0, 1, 2, 3, 81, 82, 83, 84, -1
-> > +};
-> > +
-> >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> >  	.pins = sdm845_pins,
-> >  	.npins = ARRAY_SIZE(sdm845_pins),
-> > @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> >  	.nfunctions = ARRAY_SIZE(sdm845_functions),
-> >  	.groups = sdm845_groups,
-> >  	.ngroups = ARRAY_SIZE(sdm845_groups),
-> > +	.reserved_gpios = sdm845_acpi_reserved_gpios,
+>> Hi,
+>> This series enhance the buffer allocation by:
+>> 1.Support the different buffer number in rx/tx direction
+>> 2.Get the individual rx/tx buffer size from config space
+>>
+>> Here is the related OpenAMP change:
+>> https://github.com/OpenAMP/open-amp/pull/155
+>>
 > 
-> The reason why put these in DT is because the list is board/firmware
-> dependent. E.g. the firmware on db845c does not support the peripherals
-> that sits on these 8 pins and as such these are not reserved.
+> This looks pretty reasonable, but can you confirm that it's possible to
+> use new firmware with an old Linux kernel when introducing this?
+> 
+> 
+> But ever since we discussed Loic's similar proposal earlier I've been
+> questioning if the fixed buffer size isn't just an artifact of how we
+> preallocate our buffers. The virtqueue seems to support arbitrary sizes
+> of buffers and I see that the receive function in OpenAMP has been fixed
+> to put back the buffer of the size that was received, rather than 512
+> bytes. So it seems like Linux would be able to send whatever size
+> messages to OpenAMP it would handle it.
+> 
+> The question is if we could do the same in the other direction, perhaps
+> by letting the OpenAMP side do it's message allocation when it's
+> sending, rather than Linux pushing inbufs to be filled by the remote.
 
-If we need to be more particular about which platform(s) this affects,
-we could add matching based on their differences (some ACPI HID or F/W
-version/descriptor, etc) as and when we enable them for booting with
-ACPI.
+IMHO, both could be useful and could be not correlated.
+On-the fly buffer allocation seems more efficient but needs an
+allocator.This can be a generic allocator (with a va to da) for system
+where large amount of memories are accessible from both side.
 
-> But given that the two structs looks identical now, did you perhaps not
-> intend to add.reserved_gpios for the non-ACPI case?
+Now what about system with small shared memory? In this case you have to
+deal with a limited/optimized memory chunk. To avoid memory
+fragmentation the allocator should have a pre-reserved buffers pool(so
+similar to existing implementation). This serie seems useful to optimize
+the size of the pre-reserved pool.
 
-Given your example above, I think it's best that we let the
-configuration tables advertise these in the first instance.  I only
-add them here because it is not possible to obtain them from
-elsewhere.
+> 
+> This would remove the problem of always having suboptimal buffer sizes.
+> 
+> Regards,
+> Bjorn
+> 
+>> Xiang Xiao (3):
+>>   rpmsg: virtio_rpmsg_bus: allow the different vring size for send/recv
+>>   rpmsg: virtio_rpmsg_bus: allocate rx/tx buffer separately
+>>   rpmsg: virtio_rpmsg_bus: get buffer size from config space
+>>
+>>  drivers/rpmsg/virtio_rpmsg_bus.c  | 127 +++++++++++++++++++++++---------------
+>>  include/uapi/linux/virtio_rpmsg.h |  24 +++++++
+>>  2 files changed, 100 insertions(+), 51 deletions(-)
+>>  create mode 100644 include/uapi/linux/virtio_rpmsg.h
+>>
+>> -- 
+>> 2.7.4
+>>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+
+Regards,
+Arnaud
