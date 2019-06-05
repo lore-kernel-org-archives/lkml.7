@@ -2,205 +2,90 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC816C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02577C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B308A20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:12:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="gKVFjr5O"
+	by mail.kernel.org (Postfix) with ESMTP id DABD520866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFESM2 (ORCPT
+        id S1726642AbfFESNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:12:28 -0400
-Received: from sonic317-38.consmr.mail.ne1.yahoo.com ([66.163.184.49]:38247
-        "EHLO sonic317-38.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726572AbfFESM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:12:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559758345; bh=1Jvc/kSniiBr5+XEKGKZKBXDs69qYfCMxICYBNY2uIc=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=gKVFjr5OTjaU2XiluV1y1NFKUIbrXhQbucLNd6iPDQL0EKxss7PbPtDdtXOyRoQvSUk6yBHcXtnPPE9zmqGIvU58DxHaH4xFP57uOdXTKX3JgFfATa7vqIX/xJr3ZUSgFfM06k9/u/4hrNNTnOHS6OqFphuF2ylU2FrTTshJMB6TcYG3thW6n5LsuIahZtIzSyavJr2a7lXpm/oeoZP5ZakjkpY5PwB6KyULA+YEe3ePDKq4Bnt/v4LL4jQHF8xxL4GFxiwhF1/W0DiQ7+8RfubH5gtyCn8OvMHPJAxW2WV46yB1RXcbdKDBt0B6a20g/4rG7+Csj8JRbCnqiPDqKQ==
-X-YMail-OSG: 3xminYEVM1mLi81bfCxWP_X9YJAet7TmrHdXzzI4_K7kqJN0n7cqYm5wr7.drPr
- .BuIMn8qh9t8cs.KIjLnTUwpwzkO1E2Kp1j6C1_LWBD_2bsW_2AZuLHlFagpPCJLFeLfJ8ycAHi_
- vuTW34vu5Yb91j__RlaotKpNT4jDrk4o8vXzcM01D4wchGiqn2VSXlHw8I7AMpNDl2Y7ITOzJvdO
- J1U_yC8oZPtxLODejxYH4aO.7BI6B_ZFRV9oMRxyZoAeaZvdvdhPfJXUabafPHquzDq5xs1xUyjU
- KrHaX8PgH9QzxUd_qbMjw_nPC1PKyjq4tklpwZxEUDuV4cSLqriGi40X5bcpD3egckuL9NacPe2m
- Asz2WC8jSM46AyroowR3WijfR0aZxpmUXbLu.mQ4xHOci1TAGDCnC6dxmPfyqaP141OROJqqxVBp
- qfgTs7.2C8hSTsw3p5FVkRNLYM6lvf2fwVVJgvw3rHON998asMVsEQYb.gQWBofMfNZ0KtIY4vgi
- 0UpbotZucMhpxBdwBRfWwyNIXdB_zC1HDwqldaqOGifi3szhI1ZmSpezX8ZyWnK0uiTW7BMQQOYf
- PWJOP5MWSThWYLSMQA6IMHEqo3Sc9YYxpXFaWkM3yB6cmWCmj5aOPqxrbdmAgEcegjdRGzNt9bPa
- pFT7b4QcJoE0nFZlNFij_1WERdVt9zhFqsxqFLNUxkUAMLXIo6CQDDX5YLWmlZiv7UGtyG56M4Og
- _CFTvqkS4j.jGnXOb0NZCIiTsFzSPP.Uu8afzVZT_TGv7YED.XXlKzCkYfPSr4C_QK2I2Mouthuc
- QM3Xb41TqtKurcTQj26r.zkinIztbE6Xc4vuqhJC4c62t3sNGEm3J4t5cv.rJPoDvjwKDTKbR7Vg
- 0Esqc8kllmn6gPyEa9cvmBtk_ct7LYPvnmX3lGpY5YRE6iXoHtZnBBmklUOitkkJ5XpRiwY8.XQ6
- P.yRJyBDjt1vguSpZ8DEKfSVR3CnOHzy_Q5pFHX4TmGRTR1OwQ6BA8LHAi0_CRxVzsZuSyKfmzRH
- _gHzW5oE9C_vusDsp6.U3Yl5tSIVAOiqElpeuTAZ7NextmJo7wUHzc8LBpXVAc9P2dOvI7f0by0g
- mr0NCuKqR9zLKfzPuidlge4HuH8Vz8YcE2r0AReokFhoYXhLHQV1wQPdVGX7qc5qu24vEcRz6YdP
- u84_STiMEADuMgV.Vv90vYkevTVa7sz8V2PY5z6cWvFra9e8IbTMFDUHlMXjQPvjd5WNYbB5_PLg
- MDoRmOUjqqfIZGOKhL4AmXMNX2ujOeNtpt80wGR5Q
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.ne1.yahoo.com with HTTP; Wed, 5 Jun 2019 18:12:25 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp416.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 705459f08fa8316e34f1cab0e1bf46d0;
-          Wed, 05 Jun 2019 18:12:21 +0000 (UTC)
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver
- #2]
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, casey@schaufler-ca.com
-References: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com>
- <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
- <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
- <20192.1559724094@warthog.procyon.org.uk>
- <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com>
- <CALCETrVSBwHEm-1pgBXxth07PZ0XF6FD+7E25=WbiS7jxUe83A@mail.gmail.com>
- <9a9406ba-eda4-e3ec-2100-9f7cf1d5c130@schaufler-ca.com>
- <15CBE0B8-2797-433B-B9D7-B059FD1B9266@amacapital.net>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
- 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
- vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
- 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
- h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
- SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
- XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
- kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
- a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
- CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
- dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
- OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
- fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
- vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
- 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
- SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
- bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
- P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
- /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
- JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
- jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
- x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
- wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
- zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
- WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
- yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
- Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
- emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
- Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
- aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
- esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
- Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
- EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
- GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
- I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
- oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
- vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
- icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
- qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
- /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
- wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
- v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
- abzjfg==
-Message-ID: <8e1d19ee-d2c0-189e-d70e-5c3daa3a274a@schaufler-ca.com>
-Date:   Wed, 5 Jun 2019 11:12:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 14:13:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46030 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726280AbfFESNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 14:13:48 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0807330C1205;
+        Wed,  5 Jun 2019 18:13:33 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ACEF2B3CC;
+        Wed,  5 Jun 2019 18:13:28 +0000 (UTC)
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-16-longman@redhat.com>
+ <20190604092008.GJ3402@hirez.programming.kicks-ass.net>
+ <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
+ <20190604173853.GG3419@hirez.programming.kicks-ass.net>
+ <f7f9b778-4f1a-7460-a7ae-1d4e3dd37181@redhat.com>
+ <20190604181426.GH3419@hirez.programming.kicks-ass.net>
+ <db89a086-3719-cea5-e24e-339085728c29@redhat.com>
+Organization: Red Hat
+Message-ID: <46e44f43-87fd-251b-3b83-89a8bb3b407f@redhat.com>
+Date:   Wed, 5 Jun 2019 14:13:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <15CBE0B8-2797-433B-B9D7-B059FD1B9266@amacapital.net>
+In-Reply-To: <db89a086-3719-cea5-e24e-339085728c29@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 05 Jun 2019 18:13:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/2019 10:47 AM, Andy Lutomirski wrote:
->> On Jun 5, 2019, at 10:01 AM, Casey Schaufler <casey@schaufler-ca.com> =
-wrote:
->>
->>> On 6/5/2019 9:04 AM, Andy Lutomirski wrote:
->>>> On Wed, Jun 5, 2019 at 7:51 AM Casey Schaufler <casey@schaufler-ca.c=
-om> wrote:
->>>>> On 6/5/2019 1:41 AM, David Howells wrote:
->>>>> Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>>>
->>>>>> I will try to explain the problem once again. If process A
->>>>>> sends a signal (writes information) to process B the kernel
->>>>>> checks that either process A has the same UID as process B
->>>>>> or that process A has privilege to override that policy.
->>>>>> Process B is passive in this access control decision, while
->>>>>> process A is active. In the event delivery case, process A
->>>>>> does something (e.g. modifies a keyring) that generates an
->>>>>> event, which is then sent to process B's event buffer.
->>>>> I think this might be the core sticking point here.  It looks like =
-two
->>>>> different situations:
->>>>>
->>>>> (1) A explicitly sends event to B (eg. signalling, sendmsg, etc.)
->>>>>
->>>>> (2) A implicitly and unknowingly sends event to B as a side effect =
-of some
->>>>>     other action (eg. B has a watch for the event A did).
->>>>>
->>>>> The LSM treats them as the same: that is B must have MAC authorisat=
-ion to send
->>>>> a message to A.
->>>> YES!
->>>>
->>>> Threat is about what you can do, not what you intend to do.
->>>>
->>>> And it would be really great if you put some thought into what
->>>> a rational model would be for UID based controls, too.
->>>>
->>>>> But there are problems with not sending the event:
->>>>>
->>>>> (1) B's internal state is then corrupt (or, at least, unknowingly i=
-nvalid).
->>>> Then B is a badly written program.
->>> Either I'm misunderstanding you or I strongly disagree.
->> A program needs to be aware of the conditions under
->> which it gets event, *including the possibility that
->> it may not get an event that it's not allowed*. Do you
->> regularly write programs that go into corrupt states
->> if an open() fails? Or where read() returns less than
->> the amount of data you ask for?
-> I do not regularly write programs that handle read() omitting data in t=
-he middle of a TCP stream.  I also don=E2=80=99t write programs that wait=
- for processes to die and need to handle the case where a child is dead, =
-waitid() can see it, but SIGCHLD wasn=E2=80=99t sent because =E2=80=9Csec=
-urity=E2=80=9D.
->
->>>  If B has
->>> authority to detect a certain action, and A has authority to perform
->>> that action, then refusing to notify B because B is somehow missing
->>> some special authorization to be notified by A is nuts.
->> You are hand-waving the notion of authority. You are assuming
->> that if A can read X and B can read X that A can write B.
-> No, read it again please. I=E2=80=99m assuming that if A can *write* X =
-and B can read X then A can send information to B.
+On 6/4/19 2:21 PM, Waiman Long wrote:
+> On 6/4/19 2:14 PM, Peter Zijlstra wrote:
+>>> I worked on this owner merging patch mainly to alleviate the need to use
+>>> cmpxchg for reader lock. cmpxchg_double() is certainly one possible
+>>> solution though it won't work on older CPUs. We can have a config option
+>>> to use cmpxchg_double as it may increase the size of other structures
+>>> that embedded rwsem and impose additional alignment constraint.
+>> cmpxchg8b was introduced with the Pentium (for PAE IIRC, it enabled
+>> atomic 64bit PTEs, but Linux never used it for that) and every Intel/AMD
+>> thereafter has had it. AFAIK there's no x86_64 chip without cmpxchg16b.
+> Thank for the clarification. I actually didn't check when cmpxch8b was
+> introduced. I know it is a bit slower than regular cmpxchg. So we may
+> still need to do some performance analysis to see how it compares with
+> my current approach.
 
-That is *not* a valid assumption:
+Using cmpxchg_double is actually more risky than I thought. I have been
+trying to try to use cmpxchg_double for down_write, but I kept getting
+kernel panics because the rwsem wasn't 16b-aligned. As rwsem is embedded
+in quite a large number of structures, they all have to align properly
+to make that work or the kernel will panic. That does seem too risky to
+me. So I am dropping the idea of trying to use it.
 
-	A can write to /dev/null.
-	B can read from /dev/null.
-	Does not imply B can read what A wrote.
-	Does not imply A can send a signal to B.
-
-	A can send a UDP datagram to port 3343
-	B can is bound to port 3343
-	Does not imply the packet will be delivered
-
-
-=C2=A0
-
+Cheers,
+Longman
 
