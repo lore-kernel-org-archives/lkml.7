@@ -3,115 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABB2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0114FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CEC206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C099C2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfFEWkE (ORCPT
+        id S1726658AbfFEWmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:40:04 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44789 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726510AbfFEWkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:40:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TTWMlNH_1559774400;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TTWMlNH_1559774400)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 06 Jun 2019 06:40:01 +0800
-Subject: Re: [PATCH] ocfs2/dlm: use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190605204926.GA24467@embeddedor>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <9bee6ee0-ba29-ea0d-d5d2-f8c09158a1cf@linux.alibaba.com>
-Date:   Thu, 6 Jun 2019 06:40:00 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Wed, 5 Jun 2019 18:42:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12498 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbfFEWmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:42:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 15:42:48 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2019 15:42:48 -0700
+Date:   Wed, 5 Jun 2019 15:45:53 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org, yi.l.liu@intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+Message-ID: <20190605154553.0d00ad8d@jacob-builder>
+In-Reply-To: <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+        <20190526161004.25232-27-eric.auger@redhat.com>
+        <20190603163139.70fe8839@x1.home>
+        <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190605204926.GA24467@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 4 Jun 2019 18:11:08 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
+> Hi Alex,
+> 
+> On 6/4/19 12:31 AM, Alex Williamson wrote:
+> > On Sun, 26 May 2019 18:10:01 +0200
+> > Eric Auger <eric.auger@redhat.com> wrote:
+> >   
+> >> This patch registers a fault handler which records faults in
+> >> a circular buffer and then signals an eventfd. This buffer is
+> >> exposed within the fault region.
+> >>
+> >> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> >>
+> >> ---
+> >>
+> >> v3 -> v4:
+> >> - move iommu_unregister_device_fault_handler to vfio_pci_release
+> >> ---
+> >>  drivers/vfio/pci/vfio_pci.c         | 49
+> >> +++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_private.h
+> >> |  1 + 2 files changed, 50 insertions(+)
+> >>
+> >> diff --git a/drivers/vfio/pci/vfio_pci.c
+> >> b/drivers/vfio/pci/vfio_pci.c index f75f61127277..520999994ba8
+> >> 100644 --- a/drivers/vfio/pci/vfio_pci.c
+> >> +++ b/drivers/vfio/pci/vfio_pci.c
+> >> @@ -30,6 +30,7 @@
+> >>  #include <linux/vfio.h>
+> >>  #include <linux/vgaarb.h>
+> >>  #include <linux/nospec.h>
+> >> +#include <linux/circ_buf.h>
+> >>  
+> >>  #include "vfio_pci_private.h"
+> >>  
+> >> @@ -296,6 +297,46 @@ static const struct vfio_pci_regops
+> >> vfio_pci_fault_prod_regops = { .add_capability =
+> >> vfio_pci_fault_prod_add_capability, };
+> >>  
+> >> +int vfio_pci_iommu_dev_fault_handler(struct iommu_fault_event
+> >> *evt, void *data) +{
+> >> +	struct vfio_pci_device *vdev = (struct vfio_pci_device *)
+> >> data;
+> >> +	struct vfio_region_fault_prod *prod_region =
+> >> +		(struct vfio_region_fault_prod
+> >> *)vdev->fault_pages;
+> >> +	struct vfio_region_fault_cons *cons_region =
+> >> +		(struct vfio_region_fault_cons
+> >> *)(vdev->fault_pages + 2 * PAGE_SIZE);
+> >> +	struct iommu_fault *new =
+> >> +		(struct iommu_fault *)(vdev->fault_pages +
+> >> prod_region->offset +
+> >> +			prod_region->prod *
+> >> prod_region->entry_size);
+> >> +	int prod, cons, size;
+> >> +
+> >> +	mutex_lock(&vdev->fault_queue_lock);
+> >> +
+> >> +	if (!vdev->fault_abi)
+> >> +		goto unlock;
+> >> +
+> >> +	prod = prod_region->prod;
+> >> +	cons = cons_region->cons;
+> >> +	size = prod_region->nb_entries;
+> >> +
+> >> +	if (CIRC_SPACE(prod, cons, size) < 1)
+> >> +		goto unlock;
+> >> +
+> >> +	*new = evt->fault;
+> >> +	prod = (prod + 1) % size;
+> >> +	prod_region->prod = prod;
+> >> +	mutex_unlock(&vdev->fault_queue_lock);
+> >> +
+> >> +	mutex_lock(&vdev->igate);
+> >> +	if (vdev->dma_fault_trigger)
+> >> +		eventfd_signal(vdev->dma_fault_trigger, 1);
+> >> +	mutex_unlock(&vdev->igate);
+> >> +	return 0;
+> >> +
+> >> +unlock:
+> >> +	mutex_unlock(&vdev->fault_queue_lock);
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >>  static int vfio_pci_init_fault_region(struct vfio_pci_device
+> >> *vdev) {
+> >>  	struct vfio_region_fault_prod *header;
+> >> @@ -328,6 +369,13 @@ static int vfio_pci_init_fault_region(struct
+> >> vfio_pci_device *vdev) header = (struct vfio_region_fault_prod
+> >> *)vdev->fault_pages; header->version = -1;
+> >>  	header->offset = PAGE_SIZE;
+> >> +
+> >> +	ret =
+> >> iommu_register_device_fault_handler(&vdev->pdev->dev,
+> >> +
+> >> vfio_pci_iommu_dev_fault_handler,
+> >> +					vdev);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >>  	return 0;
+> >>  out:
+> >>  	kfree(vdev->fault_pages);
+> >> @@ -570,6 +618,7 @@ static void vfio_pci_release(void *device_data)
+> >>  	if (!(--vdev->refcnt)) {
+> >>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+> >>  		vfio_pci_disable(vdev);
+> >> +
+> >> iommu_unregister_device_fault_handler(&vdev->pdev->dev);  
+> > 
+> > 
+> > But this can fail if there are pending faults which leaves a device
+> > reference and then the system is broken :(  
+> This series only features unrecoverable errors and for those the
+> unregistration cannot fail. Now unrecoverable errors were added I
+> admit this is confusing. We need to sort this out or clean the
+> dependencies.
+As Alex pointed out in 4/29, we can make
+iommu_unregister_device_fault_handler() never fail and clean up all the
+pending faults in the host IOMMU belong to that device. But the problem
+is that if a fault, such as PRQ, has already been injected into the
+guest, the page response may come back after handler is unregistered
+and registered again. We need a way to reject such page response belong
+to the previous life of the handler. Perhaps a sync call to the guest
+with your fault queue eventfd? I am not sure.
 
-On 19/6/6 04:49, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct dlm_migratable_lockres 
-> {
-> i	...
->         struct dlm_migratable_lock ml[0];  // 16 bytes each, begins at byte 112
-> };
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following form:
-> 
-> sizeof(struct dlm_migratable_lockres) + (mres->num_locks * sizeof(struct dlm_migratable_lock))
-> 
-> with:
-> 
-> struct_size(mres, ml, mres->num_locks)
-> 
-> Notice that, in this case, variable sz is not necessary, hence it
-> is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/dlm/dlmrecovery.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ocfs2/dlm/dlmrecovery.c b/fs/ocfs2/dlm/dlmrecovery.c
-> index e22d6a115220..064ce5bbc3f6 100644
-> --- a/fs/ocfs2/dlm/dlmrecovery.c
-> +++ b/fs/ocfs2/dlm/dlmrecovery.c
-> @@ -1109,7 +1109,7 @@ static int dlm_send_mig_lockres_msg(struct dlm_ctxt *dlm,
->  {
->  	u64 mig_cookie = be64_to_cpu(mres->mig_cookie);
->  	int mres_total_locks = be32_to_cpu(mres->total_locks);
-> -	int sz, ret = 0, status = 0;
-> +	int ret = 0, status = 0;
->  	u8 orig_flags = mres->flags,
->  	   orig_master = mres->master;
->  
-> @@ -1117,9 +1117,6 @@ static int dlm_send_mig_lockres_msg(struct dlm_ctxt *dlm,
->  	if (!mres->num_locks)
->  		return 0;
->  
-> -	sz = sizeof(struct dlm_migratable_lockres) +
-> -		(mres->num_locks * sizeof(struct dlm_migratable_lock));
-> -
->  	/* add an all-done flag if we reached the last lock */
->  	orig_flags = mres->flags;
->  	BUG_ON(total_locks > mres_total_locks);
-> @@ -1133,7 +1130,8 @@ static int dlm_send_mig_lockres_msg(struct dlm_ctxt *dlm,
->  
->  	/* send it */
->  	ret = o2net_send_message(DLM_MIG_LOCKRES_MSG, dlm->key, mres,
-> -				 sz, send_to, &status);
-> +				 struct_size(mres, ml, mres->num_locks),
-> +				 send_to, &status);
->  	if (ret < 0) {
->  		/* XXX: negative status is not handled.
->  		 * this will end up killing this node. */
-> 
+Jacob
