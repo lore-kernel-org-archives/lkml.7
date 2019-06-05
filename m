@@ -2,159 +2,150 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD859C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B75C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5482075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9D12075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YkmfipVk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SlyLnGBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfFEPb3 (ORCPT
+        id S1728476AbfFEPeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:31:29 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:27037 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfFEPb3 (ORCPT
+        Wed, 5 Jun 2019 11:34:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41896 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfFEPeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559748688; x=1591284688;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SZDqMhXVHKpi6b60Mndyg6IqKyAEKB8xVLBf3wCGp48=;
-  b=YkmfipVk/32s1sMohbCiuDppYdTQGNJcnJ6ZJ2oKTSpWVduS0KcT6JaS
-   mapbUV9cV74y86HYBw6fHAfi0abYTU2GgBUIY3L27awUHbKy+oufVQUXS
-   lGPSo7jXd4/+ow8yGTurbI/vC8OZGoFzEpdgp9afyDDUnMnHJTslGiKra
-   E=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="808761647"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Jun 2019 15:31:25 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 60EDEA18D7;
-        Wed,  5 Jun 2019 15:31:21 +0000 (UTC)
-Received: from EX13D05UWC004.ant.amazon.com (10.43.162.223) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 15:31:20 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D05UWC004.ant.amazon.com (10.43.162.223) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 15:31:20 +0000
-Received: from localhost (10.85.18.74) by mail-relay.amazon.com
- (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Wed, 5 Jun 2019 15:31:20 +0000
-Date:   Wed, 5 Jun 2019 08:31:20 -0700
-From:   Eduardo Valentin <eduval@amazon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Eduardo Valentin <eduval@amazon.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Message-ID: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
- <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
- <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
+        Wed, 5 Jun 2019 11:34:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55FUgFC039576;
+        Wed, 5 Jun 2019 15:32:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=OZ1kDdTgN4wvLaPyCNbaBt4ZZAol0O1Af0n8ppQn/zU=;
+ b=SlyLnGBXh3+Z/kVO/l6MtBnlb/hL9gKjC3CliEvgg9yYkyraDbOZv+xE+6/BydM6W02j
+ 8MXGwY8TYLi9z4jDghyFakXxGwlgaO/5kJ8bM0ljtmVE5iNv+yMVB/XAftSP04CwlxCC
+ 8m65gs3Ntc74ibhVNhve9meTwuBtHY8lwgRfnhEe978fwYosu2Eak5nBKaQbFqjbwddC
+ +49tb1GrtXJ0gZJ8J362dwJw6BoCfGDK+bw0HVfdk2ZHuWWbThgQUwUoO1llvAB8Mjys
+ D6PbUMcQj+WDcrplRbfyv4etIOFyiBLU7D4hfEO6EoR6Ovny60qaCVxHjA7EUq4pg0fV Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2sugstkees-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jun 2019 15:32:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55FWgi1133961;
+        Wed, 5 Jun 2019 15:32:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2swnhc6sy2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jun 2019 15:32:43 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x55FWSXg025273;
+        Wed, 5 Jun 2019 15:32:30 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Jun 2019 08:32:28 -0700
+Date:   Wed, 5 Jun 2019 11:32:29 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, hannes@cmpxchg.org,
+        jiangshanlai@gmail.com, lizefan@huawei.com, bsd@redhat.com,
+        dan.j.williams@intel.com, dave.hansen@intel.com,
+        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
+        steven.sistare@oracle.com, tglx@linutronix.de,
+        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, shakeelb@google.com
+Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
+Message-ID: <20190605153229.nvxr6j7tdzffwkgj@ca-dmjordan1.us.oracle.com>
+References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
+ <20190605135319.GK374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190605135319.GK374014@devbig004.ftw2.facebook.com>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906050097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906050096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
+Hi Tejun,
+
+On Wed, Jun 05, 2019 at 06:53:19AM -0700, Tejun Heo wrote:
+> On Wed, Jun 05, 2019 at 09:36:45AM -0400, Daniel Jordan wrote:
+> > My use case for this work is kernel multithreading, the series formerly known
+> > as ktask[2] that I'm now trying to combine with padata according to feedback
+> > from the last post.  Helper threads in a multithreaded job may consume lots of
+> > resources that aren't properly accounted to the cgroup of the task that started
+> > the job.
 > 
-> > Well, yes, but the point is you would be switching from a simple AND (&) operation
-> > to a division...
-> >
-> > I am keeping the power of 2 dep so that we can keep this with a simple &.
-> 
-> Works for me.
-> 
-> > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > > > >
-> > > > > Wouldn't compiler warn you due to unused data?
-> > > > > Perhaps drop of_match_ptr() for good...
-> > > >
-> > > > Not sure what you meant here. I dont see any compiler warning.
-> > > > Also, of_match_ptr seams to be well spread in the kernel.
-> > >
-> > > If this will be compiled with CONFIG_OF=n...
-> >
-> > I see.. I obviously did not test with that config..
-> >
-> > > Though I didn't check all dependencies to see if it even possible. In
-> > > any case of_match_ptr() is redundant in both cases here.
-> > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> > > CONFIG_OF, or drop the macro use.
-> >
-> > I will wrap it into CONFIG_OF..
-> 
-> Would be this expected to work in the case of CONFIG_OF=n?
-> If no, why to introduce ugly #ifdef:s and additional macros?
+> Can you please go into more details on the use cases?
 
-I do hate those too...
+Sure, quoting from the last ktask post:
 
-> Wouldn't be better to have
->   depends on OF || COMPILE_TEST
+  A single CPU can spend an excessive amount of time in the kernel operating
+  on large amounts of data.  Often these situations arise during initialization-
+  and destruction-related tasks, where the data involved scales with system size.
+  These long-running jobs can slow startup and shutdown of applications and the
+  system itself while extra CPUs sit idle.
+      
+  To ensure that applications and the kernel continue to perform well as core
+  counts and memory sizes increase, harness these idle CPUs to complete such jobs
+  more quickly.
+      
+  ktask is a generic framework for parallelizing CPU-intensive work in the
+  kernel.  The API is generic enough to add concurrency to many different kinds
+  of tasks--for example, zeroing a range of pages or evicting a list of
+  inodes--and aims to save its clients the trouble of splitting up the work,
+  choosing the number of threads to use, maintaining an efficient concurrency
+  level, starting these threads, and load balancing the work between them.
 
-Well, technically, the original author had a case for using this
-without CONFIG_OF. That is why I did not force here to be a strong
-dependency on CONFIG_OF. So, I guess in this case the driver will
-work properly in both cases if we:
+So far the users of the framework primarily consume CPU and memory.
 
-+#ifdef CONFIG_OF
-+static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-+       {
-+               .compatible = "i2c-slave-mqueue",
-+       },
-+       { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
-+#endif
-+
-+static struct i2c_driver i2c_slave_mqueue_driver = {
-+       .driver = {
-+               .name   = "i2c-slave-mqueue",
-+               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-+       },
-+       .probe          = i2c_slave_mqueue_probe,
-+       .remove         = i2c_slave_mqueue_remove,
-+       .id_table       = i2c_slave_mqueue_id,
-+};
+> For memory and io, we're generally going for remote charging, where a
+> kthread explicitly says who the specific io or allocation is for,
+> combined with selective back-charging, where the resource is charged
+> and consumed unconditionally even if that would put the usage above
+> the current limits temporarily.  From what I've been seeing recently,
+> combination of the two give us really good control quality without
+> being too invasive across the stack.
 
-The above is a well stablish pattern across the drivers.
+Yes, for memory I actually use remote charging.  In patch 3 the worker's
+current->active_memcg field is changed to match that of the cgroup associated
+with the work.
 
-> ?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Cc Shakeel, since we're talking about it.
 
--- 
-All the best,
-Eduardo Valentin
+> CPU doesn't have a backcharging mechanism yet and depending on the use
+> case, we *might* need to put kthreads in different cgroups.  However,
+> such use cases might not be that abundant and there may be gotaches
+> which require them to be force-executed and back-charged (e.g. fs
+> compression from global reclaim).
+
+The CPU-intensiveness of these works is one of the reasons for actually putting
+the workers through the migration path.  I don't know of a way to get the
+workers to respect the cpu controller (and even cpuset for that matter) without
+doing that.
+
+Thanks for the quick feedback.
+
+Daniel
