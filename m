@@ -2,130 +2,123 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B890C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A69C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE584206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C72E206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfGl9FDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfFEMcG (ORCPT
+        id S1727762AbfFEMdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:32:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41920 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727461AbfFEMcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:32:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8D62CAE8B;
-        Wed,  5 Jun 2019 12:32:03 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 1D58EDA843; Wed,  5 Jun 2019 14:32:54 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 14:32:53 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Maninder Singh <maninder1.s@samsung.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        terrelln@fb.com
-Subject: Re: [PATCH 1/4] zstd: pass pointer rathen than structure to functions
-Message-ID: <20190605123253.GZ15290@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Maninder Singh <maninder1.s@samsung.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        keescook@chromium.org, gustavo@embeddedor.com, joe@perches.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        a.sahrawat@samsung.com, pankaj.m@samsung.com, v.narang@samsung.com,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        terrelln@fb.com
-References: <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
- <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcas5p1.samsung.com>
- <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
- <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
- <20190605115703.GY15290@twin.jikos.cz>
+        Wed, 5 Jun 2019 08:33:32 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53218 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfFEMdb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:33:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s3so2091082wms.2;
+        Wed, 05 Jun 2019 05:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dS1ZaHCEDETpfZhDj9KoJ5ScF+/wugl5HQvEWcNs2Qg=;
+        b=DfGl9FDfgDm1nPau3gW2n+zTyUZhKfSBropX2aBg/QQAF3+0+SBbbyak8juLc2+cuo
+         E9WG2Z5gyHg94ek+2GtTNAR/B8crKrV83gKEApu/CiUrWERaB5lZu29jxWrHBWOMaLkv
+         WNlOAdQ7nVkYPCA/09doIlkicMj0Or/ajtNsQMVkaZHZKlbJd1SN24diNkd+ZDrcv84p
+         C+ddP82AWZI9g9grkzrKknwuIjyF+12MFlZR+8+XcoQF5x1SF6+HK/ITs9a26xBF08F1
+         sTbM+Wg2D7FDl1uWekTat56zIi0qdBIPk9aIML8JfWhls0F6P6FJ80aIu2+5EbXlsD38
+         2tsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dS1ZaHCEDETpfZhDj9KoJ5ScF+/wugl5HQvEWcNs2Qg=;
+        b=JkW+dQtRtLk3I3FtQvfl6YPgAMuV2b8ZYjxOypJkeHmUh0FORCirHXgLugPLL+EiTa
+         Hr5vTEhwdZRsl8QYf7l6lUPBY0kiG9v4uKTAiZuh3pIBJ9y6InbEqWkiinEy/rYDZsFx
+         OdodskQky7u9vkxY+CDuQpKkcCFPcbgKJn25J65S/9HV1LfqjwY/UweljlD6upfQCAtL
+         bj/l5lD9AVz1X2xv58XhyM5xg6Z2gQzlUyhyUg08APjG71XZMa4I+iKt7+gGYcicydt8
+         wimrjjeWkblRzBpOGhXcPQLxxmNHl/f10warPBVhcXRHlWzhhs/zdpZkBzz81DOk/cXb
+         OYoQ==
+X-Gm-Message-State: APjAAAXYLWBXDaYNwKyYsIjKlIsIojQAlF/jmXtk9u81T2iMjGoM4fwb
+        FuJ+qhyg2j70FYElX35I+1M=
+X-Google-Smtp-Source: APXvYqxm5fjIn8Wyy87PoN9X3VY6GsvFaGPxSeQvbHfoMFUoNH3jsickxGjiZWtugCmFyZpFfiMHQA==
+X-Received: by 2002:a1c:4484:: with SMTP id r126mr23004300wma.27.1559738009326;
+        Wed, 05 Jun 2019 05:33:29 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id z12sm10693621wrl.37.2019.06.05.05.33.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 05:33:28 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 14:33:27 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] rtc: tegra: Drop MODULE_ALIAS
+Message-ID: <20190605123327.GB724@ulmo>
+References: <20190605122613.21303-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
 Content-Disposition: inline
-In-Reply-To: <20190605115703.GY15290@twin.jikos.cz>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <20190605122613.21303-1-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 01:57:03PM +0200, David Sterba wrote:
-> On Tue, Jun 04, 2019 at 03:43:26PM -0700, Andrew Morton wrote:
-> > On Mon,  3 Jun 2019 14:32:03 +0530 Maninder Singh <maninder1.s@samsung.com> wrote:
-> > 
-> > > currently params structure is passed in all functions, which increases
-> > > stack usage in all the function and lead to stack overflow on target like
-> > > ARM with kernel stack size of 8 KB so better to pass pointer.
-> > > 
-> > > Checked for ARM:
-> > > 
-> > >                                 Original               Patched
-> > > Call FLow Size:                  1264                   1040
-> > > ....
-> > > (HUF_sort)                      -> 296
-> > > (HUF_buildCTable_wksp)          -> 144
-> > > (HUF_compress4X_repeat)         -> 88
-> > > (ZSTD_compressBlock_internal)   -> 200
-> > > (ZSTD_compressContinue_internal)-> 136                  -> 88
-> > > (ZSTD_compressCCtx)             -> 192                  -> 64
-> > > (zstd_compress)                 -> 144                  -> 96
-> > > (crypto_compress)               -> 32
-> > > (zcomp_compress)                -> 32
-> > > ....
-> > > 
-> > > Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> > > Signed-off-by: Vaneet Narang <v.narang@samsung.com>
-> > > 
-> > 
-> > You missed btrfs.  This needs review, please - particularly the
-> > kernel-wide static ZSTD_parameters in zstd_get_btrfs_parameters().
-> 
-> > 
-> > The base patch is here:
-> > 
-> > http://lkml.kernel.org/r/1559552526-4317-2-git-send-email-maninder1.s@samsung.com  
-> > 
-> > --- a/fs/btrfs/zstd.c~zstd-pass-pointer-rathen-than-structure-to-functions-fix
-> > +++ a/fs/btrfs/zstd.c
-> > @@ -27,15 +27,17 @@
-> >  /* 307s to avoid pathologically clashing with transaction commit */
-> >  #define ZSTD_BTRFS_RECLAIM_JIFFIES (307 * HZ)
-> >  
-> > -static ZSTD_parameters zstd_get_btrfs_parameters(unsigned int level,
-> > +static ZSTD_parameters *zstd_get_btrfs_parameters(unsigned int level,
-> >  						 size_t src_len)
-> >  {
-> > -	ZSTD_parameters params = ZSTD_getParams(level, src_len, 0);
-> > +	static ZSTD_parameters params;
-> 
-> > +
-> > +	params = ZSTD_getParams(level, src_len, 0);
-> 
-> No thats' broken, the params can't be static as it depends on level and
-> src_len. What happens if there are several requests in parallel with
-> eg. different levels?
-> 
-> Would be really great if the mailinglist is CCed when the code is
-> changed in a non-trivial way.
 
-So this does not compile fs/btrfs/zstd.o which Andrew probably found
-too, otherwise btrfs is the only in-tree user of the function outside of
-lib/ and crypto/.
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think that Nick Terrell should have been CCed too, as he ported zstd
-to linux.
+On Wed, Jun 05, 2019 at 03:26:13PM +0300, Dmitry Osipenko wrote:
+> RTC driver was converted to OF driver long time ago. The MODULE_ALIAS
+> macro has no effect for the OF drivers since the alias is overridden by
+> the drivers core to follow the OF naming convention of the driver's alias,
+> which is based on the device-tree matching name.
+>=20
+> $ cat /sys/devices/soc0/7000e000.rtc/modalias
+> of:NrtcT(null)Cnvidia,tegra20-rtc
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/rtc/rtc-tegra.c | 1 -
+>  1 file changed, 1 deletion(-)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz3tpcACgkQ3SOs138+
+s6E+Ng//eZTxse0nIaE8yFtTYIk+8duVndMR5gjd4dlPfNlYj+22Mwbrkjdbwhaf
+6UxRgSSDeEBIsRIogl7Js/UzxOhIDw6dT16DItWGUVNoX5CJ/kAXhimnis4x7guh
+IHiLEBfJLmq1+x2tq+oIA/P7CpaVpSjII/27Be5ju84T94SDiGwCKqfCpLyWCePC
+XNghQ1CUJWj9GXltqg2Amjbn49yGcYId16DwHHfbqeeQYmS/Du1IZnQEevMMy+92
+1EEow8h4LmfBmb7mq97Xl+ozX7ADgwwF+3oEGLpuFrSKyInvND8VW8WG4zhPa2SX
+TQ4NzyJe9AqJh6MXMT+zL9Jd3b150AE/+VHcDKb42IETXi4KIRg2dmBV1VxOvg0G
+b/fDJtMtOI/XtCG4Eca6wc+F6y9KkJ07d53FTuja1CZmJ3nyYoeZS7OLWKOxmurR
+2kire874EEt8R8WHX3P5yE/qz2+6LlShbluMMRy8OyxSETkandrjFZVyghT/LWp5
+zi3NvxqmJw20IMODPMguloMBXqaN+ahLzZOcmzQu85w8lc++A2z53Oqd94JckOC3
+9B04eXEzxDtz2rJ/K07JAt9SR0fV4cmMMTWbUh6OINjCOcOHsHLTlu6jW69ey15H
+kt94WU6mhdsyImTx4glAK3hmhtF9xD4+GKkZ8k2veTLJZLoKzH8=
+=Yr7G
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
