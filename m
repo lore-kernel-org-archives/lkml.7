@@ -6,101 +6,235 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F1BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22354C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B19E20874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAAC2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfFEWNF (ORCPT
+        id S1726859AbfFEWNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:13:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25093 "EHLO mga03.intel.com"
+        Wed, 5 Jun 2019 18:13:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:47386 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfFEWNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:13:05 -0400
+        id S1726821AbfFEWNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:13:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 15:13:04 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 15:13:09 -0700
 X-ExtLoop1: 1
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Jun 2019 15:13:04 -0700
-Subject: [PATCH v9 09/12] mm: Document ZONE_DEVICE memory-model implications
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2019 15:13:09 -0700
+Subject: [PATCH v9 10/12] mm/devm_memremap_pages: Enable sub-section remap
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     akpm@linux-foundation.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org,
+Cc:     Michal Hocko <mhocko@suse.com>, Toshi Kani <toshi.kani@hpe.com>,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
         linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
         osalvador@suse.de, mhocko@suse.com
-Date:   Wed, 05 Jun 2019 14:58:47 -0700
-Message-ID: <155977192794.2443951.16177998596403034849.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Jun 2019 14:58:53 -0700
+Message-ID: <155977193326.2443951.14201009973429527491.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explain the general mechanisms of 'ZONE_DEVICE' pages and list the users
-of 'devm_memremap_pages()'.
+Teach devm_memremap_pages() about the new sub-section capabilities of
+arch_{add,remove}_memory(). Effectively, just replace all usage of
+align_start, align_end, and align_size with res->start, res->end, and
+resource_size(res). The existing sanity check will still make sure that
+the two separate remap attempts do not collide within a sub-section (2MB
+on x86).
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Reported-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/vm/memory-model.rst |   39 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ kernel/memremap.c |   61 +++++++++++++++++++++--------------------------------
+ 1 file changed, 24 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
-index 382f72ace1fc..e0af47e02e78 100644
---- a/Documentation/vm/memory-model.rst
-+++ b/Documentation/vm/memory-model.rst
-@@ -181,3 +181,42 @@ that is eventually passed to vmemmap_populate() through a long chain
- of function calls. The vmemmap_populate() implementation may use the
- `vmem_altmap` along with :c:func:`altmap_alloc_block_buf` helper to
- allocate memory map on the persistent memory device.
-+
-+ZONE_DEVICE
-+===========
-+The `ZONE_DEVICE` facility builds upon `SPARSEMEM_VMEMMAP` to offer
-+`struct page` `mem_map` services for device driver identified physical
-+address ranges. The "device" aspect of `ZONE_DEVICE` relates to the fact
-+that the page objects for these address ranges are never marked online,
-+and that a reference must be taken against the device, not just the page
-+to keep the memory pinned for active use. `ZONE_DEVICE`, via
-+:c:func:`devm_memremap_pages`, performs just enough memory hotplug to
-+turn on :c:func:`pfn_to_page`, :c:func:`page_to_pfn`, and
-+:c:func:`get_user_pages` service for the given range of pfns. Since the
-+page reference count never drops below 1 the page is never tracked as
-+free memory and the page's `struct list_head lru` space is repurposed
-+for back referencing to the host device / driver that mapped the memory.
-+
-+While `SPARSEMEM` presents memory as a collection of sections,
-+optionally collected into memory blocks, `ZONE_DEVICE` users have a need
-+for smaller granularity of populating the `mem_map`. Given that
-+`ZONE_DEVICE` memory is never marked online it is subsequently never
-+subject to its memory ranges being exposed through the sysfs memory
-+hotplug api on memory block boundaries. The implementation relies on
-+this lack of user-api constraint to allow sub-section sized memory
-+ranges to be specified to :c:func:`arch_add_memory`, the top-half of
-+memory hotplug. Sub-section support allows for `PMD_SIZE` as the minimum
-+alignment granularity for :c:func:`devm_memremap_pages`.
-+
-+The users of `ZONE_DEVICE` are:
-+* pmem: Map platform persistent memory to be used as a direct-I/O target
-+  via DAX mappings.
-+
-+* hmm: Extend `ZONE_DEVICE` with `->page_fault()` and `->page_free()`
-+  event callbacks to allow a device-driver to coordinate memory management
-+  events related to device-memory, typically GPU memory. See
-+  Documentation/vm/hmm.rst.
-+
-+* p2pdma: Create `struct page` objects to allow peer devices in a
-+  PCI/-E topology to coordinate direct-DMA operations between themselves,
-+  i.e. bypass host memory.
+diff --git a/kernel/memremap.c b/kernel/memremap.c
+index 57980ed4e571..a0e5f6b91b04 100644
+--- a/kernel/memremap.c
++++ b/kernel/memremap.c
+@@ -58,7 +58,7 @@ static unsigned long pfn_first(struct dev_pagemap *pgmap)
+ 	struct vmem_altmap *altmap = &pgmap->altmap;
+ 	unsigned long pfn;
+ 
+-	pfn = res->start >> PAGE_SHIFT;
++	pfn = PHYS_PFN(res->start);
+ 	if (pgmap->altmap_valid)
+ 		pfn += vmem_altmap_offset(altmap);
+ 	return pfn;
+@@ -86,7 +86,6 @@ static void devm_memremap_pages_release(void *data)
+ 	struct dev_pagemap *pgmap = data;
+ 	struct device *dev = pgmap->dev;
+ 	struct resource *res = &pgmap->res;
+-	resource_size_t align_start, align_size;
+ 	unsigned long pfn;
+ 	int nid;
+ 
+@@ -96,25 +95,21 @@ static void devm_memremap_pages_release(void *data)
+ 	pgmap->cleanup(pgmap->ref);
+ 
+ 	/* pages are dead and unused, undo the arch mapping */
+-	align_start = res->start & ~(PA_SECTION_SIZE - 1);
+-	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
+-		- align_start;
+-
+-	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
++	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+ 
+ 	mem_hotplug_begin();
+ 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+-		pfn = align_start >> PAGE_SHIFT;
++		pfn = PHYS_PFN(res->start);
+ 		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+-				align_size >> PAGE_SHIFT, NULL);
++				PHYS_PFN(resource_size(res)), NULL);
+ 	} else {
+-		arch_remove_memory(nid, align_start, align_size,
++		arch_remove_memory(nid, res->start, resource_size(res),
+ 				pgmap->altmap_valid ? &pgmap->altmap : NULL);
+-		kasan_remove_zero_shadow(__va(align_start), align_size);
++		kasan_remove_zero_shadow(__va(res->start), resource_size(res));
+ 	}
+ 	mem_hotplug_done();
+ 
+-	untrack_pfn(NULL, PHYS_PFN(align_start), align_size);
++	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
+ 	pgmap_array_delete(res);
+ 	dev_WARN_ONCE(dev, pgmap->altmap.alloc,
+ 		      "%s: failed to free all reserved pages\n", __func__);
+@@ -141,16 +136,13 @@ static void devm_memremap_pages_release(void *data)
+  */
+ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ {
+-	resource_size_t align_start, align_size, align_end;
+-	struct vmem_altmap *altmap = pgmap->altmap_valid ?
+-			&pgmap->altmap : NULL;
+ 	struct resource *res = &pgmap->res;
+ 	struct dev_pagemap *conflict_pgmap;
+ 	struct mhp_restrictions restrictions = {
+ 		/*
+ 		 * We do not want any optional features only our own memmap
+ 		*/
+-		.altmap = altmap,
++		.altmap = pgmap->altmap_valid ? &pgmap->altmap : NULL,
+ 	};
+ 	pgprot_t pgprot = PAGE_KERNEL;
+ 	int error, nid, is_ram;
+@@ -160,12 +152,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	align_start = res->start & ~(PA_SECTION_SIZE - 1);
+-	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
+-		- align_start;
+-	align_end = align_start + align_size - 1;
+-
+-	conflict_pgmap = get_dev_pagemap(PHYS_PFN(align_start), NULL);
++	conflict_pgmap = get_dev_pagemap(PHYS_PFN(res->start), NULL);
+ 	if (conflict_pgmap) {
+ 		dev_WARN(dev, "Conflicting mapping in same section\n");
+ 		put_dev_pagemap(conflict_pgmap);
+@@ -173,7 +160,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 		goto err_array;
+ 	}
+ 
+-	conflict_pgmap = get_dev_pagemap(PHYS_PFN(align_end), NULL);
++	conflict_pgmap = get_dev_pagemap(PHYS_PFN(res->end), NULL);
+ 	if (conflict_pgmap) {
+ 		dev_WARN(dev, "Conflicting mapping in same section\n");
+ 		put_dev_pagemap(conflict_pgmap);
+@@ -181,7 +168,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 		goto err_array;
+ 	}
+ 
+-	is_ram = region_intersects(align_start, align_size,
++	is_ram = region_intersects(res->start, resource_size(res),
+ 		IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE);
+ 
+ 	if (is_ram != REGION_DISJOINT) {
+@@ -202,8 +189,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 	if (nid < 0)
+ 		nid = numa_mem_id();
+ 
+-	error = track_pfn_remap(NULL, &pgprot, PHYS_PFN(align_start), 0,
+-			align_size);
++	error = track_pfn_remap(NULL, &pgprot, PHYS_PFN(res->start), 0,
++			resource_size(res));
+ 	if (error)
+ 		goto err_pfn_remap;
+ 
+@@ -221,25 +208,25 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 	 * arch_add_memory().
+ 	 */
+ 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+-		error = add_pages(nid, align_start >> PAGE_SHIFT,
+-				align_size >> PAGE_SHIFT, &restrictions);
++		error = add_pages(nid, PHYS_PFN(res->start),
++				PHYS_PFN(resource_size(res)), &restrictions);
+ 	} else {
+-		error = kasan_add_zero_shadow(__va(align_start), align_size);
++		error = kasan_add_zero_shadow(__va(res->start), resource_size(res));
+ 		if (error) {
+ 			mem_hotplug_done();
+ 			goto err_kasan;
+ 		}
+ 
+-		error = arch_add_memory(nid, align_start, align_size,
+-					&restrictions);
++		error = arch_add_memory(nid, res->start, resource_size(res),
++				&restrictions);
+ 	}
+ 
+ 	if (!error) {
+ 		struct zone *zone;
+ 
+ 		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
+-		move_pfn_range_to_zone(zone, align_start >> PAGE_SHIFT,
+-				align_size >> PAGE_SHIFT, altmap);
++		move_pfn_range_to_zone(zone, PHYS_PFN(res->start),
++				PHYS_PFN(resource_size(res)), restrictions.altmap);
+ 	}
+ 
+ 	mem_hotplug_done();
+@@ -251,8 +238,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 	 * to allow us to do the work while not holding the hotplug lock.
+ 	 */
+ 	memmap_init_zone_device(&NODE_DATA(nid)->node_zones[ZONE_DEVICE],
+-				align_start >> PAGE_SHIFT,
+-				align_size >> PAGE_SHIFT, pgmap);
++				PHYS_PFN(res->start),
++				PHYS_PFN(resource_size(res)), pgmap);
+ 	percpu_ref_get_many(pgmap->ref, pfn_end(pgmap) - pfn_first(pgmap));
+ 
+ 	error = devm_add_action_or_reset(dev, devm_memremap_pages_release,
+@@ -263,9 +250,9 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 	return __va(res->start);
+ 
+  err_add_memory:
+-	kasan_remove_zero_shadow(__va(align_start), align_size);
++	kasan_remove_zero_shadow(__va(res->start), resource_size(res));
+  err_kasan:
+-	untrack_pfn(NULL, PHYS_PFN(align_start), align_size);
++	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
+  err_pfn_remap:
+ 	pgmap_array_delete(res);
+  err_array:
 
