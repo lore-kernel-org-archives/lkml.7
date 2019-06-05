@@ -2,268 +2,120 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36C8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F731C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8804D2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCA8206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559736256;
+	bh=Q4I3OkixRElnCphLLigiroJyKLLP7sxM9Ti74vtXU9s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nzVk8FV3UbwsFUx+dk/85Vtbi/9ASFhrnx6zl21Rks8EBopBa0KxssEPiZBCdUt6o
+	 jwlKERwELtqWuzlyxwMCm+8a90eLjzf3ugfxpAdI3QqIZGgveOXu+q/0RbfsKMRbmZ
+	 Qol6rooUQOKCzcliPGEwbgpDoxFqO+MDtINoSmXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfFEMDd (ORCPT
+        id S1727612AbfFEMEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:03:33 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45949 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726305AbfFEMDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:03:32 -0400
-Received: from [IPv6:2001:420:44c1:2579:c806:4d76:5b3c:eea9] ([IPv6:2001:420:44c1:2579:c806:4d76:5b3c:eea9])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id YUdahlLxG3qlsYUddhfn01; Wed, 05 Jun 2019 14:03:30 +0200
-Subject: Re: [PATCH 3/5] media: mtk-vcodec: remove unneeded proxy functions
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190604093737.172599-1-acourbot@chromium.org>
- <20190604093737.172599-4-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <c86d2409-b3f0-b20e-f371-50338f7199d8@xs4all.nl>
-Date:   Wed, 5 Jun 2019 14:03:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 5 Jun 2019 08:04:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfFEMEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:04:14 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B21420874;
+        Wed,  5 Jun 2019 12:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559736253;
+        bh=Q4I3OkixRElnCphLLigiroJyKLLP7sxM9Ti74vtXU9s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lNzKx7eu7ovbPkGHOGYaq9WLcs1+7RfPwD5bkpFJrfpIDl7nN3r9gmIDwNsAQkjkI
+         7JWUfJiz1PBiG9GhgEn/xpFjzd3Ova3+1/2rQS3O+o8sTZMD3Iyl/mpeKlRetMPCPA
+         RdfM6dDBePzxoa2bip5qri3s7nntbwymfpkoPZA0=
+Received: by mail-lj1-f175.google.com with SMTP id j24so22910015ljg.1;
+        Wed, 05 Jun 2019 05:04:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/Ny556OIjFGPcUTVy/L97s2y6uD6fww+pB6Df0s8iYOQ5QJWK
+        KI5pjFPWt/1+xx5LMcXwuCvTANX58FSu2nI/qNE=
+X-Google-Smtp-Source: APXvYqw69BGxAUXlLNZiQohe1mQKEk1/sUuI61aHpBWprCisadKCJZLOINlyBJyK7mSKiYiH+wU6moSJ+FfKB5EV0vU=
+X-Received: by 2002:a2e:424c:: with SMTP id p73mr3438602lja.216.1559736251748;
+ Wed, 05 Jun 2019 05:04:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190604093737.172599-4-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKpG5YTmPrv9ECx9caWZmPw9wkF0O/93RuPnuOaSU66y2ZAoV9ShsUwPVF9kfGZTQgDYjiL4ukeiLhetjqbgu8qna2enbKFUhjePWLcpE9pRmktaDyn4
- eft3zXM5crqve0NuecMlrhRKZ/+KtE7sdwyFL7Iz/JeOSWwJtPPYnpv/qUP2ELySMXV1wmOjUPeXErPSoPoV7DrRFfrAWTIQ3TLQk2ggx6Qm/22acgF2mK/k
- 97hf0Q+WlQgpVhUbjfkHPv5PTtUZJ4ZINQBDlusRXfvj1M7Y5YLojmyNU+yr9wHtcCz1PavCt2dFA6E34YGcQmYELfHRWB0GgHZ63ZrsQSwsk3qNF2eNWOgY
- gSi5auLPBbMOPp32s33upW7yibZ+qNjtxrpYLNnmTA/sUUVDPR+4+xQg63qjgObwPy0z5aRKK0pkv/9IMRXoA9569KeqMzsWqSOa3qG6bM3ZvUZSxOO0FPxd
- I1JeYD+poEknkgxJMGbAHtq5pYz0Eec4EPfvCy2n1ndeQm0awrhL9GRJIV+/Gasq+z4e6rCkd/0kq7qWhLeT9nY4OU2uk+BLjPV9Qg==
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
+ <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com> <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
+In-Reply-To: <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 5 Jun 2019 14:04:00 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdoip-pc=qGxaxV_FAV8n7taXHuP59ve=YAMi-QibVyfQ@mail.gmail.com>
+Message-ID: <CAJKOXPdoip-pc=qGxaxV_FAV8n7taXHuP59ve=YAMi-QibVyfQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/19 11:37 AM, Alexandre Courbot wrote:
-> We were getting the codec interface through a proxy function that does
-> not bring anything compared to just accessing the interface definition
-> directly, so just do that. Also make the decoder interfaces const.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> ---
->  .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c    |  9 +--------
->  drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c |  9 +--------
->  drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c |  9 +--------
->  drivers/media/platform/mtk-vcodec/vdec_drv_if.c      | 12 ++++++------
->  .../media/platform/mtk-vcodec/venc/venc_h264_if.c    |  9 +--------
->  drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c |  9 +--------
->  drivers/media/platform/mtk-vcodec/venc_drv_if.c      |  8 ++++----
->  7 files changed, 15 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-> index 0c0660d2560b..85afdd6ab093 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-> @@ -481,16 +481,9 @@ static int vdec_h264_get_param(void *h_vdec, enum vdec_get_param_type type,
->  	return 0;
->  }
->  
-> -static struct vdec_common_if vdec_h264_if = {
-> +const struct vdec_common_if vdec_h264_if = {
->  	.init		= vdec_h264_init,
->  	.decode		= vdec_h264_decode,
->  	.get_param	= vdec_h264_get_param,
->  	.deinit		= vdec_h264_deinit,
->  };
-> -
-> -struct vdec_common_if *get_h264_dec_comm_if(void);
-> -
-> -struct vdec_common_if *get_h264_dec_comm_if(void)
-> -{
-> -	return &vdec_h264_if;
-> -}
-> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-> index 1e3763881e0d..a8ca762eac76 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-> @@ -605,16 +605,9 @@ static void vdec_vp8_deinit(void *h_vdec)
->  	kfree(inst);
->  }
->  
-> -static struct vdec_common_if vdec_vp8_if = {
-> +const struct vdec_common_if vdec_vp8_if = {
->  	.init		= vdec_vp8_init,
->  	.decode		= vdec_vp8_decode,
->  	.get_param	= vdec_vp8_get_param,
->  	.deinit		= vdec_vp8_deinit,
->  };
-> -
-> -struct vdec_common_if *get_vp8_dec_comm_if(void);
-> -
-> -struct vdec_common_if *get_vp8_dec_comm_if(void)
-> -{
-> -	return &vdec_vp8_if;
-> -}
-> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> index 589b2fc91da2..1f99febdfbbe 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> @@ -994,16 +994,9 @@ static int vdec_vp9_get_param(void *h_vdec, enum vdec_get_param_type type,
->  	return ret;
->  }
->  
-> -static struct vdec_common_if vdec_vp9_if = {
-> +const struct vdec_common_if vdec_vp9_if = {
->  	.init		= vdec_vp9_init,
->  	.decode		= vdec_vp9_decode,
->  	.get_param	= vdec_vp9_get_param,
->  	.deinit		= vdec_vp9_deinit,
->  };
-> -
-> -struct vdec_common_if *get_vp9_dec_comm_if(void);
-> -
-> -struct vdec_common_if *get_vp9_dec_comm_if(void)
-> -{
-> -	return &vdec_vp9_if;
-> -}
-> diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> index 5d8d76d55005..aa614eea3cc5 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-> @@ -10,9 +10,9 @@
->  #include "mtk_vcodec_dec_pm.h"
->  #include "mtk_vpu.h"
->  
-> -const struct vdec_common_if *get_h264_dec_comm_if(void);
-> -const struct vdec_common_if *get_vp8_dec_comm_if(void);
-> -const struct vdec_common_if *get_vp9_dec_comm_if(void);
-> +extern const struct vdec_common_if vdec_h264_if;
-> +extern const struct vdec_common_if vdec_vp8_if;
-> +extern const struct vdec_common_if vdec_vp9_if;
->  
->  int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
->  {
-> @@ -20,13 +20,13 @@ int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
->  
->  	switch (fourcc) {
->  	case V4L2_PIX_FMT_H264:
-> -		ctx->dec_if = get_h264_dec_comm_if();
-> +		ctx->dec_if = &vdec_h264_if;
->  		break;
->  	case V4L2_PIX_FMT_VP8:
-> -		ctx->dec_if = get_vp8_dec_comm_if();
-> +		ctx->dec_if = &vdec_vp8_if;
->  		break;
->  	case V4L2_PIX_FMT_VP9:
-> -		ctx->dec_if = get_vp9_dec_comm_if();
-> +		ctx->dec_if = &vdec_vp9_if;
->  		break;
->  	default:
->  		return -EINVAL;
-> diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> index bfe61d5dc1cb..4e1d933395cd 100644
-> --- a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> @@ -649,16 +649,9 @@ static int h264_enc_deinit(void *handle)
->  	return ret;
->  }
->  
-> -static const struct venc_common_if venc_h264_if = {
-> +const struct venc_common_if venc_h264_if = {
->  	.init = h264_enc_init,
->  	.encode = h264_enc_encode,
->  	.set_param = h264_enc_set_param,
->  	.deinit = h264_enc_deinit,
->  };
-> -
-> -const struct venc_common_if *get_h264_enc_comm_if(void);
-> -
-> -const struct venc_common_if *get_h264_enc_comm_if(void)
-> -{
-> -	return &venc_h264_if;
-> -}
-> diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> index af23367cf1dd..2d1372ab6486 100644
-> --- a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> @@ -455,16 +455,9 @@ static int vp8_enc_deinit(void *handle)
->  	return ret;
->  }
->  
-> -static const struct venc_common_if venc_vp8_if = {
-> +const struct venc_common_if venc_vp8_if = {
->  	.init = vp8_enc_init,
->  	.encode = vp8_enc_encode,
->  	.set_param = vp8_enc_set_param,
->  	.deinit = vp8_enc_deinit,
->  };
-> -
-> -const struct venc_common_if *get_vp8_enc_comm_if(void);
-> -
-> -const struct venc_common_if *get_vp8_enc_comm_if(void)
-> -{
-> -	return &venc_vp8_if;
-> -}
-> diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.c b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-> index 318af1b4b6e7..cf5bfa296d20 100644
-> --- a/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-> @@ -11,8 +11,8 @@
->  #include "mtk_vcodec_enc_pm.h"
->  #include "mtk_vpu.h"
->  
-> -const struct venc_common_if *get_h264_enc_comm_if(void);
-> -const struct venc_common_if *get_vp8_enc_comm_if(void);
-> +extern const struct venc_common_if venc_h264_if;
-> +extern const struct venc_common_if venc_vp8_if;
+On Sun, 2 Jun 2019 at 23:42, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> > On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
+> >>
+> >> For configure low level state of charge threshold alert signaled from
+> >> max17040 we add "maxim,alert-low-soc-level" property.
+> >>
+> >> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> >> ---
+> >>   .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
+> >>   1 file changed, 28 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >> new file mode 100644
+> >> index 000000000000..a13e8d50ff7b
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >> @@ -0,0 +1,28 @@
+> >> +max17040_battery
+> >> +~~~~~~~~~~~~~~~~
+> >> +
+> >> +Required properties :
+> >> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> >
+> > One more comment. The datasheet for max17040 says that there is on
+> > ALERT pin and ALERT bits in RCOMP register. Which device are you
+> > using? If it turns out that max17040 does not support it, then the
+> > driver and bindings should reflect this - interrupts should not be set
+> > on max17040.
+> >
+>
+> Yes you are right, max17040 have no ALERT pin. I am using max17043. Let
+> me know what you think would be best, put a note about it in the
+> description, add a compatibles like "maxim,max17043" and
+> "maxim,max17044"? What do you think?
 
-This should be moved to a header. checkpatch gives me:
+Usually in such case driver should behave differently for different
+devices. This difference is chosen by compatible. Since there is
+already max77836 compatible - which has the ALERT pin (probably it
+just includes 17043 fuel gauge) - you can customize it. No need for
+new compatible, unless it stops working on max77836...
 
-Applying: media: mtk-vcodec: remove unneeded proxy functions
-WARNING: externs should be avoided in .c files
-#79: FILE: drivers/media/platform/mtk-vcodec/vdec_drv_if.c:14:
-+extern const struct vdec_common_if vdec_vp8_if;
+Anyway, configuring interrupts on max17040 would be probably harmless
+but still it is not really correct. The registers should not be
+touched in such case.
 
-WARNING: externs should be avoided in .c files
-#80: FILE: drivers/media/platform/mtk-vcodec/vdec_drv_if.c:15:
-+extern const struct vdec_common_if vdec_vp9_if;
-
-WARNING: externs should be avoided in .c files
-#156: FILE: drivers/media/platform/mtk-vcodec/venc_drv_if.c:15:
-+extern const struct venc_common_if venc_vp8_if;
-
-And I agree with checkpatch here.
-
-I'll drop this patch from the series, but I'll take the others.
-
-Regards,
-
-	Hans
-
->  
->  int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
->  {
-> @@ -20,10 +20,10 @@ int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
->  
->  	switch (fourcc) {
->  	case V4L2_PIX_FMT_VP8:
-> -		ctx->enc_if = get_vp8_enc_comm_if();
-> +		ctx->enc_if = &venc_vp8_if;
->  		break;
->  	case V4L2_PIX_FMT_H264:
-> -		ctx->enc_if = get_h264_enc_comm_if();
-> +		ctx->enc_if = &venc_h264_if;
->  		break;
->  	default:
->  		return -EINVAL;
-> 
-
+Best regards,
+Krzysztof
