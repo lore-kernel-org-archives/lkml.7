@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4E3C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19CFC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9B92075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B040E2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NLvmv78i"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oFzHm/8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFEFzb (ORCPT
+        id S1726664AbfFEFzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:55:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39226 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFEFza (ORCPT
+        Wed, 5 Jun 2019 01:55:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49118 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfFEFzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:55:30 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x555tS02101476;
-        Wed, 5 Jun 2019 00:55:28 -0500
+        Wed, 5 Jun 2019 01:55:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x555tUUv002609;
+        Wed, 5 Jun 2019 00:55:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559714128;
-        bh=tIJbe7Fp1BD7LDlYGApM8nyEkRguoaTkqCrr26aUqco=;
+        s=ti-com-17Q1; t=1559714130;
+        bh=hIv3m0nvpBJjbhu7oWIXqB0Efd9SLUjlr+sYX36ES7k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NLvmv78igSNog9DS2vN93FGEY/wz+6OcjcILHXF0rTRZPI6EmPmMghMIllTbYgKvG
-         Rv7f29CcZ2sCmRnA5lUx0rvxIzhZGx5KfYcB55D0dDYWZQO1/lrKAkUI6fnJ8FczDP
-         3SoG5Hm95qZrSkBnEO1jOWzr5Da8Rom5ZhW2l1kQ=
+        b=oFzHm/8JLOkafo6DNDnsbggA5CY4l8R9Zpl3lij+T1JcLXcjX6JlyIlpJb3GgTs0T
+         kLYST2p2Rhvk/WrFIyY8eEXq8rPQZkGuh+cvOxHAhs00Zm1BIjpc5z8fwicZoG+/XH
+         2O/E1x85zriJPZMh1P2iY2BuSyl+vJDdbbaEeob0=
 Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x555tRsv049082
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x555tUTw115719
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 00:55:28 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
+        Wed, 5 Jun 2019 00:55:30 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
  (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 00:55:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 00:55:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 00:55:27 -0500
+ Frontend Transport; Wed, 5 Jun 2019 00:55:29 -0500
 Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x555tMHc049531;
-        Wed, 5 Jun 2019 00:55:25 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x555tMHd049531;
+        Wed, 5 Jun 2019 00:55:28 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
 CC:     <lokeshvutla@ti.com>, <linux-gpio@vger.kernel.org>,
         <t-kristo@ti.com>, <j-keerthy@ti.com>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] gpio: davinci: Fix the compiler warning with ARM64 config enabled
-Date:   Wed, 5 Jun 2019 11:25:18 +0530
-Message-ID: <20190605055519.24079-2-j-keerthy@ti.com>
+Subject: [PATCH 2/2] gpio: Davinci: Add K3 dependencies
+Date:   Wed, 5 Jun 2019 11:25:19 +0530
+Message-ID: <20190605055519.24079-3-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190605055519.24079-1-j-keerthy@ti.com>
 References: <20190605055519.24079-1-j-keerthy@ti.com>
@@ -67,45 +67,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the compiler warning with ARM64 config enabled
-as the current mask assumes 32 bit by default.
+Add K3 dependencies to enable the driver on K3 platforms.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/gpio/gpio-davinci.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 3bbf5804bd11..0977590eb996 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -297,7 +297,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- static void gpio_irq_disable(struct irq_data *d)
- {
- 	struct davinci_gpio_regs __iomem *g = irq2regs(d);
--	u32 mask = (u32) irq_data_get_irq_handler_data(d);
-+	uintptr_t mask = (uintptr_t)irq_data_get_irq_handler_data(d);
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 62f3fe06cd2f..28dba62e2219 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -174,7 +174,7 @@ config GPIO_CLPS711X
+ config GPIO_DAVINCI
+ 	bool "TI Davinci/Keystone GPIO support"
+ 	default y if ARCH_DAVINCI
+-	depends on ARM && (ARCH_DAVINCI || ARCH_KEYSTONE)
++	depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || ARCH_K3)
+ 	help
+ 	  Say yes here to enable GPIO support for TI Davinci/Keystone SoCs.
  
- 	writel_relaxed(mask, &g->clr_falling);
- 	writel_relaxed(mask, &g->clr_rising);
-@@ -306,7 +306,7 @@ static void gpio_irq_disable(struct irq_data *d)
- static void gpio_irq_enable(struct irq_data *d)
- {
- 	struct davinci_gpio_regs __iomem *g = irq2regs(d);
--	u32 mask = (u32) irq_data_get_irq_handler_data(d);
-+	uintptr_t mask = (uintptr_t)irq_data_get_irq_handler_data(d);
- 	unsigned status = irqd_get_trigger_type(d);
- 
- 	status &= IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING;
-@@ -447,7 +447,7 @@ davinci_gpio_irq_map(struct irq_domain *d, unsigned int irq,
- 				"davinci_gpio");
- 	irq_set_irq_type(irq, IRQ_TYPE_NONE);
- 	irq_set_chip_data(irq, (__force void *)g);
--	irq_set_handler_data(irq, (void *)__gpio_mask(hw));
-+	irq_set_handler_data(irq, (void *)(uintptr_t)__gpio_mask(hw));
- 
- 	return 0;
- }
 -- 
 2.17.1
 
