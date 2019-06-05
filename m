@@ -2,76 +2,102 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EDEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7676FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257672075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:26:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PlkGjGUX"
+	by mail.kernel.org (Postfix) with ESMTP id 476262075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 18:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfFES0Q (ORCPT
+        id S1726515AbfFEScU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 14:26:16 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51813 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfFES0Q (ORCPT
+        Wed, 5 Jun 2019 14:32:20 -0400
+Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:41419 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725950AbfFEScU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 14:26:16 -0400
-Received: by mail-it1-f195.google.com with SMTP id m3so5049269itl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 11:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CuKsTBPsIQTq7kaBkBZ4doP5Ts93RaiB5cwtxxnYeKo=;
-        b=PlkGjGUXwzj17TBdlmfkM3QAvf/E4BNtOY6z86bVQd4magMo+EcHQNSjIFIMHSv9ep
-         Hvn0TJUbPu1jT6y+TjRG17nCAMo2zeTFBjnwLXvyDDHdIs/phhSJ5FGcELiuZ3qi4qb4
-         8r2u0QNafuNOyyE9n3i5EJIFPbKUN09gquhoJ1Jq5l847nWhl3wXZXG+e0tX2A09B2Ea
-         t4L1U4es8Xu93CiBgt7golQhzRx1HiABCzolmi+9lkEYx/cOhkMz8PX2Q17JQViNF8KR
-         kPmbzLqAvRGc8MlXh9si9eN7nJ94ifGV8+0AQezoJE43EQfRV4SMR1Ea1rT4lxoRcBoK
-         um3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CuKsTBPsIQTq7kaBkBZ4doP5Ts93RaiB5cwtxxnYeKo=;
-        b=cmSHuyF4EdzVGjTjkjnhtW+V9wgFsrnqq9ISPF6bOW2jsqfly5f8Sd7oEBWfEDxEwZ
-         yM9rVofrtfDjGLfAYcLEP9H+fFhqSP03szHQAiSgd0ecHljKw4eEacGDDaD6brzF9Cig
-         Ebt5KQvzjtBDsuIDxn+Zen6avyWf+iY3QaaE4YjjS3NslIaN6nrgo9fYXj6D8+J9P9rG
-         8Awsa//kjxzZH3mBvbYojdPJ3zrXqbY4aeyYbbPX/wGZKHvUU5JiWq5/nL7RXQ85eOdx
-         cbwPJGfAXzYlvk4r/yU9SuccdV+PXmNCwI0T5IRj3iJTmeDbIJ+YAgQIefcnIH9+MJqL
-         Z6YQ==
-X-Gm-Message-State: APjAAAWNHq85yao4evI5clNxbc72EeMo1TaIkSv2oRQuchzp8gQIrmET
-        Z77iqbG7XiBEy3BLU1mlzSQNRC0tpZmujz3jVcJD4YmGo54=
-X-Google-Smtp-Source: APXvYqzg2Q8FD5mu9akBujndKp639v+Wwjk+fWqAAHLrXjNUx9Ab4kGUMVzGf0NiOxZjZs7NT3ykGTBqnEr/028Fy/w=
-X-Received: by 2002:a24:bd4:: with SMTP id 203mr26657993itd.119.1559759174805;
- Wed, 05 Jun 2019 11:26:14 -0700 (PDT)
+        Wed, 5 Jun 2019 14:32:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C5FBE18224D68;
+        Wed,  5 Jun 2019 18:32:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: love44_4e33dee382858
+X-Filterd-Recvd-Size: 2595
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  5 Jun 2019 18:32:17 +0000 (UTC)
+Message-ID: <44c945bf0573842fe9b2db89407e40c88fcc7eb4.camel@perches.com>
+Subject: Re: [PATCH] block: Drop unlikely before IS_ERR(_OR_NULL)
+From:   Joe Perches <joe@perches.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 05 Jun 2019 11:32:14 -0700
+In-Reply-To: <8221bc17-b0bb-da6f-4343-3e73467252d5@metux.net>
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+         <20190605142428.84784-4-wangkefeng.wang@huawei.com>
+         <8221bc17-b0bb-da6f-4343-3e73467252d5@metux.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
- <20190429193631.119828-1-matthewgarrett@google.com>
-In-Reply-To: <20190429193631.119828-1-matthewgarrett@google.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Wed, 5 Jun 2019 11:26:03 -0700
-Message-ID: <CACdnJuvJcJ4Rkp7gBTwZ_r_9wKtu34Yko+E3yo07cwc53QrGGA@mail.gmail.com>
-Subject: Re: [PATCH V4] mm: Allow userland to request that the kernel clear
- memory on release
-To:     Linux-MM <linux-mm@kvack.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:36 PM Matthew Garrett
-<matthewgarrett@google.com> wrote:
+On Wed, 2019-06-05 at 18:24 +0000, Enrico Weigelt, metux IT consult
+wrote:
+> On 05.06.19 14:24, Kefeng Wang wrote:
+> 
+> > diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> > index b97b479e4f64..1f7127b03490 100644
+> > --- a/block/blk-cgroup.c
+> > +++ b/block/blk-cgroup.c
+> > @@ -881,7 +881,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+> >   			blkg_free(new_blkg);
+> >   		} else {
+> >   			blkg = blkg_create(pos, q, new_blkg);
+> > -			if (unlikely(IS_ERR(blkg))) {
+> > +			if (IS_ERR(blkg)) {
+> >   				ret = PTR_ERR(blkg);
+> >   				goto fail_unlock;
+> >   			}
+> > 
+> 
+> I think this cocci script should do such things automatically:
+> 
+> virtual patch
+> virtual context
+> virtual org
+> virtual report
+> 
+> @@
+> expression E;
+> @@
+> - unlikely(IS_ERR(E))
+> + IS_ERR(E)
 
-(snip)
+Likely change all of these too:
 
-Any further feedback on this? Does it seem conceptually useful?
+$ git grep -P '\blikely.*IS_ERR'
+drivers/net/vxlan.c:    if (likely(!IS_ERR(rt))) {
+fs/ntfs/lcnalloc.c:     if (likely(page && !IS_ERR(page))) {
+fs/ntfs/mft.c:  if (likely(!IS_ERR(page))) {
+fs/ntfs/mft.c:  if (likely(!IS_ERR(m)))
+fs/ntfs/mft.c:          if (likely(!IS_ERR(m))) {
+fs/ntfs/mft.c:          if (likely(!IS_ERR(rl2)))
+fs/ntfs/namei.c:                if (likely(!IS_ERR(dent_inode))) {
+fs/ntfs/runlist.c:      if (likely(!IS_ERR(old_rl)))
+net/openvswitch/datapath.c:             if (likely(!IS_ERR(reply))) {
+net/socket.c:   if (likely(!IS_ERR(newfile))) {
+
+
