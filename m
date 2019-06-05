@@ -2,95 +2,128 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57761C46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47079C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B51E20872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FFA2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFEUZD (ORCPT
+        id S1726637AbfFEU10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:25:03 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:37427 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726464AbfFEUZD (ORCPT
+        Wed, 5 Jun 2019 16:27:26 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38358 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfFEU1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:25:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TTW4sPz_1559766298;
-Received: from US-160370MP2.local(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TTW4sPz_1559766298)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 06 Jun 2019 04:25:00 +0800
-Date:   Wed, 5 Jun 2019 13:24:57 -0700
-From:   Liu Bo <bo.liu@linux.alibaba.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.4 23/56] fuse: honor RLIMIT_FSIZE in
- fuse_file_fallocate
-Message-ID: <20190605202456.2emhy5t26c7mg4f2@US-160370MP2.local>
-Reply-To: bo.liu@linux.alibaba.com
-References: <20190601132600.27427-1-sashal@kernel.org>
- <20190601132600.27427-23-sashal@kernel.org>
+        Wed, 5 Jun 2019 16:27:23 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l3so87164qtj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 13:27:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wGxHiQlWFn1uiPqF46GhGASLxDFDSqAuue1nQQO+VCs=;
+        b=VgMvlqEUqXSwyG0hQpask6WtDt4c+TpS4y+e5sHA1h/FLOQAThtYNrs4+dNjXSDkif
+         anJon2daiL4jPYkrOp1WCsGq/IpLudjA8tUXi/n8H9bWIVxSu3IfygNh03YN0pAvvmox
+         VkYgDSiqgPt/1ScsNFybyA/1lfILuT3HWBFWEV3iIUBskAjvlVlHSaIF41QNmlYlhjlQ
+         04rHdQKDCnQkZcIGCL+3mpifjujvwHYyyjlImuMmL9FseNupuRbs9EQNFijqHi1d+Bqy
+         no0RvYApRCPbMZVVMDkrDZ2UIZH7DRP7vYwf+4oyJhb3tL98vIkcTPUzQi2kAermn1+c
+         1Y6g==
+X-Gm-Message-State: APjAAAW0yGOVykIO2k9aLy3JEskRWdHr9eLogHSNho9OMikhbuJasOQZ
+        wBwF8Jj+sDraUWPPr3O6rjlgrw==
+X-Google-Smtp-Source: APXvYqyNZwCNllCffk9CW8iJVZnNw6kyLj1Wao5YfIYT6vXREYUpwAyvBsDlsGb5oilKvNDw7Zk3hw==
+X-Received: by 2002:aed:254c:: with SMTP id w12mr37738167qtc.127.1559766441824;
+        Wed, 05 Jun 2019 13:27:21 -0700 (PDT)
+Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
+        by smtp.gmail.com with ESMTPSA id z20sm14611825qtz.34.2019.06.05.13.27.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 13:27:20 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 16:27:18 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, James.Bottomley@hansenpartnership.com,
+        hch@infradead.org, davem@davemloft.net, jglisse@redhat.com,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-parisc@vger.kernel.org, christophe.de.dinechin@gmail.com,
+        jrdr.linux@gmail.com
+Subject: Re: [PATCH net-next 0/6] vhost: accelerate metadata access
+Message-ID: <20190605162631-mutt-send-email-mst@kernel.org>
+References: <20190524081218.2502-1-jasowang@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190601132600.27427-23-sashal@kernel.org>
-User-Agent: NeoMutt/20180323
+In-Reply-To: <20190524081218.2502-1-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 09:25:27AM -0400, Sasha Levin wrote:
-> From: Liu Bo <bo.liu@linux.alibaba.com>
+On Fri, May 24, 2019 at 04:12:12AM -0400, Jason Wang wrote:
+> Hi:
 > 
-> [ Upstream commit 0cbade024ba501313da3b7e5dd2a188a6bc491b5 ]
+> This series tries to access virtqueue metadata through kernel virtual
+> address instead of copy_user() friends since they had too much
+> overheads like checks, spec barriers or even hardware feature
+> toggling like SMAP. This is done through setup kernel address through
+> direct mapping and co-opreate VM management with MMU notifiers.
 > 
-> fstests generic/228 reported this failure that fuse fallocate does not
-> honor what 'ulimit -f' has set.
+> Test shows about 23% improvement on TX PPS. TCP_STREAM doesn't see
+> obvious improvement.
 > 
-> This adds the necessary inode_newsize_ok() check.
-> 
-> Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
-> Fixes: 05ba1f082300 ("fuse: add FALLOCATE operation")
-> Cc: <stable@vger.kernel.org> # v3.5
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/fuse/file.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index d40c2451487cb..3ba45758e0938 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -2947,6 +2947,13 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
->  		}
->  	}
->  
-> +	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
-> +	    offset + length > i_size_read(inode)) {
-> +		err = inode_newsize_ok(inode, offset + length);
-> +		if (err)
-> +			return err;
+> Thanks
 
-A later commit [1] was proposed to fix a problem of returning without unlock.
 
-[1]: https://kernel.googlesource.com/pub/scm/linux/kernel/git/mszeredi/fuse/+/35d6fcbb7c3e296a52136347346a698a35af3fda
+Thanks this is queued for next.
 
-thanks,
--liubo
+Did you want to rebase and repost packed ring support on top?
+IIUC it's on par with split ring with these patches.
 
-> +	}
-> +
->  	if (!(mode & FALLOC_FL_KEEP_SIZE))
->  		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
->  
+
+> Changes from RFC V3:
+> - rebase to net-next
+> - Tweak on the comments
+> Changes from RFC V2:
+> - switch to use direct mapping instead of vmap()
+> - switch to use spinlock + RCU to synchronize MMU notifier and vhost
+>   data/control path
+> - set dirty pages in the invalidation callbacks
+> - always use copy_to/from_users() friends for the archs that may need
+>   flush_dcache_pages()
+> - various minor fixes
+> Changes from V4:
+> - use invalidate_range() instead of invalidate_range_start()
+> - track dirty pages
+> Changes from V3:
+> - don't try to use vmap for file backed pages
+> - rebase to master
+> Changes from V2:
+> - fix buggy range overlapping check
+> - tear down MMU notifier during vhost ioctl to make sure
+>   invalidation request can read metadata userspace address and vq size
+>   without holding vq mutex.
+> Changes from V1:
+> - instead of pinning pages, use MMU notifier to invalidate vmaps
+>   and remap duing metadata prefetch
+> - fix build warning on MIPS
+> 
+> Jason Wang (6):
+>   vhost: generalize adding used elem
+>   vhost: fine grain userspace memory accessors
+>   vhost: rename vq_iotlb_prefetch() to vq_meta_prefetch()
+>   vhost: introduce helpers to get the size of metadata area
+>   vhost: factor out setting vring addr and num
+>   vhost: access vq metadata through kernel virtual address
+> 
+>  drivers/vhost/net.c   |   4 +-
+>  drivers/vhost/vhost.c | 850 ++++++++++++++++++++++++++++++++++++------
+>  drivers/vhost/vhost.h |  38 +-
+>  3 files changed, 766 insertions(+), 126 deletions(-)
+> 
 > -- 
-> 2.20.1
+> 2.18.1
