@@ -2,152 +2,162 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED65C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3361EC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D87A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h9hxrx3y"
+	by mail.kernel.org (Postfix) with ESMTP id 1B64820883
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfFETKX (ORCPT
+        id S1726726AbfFETLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:10:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54030 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfFETKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:10:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rAru/g/esClPI2WAaX3PUnaPhvPum8MkxndH0C4U79k=; b=h9hxrx3ykj4KhmvSEPus00VJa6
-        wvVDeIH1Qmut2HOHh/RUxiNzSd7gwfRDYSTkLIyqZpUjAbtS5mq55akT0u2mxUTK2z8cSjd/b54dM
-        8aoShnW2SqajrE0K8QIVYm2+5j17/DSdIwU3B2iaI+1dOtzkF/E438wsnCRgFlD5sFaqU603aIb5u
-        kVWlr+kPIav7QdEej0kJJO6MTlHZQ/6JvBpLs2oeS3bw37SVpNNCNhOIsWeEgnoh0cjM2mzGF3iyr
-        QBZD9DNwuko7J2FmoHon7WLxIokgm/Hd8Zkv1CPk1/CwxtBoRMdASJIL8Rlts4b10DQOlSqyKq3fi
-        L1gaY8ew==;
-Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYbHa-0005od-3i; Wed, 05 Jun 2019 19:09:10 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/13] IB/iser: set virt_boundary_mask in the scsi host
-Date:   Wed,  5 Jun 2019 21:08:31 +0200
-Message-Id: <20190605190836.32354-9-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190605190836.32354-1-hch@lst.de>
-References: <20190605190836.32354-1-hch@lst.de>
+        Wed, 5 Jun 2019 15:11:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51156 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726477AbfFETLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 15:11:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9FC83AF0C;
+        Wed,  5 Jun 2019 19:11:10 +0000 (UTC)
+Message-ID: <6f40f43ed32c5c519761879245423f7c371e4ae6.camel@suse.de>
+Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
+        viresh.kumar@linaro.org, mturquette@baylibre.com,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+Date:   Wed, 05 Jun 2019 21:11:06 +0200
+In-Reply-To: <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+         <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
+         <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
+         <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PJNAuTBnger31MKfSUoC"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This ensures all proper DMA layer handling is taken care of by the
-SCSI midlayer.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/infiniband/ulp/iser/iscsi_iser.c | 35 +++++-------------------
- 1 file changed, 7 insertions(+), 28 deletions(-)
+--=-PJNAuTBnger31MKfSUoC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 9c185a8dabd3..841b66397a57 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -613,6 +613,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 	struct Scsi_Host *shost;
- 	struct iser_conn *iser_conn = NULL;
- 	struct ib_conn *ib_conn;
-+	struct ib_device *ib_dev;
- 	u32 max_fr_sectors;
- 
- 	shost = iscsi_host_alloc(&iscsi_iser_sht, 0, 0);
-@@ -643,16 +644,19 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		}
- 
- 		ib_conn = &iser_conn->ib_conn;
-+		ib_dev = ib_conn->device->ib_device;
- 		if (ib_conn->pi_support) {
--			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
-+			u32 sig_caps = ib_dev->attrs.sig_prot_cap;
- 
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
- 		}
- 
--		if (iscsi_host_add(shost,
--				   ib_conn->device->ib_device->dev.parent)) {
-+		if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
-+			shost->virt_boundary_mask = ~MASK_4K;
-+
-+		if (iscsi_host_add(shost, ib_dev->dev.parent)) {
- 			mutex_unlock(&iser_conn->state_mutex);
- 			goto free_host;
- 		}
-@@ -958,30 +962,6 @@ static umode_t iser_attr_is_visible(int param_type, int param)
- 	return 0;
- }
- 
--static int iscsi_iser_slave_alloc(struct scsi_device *sdev)
--{
--	struct iscsi_session *session;
--	struct iser_conn *iser_conn;
--	struct ib_device *ib_dev;
--
--	mutex_lock(&unbind_iser_conn_mutex);
--
--	session = starget_to_session(scsi_target(sdev))->dd_data;
--	iser_conn = session->leadconn->dd_data;
--	if (!iser_conn) {
--		mutex_unlock(&unbind_iser_conn_mutex);
--		return -ENOTCONN;
--	}
--	ib_dev = iser_conn->ib_conn.device->ib_device;
--
--	if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
--		blk_queue_virt_boundary(sdev->request_queue, ~MASK_4K);
--
--	mutex_unlock(&unbind_iser_conn_mutex);
--
--	return 0;
--}
--
- static struct scsi_host_template iscsi_iser_sht = {
- 	.module                 = THIS_MODULE,
- 	.name                   = "iSCSI Initiator over iSER",
-@@ -994,7 +974,6 @@ static struct scsi_host_template iscsi_iser_sht = {
- 	.eh_device_reset_handler= iscsi_eh_device_reset,
- 	.eh_target_reset_handler = iscsi_eh_recover_target,
- 	.target_alloc		= iscsi_target_alloc,
--	.slave_alloc            = iscsi_iser_slave_alloc,
- 	.proc_name              = "iscsi_iser",
- 	.this_id                = -1,
- 	.track_queue_depth	= 1,
--- 
-2.20.1
+On Wed, 2019-06-05 at 13:34 +0200, Stefan Wahren wrote:
+> Hi,
+>=20
+> Am 05.06.19 um 13:00 schrieb Nicolas Saenz Julienne:
+> > Hi Stefan,
+> > thanks for the review, I took note of your code comments.
+> >=20
+> > On Wed, 2019-06-05 at 11:46 +0200, Stefan Wahren wrote:
+> > > Hi Nicolas,
+> > >=20
+> > > Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
+> > > > Hi all,
+> > > > this series aims at adding cpufreq support to the Raspberry Pi fami=
+ly of
+> > > > boards.
+> > > >=20
+> > > > The previous revision can be found at:=20
+> > > > https://lkml.org/lkml/2019/5/20/431
+> > > >=20
+> > > > The series first factors out 'pllb' from clk-bcm2385 and creates a =
+new
+> > > > clk driver that operates it over RPi's firmware interface[1]. We ar=
+e
+> > > > forced to do so as the firmware 'owns' the pll and we're not allowe=
+d to
+> > > > change through the register interface directly as we might race wit=
+h the
+> > > > over-temperature and under-voltage protections provided by the firm=
+ware.
+> > > it would be nice to preserve such design decision in the driver as a
+> > > comment, because the cover letter usually get lost.
+> > > > Next it creates a minimal cpufreq driver that populates the CPU's o=
+pp
+> > > > table, and registers cpufreq-dt. Which is needed as the firmware
+> > > > controls the max and min frequencies available.
+> > > I tested your series on top of Linux 5.2-rc1 with multi_v7_defconfig =
+and
+> > > manually enable this drivers. During boot with Raspbian rootfs i'm
+> > > getting the following:
+> > >=20
+> > > [    1.177009] cpu cpu0: failed to get clock: -2
+> > > [    1.183643] cpufreq-dt: probe of cpufreq-dt failed with error -2
+> > This is surprising, who could be creating a platform_device for cpufreq=
+-dt
+> > apart from raspberrypi-cpufreq? Just to make things clear, you're using=
+ the
+> > device tree from v5.2-rc1 (as opposed to the Raspbian one)?
+>=20
+> sorry my fault, i thought it already has been replaced. The behavior in
+> this unexpected case is fine, since it doesn't crash.
+>=20
+> I replaced the the DTB with the mainline one, but now i'm getting this:
+>=20
+> [    4.566068] cpufreq: cpufreq_online: CPU0: Running at unlisted freq:
+> 600000 KHz
+> [    4.580690] cpu cpu0: dev_pm_opp_set_rate: Invalid target frequency 0
+> [    4.594391] cpufreq: __target_index: Failed to change cpu frequency: -=
+22
+
+For the record this fixes it:
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index aa51756fd4d6..edb71eefe9cf 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -1293,7 +1293,7 @@ static int clk_core_determine_round_nolock(struct clk=
+_core
+*core,
+        } else if (core->ops->round_rate) {
+                rate =3D core->ops->round_rate(core->hw, req->rate,
+                                             &req->best_parent_rate);
+-               if (rate < 0)
++               if (IS_ERR_VALUE(rate))
+                        return rate;
+
+                req->rate =3D rate;
+
+round_rate() returns a 'long' value, yet 'pllb' in rpi3b+ goes as high as
+2.8GHz, which only fits in an 'unsigned long'. This explains why I didn't s=
+ee
+this issue with RPI2b.
+
+I'll add the patch to the series.
+
+Regards,
+Nicolas
+
+
+--=-PJNAuTBnger31MKfSUoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz4E8oACgkQlfZmHno8
+x/65VAf/fn1es6te2vdGehlcnMHV8inkQwAi0BEftzdL8s5w+Yv3WsJH3lwZM3sD
+DPZNWwlL/U2nVcKb997HnAcZm6CkosH87jzzF8n41F2LlzJGAzVDOZyxcbTJlK5V
+XtGsBvTkcqww24j6tKopUZ+9lWTSDTy2Jt3o/yxliP1oMFDrOVDQ0H20Qcprx32O
+lgev+7L7raIhmw8Fzy4DLU0nLe8kqkxGOHdorK7cRELAhys0rCx4WEX5MjJGUHQe
+TE9hQOG8bbGjvTtfE0MN837iw+S0D4XIyvjY5REPut2RTEcyf7uTea52DyXMeX5v
+vAGHR2WLM77yT5igIMv746NEBYT2SA==
+=2JhT
+-----END PGP SIGNATURE-----
+
+--=-PJNAuTBnger31MKfSUoC--
 
