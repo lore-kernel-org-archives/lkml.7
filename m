@@ -2,157 +2,135 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792FC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D49C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B5F2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0814920866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uyqHfSGd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="beh0BL6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfFENSR (ORCPT
+        id S1727992AbfFENUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:18:17 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33833 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbfFENSQ (ORCPT
+        Wed, 5 Jun 2019 09:20:16 -0400
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:44508 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfFENUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:18:16 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190605131814euoutp013151190e4785a37558a6b6f96534e3f4~lT_XDWjcN2355823558euoutp01B
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2019 13:18:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190605131814euoutp013151190e4785a37558a6b6f96534e3f4~lT_XDWjcN2355823558euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559740694;
-        bh=AYgGHyFLe4+lbCQJ2TaAOGNr2vbCK28Y5rFRviVnQ8M=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=uyqHfSGdFc8erg0mIwwOTF+h3YJYFD6/Z11/HBHjLeWQgRaeGa0r9A7rPUhmCuiqa
-         iJX3aq2I75uuJTqcQcVoajjoh7Z+Sl+OdsfdMVACajjPMeN3rTy6kp7uRObT8YVmjX
-         l6/dLvKP/mKKDxYXBCF8HISXZ2405Ewxc1bs9xvk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190605131813eucas1p1ed5cf422671c87b4bc112e933d37ca16~lT_WCdiJ-0581705817eucas1p16;
-        Wed,  5 Jun 2019 13:18:13 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 83.B2.04325.411C7FC5; Wed,  5
-        Jun 2019 14:18:12 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190605131812eucas1p1e6c2c4df2433c5c763e024f03d3a99fb~lT_VKq1yj1563815638eucas1p1C;
-        Wed,  5 Jun 2019 13:18:12 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190605131812eusmtrp1b1b9a45609459ca8f477b0a5ba7099c9~lT_VJ5_ge2668526685eusmtrp1Y;
-        Wed,  5 Jun 2019 13:18:12 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-a9-5cf7c1148657
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id FA.1E.04146.411C7FC5; Wed,  5
-        Jun 2019 14:18:12 +0100 (BST)
-Received: from [106.120.50.25] (unknown [106.120.50.25]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190605131811eusmtip2934ac5ed190b3bb1a4d529c8f9db974b~lT_UT1Xq10341403414eusmtip2F;
-        Wed,  5 Jun 2019 13:18:11 +0000 (GMT)
-Subject: Re: [Freedreno] [PATCH] of/device: add blacklist for iommu dma_ops
-To:     Rob Clark <robdclark@gmail.com>, Tomasz Figa <tfiga@chromium.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <95d6e963-7f30-1d9c-99d7-0f6cc1589997@samsung.com>
-Date:   Wed, 5 Jun 2019 15:18:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAF6AEGuj=QmEWZVzHMtoDgO0M0t-W9+tay5F4AKYThZqy=nkdA@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj22zk7O7MWn0fNN4uiVdLdpKSPNDEoOGY/ukCFCbbyoJKX2NKs
-        iExR0rQyQ920pgWZt1YzvKdtWlNiYpmg1Uhh0IUkbV4KLHM7Vv57vvd5Hp73eflYipuR+rJx
-        iWcEdaIqXsm40/UvfvZs8jJNRW7pKvIneT3dEjJTn08RfWePlFjvmxjyZuIbQ0o/WhHRfp1h
-        SGX1cwkpaw8i+e1WGelrLmXIx/IfFMl82ikjplG7lNgezWodmb8Z0vWzkSKfx7roUI6vuVOD
-        +JK0VzTfdy1Pwj+dLKP5Jp1Nxhurshm+YXJIyn+4apHwBQMViG8ZTGN4h3H5/gUR7sHRQnxc
-        iqD2DznuHtuSZ6VO1zGpb3MNKA3ppDlIzgLeBjP36qgc5M5y+AGCaocOOQkOjyNor4sSCQeC
-        +mcm9Nfx6UPHnKgCgeHWMVE0gqDkvZ5xEp44HDILymVO7IX3wHS6wxVB4Xwp9Ff+oJ0EgwMg
-        ZyTHZVDgEHg/VUE5MY1Xw2CW1pXgjSNhor2fEjUe0K21u7xyfACqMsZcmMIroGGklBKxD7y1
-        6yXOMMC1LLTatJS49m6wDRXNYU/4YnkiE/EyeFmQS4uGDATDPbUy8ZGLoC+9eK50EHRYXs2e
-        jJ2NWAeGZn9xvAuayu+6xoAXwcCIh7jEIrhZ78xyjhVwJYsT1X6gszz8F2vqfU3dQErdvGq6
-        eXV08+ro/ueWIboK+QjJmoQYQbM1UTi7WaNK0CQnxmw+mZRgRLPf8uVvy0Qjaps+YUaYRcqF
-        Cng8FclJVSmacwlmBCyl9FKo3o1Hcopo1bnzgjopSp0cL2jMaClLK30UF9yGjnE4RnVGOCUI
-        pwX1X1bCyn3TEPgcpC7vxv3Nay9ef2JcFfYr+rP90BLfFvMb63ARP6zcG5W5cUOTn8XmW9RL
-        WkezD3JtoQET2Hw08HC1d9zKDnvhqnAyGS5f7Pb8iFxSM46lqM1/entonH6nMBbYmGxYYji7
-        L2aNVl/o1rnjdmWx8pJQHBaRamwr0H4P5j3PK2lNrCpgPaXWqP4A4XKo3ZIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsVy+t/xe7oiB7/HGNw7yG7Re+4kk8X/bROZ
-        LeYfOcdqcXbZQTaLK1/fs1nMeX6W0WLmm/9sFitXH2WyWLDf2mLi/rPsFpd3zWGzeL7wB7NF
-        694j7BYHPzxhtbi7Aaj2c+s/NosTP3cwW7z8eILFQchjzbw1jB6zGy6yeFzu62Xy2PttAYvH
-        zll32T02repk89j+7QGrx/3u40wek28sZ/TYfbOBzePzJrkA7ig9m6L80pJUhYz84hJbpWhD
-        CyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jN29Z5kLNrNV3OpZz9jAOIu1i5GT
-        Q0LAROLF/cOMXYxcHEICSxkl7p+fxgKRkJE4Oa0BqkhY4s+1LjaIoteMEm/XvWUHSQgLeEu0
-        Tl4IZosIuEr8afrMDFLELDCZVWL2qtesEB1/WSTunLkGNopNwFCi6y3IKE4OXgE7iTvflzOD
-        2CwCKhI322YygtiiAjESfY0rWCBqBCVOznwCZnMKBEqsav4IZjMLmEnM2/yQGcKWl9j+dg6U
-        LS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+oVJ+YWl+al6yXn525iBCaI
-        bcd+bt7BeGlj8CFGAQ5GJR5eiY3fY4RYE8uKK3MPMUpwMCuJ8Cbe/hIjxJuSWFmVWpQfX1Sa
-        k1p8iNEU6LmJzFKiyfnA5JVXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaP
-        iYNTqoFRdoL225DM3ZPDwrleBonmn18YriV6ptaow9b8nV6Y/uMV8TKhjveOV3zQ3/bFecG9
-        5A02h02u39rLkfwv5ga7I3/aiccf3Mo3M15m6w/afjDI4WNqS/KG+eHHTc0aS9dmpal6l2UH
-        Xddf6Fa5sCtp5sa7TsJRka5nrY/94nx7zE+FzeXpvzYlluKMREMt5qLiRABE248YJgMAAA==
-X-CMS-MailID: 20190605131812eucas1p1e6c2c4df2433c5c763e024f03d3a99fb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190605125734epcas1p43b15cc8c556d917ca71b561791861cec
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190605125734epcas1p43b15cc8c556d917ca71b561791861cec
-References: <20181201165348.24140-1-robdclark@gmail.com>
-        <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
-        <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
-        <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
-        <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
-        <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
-        <CAAFQd5Dmr+xyd4dyc_44vJFpNpwK6+MgG+ensoey59HgbxXV6g@mail.gmail.com>
-        <CGME20190605125734epcas1p43b15cc8c556d917ca71b561791861cec@epcas1p4.samsung.com>
-        <CAF6AEGuj=QmEWZVzHMtoDgO0M0t-W9+tay5F4AKYThZqy=nkdA@mail.gmail.com>
+        Wed, 5 Jun 2019 09:20:15 -0400
+Received: by mail-lf1-f50.google.com with SMTP id r15so19041576lfm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 06:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DO7D5eGfZPh8QvxGU3q/q3NaNXnYXn2zGQBCFbLpPDQ=;
+        b=beh0BL6GcCR20DqoSBbg1q9zX26ZweZ4cxqvK5XqGFC0YgWE/zUAtf+vzocqFqAIHf
+         +igysvAnFP/0stEjHfGRV72UA6kNEUpVGbCzR3PunExIPEXd6unoE674F+AGlXHFzjt/
+         8NS8uRWNaYDT5IEMzIG4H/1OrTlsYliyj9CMuWA3HV2gmUUm8nkj0WSfjqpm8QvMEYDf
+         ix2UPw83lTFBZPdU+RN6oQSq2xahk63I0at4HboglznNRiRVGqfb0tpfTTbAJFa3W6ie
+         rWnoXpoAqfhBQV0B3Gt9Rmf2ZdMqqT6SxcIjX/TfwnfvKy6cQ6loTHwJFwOZwDI0ayWQ
+         X+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DO7D5eGfZPh8QvxGU3q/q3NaNXnYXn2zGQBCFbLpPDQ=;
+        b=B2LY8GWxRuBttnpLwI9soOhhJ1PtNHew/1qSTwzQongvcWGyuSF3PHHjxe4Dr0PJya
+         o8Z41TvtqPQauJ5RxumkcfhN32AI+EOWRQ53yEH2GVAM/Z0miSa7nDQ8brT2HQG5/LhN
+         v7W3zgjQNQ2O6ODYRtJG56156Ya8Qf+l5KHyCv3TtY5LcI3KDHUXtM0eagGjKwnIBmTt
+         mYy9EA/vw1MeeNMzSRqjsZPUiz3UxCw4k7VZ/M39MJxAmQ5TemQvIfCTXW7WcU1Dr87Q
+         i2tI7Xd69La4OHfEeBxXs6rmLolfLyC4BbhDjqLR3d+BvfiFjoWfGmRJTx66DQWxpwWb
+         F05g==
+X-Gm-Message-State: APjAAAU+beJxWxTKS1gIFoCRlMnrp+8eYV8VpCg7UkSbmvHfyA7GLoph
+        XEQvbvDYWLcC0hVZGQGFm5dejA==
+X-Google-Smtp-Source: APXvYqxnMEac5uvICE+jqkJZ0l9bWQ/ao8lR2Ti7ZO064/CZvxjhrADWlHRjdVyo1QEdZZg6tDX8AA==
+X-Received: by 2002:ac2:59c6:: with SMTP id x6mr17692240lfn.169.1559740813157;
+        Wed, 05 Jun 2019 06:20:13 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id t3sm1893259lfk.59.2019.06.05.06.20.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 06:20:12 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
+Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP support
+Date:   Wed,  5 Jun 2019 16:20:02 +0300
+Message-Id: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This patchset adds XDP support for TI cpsw driver and base it on
+page_pool allocator. It was verified on af_xdp socket drop,
+af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 
-On 2019-06-05 14:57, Rob Clark wrote:
-> On Tue, Jun 4, 2019 at 11:58 PM Tomasz Figa <tfiga@chromium.org> wrote:
->> But first of all, I remember Marek already submitted some patches long
->> ago that extended struct driver with some flag that means that the
->> driver doesn't want the IOMMU to be attached before probe. Why
->> wouldn't that work? Sounds like a perfect opt-out solution.
-> Actually, yeah.. we should do that.  That is the simplest solution.
+It was verified with following configs enabled:
+CONFIG_JIT=y
+CONFIG_BPFILTER=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_XDP_SOCKETS=y
+CONFIG_BPF_EVENTS=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_BPF_JIT=y
+CONFIG_CGROUP_BPF=y
 
-Tomasz has very good memory. It took me a while to find that old patches:
+Link on previous v2:
+https://lkml.org/lkml/2019/5/30/1315
 
-https://patchwork.kernel.org/patch/4677251/
-https://patchwork.kernel.org/patch/4677941/
-https://patchwork.kernel.org/patch/4677401/
+Also regular tests with iperf2 were done in order to verify impact on
+regular netstack performance, compared with base commit:
+https://pastebin.com/JSMT0iZ4
 
-It looks that my idea was a bit ahead of its time ;)
+v2..v3:
+- each rxq and ndev has its own page pool
 
-Best regards
+v1..v2:
+- combined xdp_xmit functions
+- used page allocation w/o refcnt juggle
+- unmapped page for skb netstack
+- moved rxq/page pool allocation to open/close pair
+- added several preliminary patches:
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
+
+
+Based on net-next/master
+
+Ilias Apalodimas (2):
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+
+Ivan Khoronzhuk (5):
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
+  net: ethernet: ti: davinci_cpdma: add dma mapped submit
+  net: ethernet: ti: davinci_cpdma: return handler status
+  net: ethernet: ti: cpsw: add XDP support
+
+ drivers/net/ethernet/ti/Kconfig         |   1 +
+ drivers/net/ethernet/ti/cpsw.c          | 555 ++++++++++++++++++++----
+ drivers/net/ethernet/ti/cpsw_ethtool.c  | 100 ++++-
+ drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
+ drivers/net/ethernet/ti/davinci_cpdma.c | 122 ++++--
+ drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
+ drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
+ include/net/page_pool.h                 |   6 +
+ net/core/page_pool.c                    |   7 +
+ 9 files changed, 685 insertions(+), 139 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.17.1
 
