@@ -2,96 +2,117 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ECDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CACC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F73D2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3FF2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFEWbZ (ORCPT
+        id S1726649AbfFEWdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:31:25 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:37830 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbfFEWbZ (ORCPT
+        Wed, 5 Jun 2019 18:33:42 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:59074 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfFEWdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:31:25 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x55MPvsO026302;
-        Wed, 5 Jun 2019 22:31:05 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2sxkhks4xy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Jun 2019 22:31:04 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 21264BA;
-        Wed,  5 Jun 2019 22:31:03 +0000 (UTC)
-Received: from anatevka (anatevka.americas.hpqcorp.net [10.34.81.61])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 41A0F4F;
-        Wed,  5 Jun 2019 22:31:03 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 16:31:03 -0600
-From:   Jerry Hoemann <jerry.hoemann@hpe.com>
-To:     linux@roeck-us.net, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] watchdog/hpwdt: cleanups and kdump accommodations
-Message-ID: <20190605223102.GA23382@anatevka>
-Reply-To: Jerry.Hoemann@hpe.com
-References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
+        Wed, 5 Jun 2019 18:33:42 -0400
+X-Greylist: delayed 317 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Jun 2019 18:33:40 EDT
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id EB9D51321F5F3B;
+        Wed,  5 Jun 2019 22:28:21 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f24a:5600:a9ad:74ef:9537:685])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Wed,  5 Jun 2019 22:28:21 +0000 (UTC)
+Message-ID: <0d998fe0ff4473be2a9341c1f5ddf55957d18ad8.camel@archlinux.org>
+Subject: Re: [PATCH v2 0/4] Read battery voltage from G403 and G900 mice
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Pedro Vanzella <pedro@pedrovanzella.com>,
+        linux-input@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190605194533.18717-1-pedro@pedrovanzella.com>
+References: <20190605194533.18717-1-pedro@pedrovanzella.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-b2wSQK5XfwPnbBz+78jy"
+Date:   Wed, 05 Jun 2019 23:24:18 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=984 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906050143
+User-Agent: Evolution 3.32.2 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 02:59:37PM -0600, Jerry Hoemann wrote:
-> First two changes makes hpwdt more generic.
-> Next two changes make hpwdt work better with kdump.
-> 
 
-Hi Guenter,
+--=-b2wSQK5XfwPnbBz+78jy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Did you have feedback on this patch set?
+On Wed, 2019-06-05 at 15:45 -0400, Pedro Vanzella wrote:
+> The gaming line of Logitech devices doesn't use the old hidpp20
+> feature
+> for battery level reporting. Instead, they report the current voltage
+> of the battery, in millivolts.
+>=20
+> This patch set handles this case by adding a quirk to the devices we
+> know
+> to have this new feature, in both wired and wireless mode.
+>=20
+> This version of the patch set is better split, as well as adding the
+> quirk to make sure we don't needlessly probe every device connected.
+>=20
+> Pedro Vanzella (4):
+>   HID: hid-logitech-hidpp: add quirk to handle battery voltage
+>   HID: hid-logitech-hidpp: add function to query battery voltage
+>   HID: hid-logitech-hidpp: report battery voltage to the power supply
+>   HID: hid-logitech-hidpp: subscribe to battery voltage events
+>=20
+>  drivers/hid/hid-logitech-hidpp.c | 150
+> ++++++++++++++++++++++++++++++-
+>  1 file changed, 147 insertions(+), 3 deletions(-)
+>=20
 
-Thanks
+Hello,
 
-Jerry
+Why using quirks? 0x1001 is a feature, it should be discoverable in
+IFeatureSet (0x0001). I don't understand the need to hardcode the
+supported devices, HID++ exists specifically to prevent that.
 
+Wasn't this what you started in your previous patch? Why move away from
+it?
 
-> 
-> Jerry Hoemann (6):
->   watchdog/hpwdt: Stop hpwdt on unregister.
->   watchdog/hpwdt: Advertize max_hw_heartbeat_ms
->   watchdog/hpwdt: Have core ping watchdog.
->   watchdog/hpwdt: Add module parameter kdumptimeout.
->   watchdog/hpwdt: Update documentation
->   watchdog/hpwdt: Reflect changes
-> 
->  Documentation/watchdog/hpwdt.txt |  4 +++
->  drivers/watchdog/hpwdt.c         | 55 ++++++++++++++++++++++++++++++----------
->  2 files changed, 45 insertions(+), 14 deletions(-)
-> 
-> -- 
-> 1.8.3.1
+Thank you,
+Filipe La=C3=ADns
+3DCE 51D6 0930 EBA4 7858 BA41 46F6 33CB B0EB 4BF2
 
--- 
+--=-b2wSQK5XfwPnbBz+78jy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
------------------------------------------------------------------------------
-Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
------------------------------------------------------------------------------
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAlz4QQkACgkQ+JPGdIFq
+qV2ohA//ZGUDKIds/DIp+6rdJeuW7H8UQ2th2gXAir3NclnfH+CaDpjpmxJs5Noi
+VHXI0ML8sakz8e0uOMbl6cY+0oxZyn6F754fb0FAY301ZhZz/L09SzzuPZI9eyNC
+Wpb+UWuf5K1trq5pmfJbE9Pw49s6K4i0G/rtut1R3lDF+QTxz1f0wohipKApk/Om
+IRMbWBli2hEI+FbXFtH8vdKrLYT884gbp/EooVBY8T3mJDIhxzQdFG7OpIAFYMJk
+QB5Aprw9nraCLHDnYOIxbmLvFU+yMKJFJxi43mHLR7FocVD3+uroxlIiRVYANHVs
++Q43YdZfLgO6hXkAYVsCWtSXS1XgeZDaXiCFA+CZIqq+XkTBtXE3X2rE6Dg3nCgI
+TJdnQFZvCWLTtNaBHQSAE2iS38o24W+x7Go5Uj9UMIfDIoxoZigoCUQbk+VbaVxe
+WuprtmdZVhPPo2JzlhwWjMWOgzNeeMgceQnc8DHQyQGDAIPlJ4iX+23MFFAcRG1I
+48rX3ssO20e4H9+MDgxCFV6f27/yCAf/qSOXP5cgWFRt9LyeKzvr0aAEC4urx1Iq
+Kqrf6WLcypVJNpEBeP70J7ZEsJUkT75b4tYWzyRGnwA/1LhtMIunAFK7IexASkZk
+qzN9etW89nWgZb/XKLcJQ9Y3l8/4cCONbj6l7tVyIpzzKi94i04=
+=M0oI
+-----END PGP SIGNATURE-----
+
+--=-b2wSQK5XfwPnbBz+78jy--
