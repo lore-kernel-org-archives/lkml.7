@@ -2,108 +2,120 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80708C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A14C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3442075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B5F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFEIwt (ORCPT
+        id S1726921AbfFEIw7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:52:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726690AbfFEIwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:52:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1C767CAD2F3FF6741F4C;
-        Wed,  5 Jun 2019 16:52:45 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Jun 2019
- 16:52:35 +0800
-Subject: Re: [PATCH net] tcp: avoid creating multiple req socks with the same
- tuples
-To:     Eric Dumazet <edumazet@google.com>, Mao Wenan <maowenan@huawei.com>
-CC:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190604145543.61624-1-maowenan@huawei.com>
- <CANn89iK+4QC7bbku5MUczzKnWgL6HG9JAT6+03Q2paxBKhC4Xw@mail.gmail.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <40f32663-f100-169c-4d1b-79d64d68a5f9@huawei.com>
-Date:   Wed, 5 Jun 2019 16:52:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 5 Jun 2019 04:52:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5302 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEIw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 04:52:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 01:52:57 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2019 01:52:57 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 5 Jun 2019 01:51:47 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.137]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.153]) with mapi id 14.03.0415.000;
+ Wed, 5 Jun 2019 16:51:45 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Subject: RE: [PATCH v2 2/4] iommu: Introduce device fault data
+Thread-Topic: [PATCH v2 2/4] iommu: Introduce device fault data
+Thread-Index: AQHVGhzpdp8RFw2/OU64MEW+KDLfp6aJ93gAgALLAvA=
+Date:   Wed, 5 Jun 2019 08:51:45 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19CA6A9EE@SHSMSX104.ccr.corp.intel.com>
+References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
+        <20190603145749.46347-3-jean-philippe.brucker@arm.com>
+ <20190603150842.11070cfd@jacob-builder>
+In-Reply-To: <20190603150842.11070cfd@jacob-builder>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNWQ0ODQxZDgtOWQ2Ni00NTkxLThlZmItZTgyMzM0MTliZTNiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZWJVU25wanM3dHNndlwvK2pnS3RUQmdhcUQ1eFdERDZCXC9SVXhRY1V0bGZnRFlyakNsR01cL3NiSThVWHlWa0RLSSJ9
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CANn89iK+4QC7bbku5MUczzKnWgL6HG9JAT6+03Q2paxBKhC4Xw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2019/6/4 23:24, Eric Dumazet 写道:
-> On Tue, Jun 4, 2019 at 7:47 AM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> There is one issue about bonding mode BOND_MODE_BROADCAST, and
->> two slaves with diffierent affinity, so packets will be handled
->> by different cpu. These are two pre-conditions in this case.
-
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> --
+> From: Jacob Pan
+> Sent: Tuesday, June 4, 2019 6:09 AM
 > 
-> This issue has been discussed last year.
+> On Mon,  3 Jun 2019 15:57:47 +0100
+> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 > 
-> I am afraid your patch does not solve all races.
+> > +/**
+> > + * struct iommu_fault_page_request - Page Request data
+> > + * @flags: encodes whether the corresponding fields are valid and
+> > whether this
+> > + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
+> > values)
+> > + * @pasid: Process Address Space ID
+> > + * @grpid: Page Request Group Index
+> > + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
+> > + * @addr: page address
+> > + * @private_data: device-specific private information
+> > + */
+> > +struct iommu_fault_page_request {
+> > +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
+> > +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+> > +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+> > +	__u32	flags;
+> > +	__u32	pasid;
+> > +	__u32	grpid;
+> > +	__u32	perm;
+> > +	__u64	addr;
+> > +	__u64	private_data[2];
+> > +};
+> > +
 > 
-> The lookup you add is lockless, so this is racy.
+> Just a thought, for non-identity G-H PASID management. We could pass on
+> guest PASID in PRQ to save a lookup in QEMU. In this case, QEMU
+> allocate a GPASID for vIOMMU then a host PASID for pIOMMU. QEMU has a
+> G->H lookup. When PRQ comes in to the pIOMMU with HPASID, IOMMU
+> driver
+> can retrieve GPASID from the bind data then report to the guest via
+> VFIO. In this case QEMU does not need to do a H->G PASID lookup.
 > 
-> Really the only way to solve this is to make sure that _when_ the
-> bucket lock is held,
-> we do not insert a request socket if the 4-tuple is already in the
-> chain (probably in inet_ehash_insert())
-> 
-> This needs more tricky changes than your patch.
+> Should we add a gpasid field here? or we can add a flag and field
+> later, up to you.
 > 
 
-This kind case is rarely used, and the condition of the issue is strict.
-If we add the "lookup" before or in inet_ehash_insert func for each reqsk,
-overall performance will be affected.
+Can private_data serve this purpose? It's better not introducing
+gpasid awareness within host IOMMU driver. It is just a user-level
+data associated with a PASID when binding happens. Kernel doesn't
+care the actual meaning, simply record it and then return back to user 
+space later upon device fault. Qemu interprets the meaning as gpasid
+in its own context. otherwise usages may use it for other purpose.
 
-We may solve the small probability issue with a trick in the tcp_v4_rcv.
-If the ACK is invalid checked by tcp_check_req func, the req could be dropped,
-and then goto the lookup for searching another avaliable reqsk. In this way,
-the performance will not be affected in the normal process.
-
-The patch is given as following:
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index a2896944aa37..9d0491587ed2 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1874,8 +1874,10 @@ int tcp_v4_rcv(struct sk_buff *skb)
-                        goto discard_and_relse;
-                }
-                if (nsk == sk) {
--                       reqsk_put(req);
-+                       inet_csk_reqsk_queue_drop_and_put(sk, req);
-                        tcp_v4_restore_cb(skb);
-+                       sock_put(sk);
-+                       goto lookup;
-                } else if (tcp_child_process(sk, nsk, skb)) {
-                        tcp_v4_send_reset(nsk, skb);
-                        goto discard_and_relse;
-
-
-
-
-
-
+Thanks
+Kevin
