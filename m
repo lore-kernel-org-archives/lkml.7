@@ -2,128 +2,86 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9DFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAAFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A93208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618E2207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFEUAc (ORCPT
+        id S1726597AbfFEUHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:00:32 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38191 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFEUAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:00:31 -0400
-X-Originating-IP: 90.89.68.76
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id EA63FC0006;
-        Wed,  5 Jun 2019 20:00:21 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 22:00:20 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
-Message-ID: <20190605200020.tmyom3lg3inu6vvf@flea>
-References: <20190604162959.29199-1-peron.clem@gmail.com>
- <20190604162959.29199-5-peron.clem@gmail.com>
- <20190605095141.psrq6mhk63zto77s@flea>
- <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
+        Wed, 5 Jun 2019 16:07:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63734 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfFEUHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 16:07:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 13:07:04 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Jun 2019 13:07:04 -0700
+Date:   Wed, 5 Jun 2019 13:07:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cacheinfo: fix a -Wtype-limits warning
+Message-ID: <20190605200703.GD26328@linux.intel.com>
+References: <1559763654-5155-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1559763654-5155-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:44:06PM +0200, Clément Péron wrote:
-> Hi Maxime,
->
-> On Wed, 5 Jun 2019 at 11:51, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Tue, Jun 04, 2019 at 06:29:50PM +0200, Clément Péron wrote:
-> > > We are using RXINT bits definition when looking at RXSTA register.
-> > >
-> > > These bits are equal but it's not really proper.
-> > >
-> > > Introduce the RXSTA bits and use them to have coherency.
-> > >
-> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > ---
-> > >  drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
-> > >  1 file changed, 12 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> > > index 0504ebfc831f..572bd2257d35 100644
-> > > --- a/drivers/media/rc/sunxi-cir.c
-> > > +++ b/drivers/media/rc/sunxi-cir.c
-> > > @@ -48,11 +48,11 @@
-> > >
-> > >  /* Rx Interrupt Enable */
-> > >  #define SUNXI_IR_RXINT_REG    0x2C
-> > > -/* Rx FIFO Overflow */
-> > > +/* Rx FIFO Overflow Interrupt Enable */
-> > >  #define REG_RXINT_ROI_EN             BIT(0)
-> > > -/* Rx Packet End */
-> > > +/* Rx Packet End Interrupt Enable */
-> > >  #define REG_RXINT_RPEI_EN            BIT(1)
-> > > -/* Rx FIFO Data Available */
-> > > +/* Rx FIFO Data Available Interrupt Enable */
-> > >  #define REG_RXINT_RAI_EN             BIT(4)
-> > >
-> > >  /* Rx FIFO available byte level */
-> > > @@ -60,6 +60,12 @@
-> > >
-> > >  /* Rx Interrupt Status */
-> > >  #define SUNXI_IR_RXSTA_REG    0x30
-> > > +/* Rx FIFO Overflow */
-> > > +#define REG_RXSTA_ROI                        BIT(0)
-> > > +/* Rx Packet End */
-> > > +#define REG_RXSTA_RPE                        BIT(1)
-> > > +/* Rx FIFO Data Available */
-> > > +#define REG_RXSTA_RA                 BIT(4)
-> >
-> > I'm fine with it on principle, but if the consistency needs to be
-> > maintained then we could just reuse the above defines
->
-> There is no comment why we can reuse them, they can also be some wrong
-> case for example the RXINT_DRQ_EN bit is not present in RXSTA and same
-> for STAT bit present in RXSTA and not present in RXINT.
->
-> I have discover and read this code a month ago and this logic is
-> really not obvious nor explain.
->
-> Maybe this hack could be done when we will introduce a quirks, but for
-> the moment I really think that it's more proper and readable to
-> introduce them properly.
+On Wed, Jun 05, 2019 at 03:40:54PM -0400, Qian Cai wrote:
+> cpuinfo_x86.x86_model is an unsigned type, so compares it against zero
+> will generate a compilation warning,
+> 
+> arch/x86/kernel/cpu/cacheinfo.c: In function
+> 'cacheinfo_amd_init_llc_id':
+> arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always
+> true due to limited range of data type [-Wtype-limits]
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/kernel/cpu/cacheinfo.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+> index 395d46f78582..c7503be92f35 100644
+> --- a/arch/x86/kernel/cpu/cacheinfo.c
+> +++ b/arch/x86/kernel/cpu/cacheinfo.c
+> @@ -658,8 +658,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
+>  	if (c->x86 < 0x17) {
+>  		/* LLC is at the node level. */
+>  		per_cpu(cpu_llc_id, cpu) = node_id;
+> -	} else if (c->x86 == 0x17 &&
+> -		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
+> +	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
 
-I don't think we understood each other :)
+Might be worth calling out in the changelog that 'c->x86 == 0x17' is true
+if and only if c->x86_model was explicitly set by cpu_detect(), i.e. the
+patch is correct even if the original intent was a misguided attempt to
+check that x86_model has been set.
 
-I was talking about having something like
+Fixes: 68091ee7ac3c ("x86/CPU/AMD: Calculate last level cache ID from number of sharing threads")
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-#define REG_RXSTA_ROI  REG_RXINT_ROI_EN
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  		/*
+>  		 * LLC is at the core complex level.
+>  		 * Core complex ID is ApicId[3] for these processors.
+> -- 
+> 1.8.3.1
+> 
