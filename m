@@ -2,174 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0D2C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F46C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976962075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAC12075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfFEJGT (ORCPT
+        id S1726941AbfFEJJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:06:19 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49387 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEJGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:06:19 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 44CD33C014D;
-        Wed,  5 Jun 2019 11:06:16 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qlywOd2IU4e6; Wed,  5 Jun 2019 11:06:09 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 5 Jun 2019 05:09:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35360 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbfFEJJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:09:09 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id B23853C00D1;
-        Wed,  5 Jun 2019 11:06:09 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 5 Jun 2019
- 11:06:09 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Kento Kobayashi <Kento.A.Kobayashi@sony.com>,
-        Hui Peng <benquike@gmail.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jan-Marek Glogowski <glogow@fbihome.de>,
-        Bin Liu <b-liu@ti.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jon Flatley <jflat@chromium.org>,
-        Mathieu Malaterre <malat@debian.org>
-CC:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        <yuichi.kusakabe@denso-ten.com>, <yohhei.fukui@denso-ten.com>,
-        <natsumi.kamei@denso-ten.com>, <yasano@jp.adit-jv.com>
-Subject: [PATCH] usb: hub: report failure to enumerate uevent to userspace
-Date:   Wed, 5 Jun 2019 11:05:56 +0200
-Message-ID: <20190605090556.17792-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.21.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 9AD5A30BC569;
+        Wed,  5 Jun 2019 09:09:09 +0000 (UTC)
+Received: from krava (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2B2F019C65;
+        Wed,  5 Jun 2019 09:09:07 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 11:09:07 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH V3 1/5] perf cpumap: Retrieve die id information
+Message-ID: <20190605090907.GC23116@krava>
+References: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 05 Jun 2019 09:09:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+On Tue, Jun 04, 2019 at 03:50:40PM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> There is no function to retrieve die id information of a given CPU.
+> 
+> Add cpu_map__get_die_id() to retrieve die id information.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+> 
+> No changes since V2.
 
-When a USB device fails to enumerate, only a kernel message is printed.
-With this patch, a uevent is also generated to notify userspace.
-Services can monitor for the event through udev and handle failures
-accordingly.
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-The "port_enumerate_fail_notify()" function name follows the syntax of
-"port_over_current_notify()" used in v4.20-rc1
-commit 201af55da8a398 ("usb: core: added uevent for over-current").
+for the whole patchset
 
-Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- Documentation/ABI/testing/usb-uevent | 36 ++++++++++++++++++++++++++++
- drivers/usb/core/hub.c               | 15 +++++++++++-
- 2 files changed, 50 insertions(+), 1 deletion(-)
+thanks,
+jirka
 
-diff --git a/Documentation/ABI/testing/usb-uevent b/Documentation/ABI/testing/usb-uevent
-index d35c3cad892c..23e618227d31 100644
---- a/Documentation/ABI/testing/usb-uevent
-+++ b/Documentation/ABI/testing/usb-uevent
-@@ -25,3 +25,39 @@ Description:	When the USB Host Controller has entered a state where it is no
- 		TYPE=9/0/1
- 
- Users:		chromium-os-dev@chromium.org
-+
-+What:		Raise a uevent when USB device enumeration has failed
-+Date:		2019-06-05
-+KernelVersion:	5.2
-+Contact:	linux-usb@vger.kernel.org
-+Description:	When a USB device has failed to enumerate, a uevent will be generated.
-+		The uevent will contain ACTION=change, ENUMERATION_FAILURE=1 and
-+		ENUMERATION_FAIL_PORT=<port_id>. Services can monitor for the event
-+		through udev and handle failures accordingly.
-+
-+		Here is an example taken using udevadm monitor -p (R-Car H3ULCB):
-+
-+		UDEV  [47.298493] change   /devices/platform/soc/ee0a0000.usb/usb4/4-0:1.0 (usb)
-+		ACTION=change
-+		DEVPATH=/devices/platform/soc/ee0a0000.usb/usb4/4-0:1.0
-+		DEVTYPE=usb_interface
-+		DRIVER=hub
-+		ENUMERATION_FAILURE=1
-+		ENUMERATION_FAIL_PORT=1
-+		ID_MODEL_FROM_DATABASE=1.1 root hub
-+		ID_USB_CLASS_FROM_DATABASE=Hub
-+		ID_USB_PROTOCOL_FROM_DATABASE=Full speed (or root) hub
-+		ID_VENDOR_FROM_DATABASE=Linux Foundation
-+		INTERFACE=9/0/0
-+		MODALIAS=usb:v1D6Bp0001d0502dc09dsc00dp00ic09isc00ip00in00
-+		OF_COMPATIBLE_0=generic-ohci
-+		OF_COMPATIBLE_N=1
-+		OF_FULLNAME=/soc/usb@ee0a0000
-+		OF_NAME=usb
-+		PRODUCT=1d6b/1/502
-+		SEQNUM=1762
-+		SUBSYSTEM=usb
-+		TYPE=9/0/0
-+		USEC_INITIALIZED=24344435
-+
-+Users:		ADIT, DENSO TEN
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 2f94568ba385..da1a3d47a071 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -4921,6 +4921,17 @@ hub_power_remaining(struct usb_hub *hub)
- 	return remaining;
- }
- 
-+static void port_enumerate_fail_notify(struct usb_port *port)
-+{
-+	char env_port[32];
-+	char *envp[3] = { "ENUMERATION_FAILURE=1", env_port, NULL };
-+
-+	snprintf(env_port, sizeof(env_port), "ENUMERATION_FAIL_PORT=%d",
-+		 port->portnum);
-+
-+	kobject_uevent_env(&port->dev.parent->kobj, KOBJ_CHANGE, envp);
-+}
-+
- static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
- 		u16 portchange)
- {
-@@ -5131,9 +5142,11 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
- 	if (hub->hdev->parent ||
- 			!hcd->driver->port_handed_over ||
- 			!(hcd->driver->port_handed_over)(hcd, port1)) {
--		if (status != -ENOTCONN && status != -ENODEV)
-+		if (status != -ENOTCONN && status != -ENODEV) {
-+			port_enumerate_fail_notify(port_dev);
- 			dev_err(&port_dev->dev,
- 					"unable to enumerate USB device\n");
-+		}
- 	}
- 
- done:
--- 
-2.21.0
-
+> 
+>  tools/perf/util/cpumap.c | 7 +++++++
+>  tools/perf/util/cpumap.h | 1 +
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 0b59922..7db1365 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -373,6 +373,13 @@ int cpu_map__build_map(struct cpu_map *cpus, struct cpu_map **res,
+>  	return 0;
+>  }
+>  
+> +int cpu_map__get_die_id(int cpu)
+> +{
+> +	int value, ret = cpu__get_topology_int(cpu, "die_id", &value);
+> +
+> +	return ret ?: value;
+> +}
+> +
+>  int cpu_map__get_core_id(int cpu)
+>  {
+>  	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index f00ce62..6762ff9 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -25,6 +25,7 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size);
+>  size_t cpu_map__fprintf(struct cpu_map *map, FILE *fp);
+>  int cpu_map__get_socket_id(int cpu);
+>  int cpu_map__get_socket(struct cpu_map *map, int idx, void *data);
+> +int cpu_map__get_die_id(int cpu);
+>  int cpu_map__get_core_id(int cpu);
+>  int cpu_map__get_core(struct cpu_map *map, int idx, void *data);
+>  int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp);
+> -- 
+> 2.7.4
+> 
