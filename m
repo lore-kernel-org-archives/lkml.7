@@ -2,138 +2,133 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D922C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28471C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CE82075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0AC20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="HCzBISTF"
+	dkim=pass (2048-bit key) header.d=mbobrowski-org.20150623.gappssmtp.com header.i=@mbobrowski-org.20150623.gappssmtp.com header.b="jAQ7fFrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfFEKZu (ORCPT
+        id S1727217AbfFEK0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:25:50 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:20599 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEKZt (ORCPT
+        Wed, 5 Jun 2019 06:26:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43483 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfFEK0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:25:49 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
-   d="scan'208";a="36045944"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Jun 2019 03:25:48 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Jun 2019 03:25:48 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 5 Jun 2019 03:25:48 -0700
+        Wed, 5 Jun 2019 06:26:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so12144911pgv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 03:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5n/UdsYgRDi+6yGxKYVp9FWhHREYaLtnbYNb1/UP8jU=;
- b=HCzBISTFZhXN+uRUUHnzC0o1bmE8kPl8gx5DlmXUZGvrrurVaFHTEX3A+VBY/jNSJJAx66DsDRmvO7nLkaLvF9CetFmYofl2Unm9LMp51czXo6WL79MGeRElWfG9Q70dLqRgGtWU2FH/KsjeBoaHwKWnBEhFKRTsVE88+zod5e8=
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com (10.172.37.15) by
- DM5PR11MB1722.namprd11.prod.outlook.com (10.168.105.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.20; Wed, 5 Jun 2019 10:25:44 +0000
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::11dc:d9db:1a6a:a0b8]) by DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::11dc:d9db:1a6a:a0b8%6]) with mapi id 15.20.1965.011; Wed, 5 Jun 2019
- 10:25:44 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <thierry.reding@gmail.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Claudiu.Beznea@microchip.com>
-Subject: [PATCH] pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
-Thread-Topic: [PATCH] pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
-Thread-Index: AQHVG4kIxBHHCWR2MkOz22b5c6HhUQ==
-Date:   Wed, 5 Jun 2019 10:25:44 +0000
-Message-ID: <1559730328-22131-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR10CA0117.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:28::46) To DM5PR11MB1547.namprd11.prod.outlook.com
- (2603:10b6:4:a::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [213.233.110.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cfb76f2b-74a6-4332-c048-08d6e9a02abe
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1722;
-x-ms-traffictypediagnostic: DM5PR11MB1722:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM5PR11MB1722C4202B52F8AF47B66F7F87160@DM5PR11MB1722.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(8936002)(81166006)(81156014)(316002)(7736002)(476003)(256004)(26005)(486006)(6486002)(52116002)(71200400001)(4326008)(36756003)(66556008)(3846002)(66476007)(6436002)(99286004)(305945005)(6512007)(2616005)(86362001)(50226002)(6116002)(66066001)(6306002)(64756008)(186003)(66446008)(54906003)(102836004)(71190400001)(73956011)(14454004)(66946007)(25786009)(8676002)(478600001)(72206003)(2906002)(6506007)(4744005)(110136005)(386003)(68736007)(53936002)(107886003)(2501003)(5660300002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1722;H:DM5PR11MB1547.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5xlTh6OYPNeBt52R7wCgtaR3qeCJdmxqd7tT2mP9m2LlPaf6MyvowSgFHahrvsW+NtlwzeuKDFtCVTz71VpKxpnWrptdcbh/H/DiaySm8mKBlcjZ71UrX+pjsk0pcRU2YZ/tpzqlekCQtzeM1TskJtjNsfFE93WGe/QzrEjR69rqyahWtuld7nxQam5D/V+Xy2R0wnMKPXrJKHijQ/35/ET8s5qjSLzKENHNeBlskVaDxDB3QSkUlCsaJsxUpT59Ha4uE4aqxOaD5f4KHmNqedvFOv5JkBWolnFC4TVuhy6Q8EHmr4FjiJrXCCL3FUp5r2vRNY/92J6LxKGvBEc0ZN1qc3b7+vBwek5L8qZ9eT6aZnH4W60/39sFK5bJGdWgfvOEYEG2R2CT9yzvU4gEcLieCm2XRG2r7AdVQJbl3cw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=mbobrowski-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M1ULtVTBaRjJ1PHd8skCpbTVO6zbbI/pi1e0gXp7yc0=;
+        b=jAQ7fFrGO0TepAjaeIU8cFqLQxHx3KjiTOlpJHN1i0lpGgHHU5xkuYBwY5v31GkgKL
+         pJPivwXOu550agdJIYhlPftZMBzP0X7kfNUgAK1FayYvt8LHGpXhis876t6/AELoj4Ix
+         LteoO3odnsLY/gznyLnkIIRH4x4bn6QYccT5RQmKC05p9Jje9UPyLlgJehd5351xQC5m
+         EK+mjbCGXLppVyRoCHYSC6lUQ61Z63AqXSjp/BCcL7MK3CCKVljkD2p+chMO+3wCNhU/
+         eX7Dv99osaWfMFdlpwiGXyGvPW8KPEZ7RaaNjMwyuc8wLKK+LFyoZXxOZqBqvfiQV3jw
+         U0zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M1ULtVTBaRjJ1PHd8skCpbTVO6zbbI/pi1e0gXp7yc0=;
+        b=rcQ1hIh4ZpWL1QJT5PZKHe3oJREjeRhA81xHcsbCcGvas9tW8vefuynEbkFMN6EZRT
+         4sXoZTOCv9znprS18EMuYetw11OUtWhfM6DVi/J9pzUnbaUOEoVxlYEtxoFaoZ8GXy4v
+         dXMlrJC9m0IufZY1WBxZbzgHVtOVHEV90adWY/QbMGxsxgaWovWmtdlyTpfp7om6MFxk
+         eJyTuNdWMsJgBIX4JskyFvtDOpMHLZchwXdbejTvWqlhPPVukENSXIceNCzwE6f5Y9S4
+         vn52mFocSTkasNKzAM6KsZnG0P2m2MNYb2GaJD8IDgcUZAefBbtUPssWb/4/N7h5z34P
+         jVIQ==
+X-Gm-Message-State: APjAAAX9IgEEalyHgNFhU6kA+loN2e0HBokSWrndpjsfl/uLW9hjFYiU
+        BoZNq/DT5k8TDYDenhGvSYzE
+X-Google-Smtp-Source: APXvYqySxD+fahxqn6P/0cG5QKLSgMNAfXkPXSCVU91zFyZzNMLl1HP/nOL6ml0Er8r9V2f2cemjRA==
+X-Received: by 2002:a63:4e07:: with SMTP id c7mr3389206pgb.350.1559730380269;
+        Wed, 05 Jun 2019 03:26:20 -0700 (PDT)
+Received: from poseidon.Home ([114.78.0.167])
+        by smtp.gmail.com with ESMTPSA id i5sm14705123pfk.49.2019.06.05.03.26.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 03:26:19 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 20:26:13 +1000
+From:   Matthew Bobrowski <mbobrowski@mbobrowski.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Christian Brauner <christian@brauner.io>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+Message-ID: <20190605102611.GA4546@poseidon.Home>
+References: <20190522163150.16849-1-christian@brauner.io>
+ <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+ <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
+ <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
+ <20190523095506.nyei5nogvv63lm4a@brauner.io>
+ <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfb76f2b-74a6-4332-c048-08d6e9a02abe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 10:25:44.5090
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkFk
-ZCBjb21wYXRpYmxlIHN0cmluZyBmb3IgU0FNOVg2MCBITENEQydzIFBXTS4NCg0KU2lnbmVkLW9m
-Zi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQpBY2tl
-ZC1ieTogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4NCi0tLQ0KDQpI
-aSBUaGllcnJ5LA0KDQpUaGlzIHBhdGNoIHdhcyBpbml0aWFsbHkgcGFydCBvZiBzZXJpZXMgYXQg
-WzFdLiBUaGUgcmVzdCBvZiB0aGUgcGF0Y2hlcyBpbg0KdGhhdCBzZXJpZXMgd2VyZSB0YWtlbiB0
-aG91Z2ggZHJtLW1pc2MtbmV4dC4gT25seSB0aGlzIG9uZSByZW1haW5lZC4NCg0KWzFdIGh0dHBz
-Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMTU1NjE5NTc0OC0xMTEwNi0xLWdpdC1zZW5kLWVtYWls
-LWNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20vDQoNCiBkcml2ZXJzL3B3bS9wd20tYXRtZWwt
-aGxjZGMuYyB8IDEgKw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9wd20vcHdtLWF0bWVsLWhsY2RjLmMgYi9kcml2ZXJzL3B3bS9wd20tYXRt
-ZWwtaGxjZGMuYw0KaW5kZXggNTRjNjYzM2Q5YjVkLi42YmZiZTFhOTAyZmMgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL3B3bS9wd20tYXRtZWwtaGxjZGMuYw0KKysrIGIvZHJpdmVycy9wd20vcHdtLWF0
-bWVsLWhsY2RjLmMNCkBAIC0yNDYsNiArMjQ2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
-ZXZpY2VfaWQgYXRtZWxfaGxjZGNfZHRfaWRzW10gPSB7DQogCQkuY29tcGF0aWJsZSA9ICJhdG1l
-bCxzYW1hNWQ0LWhsY2RjIiwNCiAJCS5kYXRhID0gJmF0bWVsX2hsY2RjX3B3bV9zYW1hNWQzX2Vy
-cmF0YSwNCiAJfSwNCisJewkuY29tcGF0aWJsZSA9ICJtaWNyb2NoaXAsc2FtOXg2MC1obGNkYyIs
-IH0sDQogCXsgLyogc2VudGluZWwgKi8gfSwNCiB9Ow0KIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2Ys
-IGF0bWVsX2hsY2RjX2R0X2lkcyk7DQotLSANCjIuNy40DQoNCg==
+On Thu, May 23, 2019 at 01:25:08PM +0300, Amir Goldstein wrote:
+
+...
+
+> > > > Interesting. When do you think the gate can be removed?
+> > >
+> > > Nobody is working on this AFAIK.
+> > > What I posted was a simple POC, but I have no use case for this.
+> > > In the patchwork link above, Jan has listed the prerequisites for
+> > > removing the gate.
+> > >
+> > > One of the prerequisites is FAN_REPORT_FID, which is now merged.
+> > > When events gets reported with fid instead of fd, unprivileged user
+> > > (hopefully) cannot use fid for privilege escalation.
+> > >
+> > > > I was looking into switching from inotify to fanotify but since it's not usable from
+> > > > non-initial userns it's a no-no
+> > > > since we support nested workloads.
+> > >
+> > > One of Jan's questions was what is the benefit of using inotify-compatible
+> > > fanotify vs. using inotify.
+> > > So what was the reason you were looking into switching from inotify to fanotify?
+> > > Is it because of mount/filesystem watch? Because making those available for
+> >
+> > Yeah. Well, I would need to look but you could probably do it safely for
+> > filesystems mountable in user namespaces (which are few).
+> > Can you do a bind-mount and then place a watch on the bind-mount or is
+> > this superblock based?
+> >
+> 
+> Either.
+> FAN_MARK_MOUNT was there from day 1 of fanotify.
+> FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
+> 
+> But directory modification events that are supported since v5.1 are
+> not available
+> with FAN_MARK_MOUNT, see:
+> https://github.com/amir73il/man-pages/blob/fanotify_fid/man2/fanotify_init.2#L97
+> 
+> Matthew,
+> 
+> Perhaps this fact is worth a mention in the linked entry for FAN_REPORT_FID
+> in fanotify_init.2 in addition to the comment on the entry for FAN_MARK_MOUNT
+> in fanotify_mark.2.
+
+Sorry, a little late to the party...
+
+The fact being that directory modification events that are supported since v5.1
+are not available when used in conjunction with FAN_MARK_MOUNT?
+
+-- 
+Matthew Bobrowski
