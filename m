@@ -2,115 +2,120 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2B1C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E35C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF2B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE992075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 08:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="EUIbujJO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k03miPaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfFEIb3 (ORCPT
+        id S1726747AbfFEIcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 04:31:29 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:16667 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfFEIb3 (ORCPT
+        Wed, 5 Jun 2019 04:32:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34737 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfFEIcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 04:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559723486;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dZ9VB0L69XNhmbi+WvDL/Ge3RPtwyO9V5uIsQMIewxA=;
-        b=EUIbujJOnzJTzyH0kT4jnfrzwR5L/nSqeqt9wK3L8UbvLx9G4Fkxf5PnKNn2ps1+0j
-        xUzXS6gmNTi6KuI0N0nILfDGzV4EgNuJtMq0nxet4XT/eDIs8YLpcPgh/Lf8cL1Ouk/Q
-        JlqqyvRKvQ191pq/ox7ARnAg53bMU4lhQMpyDWS4+2cvcvmh0jccJczHa3Op+qM24BvD
-        vevTXWU5tYdamFKWbJ7sobLvY3ZKmBPWzy1nGvyKlLQzeMJUqRvezY9JeUxPu3f7/aP0
-        bUEkH5aZA2wiAio3yl5goYKivUxNwPq9ww7NhUzDJ8FKl8+oAuS19pT/C/rgCEwM37fm
-        ttrw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vhwDaiCA=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
-        with ESMTPSA id i01b98v558VNBIo
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 5 Jun 2019 10:31:23 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 0/2] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190605082942.GC15169@ravnborg.org>
-Date:   Wed, 5 Jun 2019 10:31:22 +0200
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
-        imirkin@alum.mit.edu, marek.belisko@gmail.com,
-        letux-kernel@openphoenux.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E8EB9DF9-3684-4312-86E6-AA7BF38CF121@goldelico.com>
-References: <cover.1559711222.git.hns@goldelico.com> <20190605082942.GC15169@ravnborg.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 5 Jun 2019 04:32:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so5090917plt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 01:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dk0R1JeANwhvfJ8EQjNAn0p7Nj8AEAOaqyvCO9n4i9o=;
+        b=k03miPaflHsYxMZvcILGpctdJhtceRMyyo9Sz+HkvQksJJ5V01qAuQPRb2/jd89gDK
+         W6n3QXdOdbDFKXrQoM7emCK5pdtddXCUPmDIfXd7ruUGPhYAq8g4y4S8arksaz7/MZv1
+         Xe/oBYbsELe4UOkCSaFDKyGfqoGV+H4qILh3HdKr4cpBGa7+YJ6dZuVXGE9XDl12Qby7
+         OGiB7W+9JwHgOD+Ahlk4o/EW/Wo0knAZU9N+y0rCdxlKMJ65GdO6VjNosDTiZXaUfEKq
+         SApCpBFPE4n/f+EVCTjab8t4+nsnS7hBs1IyP5Otrjj4xwplyT0oZ1m1uJ7gpNxp4m3a
+         qXbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dk0R1JeANwhvfJ8EQjNAn0p7Nj8AEAOaqyvCO9n4i9o=;
+        b=FoYXTPSmTNuPv3uvtrTG87P3mIM/QJEAFeyKSqB6DR61KOTRgcKfDEQXZiUSw1hOsm
+         /cHHHmN9QEHK0td3lwpc47qIunmdEbqE3sEQt8D0vQiAab6Qxx1Jghzlw1pIICpKLx84
+         PnPJg1bHtmcJ1/aaguh65pGTFrslVw9z1BR1Mk0deM2bHrJanVNRNomL8erCgV88i6Gp
+         b5onVt9CRddL09h3YzNWktlz6G5WzFy2H2aOhUg19PMDZ2xo25HhLLgyDxAHbZj9zqpf
+         JvD5wLdp/NW4iSapv89nA/CdGQ6AkLuPP81ZPOF9rZQUnUuZPmXS0/rkJS3zkhgkjp/4
+         Je+A==
+X-Gm-Message-State: APjAAAWDpGbB7nR1IoJdjDKZkS5CySNvox/77n4zd37bHyQI2/K+kRe3
+        /VVfMSv69RnhFj5oIW9LsA5rPzHQXVBDqL/mCYM=
+X-Google-Smtp-Source: APXvYqwbZaGMyauKiFD++PrI2NLWR+EDp4DDtRCdyEdJmY9157nkeZUMvJH5Ca/fFXFKRHqlA5YUgzAWFuI8b1Jcpx4=
+X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr41234514plr.262.1559723573797;
+ Wed, 05 Jun 2019 01:32:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190602143017.19645-1-benniciemanuel78@gmail.com>
+In-Reply-To: <20190602143017.19645-1-benniciemanuel78@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Jun 2019 11:32:42 +0300
+Message-ID: <CAHp75Vf5Foj3FKD6DiRgck07KAVddGTTXJQhWib77yctfdAjOg@mail.gmail.com>
+Subject: Re: [PATCH] pci: ibmphp: add check of return value from pci_hp_register()
+To:     benniciemanuel78@gmail.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joe Perches <joe@perches.com>, Lukas Wunner <lukas@wunner.de>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+On Sun, Jun 2, 2019 at 5:30 PM Emanuel Bennici
+<benniciemanuel78@gmail.com> wrote:
+>
+> Check the return value of pci_hp_register() in Function
+> ebda_rsrc_controller()
+>
 
-> Am 05.06.2019 um 10:29 schrieb Sam Ravnborg <sam@ravnborg.org>:
->=20
-> Hi Nikolaus.
->=20
-> Thanks for the new panel patches.
-> On Wed, Jun 05, 2019 at 07:07:01AM +0200, H. Nikolaus Schaller wrote:
->> V2:
->> * fix typo in 99dtc panel compatible string (reported by =
-imirkin@alum.mit.edu)
->>=20
->> V1:
->>=20
->> Since v5.2-rc1 OMAP is no longer using a special display driver =
-architecture
->> for DPI panels, but uses the general drm/panel/panel-simple.
->>=20
->> So we finally can add SoC independent panel definitions for two panel =
-models
->> which we already had worked on quite a while ago (before device tree =
-was
->> introduced):
->>=20
->> 	https://patchwork.kernel.org/patch/2851295/
->>=20
->>=20
->>=20
->> H. Nikolaus Schaller (2):
->>  drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
->>  drm/panel: simple: Add Ortustech COM37H3M panel support
->=20
-> All three panels are missing binding documentation.
-> Please submit binding documentation, in separate patches, with
-> proper "dt-bindings: xxx" subjects.
-> See Documentation/device-tree/bindings/submitting...
+Maybe this is correct, maybe not.
+You are changing behaviour of the function.
+How did you test this?
 
-Ah, ok. Yes, will add to v3 asap.
-
->=20
-> Patches not applied due to the missing docs.
-> But the patches itself looked good.
-> You have specified bus_flags etc, and added the
-> new entries in correct alphabetical order etc.
->=20
-> 	Sam
-
-BR and thanks,
-Nikolaus
+> Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
+> ---
+>  drivers/pci/hotplug/ibmphp_ebda.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/ibmphp_ebda.c b/drivers/pci/hotplug/ibmphp_ebda.c
+> index 11a2661dc062..7e523ce071b3 100644
+> --- a/drivers/pci/hotplug/ibmphp_ebda.c
+> +++ b/drivers/pci/hotplug/ibmphp_ebda.c
+> @@ -896,10 +896,17 @@ static int __init ebda_rsrc_controller(void)
+>
+>         }                       /* each hpc  */
+>
+> +       int result = 0;
+>         list_for_each_entry(tmp_slot, &ibmphp_slot_head, ibm_slot_list) {
+>                 snprintf(name, SLOT_NAME_SIZE, "%s", create_file_name(tmp_slot));
+> -               pci_hp_register(&tmp_slot->hotplug_slot,
+> -                       pci_find_bus(0, tmp_slot->bus), tmp_slot->device, name);
+> +               result = pci_hp_register(&tmp_slot->hotplug_slot,
+> +                                        pci_find_bus(0, tmp_slot->bus),
+> +                                        tmp_slot->device, name);
+> +
+> +               if (result) {
+> +                       err("pci_hp_register failed with error %d\n", result);
+> +                       goto error;
+> +               }
+>         }
+>
+>         print_ebda_hpc();
+> --
+> 2.19.1
+>
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
