@@ -2,134 +2,195 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAB6C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D4DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40866206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559741687;
-	bh=o8lToEz46I/+28kwT0hSuUzum1uvFsV9UImUt4RT1B4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmNd3GzqeAYO41DvnBNyvTETyAeKVmtnOMJ7sakbEL9jvbri2uviAGYwK2s2o9nqh
-	 pcMAWPInmvZFLfemTtqYTzlClAN5jFoXgo4LTWvmjeAW6+yh48s//IjwRgpUXznvUz
-	 +F8jrUcrFHEiAu8JSE7g4/XkjxsKegFSmOuiMRwU=
+	by mail.kernel.org (Postfix) with ESMTP id 2A2B920684
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="04/ccSPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfFENeq (ORCPT
+        id S1727985AbfFENh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:34:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35992 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFENep (ORCPT
+        Wed, 5 Jun 2019 09:37:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56080 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFENhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:34:45 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g18so5134881qkl.3;
-        Wed, 05 Jun 2019 06:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=grBBM9ViaanFgHPLnFrQHKU04qolbq9KsWYNsIIwRqA=;
-        b=u107NaP8nG876tIG6Q2fL9N9piNv7X1C8ktfs1g7H/hDLqed+pH6cxVRLLRNznbtm7
-         Mcs4Os2HbvpEVPU71DOG2dkTQkQFj1DTVQD1xbFBWjw7WF0h97y/V1UlSvaIuFEftNWK
-         dbxnDMpwhY3GY20Mb6DEdwg3rrwqciAvdHqjQnpRY/BolbgE4M1jaiF1ZPvawQvLAFJc
-         mcV6vpbo4mCioqlrX32FS6meK6OqhxdlRBo/hp2jYyy/9ZG4eFC4e6hRV5mikW8QsOPd
-         e+yXKMeMNN+lIamY359iclpNA/oUtZ93ElA4TD7urYgkhnKxGU0Z8kzqejtn6DHL6ifZ
-         Vxsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=grBBM9ViaanFgHPLnFrQHKU04qolbq9KsWYNsIIwRqA=;
-        b=khGQHwe9CYIf0BQhjf5E9rh4DUxyspB4gGqGoeMAC9xVfOOK40FQz33aHP2wM+XIEI
-         jxYfLy4F97OoDou7UN1d7WbYiGU+atVE4VM/PyuHzjmE435A4eHdOQSRm84JInqn0qUg
-         WOqh1wGGvpdJ36PUITGmpl9E8IvCkUlRgARdlDHg8VSQclB2/QamHFP/YADmkHcHalRY
-         8GOJKo8P+4TI4bClX+G0zZyoZDkfBWRXByOreJS0PqtCO+e/GTzqEfvWJcTRaeNSfuW9
-         7IgE+KYhLd3cy8VGEe39UGSfzAOhqBmGggVXf9RtL3FfAaevpTMcC9E4/M6+z5A5EVo9
-         K+6g==
-X-Gm-Message-State: APjAAAUHeVZqrLqioCL8ap9lQ2xclXDsuvbxnHJ9Hu1Ukl0SUz8CzPws
-        T8qvRHAQneWaS1CnLdFHOGs=
-X-Google-Smtp-Source: APXvYqwl1p5ZrcCZPQK3a1Eh2kpFD9I7pupsFV3QFAqHHQm23X4++11e1P8XI1bGH2GOwoL1JUr5vA==
-X-Received: by 2002:a37:4804:: with SMTP id v4mr34301359qka.330.1559741684282;
-        Wed, 05 Jun 2019 06:34:44 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c027])
-        by smtp.gmail.com with ESMTPSA id d16sm13121896qtd.73.2019.06.05.06.34.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 06:34:43 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 06:34:42 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, lizefan@huawei.com, cgroups@vger.kernel.org
-Subject: Re: [PATCH] sched/core: Fix cpu controller for !RT_GROUP_SCHED
-Message-ID: <20190605133442.GJ374014@devbig004.ftw2.facebook.com>
-References: <20190605114935.7683-1-juri.lelli@redhat.com>
+        Wed, 5 Jun 2019 09:37:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55DTE1i119488;
+        Wed, 5 Jun 2019 13:37:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=u+zLCba4ifvorqHECxdb8NWOVORyLACPhu1rUxGfaiU=;
+ b=04/ccSPIDB9rw0yaqtcHi0KxfYmVhroln6GrxIIJzj+KGMwFDFX7hLTbB5o3fTLxBF89
+ f6L2rcGShr+HLDMtx402CIThkjTlkqOfuo5U4Vd+MJrso7BezPsVTOmqkth7JJQ+RTEc
+ kb14qh1piCluKWghlyGA2hLFa4230l30Vnc3+2m6xnNZIVg07MSAiWxocE7bA/4j0m0+
+ TK9uMGn+1S+nIxB5mvY6N/WRTOKYBwl3FYzT/tWQhVUECUikgTVXITWKP/BEzEeEU74+
+ 6ZJYd4KTUVHwSCKtYk7FLDVi+4/BwJsFLksq3zUNl7MKDZf0qHnUIp/9vO+eJvVWqjYF RA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sugstjn49-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jun 2019 13:37:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55DZsPL069366;
+        Wed, 5 Jun 2019 13:37:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2swnghw2j9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jun 2019 13:37:08 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x55Db0GP027121;
+        Wed, 5 Jun 2019 13:37:01 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Jun 2019 06:37:00 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     hannes@cmpxchg.org, jiangshanlai@gmail.com, lizefan@huawei.com,
+        tj@kernel.org
+Cc:     bsd@redhat.com, dan.j.williams@intel.com,
+        daniel.m.jordan@oracle.com, dave.hansen@intel.com,
+        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
+        steven.sistare@oracle.com, tglx@linutronix.de,
+        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [RFC v2 1/5] cgroup: add cgroup v2 interfaces to migrate kernel threads
+Date:   Wed,  5 Jun 2019 09:36:46 -0400
+Message-Id: <20190605133650.28545-2-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
+References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605114935.7683-1-juri.lelli@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=870
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906050087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=902 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906050087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Prepare for cgroup aware workqueues by introducing cgroup_attach_kthread
+and a helper cgroup_attach_kthread_to_dfl_root.
 
-On Wed, Jun 05, 2019 at 01:49:35PM +0200, Juri Lelli wrote:
-> On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-> move RT tasks between cgroups to which cpu controller has been attached;
-> but it is oddly possible to first move tasks around and then make them
-> RT (setschedule to FIFO/RR).
-> 
-> E.g.:
-> 
->   # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
->   # chrt -fp 10 $$
->   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   bash: echo: write error: Invalid argument
->   # chrt -op 0 $$
->   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   # chrt -fp 10 $$
->   # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   2345
->   2598
->   # chrt -p 2345
->   pid 2345's current scheduling policy: SCHED_FIFO
->   pid 2345's current scheduling priority: 10
-> 
-> Existing code comes with a comment saying the "we don't support RT-tasks
-> being in separate groups". Such comment is however stale and belongs to
-> pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-> !RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-> are not performed at all in these cases.
-> 
-> Make moving RT tasks between cpu controller groups viable by removing
-> special case check for RT (and DEADLINE) tasks.
-> 
-> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-> ---
-> Hi,
-> 
-> Although I'm pretty assertive in the changelog, I actually wonder what
-> am I missing here and why (if) current behavior is needed and makes
-> sense.
-> 
-> Any input?
+A workqueue worker will always migrate itself, so for now use @current
+in the interfaces to avoid handling task references.
 
-Yeah, RT tasks being transprent to the cpu controller when
-!RT_GROUP_SCHED makes sense to me, especially given that the rules
-around it are already inconsistent.  Please feel free to add
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+---
+ include/linux/cgroup.h |  6 ++++++
+ kernel/cgroup/cgroup.c | 48 +++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 49 insertions(+), 5 deletions(-)
 
-  Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 81f58b4a5418..ad78784e3692 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -103,6 +103,7 @@ struct cgroup_subsys_state *css_tryget_online_from_dir(struct dentry *dentry,
+ struct cgroup *cgroup_get_from_path(const char *path);
+ struct cgroup *cgroup_get_from_fd(int fd);
+ 
++int cgroup_attach_kthread(struct cgroup *dst_cgrp);
+ int cgroup_attach_task_all(struct task_struct *from, struct task_struct *);
+ int cgroup_transfer_tasks(struct cgroup *to, struct cgroup *from);
+ 
+@@ -530,6 +531,11 @@ static inline struct cgroup *task_dfl_cgroup(struct task_struct *task)
+ 	return task_css_set(task)->dfl_cgrp;
+ }
+ 
++static inline int cgroup_attach_kthread_to_dfl_root(void)
++{
++	return cgroup_attach_kthread(&cgrp_dfl_root.cgrp);
++}
++
+ static inline struct cgroup *cgroup_parent(struct cgroup *cgrp)
+ {
+ 	struct cgroup_subsys_state *parent_css = cgrp->self.parent;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 3f2b4bde0f9c..bc8d6a2e529f 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -2771,21 +2771,59 @@ struct task_struct *cgroup_procs_write_start(char *buf, bool threadgroup)
+ 	return tsk;
+ }
+ 
+-void cgroup_procs_write_finish(struct task_struct *task)
+-	__releases(&cgroup_threadgroup_rwsem)
++static void __cgroup_procs_write_finish(struct task_struct *task)
+ {
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+-	/* release reference from cgroup_procs_write_start() */
+-	put_task_struct(task);
++	lockdep_assert_held(&cgroup_mutex);
+ 
+-	percpu_up_write(&cgroup_threadgroup_rwsem);
+ 	for_each_subsys(ss, ssid)
+ 		if (ss->post_attach)
+ 			ss->post_attach();
+ }
+ 
++void cgroup_procs_write_finish(struct task_struct *task)
++	__releases(&cgroup_threadgroup_rwsem)
++{
++	lockdep_assert_held(&cgroup_mutex);
++
++	/* release reference from cgroup_procs_write_start() */
++	put_task_struct(task);
++
++	percpu_up_write(&cgroup_threadgroup_rwsem);
++	__cgroup_procs_write_finish(task);
++}
++
++/**
++ * cgroup_attach_kthread - attach the current kernel thread to a cgroup
++ * @dst_cgrp: the cgroup to attach to
++ *
++ * The caller is responsible for ensuring @dst_cgrp is valid until this
++ * function returns.
++ *
++ * Return: 0 on success or negative error code.
++ */
++int cgroup_attach_kthread(struct cgroup *dst_cgrp)
++{
++	int ret;
++
++	if (WARN_ON_ONCE(!(current->flags & PF_KTHREAD)))
++		return -EINVAL;
++
++	mutex_lock(&cgroup_mutex);
++
++	percpu_down_write(&cgroup_threadgroup_rwsem);
++	ret = cgroup_attach_task(dst_cgrp, current, false);
++	percpu_up_write(&cgroup_threadgroup_rwsem);
++
++	__cgroup_procs_write_finish(current);
++
++	mutex_unlock(&cgroup_mutex);
++
++	return ret;
++}
++
+ static void cgroup_print_ss_mask(struct seq_file *seq, u16 ss_mask)
+ {
+ 	struct cgroup_subsys *ss;
 -- 
-tejun
+2.21.0
+
