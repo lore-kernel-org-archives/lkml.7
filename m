@@ -2,96 +2,135 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFB5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DC8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A0620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D97520866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 16:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="EpK/aD4e"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EtIXGMem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfFEQmb (ORCPT
+        id S1728763AbfFEQrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 12:42:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42989 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbfFEQma (ORCPT
+        Wed, 5 Jun 2019 12:47:05 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:7961 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfFEQrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:42:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so11433636pgd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 09:42:30 -0700 (PDT)
+        Wed, 5 Jun 2019 12:47:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IR/5u8R+ftfvePhhPnEG7rK5T0D9AZJGfobf430HZK0=;
-        b=EpK/aD4eGRpEC9hMVO208gbI/muqvw8jBmuMlOGu+QCJFEebWFWSoFCERzvwGvuL6K
-         ZsZW1YedQmJCDs8eKJRuqXLHpxRuF8EZ0fn2kX/QObnsB/BRL2omZKd+WbVgXyaemLx6
-         nIziz08WC5m6Od5vkSTLH9UrAqUvEideQSFn7Kek1qFQR0L0B9Lr6mu9mZtZkMWsYh68
-         Lh26494NJ/EqpF12bz4dOK09y5nJtxJbA5Jt04y7H3ZUrW/7ymTys04XVtMiWIRbFDoZ
-         avUuRe2ACDkCiyz75JTnDTlW2XCPbiknHuhU5mk9t7MeLU10/Q07/2PW5oCPCQB+ZlqU
-         FFAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IR/5u8R+ftfvePhhPnEG7rK5T0D9AZJGfobf430HZK0=;
-        b=tjzB9oI8I6UPFyolH53EPEsFhhds16CHVGUlCdC4QyKqCXP+z9LtmoLY0ILndoi+FG
-         FUSGZ3TjYwHr4U1sBzL4p6+EFjg5PH/kMOOp66fPFWd9fMzbfap2uJ+f6H/OOuaOA9Xf
-         zGC1ZcfOqUC4pey0j7DR4TgViIv0fbERc3NNFfVzlwyE5RO1t0PAJxzAK4WqPZTvtPox
-         4WEMBy1amlcMdoMcBqSQkuvcoGkAcJk3r6YJcOC/tFfFrIwel7Zmx8EfzbLLHU/tURBN
-         eGbub/8rn0DPWd2+lp61DVOBP+JOPDwWV6+ub5bIEaJP8+O+SWuRUjZWiXrKgAIPZeRt
-         cGEg==
-X-Gm-Message-State: APjAAAUKLkB0xyeQeqhFc1yeqt9Q6klW1Ky73eB9QrlbMRybSwr6WZ7O
-        HauGfqgcKzmaCVUAXAZn3o8GTQQ9tGM=
-X-Google-Smtp-Source: APXvYqxGZGo/d/XJokbeKLqRlqfQUskb3FoYJTPKNFpIC57YsPlwoH1CmnWwVKyEBqoYUEgWRbnDhQ==
-X-Received: by 2002:aa7:9e51:: with SMTP id z17mr48511176pfq.212.1559752950079;
-        Wed, 05 Jun 2019 09:42:30 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:cd0c])
-        by smtp.gmail.com with ESMTPSA id q125sm44812419pfq.62.2019.06.05.09.42.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 09:42:28 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 12:42:27 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 01/10] mm: add missing smp read barrier on getting
- memcg kmem_cache pointer
-Message-ID: <20190605164227.GB12453@cmpxchg.org>
-References: <20190605024454.1393507-1-guro@fb.com>
- <20190605024454.1393507-2-guro@fb.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559753221; x=1591289221;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gAunuADjUlfvR6+lZVJDavO/Jg439Hd4VR1/jUhyiuU=;
+  b=EtIXGMemhK8XfXLJO9UL3EhyVVewcFRo96pbCqEfFd5duGfjyhKJxVYY
+   EKgs+eS+uod8a93nBR7cLSEhkChp7yszd1g4d9ooXC77WOwQKWf3U6rGx
+   enJuVkKi1EcytUUPHUCA6VCz7iQlXE3TbHc9F3DyJ1lXLJy0wd3Pr86tR
+   U=;
+X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
+   d="scan'208";a="769129587"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Jun 2019 16:46:54 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id C53A5A23E9;
+        Wed,  5 Jun 2019 16:46:53 +0000 (UTC)
+Received: from EX13D05UWB001.ant.amazon.com (10.43.161.181) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 16:46:53 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D05UWB001.ant.amazon.com (10.43.161.181) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 16:46:53 +0000
+Received: from localhost (10.85.18.74) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Wed, 5 Jun 2019 16:46:53 +0000
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Haiyue Wang <haiyue.wang@linux.intel.com>,
+        <jarkko.nikula@linux.intel.com>, <andriy.shevchenko@intel.com>,
+        <brendanhiggins@google.com>, Eduardo Valentin <eduval@amazon.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCHv7 1/3] dt-bindings: i2c: document bindings for i2c-slave-mqueue
+Date:   Wed, 5 Jun 2019 09:46:49 -0700
+Message-ID: <20190605164651.15991-2-eduval@amazon.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190605164651.15991-1-eduval@amazon.com>
+References: <20190605164651.15991-1-eduval@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605024454.1393507-2-guro@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:44:45PM -0700, Roman Gushchin wrote:
-> Johannes noticed that reading the memcg kmem_cache pointer in
-> cache_from_memcg_idx() is performed using READ_ONCE() macro,
-> which doesn't implement a SMP barrier, which is required
-> by the logic.
-> 
-> Add a proper smp_rmb() to be paired with smp_wmb() in
-> memcg_create_kmem_cache().
-> 
-> The same applies to memcg_create_kmem_cache() itself,
-> which reads the same value without barriers and READ_ONCE().
-> 
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+Document the i2c-slave-mqueue binding by adding
+descriptor, required properties, and example.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+---
+
+Changes from V6 to V7:
+- none
+
+ .../bindings/i2c/i2c-slave-mqueue.txt         | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+new file mode 100644
+index 000000000000..eb1881a4fc0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+@@ -0,0 +1,34 @@
++===============================================
++Device Tree for I2C slave message queue backend
++===============================================
++
++Some protocols over I2C/SMBus are designed for bi-directional transferring
++messages by using I2C Master Write protocol. This requires that both sides
++of the communication have slave addresses.
++
++This I2C slave mqueue (message queue) is used to receive and queue
++messages from the remote i2c intelligent device; and it will add the target
++slave address (with R/W# bit is always 0) into the message at the first byte.
++
++Links
++----
++`Intelligent Platform Management Bus
++Communications Protocol Specification
++<https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmp-spec-v1.0.pdf>`_
++
++`Management Component Transport Protocol (MCTP)
++SMBus/I2C Transport Binding Specification
++<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_1.1.0.pdf>`_
++
++Required Properties:
++- compatible		: should be "i2c-slave-mqueue"
++- reg			: slave address
++
++Example:
++
++i2c {
++	slave_mqueue: i2c-slave-mqueue {
++		compatible = "i2c-slave-mqueue";
++		reg = <0x10>;
++	};
++};
+-- 
+2.21.0
+
