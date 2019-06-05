@@ -2,210 +2,114 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C48C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69ADC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E352067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666582067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="p49yDIRb"
+	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="TRP1sB1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfFEVBx (ORCPT
+        id S1726645AbfFEVCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:01:53 -0400
-Received: from uhil19pa09.eemsg.mail.mil ([214.24.21.82]:8523 "EHLO
-        uhil19pa09.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfFEVBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:01:52 -0400
-X-EEMSG-check-017: 22592412|UHIL19PA09_EEMSG_MP7.csd.disa.mil
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by uhil19pa09.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 05 Jun 2019 21:01:47 +0000
+        Wed, 5 Jun 2019 17:02:06 -0400
+Received: from mail-eopbgr710071.outbound.protection.outlook.com ([40.107.71.71]:9357
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfFEVCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:02:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1559768507; x=1591304507;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=GlGOmoMxCLppcevLW3isDRXTsHFkzQuuvVZrdU11K28=;
-  b=p49yDIRbWrYVHyVKzrJ4tv7XRwKq/8Je7c4X2YNcJlV4rehRE2Zg9bnr
-   ooEhAKze52kvOhQyob/ACTgQ6GrsDDPCPwWUR7sqfKxUEkLfATxoICQL4
-   NjSGJBe03CClrkbFFuEIDbOrPr0Wph0/aNlT8un0Q87mPsFH0f3iraWRe
-   P7vuYzJ6WHrBgmVioNmIp4ycXNCAFYDSdUoi3tg5YTxTDlehO6cOzCHNL
-   CzBLvQZ251aw5Rh3BQCvsBG61pYvLE462bLQyRe04GV3DHcpmjfK1cR1j
-   fk9YKsYMOYr6+qfa3a3O+6aOulQzo5DpqfDqmyQXblvQXBxStN3HfHFi9
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,556,1549929600"; 
-   d="scan'208";a="28614991"
-IronPort-PHdr: =?us-ascii?q?9a23=3AUuSxBh/N/WTGwf9uRHKM819IXTAuvvDOBiVQ1K?=
- =?us-ascii?q?B+1ekUIJqq85mqBkHD//Il1AaPAdyCrasY0aGP7v6ocFdDyK7JiGoFfp1IWk?=
- =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
- =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmSexbalvIBi5swndudQajItjJ60s1h?=
- =?us-ascii?q?bHv3xEdvhMy2h1P1yThRH85smx/J5n7Stdvu8q+tBDX6vnYak2VKRUAzs6PW?=
- =?us-ascii?q?874s3rrgTDQhCU5nQASGUWkwFHDBbD4RrnQ5r+qCr6tu562CmHIc37SK0/VD?=
- =?us-ascii?q?q+46t3ThLjlTwKPCAl/m7JlsNwjbpboBO/qBx5347Ue5yeOP5ncq/AYd8WWW?=
- =?us-ascii?q?9NU8BfWCxbBoO3cpUBAewPM+1Fq4XxvlUDoB+7CQSqGejhyCJHhmXu0KMnze?=
- =?us-ascii?q?ohHwHI0g8uEd0Av3vbrsn6OqgJXOCpz6TF1ynPY+9Y1Dr/7oXDbxAvoeuLXb?=
- =?us-ascii?q?J1acff1FUvGB3djlWQt4PlOS6e2PkIs2eB6+pgUfygim46oAx2uTig29wsh5?=
- =?us-ascii?q?LVhoMV1l/E9SJ5zJwzJd2jUkF3e9GkEJxOtyyDMYZ9X8AsQ3lwtSonxbALto?=
- =?us-ascii?q?S3cSgXxJg92RLSZOKLf5KV7h/lSe2fOy13hGh/d7K6nxuy9E+gxfDiWcSsy1?=
- =?us-ascii?q?ZKqzZFksHLtnAQyxzf8siHReV5/kemwTuPyxrc6vtFIUApjqrXMYIhw74smZ?=
- =?us-ascii?q?oTtkTPBCn2l1ntjKCKbEkk/+mo6+D/brXnoJ+TKZN0hxnjPqkhlcGzG+Q1Ph?=
- =?us-ascii?q?UUU2SF9umwyqfv8VDhTLVPlPI2k63ZsJ7AJcQco660GxRV3Zs46xukEzen0M?=
- =?us-ascii?q?gXnXkALF5ffhKHlJLmN0vBIPD/E/ezm06snytzx/DaIr3hBY3ALnfZkLj/cr?=
- =?us-ascii?q?Z96E5cxRE3zdBe4ZJUF74AIPz0Wk/sstzXEwU2MxC1w+bgDtVxzIQeWXiAAq?=
- =?us-ascii?q?WBKqPdrUeI5v4zI+mLfIIVvCv9K+Qi5/P1l3A5nEUScrWz0psPaXC4Au5pI0?=
- =?us-ascii?q?GDbXrqnNgBDX8AvhAiQ+zylF2CTTlTam6uUK0m/TE0FoKnAJzYRo+xgLyOxj?=
- =?us-ascii?q?q7HpNSZm9YEFCACGvneJ+eV/gQbyKSJ9drkiYYWri5V48hyRauuRf+y7p6Mu?=
- =?us-ascii?q?rU/TYVtZH929hv4e3cixUy+SZzD8SH3GGHV3t0kX8QRz8qwKB/plRwxUqD0a?=
- =?us-ascii?q?h/jf1XC9hT5/dSUgohL57T0fF1C9DoVQLdZNuGVFGmQtC+CzErUt0x28MOY1?=
- =?us-ascii?q?p6G9i6kBDD3jCqA7gOmr2KGpM09KPc32brK8Z5ynbG0rQhjlY8TstIL22mib?=
- =?us-ascii?q?Rz9xXQB4TRiUWWi76qdbgA3C7K7GqD13CBvF9GXw52SqjFQXAfaVXTrdvj6E?=
- =?us-ascii?q?LOVbmuBqo7MgFZ086NNrNKasH1jVVBXPrjPNXeY2Ssm2a/HBqIyKiMY5f0dG?=
- =?us-ascii?q?UDwirdDFMJkx4c/XmYLwgyHCShrHzEDDxoC13vZ1ng8e5kqHO0VkU01R2Fb1?=
- =?us-ascii?q?V917qp/R4YnficS/IV3rIZtyYtsi97HE6839/NFdqAqBRufL9GbdM+/lhHz2?=
- =?us-ascii?q?TZuBJ5PpC6KKBinFEeeRxtv0zyzxV3FplAkc8yoXMuzQpyL7+Y0VxYezyD2Z?=
- =?us-ascii?q?DwPaHYKmrp8RCxZK7ZxEve3MyV+qgR8vQ4rUvsvAWzGkol6XVn3MFf02GA6Z?=
- =?us-ascii?q?XSEAoSTZXxX1409xdkp7DaeCg954Xb1X13KqS0rDDC1MwzBOc/yRavYc1fMK?=
- =?us-ascii?q?WaGw/2CcEaANKuKOMykVizch0EJPxS9LIzP86+c/uG2airPPtvnT6/lmRI/p?=
- =?us-ascii?q?xy0l+W9yp9Vu7J348Jw/Sf3gSaSjf8iEmuv9vpmYBLez4SBHCzySv6C45LYK?=
- =?us-ascii?q?19Y4ILBX2pI82tydV0n4TtVGJA9F6/G1MG39ekeR6Tb1z7wA1R2l0boX+5li?=
- =?us-ascii?q?uiyTx7jTUpo7GB3CzB3evibgALOm1VS2l4i1fjP4y0g8odXEiyYAgjjAGl6l?=
- =?us-ascii?q?rix6hHuKR/KHHeQV9ScCjrK2FvSbOwuaCfY85L8Z8otCJXUOOmYV+EULLyvx?=
- =?us-ascii?q?wa0yawV1dZkR8hej7imbWxyxNghW2eLF53rXzEac932BHT7cDdQvgX2SAJEn?=
- =?us-ascii?q?pWkz7SU2OgMsGp8NPcrJLKtuSzRir1TZFIWTX6xoOH8i2g7CtlBgPpzKP7oc?=
- =?us-ascii?q?HuDQVviXyz7NJtTyid6U+nM4Q=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BtAQDmLPhc/wHyM5BmGwEBAQEDAQEBBwMBAQGBZYFnK?=
- =?us-ascii?q?oE7ATIohBSTPQEBAQEBAQaBCAgliVCRCQkBAQEBAQEBAQE0AQIBAYRAAoJWI?=
- =?us-ascii?q?zgTAQMBAQEEAQEBAQMBAWwogjopAYJnAQIDIw8BBT8CEAsYAgImAgJXBg0GA?=
- =?us-ascii?q?gEBglMMP4F3FKcLgTGFR4MmgUaBDCiLWxd4gQeBOAyCKgcuPodOglgEi1Ezg?=
- =?us-ascii?q?W2bHwmCEIIakRoGG4IjhneEAoljpUwhgVgrCAIYCCEPgyeCGxeOPCMDMIEGA?=
- =?us-ascii?q?QGPBwEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 05 Jun 2019 21:01:46 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x55L1h90015404;
-        Wed, 5 Jun 2019 17:01:43 -0400
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver
- #2]
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-References: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com>
- <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
- <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
- <20192.1559724094@warthog.procyon.org.uk>
- <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com>
- <CALCETrVSBwHEm-1pgBXxth07PZ0XF6FD+7E25=WbiS7jxUe83A@mail.gmail.com>
- <9a9406ba-eda4-e3ec-2100-9f7cf1d5c130@schaufler-ca.com>
- <15CBE0B8-2797-433B-B9D7-B059FD1B9266@amacapital.net>
- <5dae2a59-1b91-7b35-7578-481d03c677bc@tycho.nsa.gov>
- <20190605192842.GA9590@kroah.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <afe35206-d4c1-1974-4b45-65c8c978d613@tycho.nsa.gov>
-Date:   Wed, 5 Jun 2019 17:01:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190605192842.GA9590@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZ4Mjp07DQCFWHCwyQ6KYQgf8nFlazZ9TOiF+pSUN1w=;
+ b=TRP1sB1rTd896TfjngIUxP2eFoD/oAwqdguaidZo0xJfhVEK1E3yFWCymXqzocPAqn/QimbrbLhqdMNJ7sW3PQ5EWZHlW1etnTlKyKXzTw8N018+xTamrx5M4AWAHYfYGjyE8UgbmibUvUrczBHfoM5fj7ivH1y1rgY8es1BVU8=
+Received: from BN8PR06MB6228.namprd06.prod.outlook.com (20.178.217.156) by
+ BN8PR06MB6194.namprd06.prod.outlook.com (20.178.215.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Wed, 5 Jun 2019 21:02:03 +0000
+Received: from BN8PR06MB6228.namprd06.prod.outlook.com
+ ([fe80::bc27:e0e1:e3e2:7b52]) by BN8PR06MB6228.namprd06.prod.outlook.com
+ ([fe80::bc27:e0e1:e3e2:7b52%6]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 21:02:03 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.linux.org" <linux-nfs@vger.linux.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS client bugfixes
+Thread-Topic: [GIT PULL] Please pull NFS client bugfixes
+Thread-Index: AQHVG+HsIC2HWV3WS06QCVj0pV28+Q==
+Date:   Wed, 5 Jun 2019 21:02:02 +0000
+Message-ID: <a8ebea1795238acb889dbf3d5b15303bbfccbbf9.camel@netapp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [23.28.75.121]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f7dcace7-b4d2-44c5-1bc5-08d6e9f90f64
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR06MB6194;
+x-ms-traffictypediagnostic: BN8PR06MB6194:
+x-microsoft-antispam-prvs: <BN8PR06MB6194CF8AEBA048D9783EA5EDF8160@BN8PR06MB6194.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39840400004)(376002)(366004)(346002)(136003)(396003)(199004)(189003)(8676002)(3846002)(71200400001)(6916009)(2616005)(476003)(478600001)(5660300002)(305945005)(66446008)(5640700003)(72206003)(71190400001)(102836004)(6506007)(14444005)(256004)(6436002)(53936002)(91956017)(2906002)(25786009)(26005)(486006)(118296001)(76116006)(6486002)(6116002)(54906003)(66556008)(66476007)(99286004)(66946007)(73956011)(64756008)(186003)(81156014)(316002)(81166006)(58126008)(14454004)(86362001)(36756003)(8936002)(1730700003)(7736002)(2501003)(2351001)(6512007)(66066001)(68736007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR06MB6194;H:BN8PR06MB6228.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vF9QenSwhI4sRhr4bNB2grfTXWs9b9lEKGlwGbWFwxX5l3Zhz+5lxovUr9Z4Eix50pZhElOCYvyJSvwqhEz64kEUYxUZuckBPDHkn1DAXLDToQ1axSSmtaIttAsbEEnEEd2Ot8z+kHmOJ+rsZUuRTT8kkVd/Sc8sJUw8DOKXUKcbSyb4ZpfWgE2KDOJSNjqxCmPXuDYTnlXWpsuuVxPqVlWosg6ocRUE2w1SMd2qVpVQ9aGiFFTei8+347LG4oxLi2CnFFEUtVcwYttBdWnfBL0wQOVQXhGbr3igKtc6WU/SgCjLIYjo0nttSiWWjfsTx7OiVPhf3RVoatXgrIiUsBlaaty6J2WOP9hvgdWPDnoGUmjNG21T94E2IGjziDc9x6xH67Pg3zNK4piFfyLQiybbphkGBb8EdoKacH3+U3M=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9CBFABC1D6362646838A787D517D889D@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7dcace7-b4d2-44c5-1bc5-08d6e9f90f64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 21:02:03.1872
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bjschuma@netapp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR06MB6194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 3:28 PM, Greg KH wrote:
-> On Wed, Jun 05, 2019 at 02:25:33PM -0400, Stephen Smalley wrote:
->> On 6/5/19 1:47 PM, Andy Lutomirski wrote:
->>>
->>>> On Jun 5, 2019, at 10:01 AM, Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>>
->>>>> On 6/5/2019 9:04 AM, Andy Lutomirski wrote:
->>>>>> On Wed, Jun 5, 2019 at 7:51 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>>>>> On 6/5/2019 1:41 AM, David Howells wrote:
->>>>>>> Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>>>>>
->>>>>>>> I will try to explain the problem once again. If process A
->>>>>>>> sends a signal (writes information) to process B the kernel
->>>>>>>> checks that either process A has the same UID as process B
->>>>>>>> or that process A has privilege to override that policy.
->>>>>>>> Process B is passive in this access control decision, while
->>>>>>>> process A is active. In the event delivery case, process A
->>>>>>>> does something (e.g. modifies a keyring) that generates an
->>>>>>>> event, which is then sent to process B's event buffer.
->>>>>>> I think this might be the core sticking point here.  It looks like two
->>>>>>> different situations:
->>>>>>>
->>>>>>> (1) A explicitly sends event to B (eg. signalling, sendmsg, etc.)
->>>>>>>
->>>>>>> (2) A implicitly and unknowingly sends event to B as a side effect of some
->>>>>>>       other action (eg. B has a watch for the event A did).
->>>>>>>
->>>>>>> The LSM treats them as the same: that is B must have MAC authorisation to send
->>>>>>> a message to A.
->>>>>> YES!
->>>>>>
->>>>>> Threat is about what you can do, not what you intend to do.
->>>>>>
->>>>>> And it would be really great if you put some thought into what
->>>>>> a rational model would be for UID based controls, too.
->>>>>>
->>>>>>> But there are problems with not sending the event:
->>>>>>>
->>>>>>> (1) B's internal state is then corrupt (or, at least, unknowingly invalid).
->>>>>> Then B is a badly written program.
->>>>> Either I'm misunderstanding you or I strongly disagree.
->>>>
->>>> A program needs to be aware of the conditions under
->>>> which it gets event, *including the possibility that
->>>> it may not get an event that it's not allowed*. Do you
->>>> regularly write programs that go into corrupt states
->>>> if an open() fails? Or where read() returns less than
->>>> the amount of data you ask for?
->>>
->>> I do not regularly write programs that handle read() omitting data in the middle of a TCP stream.  I also don’t write programs that wait for processes to die and need to handle the case where a child is dead, waitid() can see it, but SIGCHLD wasn’t sent because “security”.
->>>
->>>>
->>>>>    If B has
->>>>> authority to detect a certain action, and A has authority to perform
->>>>> that action, then refusing to notify B because B is somehow missing
->>>>> some special authorization to be notified by A is nuts.
->>>>
->>>> You are hand-waving the notion of authority. You are assuming
->>>> that if A can read X and B can read X that A can write B.
->>>
->>> No, read it again please. I’m assuming that if A can *write* X and B can read X then A can send information to B.
->>
->> I guess the questions here are:
->>
->> 1) How do we handle recursive notification support, since we can't check
->> that B can read everything below a given directory easily?  Perhaps we can
->> argue that if I have watch permission to / then that implies visibility to
->> everything below it but that is rather broad.
-> 
-> How do you handle fanotify today which I think can do this?
-
-Doesn't appear to have been given much thought; looks like 
-fanotify_init() checks capable(CAP_SYS_ADMIN) and fanotify_mark() checks 
-inode_permission(MAY_READ) on the mount/directory/file.  File 
-descriptors for monitored files returned upon events at least get vetted 
-through security_file_open() so that can prevent the monitoring process 
-from receiving arbitrary descriptors. Would be preferable if 
-fanotify_mark() did some kind of security_path_watch() or similar check, 
-and distinguished mounts versus directories since monitoring of 
-directories is not recursive.
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQNCmNkNmM4NGQ4
+ZjBjZGM5MTFkZjQzNWJiMDc1YmEyMmNlM2M2MDViMDc6DQoNCiAgTGludXggNS4yLXJjMiAoMjAx
+OS0wNS0yNiAxNjo0OToxOSAtMDcwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9z
+aXRvcnkgYXQ6DQoNCiAgZ2l0Oi8vZ2l0LmxpbnV4LW5mcy5vcmcvcHJvamVjdHMvYW5uYS9saW51
+eC1uZnMuZ2l0IHRhZ3MvbmZzLWZvci01LjItDQoyDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
+cyB1cCB0bw0KYmE4NTFhMzljOTcwM2YwOTY4NGE1NDE4ODVlZDE3NmY4ZmI3Yzg2ODoNCg0KICBO
+RlN2NC4xOiBGaXggYnVnIG9ubHkgZmlyc3QgQ0JfTk9USUZZX0xPQ0sgaXMgaGFuZGxlZCAoMjAx
+OS0wNS0zMA0KMTU6NTE6MDcgLTA0MDApDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClRoZXNlIGFyZSBtb3N0bHkgc3Rh
+YmxlIGJ1Z2ZpeGVzIGZvdW5kIGR1cmluZyB0ZXN0aW5nLCBtYW55IGR1cmluZyB0aGUNCnJlY2Vu
+dCBORlMgYmFrZS1hLXRob24uDQoNClN0YWJsZSBidWdmaXhlczoNCi0gU1VOUlBDOiBGaXggcmVn
+cmVzc2lvbiBpbiB1bW91bnQgb2YgYSBzZWN1cmUgbW91bnQNCi0gU1VOUlBDOiBGaXggYSB1c2Ug
+YWZ0ZXIgZnJlZSB3aGVuIGEgc2VydmVyIHJlamVjdHMgdGhlIFJQQ1NFQ19HU1MNCmNyZWRlbnRp
+YWwNCi0gTkZTdjQuMTogQWdhaW4gZml4IGEgcmFjZSB3aGVyZSBDQl9OT1RJRllfTE9DSyBmYWls
+cyB0byB3YWtlIGEgd2FpdGVyDQotIE5GU3Y0LjE6IEZpeCBidWcgb25seSBmaXJzdCBDQl9OT1RJ
+RllfTE9DSyBpcyBoYW5kbGVkDQoNCk90aGVyIGJ1Z2ZpeGVzOg0KLSB4cHJ0cmRtYTogVXNlIHN0
+cnVjdF9zaXplKCkgaW4ga3phbGxvYygpDQoNClRoYW5rcywNCkFubmENCg0KLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KR3Vz
+dGF2byBBLiBSLiBTaWx2YSAoMSk6DQoNCiAgICAgIHhwcnRyZG1hOiBVc2Ugc3RydWN0X3NpemUo
+KSBpbiBremFsbG9jKCkNCg0KT2xnYSBLb3JuaWV2c2thaWEgKDEpOg0KICAgICAgU1VOUlBDIGZp
+eCByZWdyZXNzaW9uIGluIHVtb3VudCBvZiBhIHNlY3VyZSBtb3VudA0KDQpUcm9uZCBNeWtsZWJ1
+c3QgKDEpOg0KICAgICAgU1VOUlBDOiBGaXggYSB1c2UgYWZ0ZXIgZnJlZSB3aGVuIGEgc2VydmVy
+IHJlamVjdHMgdGhlIFJQQ1NFQ19HU1MNCmNyZWRlbnRpYWwNCg0KWWloYW8gV3UgKDIpOg0KICAg
+ICAgTkZTdjQuMTogQWdhaW4gZml4IGEgcmFjZSB3aGVyZSBDQl9OT1RJRllfTE9DSyBmYWlscyB0
+byB3YWtlIGENCndhaXRlcg0KICAgICAgTkZTdjQuMTogRml4IGJ1ZyBvbmx5IGZpcnN0IENCX05P
+VElGWV9MT0NLIGlzIGhhbmRsZWQNCg0KIGZzL25mcy9uZnM0cHJvYy5jICAgICAgICAgICB8IDMy
+ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tDQogbmV0L3N1bnJwYy9jbG50LmMgICAg
+ICAgICAgIHwgMzAgKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQogbmV0L3N1bnJwYy94
+cHJ0cmRtYS92ZXJicy5jIHwgIDMgKy0tDQogMyBmaWxlcyBjaGFuZ2VkLCAyOCBpbnNlcnRpb25z
+KCspLCAzNyBkZWxldGlvbnMoLSkNCg==
