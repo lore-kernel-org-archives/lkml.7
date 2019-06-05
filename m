@@ -2,155 +2,92 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09929C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2546CC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28AC2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:10:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8PDFRD6"
+	by mail.kernel.org (Postfix) with ESMTP id 09D9020866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfFEJKs (ORCPT
+        id S1727001AbfFEJLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:10:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45397 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEJKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:10:47 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w34so12027520pga.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qe2qEqCwB2kLhiPVN6wzjgcS8llGOmV8LcU4p/YtuR0=;
-        b=k8PDFRD65GfqIRKyHH1gKGhC28AUBf1rIqpRtBVKZkFOyfSofJ+xIM+bLtiUdsa1ig
-         BfBeMXE4TTb+OvlBSRfaFAWMxhPvW7zD7u0gshBiyiG+f/AP+hFcw5/3p//x5e6yNF8i
-         iPCPlE6TLiaKPZK4piGiEE9Pkzh5T8527HyNmPxS/jzZbdznDq+UHq0PUsYFS68PCjVH
-         c6haPJ8Zsy54mqCByUbYktyztQAztfiraWDZZawfYhmUvogLTVoFiPHNA4cKvrB/L4eM
-         ZBGGJxngz4OmNGVs5i1rAmncPcv9RqFAq3rg7aA50c5lr/VrCFjmg28FjvRrq5P13Hx3
-         Xgog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qe2qEqCwB2kLhiPVN6wzjgcS8llGOmV8LcU4p/YtuR0=;
-        b=YX08LWNF108vlP6HkfEoDkXyAbxOImJaXNmtsTv1FOvhYSPvXqbkkSx4qvA/xrvdee
-         UrWgACkp8deXvsRUjrRibZNLKQYdSBzBxsnhyDngpULf6sKYoRrmpDTvcCcb0pZE0Sdf
-         rgfYUsf+vAWFTq8jy5sg2mkyZmEx4/glkrmlgAGy+e9I4DXNdYGi61jVJWMq+Udk1EZi
-         ApX/vH67oglhYxtMziMkCVvpoGa5xOytXvqrTYiXHNWzXD9euQDQHHZ+VT4G4307zxtm
-         kYnXzXm5iK9fhhhew1CXumTTzPeQN5OVMbiTup5I34vekgzAjJIp86soTNxVHndCCJDU
-         NDeQ==
-X-Gm-Message-State: APjAAAVdCxFCy/MfUzPFxAEBj5ZbACkut591FhEYlpwfKWEgL9zZC3+T
-        5Q2RHFyFJYKwnICJd5/RqThyig0=
-X-Google-Smtp-Source: APXvYqxhrX6wAssVXs2ZclXfwzF30GmChMOrWvQir8bDvycAg5gzUgp1/7H0hRmAZ6tIjdILLAT+Sg==
-X-Received: by 2002:a63:4c54:: with SMTP id m20mr2997813pgl.316.1559725847045;
-        Wed, 05 Jun 2019 02:10:47 -0700 (PDT)
-Received: from mylaptop.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id w36sm11844525pgl.62.2019.06.05.02.10.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 02:10:46 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
+        Wed, 5 Jun 2019 05:11:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726502AbfFEJLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:11:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 627BEAE16;
+        Wed,  5 Jun 2019 09:11:14 +0000 (UTC)
+Message-ID: <17ea99902e4329db735080d1a8fc04f5c06c9bf0.camel@suse.de>
+Subject: Re: [PATCH 3/4] clk: bcm2835: register Raspberry Pi's firmware clk
+ device
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Eric Anholt <eric@anholt.net>, stefan.wahren@i2se.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        sboyd@kernel.org, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCHv3 2/2] mm/gup: rename nr as nr_pinned in get_user_pages_fast()
-Date:   Wed,  5 Jun 2019 17:10:20 +0800
-Message-Id: <1559725820-26138-2-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
-References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+Date:   Wed, 05 Jun 2019 11:11:12 +0200
+In-Reply-To: <87muiwzyrw.fsf@anholt.net>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+         <20190604173223.4229-4-nsaenzjulienne@suse.de> <87muiwzyrw.fsf@anholt.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Y0gkZzcIbprnY+sekDS2"
+User-Agent: Evolution 3.32.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To better reflect the held state of pages and make code self-explaining,
-rename nr as nr_pinned.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org
----
- mm/gup.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+--=-Y0gkZzcIbprnY+sekDS2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 0e59af9..9b3c8a6 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2236,7 +2236,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 			unsigned int gup_flags, struct page **pages)
- {
- 	unsigned long addr, len, end;
--	int nr = 0, ret = 0;
-+	int nr_pinned = 0, ret = 0;
- 
- 	start &= PAGE_MASK;
- 	addr = start;
-@@ -2251,28 +2251,28 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 
- 	if (gup_fast_permitted(start, nr_pages)) {
- 		local_irq_disable();
--		gup_pgd_range(addr, end, gup_flags, pages, &nr);
-+		gup_pgd_range(addr, end, gup_flags, pages, &nr_pinned);
- 		local_irq_enable();
--		ret = nr;
-+		ret = nr_pinned;
- 	}
- 
--	if (unlikely(gup_flags & FOLL_LONGTERM) && nr)
--		nr = reject_cma_pages(nr, pages);
-+	if (unlikely(gup_flags & FOLL_LONGTERM) && nr_pinned)
-+		nr_pinned = reject_cma_pages(nr_pinned, pages);
- 
--	if (nr < nr_pages) {
-+	if (nr_pinned < nr_pages) {
- 		/* Try to get the remaining pages with get_user_pages */
--		start += nr << PAGE_SHIFT;
--		pages += nr;
-+		start += nr_pinned << PAGE_SHIFT;
-+		pages += nr_pinned;
- 
--		ret = __gup_longterm_unlocked(start, nr_pages - nr,
-+		ret = __gup_longterm_unlocked(start, nr_pages - nr_pinned,
- 					      gup_flags, pages);
- 
- 		/* Have to be a bit careful with return values */
--		if (nr > 0) {
-+		if (nr_pinned > 0) {
- 			if (ret < 0)
--				ret = nr;
-+				ret = nr_pinned;
- 			else
--				ret += nr;
-+				ret += nr_pinned;
- 		}
- 	}
- 
--- 
-2.7.5
+On Tue, 2019-06-04 at 17:00 -0700, Eric Anholt wrote:
+> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
+>=20
+> > Registers clk-raspberrypi as a platform device as part of the driver's
+> > probe sequence.
+>=20
+> Similar to how we have VCHI register platform devices for the services
+> VCHI provides, shouldn't we have the firmware driver register the device
+> for clk_raspberrypi?  Or put the clk provider in the fw driver instead
+> of a separate driver (no opinion on my part).
+
+Makes sense to me, I'll move the platform driver registration into the firm=
+ware
+driver.
+
+
+--=-Y0gkZzcIbprnY+sekDS2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz3hzAACgkQlfZmHno8
+x/5W0AgAk1lBDDOGbH2IxMCBbNMjMT+5XCPJUI+HhTTIY6r2lj0vF9v2mMl6idjj
+Dy1k0dx1BmB4S8bAAoLUO0AjOriCapLoDDwotUSpT5XPXABdmQyacS0hzbgNtdR2
+e/6Ks/dgPThgKTyWrFH5ebLK5GBqm+NtYUkFOIugECaL2oIAwaM7jFntdSin/42W
+1/ZInxhc6/yeMOGZqtfnOKlzxJQ2yO6kamz6neOY6prXtJSSjjVQ8NLRun5gj8xB
+FThb3WLHnZ3xUit7GnbhzzSkUAgdvTrRVesxViN+FtmGySqYeI3HVCHjjyBEu6CY
+yrDjYy0kizct4ZRNg3HEGeF3/kd+EA==
+=Ryff
+-----END PGP SIGNATURE-----
+
+--=-Y0gkZzcIbprnY+sekDS2--
 
