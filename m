@@ -2,125 +2,117 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C284FC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1392C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99AF6206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="PEL0/EtW"
+	by mail.kernel.org (Postfix) with ESMTP id 90FBB2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559711444;
+	bh=V8DlWgZqXstcCmPiURrcVjF20aQb86vskPSHAO9ICAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WrADqipU45dRjJ0TtKm+b/s778zUgNHusmOykhWV6p/B3znRK8W1qo8faKkbTSDdP
+	 Royq3VMQmmbGKzEyB3pKpMMTS1QQkpgKvF7nlEDsJDcw1p42bq8I7IQ7Bkyh7rpGZa
+	 QVj/plduDsTqXObdgZsMzvOyEeqzlEMTUUV6uC0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFEFHX (ORCPT
+        id S1726541AbfFEFKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:07:23 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:17788 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFEFHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:07:21 -0400
-X-Greylist: delayed 58243 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Jun 2019 01:07:20 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559711238;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7/qIHPW7YK3E/1WVa6JBhancuqJUkFLGU+ia6pFayDE=;
-        b=PEL0/EtW16UwjOZruWGSON1tYF3wyesCAQ5P6r6GovitFSOfA4RtCWVQHmC5dQDE8G
-        imBOCz5spDhARWpo1nZCkRvG/OykztHxLLwnr3Um9XNBS+Fjs+IMOLd7pDhZKpbt3D0j
-        Skl7PozcwyAAM8KR4E6iHbBi8+adI4QNrj4HqEHmPAswHG3Mc94VLn24COF9r8C1VFHe
-        6lwGqvon7srUzzNuXG67ZPndN4o9CLT8IW18nV9sRVw1KH5s9jXrcXhjx6wUKfhbuXwY
-        qOu4jR6Ihyac3BuDrnU+eQGZqTLhJCdn++VKQ2GHe68INrq3icmkDyhDOubZamkNhibz
-        ycOA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2MzN9Qq6uM="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
-        with ESMTPSA id i01b98v55574A1B
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 5 Jun 2019 07:07:04 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
-        imirkin@alum.mit.edu, marek.belisko@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 1/2] drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
-Date:   Wed,  5 Jun 2019 07:07:02 +0200
-Message-Id: <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559711222.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1559711222.git.hns@goldelico.com>
-References: <cover.1559711222.git.hns@goldelico.com>
+        Wed, 5 Jun 2019 01:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbfFEFKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 01:10:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2E0420717;
+        Wed,  5 Jun 2019 05:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559711442;
+        bh=V8DlWgZqXstcCmPiURrcVjF20aQb86vskPSHAO9ICAw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UlpBaFX6E6NIFPydKcc1ZcpMS2IYp9Q2DeXASDRP6E/m654Sf2lEg5/E3ZZaK7URY
+         HZTqE+vusc3jRFjsxl74c1FAm0yQ6mmnuL77NCieSa6jiEVxSviIlPUSKJ1FKqt0sf
+         st71bQrr/F4ISxOEEYPn9wBrDacByOOlapKvOXpo=
+Date:   Wed, 5 Jun 2019 07:10:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+Message-ID: <20190605051040.GA22760@kroah.com>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+ <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+ <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+ <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+ <20190604134213.GA26263@kroah.com>
+ <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+ <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+ <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change adds support for the Sharp LQ070Y3DG3B 7.0" TFT LCD panel.
+On Wed, Jun 05, 2019 at 01:10:41PM +0900, Masahiro Yamada wrote:
+> On Wed, Jun 5, 2019 at 3:21 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > >
+> > > > > There are two ways to define fixed-width type.
+> > > > >
+> > > > > [1] #include <linux/types.h>, __u8, __u16, __u32, __u64
+> > > > >
+> > > > >       vs
+> > > > >
+> > > > > [2] #include <stdint.h>, uint8_t, uint16_t, uint32_t, uint64_t
+> > > > >
+> > > > >
+> > > > > Both are used in UAPI headers.
+> > > > > IIRC, <stdint.h> was standardized by C99.
+> > > > >
+> > > > > So, we have already relied on C99 in user-space too.
+> >
+> > A related problem is that using the stdint.h types requires
+> > including stdint.h first, but the C library requires that including
+> > one standard header does not include another one recursively.
+> >
+> > So if sys/socket.h includes linux/socket.h, that must not include
+> > stdint.h or any other header file that does so.
+> 
+> 
+> This means we cannot reliably use uint{8,16,32,64}_t in UAPI headers.
 
-Tested on Letux7004.
+We should not be doing that as they are in the userspace "namespace" of
+variables, not in the kernel namespace.  We've been over this many times
+in the past :(
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> [1] If we include <stdint.h> from linux/foo.h
+> 
+>     If sys/foo.h includes <linux/foo.h> and <stdint.h>,
+>     it violates the C library requirement.
+> 
+> 
+> [2] If we do not include <stdint.h> from linux/foo.h
+> 
+>     If sys/foo.h includes <linux/foo.h>, but not <stdint.h>,
+>     we get 'unknown type name' errors.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 569be4efd8d1..5b27829c5a78 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2204,6 +2204,33 @@ static const struct panel_desc samsung_ltn140at29_301 = {
- 	},
- };
- 
-+static const struct drm_display_mode sharp_lq070y3dg3b_mode = {
-+	.clock = 33260,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 64,
-+	.hsync_end = 800 + 64 + 128,
-+	.htotal = 800 + 64 + 128 + 64,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 8,
-+	.vsync_end = 480 + 8 + 2,
-+	.vtotal = 480 + 8 + 2 + 35,
-+	.vrefresh = 60,
-+	.flags = DISPLAY_FLAGS_PIXDATA_POSEDGE,
-+};
-+
-+static const struct panel_desc sharp_lq070y3dg3b = {
-+	.modes = &sharp_lq070y3dg3b_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,	/* 152.4mm */
-+		.height = 91,	/* 91.4mm */
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
-+		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
-+};
-+
- static const struct drm_display_mode sharp_lq035q7db03_mode = {
- 	.clock = 5500,
- 	.hdisplay = 240,
-@@ -2786,6 +2813,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "sharp,lq035q7db03",
- 		.data = &sharp_lq035q7db03,
-+	}, {
-+		.compatible = "sharp,lq070y3dg3b",
-+		.data = &sharp_lq070y3dg3b,
- 	}, {
- 		.compatible = "sharp,lq101k1ly04",
- 		.data = &sharp_lq101k1ly04,
--- 
-2.19.1
+We need to just use the proper __u{8,16,32,64} variable types instead,
+that is exactly what they are there for.
 
+thanks,
+
+greg k-h
