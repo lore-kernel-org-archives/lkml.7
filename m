@@ -2,78 +2,94 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870FCC28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430DA2075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615382075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfFEVTR (ORCPT
+        id S1726667AbfFEVUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:19:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54899 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFEVTQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:19:16 -0400
-Received: from orion.localdomain ([77.2.1.21]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MVv4X-1h9eBa1aWT-00RtRb; Wed, 05 Jun 2019 23:19:15 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     netdev@vger.kernel.org
-Subject: [PATCH] drivers: net: vxlan: drop unneeded likely() call around IS_ERR()
-Date:   Wed,  5 Jun 2019 23:19:13 +0200
-Message-Id: <1559769553-24214-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:vihkw4Ta7ffWZGf1DzM4rk0z5CparAY+tTIX/fKckLdg1apDB+k
- I1LHC9Sb1mCdpTGw8VmRdBOeKQuhtvjC8idKXkP3ZAUCSI3vIbXGIMbqAVjIVEf1QMlvBnh
- t98GJOObH1MOjrt2JuCVpVyzALXcXvGjXb6+IEVtbkPJICECbGfoyuuk5Xnys+cQnWP0e1u
- i75DzyCklN9Q8qBBcqZEA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cB4wgoy+1cU=:E9EjD6TxIvjBdBq2z3MVTA
- y+H7Nb1uyDmfbRnkU2IlsI3ClbGkuGAvOm0YGdhMQhw2CsKOBYaCN3bl2qLI0FL+N8IjDEIQt
- ejVOH4hiyu1YC0Fw6cQVfRD+UxqeM9oz0EcSa/jLAPwh6ZwxtFdkGDxZOb3Hh9ko4e93dfMAr
- ZwsCPHDNUnnEwjmisihf/AbJjj4BUkLMpRY8A7zvopUOojvpWeocaVwmrcfHacARzFnRVB4TQ
- QXcO5qH9DmNcrLNG1SzhQn3RT9l/7jD9PzSRaNFVas0ErwLkZ+IDK7DQGa19KOyGL5BZcBHnQ
- +DUbgoTTaH81NaHrOZT9JtH4mBrSZuxhRgnyAGpMQc2ikn8l+/7FLx0HY4wct33bvpzrh59Am
- sOfCBbMjHl6v61TQhY4wl8KlRxcACZsgduhkyyx7+3+xJ+GxAEZ9aQQdqpxPuAJCH1ARgUnjF
- QTfjrNElpnLlNhWEqP4bpfw01gAn8eXkRPgJ/VVAQ+hnf6QLAj8rrHiIS2NL+iHcHW+xf4bEL
- YBNDth3uoUdlo2imzNFEBchObaUDdlCxnXagFZifJqYEGhszEyt67BgPvfOOVGK33cWsPTfQJ
- D9F1nf8Q4AxYFoMcyb8hpotnGltnHdGvppWsbTx2nWF8ysI9UWmIiUdKEve0QeMRrfhRpUGGx
- XVx6hqRrEjh7dESB4QPHYd1mqlzAfxXNjpZdex89BgNm8xJgakANrVKmxzymmbTR2ha1qrxOR
- XLQ1SpcQBhgqkLIH30eHSeV2bNDyC6kt3E1pjw==
+        Wed, 5 Jun 2019 17:20:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42350 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEVUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:20:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 69BACA00F9;
+        Wed,  5 Jun 2019 21:20:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C7EE196F8;
+        Wed,  5 Jun 2019 21:19:43 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190605165530.GA15790@vmlxhi-102.adit-jv.com>
+References: <20190605165530.GA15790@vmlxhi-102.adit-jv.com> <20190605090556.17792-1-erosca@de.adit-jv.com> <20190605100337.GA9350@kroah.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     dhowells@redhat.com
+CC:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kento Kobayashi <Kento.A.Kobayashi@sony.com>,
+        Hui Peng <benquike@gmail.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jan-Marek Glogowski <glogow@fbihome.de>,
+        Bin Liu <b-liu@ti.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jon Flatley <jflat@chromium.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        yuichi.kusakabe@denso-ten.com, yohhei.fukui@denso-ten.com,
+        natsumi.kamei@denso-ten.com, yasano@jp.adit-jv.com,
+        sliu@de.adit-jv.com, Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] usb: hub: report failure to enumerate uevent to userspace
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6438.1559769583.1@warthog.procyon.org.uk>
+Date:   Wed, 05 Jun 2019 22:19:43 +0100
+Message-ID: <6439.1559769583@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 05 Jun 2019 21:20:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
 
-IS_ERR() already calls unlikely(), so this extra likely() call
-around the !IS_ERR() is not needed.
+>  - Looking at commit [4], it seems that the new "notifier" interface/api
+>    forces userspace applications to link against -lkeyutils [5].
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/net/vxlan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No.  The keyctl(2) syscall is implemented in -lkeyutils library, and not in
+-lc.  That's all.  If you want to call KEYCTL_NOTIFY to watch a key or
+keyring, you need it; not otherwise.
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 5994d54..f31d226 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2222,7 +2222,7 @@ static struct rtable *vxlan_get_route(struct vxlan_dev *vxlan, struct net_device
- 	fl4.fl4_sport = sport;
- 
- 	rt = ip_route_output_key(vxlan->net, &fl4);
--	if (likely(!IS_ERR(rt))) {
-+	if (!IS_ERR(rt)) {
- 		if (rt->dst.dev == dev) {
- 			netdev_dbg(dev, "circular route to %pI4\n", &daddr);
- 			ip_rt_put(rt);
--- 
-1.9.1
+>    Assuming the latter is designed for ("Kernel key management") [6],
+>    it may look like the keyutils library is being abused to handle
+>    the "USB (or really any hardware events)". Do you really plan to
+>    extend the scope of the library to handle these new tasks?
 
+No.
+
+That said, it's probably worth providing some userspace library to wrap the
+ring management.
+
+David
