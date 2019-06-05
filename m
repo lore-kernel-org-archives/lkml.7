@@ -2,107 +2,177 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFA4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D6CC46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E087D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559764519;
-	bh=Q0pMelW2LSEJjQOw1iitJngkn3QRqI6Tf7dAbF//uaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ARAo03JnB9AsgvINcOtfQZRhKeDd+dSXIc3K9fE/ARABs9IMsuwWVfmsDOBui4nYD
-	 4N4eFGhsn6857SWn3sTTLJyd8v1f0BIreOtEJP1Iif8WCtH+WGU7Of+4FwmLN/SPQs
-	 yvC/yI/dhyduEvPwd8WwS1hG/Kp5vcFMfv2XyCTw=
+	by mail.kernel.org (Postfix) with ESMTP id 9BCED20872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:56:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONPOG0cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFETzS (ORCPT
+        id S1726597AbfFET4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:55:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56140 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFETzR (ORCPT
+        Wed, 5 Jun 2019 15:56:48 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36768 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFET4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:55:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KgTOG/MCFpTyXVOTj1ZuKkvtNmZGpkEpbnA949wWplg=; b=poiGgtvcOkWfzAHuVL95Men3L
-        RyJsJbFdF5jvyHsVDjz+UFH1VX2AFLCeFGFxTcLT7kjna8inPhPEgFcf0DOSnNNim+PkYMgCrol36
-        DXwfUOlPsXCYCu7DZy33rjRGAMDP7O8GtkdpVHMIYq6VWHk8G4ZZw+69OPy4tTmCUTJzk=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYc08-0001Q6-5G; Wed, 05 Jun 2019 19:55:12 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 90214440046; Wed,  5 Jun 2019 20:55:11 +0100 (BST)
-Date:   Wed, 5 Jun 2019 20:55:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-spi@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>
-Subject: Re: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
-Message-ID: <20190605195511.GX2456@sirena.org.uk>
-References: <20190412105320.2924-1-kernel@esmil.dk>
- <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
- <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com>
+        Wed, 5 Jun 2019 15:56:48 -0400
+Received: by mail-yw1-f66.google.com with SMTP id t126so814963ywf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9q4+At4yxP0TO9XKtv623886ZmeIrCw2KxtQ8rIVE+c=;
+        b=ONPOG0criwRaERkMrKHfVu+FHkSVoaWJAe/3Qcz/W7LCrH5/GIScT4HA/6GrL0+9r8
+         o6co8aqwlNSEl7NCQ5sS9tePoeHt4h9GPb68IhajREN/xrsWKcvK3qyMit8mTn0Syc/A
+         7iA0JHtcd+FIK9ODp7RhnjbF13bEpwhQGYCei3mrBE/QI6K5gsvChkA/hORMbZ9/NFwj
+         fOz5k6FisPTLo3cnO2KlMHYBKGSLayATbBhmtiVl0hlN7FVFEeyjwZxp9QJDFViYJ9Fr
+         /8tGYfzZZKKv+lqP9TGaDdXxFpWTov0D05vVZG6KZ2JgmhFAjsoiImnW6hbJ2aiQ0DFz
+         doOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9q4+At4yxP0TO9XKtv623886ZmeIrCw2KxtQ8rIVE+c=;
+        b=gG6+UG7MhEuhOdyvlZsWr9KeajwfJNx31hztEbaBvJ7hsP92CePFjbY5eGKeHwhDaI
+         Op46ttdhHSoiNPtLypdFYLQ+LEQ4o7oje088hIadxjVQscz3224iVGy5x/tm9+5ocyfc
+         9jfZqRfc26lo3sVgM60wZV2ZUxcOmdoqhFfDaIawfvuCaFM7q3ftvz0VRlY7USX5bt7V
+         Kc8dJZ++OkoiTeMZNUy5Kkjduv2DG7qihhuupc+Q50BmJKLCFFdiG19ukGuCKWfTmBiC
+         11LCHOGA5zunj4PxvM3o8HaKMfHE4rVkm1wl0N0l4RWXvQMPguwOq2FnQithVX/e9PPB
+         MfWg==
+X-Gm-Message-State: APjAAAUL6ZOCNMhkUqcmfUpfDjDo/374pvLn2XsyiG+xap4his978FOa
+        1fSPG1fIXUqTSvhGdsmlibb58tIW55+YgtXmdwVX0g==
+X-Google-Smtp-Source: APXvYqyT6u3oJyZE6NCw9GM4C6IEV7j7fkZPEOKpEM78DGOX/BwgTrn0eHFIXgvbs4TMZ9Ae/bo4AwJhPu/gx1keGo4=
+X-Received: by 2002:a81:a6d5:: with SMTP id d204mr22361086ywh.205.1559764607325;
+ Wed, 05 Jun 2019 12:56:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dkgfGZfPp4OU3Le7"
-Content-Disposition: inline
-In-Reply-To: <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
+In-Reply-To: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 5 Jun 2019 12:56:36 -0700
+Message-ID: <CALvZod7Ya=mPKryiCxKVguGV-hPEjXD_6gBOFs9zJWc_NQMMBQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] zpool: Add malloc_support_movable to zpool_driver
+To:     Hui Zhu <teawaterz@linux.alibaba.com>
+Cc:     Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com,
+        Seth Jennings <sjenning@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+>
+> As a zpool_driver, zsmalloc can allocate movable memory because it
+> support migate pages.
+> But zbud and z3fold cannot allocate movable memory.
+>
+> This commit adds malloc_support_movable to zpool_driver.
+> If a zpool_driver support allocate movable memory, set it to true.
+> And add zpool_malloc_support_movable check malloc_support_movable
+> to make sure if a zpool support allocate movable memory.
+>
+> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 
---dkgfGZfPp4OU3Le7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-On Wed, Jun 05, 2019 at 09:36:44PM +0200, Emil Renner Berthing wrote:
-> On Wed, 8 May 2019 at 12:34, Mark Brown <broonie@kernel.org> wrote:
+IMHO no need to block this series on z3fold query.
 
-> >    spi: rockchip: turn down tx dma bursts
-
-> I've tried looking in the for-next and for-5.x branches here, and I
-> can't seem to find this patch.
-> Am I missing something?
-
-> It fixes a problem introduced in 4.19, so it'd be nice if it could
-> make it to stable trees eventually.
-
-47300728fb213486a830565d2af49da967c9d16a is in my tree.  When it reaches
-Linus' tree send a request to Greg for it to be backported if none of
-the stable automation picks it up.
-
---dkgfGZfPp4OU3Le7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz4Hh4ACgkQJNaLcl1U
-h9BxQgf+Ljplf8ZxX4pzMeNgr9s/Oik21N9dYZN14eGepFYn3eC2JAJ66qWR5ZDX
-q18JwvA6GyMsvntlko2y2HjEIJltQ06YGplOfVLtKkwtDWSbiBlV1nkkxpZGjmJd
-AC7LI2yRkoD35/DXj4r2x8ZatFl1W+i3isANRYtSFHUeKElyYCQ+fV4YTm8xUHjP
-zpRYGv65CG88hJmzygheI3viO+zlwsUxaJaz/jcNkoyZ4etUpz8FEYjtMeBV3SXX
-MxUncjiMX3d7HlRU4CY03FyMkUJ4d+8Pfw7YMyNbF2SMDqEbApXGhBG4XS1RcE6x
-ujRznnS4Wk9Lc6MdQbWFBAMoYrCUcw==
-=Y9+I
------END PGP SIGNATURE-----
-
---dkgfGZfPp4OU3Le7--
+> ---
+>  include/linux/zpool.h |  3 +++
+>  mm/zpool.c            | 16 ++++++++++++++++
+>  mm/zsmalloc.c         | 19 ++++++++++---------
+>  3 files changed, 29 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/linux/zpool.h b/include/linux/zpool.h
+> index 7238865e75b0..51bf43076165 100644
+> --- a/include/linux/zpool.h
+> +++ b/include/linux/zpool.h
+> @@ -46,6 +46,8 @@ const char *zpool_get_type(struct zpool *pool);
+>
+>  void zpool_destroy_pool(struct zpool *pool);
+>
+> +bool zpool_malloc_support_movable(struct zpool *pool);
+> +
+>  int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
+>                         unsigned long *handle);
+>
+> @@ -90,6 +92,7 @@ struct zpool_driver {
+>                         struct zpool *zpool);
+>         void (*destroy)(void *pool);
+>
+> +       bool malloc_support_movable;
+>         int (*malloc)(void *pool, size_t size, gfp_t gfp,
+>                                 unsigned long *handle);
+>         void (*free)(void *pool, unsigned long handle);
+> diff --git a/mm/zpool.c b/mm/zpool.c
+> index a2dd9107857d..863669212070 100644
+> --- a/mm/zpool.c
+> +++ b/mm/zpool.c
+> @@ -238,6 +238,22 @@ const char *zpool_get_type(struct zpool *zpool)
+>         return zpool->driver->type;
+>  }
+>
+> +/**
+> + * zpool_malloc_support_movable() - Check if the zpool support
+> + * allocate movable memory
+> + * @zpool:     The zpool to check
+> + *
+> + * This returns if the zpool support allocate movable memory.
+> + *
+> + * Implementations must guarantee this to be thread-safe.
+> + *
+> + * Returns: true if if the zpool support allocate movable memory, false if not
+> + */
+> +bool zpool_malloc_support_movable(struct zpool *zpool)
+> +{
+> +       return zpool->driver->malloc_support_movable;
+> +}
+> +
+>  /**
+>   * zpool_malloc() - Allocate memory
+>   * @zpool:     The zpool to allocate from.
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 0787d33b80d8..8f3d9a4d46f4 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -437,15 +437,16 @@ static u64 zs_zpool_total_size(void *pool)
+>  }
+>
+>  static struct zpool_driver zs_zpool_driver = {
+> -       .type =         "zsmalloc",
+> -       .owner =        THIS_MODULE,
+> -       .create =       zs_zpool_create,
+> -       .destroy =      zs_zpool_destroy,
+> -       .malloc =       zs_zpool_malloc,
+> -       .free =         zs_zpool_free,
+> -       .map =          zs_zpool_map,
+> -       .unmap =        zs_zpool_unmap,
+> -       .total_size =   zs_zpool_total_size,
+> +       .type =                   "zsmalloc",
+> +       .owner =                  THIS_MODULE,
+> +       .create =                 zs_zpool_create,
+> +       .destroy =                zs_zpool_destroy,
+> +       .malloc_support_movable = true,
+> +       .malloc =                 zs_zpool_malloc,
+> +       .free =                   zs_zpool_free,
+> +       .map =                    zs_zpool_map,
+> +       .unmap =                  zs_zpool_unmap,
+> +       .total_size =             zs_zpool_total_size,
+>  };
+>
+>  MODULE_ALIAS("zpool-zsmalloc");
+> --
+> 2.21.0 (Apple Git-120)
+>
