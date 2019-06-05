@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB7C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA05C46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313752075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12502075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFEVLv (ORCPT
+        id S1726608AbfFEVOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:11:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:43647 "EHLO
+        Wed, 5 Jun 2019 17:14:12 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:45451 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfFEVLv (ORCPT
+        with ESMTP id S1726305AbfFEVOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:11:51 -0400
+        Wed, 5 Jun 2019 17:14:12 -0400
 Received: from orion.localdomain ([77.2.1.21]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N9d91-1gWAgb0g9V-015WNM; Wed, 05 Jun 2019 23:11:40 +0200
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MMp08-1hICqU2EL6-00Ijls; Wed, 05 Jun 2019 23:14:10 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] net: ipv6: drop unneeded likely() call around IS_ERR()
-Date:   Wed,  5 Jun 2019 23:11:34 +0200
-Message-Id: <1559769094-20889-1-git-send-email-info@metux.net>
+Cc:     linux-cifs@vger.kernel.org
+Subject: [PATCH] fs: cifs: drop unneeded likely() call around IS_ERR()
+Date:   Wed,  5 Jun 2019 23:14:09 +0200
+Message-Id: <1559769249-22011-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:kzfUvZBslRGK3Eqrp6dPN79wrH2uqqwUiUqIcqkdKDPcXMi7HSW
- yqCx5iuw3QsUMKVapKZTdGC83bjYvCCEc/hMo94i3Ht/xG8V5INfOHqUOr04XIT+R7zdZ6N
- C+Oj5rY65s2k5RHUEHUuznRUGd+75FR/j4G0vyaq1onvSi5q85XeAhzZa/dSmx2GtoELh6e
- u6NwEV0z62ADVXGutPXHQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qNyOPwVhyQU=:zJHJhAopzU9Xe7/ZXoO7+Q
- ONV0m0GK/eeyDKetGYx1tRXveBeMCU3NxFNkScMyMJwtL2qnQDWlscxFYOoezDt2Jd23s8GPq
- qAGvKXVaS7JWGWNJ9tUqqOM3TowhVSLgOerbjjDuzDY/SQHbDjxo7/gV6k56hX+T/FtKNr9vs
- 8i0Yx6QamFgnHatbNPDfK/jtmPKblMyQ485wQYqjV2pqSvNh06xDvi67+bYs0degVVp0Pm0u6
- AK8eGFa1FSeFX6+NOz4YW0iMC+wYh04i/zMcc1/mMRvMxcird65hm9abCZbUZPK4KGMxb7UTX
- Nf+17poJ5MfHBIE4hYKmV9adcIfp5JNLNdWmdBFx9c98e1Ufl2CzHnYqbFkRyrDyq3B6gye4w
- Aa7WzEu74MRPve54aQmMbVc0qocnCwZPF2aFR0tYc/PgYdytaONJRd1eP8ry7GN6Zcu8q6qLa
- ICnwGQP4GcfI2Nd0Y9YNJCWXTokNJQuI81kxHsCnXy0gqdkgzqCBwJBfQqHL6pom1I9JdXBcL
- lEOevO1q5ovMZkLVffSuNb5S+/KbN4LkiqK/OnWFfv+2cI7gZd4oGBm20ZNtmJ09gS5N1TnRB
- WjZoaJ9JLPjg5PDIEwk1BDOaPy7n1uUV/vg21TJAKqy8RnlpFlHZQA0Q6k+uzAXHkhewQjee0
- u6+5gaVgCjzpLOurC56LPIx+bzROs2dTgQtM2YyRCupYSUA5Xu/qhdvJhRpXtvXgjBMwITPQa
- z8d5RymCBhINDwKe3VGtZkT9M0YCoo4ybRb5CQ==
+X-Provags-ID: V03:K1:qkVUq1ddLyADe4tmyATA1skl2fayfUJ70B3v6uWiplTRnUk/fQe
+ YLua2/cyRO1xn/l5xQ3kPnw6k862E/uBTZ+J8O+2soe8KvxPOAl7LMkW/ko439On/cli+Gn
+ eyX2WJMch+5rurK9eMHCK5WjxQk/vfcZBfql+BlR4FYb0oUdtnCFmqnyQ1Y6UCLEARrgYY4
+ d54jCDL8ux0MFpMJA1KWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bZqIPo62mx4=:BxMCWN3lSz9NydUk7ItuDF
+ naR2fsU5d1IsuB7DG0eO5GmtUbUbHy2otvDYTrK5W46m3hKgvEpUTV7vVSTAgXecB/f9omY/Z
+ HCojY+e4xM/zmR9veGM6PMHFDS1LRXZHZcZh/7AteRcq6ZgWcoLe4ZYHnINosnfwbfNXyLyFh
+ tN7K2+PDH7j0M2DWwMlX1ywptk3/65eosTeXNo7b9DCZH5k/n8gZDOS9+BmkwceEBi2ZyyD+G
+ 66QebDvIRufmeoAtULpPQ1gr3Ti90ZN9YwDpQe22AmZ3hVEqQSgv437bkwgRyJMfqu/PUHugb
+ ljgMBRB1+StnYM13TMDucAg4sJwBmfbFwCm9YGRIxNgWhGXm/Vc+77aq3uJ4E2lkllVtxVxhd
+ nUppaBDcQhgSf/UufEGUPuOUSMtAOanUauX49qSaSz/wEPKfdl1UpwVVGYfhyxowG5wmkWGlx
+ cEkXrPu9w/mP3jl6yTqognKtzmetb5xWAVD8gRZGWdaAo/fUeKWMfWai/gqzSCOvTdZwMjPPo
+ EnSY2DfBC8+5sRWD1oH/LP01KNWwE1wS3AripvvDN87XeknlfoJ0MkSCPjcPg5jfZVEDR0qgU
+ Eek5yBVdJC/O6fuLVMjL7W+p600lWyp1pgmW0X3/PzvU8QqfFopRv0IPqPUDy9WuMTnRfIua6
+ 7mCjh3sNVLsXDlx1i26LgJ2KYR9NUM+titGWMWq9UrGRqH+Z5wCpXf0/bTprmznQCKXXArl0F
+ ZXpqqROuxKsgODal0E5W/42/LR3ooktwsYy3AA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,36 +59,22 @@ around IS_ERR() is not needed.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- net/ipv6/inet6_hashtables.c | 2 +-
- net/ipv6/udp.c              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/dfs_cache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/inet6_hashtables.c b/net/ipv6/inet6_hashtables.c
-index b2a55f3..cf60fae 100644
---- a/net/ipv6/inet6_hashtables.c
-+++ b/net/ipv6/inet6_hashtables.c
-@@ -174,7 +174,7 @@ struct sock *inet6_lookup_listener(struct net *net,
- 				     saddr, sport, &in6addr_any, hnum,
- 				     dif, sdif);
- done:
--	if (unlikely(IS_ERR(result)))
-+	if (IS_ERR(result))
- 		return NULL;
- 	return result;
- }
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index b3418a7..6935183 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -215,7 +215,7 @@ struct sock *__udp6_lib_lookup(struct net *net,
- 					  exact_dif, hslot2,
- 					  skb);
- 	}
--	if (unlikely(IS_ERR(result)))
-+	if (IS_ERR(result))
- 		return NULL;
- 	return result;
- }
+diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
+index e3e1c13..1692c0c 100644
+--- a/fs/cifs/dfs_cache.c
++++ b/fs/cifs/dfs_cache.c
+@@ -492,7 +492,7 @@ static struct dfs_cache_entry *__find_cache_entry(unsigned int hash,
+ #ifdef CONFIG_CIFS_DEBUG2
+ 			char *name = get_tgt_name(ce);
+ 
+-			if (unlikely(IS_ERR(name))) {
++			if (IS_ERR(name)) {
+ 				rcu_read_unlock();
+ 				return ERR_CAST(name);
+ 			}
 -- 
 1.9.1
 
