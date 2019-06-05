@@ -2,144 +2,147 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69E1C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED72C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863602083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC55920866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 04:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OAlUvYzg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OAlUvYzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfFEEyD (ORCPT
+        id S1726555AbfFEEzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 00:54:03 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:41927 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbfFEEyC (ORCPT
+        Wed, 5 Jun 2019 00:55:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54892 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfFEEzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 00:54:02 -0400
-X-IronPort-AV: E=Sophos;i="5.60,550,1549897200"; 
-   d="scan'208";a="17849831"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 05 Jun 2019 13:53:59 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BF4E44004950;
-        Wed,  5 Jun 2019 13:53:59 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com
-Cc:     geert+renesas@glider.be, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
-Date:   Wed,  5 Jun 2019 13:49:02 +0900
-Message-Id: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Jun 2019 00:55:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CC92E6074C; Wed,  5 Jun 2019 04:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559710540;
+        bh=h9iwlufpq7/KISUsW3e2E4eX6OYVTsTCWq1ehA98fsM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OAlUvYzgEjn0P2VhZh/Pu77zRs9ypRoj+ZFzcBRncTK/e9gFPTLykhgNBIRh3GigY
+         mo0NYxiU6iaOl91kIKvo+8EVkqXYl0hh3KDWhZWEK87NjvAWBIOuF5oFH35yuvF4lY
+         23tTGl+kBllW9MHbciEHf+htrdplYjelIojVHPKA=
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 159746074C;
+        Wed,  5 Jun 2019 04:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559710540;
+        bh=h9iwlufpq7/KISUsW3e2E4eX6OYVTsTCWq1ehA98fsM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OAlUvYzgEjn0P2VhZh/Pu77zRs9ypRoj+ZFzcBRncTK/e9gFPTLykhgNBIRh3GigY
+         mo0NYxiU6iaOl91kIKvo+8EVkqXYl0hh3KDWhZWEK87NjvAWBIOuF5oFH35yuvF4lY
+         23tTGl+kBllW9MHbciEHf+htrdplYjelIojVHPKA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 159746074C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f50.google.com with SMTP id c26so3869624edt.1;
+        Tue, 04 Jun 2019 21:55:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAWRzR9FH0Xwm0IOX2CDJh+w4DGDUTx95rbF12TgYLMPBKBRSU1c
+        scQuhmG40QE55tPE8gkei7ydfMlcNwaCUfrcrSE=
+X-Google-Smtp-Source: APXvYqxv0a4cCcROLh0AISC2tWtOtWpbq41ZNWWSx20A4zgTfgPfQfqoTyT7mxmZaVoUMPCbLUCcOGNqGRb0duhh53E=
+X-Received: by 2002:a17:906:8d8:: with SMTP id o24mr33250632eje.235.1559710538685;
+ Tue, 04 Jun 2019 21:55:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190604222939.195471-1-swboyd@chromium.org> <20190604223700.GE4814@minitux>
+ <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com>
+In-Reply-To: <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Wed, 5 Jun 2019 10:25:26 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com>
+Message-ID: <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add iommus property to qup1
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The powered flag should be set for any other phys anyway. Otherwise,
-after we have revised the device tree for the usb phy, the following
-warning happened during a second system suspend. So, this patch fixes
-the issue.
+On Wed, Jun 5, 2019 at 4:16 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Bjorn Andersson (2019-06-04 15:37:00)
+> > On Tue 04 Jun 15:29 PDT 2019, Stephen Boyd wrote:
+> >
+> > > The SMMU that sits in front of the QUP needs to be programmed properly
+> > > so that the i2c geni driver can allocate DMA descriptors. Failure to do
+> > > this leads to faults when using devices such as an i2c touchscreen where
+> > > the transaction is larger than 32 bytes and we use a DMA buffer.
+> > >
+> >
+> > I'm pretty sure I've run into this problem, but before we marked the
+> > smmu bypass_disable and as such didn't get the fault, thanks.
+> >
+> > >  arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> > >  arm-smmu 15000000.iommu:         GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x000006c0, GFSYNR2 0x00000000
+> > >
+> > > Add the right SID and mask so this works.
+> > >
+> > > Cc: Sibi Sankar <sibis@codeaurora.org>
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index fcb93300ca62..2e57e861e17c 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -900,6 +900,7 @@
+> > >                       #address-cells = <2>;
+> > >                       #size-cells = <2>;
+> > >                       ranges;
+> > > +                     iommus = <&apps_smmu 0x6c0 0x3>;
+> >
+> > According to the docs this stream belongs to TZ, the HLOS stream should
+> > be 0x6c3.
+>
+> Aye, I saw this line in the downstream kernel but it doesn't work for
+> me. If I specify <&apps_smmu 0x6c3 0x0> it still blows up. I wonder if
+> my firmware perhaps is missing some initialization here to make the QUP
+> operate in HLOS mode? Otherwise, I thought that the 0x3 at the end was
+> the mask and so it should be split off to the second cell in the DT
+> specifier but that seemed a little weird.
 
-[   56.026531] unbalanced disables for USB20_VBUS0
-[   56.031108] WARNING: CPU: 3 PID: 513 at drivers/regulator/core.c:2593 _regula
-tor_disable+0xe0/0x1c0
-[   56.040146] Modules linked in: rcar_du_drm rcar_lvds drm_kms_helper drm drm_p
-anel_orientation_quirks vsp1 videobuf2_vmalloc videobuf2_dma_contig videobuf2_me
-mops videobuf2_v4l2 videobuf2_common videodev snd_soc_rcar renesas_usbhs snd_soc
-_audio_graph_card media snd_soc_simple_card_utils crct10dif_ce renesas_usb3 snd_
-soc_ak4613 rcar_fcp pwm_rcar usb_dmac phy_rcar_gen3_usb3 pwm_bl ipv6
-[   56.074047] CPU: 3 PID: 513 Comm: kworker/u16:19 Not tainted 5.2.0-rc3-00001-
-g5f20a19 #6
-[   56.082129] Hardware name: Renesas Salvator-X board based on r8a7795 ES2.0+ (
-DT)
-[   56.089524] Workqueue: events_unbound async_run_entry_fn
-[   56.094832] pstate: 40000005 (nZcv daif -PAN -UAO)
-[   56.099617] pc : _regulator_disable+0xe0/0x1c0
-[   56.104054] lr : _regulator_disable+0xe0/0x1c0
-[   56.108489] sp : ffff0000121c3ae0
-[   56.111796] x29: ffff0000121c3ae0 x28: 0000000000000000
-[   56.117102] x27: 0000000000000000 x26: ffff000010fe0e60
-[   56.122407] x25: 0000000000000002 x24: 0000000000000001
-[   56.127712] x23: 0000000000000002 x22: ffff8006f99d4000
-[   56.133017] x21: ffff8006f99cc000 x20: ffff8006f9846800
-[   56.138322] x19: ffff8006f9846800 x18: ffffffffffffffff
-[   56.143626] x17: 0000000000000000 x16: 0000000000000000
-[   56.148931] x15: ffff0000112f96c8 x14: ffff0000921c37f7
-[   56.154235] x13: ffff0000121c3805 x12: ffff000011312000
-[   56.159540] x11: 0000000005f5e0ff x10: ffff0000112f9f20
-[   56.164844] x9 : ffff0000112d3018 x8 : 00000000000001ad
-[   56.170149] x7 : 00000000ffffffcc x6 : ffff8006ff768180
-[   56.175453] x5 : ffff8006ff768180 x4 : 0000000000000000
-[   56.180758] x3 : ffff8006ff76ef10 x2 : ffff8006ff768180
-[   56.186062] x1 : 3d2eccbaead8fb00 x0 : 0000000000000000
-[   56.191367] Call trace:
-[   56.193808]  _regulator_disable+0xe0/0x1c0
-[   56.197899]  regulator_disable+0x40/0x78
-[   56.201820]  rcar_gen3_phy_usb2_power_off+0x3c/0x50
-[   56.206692]  phy_power_off+0x48/0xd8
-[   56.210263]  usb_phy_roothub_power_off+0x30/0x50
-[   56.214873]  usb_phy_roothub_suspend+0x1c/0x50
-[   56.219311]  hcd_bus_suspend+0x13c/0x168
-[   56.223226]  generic_suspend+0x4c/0x58
-[   56.226969]  usb_suspend_both+0x1ac/0x238
-[   56.230972]  usb_suspend+0xcc/0x170
-[   56.234455]  usb_dev_suspend+0x10/0x18
-[   56.238199]  dpm_run_callback.isra.6+0x20/0x68
-[   56.242635]  __device_suspend+0x110/0x308
-[   56.246637]  async_suspend+0x24/0xa8
-[   56.250205]  async_run_entry_fn+0x40/0xf8
-[   56.254210]  process_one_work+0x1e0/0x320
-[   56.258211]  worker_thread+0x40/0x450
-[   56.261867]  kthread+0x124/0x128
-[   56.265094]  ret_from_fork+0x10/0x18
-[   56.268661] ---[ end trace 86d7ec5de5c517af ]---
-[   56.273290] phy phy-ee080200.usb-phy.10: phy poweroff failed --> -5
+Two things here -
+0x6c0 - TZ SID. Do you see above fault on MTP sdm845 devices?
+0x6c3/0x6c6 - HLOS SIDs.
 
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 549b6b55b005 ("phy: renesas: rcar-gen3-usb2: enable/disable independent irqs")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Cheza will throw faults for anything that is programmed with TZ on mtp
+as all of that should be handled in HLOS. The firmwares of all these
+peripherals assume that the SID reservation is done (whether in TZ or HLOS).
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 1322185..dd2d7290 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -437,15 +437,15 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	struct rcar_gen3_chan *channel = rphy->ch;
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
--	int ret;
-+	int ret = 0;
- 
- 	if (!rcar_gen3_are_all_rphys_power_off(channel))
--		return 0;
-+		goto out;
- 
- 	if (channel->vbus) {
- 		ret = regulator_enable(channel->vbus);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
- 	val = readl(usb2_base + USB2_USBCTR);
-@@ -454,6 +454,8 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	val &= ~USB2_USBCTR_PLL_RST;
- 	writel(val, usb2_base + USB2_USBCTR);
- 
-+out:
-+	/* The powered flag should be set for any other phys anyway */
- 	rphy->powered = true;
- 
- 	return 0;
+I am inclined to moving the iommus property for all 'TZ' to board dts files.
+MTP wouldn't need those SIDs. So, the SOC level dtsi will have just the
+HLOS SIDs.
+
+P.S.
+As you rightly said, the second cell in iommus property is the mask so that
+the iommu is able to reserve all that SIDs that are covered with the
+starting SID
+and the mask.
+
+
+Best regards
+Vivek
 -- 
-2.7.4
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
