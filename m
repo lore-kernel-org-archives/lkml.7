@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36CC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D9EC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088D92075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079132075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="d6AKX7aJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dQ9jnZq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFEHf5 (ORCPT
+        id S1726674AbfFEHgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:35:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36112 "EHLO
+        Wed, 5 Jun 2019 03:36:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56206 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFEHf4 (ORCPT
+        with ESMTP id S1726467AbfFEHgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:35:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v22so1151747wml.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:35:54 -0700 (PDT)
+        Wed, 5 Jun 2019 03:36:09 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 16so1132520wmg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=09jLm7W8JZChRPg+8H9NxgZt7oc9Vk0L3GoCiBU0uZ8=;
-        b=d6AKX7aJySdHba4DSeoxsoAISweSJQ0CinNs4BdX5Jty6ugpsLKsGjK4kipKlQ8Vj9
-         lIv6Q0MaNPuODWFwkwPes31iHEzz9+LhX/Ct1dek2nFpTgt9ERXvzkdxDiqylU11DWNe
-         tCrn1xJZdK6eDFUPMnGsHqAlqfDe5mcEcIlUEkHX8sx8S7LB+0fPym58l3Qoz0XGEmV6
-         X2Qjqkb0glfumd62csjh+Yl5mgp2csEC+aP9inFCqupg5J+EKyHEFIGjM6uRvbe7KWPO
-         MFxTMXSx3GhHtH8S6vNjz4pC4Sy0og06VpmbpvujjGxT5cqmq8yCMOV9bccUeNAyeQZe
-         sbZg==
+        bh=wU7x45PzeBWtVxHiaVKa0wWI18hA5Maz4gefEy0Ez8U=;
+        b=dQ9jnZq5OoFxuUyhWDKEqPmkRUvZqf6CZcyZJFCEfe9mPh6AgwL5PVmVOD9Vnvc/fc
+         YJR5hhisnjeaUcjysmARyZQfaGBSjMSl0x0wd0lcL5O0+7JdJ/2p0FDBZs2EgUkEd/MJ
+         Dz9Laz/9bLYBkqfREKh1CTyft8p5+dkwht0m2IfGhhE4QRFUCUzb8+edUZYiShxO5IpG
+         zLbE5Jz9y/TlmRdg1XEKjgpRZZeOTNo4+4GeGnyJdofYBOLRHE24H8N47kvIUWRDMxDh
+         lX/6tqhBPJNxdBZPa6ukV75J4NQRVWYttIcuaU5F3zJ3qd+6SYrlx5uegyi6kct/sEGE
+         Mo0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=09jLm7W8JZChRPg+8H9NxgZt7oc9Vk0L3GoCiBU0uZ8=;
-        b=XZC/KjMG7jJd4/QNkrQV+g5nWRGRcL/dl0yf5OI+MZdeqR8fB2ldQcgqdRebJ+O5Io
-         S2t8fF4QjZC7Ni0UrSgFvibC6neMvduyG4kEHyCTbSterBI/ZjupCcuoRebxxTnm/tH/
-         zpzA9dqVgb/5Sf5T/AJjYy3Hbi0H9u85MovbhZIJ7y7JzUZcUI2HdXBpa7RDFaA0kS3h
-         t3KxciHEpanJO0HFntrj7dvP6iD3jNBuO3y3DEAUTPgK3U+nUHacWCTivqk/o0cIiA6K
-         hRqwTLpbmcP/WFhCJwcMRQVfRrHCo9ZfK5itiZNn0r4l0TTqAe3WWhk12lnXSzg3Cs7o
-         h8aA==
-X-Gm-Message-State: APjAAAUVNSol77moJ21BAgjaI5jSeQ2l87J9etmFK4AkyjEKgvap6Cax
-        tHyQRl0Mf58O4/dJOCLpM/xND1rq+c5zhw==
-X-Google-Smtp-Source: APXvYqxkcuXWwvzStuGW6Rb6pjReiWGLAHZnULJAlVwD65AGNNzMy46Zqy6jyyTXQHMm68bD+AGOeA==
-X-Received: by 2002:a1c:eb16:: with SMTP id j22mr8610828wmh.56.1559720153477;
-        Wed, 05 Jun 2019 00:35:53 -0700 (PDT)
+        bh=wU7x45PzeBWtVxHiaVKa0wWI18hA5Maz4gefEy0Ez8U=;
+        b=nLmGWL8NCz22bU9DbXkmgFAkRHDpZytCEze/+Pb2RSw6knc0a7KCtDtzN/TEhjK574
+         r2Fy7RXn0xn2fA7Mt5s3SuheoLCB8SXZs8Xu/b9STRZwyEvdALe0ENKHRBVQzOEKqLE1
+         FPYoBKCkwjfU1y0Z3Vnb/fQU7MkRzA7H3B37ZfCeHpfwuJ5jkfhkFqlhtc7tLwX1xS1E
+         hBWRM5iZ7b6dcmvC2LD3uaCCbdsWh/V6QQnC5DIw8aai3yjmeSVLkoyPiIcu4nL/pAJZ
+         ni7flgkE1tO0o5b80Bk3++9o52K74brhpJjrSanNVkrzuGizdUPPBwtTK7Z+O+BiVnvH
+         055w==
+X-Gm-Message-State: APjAAAW5LFbv9ojPYS2L4ZkQNVuWi+BGitLh6lgGFpsO80+pLyy92rpA
+        0ZNWM8K271XzalJBlQRBFRMSYlbwXoJprQ==
+X-Google-Smtp-Source: APXvYqxroyA6pGjIcaQXlQ7NCDQ+yWMiXWNfHslpBxOsOTGOeHsuNOBn7+LlBhtDWvxjkTAS+ZVR9Q==
+X-Received: by 2002:a1c:3886:: with SMTP id f128mr9986918wma.151.1559720166729;
+        Wed, 05 Jun 2019 00:36:06 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v63sm924859wmb.30.2019.06.05.00.35.52
+        by smtp.gmail.com with ESMTPSA id a3sm13399107wmb.35.2019.06.05.00.36.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 00:35:52 -0700 (PDT)
-Subject: Re: [PATCH 1/4] arm64: dts: meson-g12a-sei510: add 32k clock to
+        Wed, 05 Jun 2019 00:36:06 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64: dts: meson-g12a-x96-max: add 32k clock to
  bluetooth node
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20190603094740.12255-1-narmstrong@baylibre.com>
- <20190603094740.12255-2-narmstrong@baylibre.com>
+ <20190603094740.12255-3-narmstrong@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -117,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <f3abff32-5422-4693-759e-3e034e2f9d4c@baylibre.com>
-Date:   Wed, 5 Jun 2019 09:35:52 +0200
+Message-ID: <86183881-4d2d-f94e-4057-51878777af0d@baylibre.com>
+Date:   Wed, 5 Jun 2019 09:36:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190603094740.12255-2-narmstrong@baylibre.com>
+In-Reply-To: <20190603094740.12255-3-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -136,26 +136,27 @@ On 03/06/2019 11:47, Neil Armstrong wrote:
 > combo module to initialize correctly, simply add the same clock we
 > use for the sdio pwrseq.
 > 
-> Fixes: d1c023af1988 ("arm64: dts: meson-g12a-sei510: Add ADC Key and BT support")
+> Fixes: c5c9c7cff269 ("arm64: dts: meson-g12a-x96-max: Enable BT Module")
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 2 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> index eac57d997e0b..3e0e119c13ce 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> @@ -530,6 +530,8 @@
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> index 2c10ebfd9e7c..aa9da5de5c2d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> @@ -206,6 +206,8 @@
 >  	bluetooth {
 >  		compatible = "brcm,bcm43438-bt";
 >  		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
 > +		clocks = <&wifi32k>;
 > +		clock-names = "lpo";
->  		vbat-supply = <&vddao_3v3>;
->  		vddio-supply = <&vddio_ao1v8>;
 >  	};
+>  };
+>  
 > 
+
 
 The Fixes is wrong... wifi32k was not present at this time.
 
