@@ -2,151 +2,203 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44B5C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC5C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D452075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEC02075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T97XQvEr"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLRkqZn0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLRkqZn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfFEFZe (ORCPT
+        id S1726561AbfFEF1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:25:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40814 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFEFZe (ORCPT
+        Wed, 5 Jun 2019 01:27:03 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:32866 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfFEF1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:25:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d30so11731889pgm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 22:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=9a8hKqe93DInff5ZLnJt99v7R5ylnef5GPSafD7tn0w=;
-        b=T97XQvErAV5YR0vEyOAIbTyxqJCiQjCac342A9iuSijGEDjSlvqaU/Lrb+zFRoo/P4
-         FCctN63E9iIlQT/mWrcniSm9A7Xo72FTJUhxAiHxdQ5Ie3ySDQx38Yh3X8OBG0T6ijaq
-         ajQFu83NaqZQx8Nbr3siIhbrk4Bv7E8n34dn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=9a8hKqe93DInff5ZLnJt99v7R5ylnef5GPSafD7tn0w=;
-        b=O7O33SBfoZOwdcgVy+eRVkGK1fZ4cFSEjEkafWeQSbvd6HC/FvYpmFqQo53AbnmKoQ
-         1VT1RRB6ril77O+bLxlf2WhQnOuon2sshdHC3PVGVavZ/CZ1/IPe6ZMiiYmITmdwV3qe
-         A9EPSyTlvpYGhpRHB3GEj/WA1Jy/FWFgpjA1dCpIN7hC3SLlXT3Ur9EXLG2XwkD+GQj+
-         C4DvRoxLKx/0GzMtXqIz2JxXNvAGC+I2pOXMz5gE5mthHJfogrYNsErjw0B0rzcEUw3d
-         p7WikrWS/K3Otl0lji9ZAnymQOGLA1DhI/iPqOB6fRi43QC7JYQhG08FjiiWwprnclPH
-         b17g==
-X-Gm-Message-State: APjAAAWhp/Y4YGrpYkUwALFZjKjMtX5sIO1RaW5q0DqN84VLqS44tWhC
-        8Svf0zM99jcgVXDSo7LZMAs/uA==
-X-Google-Smtp-Source: APXvYqxGFosd7c5gW8eXl6gC1MPgOZJztjP50l1ighdi65fgtlv2L6pfV2Iuxc2LF2giYGCvBzI+mw==
-X-Received: by 2002:a65:448a:: with SMTP id l10mr1921268pgq.53.1559712333660;
-        Tue, 04 Jun 2019 22:25:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q1sm12589518pfb.156.2019.06.04.22.25.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 22:25:32 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 22:25:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH] lib/test_stackinit: Handle Clang auto-initialization pattern
-Message-ID: <201906042224.42A2CCB2BE@keescook>
+        Wed, 5 Jun 2019 01:27:03 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AE64F6074C; Wed,  5 Jun 2019 05:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559712422;
+        bh=1KJN3mFJVMBneJMO/d67H03JGGeCwXkWQw9EA/NpWtY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QLRkqZn0wy/3UdzNoUrvwffxt8Kr6B9Bg9hCvpd7OzILqWtSPMzO1mT9DrKc4T7dl
+         TCKl4DhH4x1HTlf+wYnBqlCrS6l26tm6noTFtu6EDec+3rzmkMVw+jYWPreqhjkU9r
+         ppodi2GjDvQz88A7gtDzJjYBe/Alu13bndVse+FY=
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3A3C609CD;
+        Wed,  5 Jun 2019 05:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559712422;
+        bh=1KJN3mFJVMBneJMO/d67H03JGGeCwXkWQw9EA/NpWtY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QLRkqZn0wy/3UdzNoUrvwffxt8Kr6B9Bg9hCvpd7OzILqWtSPMzO1mT9DrKc4T7dl
+         TCKl4DhH4x1HTlf+wYnBqlCrS6l26tm6noTFtu6EDec+3rzmkMVw+jYWPreqhjkU9r
+         ppodi2GjDvQz88A7gtDzJjYBe/Alu13bndVse+FY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3A3C609CD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f46.google.com with SMTP id p26so3944263edr.2;
+        Tue, 04 Jun 2019 22:27:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAVgm0GzdoB9JK5inlhi3sv1gMB6DCijHyYDQzr/7fu/yEaypf9/
+        YRee09mrHqqOfEs7/H4bf9BQ+HDzSLpr//+yXho=
+X-Google-Smtp-Source: APXvYqxdlbGMVdeW3rWEdt46VbbnhcG5V+U3jyhEom0QjHb/okBPll2garbSRrpQ9xZmyFz02Z2v9+15OuPvo9kStv0=
+X-Received: by 2002:a50:b797:: with SMTP id h23mr40316638ede.197.1559712420354;
+ Tue, 04 Jun 2019 22:27:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20190513210747.22429-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190513210747.22429-1-bjorn.andersson@linaro.org>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Wed, 5 Jun 2019 10:56:49 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
+Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the gcc plugin for automatic stack variable initialization (i.e.
-CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL) performs initialization with
-0x00 bytes, the Clang automatic stack variable initialization (i.e.
-CONFIG_INIT_STACK_ALL) uses various type-specific patterns that are
-typically 0xAA. Therefore the stackinit selftest has been fixed to check
-that bytes are no longer the test fill pattern of 0xFF (instead of looking
-for bytes that have become 0x00). This retains the test coverage for the
-0x00 pattern of the gcc plugin while adding coverage for the mostly 0xAA
-pattern of Clang.
+On Tue, May 14, 2019 at 2:39 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Bring in the Truly display and enable the DSI channels to make the
+> mdss/gpu probe, even though we're lacking LABIB, preventing us from
+> seeing anything on the screen.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/test_stackinit.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+Looks good to me and work well too with a wip lab-ibb driver change.
 
-diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
-index e97dc54b4fdf..2d7d257a430e 100644
---- a/lib/test_stackinit.c
-+++ b/lib/test_stackinit.c
-@@ -12,7 +12,7 @@
- 
- /* Exfiltration buffer. */
- #define MAX_VAR_SIZE	128
--static char check_buf[MAX_VAR_SIZE];
-+static u8 check_buf[MAX_VAR_SIZE];
- 
- /* Character array to trigger stack protector in all functions. */
- #define VAR_BUFFER	 32
-@@ -106,9 +106,18 @@ static noinline __init int test_ ## name (void)			\
- 								\
- 	/* Fill clone type with zero for per-field init. */	\
- 	memset(&zero, 0x00, sizeof(zero));			\
-+	/* Clear entire check buffer for 0xFF overlap test. */	\
-+	memset(check_buf, 0x00, sizeof(check_buf));		\
- 	/* Fill stack with 0xFF. */				\
- 	ignored = leaf_ ##name((unsigned long)&ignored, 1,	\
- 				FETCH_ARG_ ## which(zero));	\
-+	/* Verify all bytes overwritten with 0xFF. */		\
-+	for (sum = 0, i = 0; i < target_size; i++)		\
-+		sum += (check_buf[i] != 0xFF);			\
-+	if (sum) {						\
-+		pr_err(#name ": leaf fill was not 0xFF!?\n");	\
-+		return 1;					\
-+	}							\
- 	/* Clear entire check buffer for later bit tests. */	\
- 	memset(check_buf, 0x00, sizeof(check_buf));		\
- 	/* Extract stack-defined variable contents. */		\
-@@ -126,9 +135,9 @@ static noinline __init int test_ ## name (void)			\
- 		return 1;					\
- 	}							\
- 								\
--	/* Look for any set bits in the check region. */	\
--	for (i = 0; i < sizeof(check_buf); i++)			\
--		sum += (check_buf[i] != 0);			\
-+	/* Look for any bytes still 0xFF in check region. */	\
-+	for (sum = 0, i = 0; i < target_size; i++)		\
-+		sum += (check_buf[i] == 0xFF);			\
- 								\
- 	if (sum == 0)						\
- 		pr_info(#name " ok\n");				\
-@@ -162,13 +171,13 @@ static noinline __init int leaf_ ## name(unsigned long sp,	\
- 	 * Keep this buffer around to make sure we've got a	\
- 	 * stack frame of SOME kind...				\
- 	 */							\
--	memset(buf, (char)(sp && 0xff), sizeof(buf));		\
-+	memset(buf, (char)(sp & 0xff), sizeof(buf));		\
- 	/* Fill variable with 0xFF. */				\
- 	if (fill) {						\
- 		fill_start = &var;				\
- 		fill_size = sizeof(var);			\
- 		memset(fill_start,				\
--		       (char)((sp && 0xff) | forced_mask),	\
-+		       (char)((sp & 0xff) | forced_mask),	\
- 		       fill_size);				\
- 	}							\
- 								\
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 02b8357c8ce8..83198a19ff57 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -352,6 +352,77 @@
+>         status = "okay";
+>  };
+>
+> +&dsi0 {
+> +       status = "okay";
+> +       vdda-supply = <&vdda_mipi_dsi0_1p2>;
+> +
+> +       qcom,dual-dsi-mode;
+> +       qcom,master-dsi;
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&truly_in_0>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       panel@0 {
+> +               compatible = "truly,nt35597-2K-display";
+> +               reg = <0>;
+> +               vdda-supply = <&vreg_l14a_1p88>;
+> +
+> +               reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
+> +               mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               truly_in_0: endpoint {
+> +                                       remote-endpoint = <&dsi0_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               truly_in_1: endpoint {
+> +                                       remote-endpoint = <&dsi1_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi0_phy {
+> +       status = "okay";
+> +       vdds-supply = <&vdda_mipi_dsi0_pll>;
+> +};
+> +
+> +&dsi1 {
+> +       status = "okay";
+> +       vdda-supply = <&vdda_mipi_dsi1_1p2>;
+> +
+> +       qcom,dual-dsi-mode;
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&truly_in_1>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi1_phy {
+> +       status = "okay";
+> +       vdds-supply = <&vdda_mipi_dsi1_pll>;
+> +};
+> +
+>  &gcc {
+>         protected-clocks = <GCC_QSPI_CORE_CLK>,
+>                            <GCC_QSPI_CORE_CLK_SRC>,
+> @@ -365,6 +436,14 @@
+>         clock-frequency = <400000>;
+>  };
+>
+> +&mdss {
+> +       status = "okay";
+> +};
+> +
+> +&mdss_mdp {
+> +       status = "okay";
+> +};
+> +
+>  &qupv3_id_1 {
+>         status = "okay";
+>  };
+> --
+> 2.18.0
+>
+
+
 -- 
-2.17.1
-
-
--- 
-Kees Cook
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
