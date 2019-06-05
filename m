@@ -2,114 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1516CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F31C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3722075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB52206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559728899;
+	bh=LJbGRuypVwYz4+DsIAw5idV6Tie2aPGURWFJm4I9dbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DHENg1b9RLdMhMqvUtZuXWO7FMByzfAK+apBIHloQHGzM+0e4VGIinNfGCspwnaMa
+	 dqQYSN/awjB3yAv0E7ZfimrZ94d/wkTRsYUuj81Nb+mudvv3YdsMfBaXTlBb+N6Jux
+	 kqh+Bx36NpT/9WyU99DgS6YMsnn4Ohx5yErOZzpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfFEJ6a convert rfc822-to-8bit (ORCPT
+        id S1727182AbfFEKBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:58:30 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:44818 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727071AbfFEJ6a (ORCPT
+        Wed, 5 Jun 2019 06:01:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47124 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfFEKBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:58:30 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-7-CFkA386iP16q3G7kxRKBCw-1;
- Wed, 05 Jun 2019 10:58:25 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 5 Jun 2019 10:58:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 5 Jun 2019 10:58:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Oleg Nesterov' <oleg@redhat.com>
-CC:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "e@80x24.org" <e@80x24.org>, Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        stable <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: RE: [PATCH] signal: remove the wrong signal_pending() check in
- restore_user_sigmask()
-Thread-Topic: [PATCH] signal: remove the wrong signal_pending() check in
- restore_user_sigmask()
-Thread-Index: AQHVGxwzwFf0q/qAAkiR7PRGfFAGAqaMwPEw///5P4CAABTbsA==
-Date:   Wed, 5 Jun 2019 09:58:25 +0000
-Message-ID: <29dd2937475b4407b617e2516f9cdd05@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
- <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
- <263d0e478ee447d9aa10baab0d8673a5@AcuMS.aculab.com>
- <20190605092516.GC32406@redhat.com>
-In-Reply-To: <20190605092516.GC32406@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 5 Jun 2019 06:01:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tt332wNsFzoKP2lgvb/2+DEBQV3HPehR64S+Tdrj8MQ=; b=us+MkBycio5fp/tf/heKrNc/R
+        drxLNZ4z7t3I80R41YHzXZv+kQWCdOYV+A7AGigvaaWiGgRnuk6+SYncpi9e8Txe3v2v9GhHvDPRE
+        nPmXMiTXpz0kPsZH1mEyXrEitmQ4zkJ9N/BtYYblCVZeaB5jN9IayDaw4izvNRSA3cx5s=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYSjd-0008UM-D1; Wed, 05 Jun 2019 10:01:33 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 86D11440046; Wed,  5 Jun 2019 11:01:32 +0100 (BST)
+Date:   Wed, 5 Jun 2019 11:01:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
+        lee.jones@linaro.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] regulator: lm363x: Make the gpio register enable
+ flexible
+Message-ID: <20190605100132.GL2456@sirena.org.uk>
+References: <20190604174345.14841-1-dmurphy@ti.com>
+ <20190604174345.14841-2-dmurphy@ti.com>
 MIME-Version: 1.0
-X-MC-Unique: CFkA386iP16q3G7kxRKBCw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LkBseQZEL/3d2JPd"
+Content-Disposition: inline
+In-Reply-To: <20190604174345.14841-2-dmurphy@ti.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov [mailto:oleg@redhat.com]
-> Sent: 05 June 2019 10:25
-> On 06/05, David Laight wrote:
-> >
-> > epoll() would have:
-> > 	if (restore_user_sigmask(xxx.sigmask, &sigsaved, !ret || ret == -EINTR))
-> > 		ret = -EINTR;
-> 
-> I don't think so but lets discuss this later.
 
-I certainly think there should be some comments at least
-about when/whether signal handlers get called and that
-being separate from the return value.
+--LkBseQZEL/3d2JPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The system call restart stuff does seem strange.
-ISTR that was originally added for SIG_SUSPEND (^Z) so that those
-signals wouldn't be seen by the appication.
-But that makes it a property of the signal, not the system call.
+On Tue, Jun 04, 2019 at 12:43:40PM -0500, Dan Murphy wrote:
+> The use of and enablement of the GPIO can be used across devices.
+> Use the enable_reg in the regulator descriptor for the register to
+> write.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> ---
+>=20
+> v5 - No changes to the patch changes requested in this patch were done in
+> patch 4 of this series - https://lore.kernel.org/patchwork/patch/1077408/
 
-> > I also think it could be simplified if code that loaded the 'user sigmask'
-> > saved the old one in 'current->saved_sigmask' (and saved that it had done it).
-> > You'd not need 'sigsaved' nor pass the user sigmask address into
-> > the restore function.
-> 
-> Heh. apparently you do not read my emails ;)
-> 
-> This is what I proposed in my very 1st email, and I even showed the patch
-> and the code with the patch applied twice. Let me do this again.
+I was expecting this patch to just be completely dropped?  It looks like
+the end result is very similar, we're still using enable_reg to get the
+register and I don't see new validation added in patch 4.
 
-I did read that one, I've even quoted it in the past :-)
-It's just not been mentioned recently.
+--LkBseQZEL/3d2JPd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	David
+-----BEGIN PGP SIGNATURE-----
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz3kvsACgkQJNaLcl1U
+h9CL4Af/eIXNOUQrDHol0TbFPD7MMFgStTriNhd5Fn+14zkke4yvtU6mzKz4ZNeh
+3kKeUTQRvj9/xVuKjKsFmLteeTCj1hPJ7/oa7M5uo+zFuQWMWnkNulYXSv01yue1
+61zxfIJgaHEbVlI31m0pqLAQTb5opriEJ7eWpH6Iw4aYbiWO3spi0lYrQFf0BXLR
+PT6L9eDXJXE+MrXc2HrzxOXAKtB91oveq2G8WdqXp9svmP2NimUvTMUHo1HPIpUB
+g7t2i9qT2k8+5WXZ/g03DN9IxVgNy29RuAYdyEpMD4vOYmbtJiaxQMknD0TQp7Kf
+Gx3UQmwBAtBfKwQOUMK+mTMQn0O8yQ==
+=A/Jg
+-----END PGP SIGNATURE-----
 
+--LkBseQZEL/3d2JPd--
