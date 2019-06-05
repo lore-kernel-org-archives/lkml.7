@@ -2,174 +2,120 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE608C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE51C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E44B20874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF11220665
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfFERD0 (ORCPT
+        id S1728839AbfFERHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:03:26 -0400
-Received: from smtprelay0024.hostedemail.com ([216.40.44.24]:37504 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728794AbfFERD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:03:26 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8554E8368EE9;
-        Wed,  5 Jun 2019 17:03:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: snail30_1d61b4fc2bc61
-X-Filterd-Recvd-Size: 5807
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  5 Jun 2019 17:03:21 +0000 (UTC)
-Message-ID: <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 05 Jun 2019 10:03:19 -0700
-In-Reply-To: <20190605071413.779bd821@coco.lan>
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
-         <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
-         <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
-         <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
-         <20190604134213.GA26263@kroah.com>
-         <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
-         <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
-         <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
-         <20190605051040.GA22760@kroah.com>
-         <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
-         <20190605071413.779bd821@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 5 Jun 2019 13:07:37 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:33126 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728789AbfFERHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 13:07:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id EB4B8204191;
+        Wed,  5 Jun 2019 19:07:33 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GQkvM02M94+7; Wed,  5 Jun 2019 19:07:27 +0200 (CEST)
+Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
+        by smtp.infotech.no (Postfix) with ESMTPA id 47457204162;
+        Wed,  5 Jun 2019 19:07:25 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH] sg: Fix a double-fetch bug in drivers/scsi/sg.c
+To:     Jiri Slaby <jslaby@suse.cz>, Gen Zhang <blackgod016574@gmail.com>,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190523023855.GA17852@zhanggen-UX430UQ>
+ <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <da6f10b8-3b9a-f8d6-33c4-0d8f5711bb23@interlog.com>
+Date:   Wed, 5 Jun 2019 13:07:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-05 at 07:14 -0300, Mauro Carvalho Chehab wrote:
-> Em Tue, 04 Jun 2019 22:22:05 -0700
-> Joe Perches <joe@perches.com> escreveu:
+On 2019-06-05 2:00 a.m., Jiri Slaby wrote:
+> On 23. 05. 19, 4:38, Gen Zhang wrote:
+>> In sg_write(), the opcode of the command is fetched the first time from
+>> the userspace by __get_user(). Then the whole command, the opcode
+>> included, is fetched again from userspace by __copy_from_user().
+>> However, a malicious user can change the opcode between the two fetches.
+>> This can cause inconsistent data and potential errors as cmnd is used in
+>> the following codes.
+>>
+>> Thus we should check opcode between the two fetches to prevent this.
+>>
+>> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+>> ---
+>> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+>> index d3f1531..a2971b8 100644
+>> --- a/drivers/scsi/sg.c
+>> +++ b/drivers/scsi/sg.c
+>> @@ -694,6 +694,8 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
+>>   	hp->flags = input_size;	/* structure abuse ... */
+>>   	hp->pack_id = old_hdr.pack_id;
+>>   	hp->usr_ptr = NULL;
+>> +	if (opcode != cmnd[0])
+>> +		return -EINVAL;
 > 
-> > On Wed, 2019-06-05 at 07:10 +0200, Greg KH wrote:
-> > > On Wed, Jun 05, 2019 at 01:10:41PM +0900, Masahiro Yamada wrote:  
-> > > > On Wed, Jun 5, 2019 at 3:21 AM Arnd Bergmann <arnd@arndb.de> wrote:  
-> > []
-> > > > This means we cannot reliably use uint{8,16,32,64}_t in UAPI headers.  
-> > > 
-> > > We should not be doing that as they are in the userspace "namespace" of
-> > > variables, not in the kernel namespace.  We've been over this many times
-> > > in the past :(  
-> > 
-> > Just not very successfully...
-> > 
-> > $ git grep -w -P 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
-> > 342
-> > $ git grep -w -P --name-only 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
-> > 13
+> Isn't it too early to check cmnd which is copied only here:
 > 
-> Out of curiosity, I decided to check those occurrences...
-> 
-> About half of those 13 files are false-positives:
-> 
-> - bpf.h, pps.h and amdgpu_drm.h use those int types only inside comments;
-> - drm.h and coda.h have their own typedefs for those int types;
-> - vmwgfx_drm.h includes drm.h (which has the typedefs).
-> 
-> So, only 6 headers actually use posix types in a way that it seems that 
-> it would require including stdint.h:
-> 
-> - include/uapi/linux/fuse.h
-> 
->   This one explicitly includes stdint.h if !__KERNEL__
-> 
-> - include/uapi/linux/netfilter_bridge/ebtables.h,
->   include/uapi/linux/sctp.h,
->   include/uapi/scsi/scsi_netlink.h and
->   include/uapi/scsi/scsi_netlink_fc.h
-> 
->   They include linux/types.h unconditionally, relying on
->   scripts/headers_install.sh to remove it;
-> 
-> - include/uapi/scsi/scsi_bsg_fc.h
-> 
->   It doesn't include anything. In other words, it assumes that the c file 
->   would include either linux/types.h or stdint.h.
-> 
-> ---
-> 
-> Not saying that this is a good idea, but, as we have already a script that
-> it is meant to sanitize uAPI header files when installing them
-> (scripts/headers_install.sh), one could modify it (or convert to perl/python)
-> in a way that it would be doing something like[1]:
-> 
-> 	sed -E
-> 		...
-> 		-e 's,//(.*),/* \1 */,'
-> 
-> [1] the actual rule should be more complex than that, in order to avoid 
-> replacing // inside /**/ comments.
+>>   	if (__copy_from_user(cmnd, buf, cmd_size))
+>>   		return -EFAULT;
+>>   	/*
+>> ---
+>>
 
-Perhaps a checkpatch change too:
+Hi,
+Yes, it is too early. It needs to be after that __copy_from_user(cmnd,
+buf, cmd_size) call.
 
-The first block updates unsigned only bitfields
-The second tests uapi definitions and suggests "__<kernel_types"
----
- scripts/checkpatch.pl | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+To put this in context, this is a very old interface; dating from 1992
+and deprecated for almost 20 years. The fact that the first byte of
+the SCSI cdb needs to be read first to work out that size of the
+following SCSI command and optionally the offset of a data-out
+buffer that may follow the command; is one reason why that interface
+was replaced. Also the implementation did not handle SCSI variable
+length cdb_s.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index c33c5002f190..afc4bb05a987 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3747,7 +3747,7 @@ sub process {
- 		}
- 
- # check for declarations of signed or unsigned without int
--		while ($line =~ m{\b($Declare)\s*(?!char\b|short\b|int\b|long\b)\s*($Ident)?\s*[=,;\[\)\(]}g) {
-+		while ($line =~ m{\b($Declare)\s*(?!char\b|short\b|int\b|long\b)\s*($Ident)?\s*[=,;:\[\)\(]}g) {
- 			my $type = $1;
- 			my $var = $2;
- 			$var = "" if (!defined $var);
-@@ -5905,10 +5905,10 @@ sub process {
- 			      "Using weak declarations can have unintended link defects\n" . $herecurr);
- 		}
- 
--# check for c99 types like uint8_t used outside of uapi/ and tools/
--		if ($realfile !~ m@\binclude/uapi/@ &&
--		    $realfile !~ m@\btools/@ &&
--		    $line =~ /\b($Declare)\s*$Ident\s*[=;,\[]/) {
-+# check for c99 types like uint8_t used outside of tools/
-+# for uapi, suggest using __<types>, otherwise use <types> like s8, u32, etc...
-+		if ($realfile !~ m@\btools/@ &&
-+		    $line =~ /\b($Declare)\s*$Ident\s*[=,;:\[]/) {
- 			my $type = $1;
- 			if ($type =~ /\b($typeC99Typedefs)\b/) {
- 				$type = $1;
-@@ -5916,6 +5916,9 @@ sub process {
- 				$kernel_type = 's' if ($type =~ /^_*[si]/);
- 				$type =~ /(\d+)/;
- 				$kernel_type .= $1;
-+				if ($realfile =~ m@\binclude/uapi/@) {
-+					$kernel_type = "__" . $kernel_type;
-+				}
- 				if (CHK("PREFER_KERNEL_TYPES",
- 					"Prefer kernel type '$kernel_type' over '$type'\n" . $herecurr) &&
- 				    $fix) {
+Then there is the question of whether this double-fetch is exploitable?
+I cannot think of an example, but there might be (e.g. turning a READ
+command into a WRITE). But the "double-fetch" issue may be more wide
+spread. The replacement interface passes the command and data-in/-out as
+pointers while their corresponding lengths are placed in the newer
+interface structure. This assumes that the cdb and data-out won't
+change in the user space between when the write(2) is called and
+before or while the driver, using those pointers, reads the data.
+All drivers that use pointers to pass data have this "feature".
+
+Also I'm looking at this particular double-fetch from the point of view
+of the driver rewrite I have done and is currently in the early stages
+of review [linux-scsi list: "[PATCH 00/19] sg: v4 interface, rq sharing
++ multiple rqs"] and this problem is more difficult to fix since the
+full cdb read is delayed to a common point further along the submit
+processing path. To detect a change in cbd[0] my current code would
+need to be altered to carry cdb[0] through to that common point. So
+is it worth it for such an old, deprecated and replaced interface??
+What cdb/user_permissions checking that is done, is done _after_
+the full cdb is read. So trying to get around a user exclusion of
+say WRITE(10) by first using the first byte of READ(10), won't succeed.
+
+Doug Gilbert
 
