@@ -2,85 +2,218 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737A8C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C85C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFCB20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6162086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kOAXK4ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfFENad (ORCPT
+        id S1728113AbfFENaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:30:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:43006 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfFENab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:30:31 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 43E3E227A81; Wed,  5 Jun 2019 15:30:03 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 15:30:02 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: too large sg segments with commit 09324d32d2a08
-Message-ID: <20190605133002.GA13368@lst.de>
-References: <alpine.LFD.2.21.1906051057200.2118@schleppi> <20190605100928.GA9828@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605100928.GA9828@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Wed, 5 Jun 2019 09:30:46 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:55070 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727601AbfFENal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 09:30:41 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 81918C0134;
+        Wed,  5 Jun 2019 13:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559741420; bh=9O0qDkRZ0SDrdNmNU4oaIDKn7YlKE6oSo3JyRP//AOw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=kOAXK4kus5PLEY950QcjuRBu405hVvqDIXbRyZNpRQKhxgVMGZPH0uyG2PDhwZODc
+         q0MN3db+VTbqvmDDKXobr1+B7+SqpTvDmxkPjChlMqEnjc3SSQLmdujKfxY31AT29k
+         9nuPh+eFZRLGuNgdwlBMo+V27VbyyNxyInFyavx6jcCdqn/xpcUKMquN8jTjEihYg8
+         3JHMi/gMW8fjBQKFLk93FoQdmNwhYvxgLpNOnCrOj3lEGPvNfqtPDssrem3PHx1e4t
+         IQfW4dQz8P54lN+chliCyUmyLDk/8Q3df3UUMGbyAaHb1iyXEl0kjzTteJ3u4PsMM/
+         kYY/zp8FDv9bw==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 52F75A0235;
+        Wed,  5 Jun 2019 13:30:39 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id EFDA43FEC9;
+        Wed,  5 Jun 2019 15:30:38 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [RFC net-next 1/2] net: stmmac: Prepare to convert to phylink
+Date:   Wed,  5 Jun 2019 15:30:28 +0200
+Message-Id: <95af9cb02da5fdfc30967df9f291c80ecb01524d.1559741195.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1559741195.git.joabreu@synopsys.com>
+References: <cover.1559741195.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1559741195.git.joabreu@synopsys.com>
+References: <cover.1559741195.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually, it looks like something completely general isn't
-easily doable, not without some major dma API work.  Here is what
-should fix nvme, but a few other drivers will need fixes as well:
+In preparation for the convertion, split the adjust_link function into
+mac_config and add the mac_link_up and mac_link_down functions.
 
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
-From 745541130409bc837a3416300f529b16eded8513 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Wed, 5 Jun 2019 14:55:26 +0200
-Subject: nvme-pci: don't limit DMA segement size
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 113 ++++++++++++++--------
+ 1 file changed, 72 insertions(+), 41 deletions(-)
 
-NVMe uses PRPs (or optionally unlimited SGLs) for data transfers and
-has no specific limit for a single DMA segement.  Limiting the size
-will cause problems because the block layer assumes PRP-ish devices
-using a virt boundary mask don't have a segment limit.  And while this
-is true, we also really need to tell the DMA mapping layer about it,
-otherwise dma-debug will trip over it.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reported-by: Sebastian Ott <sebott@linux.ibm.com>
----
- drivers/nvme/host/pci.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f562154551ce..524d6bd6d095 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2513,6 +2513,12 @@ static void nvme_reset_work(struct work_struct *work)
- 	 */
- 	dev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
- 	dev->ctrl.max_segments = NVME_MAX_SEGS;
-+
-+	/*
-+	 * Don't limit the IOMMU merged segment size.
-+	 */
-+	dma_set_max_seg_size(dev->dev, 0xffffffff);
-+
- 	mutex_unlock(&dev->shutdown_lock);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 268af79e2632..6a2f072c0ce3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -848,6 +848,72 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
+ 			priv->pause, tx_cnt);
+ }
  
- 	/*
++static void stmmac_mac_config(struct net_device *dev)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++	struct phy_device *phydev = dev->phydev;
++	u32 ctrl;
++
++	ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
++
++	if (phydev->speed != priv->speed) {
++		ctrl &= ~priv->hw->link.speed_mask;
++
++		switch (phydev->speed) {
++		case SPEED_1000:
++			ctrl |= priv->hw->link.speed1000;
++			break;
++		case SPEED_100:
++			ctrl |= priv->hw->link.speed100;
++			break;
++		case SPEED_10:
++			ctrl |= priv->hw->link.speed10;
++			break;
++		default:
++			netif_warn(priv, link, priv->dev,
++				   "broken speed: %d\n", phydev->speed);
++			phydev->speed = SPEED_UNKNOWN;
++			break;
++		}
++
++		if (phydev->speed != SPEED_UNKNOWN)
++			stmmac_hw_fix_mac_speed(priv);
++
++		priv->speed = phydev->speed;
++	}
++
++	/* Now we make sure that we can be in full duplex mode.
++	 * If not, we operate in half-duplex mode. */
++	if (phydev->duplex != priv->oldduplex) {
++		if (!phydev->duplex)
++			ctrl &= ~priv->hw->link.duplex;
++		else
++			ctrl |= priv->hw->link.duplex;
++
++		priv->oldduplex = phydev->duplex;
++	}
++
++	/* Flow Control operation */
++	if (phydev->pause)
++		stmmac_mac_flow_ctrl(priv, phydev->duplex);
++
++	writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
++}
++
++static void stmmac_mac_link_down(struct net_device *dev, bool autoneg)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	stmmac_mac_set(priv, priv->ioaddr, false);
++}
++
++static void stmmac_mac_link_up(struct net_device *dev, bool autoneg)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	stmmac_mac_set(priv, priv->ioaddr, true);
++}
++
+ /**
+  * stmmac_adjust_link - adjusts the link parameters
+  * @dev: net device structure
+@@ -869,47 +935,7 @@ static void stmmac_adjust_link(struct net_device *dev)
+ 	mutex_lock(&priv->lock);
+ 
+ 	if (phydev->link) {
+-		u32 ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
+-
+-		/* Now we make sure that we can be in full duplex mode.
+-		 * If not, we operate in half-duplex mode. */
+-		if (phydev->duplex != priv->oldduplex) {
+-			new_state = true;
+-			if (!phydev->duplex)
+-				ctrl &= ~priv->hw->link.duplex;
+-			else
+-				ctrl |= priv->hw->link.duplex;
+-			priv->oldduplex = phydev->duplex;
+-		}
+-		/* Flow Control operation */
+-		if (phydev->pause)
+-			stmmac_mac_flow_ctrl(priv, phydev->duplex);
+-
+-		if (phydev->speed != priv->speed) {
+-			new_state = true;
+-			ctrl &= ~priv->hw->link.speed_mask;
+-			switch (phydev->speed) {
+-			case SPEED_1000:
+-				ctrl |= priv->hw->link.speed1000;
+-				break;
+-			case SPEED_100:
+-				ctrl |= priv->hw->link.speed100;
+-				break;
+-			case SPEED_10:
+-				ctrl |= priv->hw->link.speed10;
+-				break;
+-			default:
+-				netif_warn(priv, link, priv->dev,
+-					   "broken speed: %d\n", phydev->speed);
+-				phydev->speed = SPEED_UNKNOWN;
+-				break;
+-			}
+-			if (phydev->speed != SPEED_UNKNOWN)
+-				stmmac_hw_fix_mac_speed(priv);
+-			priv->speed = phydev->speed;
+-		}
+-
+-		writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
++		stmmac_mac_config(dev);
+ 
+ 		if (!priv->oldlink) {
+ 			new_state = true;
+@@ -922,6 +948,11 @@ static void stmmac_adjust_link(struct net_device *dev)
+ 		priv->oldduplex = DUPLEX_UNKNOWN;
+ 	}
+ 
++	if (phydev->link)
++		stmmac_mac_link_up(dev, false);
++	else
++		stmmac_mac_link_down(dev, false);
++
+ 	if (new_state && netif_msg_link(priv))
+ 		phy_print_status(phydev);
+ 
 -- 
-2.20.1
+2.7.4
 
