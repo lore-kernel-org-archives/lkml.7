@@ -2,150 +2,151 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC98EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B072020872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025162083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8V1Q9wN"
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="Bw87RAJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfFEP7G (ORCPT
+        id S1728632AbfFEP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:59:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36441 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbfFEP7F (ORCPT
+        Wed, 5 Jun 2019 11:59:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40145 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbfFEP70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:59:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so5231288pgb.3;
-        Wed, 05 Jun 2019 08:59:05 -0700 (PDT)
+        Wed, 5 Jun 2019 11:59:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r18so6485748edo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:59:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LNpmK93zAJJ5Un4fIjDsW9Sm00BMyg+B0/rMr5+eS3I=;
-        b=Z8V1Q9wNaBBgS8izidARY2/sgDSHaOj4/Czitv6F4qDQnhnb7sqjBRAaaXnFIP1iEk
-         TgQGWcMA0ELuDMVa8ssA3C0yT0Kxv2K9BEAbYX9ao1B8hJ1EQVo8c+4wZLMR7JqjfYi9
-         PHdLzxZrBLZTveZHgYpYcl4KJwgOJTCmL8YUFt8sytSx0t1xKYtxw5hrdQYFwauoGvOP
-         4vFRjOHeXu7t7pSXRcJsqxJjO92kdB58VlVC0lKCGgH7UNsFVKFCCeVhm2bt6+UFkY3A
-         tsGKM5RLX/Zcy3hpW91oMzGFVBhuxLkHmR1yrVew2tSiOi+At6lnfO1LOI6hjgv6F54I
-         WhQA==
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=kkZWtnBurY2WW6xwlUiKXDHLoZrLdW1fZdtO5engfaU=;
+        b=Bw87RAJ5p0HKEpsXo4qErsDmKQAaN6y8yw86pBg6o/vkuOse7R/LHvL5ImUlbb320W
+         +311tioqVPvKGfK948dqFLRx+9WYIE5vhpfaUCwKwSOUGn7TP0/3jPOKXg8/NCgmLnWq
+         lO2q3xSNzCXNVYVgzp3PGcQHFkpeAWOVWhI6NOdEIHyInlxShDvoMyG7MQ3Ft0l+JgXY
+         3Fl/qwfQby61nNpWtAe/pdHWdSmuinNZ68zkry6Gy90Pw5lveZHOCbhLLm6Dc97unDJz
+         fSXc5z+L+Mm4fUk+i3KKn21Mv7bQt4DRxbQT9ouhyaW32pqI8pyjibIeYwQLQ3YVMCD/
+         k6YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LNpmK93zAJJ5Un4fIjDsW9Sm00BMyg+B0/rMr5+eS3I=;
-        b=eGCN9jXnyhH13t9h7wtgmkrszusR/Vl5vyZe4RBx7vqJ6LxR2MnU/X6A5ej1a3r8V1
-         UhAu7dKbKm7Foed+KN8IeuOkVjXuusDjMb0Da2PhSXiP34z6WOQgsHmjebprWhaAjvg2
-         bTIFCliXvNzhjpnVypxPjcmlMGslOi83txyzLKJmPzJgFxdZmWRMn4vLQX5eAxeCVeCQ
-         /uBvhvWfjRL5hgMUzhp0E/Ge5iv+fHHy0g63vEGYMxox1x7Qd5Yap3JEFOKDq+15T/Kv
-         WNEesNqt+9iQm3yD75o012ZBpn/6P56l03Q6mmD60/xASrBNFK4Vx4SZZNqJQT6Qw7sO
-         RivQ==
-X-Gm-Message-State: APjAAAXqe9n+eK+/3pFLpqeHQ1/RB48xfFLJrK8zteQE5AjsBgxBHgAB
-        z0g/NrQ1K4Ik1gI7NuIiZjmbLtusu2Y+cLuL6GM=
-X-Google-Smtp-Source: APXvYqzrE24tcSHeSl0Iq6cMLIC9Q7zXjX4LH11vq0zHI8Mi3Q4o/Ftd6HoJo5XDcWPqWql761Gtdt2RKti3EFtuj8c=
-X-Received: by 2002:a63:fb05:: with SMTP id o5mr5560744pgh.203.1559750344896;
- Wed, 05 Jun 2019 08:59:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190531043347.4196-1-eduval@amazon.com> <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com> <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
- <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com> <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
-In-Reply-To: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Jun 2019 18:58:54 +0300
-Message-ID: <CAHp75VfPYC7xDfsGRZsSy8eV1xoMANsVmyuU_yF0kPG0fMtLCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive and
- queue messages
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kkZWtnBurY2WW6xwlUiKXDHLoZrLdW1fZdtO5engfaU=;
+        b=KjmYNb0uxoKq9mTqeZDXKbpsXUmUi+rOTrA7FiTlk71ggzdX/LVgqdDVH4EhL0tZuX
+         6VDC8Aqgu4TKqBj0IfXVALB3SOgMetX08ZiGfaUfUNc4r3B2StyW7+giLjsoTVGCHjUH
+         hIp3psCOeawfzeJZg56OCW5e+Ezk+yIwTn/Jw1ldDifpGKei04nLamKBXvFSw61dn3KK
+         Xy45GVINEqwXLzsqXijPwp03IDmisdnkHmy4wiJ4JHVKkB8nq4r4KQXpfhUAXtnjEhK9
+         cThemyxqOwgc/ANO0OqNnQi6OCfCrmFSdo88QJ4yMOLGDE8PLDk8aaz8ddhqymSpILTG
+         MGjQ==
+X-Gm-Message-State: APjAAAUN+KYcJYl+cLxJJ567Logx+ZcLH90Y8hPLrB3oa6fDt3NTdl2e
+        mgp7K4muhsgSTRi602wU0jSzOg==
+X-Google-Smtp-Source: APXvYqwiriYeZEuXH8SBmqwOANnYxtjwIzH0WYmgXS/PQopjYyXxO/hAO7F8m1Y2qyeucu2pmCNItQ==
+X-Received: by 2002:a17:906:2191:: with SMTP id 17mr4153542eju.280.1559750364802;
+        Wed, 05 Jun 2019 08:59:24 -0700 (PDT)
+Received: from localhost ([94.1.151.203])
+        by smtp.gmail.com with ESMTPSA id y21sm304540ejm.60.2019.06.05.08.59.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 08:59:24 -0700 (PDT)
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Date:   Wed,  5 Jun 2019 16:59:22 +0100
+Message-Id: <20190605155922.17153-1-matt@codeblueprint.co.uk>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 6:31 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
-> > On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> > > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
+SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
+for any sched domains with a NUMA distance greater than 2 hops
+(RECLAIM_DISTANCE). The idea being that it's expensive to balance
+across domains that far apart.
 
-> > > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > > > > >
-> > > > > > Wouldn't compiler warn you due to unused data?
-> > > > > > Perhaps drop of_match_ptr() for good...
-> > > > >
-> > > > > Not sure what you meant here. I dont see any compiler warning.
-> > > > > Also, of_match_ptr seams to be well spread in the kernel.
-> > > >
-> > > > If this will be compiled with CONFIG_OF=n...
-> > >
-> > > I see.. I obviously did not test with that config..
-> > >
-> > > > Though I didn't check all dependencies to see if it even possible. In
-> > > > any case of_match_ptr() is redundant in both cases here.
-> > > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> > > > CONFIG_OF, or drop the macro use.
-> > >
-> > > I will wrap it into CONFIG_OF..
-> >
-> > Would be this expected to work in the case of CONFIG_OF=n?
-> > If no, why to introduce ugly #ifdef:s and additional macros?
->
-> I do hate those too...
->
-> > Wouldn't be better to have
-> >   depends on OF || COMPILE_TEST
->
-> Well, technically, the original author had a case for using this
-> without CONFIG_OF. That is why I did not force here to be a strong
-> dependency on CONFIG_OF. So, I guess in this case the driver will
-> work properly in both cases if we:
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> +       {
-> +               .compatible = "i2c-slave-mqueue",
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
-> +#endif
-> +
-> +static struct i2c_driver i2c_slave_mqueue_driver = {
-> +       .driver = {
-> +               .name   = "i2c-slave-mqueue",
-> +               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> +       },
-> +       .probe          = i2c_slave_mqueue_probe,
-> +       .remove         = i2c_slave_mqueue_remove,
-> +       .id_table       = i2c_slave_mqueue_id,
-> +};
->
-> The above is a well stablish pattern across the drivers.
+However, as is rather unfortunately explained in
 
-My point here that you may achieve the same by simple dropping of_match_ptr().
+  commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
 
-P.S. Many of the drivers just old enough and not being simplified due
-to pointless churn there, but for new drivers we may avoid it.
+the value for RECLAIM_DISTANCE is based on node distance tables from
+2011-era hardware.
 
+Current AMD EPYC machines have the following NUMA node distances:
+
+node distances:
+node   0   1   2   3   4   5   6   7
+  0:  10  16  16  16  32  32  32  32
+  1:  16  10  16  16  32  32  32  32
+  2:  16  16  10  16  32  32  32  32
+  3:  16  16  16  10  32  32  32  32
+  4:  32  32  32  32  10  16  16  16
+  5:  32  32  32  32  16  10  16  16
+  6:  32  32  32  32  16  16  10  16
+  7:  32  32  32  32  16  16  16  10
+
+where 2 hops is 32.
+
+The result is that the scheduler fails to load balance properly across
+NUMA nodes on different sockets -- 2 hops apart.
+
+For example, pinning 16 busy threads to NUMA nodes 0 (CPUs 0-7) and 4
+(CPUs 32-39) like so,
+
+  $ numactl -C 0-7,32-39 ./spinner 16
+
+causes all threads to fork and remain on node 0 until the active
+balancer kicks in after a few seconds and forcibly moves some threads
+to node 4.
+
+Update the code in sd_init() to account for modern node distances, and
+maintaining backward-compatible behaviour by respecting
+RECLAIM_DISTANCE for distances more than 2 hops.
+
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ kernel/sched/topology.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f53f89df837d..0eea395f7c6b 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1410,7 +1410,18 @@ sd_init(struct sched_domain_topology_level *tl,
+ 
+ 		sd->flags &= ~SD_PREFER_SIBLING;
+ 		sd->flags |= SD_SERIALIZE;
+-		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE) {
++
++		/*
++		 * Strip the following flags for sched domains with a NUMA
++		 * distance greater than the historical 2-hops value
++		 * (RECLAIM_DISTANCE) and where tl->numa_level confirms it
++		 * really is more than 2 hops.
++		 *
++		 * Respecting RECLAIM_DISTANCE means we maintain
++		 * backwards-compatible behaviour.
++		 */
++		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE &&
++		    tl->numa_level > 3) {
+ 			sd->flags &= ~(SD_BALANCE_EXEC |
+ 				       SD_BALANCE_FORK |
+ 				       SD_WAKE_AFFINE);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.13.7
+
