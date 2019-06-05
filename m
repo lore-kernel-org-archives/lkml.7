@@ -2,109 +2,151 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB70C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85339C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA7420866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8ZvxiH8"
+	by mail.kernel.org (Postfix) with ESMTP id 62CCB20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfFEGCh (ORCPT
+        id S1726605AbfFEGDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:02:37 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34067 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfFEGCg (ORCPT
+        Wed, 5 Jun 2019 02:03:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40143 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFEGDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:02:36 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h2so8550260pgg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+mL4FgQ19EroXhijChjGHOiTYmNvNkGMP7gXP3vKz00=;
-        b=d8ZvxiH89al4I/4f5vPjsl6RJCAYuBwyr5JZ86FJPZePkQ9Ev2NOSlwuv3X66y/Z4D
-         q/B05M4hwLcOu9pDU6heJbhMtQvWUr/2vdCxtp0DhHcfYmxse5+gHlic6msQL3HiA67c
-         beApp4NKO1NfGHj+p2P+yLS8IVF3dHavOE2fPO8TuwbbdCzanev+M2ehx/kiTWjgDbGS
-         c2zxtr9M8BPnA4tzU81hgiHhp6oquEpttG7B3NxRng1Vwz1NZK77vTKlPhMsgFTKEoWC
-         +9ma7/4q7NrrIhyY2pJ+E+zgExMUrRzbJnrOhorpSulak1udo/aReyAYc8MsXpr1AtQ6
-         3oJw==
+        Wed, 5 Jun 2019 02:03:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so13273301wre.7;
+        Tue, 04 Jun 2019 23:03:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+mL4FgQ19EroXhijChjGHOiTYmNvNkGMP7gXP3vKz00=;
-        b=l4b0ARbzjYDYfn49pGvCzV+EtonLf4r2UT6eS+m0w1pGGfG+ZyBul6HQqPHUYo6f3U
-         xl38WF5yPFIdhofxXQdQ3jnYzKFZEBFErl1va92/FQFajI7m15HFHvxzjMlMDqMpXEIs
-         irdwenqE0e24j8wOduNOPKaSmOfa+HeeB0RjKUWWaNnTBU50qAFYhXpY6iQr9unMf2ga
-         Cj3oV9VPE+M2IVCbigXx8gRzWRpFQXdE1Okse9nvI94+2169WTE1n8gIVoKuJvlBklsh
-         T/X+kjnL0Fs90E28HYgCmJW8EZw8VqSGPcAzeSra+bLcvsdXRyReQP22oEDhpyK5H2dJ
-         n2fA==
-X-Gm-Message-State: APjAAAVX5iR2ru7IRrlOHoB4RYnLcv7TTbSNYRmO16Cme5+gVEmkivhx
-        1hUN2ZLlKF59Hi4XzlCPT3Y=
-X-Google-Smtp-Source: APXvYqwOzv0XDxxLIsCmIFRx2hA1nEXey9WmOKU0t6xsnmkEzGTrpoAGAeqHpapGRiSK90VIqiHW1A==
-X-Received: by 2002:a63:fe51:: with SMTP id x17mr2094853pgj.339.1559714556080;
-        Tue, 04 Jun 2019 23:02:36 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
-        by smtp.gmail.com with ESMTPSA id u184sm871872pfb.32.2019.06.04.23.02.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 23:02:35 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 11:32:29 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     akpm@linux-foundation.org, vbabka@suse.cz, mhocko@suse.com,
-        rientjes@google.com
-Cc:     khalid.aziz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: Remove VM_BUG_ON in __alloc_pages_node
-Message-ID: <20190605060229.GA9468@bharath12345-Inspiron-5559>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kmi7s/cfadEQaPuszzFg2P7DZ7ZEaobVt6Q8JtUSPhA=;
+        b=spFbJqhYCz+c6JyzyFM08M14I2mVBwvWs8x5NMj6HOIKHn7IB39Ly1zDUcrezHY9ls
+         DVYH9M2V87YMtXSnKEvrkQmo/ZX4Tr6cNtKhsDlCWTfYnP0/UTeNYUHLMgozKxptqUKJ
+         uJD8zqsL60JiC5pBXW92JmIi1s0wKI4511ltI6x+4HKG63TdSpQJVn4QuHtL8sbEzNPs
+         yg8X0s1YcSeHwmdyor6wgecMRAhtgr4QFE93XakTGePtvxotccZL5IZEo6H4iULuIxSa
+         lfPgz2l05ed/n6D0WvWBIKntohl75fNpFBADpxvhG/FjCNw2XQ+NK+jLPGHbin7lIuhC
+         +vIw==
+X-Gm-Message-State: APjAAAUsLJhKBc6GznoArY8pRQkoa5Vcn2GWflGxzzF/8pL4YRuwCnBQ
+        dsSB+NoycXO7/ShfWhqSdGndTa9k
+X-Google-Smtp-Source: APXvYqwdIzguPpm1CTWizrwfCtGYFPjAAS2cF4w/4qNA7DBbYHtADvd9DLvrI/JDJ8Kvb/hZ1Vpp7w==
+X-Received: by 2002:a5d:684c:: with SMTP id o12mr10280599wrw.305.1559714622475;
+        Tue, 04 Jun 2019 23:03:42 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id n4sm17590227wrp.61.2019.06.04.23.03.41
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 23:03:41 -0700 (PDT)
+Subject: Re: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
+To:     Gen Zhang <blackgod016574@gmail.com>, kvalo@codeaurora.org,
+        eyalreizer@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190523144425.GA26766@zhanggen-UX430UQ>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
+ IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
+ Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
+ duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
+ 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
+ wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
+ LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
+ 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
+ zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
+ 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
+ +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
+ al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
+ 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
+ K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
+ SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
+ Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
+ 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
+ t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
+ T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
+ rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
+ XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
+ B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
+ AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
+ DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
+ qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
+ ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
+ XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
+ c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
+ ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
+ 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
+ VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
+ sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
+Message-ID: <c09bbf1a-61eb-0ead-99ac-f92498a547a5@suse.cz>
+Date:   Wed, 5 Jun 2019 08:03:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190523144425.GA26766@zhanggen-UX430UQ>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In __alloc_pages_node, there is a VM_BUG_ON on the condition (nid < 0 ||
-nid >= MAX_NUMNODES). Remove this VM_BUG_ON and add a VM_WARN_ON, if the
-condition fails and fail the allocation if an invalid NUMA node id is
-passed to __alloc_pages_node.
+On 23. 05. 19, 16:44, Gen Zhang wrote:
+> In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+> when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+> and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+> platform_device_alloc() returns NULL, we should also free 'pdev_data'
+> and 'glue' before wl1271_probe() ends to prevent leaking memory.
+> 
+> Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
+> should free 'pdev_data' and 'glue' when 'ret' is error.
+> 
+> Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
+> function normally ends to prevent memory leaking.
+> 
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> ---
+> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+> index 4d4b0770..232ce5f 100644
+> --- a/drivers/net/wireless/ti/wlcore/sdio.c
+> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
+...
+> @@ -380,11 +382,20 @@ static int wl1271_probe(struct sdio_func *func,
+>  		dev_err(glue->dev, "can't add platform device\n");
+>  		goto out_dev_put;
+>  	}
+> +	platform_device_put(glue->core);
+> +	devm_kfree(&func->dev, glue);
+> +	devm_kfree(&func->dev, pdev_data);
+>  	return 0;
+>  
+>  out_dev_put:
+>  	platform_device_put(glue->core);
+>  
+> +out_free2:
+> +	devm_kfree(&func->dev, glue);
+> +
+> +out_free1:
+> +	devm_kfree(&func->dev, pdev_data);
 
-The check (nid < 0 || nid >= MAX_NUMNODES) also considers NUMA_NO_NODE
-as an invalid nid, but the caller of __alloc_pages_node is assumed to
-have checked for the case where nid == NUMA_NO_NODE.
+Are you aware of purpose of devm allocations?
 
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
- include/linux/gfp.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 5f5e25f..075bdaf 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -480,7 +480,11 @@ __alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
- static inline struct page *
- __alloc_pages_node(int nid, gfp_t gfp_mask, unsigned int order)
- {
--	VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES);
-+	if (nid < 0 || nid >= MAX_NUMNODES) {
-+		VM_WARN_ON(nid < 0 || nid >= MAX_NUMNODES);
-+		return NULL; 
-+	}
-+
- 	VM_WARN_ON((gfp_mask & __GFP_THISNODE) && !node_online(nid));
- 
- 	return __alloc_pages(gfp_mask, order, nid);
+thanks,
 -- 
-2.7.4
-
+js
+suse labs
