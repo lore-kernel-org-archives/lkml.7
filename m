@@ -2,113 +2,94 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB02C28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E17C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759D420870
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559742804;
-	bh=VmLA6dBSZQkAmQ1W0NWcX5E2+jsnX99FdnZ5Ue+tlcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rWHwm2+1O3r7I+ctppq+Krcs1Bb/gA7jQ1Utozf6qw76Wa8m1Xwx+v2Revd5LCHDN
-	 7W3vXgzXFNEXLHF2uzDa3rSxT0nt2rbfXLHoCRCIew4+WIr/VK+ZK/qTCuY48B6LAg
-	 VjB2Iu5IG7hJJovhduf5fblOicRBkXPnWvHsH150=
+	by mail.kernel.org (Postfix) with ESMTP id 75A5B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 13:54:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o673s0q9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfFENxX (ORCPT
+        id S1728193AbfFENyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 09:53:23 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]:42601 "EHLO
-        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfFENxX (ORCPT
+        Wed, 5 Jun 2019 09:54:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41689 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFENyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:53:23 -0400
-Received: by mail-qk1-f169.google.com with SMTP id b18so5152484qkc.9;
-        Wed, 05 Jun 2019 06:53:22 -0700 (PDT)
+        Wed, 5 Jun 2019 09:54:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so19572852wrm.8;
+        Wed, 05 Jun 2019 06:54:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FETSS3J4eD7K515d8ScmcKfF1wyotHso7dwlnNKYVC8=;
-        b=O84ji0lXN+RqkutIEaEyEEqQXcFVzeG64E5D+IGzwBJcDRXFIhtWb80kt89787ERae
-         SVgqIrHUOdqzFOWmqqrmY63CyKPgJHTijErg98dUmfPqYT4f200Pa3v2DHmAPP/DgulF
-         7nlCPUR8C5qMCx8d5XN1RqshszE7/VRzXBHkrkM8ioHtBsYqvXGLKiUWOF8TgpJfByAC
-         WxpTcx4EhwfLIK2ozup8V4g1ahyLKPG66YNnH3iOR2HOqHPyAVljLcZGRtEvSJDYYBBK
-         ph5a0gf262q4Ydh7OMHdU6YtIKKeID7muJi8gChJSfg446PN8vB787GwyVShso3Jk9H1
-         cbxQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=1Kpp3N9TCra6dfSaYm7bsRqEqwflkRsTfjv3dARv+9E=;
+        b=o673s0q9P/HJY2a3F5pyFquBsvQpq/nhso43cjvZdJx8HpT3qldz4AE5r9Yyenr0kM
+         yMnj/NDBZSz3Vd0wabkBW8hic/3cd48wt+yVUwEsxLkYXjoneN9dmE0rdTO6s8VnZg6z
+         mo49Ry3WxTPPjrnjJdx9oBo04xlHbyNUXVixY8y5+Z0nyuNE57a1k+V+nHtEOzMhoZzG
+         48IAJAIkZXsm8Nd3/g3Hom/zw7U9/X2aIrbS4lXpnBzoUP/lzNvSHd1PQug3XeDh1Bbl
+         nphStXkWJEoVqJo8tO58q26HPTgbYxqqgNBceSdNS1h9kR7USIu33HLSUn5E8trZ9YbS
+         NvWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FETSS3J4eD7K515d8ScmcKfF1wyotHso7dwlnNKYVC8=;
-        b=r0mbxdxC2c6ZsvXW2vmZr/cms3LF83TmsVzYAIQCT0jOVQBlzXPAZ+tMQwmmrod10H
-         INY/Ywkv3GhnngHsfYJzxvKP02D8bvNbj+ML28ob31ysBBXuJpKtu9XOlpDku5A7v2J/
-         OcDjqxH3sEYkD7CVIgSbN21CBNAFgM1C+5q4gM+z7VHgM+rh05bmZP6fq2MMTka8cSyD
-         XblTl4a2iJH+HGrCDqePHWN3cz/60amfZXn+u1ehh7FTjOSt5FNB2v7xsY/r0x60k3yL
-         B+ZmZg9Wqt4t+A+YoH0XUtZs4uDIl6Y6J8mJ+x8Futyq9zudKcsOQuVDjiLWoKMcPpxQ
-         qBHA==
-X-Gm-Message-State: APjAAAWPmgi/9fDw7PEutsI8qYpCuuUSVTvqzracNoy7Z1+0V2J0euUl
-        KWkf7dnfxuuyP0Ei3EWHkU8=
-X-Google-Smtp-Source: APXvYqzgbDsZ1PJ/Ceon86CDXM/qpmDYa498SwcV19QGw1THKkkoAkdv6IOc/u1X7CTxkAGOqabeTg==
-X-Received: by 2002:a37:9ece:: with SMTP id h197mr14387983qke.50.1559742802150;
-        Wed, 05 Jun 2019 06:53:22 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c027])
-        by smtp.gmail.com with ESMTPSA id l3sm10177469qkd.49.2019.06.05.06.53.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1Kpp3N9TCra6dfSaYm7bsRqEqwflkRsTfjv3dARv+9E=;
+        b=CSt6tnsGm7m7wak7U98DDMs5A85QJLEDqsvE6Vt97KT+vMgdnCZZZM3/l8M3eszpRn
+         OoNPGfkmxejIL2D8PkNhLi6Vxu8p5bsqzR5CrY40DEYaQ9eNgQXvP1AHV02SebNC3qY1
+         u7/kcer57RJDRLrxhhDJPAZ1QEDIUcaABLTCMFdCFP1y2OjdrSUUPQ7l34uDCQiEAzfG
+         hke70AYXNZvwQekeeyWK6JtwI84sFMvpkxAoQuCKeAeF39fdHJeXwEn7dhrr9yxmG6fa
+         +4enZ/45aYy3vmijRPZmoW5jO8F718vOLQUNWB67v362K3Upcs3H4Hyp2XCRUwBwBQ0i
+         xxhA==
+X-Gm-Message-State: APjAAAV/Mjfrovu5XhDU8mLM9j/vySQnd/HBci9o6cDcP34nAtPRzP9C
+        OBa9NqYdT94t0SpEwFKZcn0=
+X-Google-Smtp-Source: APXvYqydDPbAyAPz1moz/V7X8sI8A9+bJPkFjrETW0BldN394E9p2BhRgAAGN5X1dOXMSHvYHoIFag==
+X-Received: by 2002:adf:f946:: with SMTP id q6mr4724343wrr.109.1559742842563;
+        Wed, 05 Jun 2019 06:54:02 -0700 (PDT)
+Received: from localhost.localdomain (host228-128-static.243-194-b.business.telecomitalia.it. [194.243.128.228])
+        by smtp.googlemail.com with ESMTPSA id h21sm17859037wmb.47.2019.06.05.06.54.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 06:53:21 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 06:53:19 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     hannes@cmpxchg.org, jiangshanlai@gmail.com, lizefan@huawei.com,
-        bsd@redhat.com, dan.j.williams@intel.com, dave.hansen@intel.com,
-        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
-        steven.sistare@oracle.com, tglx@linutronix.de,
-        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
-Message-ID: <20190605135319.GK374014@devbig004.ftw2.facebook.com>
-References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Wed, 05 Jun 2019 06:54:02 -0700 (PDT)
+From:   Valerio Genovese <valerio.click@gmail.com>
+To:     isdn@linux-pingi.de, gregkh@linuxfoundation.org
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Valerio Genovese <valerio.click@gmail.com>
+Subject: [PATCH] staging: isdn: hysdn: fix symbol 'hysdn_proc_entry' was not declared.
+Date:   Wed,  5 Jun 2019 15:53:49 +0200
+Message-Id: <20190605135349.6840-1-valerio.click@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Daniel.
+This was reported by sparse:
+drivers/staging/isdn/hysdn/hysdn_procconf.c:352:23: warning: symbol 'hysdn_proc_entry' was not declared. Should it be static?
 
-On Wed, Jun 05, 2019 at 09:36:45AM -0400, Daniel Jordan wrote:
-> My use case for this work is kernel multithreading, the series formerly known
-> as ktask[2] that I'm now trying to combine with padata according to feedback
-> from the last post.  Helper threads in a multithreaded job may consume lots of
-> resources that aren't properly accounted to the cgroup of the task that started
-> the job.
+Signed-off-by: Valerio Genovese <valerio.click@gmail.com>
+---
+ drivers/staging/isdn/hysdn/hysdn_defs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Can you please go into more details on the use cases?
-
-For memory and io, we're generally going for remote charging, where a
-kthread explicitly says who the specific io or allocation is for,
-combined with selective back-charging, where the resource is charged
-and consumed unconditionally even if that would put the usage above
-the current limits temporarily.  From what I've been seeing recently,
-combination of the two give us really good control quality without
-being too invasive across the stack.
-
-CPU doesn't have a backcharging mechanism yet and depending on the use
-case, we *might* need to put kthreads in different cgroups.  However,
-such use cases might not be that abundant and there may be gotaches
-which require them to be force-executed and back-charged (e.g. fs
-compression from global reclaim).
-
-Thanks.
-
+diff --git a/drivers/staging/isdn/hysdn/hysdn_defs.h b/drivers/staging/isdn/hysdn/hysdn_defs.h
+index cdac46a21692..a651686b1787 100644
+--- a/drivers/staging/isdn/hysdn/hysdn_defs.h
++++ b/drivers/staging/isdn/hysdn/hysdn_defs.h
+@@ -221,7 +221,7 @@ typedef struct hycapictrl_info hycapictrl_info;
+ /* exported vars */
+ /*****************/
+ extern hysdn_card *card_root;	/* pointer to first card */
+-
++extern struct proc_dir_entry *hysdn_proc_entry; /* hysdn subdir in /proc/net
+ 
+ 
+ /*************************/
 -- 
-tejun
+2.17.1
+
