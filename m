@@ -2,266 +2,223 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC02C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33035C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BBD206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aU0laK5m"
+	by mail.kernel.org (Postfix) with ESMTP id 04C05206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfFEK4e (ORCPT
+        id S1727280AbfFEK7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:56:34 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42712 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEK4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:56:34 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s184so6829089oie.9;
-        Wed, 05 Jun 2019 03:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UitpZkq4NAYEkPuSk5JVXv2jvPJzGCS3S2Czf95ERP0=;
-        b=aU0laK5mJhXzqlrKdeEmun/nyOR3MFIs8LU/KeMA1EEhXlmY1EiOo2WjVEdXNvqd9D
-         sGCKfeACNPSRSPrTFJ4kAo4Rdlvu9c5sdfv7GoXU5I55+ike/lfrCcU3G2ZcHUiiU/eY
-         KGlbK8EDCYwCCBw4cYA71KNxbaYhIEAu5An/MEWKs9kAcepkC1aUxuYDfxVUV47SjE6Z
-         EBQ16s5RYUvrPFNVEHKh8Fdqdy7D0A9muTIPhupM54W5BAtRJh2Z8eNjE+WtLIdQP25Y
-         GZqq/8StXafuFUSfDs3mlwVxfWhn0mUcvIwHO9nIkBNdikyYV9+D1ZGXuoQN20BDNmxK
-         2Uag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UitpZkq4NAYEkPuSk5JVXv2jvPJzGCS3S2Czf95ERP0=;
-        b=mhRhhqML7vrLY55Agfp7uGXdc3YUD/zZgd6K7qdZYaskRhPP2ZuU42Cl0SagBHOHSl
-         1BiQRHwPcUU6g91ocAUG0aIWVBNPj9Mhl6FOsCyaeS5cC++TIivbixqqXDdDo8J1uF0Y
-         is8V2mmTGkWRdAboQHFIfdQ4py9ff8iTLh42XQJHu3EDyKvx0UFjHoACGGlb5YWDmsze
-         kPYnePkXZaOyhI7asJuwXB/7RxfCq5t6jiOQPFbrIs+uUX3WbNFJq6e3o4eUhyeK2V8R
-         Jhee4DP3gtVo80OyvGDSXEa1XnW3SEhunfVBdel4IpbQuTzG3TlPE6f1oukTBwodcdgn
-         FubA==
-X-Gm-Message-State: APjAAAWm90Vbt0MwhEyKpq1KwMpX716p31gQgZoHaeivyFDatMWgqj3d
-        7LK/R4k7QgIwwsB6wZIul1ajwNiQP71cNj8RYac=
-X-Google-Smtp-Source: APXvYqzRUo/s3TX6dlNif/a2CHEqvkm6rp6qIbtOQxbYI4Qm8SnkTg4BAOfsBFqzCJq7srW22CVfIcEGATOIkbxifKU=
-X-Received: by 2002:aca:3305:: with SMTP id z5mr7915698oiz.141.1559732193618;
- Wed, 05 Jun 2019 03:56:33 -0700 (PDT)
+        Wed, 5 Jun 2019 06:59:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45266 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfFEK7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:59:05 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AADEE882FD;
+        Wed,  5 Jun 2019 10:58:54 +0000 (UTC)
+Received: from [10.36.118.48] (unknown [10.36.118.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 202DB600CC;
+        Wed,  5 Jun 2019 10:58:46 +0000 (UTC)
+Subject: Re: [PATCH v3 07/11] mm/memory_hotplug: Create memory block devices
+ after arch_add_memory()
+From:   David Hildenbrand <david@redhat.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-8-david@redhat.com>
+ <20190604214234.ltwtkcdoju2gxisx@master>
+ <f6523d67-cac9-1189-884a-67b6829320ba@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <9a1d282f-8dd9-a48b-cc96-f9afaa435c62@redhat.com>
+Date:   Wed, 5 Jun 2019 12:58:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-2-git-send-email-wanpengli@tencent.com> <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
-In-Reply-To: <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 5 Jun 2019 18:56:59 +0800
-Message-ID: <CANRm+CxHXEg15FK9AOaNinWgwGpTuSt=xDzw+PJO6xGgX+9MWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
- msr read intercepts
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f6523d67-cac9-1189-884a-67b6829320ba@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 05 Jun 2019 10:59:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 00:53, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 21/05/19 08:06, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Allow guest reads CORE cstate when exposing host CPU power management c=
-apabilities
-> > to the guest. PKG cstate is restricted to avoid a guest to get the whol=
-e package
-> > information in multi-tenant scenario.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Liran Alon <liran.alon@oracle.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * use a separate bit for KVM_CAP_X86_DISABLE_EXITS
-> >
-> >  Documentation/virtual/kvm/api.txt | 1 +
-> >  arch/x86/include/asm/kvm_host.h   | 1 +
-> >  arch/x86/kvm/vmx/vmx.c            | 6 ++++++
-> >  arch/x86/kvm/x86.c                | 5 ++++-
-> >  arch/x86/kvm/x86.h                | 5 +++++
-> >  include/uapi/linux/kvm.h          | 4 +++-
-> >  tools/include/uapi/linux/kvm.h    | 4 +++-
-> >  7 files changed, 23 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/=
-kvm/api.txt
-> > index 33cd92d..91fd86f 100644
-> > --- a/Documentation/virtual/kvm/api.txt
-> > +++ b/Documentation/virtual/kvm/api.txt
-> > @@ -4894,6 +4894,7 @@ Valid bits in args[0] are
-> >  #define KVM_X86_DISABLE_EXITS_MWAIT            (1 << 0)
-> >  #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-> >  #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-> > +#define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-> >
-> >  Enabling this capability on a VM provides userspace with a way to no
-> >  longer intercept some instructions for improved latency in some
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
-_host.h
-> > index d5457c7..1ce8289 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -882,6 +882,7 @@ struct kvm_arch {
-> >       bool mwait_in_guest;
-> >       bool hlt_in_guest;
-> >       bool pause_in_guest;
-> > +     bool cstate_in_guest;
-> >
-> >       unsigned long irq_sources_bitmap;
-> >       s64 kvmclock_offset;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 0861c71..da24f18 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6637,6 +6637,12 @@ static struct kvm_vcpu *vmx_create_vcpu(struct k=
-vm *kvm, unsigned int id)
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, M=
-SR_TYPE_RW);
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, =
-MSR_TYPE_RW);
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, =
-MSR_TYPE_RW);
-> > +     if (kvm_cstate_in_guest(kvm)) {
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES=
-, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RES=
-IDENCY, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RES=
-IDENCY, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RES=
-IDENCY, MSR_TYPE_R);
->
-> I think I have changed my mind on the implementation of this, sorry.
->
-> 1) We should emulate these MSRs always, otherwise the guest API changes
-> between different values of KVM_CAP_X86_DISABLE_EXITS which is not
-> intended.  Also, KVM_CAP_X86_DISABLE_EXITS does not prevent live
-> migration, so it should be possible to set the MSRs in the host to
-> change the delta between the host and guest values.
->
-> 2) If both KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are
-> disabled (i.e. exit happens), the MSRs will be purely emulated.
-> C3/C6/C7 residency will never increase (it will remain the value that is
-> set by the host).  When the VM executes an hlt vmexit, it should save
-> the current TSC.  When it comes back, the C1 residency MSR should be
-> increased by the time that has passed.
->
-> 3) If KVM_X86_DISABLE_EXITS_HLT is enabled but
-> KVM_X86_DISABLE_EXITS_MWAIT is disabled (i.e. mait exits happen),
-> C3/C6/C7 residency will also never increase, but the C1 residency value
-> should be read using rdmsr from the host, with a delta added from the
-> host value.
->
-> 4) If KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are both
-> disabled (i.e. mwait exits do not happen), all four residency values
-> should be read using rdmsr from the host, with a delta added from the
-> host value.
->
-> 5) If KVM_X86_DISABLE_EXITS_HLT is disabled and
-> KVM_X86_DISABLE_EXITS_MWAIT is enabled, the configuration makes no sense
-> so it's okay not to be very optimized.  In this case, the residency
-> value should be read as in (4), but hlt vmexits will be accounted as in
-> (2) so we need to be careful not to double-count the residency during
-> hlt.  This means doing four rdmsr before the beginning of the hlt vmexit
-> and four at the end of the hlt vmexit.
+On 05.06.19 10:58, David Hildenbrand wrote:
+>>> /*
+>>>  * For now, we have a linear search to go find the appropriate
+>>>  * memory_block corresponding to a particular phys_index. If
+>>> @@ -658,6 +670,11 @@ static int init_memory_block(struct memory_block **memory, int block_id,
+>>> 	unsigned long start_pfn;
+>>> 	int ret = 0;
+>>>
+>>> +	mem = find_memory_block_by_id(block_id, NULL);
+>>> +	if (mem) {
+>>> +		put_device(&mem->dev);
+>>> +		return -EEXIST;
+>>> +	}
+>>
+>> find_memory_block_by_id() is not that close to the main idea in this patch.
+>> Would it be better to split this part?
+> 
+> I played with that but didn't like the temporary results (e.g. having to
+> export find_memory_block_by_id()). I'll stick to this for now.
+> 
+>>
+>>> 	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+>>> 	if (!mem)
+>>> 		return -ENOMEM;
+>>> @@ -699,44 +716,53 @@ static int add_memory_block(int base_section_nr)
+>>> 	return 0;
+>>> }
+>>>
+>>> +static void unregister_memory(struct memory_block *memory)
+>>> +{
+>>> +	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+>>> +		return;
+>>> +
+>>> +	/* drop the ref. we got via find_memory_block() */
+>>> +	put_device(&memory->dev);
+>>> +	device_unregister(&memory->dev);
+>>> +}
+>>> +
+>>> /*
+>>> - * need an interface for the VM to add new memory regions,
+>>> - * but without onlining it.
+>>> + * Create memory block devices for the given memory area. Start and size
+>>> + * have to be aligned to memory block granularity. Memory block devices
+>>> + * will be initialized as offline.
+>>>  */
+>>> -int hotplug_memory_register(int nid, struct mem_section *section)
+>>> +int create_memory_block_devices(unsigned long start, unsigned long size)
+>>> {
+>>> -	int block_id = base_memory_block_id(__section_nr(section));
+>>> -	int ret = 0;
+>>> +	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
+>>> +	int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
+>>> 	struct memory_block *mem;
+>>> +	unsigned long block_id;
+>>> +	int ret = 0;
+>>>
+>>> -	mutex_lock(&mem_sysfs_mutex);
+>>> +	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
+>>> +			 !IS_ALIGNED(size, memory_block_size_bytes())))
+>>> +		return -EINVAL;
+>>>
+>>> -	mem = find_memory_block(section);
+>>> -	if (mem) {
+>>> -		mem->section_count++;
+>>> -		put_device(&mem->dev);
+>>> -	} else {
+>>> +	mutex_lock(&mem_sysfs_mutex);
+>>> +	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+>>> 		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
+>>> 		if (ret)
+>>> -			goto out;
+>>> -		mem->section_count++;
+>>> +			break;
+>>> +		mem->section_count = sections_per_block;
+>>> +	}
+>>> +	if (ret) {
+>>> +		end_block_id = block_id;
+>>> +		for (block_id = start_block_id; block_id != end_block_id;
+>>> +		     block_id++) {
+>>> +			mem = find_memory_block_by_id(block_id, NULL);
+>>> +			mem->section_count = 0;
+>>> +			unregister_memory(mem);
+>>> +		}
+>>> 	}
+>>
+>> Would it be better to do this in reverse order?
+>>
+>> And unregister_memory() would free mem, so it is still necessary to set
+>> section_count to 0?
+> 
+> 1. I kept the existing behavior (setting it to 0) for now. I am planning
+> to eventually remove the section count completely (it could be
+> beneficial to detect removing of partially populated memory blocks).
 
-I will have a try, thanks Paolo! :)
+Correction: We already use it to block offlining of partially populated
+memory blocks \o/
 
-Regards,
-Wanpeng Li
+> 
+> 2. Reverse order: We would have to start with "block_id - 1", I don't
+> like that better.
+> 
+> Thanks for having a look!
+> 
 
->
-> Therefore the data structure should be something like
->
-> struct kvm_residency_msr {
->         u64 value;
->         bool delta_from_host;
->         bool count_with_host;
-> }
->
-> u64 kvm_residency_read_host(struct kvm_residency_msr *msr)
-> {
->         u64 unscaled_value =3D rdmsrl(msr->index);
->         // apply TSC scaling...
->         return ...
-> }
->
-> u64 kvm_residency_read(struct kvm_residency_msr *msr)
-> {
->         return msr->value +
->                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
-;
-> }
->
-> void kvm_residency_write(struct kvm_residency_msr *msr,
->                          u64 value)
-> {
->         msr->value =3D value -
->                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
-;
-> }
->
-> // count_with_host is true for C1 iff any of KVM_CAP_DISABLE_EXITS_HLT
-> // or KVM_CAP_DISABLE_EXITS_MWAIT is set
-> // count_with_host is true for C3/C6/C7 iff KVM_CAP_DISABLE_EXITS_MWAIT
-> is set
-> void kvm_residency_setup(struct kvm_residency_msr *msr, u16 index,
->                          bool count_with_host)
-> {
->         /* Preserve value on calls after the first */
->         u64 value =3D msr->index ? kvm_residency_read(msr) : 0;
->         msr->delta_from_host =3D msr->count_with_host =3D count_with_host=
-;
->         msr->index =3D index;
->         kvm_residency_write(msr, value);
-> }
->
-> // The following functions are called from hlt vmexits.
->
-> void kvm_residency_start_hlt(struct kvm_residency_msr *msr)
-> {
->         if (msr->count_with_host) {
->                 WARN_ON(msr->delta_from_host);
->                 msr->value +=3D kvm_residency_read_host(msr);
->                 msr->delta_from_host =3D false;
->         }
-> }
->
-> // host_tsc_waited is 0 except for MSR_CORE_C1_RES
-> void kvm_residency_end_hlt(struct kvm_residency_msr *msr,
->                            u64 host_tsc_waited)
-> {
->         if (msr->count_with_host) {
->                 WARN_ON(!msr->delta_from_host);
->                 msr->value -=3D kvm_residency_read_host(msr);
->                 msr->delta_from_host =3D true;
->         }
->         if (host_tsc_waited) {
->                 // ... apply TSC scaling to host_tsc_waited ...
->                 msr->value +=3D ...;
->         }
-> }
->
-> Thanks,
->
-> Paolo
+
+-- 
+
+Thanks,
+
+David / dhildenb
