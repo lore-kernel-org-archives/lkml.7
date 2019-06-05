@@ -2,115 +2,150 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56548C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8919620874
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351DD20883
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVvw4L2T"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="cf3XUuHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFERri (ORCPT
+        id S1726663AbfFERrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:47:38 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55954 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfFERri (ORCPT
+        Wed, 5 Jun 2019 13:47:46 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35175 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfFERrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:47:38 -0400
-Received: by mail-it1-f194.google.com with SMTP id i21so4814804ita.5;
-        Wed, 05 Jun 2019 10:47:37 -0700 (PDT)
+        Wed, 5 Jun 2019 13:47:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so9954599plo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 10:47:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qfpNMs0qBdZunrudW5P8w9zGiTn2bNjLPMUaDAOngOU=;
-        b=HVvw4L2TsO9UjjSdDA8eu7X54+P/JDP8YBeUbQ0yebOV2wR4NyeF2OQrrbr47SfJju
-         g4vEN9Lc0d7E9Bok6ZSSxYoscWdjXGy/v+X0tyuUG4GAjchlx7RICUsHlGHXpCZLspwb
-         o9lfNVsPZypxhh4Jf5ZvKcBSJKPZ55vPB3rO1Ch7/FTjBm+h4XgweOFsst6w6yw8J/yk
-         HF4BiZK+P9hpNqWSZQHDjpSgU2l9BYy/zRDefAImPIH+uo14Of4AJRoAU0w6YcATTrs/
-         3I6uo2/dO6ZKN+QG06chHXPV4PCJqh3bYsnplDZb2++Ibbf82iwviMDSZQcX+6hSPwYk
-         FpdQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ucWCwvVe2E+kF3/9x6UVXNkpj7I7/le1K1pgNhk52Wk=;
+        b=cf3XUuHjKnHDuygJqjMW4Pvrkp+iI7+WKpuoF1XIiqVZ/JZIMrgy/fr1+gwTrAofLn
+         CX6r2s6VgOW6isGJKyiBor2PZnfFJ9+BAp5NdIODNc7nnjGeZ09Mj7MlcmSipAQFLVfj
+         efi8muYh128r8+vJ4Mr5uIb/vSIkMb9/unG5pImxhBdc5q3Ot98iiTMu30NyguBu8HUz
+         KW8dYB3SXzEjR6PRAmSUsJf9kDhvzhHxAE4YYxNmrXZNHNC1S/W7DeZjazTy9MPhGthd
+         PlFQOII6yqr++UZFL2of8Ou9W30d7C884SKj0l16pU68VVzNBaZ1F8hOpyOrwAx+WHOv
+         5emQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qfpNMs0qBdZunrudW5P8w9zGiTn2bNjLPMUaDAOngOU=;
-        b=d4OhyAdA80869JChxUxc1qbLEqVOJeKoaTzXzQ2dLoy6hqTzk4vepxwaIa91wf6mZb
-         wPuXHU3e1CXVUZjnT/kMoG0TLRMi5kKPfaXjXaz1zABMexNPGGlRgbOMa7AHdRo/5Ndh
-         Wc/GL82Q3EaHy5LSWV0RNMiY3NGeSXNILdlOK09pqnHRfhSo3VTuNc9k4f5SXrS6jhlQ
-         B1x0oGvsF+d+xy8lpoW4vpyywZlKv8x7BqIkXDLLqjrxlLGq+4OaTJWvGREFm1Y2wu/G
-         PB74bpNMjzmHr9zFukbRZhspxxrFHECYMygFZyjxuHUUrLWSZIphPILmdOiXvXoQoXDE
-         2/tQ==
-X-Gm-Message-State: APjAAAUv2cAlGIMhuoedhrAeX1La4Cw4M2Kb1/kBDMueC5re59ewjKj7
-        UEoCzG6UdGVfyrkHaPqPhS1seLOxKS/XB5cgj9c=
-X-Google-Smtp-Source: APXvYqxt7DqRNjArzM8BhzTRDyq29yQ2jvADsKdaAoED/EHBfCAEeDAUuwOID6CHQCQB76ei9HH56xI+9jp5iv/c5JM=
-X-Received: by 2002:a24:c0c2:: with SMTP id u185mr13228186itf.2.1559756856877;
- Wed, 05 Jun 2019 10:47:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190605072323.21990-1-andrew.smirnov@gmail.com>
- <20190605072323.21990-3-andrew.smirnov@gmail.com> <d9d8b0c4-e9f4-5a92-3832-3449153f807d@ti.com>
-In-Reply-To: <d9d8b0c4-e9f4-5a92-3832-3449153f807d@ti.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 5 Jun 2019 10:47:25 -0700
-Message-ID: <CAHQ1cqFRVmZvcFyV93udAHEwZG8NhtM350BSm7JcchNFiqZDjA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] power: supply: ucs1002: Add HWMON interface
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ucWCwvVe2E+kF3/9x6UVXNkpj7I7/le1K1pgNhk52Wk=;
+        b=p8OgfSSIOUQ18QQ9UfwJLHURVCT7cnLf6b2XpIWWjshhUazjQjraHktlIqOFVFGknB
+         ahCIXoA6Rq1YZtu7NyQ+yndfS3nhO39T1m68UwWRzC10dMHkA1kd4WG6cwO1ztO+rPhr
+         rwz7MAJJcVk8hKffyMNAroC9f3P5B+2ilb0Yju9XvLyPhQW7Pqy5JU3hw1uDi4MgA7WA
+         mPuWYpOSaxaXS06owjeWYl0ujdVdnR+1JeIw6L8CbHOJtKvZt4AIYKZSzT05R0FUpkzB
+         dO9H6T9M1mpppNO/4TDdYry8mL4WRNnluTz+vjuMCJhGtP2LQuqtbsEboUAjebbu/Taq
+         /Fgg==
+X-Gm-Message-State: APjAAAXQv0oVRshi30F/7ln4nr04oicOR3NqZQX7uevba+iCR7yuC/ue
+        ZDXs9aMOnVQtSErM8zk3wlPCFQ==
+X-Google-Smtp-Source: APXvYqxRFHeFG//ygaQoyoax8fdsP9765j7Qc7TlC5rnDGASJj9qGVe/LEieko76+EghhpHkAScuTA==
+X-Received: by 2002:a17:902:ac82:: with SMTP id h2mr45718057plr.303.1559756865582;
+        Wed, 05 Jun 2019 10:47:45 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:31dd:a2eb:ca:4a50? ([2601:646:c200:1ef2:31dd:a2eb:ca:4a50])
+        by smtp.gmail.com with ESMTPSA id f2sm17456235pgs.83.2019.06.05.10.47.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 10:47:44 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <9a9406ba-eda4-e3ec-2100-9f7cf1d5c130@schaufler-ca.com>
+Date:   Wed, 5 Jun 2019 10:47:43 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <15CBE0B8-2797-433B-B9D7-B059FD1B9266@amacapital.net>
+References: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com> <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk> <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com> <20192.1559724094@warthog.procyon.org.uk> <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com> <CALCETrVSBwHEm-1pgBXxth07PZ0XF6FD+7E25=WbiS7jxUe83A@mail.gmail.com> <9a9406ba-eda4-e3ec-2100-9f7cf1d5c130@schaufler-ca.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 9:26 AM Andrew F. Davis <afd@ti.com> wrote:
->
-> On 6/5/19 3:23 AM, Andrey Smirnov wrote:
-> > Expose current sensors found on UCS1002 via HWMON.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > ---
-> >   drivers/power/supply/ucs1002_power.c | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
-> > index 677f20a4d76f..a4b6b37549cf 100644
-> > --- a/drivers/power/supply/ucs1002_power.c
-> > +++ b/drivers/power/supply/ucs1002_power.c
-> > @@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *client,
-> >               return ret;
-> >       }
-> >
-> > +     ret = devm_power_supply_add_hwmon_sysfs(info->charger);
->
-> Could this be added to the core power supply framework on registering so
-> all devices get this, vs each driver having to add this line?
->
 
-I'd say it is up to Sebastian to decide if this should be opt-out
-rather than opt-in. I have no objections to either approach.
+> On Jun 5, 2019, at 10:01 AM, Casey Schaufler <casey@schaufler-ca.com> wrot=
+e:
+>=20
+>> On 6/5/2019 9:04 AM, Andy Lutomirski wrote:
+>>> On Wed, Jun 5, 2019 at 7:51 AM Casey Schaufler <casey@schaufler-ca.com> w=
+rote:
+>>>> On 6/5/2019 1:41 AM, David Howells wrote:
+>>>> Casey Schaufler <casey@schaufler-ca.com> wrote:
+>>>>=20
+>>>>> I will try to explain the problem once again. If process A
+>>>>> sends a signal (writes information) to process B the kernel
+>>>>> checks that either process A has the same UID as process B
+>>>>> or that process A has privilege to override that policy.
+>>>>> Process B is passive in this access control decision, while
+>>>>> process A is active. In the event delivery case, process A
+>>>>> does something (e.g. modifies a keyring) that generates an
+>>>>> event, which is then sent to process B's event buffer.
+>>>> I think this might be the core sticking point here.  It looks like two
+>>>> different situations:
+>>>>=20
+>>>> (1) A explicitly sends event to B (eg. signalling, sendmsg, etc.)
+>>>>=20
+>>>> (2) A implicitly and unknowingly sends event to B as a side effect of s=
+ome
+>>>>     other action (eg. B has a watch for the event A did).
+>>>>=20
+>>>> The LSM treats them as the same: that is B must have MAC authorisation t=
+o send
+>>>> a message to A.
+>>> YES!
+>>>=20
+>>> Threat is about what you can do, not what you intend to do.
+>>>=20
+>>> And it would be really great if you put some thought into what
+>>> a rational model would be for UID based controls, too.
+>>>=20
+>>>> But there are problems with not sending the event:
+>>>>=20
+>>>> (1) B's internal state is then corrupt (or, at least, unknowingly inval=
+id).
+>>> Then B is a badly written program.
+>> Either I'm misunderstanding you or I strongly disagree.
+>=20
+> A program needs to be aware of the conditions under
+> which it gets event, *including the possibility that
+> it may not get an event that it's not allowed*. Do you
+> regularly write programs that go into corrupt states
+> if an open() fails? Or where read() returns less than
+> the amount of data you ask for?
 
-Thanks,
-Andrey Smirnov
+I do not regularly write programs that handle read() omitting data in the mi=
+ddle of a TCP stream.  I also don=E2=80=99t write programs that wait for pro=
+cesses to die and need to handle the case where a child is dead, waitid() ca=
+n see it, but SIGCHLD wasn=E2=80=99t sent because =E2=80=9Csecurity=E2=80=9D=
+.
+
+>=20
+>>  If B has
+>> authority to detect a certain action, and A has authority to perform
+>> that action, then refusing to notify B because B is somehow missing
+>> some special authorization to be notified by A is nuts.
+>=20
+> You are hand-waving the notion of authority. You are assuming
+> that if A can read X and B can read X that A can write B.
+
+No, read it again please. I=E2=80=99m assuming that if A can *write* X and B=
+ can read X then A can send information to B.
+
