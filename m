@@ -2,175 +2,177 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A1BC28CC3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8E5C28CC3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD412070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E22207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 00:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfFEAMI (ORCPT
+        id S1726593AbfFEAS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 20:12:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:41117 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfFEAMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 20:12:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id i7so17631501ioh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 17:12:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jgCMdX0ZEsmY8XvkNK3Jyfdn5ZUGJpEvgmM+oqBcr0g=;
-        b=nbeTCSd4mYE/kdiqQ0sPEmdoRHRaDH7rka0wTMOGfGSbb+mzaidTS8p5Zo7QvnDB4d
-         +rYrlzdkZcqns9MNy6vQH2l/mNqucOzQlDTtJeOXljVI6vcfJ0AQZuVZyItMWcjX/vnm
-         HMFPLFZnJJiMAlPeBDSNSOl1btqFZlrWbPo5XhZt6cFa+hs+yrs1C4Fxqerq404LRxYw
-         qxJs6SvL3VudZuvNvgghZ9EA7w1CZhFaPSfhehFmjiNbRbvXKuCJ4H7dIBvrZY0N5kom
-         d16un/jW+3woy6/SlAXjpVAVN24GIdqkiCc4C+2UNVt83WByMH2NisYlphPZSbn/0I81
-         tsNQ==
-X-Gm-Message-State: APjAAAWELh37WhaUkRpzvjdljX9d1LuDlYnf3oa0xvEvJeHVIN9A73Da
-        4nN5n6Rl1cJKn0r6qNHUCCJN2H36z5KBg770WC0KUmgGB1w/
-X-Google-Smtp-Source: APXvYqw8ukmx46TfaN7DnsSRAfMuScTMSkn/jtZMeHP5wDxzXSTrSTaZ1cxgD5RSWu37DUSofPSvoAMJ10+058loG/8E69D8Ob9B
+        Tue, 4 Jun 2019 20:18:59 -0400
+Received: from anholt.net ([50.246.234.109]:50678 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfFEAS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 20:18:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id F1D8510A04E7;
+        Tue,  4 Jun 2019 17:18:57 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id v6jXS3FLFHVr; Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id A54C710A288F;
+        Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id 280592FE3AAE; Tue,  4 Jun 2019 17:18:55 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mbrugger@suse.de, sboyd@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] cpufreq: add driver for Raspbery Pi
+In-Reply-To: <20190604173223.4229-5-nsaenzjulienne@suse.de>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de> <20190604173223.4229-5-nsaenzjulienne@suse.de>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
+Date:   Tue, 04 Jun 2019 17:18:54 -0700
+Message-ID: <87d0jszxxt.fsf@anholt.net>
 MIME-Version: 1.0
-X-Received: by 2002:a24:eec1:: with SMTP id b184mr25361888iti.61.1559693526866;
- Tue, 04 Jun 2019 17:12:06 -0700 (PDT)
-Date:   Tue, 04 Jun 2019 17:12:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a0a468058a88723d@google.com>
-Subject: KMSAN: uninit-value in i2c_w
-From:   syzbot <syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com>
-To:     glider@google.com, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
 
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=1514cdaaa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link: https://syzkaller.appspot.com/bug?extid=397fd082ce5143e2f67d
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e7a54aa00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ab35dea00000
+> Raspberry Pi's firmware offers and interface though which update it's
+> performance requirements. It allows us to request for specific runtime
+> frequencies, which the firmware might or might not respect, depending on
+> the firmware configuration and thermals.
+>
+> As the maximum and minimum frequencies are configurable in the firmware
+> there is no way to know in advance their values. So the Raspberry Pi
+> cpufreq driver queries them, builds an opp frequency table to then
+> launch cpufreq-dt.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>
+> Changes since RFC:
+>   - Alphabetically ordered relevant stuff
+>   - Updated Kconfig to select firmware interface
+>   - Correctly unref clk_dev after use
+>   - Remove all opps on failure
+>   - Remove use of dev_pm_opp_set_sharing_cpus()
+>
+>  drivers/cpufreq/Kconfig.arm           |  8 +++
+>  drivers/cpufreq/Makefile              |  1 +
+>  drivers/cpufreq/raspberrypi-cpufreq.c | 84 +++++++++++++++++++++++++++
+>  3 files changed, 93 insertions(+)
+>  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+>
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index f8129edc145e..556d432cc826 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
+>  	  The driver implements the cpufreq interface for this HW engine.
+>  	  Say Y if you want to support CPUFreq HW.
+>=20=20
+> +config ARM_RASPBERRYPI_CPUFREQ
+> +	tristate "Raspberry Pi cpufreq support"
+> +	select RASPBERRYPI_FIRMWARE
+> +	help
+> +	  This adds the CPUFreq driver for Raspberry Pi
+> +
+> +	  If in doubt, say N.
+> +
+>  config ARM_S3C_CPUFREQ
+>  	bool
+>  	help
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 689b26c6f949..121c1acb66c0 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.o
+>  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+=3D qcom-cpufreq-hw.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-kryo.o
+> +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+=3D raspberrypi-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
+> diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/rasp=
+berrypi-cpufreq.c
+> new file mode 100644
+> index 000000000000..2b3a195a9d37
+> --- /dev/null
+> +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Raspberry Pi cpufreq driver
+> + *
+> + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +
+> +static const struct of_device_id machines[] __initconst =3D {
+> +	{ .compatible =3D "raspberrypi,3-model-b-plus" },
+> +	{ .compatible =3D "raspberrypi,3-model-b" },
+> +	{ .compatible =3D "raspberrypi,2-model-b" },
+> +	{ /* sentinel */ }
+> +};
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com
+I think I'd skip the compatible string check here.  The firmware's
+clock-management should be well-tested by folks playing with clocking in
+the downstream tree.  There aren't any firmware differences in the
+processing of these clock management packets, to my recollection.
 
-usb 1-1: New USB device found, idVendor=06a2, idProduct=6810,  
-bcdDevice=1b.af
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: string descriptor 0 read error: -71
-gspca_main: gspca_topro-2.14.0 probing 06a2:6810
-gspca_topro: reg_w err -71
-==================================================================
-BUG: KMSAN: uninit-value in i2c_w+0xb7a/0xd70  
-drivers/media/usb/gspca/topro.c:1043
-CPU: 1 PID: 3338 Comm: kworker/1:2 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  i2c_w+0xb7a/0xd70 drivers/media/usb/gspca/topro.c:1043
-  probe_6810 drivers/media/usb/gspca/topro.c:1126 [inline]
-  sd_init+0xc05/0x7ca0 drivers/media/usb/gspca/topro.c:4081
-  gspca_dev_probe2+0xee0/0x2240 drivers/media/usb/gspca/gspca.c:1546
-  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1619
-  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:523
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+Other than that, I'm happy with the series and would give it my
+acked-by.
 
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:208 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:162
-  kmsan_kmalloc+0xa4/0x130 mm/kmsan/kmsan_hooks.c:175
-  kmem_cache_alloc_trace+0x503/0xae0 mm/slub.c:2801
-  kmalloc include/linux/slab.h:547 [inline]
-  gspca_dev_probe2+0x30c/0x2240 drivers/media/usb/gspca/gspca.c:1480
-  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1619
-  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:523
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-==================================================================
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlz3Cm4ACgkQtdYpNtH8
+nugFjg/7BW+vK+pRjIN9r/4ejWmipNwzyurktOyEn+OwCgwTSTkdlvGm/SllSKHr
+3Y4BBLmSFf3xE87lNTkLmpkryi0LyBa1NokmCo0P21QoAkKpg4ZswtA+ti6o2cuR
+oHw+cZ9o0sC3HvBFQknojZ7k/y91lROfQb/0h0FgE+9fQwpf/tfzazbSGHj8BF4x
+Qil0ZEdJaw+dRzAJCSr250SGOqdifxcswEeIjesZZeR1uIOjgm74j9gEMrHagPQq
+86Nq5RqOEe9eIUv7tADT+pFHFqQwmoWp5FSCgGxXhTraJlEf0O2bOUVWE9tXvovl
+3Zz4vcEeyzUz5QTqVHERPyN4gbeHO+6x4QoRQeq7Z7GiIJKCMX74OkoGgNAIR0gT
+N2gnGxiAcSyY8crQkfa4kdf7jCGEWLIkBHo1R2N4ee3yYZP3ncCQeL4YoJ/jv2gG
+I6q9SzydecKAkQyQZaOElK3aJAIOdnuxs3H41r6lPhjB8B+ayevWUJL5ZkyVDlCr
+Ic1HXmyvoTLZQ6/doXsnu9DFSiZj45kUjyymVpvUpoygu8KhcSIdnuuYoidNkvnv
+bpSww6H3sFRU5b5CAPBM/kC7tnxzEK4kWIgZEqP7jA0vtv/2g08k0KwaqgPQDQDa
+sBQ2QqaHMXDXVaDMFEnDFDeFDl8UwhpZqvIhiKwy7iU9LkRH/mE=
+=V302
+-----END PGP SIGNATURE-----
+--=-=-=--
