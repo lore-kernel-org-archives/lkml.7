@@ -2,112 +2,147 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11868C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFB1C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E478B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456E2206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfFEMYi (ORCPT
+        id S1727663AbfFEM1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:24:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59210 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727172AbfFEMYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:24:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C50B15A2;
-        Wed,  5 Jun 2019 05:24:37 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CAB43F246;
-        Wed,  5 Jun 2019 05:24:35 -0700 (PDT)
-Subject: Re: [PATCH 3/3] arm: arch_timer: mark functions as __always_inline
-To:     Anders Roxell <anders.roxell@linaro.org>, mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com
-References: <20190603091512.25298-1-anders.roxell@linaro.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <c347fcb8-fcc0-57b2-97ed-052b117c5e0f@arm.com>
-Date:   Wed, 5 Jun 2019 13:24:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 08:27:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727273AbfFEM1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:27:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 279BDAD2A;
+        Wed,  5 Jun 2019 12:27:28 +0000 (UTC)
+Message-ID: <8d6eb920ebcaec2ede413439a7080ae030b7e44e.camel@suse.de>
+Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
+        viresh.kumar@linaro.org, mturquette@baylibre.com,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+Date:   Wed, 05 Jun 2019 14:27:26 +0200
+In-Reply-To: <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+         <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
+         <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
+         <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-8ce50Ee7YyHn+6OQ/pXB"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-In-Reply-To: <20190603091512.25298-1-anders.roxell@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2019 10:15, Anders Roxell wrote:
-> If CONFIG_FUNCTION_GRAPH_TRACER is enabled function
-> arch_counter_get_cntvct() is marked as notrace. However, function
-> __arch_counter_get_cntvct is marked as inline. If
-> CONFIG_OPTIMIZE_INLINING is set that will make the two functions
-> tracable which they shouldn't.
-> 
-> Rework so that functions __arch_counter_get_* are marked with
-> __always_inline so they will be inlined even if CONFIG_OPTIMIZE_INLINING
-> is turned on.
-> 
-> Originally found on arm64, but doing the same thing on arm for
-> consistency.
-> 
-> Fixes: 0ea415390cd3 ("clocksource/arm_arch_timer: Use arch_timer_read_counter to access stable counters")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+--=-8ce50Ee7YyHn+6OQ/pXB
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Hi Stefan,
+
+On Wed, 2019-06-05 at 13:34 +0200, Stefan Wahren wrote:
+> Hi,
+>=20
+> Am 05.06.19 um 13:00 schrieb Nicolas Saenz Julienne:
+> > Hi Stefan,
+> > thanks for the review, I took note of your code comments.
+> >=20
+> > On Wed, 2019-06-05 at 11:46 +0200, Stefan Wahren wrote:
+> > > Hi Nicolas,
+> > >=20
+> > > Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
+> > > > Hi all,
+> > > > this series aims at adding cpufreq support to the Raspberry Pi fami=
+ly of
+> > > > boards.
+> > > >=20
+> > > > The previous revision can be found at:=20
+> > > > https://lkml.org/lkml/2019/5/20/431
+> > > >=20
+> > > > The series first factors out 'pllb' from clk-bcm2385 and creates a =
+new
+> > > > clk driver that operates it over RPi's firmware interface[1]. We ar=
+e
+> > > > forced to do so as the firmware 'owns' the pll and we're not allowe=
+d to
+> > > > change through the register interface directly as we might race wit=
+h the
+> > > > over-temperature and under-voltage protections provided by the firm=
+ware.
+> > > it would be nice to preserve such design decision in the driver as a
+> > > comment, because the cover letter usually get lost.
+> > > > Next it creates a minimal cpufreq driver that populates the CPU's o=
+pp
+> > > > table, and registers cpufreq-dt. Which is needed as the firmware
+> > > > controls the max and min frequencies available.
+> > > I tested your series on top of Linux 5.2-rc1 with multi_v7_defconfig =
+and
+> > > manually enable this drivers. During boot with Raspbian rootfs i'm
+> > > getting the following:
+> > >=20
+> > > [    1.177009] cpu cpu0: failed to get clock: -2
+> > > [    1.183643] cpufreq-dt: probe of cpufreq-dt failed with error -2
+> > This is surprising, who could be creating a platform_device for cpufreq=
+-dt
+> > apart from raspberrypi-cpufreq? Just to make things clear, you're using=
+ the
+> > device tree from v5.2-rc1 (as opposed to the Raspbian one)?
+>=20
+> sorry my fault, i thought it already has been replaced. The behavior in
+> this unexpected case is fine, since it doesn't crash.
+>=20
+> I replaced the the DTB with the mainline one, but now i'm getting this:
+>=20
+> [    4.566068] cpufreq: cpufreq_online: CPU0: Running at unlisted freq:
+> 600000 KHz
+> [    4.580690] cpu cpu0: dev_pm_opp_set_rate: Invalid target frequency 0
+> [    4.594391] cpufreq: __target_index: Failed to change cpu frequency: -=
+22
+
+Ok, this looks more more like my fault, probably an overflow error somewher=
+e. I
+saw something similar while testing it on RPI2b. Which board & config was t=
+his
+run with? Could you confirm the clk-raspberrypi.c message verifying the max=
+ and
+min frequencies showed up and was correct.
+
+Regards,
+Nicolas
+
+
+--=-8ce50Ee7YyHn+6OQ/pXB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz3tS4ACgkQlfZmHno8
+x/6IPwf5AW2cqDKMXXG6zjSDBbD14gmTvnpBPLctfKW+l06doG1g5uXw/mfkX/DI
+jOpcLFRS0GJafFskDnkmvdl10tLmCRQtmSBWfEa/HoYndHNxmy+gjLWQHJY6oUJI
+S/oigi4WK561pDhQ9Ey6ooq21zLypgRFpoYElG8YVudvKRP7j0I0S2RZXM18dixs
+IQV5bmFY9PMmnwXrsbm+/SpRdsO1NLwk/bFAsEZrZE0lKBVWQdtvqcaSCAF5EvlK
+gCoXRwGtQ1pWq9eLoPacapAWs5XMmfPs6hMk9T/8iFHe3XwwIweuJNS+5/AyEtnW
+vNFS6cF5duw5115FBxCWc5GtcFF10g==
+=GpHh
+-----END PGP SIGNATURE-----
+
+--=-8ce50Ee7YyHn+6OQ/pXB--
+
