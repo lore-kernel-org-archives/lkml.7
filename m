@@ -2,170 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A0FC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14558C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E1B20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26F920872
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 14:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="FFPzZ+V1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfFEOkB (ORCPT
+        id S1728455AbfFEOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 10:40:01 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32884 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbfFEOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:40:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 796AA374;
-        Wed,  5 Jun 2019 07:39:59 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8515E3F246;
-        Wed,  5 Jun 2019 07:39:56 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 15:39:50 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v9 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190605143805.olk2ta5p2jnd4mjt@e110439-lin>
-References: <20190515094459.10317-1-patrick.bellasi@arm.com>
- <20190515094459.10317-13-patrick.bellasi@arm.com>
- <20190531153545.GE374014@devbig004.ftw2.facebook.com>
- <20190603122725.GB19426@darkstar>
- <20190605140324.GL374014@devbig004.ftw2.facebook.com>
+        Wed, 5 Jun 2019 10:41:47 -0400
+Received: from mail-eopbgr140101.outbound.protection.outlook.com ([40.107.14.101]:24487
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728283AbfFEOlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:41:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5KmD+P4vEqVwKRS9x0iCBOGut9A2SxHAJWxBcFUPug=;
+ b=FFPzZ+V1bnXSg/HIJrbS0b+04wXM+hd2CixOnC3z9fkksU7nrUyndE3FvJ3rNyeJe2Ctncucu6V88zLtRXj/LVcwVjakHVt54K1/IXZaPP6l5bzpq2u3TrniUwFbjl8vx9kMXGRWWD4LlcuH2ELcn27nKry2ehdeDNLR4P4FF8k=
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com (10.175.243.15) by
+ VI1PR07MB5006.eurprd07.prod.outlook.com (20.177.201.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Wed, 5 Jun 2019 14:41:41 +0000
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a]) by VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a%7]) with mapi id 15.20.1965.011; Wed, 5 Jun 2019
+ 14:41:41 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Vas Dias <jason.vas.dias@gmail.com>
+Subject: [PATCH v3 0/2] x86/vdso: CLOCK_MONOTONIC_RAW implementation
+Thread-Topic: [PATCH v3 0/2] x86/vdso: CLOCK_MONOTONIC_RAW implementation
+Thread-Index: AQHVG6zJXpStcOxGJ0Sjhi5ynZzqMQ==
+Date:   Wed, 5 Jun 2019 14:41:41 +0000
+Message-ID: <20190605144116.28553-1-alexander.sverdlin@nokia.com>
+In-Reply-To: <CALCETrW6aE--Fo3qnK2zCAis5C-NraZtie4RBw59DVmzg5K_oA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.181]
+x-mailer: git-send-email 2.21.0
+x-clientproxiedby: HE1PR06CA0156.eurprd06.prod.outlook.com
+ (2603:10a6:7:16::43) To VI1PR07MB3165.eurprd07.prod.outlook.com
+ (2603:10a6:802:21::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 624be506-34f6-44a9-5abb-08d6e9c3ec40
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR07MB5006;
+x-ms-traffictypediagnostic: VI1PR07MB5006:
+x-microsoft-antispam-prvs: <VI1PR07MB5006DDDE865B125BF8C42F9F88160@VI1PR07MB5006.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:669;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(39860400002)(366004)(376002)(189003)(199004)(54534003)(508600001)(476003)(11346002)(2616005)(14454004)(186003)(102836004)(486006)(316002)(256004)(99286004)(86362001)(53936002)(3846002)(36756003)(26005)(71190400001)(71200400001)(7736002)(386003)(4744005)(6116002)(2501003)(81156014)(68736007)(25786009)(81166006)(8676002)(4326008)(50226002)(110136005)(54906003)(66446008)(6512007)(2906002)(64756008)(52116002)(66946007)(66476007)(5660300002)(73956011)(66556008)(66066001)(1076003)(6436002)(6486002)(305945005)(8936002)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB5006;H:VI1PR07MB3165.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VphOE/ox0fRnT5qC+Q0/l3TtPWnkaJWD2tfko1ev7Pxhbj+P7c/i2nhhx7N7ecL2+F0w4/mMdbPb5NyJmOLLJKyVIrDusZe1mHrkNG3wGbTdZd6Hj2qCozOPykN0RxmaD+Eymtoc8juQaCZChCeP8iGeGWrGCEMjWkxPpIhbsTvov2DKU40N5L1Eg14O4r9KRtYigjspydmteYhFvQyZZJsNWMyz/64mxVqKFRPVDY1hFY08/Hpn4wKMM5PF7HQODiGa6bZVSRteMfWpOdHnCZS5aHdlDA2SomgHIv/jEhQqRF84fZeTIyDZQYxEiD5Gf7Xq90geIwHZUYWh1FSMW+8gM3zDitPnGJRrxcuw7l5u3SKHfvpOG8x/ySXu1Iji0ROtdWvoMV+CYz7Tx2AJi7OJEayXP7YMVaH4qKn3Yv8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605140324.GL374014@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 624be506-34f6-44a9-5abb-08d6e9c3ec40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 14:41:41.4426
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: alexander.sverdlin@nokia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB5006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-Jun 07:03, Tejun Heo wrote:
-> Hello,
-
-Hi!
-
-> On Mon, Jun 03, 2019 at 01:27:25PM +0100, Patrick Bellasi wrote:
-> > All the above, to me it means that:
-> >  - cgroups are always capped by system clamps
-> >  - cgroups can further restrict system clamps
-> > 
-> > Does that match with your view?
-> 
-> Yeah, as long as what's defined at system level clamps everything in
-> the system whether they're in cgroups or not, it's all good.
-
-Right, then we are good with v9 on this point.
-
-> > > * Limits (high / max) default to max.  Protections (low / min) 0.  A
-> > >   new cgroup by default doesn't constrain itself further and doesn't
-> > >   have any protection.
-> > 
-> > Example 2
-> > ---------
-> > 
-> > Let say we have:
-> > 
-> >   /tg1:
-> >         util_min=200 (as a protection)
-> >         util_max=800 (as a limit)
-> > 
-> > the moment we create a subgroup /tg1/tg11, in v9 it is initialized
-> > with the same limits _and protections_ of its father:
-> > 
-> >   /tg1/tg11:
-> >         util_min=200 (protection inherited from /tg1)
-> >         util_max=800 (limit inherited from /tg1)
-> > 
-> > Do you mean that we should have instead:
-> > 
-> >   /tg1/tg11:
-> >         util_min=0   (no protection by default at creation time)
-> >         util_max=800 (limit inherited from /tg1)
-> > 
-> > 
-> > i.e. we need to reset the protection of a newly created subgroup?
-> 
-> The default value for limits should be max, protections 0.  Don't
-> inherit config values from the parent.  That gets confusing super fast
-> because when the parent config is set and each child is created plays
-> into the overall configuration.  Hierarchical confinements should
-> always be enforced and a new cgroup should always start afresh in
-> terms of its own configuration.
-
-Got it, so in the example above we will create:
-
-   /tg1/tg11:
-         util_min=0    (no requested protection by default at creation time)
-         util_max=1024 (no requests limit by default at creation time)
-
-That's it for the "requested" values side, while the "effective"
-values are enforced by the hierarchical confinement rules since
-creation time.
-Which means we will enforce the effective values as:
-
-   /tg1/tg11:
-
-         util_min.effective=0
-            i.e. keep the child protection since smaller than parent
-
-         util_max.effective=800
-            i.e. keep parent limit since stricter than child
-
-Please shout if I got it wrong, otherwise I'll update v10 to
-implement the above logic.
-
-> > > * A limit defines the upper ceiling for the subtree.  If an ancestor
-> > >   has a limit of X, none of its descendants can have more than X.
-> > 
-> > That's correct, however we distinguish between "requested" and
-> > "effective" values.
-> 
-> Sure, all property propagating controllers should.
-
-Right.
-
-> > > Note that there's no way for an ancestor to enforce protection its
-> > > descendants.  It can only allow them to claim some.  This is
-> > > intentional as the other end of the spectrum is either descendants
-> > > losing the ability to further distribute protections as they see fit.
-> > 
-> > Ok, that means I need to update in v10 the initialization of subgroups
-> > min clamps to be none by default as discussed in the above Example 2,
-> > right?
-> 
-> Yeah and max to max.
-
-Right, I've got it now.
-
-
-> Thanks.
-
-Cheers,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+RnJvbTogQWxleGFuZGVyIFN2ZXJkbGluIDxhbGV4YW5kZXIuc3ZlcmRsaW5Abm9raWEuY29tPg0K
+DQpUcml2aWFsIHZEU08gaW1wbGVtZW50YXRpb24gc2F2ZXMgYSBzeXNjYWxsIGFuZCBicmluZ3Mg
+NzAwJSBwZXJmb3JtYW5jZQ0KYm9vc3Qgb2YgY2xvY2tfZ2V0dGltZShDTE9DS19NT05PVE9OSUNf
+UkFXLCAuLi4pIGNhbGwuDQoNCkNoYW5nZWxvZzoNCnYzOiBNb3ZlIG11bHQgYW5kIHNoaWZ0IGlu
+dG8gc3RydWN0IHZndG9kX3RzDQp2MjogY29weSBkb19ocmVzKCkgaW50byBkb19tb25vdG9uaWNf
+cmF3KCkNCg0KQWxleGFuZGVyIFN2ZXJkbGluICgyKToNCiAgeDg2L3Zkc286IE1vdmUgbXVsdCBh
+bmQgc2hpZnQgaW50byBzdHJ1Y3Qgdmd0b2RfdHMNCiAgeDg2L3Zkc286IGltcGxlbWVudCBjbG9j
+a19nZXR0aW1lKENMT0NLX01PTk9UT05JQ19SQVcsIC4uLikNCg0KIGFyY2gveDg2L2VudHJ5L3Zk
+c28vdmNsb2NrX2dldHRpbWUuYyAgICB8ICA0ICsrLS0NCiBhcmNoL3g4Ni9lbnRyeS92c3lzY2Fs
+bC92c3lzY2FsbF9ndG9kLmMgfCAxNCArKysrKysrKysrKystLQ0KIGFyY2gveDg2L2luY2x1ZGUv
+YXNtL3ZndG9kLmggICAgICAgICAgICB8ICA3ICsrKystLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDE4
+IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi40LjYNCg0K
