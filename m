@@ -2,135 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076F9C28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0BEC28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19512075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C6A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LxIaZty5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAC9jl1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFEHXN (ORCPT
+        id S1726637AbfFEHXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:23:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43932 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfFEHXM (ORCPT
+        Wed, 5 Jun 2019 03:23:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39341 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFEHXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:23:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id k20so19425188ios.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:23:12 -0700 (PDT)
+        Wed, 5 Jun 2019 03:23:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g9so9363780plm.6;
+        Wed, 05 Jun 2019 00:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bFlickOGyCE8q2nid47CTokWI0/Tlpvfgy/2BgVqxGM=;
-        b=LxIaZty5SFUHpeOd6VDojbonDevwkb/pcxQ1fTAr8bq2nAGRG0FUXbB1ahd4Cs8yIg
-         oRPSkndInGzFgEmm/7b8+X+6UoxWShv3j+IC09/3LLXcEjsZyFDlSftzMZGeWVKdukuX
-         tRxKQheHKNttUpTHH5/RMjZ+9n5MZjzcjavgM2hp/GDi8kasXudamsoB8q5ZYKcvvRFK
-         oXRYVu3aAEZpJ3wnVIPhImAJzexpje8nEOn7PZhmrjPhy8orFBxeeLwbH0l94g5oP+Bm
-         HWPA8NJ/LOwXgcprZGF5/kFXdsM8GDFUlEgPx3qrwshAgepVR88j0fhlf2GCzx85nK3B
-         zqWw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4QxJ+z/7JNLNHMMwUtAoUXwkceuj/SaTUZVOFbLgjLg=;
+        b=eAC9jl1E6rw/JS1z02Gw0KZn0csw+7ORGdjR8tAmW67rgR3z/9MvUFJK/UR5A7/eC2
+         cbgktlcpvvRHxJRSlhjYbEOddKXzti8F1nsFT08zE+SIt3K2QwXhVpAk6i5DVzwUp0YU
+         Wn7aWPRY6/SSnnFsGeiqQuIgPdi++CkHKIdNzL7Zj11MJuaJ5zjoQvOmLzZA/WMrEWYJ
+         YzgAeU2ruVS9h7/56eP++70f06uIbZnBxUmhQ3zljD9ajKJaaiPduoGBVBhY317a01Ux
+         fYy7Ei07abpx8JQZ+Lg1/k+/K8PPXh6v0ipyzO5tN435G9Gd/PRukFSaONKlO2CeceGX
+         fY0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bFlickOGyCE8q2nid47CTokWI0/Tlpvfgy/2BgVqxGM=;
-        b=Ex6bFUOWI7VeIpW7sDLhXvYXiTvHxqJnqyv1+13O7q+OZrWblwEGAY9eQpGs3ijaFo
-         C/EjZpKPmOXRJM2BvihS4xXEQqqeZQSsaW8txHPqnecLhS5JRJhwKaWjNR2Cizsr7cAf
-         uyxhtQerjyDkod2XOUW4p7dPl3NapuTAn/aSX4Eri0Que64dGiVvmAvI/hADvCwIB+35
-         XjCOEoUHf7uqxg6HTRXGb2DhsanRTpL+Um/rxjza8Avye+uQUEEId8csR3cI5Zcep0KZ
-         WVCDqNwQ8YCuH5BvS4HhiDtG3uQTshBMhaU+jYJT2MNT/4/aNIHKHrTH9AJyxK3pCswt
-         7FHw==
-X-Gm-Message-State: APjAAAV2fu7N14LQeatqmn2d6LwXVlCL1NxtsOi3E50u3f7JZ+RCVibo
-        h1JN5aHbVpwr8C+PragIT5DAYjQ/P9eQy6idK20bTQ==
-X-Google-Smtp-Source: APXvYqyvUHNyNwg2/0w1ihfOoePLCRKJbrn5Y6sShasQnJXGkrj6UQ0uvq3+cXzOG4W7XlqhT4twEcbHEF/T3XAEymE=
-X-Received: by 2002:a5d:9402:: with SMTP id v2mr7086874ion.128.1559719391862;
- Wed, 05 Jun 2019 00:23:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4QxJ+z/7JNLNHMMwUtAoUXwkceuj/SaTUZVOFbLgjLg=;
+        b=i9VvVfr81sXSjVEc4cUMbw6g4mXcbrDW9v7O2YaC6Uz9jV58Hji2AvVjYQ5vQNX9dj
+         0JA/ODdtf9AsHv9oKenjxuoXLJM3drGFlGXDOgcCv8JhO0VGVioI//8X2orsmhRb1dDJ
+         mWppOItX+88n9kanfqH+T1LNUmAjzYHblwXQvOJB0frZWRcLo1FnY/wai9JrZRKapY/+
+         uteOl3ldZtNFrjnO7K3egE2yNjgpB2ZFnSk2ojsk5X7BvwF8wwnX+RHKnJcTU5elEQoY
+         uTVshBqDoSr84cUoaAWm9W07h4O5vsh55DM/qK1fdRSpC4PuAl/Pacicu/B9C8rv5PFz
+         J6YA==
+X-Gm-Message-State: APjAAAXnRzEzYnwJWh3S44B9cwNvxyhXt0iq50aH+WPHPil1LXi/vYYf
+        PBQGFZOFOqws4ZhfIWjn4Ex6bMmR54o=
+X-Google-Smtp-Source: APXvYqzBrNu6EcZb6sZncPpDiicDtvBS15EhsceaLiPiDfa+9v77+ARdw78uAh/py8co8HIx0cOcMw==
+X-Received: by 2002:a17:902:bb95:: with SMTP id m21mr42258650pls.154.1559719421564;
+        Wed, 05 Jun 2019 00:23:41 -0700 (PDT)
+Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id i4sm1027404pjd.31.2019.06.05.00.23.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 00:23:40 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] HWMON compatibility layer for power supplies
+Date:   Wed,  5 Jun 2019 00:23:21 -0700
+Message-Id: <20190605072323.21990-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190604104455.8877-1-lee.jones@linaro.org> <20190604104455.8877-2-lee.jones@linaro.org>
- <20190605062020.GL22737@tuxbook-pro> <20190605071625.GK4797@dell>
-In-Reply-To: <20190605071625.GK4797@dell>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 5 Jun 2019 09:22:59 +0200
-Message-ID: <CAKv+Gu_YcdePUkkCGdP5DC9rxCUAshgOzU32pViAp2CbmAaJuw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, balbi@kernel.org,
-        wsa+renesas@sang-engineering.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Brown <david.brown@linaro.org>, alokc@codeaurora.org,
-        kramasub@codeaurora.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 09:16, Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 04 Jun 2019, Bjorn Andersson wrote:
->
-> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
-> >
-> > > The Qualcomm Geni I2C driver currently probes silently which can be
-> > > confusing when debugging potential issues.  Add a low level (INFO)
-> > > print when each I2C controller is successfully initially set-up.
-> > >
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > index 0fa93b448e8d..e27466d77767 100644
-> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
-> > >             return ret;
-> > >     }
-> > >
-> > > +   dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> > > +
-> >
-> > I would prefer that we do not add such prints, as it would be to accept
-> > the downstream behaviour of spamming the log to the point where no one
-> > will ever look through it.
->
-> We should be able to find a middle ground.  Spamming the log with all
-> sorts of device specific information/debug is obviously not
-> constructive, but a single liner to advertise that an important
-> device/controller has been successfully initialised is more helpful
-> than it is hinderous.
->
-> This print was added due to the silent initialisation costing me
-> several hours of debugging ACPI device/driver code (albeit learning a
-> lot about ACPI as I go) just to find out that it was already doing the
-> right thing - just very quietly.
->
+Everyone:
 
-I agree.
+This small series contains the code I wrote to expose various power
+supply sensors via HWMON layer in order to be able to access all of
+the sensors in the system with libsensors.
 
-There are numerous EHCI drivers IIRC which, if compiled in,
-unconditionally print some blurb, whether you have the hardware or
-not, which is pretty annoying.
+Changes since [v2]:
 
-In this case, however, having a single line per successfully probed
-device (containing the dev_name and perhaps the MMIO base address or
-some other identifying feature) is pretty useful, and shouldn't be
-regarded as log spamming imo. dev_info() honours the 'quiet' kernel
-command line parameter, and so you will only see the message if you
-actually look at the log.
+  - Added missing static specified to devm_power_supply_add_hwmon_sysfs()
+  
+  - Collected Reviewed-by from Guenter
+
+Changes since [v1]:
+
+  - All multiplications converted to use check_mul_overflow()
+
+  - All divisions converted to use DIV_ROUND_CLOSEST()
+
+  - Places that were ignoring errors now don't
+
+  - Alphabetized include list
+
+[v2] lkml.kernel.org/r/20190531011620.9383-1-andrew.smirnov@gmail.com
+[v1] lkml.kernel.org/r/20190529071112.16849-1-andrew.smirnov@gmail.com
+
+Thanks,
+Andrey Smirnov
+
+Andrey Smirnov (2):
+  power: supply: Add HWMON compatibility layer
+  power: supply: ucs1002: Add HWMON interface
+
+ drivers/power/supply/Kconfig              |  14 +
+ drivers/power/supply/Makefile             |   1 +
+ drivers/power/supply/power_supply_hwmon.c | 349 ++++++++++++++++++++++
+ drivers/power/supply/ucs1002_power.c      |   6 +
+ include/linux/power_supply.h              |   9 +
+ 5 files changed, 379 insertions(+)
+ create mode 100644 drivers/power/supply/power_supply_hwmon.c
+
+-- 
+2.21.0
+
