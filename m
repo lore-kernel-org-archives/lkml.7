@@ -2,135 +2,274 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8044DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4952067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3A52067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:40:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2rPos/u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rjQbWXan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFEUil (ORCPT
+        id S1726604AbfFEUk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:38:41 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45726 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfFEUik (ORCPT
+        Wed, 5 Jun 2019 16:40:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55670 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEUk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:38:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w34so13021786pga.12;
-        Wed, 05 Jun 2019 13:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kyi91WMR4AvwDRIy5DxgM0o6bNXmSrWa07y0x+D4CAE=;
-        b=H2rPos/u564e/RMxlV0kDV5IpWYrSjoJZs3LwzOA5spNEigtkKwhdm+sVNo+rle9on
-         iHahXa4VDiKz3mdzMYnqMj5rDggFiHfMUtBPEuqJmHKl3S4cWVl5An67zYqOeuuZhJbd
-         n548Nb8/qTkZKWXMqIRLgC015pk7VKJa4LnukLtgyNDR+UBRpSLsqDQ5ofuZkfyFoair
-         n+fs2oAiOYcv3+yh98+B3sVNiWC8lhqBB/q8R3yJEiJGsD5jY5u3Ywi/UeP7EkNgMwN5
-         QwfYU1xxIU8OaS8tNjtTckhKY1CO3+RpcbwwY4UAlSdJCxlCNEZZuDCPhVYYeI4zlP6N
-         +xpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kyi91WMR4AvwDRIy5DxgM0o6bNXmSrWa07y0x+D4CAE=;
-        b=Ww5y2q1GIn6V0PHlFv6WVJfX4ixqpfJ4K5d5c6VGnzprUuph7wdUu77StcvkS0Ixer
-         VZMwWdHkg7RJ+bgH6Me42RBUUbl5OueNjBmk5t0r7ytSyI6k1kCGnt9N2F5Dw9CJ0oyA
-         FwvG36M9Nmk/EvIqNLjeaJ0N0ReEhH3b/wECZbOD/8q1VVVuY/wYxoZApviIqJ/F66jV
-         Ohcsr95Es2dmbBTmyRuOLRFyiz/xgUSE7dFuLlrtOhA41kn9rF+NHnG6k4jPZL88fBtg
-         PXYbWmqLv/+SfWWbgr6K5mtuxoYRauJGHE3YVB4XbEIRfZ+w1Q7cVGGWCtyNEBqdBvIH
-         /1ww==
-X-Gm-Message-State: APjAAAWVmUhOEPZCGH7T5IwbafE8uy2zF3vjLBshIy0ozVzxUXfGY67D
-        tZ0/fiq/INFtB0dbAr6tm8s=
-X-Google-Smtp-Source: APXvYqwgj03QmQKBLMhlLogbCOnzgbDTK8FMHjvQS6CX/TQmvvPXBAZAqJSqcV8zooVwaTW3ZMFPaA==
-X-Received: by 2002:a63:91c4:: with SMTP id l187mr771892pge.95.1559767119687;
-        Wed, 05 Jun 2019 13:38:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n13sm20788638pff.59.2019.06.05.13.38.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 13:38:38 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 13:38:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] hwmon: core: fix potential memory leak in
- *hwmon_device_register*
-Message-ID: <20190605203837.GA30238@roeck-us.net>
-References: <20190530025605.3698-1-eduval@amazon.com>
- <20190530025605.3698-3-eduval@amazon.com>
+        Wed, 5 Jun 2019 16:40:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Bdl+GToplZYKFl2/CZwK1ShFFbX2KkgoYa/IQrkAuz4=; b=rjQbWXan+6Rg3IlYBqU+ZkIeqs
+        1t9EtuwW9iZ++dFEqThm5G+AubmH6Sp2/HBdaWcip/N6nFIu4mRZGVfCJzVOmCRPb0un9kMjCWEvW
+        x8Wd21a9+eUqrO5wN0Nodpu9SAZVA3ViJvHJudrbvifdZyA9aWfKe80I40SxCKiHV+s7Awm/MdwIj
+        XbaxEr6DejPaDSoZ5hIamojbNR0fm/0pHtUXyGZgrlI2AiDBuqHRx6n8WWdtAXB4lvpa44tWVTHUF
+        L64dGlYH7wjSNLbcMwsL85JtoeTMIGtFFIBKYkKE07assZ8unvum/mVH22z9wpJB8rBmP0XCS2Fux
+        HccFHKTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYchZ-0001Du-8j; Wed, 05 Jun 2019 20:40:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DEB6720763536; Wed,  5 Jun 2019 22:40:03 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 22:40:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20190605204003.GC3402@hirez.programming.kicks-ass.net>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
+ <20190402094320.GM11158@hirez.programming.kicks-ass.net>
+ <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
+ <20190403160112.GK4038@hirez.programming.kicks-ass.net>
+ <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190530025605.3698-3-eduval@amazon.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 07:56:05PM -0700, Eduardo Valentin wrote:
-> When registering a hwmon device with HWMON_C_REGISTER_TZ flag
-> in place, the hwmon subsystem will attempt to register the device
-> also with the thermal subsystem. When the of-thermal registration
-> fails, __hwmon_device_register jumps to ida_remove, leaving
-> the locally allocated hwdev pointer.
-> 
-> This patch fixes the leak by jumping to a new label that
-> will first unregister hdev and then fall into the kfree of hwdev
-> to finally remove the idas and propagate the error code.
-> 
+On Tue, Jun 04, 2019 at 07:21:13PM -0400, Alex Kogan wrote:
 
-Hah, actually this is wrong. hwdev is freed indirectly with the
-device_unregister() call. See commit 74e3512731bd ("hwmon: (core)
-Fix double-free in __hwmon_device_register()").
-
-It may make sense to add a respective comment to the code, though.
-
-Guenter
-
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-> ---
-> V1->V2: removed the device_unregister() before jumping
-> into the new label, as suggested in the first review round.
+> Trying to resume this work, I am looking for concrete steps required
+> to integrate CNA with the paravirt patching.
 > 
->  drivers/hwmon/hwmon.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Looking at alternative_instructions(), I wonder if I need to add
+> another call, something like apply_numa() similar to apply_paravirt(),
+> and do the patch work there.  Or perhaps I should “just" initialize
+> the pv_ops structure with the corresponding
+> numa_queued_spinlock_slowpath() in paravirt.c?
+
+Yeah, just initialize the pv_ops.lock.* thingies to contain the numa
+variant before apply_paravirt() happens.
+
+> Also, the paravirt code is under arch/x86, while CNA is generic (not
+> x86-specific).  Do you still want to see CNA-related patching residing
+> under arch/x86?
 > 
-> diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-> index 429784edd5ff..620f05fc412a 100644
-> --- a/drivers/hwmon/hwmon.c
-> +++ b/drivers/hwmon/hwmon.c
-> @@ -652,10 +652,8 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
->  				if (info[i]->config[j] & HWMON_T_INPUT) {
->  					err = hwmon_thermal_add_sensor(dev,
->  								hwdev, j);
-> -					if (err) {
-> -						device_unregister(hdev);
-> -						goto ida_remove;
-> -					}
-> +					if (err)
-> +						goto device_unregister;
->  				}
->  			}
->  		}
-> @@ -663,6 +661,8 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
->  
->  	return hdev;
->  
-> +device_unregister:
-> +	device_unregister(hdev);
->  free_hwmon:
->  	kfree(hwdev);
->  ida_remove:
+> We still need a config option (something like NUMA_AWARE_SPINLOCKS) to
+> enable CNA patching under this config only, correct?
+
+There is the static_call() stuff that could be generic; I posted a new
+version of that today (x86 only for now, but IIRC there's arm64 patches
+for that around somewhere too).
+
+https://lkml.kernel.org/r/20190605130753.327195108@infradead.org
+
+Which would allow something a little like this:
+
+
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index bd5ac6cc37db..01feaf912bd7 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -63,29 +63,7 @@ static inline bool vcpu_is_preempted(long cpu)
+ #endif
+ 
+ #ifdef CONFIG_PARAVIRT
+-DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
+-
+ void native_pv_lock_init(void) __init;
+-
+-#define virt_spin_lock virt_spin_lock
+-static inline bool virt_spin_lock(struct qspinlock *lock)
+-{
+-	if (!static_branch_likely(&virt_spin_lock_key))
+-		return false;
+-
+-	/*
+-	 * On hypervisors without PARAVIRT_SPINLOCKS support we fall
+-	 * back to a Test-and-Set spinlock, because fair locks have
+-	 * horrible lock 'holder' preemption issues.
+-	 */
+-
+-	do {
+-		while (atomic_read(&lock->val) != 0)
+-			cpu_relax();
+-	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
+-
+-	return true;
+-}
+ #else
+ static inline void native_pv_lock_init(void)
+ {
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 5169b8cc35bb..78be9e474e94 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -531,7 +531,7 @@ static void __init kvm_smp_prepare_cpus(unsigned int max_cpus)
+ {
+ 	native_smp_prepare_cpus(max_cpus);
+ 	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
+-		static_branch_disable(&virt_spin_lock_key);
++		static_call_update(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
+ }
+ 
+ static void __init kvm_smp_prepare_boot_cpu(void)
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 98039d7fb998..ae6d15f84867 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -105,12 +105,10 @@ static unsigned paravirt_patch_jmp(void *insn_buff, const void *target,
+ }
+ #endif
+ 
+-DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
+-
+ void __init native_pv_lock_init(void)
+ {
+-	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		static_branch_disable(&virt_spin_lock_key);
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		static_call_update(queued_spin_lock_slowpath, __tas_spin_lock_slowpath);
+ }
+ 
+ unsigned paravirt_patch_default(u8 type, void *insn_buff,
+diff --git a/arch/x86/xen/spinlock.c b/arch/x86/xen/spinlock.c
+index 3776122c87cc..86808127b6e6 100644
+--- a/arch/x86/xen/spinlock.c
++++ b/arch/x86/xen/spinlock.c
+@@ -70,7 +70,7 @@ void xen_init_lock_cpu(int cpu)
+ 
+ 	if (!xen_pvspin) {
+ 		if (cpu == 0)
+-			static_branch_disable(&virt_spin_lock_key);
++			static_call_update(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
+ 		return;
+ 	}
+ 
+diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
+index fde943d180e0..8ca4dd9db931 100644
+--- a/include/asm-generic/qspinlock.h
++++ b/include/asm-generic/qspinlock.h
+@@ -65,7 +65,9 @@ static __always_inline int queued_spin_trylock(struct qspinlock *lock)
+ 	return likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL));
+ }
+ 
+-extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++extern void __queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++
++DECLARE_STATIC_CALL(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
+ 
+ /**
+  * queued_spin_lock - acquire a queued spinlock
+@@ -78,7 +80,7 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
+ 	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL)))
+ 		return;
+ 
+-	queued_spin_lock_slowpath(lock, val);
++	static_call(queued_spin_lock_slowpath, lock, val);
+ }
+ 
+ #ifndef queued_spin_unlock
+@@ -95,13 +97,6 @@ static __always_inline void queued_spin_unlock(struct qspinlock *lock)
+ }
+ #endif
+ 
+-#ifndef virt_spin_lock
+-static __always_inline bool virt_spin_lock(struct qspinlock *lock)
+-{
+-	return false;
+-}
+-#endif
+-
+ /*
+  * Remapping spinlock architecture specific functions to the corresponding
+  * queued spinlock functions.
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index 2473f10c6956..0e9e61637d56 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -290,6 +290,20 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+ 
+ #endif /* _GEN_PV_LOCK_SLOWPATH */
+ 
++void __tas_spin_lock_slowpath(struct qspinlock *lock, u32 val)
++{
++	/*
++	 * On hypervisors without PARAVIRT_SPINLOCKS support we fall
++	 * back to a Test-and-Set spinlock, because fair locks have
++	 * horrible lock 'holder' preemption issues.
++	 */
++
++	do {
++		while (atomic_read(&lock->val) != 0)
++			cpu_relax();
++	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
++}
++
+ /**
+  * queued_spin_lock_slowpath - acquire the queued spinlock
+  * @lock: Pointer to queued spinlock structure
+@@ -311,7 +325,7 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+  * contended             :    (*,x,y) +--> (*,0,0) ---> (*,0,1) -'  :
+  *   queue               :         ^--'                             :
+  */
+-void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
++void __queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ {
+ 	struct mcs_spinlock *prev, *next, *node;
+ 	u32 old, tail;
+@@ -322,9 +336,6 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	if (pv_enabled())
+ 		goto pv_queue;
+ 
+-	if (virt_spin_lock(lock))
+-		return;
+-
+ 	/*
+ 	 * Wait for in-progress pending->locked hand-overs with a bounded
+ 	 * number of spins so that we guarantee forward progress.
+@@ -558,7 +569,9 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	 */
+ 	__this_cpu_dec(qnodes[0].mcs.count);
+ }
+-EXPORT_SYMBOL(queued_spin_lock_slowpath);
++EXPORT_SYMBOL(__queued_spin_lock_slowpath);
++
++DEFINE_STATIC_CALL(queued_spin_lock_slowpath, __queued_spin_lock_slowpath);
+ 
+ /*
+  * Generate the paravirt code for queued_spin_unlock_slowpath().
