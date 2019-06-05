@@ -2,108 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E25CC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDB9C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530E8206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F0A2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="cmnRJyjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfFEUKf (ORCPT
+        id S1726599AbfFEUOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:10:35 -0400
-Received: from www62.your-server.de ([213.133.104.62]:36612 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfFEUKf (ORCPT
+        Wed, 5 Jun 2019 16:14:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33154 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfFEUOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:10:35 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hYcEx-0002kS-Qb; Wed, 05 Jun 2019 22:10:31 +0200
-Received: from [178.197.249.21] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hYcEx-000Xli-JO; Wed, 05 Jun 2019 22:10:31 +0200
-Subject: Re: [BPF v1] tools: bpftool: Fix JSON output when lookup fails
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>, bpf@vger.kernel.org
-Cc:     Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=c3=b3pez_Galeiras?= <iago@kinvolk.io>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        Okash Khawaja <osk@fb.com>,
-        David Calavera <david.calavera@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190605191707.24429-1-krzesimir@kinvolk.io>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <bd439a28-fed1-b35c-79b0-2100c58584ed@iogearbox.net>
-Date:   Wed, 5 Jun 2019 22:10:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190605191707.24429-1-krzesimir@kinvolk.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25471/Wed Jun  5 10:12:21 2019)
+        Wed, 5 Jun 2019 16:14:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so5661pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 13:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=znk5vD5rMbn5z4a3+WKbn3kzpOM9HaH0Z0fJiM8Yq8Y=;
+        b=cmnRJyjY3QFQ+BQOSejlOb1DI3VR7qg0TxLdoYYyAOnIePiy2kqrOVzKDPJKqyKt9q
+         6q6cFyKC3bXadxZhDLpIDnTiAj8qBNzlGCp37zCdo1f6DCz1Pm3E2QJGiuEr6GohiQn+
+         Vr98wk6xFFOxQ30tZJaRSGuwppW7Qtx7FFdY0fNjUohl14NwFJNhUVubaWb2DCq6mNWh
+         k/b5SlOspVX9Czxbn2EeK2gY+egCxGLPlimc5AjRPkJ5g5YN2ALuFTsFJgULIkd8aurI
+         DcuI0FhRG8rGZm95wu9C/ee/tWCwSl6UO3MZ8pJFxkXgv9nFwH56xau/aFS4XvtaKP9V
+         Qx1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=znk5vD5rMbn5z4a3+WKbn3kzpOM9HaH0Z0fJiM8Yq8Y=;
+        b=NIosKlx8kPCJoIrnR8sQh2JEvjVbUjt44DoUvcXAXKko9hafOlGC+2L9TZNyegcEyl
+         P4r1aG/Wc1x0LQ1jLO1ZgBuHali5YeHDxZNW+M/xRIPAp3d/wh1VD+vuZCW/wNtdyM27
+         yi8roslHhfiK3XPsMGebfL+ZLG8ql5jqTnWfvAM+WjlliF0wC7zt5m3MszQqBTOsouhM
+         l53psnIckMX6cbycP0gNk2JczHo5Qys4l4JK8DqtGM8ky/3Az54sYzLFkcMX766G4o8p
+         /RHDQtOp1QJwj+HU5KpSaYzO+ERKQ/VCH/CSg3xVx8/AwritPTtvB20ccgyExNJroNif
+         mnuw==
+X-Gm-Message-State: APjAAAUwy9fdwbcDRomnJd2oVwmyvVPzWtMyAfTiZ3XecfrsQizP9djN
+        iRWm/3Ax+g5m7wcsI3quklwdeg==
+X-Google-Smtp-Source: APXvYqwkFteFZdFh9mxUp8CCyQXSglviTfuR92Oyp0Kt3F6L2PL4pyQvZRQ6L94JnZ7YLK0WWCrYRw==
+X-Received: by 2002:a17:90a:8409:: with SMTP id j9mr47854496pjn.2.1559765646373;
+        Wed, 05 Jun 2019 13:14:06 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:31dd:a2eb:ca:4a50? ([2601:646:c200:1ef2:31dd:a2eb:ca:4a50])
+        by smtp.gmail.com with ESMTPSA id c6sm42250854pfm.163.2019.06.05.13.14.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 13:14:05 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <20190605151653.GK11331@linux.intel.com>
+Date:   Wed, 5 Jun 2019 13:14:04 -0700
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5A85C1D7-A159-437E-B42A-3F4254E07305@amacapital.net>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com> <20190531233159.30992-3-sean.j.christopherson@intel.com> <20190604114951.GC30594@linux.intel.com> <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com> <20190605151653.GK11331@linux.intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/2019 09:17 PM, Krzesimir Nowak wrote:
-> In commit 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros
-> into functions") one case of error reporting was special cased, so it
-> could report a lookup error for a specific key when dumping the map
-> element. What the code forgot to do is to wrap the key and value keys
-> into a JSON object, so an example output of pretty JSON dump of a
-> sockhash map (which does not support looking up its values) is:
-> 
-> [
->     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
->     ],
->     "value": {
->         "error": "Operation not supported"
->     },
->     "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
->     ],
->     "value": {
->         "error": "Operation not supported"
->     }
-> ]
-> 
-> Note the key-value pairs inside the toplevel array. They should be
-> wrapped inside a JSON object, otherwise it is an invalid JSON. This
-> commit fixes this, so the output now is:
-> 
-> [{
->         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x00"
->         ],
->         "value": {
->             "error": "Operation not supported"
->         }
->     },{
->         "key": ["0x0a","0x41","0x00","0x02","0x1f","0x78","0x00","0x01"
->         ],
->         "value": {
->             "error": "Operation not supported"
->         }
->     }
-> ]
-> 
-> Fixes: 9a5ab8bf1d6d ("tools: bpftool: turn err() and info() macros into functions")
-> Cc: Quentin Monnet <quentin.monnet@netronome.com>
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 
-Applied, thanks!
+
+> On Jun 5, 2019, at 8:17 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.c=
+om> wrote:
+>=20
+>> On Tue, Jun 04, 2019 at 10:10:22PM +0000, Xing, Cedric wrote:
+>> A bit off topic here. This mmap()/mprotect() discussion reminds me a
+>> question (guess for Jarkko): Now that vma->vm_file->private_data keeps
+>> a pointer to the enclave, why do we store it again in vma->vm_private?
+>> It isn't a big deal but non-NULL vm_private does prevent mprotect()
+>> from merging adjacent VMAs.=20
+>=20
+> Same semantics as with a regular mmap i.e. you can close the file and
+> still use the mapping.
+>=20
+>=20
+
+The file should be properly refcounted =E2=80=94 vm_file should not go away w=
+hile it=E2=80=99s mapped.=
