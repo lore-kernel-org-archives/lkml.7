@@ -2,179 +2,125 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7987C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C10C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3720866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC0720866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZB7ow7A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHXwbjIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfFEJVw (ORCPT
+        id S1727038AbfFEJV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:21:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42858 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfFEJVw (ORCPT
+        Wed, 5 Jun 2019 05:21:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38830 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfFEJV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:21:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so637168wrl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:21:50 -0700 (PDT)
+        Wed, 5 Jun 2019 05:21:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id x24so19666125ion.5;
+        Wed, 05 Jun 2019 02:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HkLrjitg6lVmSSsN339H7rE/QKTw75t3z9ac6zp7EjU=;
-        b=nZB7ow7AXRjSr4qoR4f1Dsl4WnuTsh3fvyjw161LZtjSwz/pSxMbXTt26WoA5HDI1P
-         LbUh0dYE5eGeTFe1jAta6TMaTpOo0VwOSLzl/lko7lO+reF8XZbuesjvR8pv0qdV9b78
-         1+iir5kvR09goxeok2nf1n+ktNwtVeKq4YW5wd90Z/toDEVZNz3DhmqzhmdWlWXBv+Ir
-         2CVvRCgkgA/U3LIufzMtSJ4hzvOA8iOnJUl+JfPaf62th2YCjEVlFfQgM1Q92YT6/6A6
-         fw3xbd8kyH86itHgB+xO/tSRmiZ+2D8j368pXtZlbrIpHdLWTi/bVx56BfKgNqN11Wde
-         fEEA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uDjBQkAVbNID/6IEXKOFNSbDIeMHgSat2+m5A0KFo3M=;
+        b=RHXwbjIiFnQT8YPT/t/8R6S8Isf5kbM4MgtKHCD0NGKh7HLa8sPQgTVk8v1qNWpoiF
+         Rhq+9Yl7c1ZJD05i62ck5l4Y0RpNoDGDNJYAqbn8ugHSy9iP9/N6BRYkxY+32oN4YYJp
+         5EtMvW0TcWwmXCiGyXTHksDh/tmoIJfl3gbaU11q8+EgrCPCc9y75svoD2y70J6e8RB7
+         6v1AuZlQcyqU5Kf6d+RnJEP6LR7dtuKsB8Mm048NlWPsa/8jKOyVelcKUBFB5Ab/vhQ5
+         ugL6ThWymA5ec//v8iLYg/N2yHP2fxhwYmJgqYZZHweVhkd7DTPZPR+OBDj7+icJ5t4/
+         W2Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HkLrjitg6lVmSSsN339H7rE/QKTw75t3z9ac6zp7EjU=;
-        b=JmA2W3Fl9pdYDmveuRUQej+FPVbPBux2phwygVltfrCFAS/3nirHv449TF/+TJVgfL
-         q8exDHC6bZ2A3B2X+p4ErCK5j2hidA1gk0rNn9Ia2M7Jt/8qTl82MD3zlvmnUjeaTo5h
-         Fq9h7JwwAqFiFDhm4WF30AJ34bASTSkU1vry2HDl/79XN5T14ysym77J3oYROeau54ar
-         eV9xWwb6F+DluSzUK7F/P7oTGaJk6WvoCpMDfvwHzaRbN1zkeAp3fwwWsG1FC1W/LKX4
-         /qQBNx9iQFSvsspILucXbdlX8B/Ycp4o1R5jKnaSaaYAdx7st1+DyzhFCsj1YOe3N/fN
-         bbyg==
-X-Gm-Message-State: APjAAAVFH5X3f7yXPoT2u7kmsJsGg6KLyJo8dYGmgXYLNJrGpuqmYDwo
-        jQvjVBNSPIEOX/m7Agnp8LNdLw==
-X-Google-Smtp-Source: APXvYqzQyu7iRiNMClS/A791P+up2dhjhpkSl89DWahEDcK/qdpMbigxSNW0TCIdZjeV5mmHlyo7OQ==
-X-Received: by 2002:adf:fd0f:: with SMTP id e15mr24479182wrr.104.1559726509998;
-        Wed, 05 Jun 2019 02:21:49 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id o14sm19377907wrp.77.2019.06.05.02.21.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 02:21:48 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 10:21:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <groeck@google.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>, kernel@collabora.com,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
-        Guido Kiener <guido@kiener-muenchen.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>
-Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
- device to talk with the EC
-Message-ID: <20190605092146.GR4797@dell>
-References: <20190604152019.16100-4-enric.balletbo@collabora.com>
- <20190604155228.GB9981@kroah.com>
- <beaf3554bb85974eb118d7722ca55f1823b1850c.camel@collabora.com>
- <20190604183527.GA20098@kroah.com>
- <CABXOdTfU9KaBDhQcwvBGWCmVfnd02_ZFmPGtJsCtGQ-iO9A3Qw@mail.gmail.com>
- <20190604185953.GA2061@kroah.com>
- <20190605064839.GH4797@dell>
- <20190605080241.GC9693@kroah.com>
- <20190605084002.GP4797@dell>
- <20190605084813.GA26984@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uDjBQkAVbNID/6IEXKOFNSbDIeMHgSat2+m5A0KFo3M=;
+        b=g+lPA+j5B1lomooTS0QnRIXZZDZulY8jRCbYkPN55reubgVPsluOQAg6vKjqVt9vbx
+         gi1yqG1KPICeXab+A5BOofc098zIW5Smg12lJUduB/Jz4ho7nPRC1S1JAdQw7blhp04u
+         wQ5SYdy0h6c8LZKCxtGcGf7nWNuO+QZnCfGud9qYVcn8uDVy+83i31BEqg4R9qTHbmHI
+         qbRKi0Ws3GgYgDUqYBAUV5s13bVG+lmB1YAhRuELbqFbLgUHHe/0TD5rDzOy+AikfXAo
+         B3YwBxby7KT9VhlAdsGk/m+r0UgxTS5Pcwd2wdlwCQ5A3AiAhGl89GaKlHQIubFym2qE
+         pQeQ==
+X-Gm-Message-State: APjAAAU2F6wGWxk8hQABzfIvX5huqvwh9v6tHjXYU/ypjmBpIhaL9ik/
+        d44hyemTlpqeY4/uTvcY20PK58QgCroKVF6mCw==
+X-Google-Smtp-Source: APXvYqzhrwM6pEU0bDIofrePlo2VCS3ovjf/uem6DKwoveAH/lvCKMoeaEMwWSWxTZo0WaInVh5mjHoL5EIGlDYHtoI=
+X-Received: by 2002:a6b:7d09:: with SMTP id c9mr24679346ioq.245.1559726517832;
+ Wed, 05 Jun 2019 02:21:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190605084813.GA26984@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAEYzJUH1L5qyWKN3_s4Sz81frho6nKB9bkyDoGxXCvLNO484ew@mail.gmail.com>
+ <6823d3ab-5f93-da74-0dbc-19bdb7be6907@suse.de> <3399cad5-4387-dd23-77f1-a70e551fb531@suse.de>
+ <CAEYzJUE0SuO3uHm1TTxfr1kPtLic1ggUPnGFYTSPcwk6nfq82g@mail.gmail.com> <78880cf8-07c6-e00d-0084-ce9c211eeec6@suse.de>
+In-Reply-To: <78880cf8-07c6-e00d-0084-ce9c211eeec6@suse.de>
+From:   =?UTF-8?Q?Bj=C3=B8rn_Forsman?= <bjorn.forsman@gmail.com>
+Date:   Wed, 5 Jun 2019 11:21:46 +0200
+Message-ID: <CAEYzJUFUxgQXDTOf5ai9+9UijEL-Eb+_91UbVPC2hc=8G-++4Q@mail.gmail.com>
+Subject: Re: bcache: oops when writing to writeback_percent without a cache device
+To:     Coly Li <colyli@suse.de>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019, Greg Kroah-Hartman wrote:
+On Wed, 5 Jun 2019 at 06:41, Coly Li <colyli@suse.de> wrote:
+>
+> On 2019/6/5 1:24 =E4=B8=8A=E5=8D=88, Bj=C3=B8rn Forsman wrote:
+> > On Tue, 4 Jun 2019 at 17:41, Coly Li <colyli@suse.de> wrote:
+> >>
+> >> On 2019/6/4 10:59 =E4=B8=8B=E5=8D=88, Coly Li wrote:
+> >>> On 2019/6/4 7:00 =E4=B8=8B=E5=8D=88, Bj=C3=B8rn Forsman wrote:
+> >>>> Hi all,
+> >>>>
+> >>>> I get a kernel oops from bcache when writing to
+> >>>> /sys/block/bcache0/bcache/writeback_percent and there is no attached
+> >>>> cache device. See the oops itself below my signature.
+> >>>>
+> >>>> This is on Linux 4.19.46. I looked in git and see many commits to
+> >>>> bcache lately, but none seem to address this particular issue.
+> >>>>
+> >>>> Background: I'm writing to .../writeback_percent with
+> >>>> systemd-tmpfiles. I'd rather not replace it with a script that figur=
+es
+> >>>> out whether or not the kernel will oops if writing to the sysfs file
+> >>>> -- the kernel should not oops in the first place.
+> >>>
+> >>> Hi Bjorn,
+> >>>
+> >>> Thank you for the reporting. I believe this is a case we missed in
+> >>> testings. When a bcache device is not attached, it does not make sens=
+e
+> >>> to update the writeback rate in period by the changing of writeback_p=
+ercent.
+> >>>
+> >>> I will post a patch for your testing soon.
+> >>
+> >> Hi Bjorn,
+> >>
+> >> Could you please to try this patch ? Hope it may help a bit.
+> >
+> > Hi Coly,
+> >
+> > Thanks for the quick patch! I tested it on linux 5.2-rc2 and it indeed
+> > fixes the problem.
+> >
+> > There is one typo in the patch/commit message: s/writebac/writeback/
+> >
+>
+> Hi Bjorn,
+>
+> Thanks for the patch review. Do you mind if I add Reviewed-By: tag with
+> your name and email address ?
 
-> On Wed, Jun 05, 2019 at 09:40:02AM +0100, Lee Jones wrote:
-> > On Wed, 05 Jun 2019, Greg Kroah-Hartman wrote:
-> > 
-> > > On Wed, Jun 05, 2019 at 07:48:39AM +0100, Lee Jones wrote:
-> > > > On Tue, 04 Jun 2019, Greg Kroah-Hartman wrote:
-> > > > > On Tue, Jun 04, 2019 at 11:39:21AM -0700, Guenter Roeck wrote:
-> > > > > > On Tue, Jun 4, 2019 at 11:35 AM Greg Kroah-Hartman
-> > > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > > >
-> > > > > > > On Tue, Jun 04, 2019 at 01:58:38PM -0300, Ezequiel Garcia wrote:
-> > > > > > > > Hey Greg,
-> > > > > > > >
-> > > > > > > > > > + dev_info(&pdev->dev, "Created misc device /dev/%s\n",
-> > > > > > > > > > +          data->misc.name);
-> > > > > > > > >
-> > > > > > > > > No need to be noisy, if all goes well, your code should be quiet.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > I sometimes wonder about this being noise or not, so I will slightly
-> > > > > > > > hijack this thread for this discussion.
-> > > > > > > >
-> > > > > > > > >From a kernel developer point-of-view, or even from a platform
-> > > > > > > > developer or user with a debugging hat point-of-view, having
-> > > > > > > > a "device created" or "device registered" message is often very useful.
-> > > > > > >
-> > > > > > > For you, yes.  For someone with 30000 devices attached to their system,
-> > > > > > > it is not, and causes booting to take longer than it should be.
-> > > > 
-> > > > Who has 30,000 devices attached to their systems?
-> > > 
-> > > More than you might imagine.
-> > > 
-> > > > I would argue that
-> > > > in these special corner-cases, they should knock the log-level *down*
-> > > > a notch.  For the rest of us who run normal platforms, an extra second
-> > > > of boot time renders a more forthcoming/useful system than if each of
-> > > > our devices initialised silently.
-> > > > 
-> > > > Personally I like to know what devices I have on my system, and the
-> > > > kernel log is the first place I look.  As far as I'm concerned, for
-> > > > the most part, if it's not in the kernel log, I don't have it.
-> > > 
-> > > Then you "do not have" lots of devices, as we have been removing these
-> > > messages for a number of years now :)
-> > > 
-> > > >  "Oh wow, I didn't know I had XXX functionality on this platform."
-> > > > 
-> > > > In my real job, I am currently enabling some newly released AArch64
-> > > > based laptops for booting with ACPI.  I must have wasted a day whilst
-> > > > enabling some of the devices the system relies upon, just to find
-> > > > out that 90% of them were actually probing semi-fine (at least probe()
-> > > > was succeeding), just silently. *grumble*
-> > > 
-> > > Yup, that's normal.  If you want to see what devices are in the system,
-> > > look in /sys/devices/ as that is what it is for, not the kernel log.
-> > 
-> > My guess is that less than 1% of Linux users use /sys/devices in this
-> > way.  It's a very unfriendly interface.  Besides, when enabling a new
-> > platform, access to sysfs comes too far down the line to be useful in
-> > the majority of cases.
-> 
-> `lshw` is your friend :)
+Yes, you can add my Reviewed-By: tag.
 
-Provided you have a command line (with `lshw` installed) and a
-working keyboard.  ;)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+Bj=C3=B8rn Forsman
