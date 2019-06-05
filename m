@@ -2,102 +2,124 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B95C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD90FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF412083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6FD20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbjPzh7y"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="n4HjD70o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfFEPtC (ORCPT
+        id S1728550AbfFEPuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:49:02 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:33374 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfFEPtC (ORCPT
+        Wed, 5 Jun 2019 11:50:06 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:36960 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfFEPuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:49:02 -0400
-Received: by mail-pf1-f181.google.com with SMTP id x15so5275917pfq.0;
-        Wed, 05 Jun 2019 08:49:02 -0700 (PDT)
+        Wed, 5 Jun 2019 11:50:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=wb+jj/thnorcdyL/QFDbCuhhmimyl2lyoNTzHydU1U4=;
-        b=XbjPzh7yTvVSKLVy2O38IyLCkryVQxqPByZTLRHG0NpWcBVzok2y8VX2wjMpoy+C9S
-         bHUBNcSQHSkLURY/jtnNtyjXuFtlOvldgWpUAuvbZbRYcg3Ete+el5c10zD3Xzm8DguV
-         DPPekh2iF0Lv3wpb0xWgBUDLvPq1ICd3GbmP7AeEfXk/qlVzc3I8VVs73h1maZLyIVcC
-         YiJPIXA9/auNoU1kx83TCeuQr5GXgq4c02O+k8BLPRZotcaSveeVg+D05Q0agK9ku2S3
-         6juYAK8/HehaBKoKm7qsQWqaAyBcz9DmhNu+xrtNyLS92SyuGAqUEq71fsSV6Qh39Epc
-         BRXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wb+jj/thnorcdyL/QFDbCuhhmimyl2lyoNTzHydU1U4=;
-        b=pewx77i2wRxe4l4lCZQ0849fC3DtXAX0VrlbinXsHsgm2uROtfSSTs4dlZLtEW+QC5
-         YyToVCD/R6q4gN6FO5Y3bK8yhVVRjpk3kxzEORKAx3dVjpge2G0lzQY9CMroICjbzS9o
-         I/RsPgdT0Uxmv3xHqL3pLEKB0dMHP058NUeK0LjvWYEoXoOOgRZDin4+oNo1fLsP9jYU
-         Y3dYv7q9UgMxYQRct4jUPqjlERH5tFOWsTPT09j8TUOEbiyOrCwm3e+iQy2sNnfc2/Gl
-         ihPmU6sU6L4mnFoxnFNWFBFbT5SUpGY+5ibvluceG8spsJsAjWeAQd/UmbAzxYYi97b4
-         pmqg==
-X-Gm-Message-State: APjAAAXAbqOOdleOoBV5pC2Xdm4H5EtC71cwXC5QzYPlwTPGqFXkKvdp
-        sSBQGEMQ8qHGHiG3TOmRHCQ=
-X-Google-Smtp-Source: APXvYqy9IvXux9Zh7VEVq36XWON6hyMBGuSz194eUWoJr9GhJE7pvxBasgOhoWb6XSB25DBEnp+yQA==
-X-Received: by 2002:aa7:8292:: with SMTP id s18mr16034016pfm.111.1559749741871;
-        Wed, 05 Jun 2019 08:49:01 -0700 (PDT)
-Received: from [172.27.227.204] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id f11sm23067144pfd.27.2019.06.05.08.48.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 08:49:01 -0700 (PDT)
-Subject: Re: KASAN: slab-out-of-bounds Read in rt_cache_valid
-To:     syzbot <syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-References: <0000000000008ab73d058a787e2c@google.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <dddafeb7-95a2-52e3-57fa-62c6e4c5b832@gmail.com>
-Date:   Wed, 5 Jun 2019 09:48:58 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559749804; x=1591285804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9MFrYKLeLiHQwuVnld71Reu+eO4VodzjXUL9QDeOO1A=;
+  b=n4HjD70oKmRskPkU3KwatnzxMH9ESC4EKy8YwcDVuXxkIUK4dmlr8cNj
+   EyUaivDB/XsVsLXmgKnALLQaLpXAocoJUn+Av488tuxel8gIJxCUVlMWo
+   gv2k16dFTW9gKbHZIDN4UyD4Ij7cKbSY+K32cx3pBEQz49LbfU02u/3U8
+   8=;
+X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
+   d="scan'208";a="678323901"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Jun 2019 15:50:00 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 9F0BDC10C8;
+        Wed,  5 Jun 2019 15:49:56 +0000 (UTC)
+Received: from EX13D13UWB003.ant.amazon.com (10.43.161.233) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 15:49:55 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D13UWB003.ant.amazon.com (10.43.161.233) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 5 Jun 2019 15:49:55 +0000
+Received: from localhost (10.85.18.74) by mail-relay.amazon.com
+ (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Wed, 5 Jun 2019 15:49:55 +0000
+Date:   Wed, 5 Jun 2019 08:49:55 -0700
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     Talel Shenhar <talel@amazon.com>
+CC:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
+        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
+        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
+        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+Message-ID: <20190605154955.GD1534@u40b0340c692b58f6553c.ant.amazon.com>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+ <1559731921-14023-2-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000008ab73d058a787e2c@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1559731921-14023-2-git-send-email-talel@amazon.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 11:10 PM, syzbot wrote:
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in rt_cache_valid+0x158/0x190
-> net/ipv4/route.c:1556
-> Read of size 2 at addr ffff8880654f3ac7 by task syz-executor.0/26603
+On Wed, Jun 05, 2019 at 01:52:00PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
 > 
-> CPU: 0 PID: 26603 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #9
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
->  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
->  kasan_report+0x12/0x20 mm/kasan/common.c:614
->  __asan_report_load2_noabort+0x14/0x20 mm/kasan/generic_report.c:130
->  rt_cache_valid+0x158/0x190 net/ipv4/route.c:1556
->  __mkroute_output net/ipv4/route.c:2332 [inline]
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../interrupt-controller/amazon,al-fic.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> new file mode 100644
+> index 0000000..a2f31a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> @@ -0,0 +1,22 @@
+> +Amazon's Annapurna Labs Fabric Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
 
-This one appears to be a use after free. The fib entry is still live (in
-the FIB) and the cached entry is still attached. Perhaps one too many
-puts on the dst_entry.
+It would be great if you describe what the 2 numbers must represent here..
 
+> +- interrupt-parent: specifies the parent interrupt controller.
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to.
+> +
+> +Example:
+> +
+> +amazon_fic: amazon_fic {
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <1>;
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 2.7.4
+> 
+
+-- 
+All the best,
+Eduardo Valentin
