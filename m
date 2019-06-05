@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799FEC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B8C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4AB2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32842086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BySmcBdr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rV/FZ2k5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfFEHFs (ORCPT
+        id S1726940AbfFEHFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:05:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36887 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfFEHFo (ORCPT
+        Wed, 5 Jun 2019 03:05:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33179 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfFEHFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:05:44 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 20so11881729pgr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:43 -0700 (PDT)
+        Wed, 5 Jun 2019 03:05:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g21so9362654plq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d2izPr39F3F0VHRMOQwIEoQfvTiBqRIbKynBXN0NUa0=;
-        b=BySmcBdri3W99nnsQSAV43VhgYjxYbf/4s1H2Ffq8FJOzXMN069qRgTdjBnaBeXkKe
-         hyOQGqkICDAwG9O/U+MqLX3sX8C5cWdggkkH5I5PUYi6ALpkAfYnyKBwfMuSGHE03tGV
-         +4eS3liPY8ScJWNsOwZbtepvi9X8H/xWmeApo+/0QzjdkD2LicPI/WhnFLM5HcyS1Usd
-         VEwauu6vJt8efqTX3u8HgwaXCBX2GCwjNmbwJK9jBF/7fbz6sMOz4uKZPDOAckDiw9Nc
-         vCe3jvE+6mHuL+l/IW7M29zfaLOGvuWh2ajB2HcMfXGRFeXi5KKlPFWFfYAb2AZYQJdx
-         8nQQ==
+        bh=rbPIQS9Fmw5oTtgndIQLG4f4C7zxyYTux8kyKub57FA=;
+        b=rV/FZ2k5ROTiwaU+QXmT18Q1X1XIfCyR4CuDNLomAL9GmG0K/H7k/bXUWOVlmzuxqr
+         be68f1Qm8zwGc69LlLEY8vyoyGxmNKq55wQVgKt/VXliZaiPk3mV99UE1jVCCM/B4cPI
+         /asHO2RFXQmPBlhXRY1iQpScW0QI69rG+4BevPUvNLGUIghl/BgY3M/rh1h2aFLGD26y
+         Bs7o/6pdZ6XOABeOEynE65OpxMzLv1sFJd9kv0B8TCA770G1lPRQLoTCyzumG331Alzb
+         0TSoxYTi5nJSmy51QGVkT8NUpMW7xCNmhtz+ulFHyySALZYnIobgPOCHzNk7YNdEOqoM
+         Vudg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d2izPr39F3F0VHRMOQwIEoQfvTiBqRIbKynBXN0NUa0=;
-        b=p/Oz57xSMOfTn8wcCldx02ZlITMD0qQCwRh41cXndBmKCNEnhtMByl9BfP1XXNALVO
-         HUkOlNhbahtgAW4xqPRnb4kwBYcpzJxe7uUVYOAZLH+1Z14fqpgTemxsgzoBJ0w6XJA6
-         4TKZ0qNFLGwMfRTz0nAef8EeG2BVhiqdX5LR4lfy8zcXfZyjz+KRxutf1HQye2Er5K9I
-         IN4nFXx2MyWlBNe0LITqQA8cmYgaDqm1Fh/4hxRSYC/wcaWfNC+uotqxcAtqDQFvArFI
-         /RM24lXgpHm3iuPVgbAznsElIU4AppKr95TOeCOYTPYW8zIQDbztII2raSIRtSC7k8rl
-         B2eg==
-X-Gm-Message-State: APjAAAVZeSXJkESz0Z+9iIdr8idKuOEyHL59hHR96JuJ0oJ8MhXdHlXI
-        CuXBa791nStiAsWSdXPHXoQ=
-X-Google-Smtp-Source: APXvYqxifsh8LBT0sk9LAzZyDwQ07jHD8F1USZwx/MC+2mwHbldjh1VnrJKg1q3DGXF67e3q25xX8w==
-X-Received: by 2002:a63:a449:: with SMTP id c9mr2466787pgp.149.1559718343138;
-        Wed, 05 Jun 2019 00:05:43 -0700 (PDT)
+        bh=rbPIQS9Fmw5oTtgndIQLG4f4C7zxyYTux8kyKub57FA=;
+        b=XuTfQu0YrA3ShkFVqr760F4AE1y2PX3moPGGiGVRsSQPJ6uoNvb7v43yIcLOer3Ctk
+         HuQuyGn5tSbAFhiTwm0ZYhYdzDMXmNy45Y4+b8B4mYRPdTamuOBNXzscy4FZrKkoMxiJ
+         I/bRk9hhw0+/iuvvYK1qMNticG1eCDuoYgYM+zsBbpUKkrJXYQXpTHVYbBTEUKjkmGN0
+         1IwLkK5mnvh8FLBYOC+NEADrtRC051n4Odi4rBAK659ZcwFQgxXfBPKPRsIEPLdSuV3O
+         8eeHcqlAgcYnLAPw6/S7Yu7x93Yo9dEq8M3tl5NeKF+3qo+f//efloEJEU1aKAublztQ
+         1Qrg==
+X-Gm-Message-State: APjAAAXe2Mib3gx270dz3JxS68cLO0Fy87kGl5RqWcxO31M1jIN9Qqt1
+        pjwztvbnbSt+XRdJLYzJZZWOzluoeTc=
+X-Google-Smtp-Source: APXvYqwwtx7cLpi6/3SbzLxsfe67iwSRMqCZtxpzZk6fJB29m0FN0KYAyk+OHByP79AIhNJLX7RDzw==
+X-Received: by 2002:a17:902:542:: with SMTP id 60mr19568359plf.68.1559718346021;
+        Wed, 05 Jun 2019 00:05:46 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.41
+        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 00:05:42 -0700 (PDT)
+        Wed, 05 Jun 2019 00:05:45 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 13/15] drm/bridge: tc358767: Simplify tc_aux_wait_busy()
-Date:   Wed,  5 Jun 2019 00:05:05 -0700
-Message-Id: <20190605070507.11417-14-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 15/15] drm/bridge: tc358767: Replace magic number in tc_main_link_enable()
+Date:   Wed,  5 Jun 2019 00:05:07 -0700
+Message-Id: <20190605070507.11417-16-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190605070507.11417-1-andrew.smirnov@gmail.com>
 References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
@@ -83,8 +83,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We never pass anything but 100 as timeout_ms to tc_aux_wait_busy(), so
-we may as well hardcode that value and simplify function's signature.
+We don't need 8 byte array, DP_LINK_STATUS_SIZE (6) should be
+enough. This also gets rid of a magic number as a bonus.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Archit Taneja <architt@codeaurora.org>
@@ -99,43 +99,21 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index a04401cf2a92..4fe7641f84ee 100644
+index 41a976dff13b..cf38f943e656 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -294,10 +294,9 @@ static inline int tc_poll_timeout(struct tc_data *tc, unsigned int addr,
- 					sleep_us, timeout_us);
- }
- 
--static int tc_aux_wait_busy(struct tc_data *tc, unsigned int timeout_ms)
-+static int tc_aux_wait_busy(struct tc_data *tc)
- {
--	return tc_poll_timeout(tc, DP0_AUXSTATUS, AUX_BUSY, 0,
--			       1000, 1000 * timeout_ms);
-+	return tc_poll_timeout(tc, DP0_AUXSTATUS, AUX_BUSY, 0, 1000, 100000);
- }
- 
- static int tc_aux_write_data(struct tc_data *tc, const void *data,
-@@ -370,7 +369,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	u32 auxstatus;
+@@ -893,7 +893,7 @@ static int tc_main_link_enable(struct tc_data *tc)
+ 	u32 dp_phy_ctrl;
+ 	u32 value;
  	int ret;
+-	u8 tmp[8];
++	u8 tmp[DP_LINK_STATUS_SIZE];
  
--	ret = tc_aux_wait_busy(tc, 100);
-+	ret = tc_aux_wait_busy(tc);
- 	if (ret)
- 		return ret;
- 
-@@ -397,7 +396,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	if (ret)
- 		return ret;
- 
--	ret = tc_aux_wait_busy(tc, 100);
-+	ret = tc_aux_wait_busy(tc);
- 	if (ret)
- 		return ret;
+ 	dev_dbg(tc->dev, "link enable\n");
  
 -- 
 2.21.0
