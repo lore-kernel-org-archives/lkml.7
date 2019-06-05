@@ -2,127 +2,106 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E50BC28CC6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4173CC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7800B2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B61B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="L5rDmFGR";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bRU0wRy2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PIJl5hSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfFEFuk (ORCPT
+        id S1726593AbfFEFwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 01:50:40 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:21517 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfFEFuj (ORCPT
+        Wed, 5 Jun 2019 01:52:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52902 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfFEFwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 01:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559713839; x=1591249839;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=V23UQoLuR8JfcnTKw+reL88TN+mD9zb++TQbqJi3rt8=;
-  b=L5rDmFGRwqT9AxB9FIzSc4JW24PhpVGK0IR3GRetQancCFd9KlzU1Bnf
-   95N7AxtsO51dM45TfTuZ9UUXGgJ4FUDWTjHBFu81TDCYOyTKF82wrqLgx
-   tyzWYZhkI8GuKEYot7SkWGnTpcz25UMgMApqZBfxiGbA9TfR/J6qH090x
-   jCWEZy7kzXrGQqk4DJBPwLLYCew/7gIlYfKwG+34t4V6+ZNMexrsCrOsz
-   UfeYXNLsgvoRHnOL5f5hMBpegYo+vmbZxXkaEGnG0q8ShN9bE92F34sT5
-   fD1SfrIUkqD51nye+g+57jzfEMYlvfxNcVcuITQZXiPQUcpdv1C8uRTAC
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549900800"; 
-   d="scan'208";a="111507124"
-Received: from mail-sn1nam01lp2058.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.58])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Jun 2019 13:50:38 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V23UQoLuR8JfcnTKw+reL88TN+mD9zb++TQbqJi3rt8=;
- b=bRU0wRy2MGCJx1+aiQtjvmCRrino99uux6SOpl2ZJp/UFzssOR0chzp2Sn1zlhiVimnnz45mcF5f3fuOcZfn4uVggpylVpf8/78yekEAj+Fs5ygeGrKk9bG+srDulGwPzNE7yPIwLkcFLw5lWVmMMbBOQGrOygsbKxZNrUYjuF0=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4335.namprd04.prod.outlook.com (52.135.72.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Wed, 5 Jun 2019 05:50:36 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530%6]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
- 05:50:36 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Topic: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Index: AQHVGqYAlQFsNx0blUeatbYnjFKLiqaMDImAgACCvoA=
-Date:   Wed, 5 Jun 2019 05:50:36 +0000
-Message-ID: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
-In-Reply-To: <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2717869a-9cec-4eb0-6dd4-08d6e979bb7f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4335;
-x-ms-traffictypediagnostic: SN6PR04MB4335:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4335CC9F1C4F1146AACC75F6FC160@SN6PR04MB4335.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(2906002)(256004)(9686003)(55016002)(99286004)(71200400001)(3846002)(81166006)(6116002)(71190400001)(5660300002)(6246003)(53936002)(4744005)(33656002)(11346002)(446003)(486006)(4326008)(25786009)(52536014)(476003)(54906003)(110136005)(53546011)(6506007)(102836004)(7696005)(186003)(14454004)(316002)(76116006)(66556008)(76176011)(72206003)(14444005)(86362001)(478600001)(26005)(81156014)(7736002)(7416002)(229853002)(8676002)(8936002)(68736007)(64756008)(66476007)(73956011)(66946007)(74316002)(305945005)(66446008)(6436002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4335;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: e+yJZSvXZp7ShiVLuSaJeJNOAQOkSlqfUcc2sbw/IDQKRtzEafDdMrq/uqvQhhZyRfqaesrXuIe/xcpmvY28LutBjY0SGFlrjLFZjrSV2YIvNSIUosXW2IxNfn9EK8Bg38DXYHU1ctttswuQ9+3u0j12lK6+zU67ktkULGlMZxZdX+wl5ZLKlHPet5rwAYxh/sRSfvS/fHH5OW2koX4ooiBCLwPPiytpPIj3yprCA3ULODNbK3uMw5y2kIEZoK9sNQd/EpifO+YmZg3ffWr1ecwl3BMa0wphMt3jYIIWokPXdwiRIxU2eonbsLGriMT0gSHLG0bwIAce/cyWO2nu14LPhPtJmiEZHejETgSG0764vGQhXXqlYCu1eaBizoDh/fxch87JWPdDcTxQASsCedrHNiM/YtbYA6WwRYJIZyk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 5 Jun 2019 01:52:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mQPnxrhp5YNAxbcRHunQ2loi4lsOMm2nCJapuHt3yu8=; b=PIJl5hSe98LLKx79uZ1dqZsNg
+        b2rndQ5ZR8VcWAZeunlR8hh5a5sMcO8TUDiKi+ddHBvHfo49KDV+Wt5b7npFln+CQ6BC8G7/76nmP
+        Iorz+ZIr/BBYin/WF+R7snd+9qpPsajI1isSocXkdQ6ed/FKCltCJsufpjfi8FPmir+YW+f15hwjN
+        pPyk1fwo3QRljg46ofS8KUKwwHPJPh3TuKYqaWqIkzJrnfPu4XZ2R1VxBXz21NZ9MXdsMDDK8Ohlc
+        TmrfGKrzenAu7LFttfAqfYLyTW/947yKE9E2vxqkajbskJ53kpTt/7UILS0lD2aCWUu6vMTLK2d23
+        wFmcyw+nw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYOqK-0005Zc-T9; Wed, 05 Jun 2019 05:52:12 +0000
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        John Crispin <blogic@openwrt.org>,
+        Felix Fietkau <nbd@openwrt.org>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        kbuild test robot <lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] net: ethernet: mediatek: fix mtk_eth_soc build errors &
+ warnings
+Message-ID: <85d9fdd9-4b7f-6a51-b885-b3a43f199ec9@infradead.org>
+Date:   Tue, 4 Jun 2019 22:52:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2717869a-9cec-4eb0-6dd4-08d6e979bb7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 05:50:36.4249
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4335
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gDQo+IE9uIFR1ZSwgSnVuIDQsIDIwMTkgYXQgMTI6MjIgQU0gQmpvcm4gQW5kZXJz
-c29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBUaGlz
-IHNlcmllcyBleHBvc2VzIHRoZSB1ZnNfcmVzZXQgbGluZSBhcyBhIGdwaW8sIGFkZHMgc3VwcG9y
-dCBmb3IgdWZzaGNkIHRvDQo+ID4gYWNxdWlyZSBhbmQgdG9nZ2xlIHRoaXMgYW5kIHRoZW4gYWRk
-cyB0aGlzIHRvIFNETTg0NSBNVFAuDQo+ID4NCj4gPiBCam9ybiBBbmRlcnNzb24gKDMpOg0KPiA+
-ICAgcGluY3RybDogcWNvbTogc2RtODQ1OiBFeHBvc2UgdWZzX3Jlc2V0IGFzIGdwaW8NCj4gPiAg
-IHNjc2k6IHVmczogQWxsb3cgcmVzZXR0aW5nIHRoZSBVRlMgZGV2aWNlDQo+ID4gICBhcm02NDog
-ZHRzOiBxY29tOiBzZG04NDUtbXRwOiBTcGVjaWZ5IFVGUyBkZXZpY2UtcmVzZXQgR1BJTw0KPiAN
-Cj4gQWRkaW5nIHNpbWlsYXIgY2hhbmdlIGFzIGluIHNkbTg0NS1tdHAgdG8gdGhlIG5vdCB5ZXQg
-dXBzdHJlYW0NCj4gYmx1ZWxpbmUgZHRzLCBJIHZhbGlkYXRlZCB0aGlzIGFsbG93cyBteSBtaWNy
-b24gVUZTIHBpeGVsMyB0byBib290Lg0KPiANCj4gVGVzdGVkLWJ5OiBKb2huIFN0dWx0eiA8am9o
-bi5zdHVsdHpAbGluYXJvLm9yZz4NCk1heWJlIHVmc19oYmFfdmFyaWFudF9vcHMgd291bGQgYmUg
-dGhlIHByb3BlciBwbGFjZSB0byBhZGQgdGhpcz8NCg0KVGhhbmtzLA0KQXZyaQ0KDQoNCg0KPiAN
-Cj4gdGhhbmtzDQo+IC1qb2huDQo=
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix build errors in Mediatek mtk_eth_soc driver.
+
+It looks like these 3 source files were meant to be linked together
+since 2 of them are library-like functions,
+but they are currently being built as 3 loadable modules.
+
+Fixes these build errors:
+
+  WARNING: modpost: missing MODULE_LICENSE() in drivers/net/ethernet/mediatek/mtk_eth_path.o
+  WARNING: modpost: missing MODULE_LICENSE() in drivers/net/ethernet/mediatek/mtk_sgmii.o
+  ERROR: "mtk_sgmii_init" [drivers/net/ethernet/mediatek/mtk_eth_soc.ko] undefined!
+  ERROR: "mtk_setup_hw_path" [drivers/net/ethernet/mediatek/mtk_eth_soc.ko] undefined!
+  ERROR: "mtk_sgmii_setup_mode_force" [drivers/net/ethernet/mediatek/mtk_eth_soc.ko] undefined!
+  ERROR: "mtk_sgmii_setup_mode_an" [drivers/net/ethernet/mediatek/mtk_eth_soc.ko] undefined!
+  ERROR: "mtk_w32" [drivers/net/ethernet/mediatek/mtk_eth_path.ko] undefined!
+  ERROR: "mtk_r32" [drivers/net/ethernet/mediatek/mtk_eth_path.ko] undefined!
+
+This changes the loadable module name from mtk_eth_soc to mtk_eth.
+I didn't see a way to leave it as mtk_eth_soc.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Sean Wang <sean.wang@mediatek.com>
+Cc: John Crispin <blogic@openwrt.org>
+Cc: Felix Fietkau <nbd@openwrt.org>
+Cc: Nelson Chang <nelson.chang@mediatek.com>
+---
+ drivers/net/ethernet/mediatek/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- linux-next-20190604.orig/drivers/net/ethernet/mediatek/Makefile
++++ linux-next-20190604/drivers/net/ethernet/mediatek/Makefile
+@@ -3,5 +3,5 @@
+ # Makefile for the Mediatek SoCs built-in ethernet macs
+ #
+ 
+-obj-$(CONFIG_NET_MEDIATEK_SOC)                 += mtk_eth_soc.o mtk_sgmii.o \
+-						  mtk_eth_path.o
++obj-$(CONFIG_NET_MEDIATEK_SOC)                 += mtk_eth.o
++mtk_eth-y := mtk_eth_soc.o mtk_sgmii.o mtk_eth_path.o
+
+
