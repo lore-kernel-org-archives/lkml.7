@@ -2,81 +2,126 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4527FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B11C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EB820872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6/CTKw2"
+	by mail.kernel.org (Postfix) with ESMTP id 44F15206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFEUHp (ORCPT
+        id S1726648AbfFEUIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:07:45 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:38450 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfFEUHo (ORCPT
+        Wed, 5 Jun 2019 16:08:05 -0400
+Received: from emh03.mail.saunalahti.fi ([62.142.5.109]:37188 "EHLO
+        emh03.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfFEUIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:07:44 -0400
-Received: by mail-io1-f49.google.com with SMTP id k13so546081iop.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 13:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YWPCkjiDpsVKRA3zAFLVPrJDaYwckwujcOqte+GF4Qs=;
-        b=Y6/CTKw2HpfFzRV8cVp90r2srB2SmP6at0zd+tEXm7XFl50kmu/Y3nIEEWGg3Kzk/B
-         l3D3Qr4UiAJUphHXpmvTqTi4wbNRjrImrlG7ZnCCJKH8FdZqjq4BvR9hjClj79ZJXtpo
-         wJwy3Sz8MDxzQjIUSDal0FQ4e3ED/l4WprxHOQB1SqDvdINs5Z2Iqe466nxFxl7DIM25
-         bdtQ+7JbvDnxmhTWFmbnWKhDxV3HeUg0fR3ZqWqUeprL7yqliCoe6qJGgY9soYeL2+c4
-         g5KyxxMf4S0cwbsB+gEsHrj/UZW1Nk7qSFO7PfGWDWJQGbArg1y384v4TeP+oCHceLWr
-         6KCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YWPCkjiDpsVKRA3zAFLVPrJDaYwckwujcOqte+GF4Qs=;
-        b=EjXUeRXhSts3UyKkdcJo4H0voNLXs04AbI7GgppTXgt9V+L4VjYGYRdH2oBcmT9xFd
-         adrWaTn5LzKA72RzL03lOphiLBKPiQ4Qe0brfeGcKo7FfFULVIQQ8M0F1U5NlOW0VTrb
-         FNdFvkdiVCIcGbmJ3P/NwPG8eBudg5jN2RfqcnZzdh/88KySVA3cgXEhUGmBxUYve92H
-         K7Grs71N3BKmphEikdIM9wrKfDJiQYvcaVgxO/htYPyK10nw4UbKH9ki6As81PG7WpFX
-         tWZQoLIu36ZlY6LLpFsu/Ldj2D/eZ6ebJ9bZNVrWPC23b78h7IEkIt/gQ96mohnYVGL7
-         C5sQ==
-X-Gm-Message-State: APjAAAUPKDFjL6Fw9fHn9XVHZLgNnzRV82vG/jJfEf5tChHrimMKkFkE
-        wiWljo9Z8aEAsig0QsZELX64LzWGS3KDxTb/DvOaggBHeu4ziw==
-X-Google-Smtp-Source: APXvYqzGleq5vDpqLVlVafId0CX+B2A32E7+JeJwJXNMpga7x9yP1fKCekdulEwyHbBdx18n2S7Lth9ehJe4hSJLcVk=
-X-Received: by 2002:a5d:9d8a:: with SMTP id 10mr9444816ion.179.1559765263703;
- Wed, 05 Jun 2019 13:07:43 -0700 (PDT)
+        Wed, 5 Jun 2019 16:08:05 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-64-161-nat.elisa-mobile.fi [85.76.64.161])
+        by emh03.mail.saunalahti.fi (Postfix) with ESMTP id B9366400BA;
+        Wed,  5 Jun 2019 23:08:00 +0300 (EEST)
+Date:   Wed, 5 Jun 2019 23:08:00 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3] powerpc: fix kexec failure on book3s/32
+Message-ID: <20190605200800.GK3538@darkstar.musicnaut.iki.fi>
+References: <56efc3b317622d5f607d1f7a35894b194c385492.1559549824.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
- <CABXGCsNq4xTFeeLeUXBj7vXBz55aVu31W9q74r+pGM83DrPjfA@mail.gmail.com> <20190529180931.GI18589@dhcp22.suse.cz>
-In-Reply-To: <20190529180931.GI18589@dhcp22.suse.cz>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Thu, 6 Jun 2019 01:07:32 +0500
-Message-ID: <CABXGCsNTjHhpK4OoGxo+rcp60F0pAc377KpdsrgWptyFjfLLog@mail.gmail.com>
-Subject: Re: kernel BUG at mm/swap_state.c:170!
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56efc3b317622d5f607d1f7a35894b194c385492.1559549824.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 23:09, Michal Hocko <mhocko@kernel.org> wrote:
->
-> Do you see the same with 5.2-rc1 resp. 5.1?
+Hi,
 
-The problem still occurs at 5.2-rc3.
-Unfortunately hard reproducible does not allow to make bisect.
-Any ideas what is wrong?
+On Mon, Jun 03, 2019 at 08:20:28AM +0000, Christophe Leroy wrote:
+> In the old days, _PAGE_EXEC didn't exist on 6xx aka book3s/32.
+> Therefore, allthough __mapin_ram_chunk() was already mapping kernel
+> text with PAGE_KERNEL_TEXT and the rest with PAGE_KERNEL, the entire
+> memory was executable. Part of the memory (first 512kbytes) was
+> mapped with BATs instead of page table, but it was also entirely
+> mapped as executable.
+> 
+> In commit 385e89d5b20f ("powerpc/mm: add exec protection on
+> powerpc 603"), we started adding exec protection to some 6xx, namely
+> the 603, for pages mapped via pagetables.
+> 
+> Then, in commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+> STRICT_KERNEL_RWX"), the exec protection was extended to BAT mapped
+> memory, so that really only the kernel text could be executed.
+> 
+> The problem here is that kexec is based on copying some code into
+> upper part of memory then executing it from there in order to install
+> a fresh new kernel at its definitive location.
+> 
+> However, the code is position independant and first part of it is
+> just there to deactivate the MMU and jump to the second part. So it
+> is possible to run this first part inplace instead of running the
+> copy. Once the MMU is off, there is no protection anymore and the
+> second part of the code will just run as before.
+> 
+> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  Aaro, can you test this patch ? Thanks.
 
---
-Best Regards,
-Mike Gavrilov.
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+
+A.
+
+>  arch/powerpc/include/asm/kexec.h       | 3 +++
+>  arch/powerpc/kernel/machine_kexec_32.c | 4 +++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index 4a585cba1787..c68476818753 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -94,6 +94,9 @@ static inline bool kdump_in_progress(void)
+>  	return crashing_cpu >= 0;
+>  }
+>  
+> +void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_code_buffer,
+> +			 unsigned long start_address) __noreturn;
+> +
+>  #ifdef CONFIG_KEXEC_FILE
+>  extern const struct kexec_file_ops kexec_elf64_ops;
+>  
+> diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/machine_kexec_32.c
+> index affe5dcce7f4..2b160d68db49 100644
+> --- a/arch/powerpc/kernel/machine_kexec_32.c
+> +++ b/arch/powerpc/kernel/machine_kexec_32.c
+> @@ -30,7 +30,6 @@ typedef void (*relocate_new_kernel_t)(
+>   */
+>  void default_machine_kexec(struct kimage *image)
+>  {
+> -	extern const unsigned char relocate_new_kernel[];
+>  	extern const unsigned int relocate_new_kernel_size;
+>  	unsigned long page_list;
+>  	unsigned long reboot_code_buffer, reboot_code_buffer_phys;
+> @@ -58,6 +57,9 @@ void default_machine_kexec(struct kimage *image)
+>  				reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
+>  	printk(KERN_INFO "Bye!\n");
+>  
+> +	if (!IS_ENABLED(CONFIG_FSL_BOOKE) && !IS_ENABLED(CONFIG_44x))
+> +		relocate_new_kernel(page_list, reboot_code_buffer_phys, image->start);
+> +
+>  	/* now call it */
+>  	rnk = (relocate_new_kernel_t) reboot_code_buffer;
+>  	(*rnk)(page_list, reboot_code_buffer_phys, image->start);
+> -- 
+> 2.13.3
+> 
