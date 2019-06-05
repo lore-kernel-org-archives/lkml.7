@@ -2,125 +2,151 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449CDC46470
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7738BC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1949E2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559727181;
-	bh=9yRQKQmW+n1NU2z2O3UWtAUpNtMId+rKeTGOyyhWZf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2c5OLH8p3b4QvQcl3ENfL9ujC1u5jBnCwFDw+fsZoLFfCTD8Me7fmkaS2Z0KTg3JH
-	 68ZqlsgFdgOzBTrLLI/anpVsfE7QUelSp1EH+ea24StoEocgfrgP4T3t45TjTx40LL
-	 bxjjZLD2Ozp8ej5xyXfRgDxan6DX73reb2ANduVw=
+	by mail.kernel.org (Postfix) with ESMTP id 5A9F520717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfFEJdA (ORCPT
+        id S1727045AbfFEJfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:33:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33780 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726690AbfFEJdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:33:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E493CAEA3;
-        Wed,  5 Jun 2019 09:32:57 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 11:32:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <zi.yan@cs.rutgers.edu>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
- allocations"
-Message-ID: <20190605093257.GC15685@dhcp22.suse.cz>
-References: <20190503223146.2312-1-aarcange@redhat.com>
- <20190503223146.2312-3-aarcange@redhat.com>
- <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
- <20190520153621.GL18914@techsingularity.net>
- <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
- <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
- <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com>
- <20190531092236.GM6896@dhcp22.suse.cz>
- <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
+        Wed, 5 Jun 2019 05:35:09 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:59686 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbfFEJfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:35:09 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 7734AA0191;
+        Wed,  5 Jun 2019 11:35:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id zXe4_JImFazw; Wed,  5 Jun 2019 11:35:02 +0200 (CEST)
+Subject: Re: [PATCH 2/2 v4] tty/serial/8250: use mctrl_gpio helpers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+References: <20190603083332.12480-1-sr@denx.de>
+ <20190603083332.12480-2-sr@denx.de>
+ <20190604165224.GP9224@smile.fi.intel.com>
+From:   Stefan Roese <sr@denx.de>
+Message-ID: <115804ab-7d7c-a656-e6f4-ad61b3e02705@denx.de>
+Date:   Wed, 5 Jun 2019 11:35:01 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190604165224.GP9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-05-19 14:53:35, David Rientjes wrote:
-> On Fri, 31 May 2019, Michal Hocko wrote:
+On 04.06.19 18:52, Andy Shevchenko wrote:
+> On Mon, Jun 03, 2019 at 10:33:32AM +0200, Stefan Roese wrote:
+>> From: Yegor Yefremov <yegorslists@googlemail.com>
+>>
+>> This patch permits the usage for GPIOs to control
+>> the CTS/RTS/DTR/DSR/DCD/RI signals.
 > 
-> > > The problem which this patch addresses has apparently gone unreported for 
-> > > 4+ years since
-> > 
-> > Can we finaly stop considering the time and focus on the what is the
-> > most reasonable behavior in general case please? Conserving mistakes
-> > based on an argument that we have them for many years is just not
-> > productive. It is very well possible that workloads that suffer from
-> > this simply run on older distribution kernels which are moving towards
-> > newer kernels very slowly.
-> > 
+>> +	if (up->gpios) {
 > 
-> That's fine, but we also must be mindful of users who have used 
-> MADV_HUGEPAGE over the past four years based on its hard-coded behavior 
-> that would now regress as a result.
-
-Absolutely, I am all for helping those usecases. First of all we need to
-understand what those usecases are though. So far we have only seen very
-vague claims about artificial worst case examples when a remote access
-dominates the overall cost but that doesn't seem to be the case in real
-life in my experience (e.g. numa balancing will correct things or the
-over aggressive node reclaim tends to cause problems elsewhere etc.).
-
-That being said I am pretty sure that a new memory policy as proposed
-previously that would allow for a node reclaim behavior is a way for
-those very specific workloads that absolutely benefit from a local
-access. There are however real life usecases that benefit from THP even
-on remote nodes as explained by Andrea (most notable kvm) and the only
-way those can express their needs is the madvise flag. Not to mention
-that the default node reclaim behavior might cause excessive reclaim
-as demonstrate by Mel and Anrea and that is certainly not desirable in
-itself.
-
-[...]
-> > > My goal is to reach a solution that does not cause anybody to incur 
-> > > performance penalties as a result of it.
-> > 
-> > That is certainly appreciated and I can offer my help there as well. But
-> > I believe we should start with a code base that cannot generate a
-> > swapping storm by a trivial code as demonstrated by Mel. A general idea
-> > on how to approve the situation has been already outlined for a default
-> > case and a new memory policy has been mentioned as well but we need
-> > something to start with and neither of the two is compatible with the
-> > __GFP_THISNODE behavior.
-> > 
+>> +		mctrl_gpio_set(up->gpios, mctrl_gpio);
+>> +	}
 > 
-> Thus far, I haven't seen anybody engage in discussion on how to address 
-> the issue other than proposed reverts that readily acknowledge they cause 
-> other users to regress.  If all nodes are fragmented, the swap storms that 
-> are currently reported for the local node would be made worse by the 
-> revert -- if remote hugepages cannot be faulted quickly then it's only 
-> compounded the problem.
+> ...
+> 
+>> +	if (up->gpios) {
+> 
+>> +		mctrl_gpio = mctrl_gpio_get_outputs(up->gpios, &mctrl_gpio);
+> 
+>> +	}
+> 
+> ...
+> 
+>> +			gpios = mctrl_gpio_init(&uart->port, 0);
+>> +			if (IS_ERR(gpios)) {
+>> +				if (PTR_ERR(gpios) != -ENOSYS)
+>> +					return PTR_ERR(gpios);
+>> +			}
+> 
+> ...
+> 
+>> +	if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios,
+>> +						UART_GPIO_RTS))) {
+> 
+>> +	}
+> 
+> ...
+> 
+>> -	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW) {
+>> +	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW
+>> +		&& IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios,
+>> +							UART_GPIO_RTS))) {
+> 
+>> }
+> 
+> ...
+> 
+>> +	if (up->gpios)
+>> +		mctrl_gpio_disable_ms(up->gpios);
+> 
+> ...
+> 
+>> +	if (up->gpios)
+>> +		mctrl_gpio_enable_ms(up->gpios);
+> 
+> ...
+> 
+>> +	if (up->gpios)
+>> +		return mctrl_gpio_get(up->gpios, &ret);
+> 
+> 
+> Can we rather make this mimic the gpiod_get_optional() API?
+> 
+> So, if we get an error, it's an error, otherwise with NULL pointer the
+> operations goes to be no-op.
+> 
+> [IS_ERR_OR_NULL() -> IS_ERR(), if (up->gpios) -> /dev/null, etc]
 
-Andrea has outline the strategy to go IIRC. There also has been a
-general agreement that we shouldn't be over eager to fall back to remote
-nodes if the base page size allocation could be satisfied from a local node.
--- 
-Michal Hocko
-SUSE Labs
+So you want me to drop all "if (up->gpios)" checks? I can do this in
+some cases (e.g. serial8250_disable_ms()). But I would like to keep
+it in other cases, like serial8250_out_MCR(), where this check prevents
+some unnecessary code execution in the "non-gpios mode" (and vice-versa).
+
+Would this be acceptable?
+
+BTW: Regarding the OMAP specific code: I'm not the author of this code
+and I don't have access to such hardware to do some tests here. But
+changing IS_ERR_OR_NULL() -> IS_ERR() in this OMAP code does not
+seem correct. IIUTC, these "if" clauses are extended here by
+IS_ERR_OR_NULL(mctrl_gpio_to_gpiod()) to check if the GPIO's are not
+enabled / used. Currently this will probably break, since when called
+with "gpios == NULL", mctrl_gpio_to_gpiod() will crash [1].
+
+If you don't object (or have other suggestions), I'll change this to
+use "up->gpios == 0" instead. This seems to be what the original author
+wanted to achieve.
+
+Okay?
+
+Thanks,
+Stefan
+
+[1]
+
+struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+				      enum mctrl_gpio_idx gidx)
+{
+	return gpios->gpio[gidx];
+}
