@@ -2,117 +2,84 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FEDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC0C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6F20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mML4dgqZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0802B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfFEBKa (ORCPT
+        id S1726502AbfFEBQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 21:10:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39468 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFEBKI (ORCPT
+        Tue, 4 Jun 2019 21:16:01 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:40036 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfFEBQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 21:10:08 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i125so4146373qkd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zQKkpwtYkmsAlAHS1/A4fUvJkej14tNEkYhCxUI7UmE=;
-        b=mML4dgqZiU8wAr0d5ViMsn+/5YALz6+FqkNUxcR95xosVUMIBi6CodrS3m6LUmE7yq
-         N0F3JXgJcb1GrLlzx5hFiCb0Vy7BGKqS09iQ8rxnyjB1ogbN/tXJBEs0BTvdZhyFodrE
-         vlN2ULSryR+pLbKQ2+otlPq6cGq3E4yw8AW59O6bwCneCoXbyoTguYBOdEgou7Q1hXJe
-         ZH9flwTsYEX4uhJPyhF/UI9IT1KYIBswMCgdS2x0kGXn3NFKogznM2Q9kJwEuE6dhDjY
-         rVjphXLFxgl7LTBv3lmLRWsggp/UsoU8fcYAwJVXddBeunRLMW6wfZNdqtXo8GFUc8a/
-         FwGQ==
+        Tue, 4 Jun 2019 21:16:01 -0400
+Received: by mail-it1-f200.google.com with SMTP id u10so591453itb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 18:16:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zQKkpwtYkmsAlAHS1/A4fUvJkej14tNEkYhCxUI7UmE=;
-        b=es2T0DJsVePi77lyIHq4+XMQVj5kC6lPL10RBVnH/67AF4QPto+45LzGqAcSfljWi4
-         ItU9st05DLxcmBqLGk77uHjBeZFCCE11rPfAggNFdEVZ9Kt9z09RvC1my4jgWWmR3J2m
-         JnqHuQFKV/gBEfIeoafqDZ0CyvRBDDlQ7omdhZb00vrYTtV5ccsI0b/oLhSG0rtAWw4R
-         CalYJIh35k8p+QXZw8EWpS+d8rJRqVUQDoBv7shH2QnmW8uG36/Qv692nJwthGxF1XSE
-         f+yAuMqtogody98l2wURMJFkSMsPKDt/hjTh4fN8W2jOAsqUb9bQhs/niByuXVhwT0MJ
-         MmWw==
-X-Gm-Message-State: APjAAAXIthHQ2CwG7yuvw+eYYd+rd/ZYCG35IoxNbt0SC9By/k3BOiq0
-        qk/C6wVCSnyJfy2tCfOt4TJOOSYcUco=
-X-Google-Smtp-Source: APXvYqzPJdWBc2QIMT3Y6iL4ReXMlGY1hQuJNW76I+wcdqm0YiOxcQSdaP6E9QroOX3kgbi3s4xLBQ==
-X-Received: by 2002:a37:6086:: with SMTP id u128mr10837297qkb.270.1559697007568;
-        Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
-Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id v41sm7169401qta.78.2019.06.04.18.10.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 18:10:07 -0700 (PDT)
-From:   Geordan Neukum <gneukum1@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Geordan Neukum <gneukum1@gmail.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        Jeremy Sowden <jeremy@azazel.net>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] staging: kpc2000: kpc_spi: remove unnecessary struct member word_len
-Date:   Wed,  5 Jun 2019 01:09:10 +0000
-Message-Id: <16f6ea93695137a9347203f66aff36874730cc26.1559696611.git.gneukum1@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1559696611.git.gneukum1@gmail.com>
-References: <cover.1559696611.git.gneukum1@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=tq94hQ5Or5MBqoFOhglGdojFAqBC1MTKP/WSj5YIV/8=;
+        b=ul3h1ARL6gd8EQU+e1NzyWursTH+hoI+a2DR+w2Qzy2jnYp4d7L9uWPTII8E6nugFW
+         z5ip2pPdpDN8hR+7V84G+E3Mc6kJ70uYnDOB8ndzkP2+bNxPa+7R+M1XqDI8kZ2fFKzO
+         jUSTk4OKx18bTMzaw2Y4L0GkDMZjVjf9Y1KIBTq0gwHDAVlL4G/ifzzPyo8UvX5/8oxn
+         +yCUVQEFqjpy+y1y6B6/LnCSjfSzUFACjwJjSVo+i/H7Mb4DNaYDatOYoalYXY0atVpS
+         ChLhTlYerlv25cob3cyO9ogdLwAmODaYzyuX1v2ii2n+Rpktyoj75lzi/1Ot1JawTPbK
+         qX6w==
+X-Gm-Message-State: APjAAAXwJaD0v+8ktSBUmO2yxv0mn3HwUB+TVTN7+Poy/52OnWqQ2ox0
+        atObkAy6s6mzwUux00I1CgV0eq+5zvsQqPVgtlmZuuxDjri5
+X-Google-Smtp-Source: APXvYqyZ29aiETxQGapPeY5BBEdXLC0rlE3NJCR2G4dNoGSX9gBRxgTLHXrDZB5y+iumqWQ8OcygrjVAkKZaPDKVOogeeEOvOhLK
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:e00b:: with SMTP id z11mr6761741iog.27.1559697360239;
+ Tue, 04 Jun 2019 18:16:00 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 18:16:00 -0700
+In-Reply-To: <000000000000543e45058a3cf40b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001d42b5058a895703@google.com>
+Subject: Re: possible deadlock in get_user_pages_unlocked (2)
+From:   syzbot <syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        dan.j.williams@intel.com, ira.weiny@intel.com, jack@suse.cz,
+        jhubbard@nvidia.com, jmorris@namei.org, keith.busch@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, richard.weiyang@gmail.com,
+        rppt@linux.ibm.com, serge@hallyn.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org,
+        zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The structure kp_spi_controller_state, defined in the kpc2000_spi
-driver, contains a member named word_len which is never used after
-initialization. Therefore, it should be removed for simplicity's sake.
+syzbot has bisected this bug to:
 
-Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
----
- drivers/staging/kpc2000/kpc2000_spi.c | 3 ---
- 1 file changed, 3 deletions(-)
+commit 69d61f577d147b396be0991b2ac6f65057f7d445
+Author: Mimi Zohar <zohar@linux.ibm.com>
+Date:   Wed Apr 3 21:47:46 2019 +0000
 
-diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 1d89cb3b861f..61296335313b 100644
---- a/drivers/staging/kpc2000/kpc2000_spi.c
-+++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -110,7 +110,6 @@ struct kp_spi {
- struct kp_spi_controller_state {
- 	void __iomem   *base;
- 	unsigned char   chip_select;
--	int             word_len;
- 	s64             conf_cache;
- };
- 
-@@ -269,7 +268,6 @@ kp_spi_setup(struct spi_device *spidev)
- 		}
- 		cs->base = kpspi->base;
- 		cs->chip_select = spidev->chip_select;
--		cs->word_len = spidev->bits_per_word;
- 		cs->conf_cache = -1;
- 		spidev->controller_state = cs;
- 	}
-@@ -369,7 +367,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
- 			if (transfer->bits_per_word) {
- 				word_len = transfer->bits_per_word;
- 			}
--			cs->word_len = word_len;
- 			sc.bitfield.wl = word_len-1;
- 
- 			/* ...chip select */
--- 
-2.21.0
+     ima: verify mprotect change is consistent with mmap policy
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1055a2f2a00000
+start commit:   56b697c6 Add linux-next specific files for 20190604
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1255a2f2a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1455a2f2a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=e1374b2ec8f6a25ab2e5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165757eea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10dd3e86a00000
+
+Reported-by: syzbot+e1374b2ec8f6a25ab2e5@syzkaller.appspotmail.com
+Fixes: 69d61f577d14 ("ima: verify mprotect change is consistent with mmap  
+policy")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
