@@ -2,107 +2,89 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055FBC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B091C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC9E2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2DB2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HCuTRIjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfFEWUa (ORCPT
+        id S1726648AbfFEWW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:20:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54982 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfFEWU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:20:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 15:20:29 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2019 15:20:28 -0700
-Date:   Wed, 5 Jun 2019 15:20:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
-        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>
-Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190605222028.GH26328@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
- <20190422215831.GL1236@linux.intel.com>
- <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
- <20190424002653.GB14422@linux.intel.com>
- <20190604201232.GA7775@linux.intel.com>
- <20190605142908.GD11331@linux.intel.com>
- <20190605145219.GC26328@linux.intel.com>
- <20190605212536.GA22510@wind.enjellic.com>
+        Wed, 5 Jun 2019 18:22:59 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:37802 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfFEWW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:22:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559773376; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=vYXmQr/7cLomc7L2vWT2Hwyls4I65jEhBN+6anSml8Y=;
+        b=HCuTRIjJLOASltCPPWDDUfBs6u5KN0r6LpRVIpDZrmpc7y67UFCZdJMfm/g/txjZ/wEJmD
+        T+we2elfGngzcsIuXNrr6ZPv2wCu0cObxse9WOrVFGLe5fRKHl4YEzQY4Bkh9Who3GA+q7
+        fbnSSdD6qk9kS59V0xeRVdLScn175Nw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 1/3] dt-bindings: display: Add GiantPlus GPM940B0 panel documentation
+Date:   Thu,  6 Jun 2019 00:22:45 +0200
+Message-Id: <20190605222247.25657-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605212536.GA22510@wind.enjellic.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 04:25:37PM -0500, Dr. Greg wrote:
-> On Wed, Jun 05, 2019 at 07:52:19AM -0700, Sean Christopherson wrote:
-> 
-> Good afternoon to everyone.
-> 
-> > At this point I don't see the access control stuff impacting the LKM
-> > decision.
-> > 
-> > Irrespetive of the access control thing, there are (at least) two issues
-> > with using ACPI to probe the driver:
-> > 
-> >   - ACPI probing breaks if there are multiple device, i.e. when KVM adds
-> >     a raw EPC device.  We could do something like probe the driver via
-> >     ACPI but manually load the raw EPC device from core SGX code, but IMO
-> >     taking that approach should be a concious decision.
-> 
-> If that is the case, I assume that ACPI probing will also be
-> problematic for kernels that will be running on systems that have the
-> SGX accelerator cards that Intel has announced in them.
+The GPM940B0 is a 3.0" 320x240 24-bit TFT LCD panel.
 
-Just to make sure we're all on the same page, by "multiple devices" I
-was referring to multiple char devices in the kernel, not multiple EPC
-"devices".
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-> We haven't seen a solid technical description regarding how SGX
-> functionality is to be surfaced via these cards.  However, since the
-> SDM/SGX specification indicates that multiple PRM/EPC's are supported,
-> the logical assumption would be that each card would be surfaced as a
-> separate EPC's.
+Notes:
+    v2: New patch
+    
+    v3: Add Rob's ack
+    
+    v4-v5: No change
 
-I haven't seen the details for the cards, but for multi-socket systems
-with multiple EPC sections, the ACPI tables will enumerate a single EPC
-"device" without any size or location information.  I.e. ACPI can be
-used to detect that the system has EPC, but software will need to use
-CPUID to enumerate the number of sections and their size/location. 
+ .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+new file mode 100644
+index 000000000000..3dab52f92c26
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+@@ -0,0 +1,12 @@
++GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
++
++Required properties:
++- compatible: should be "giantplus,gpm940b0"
++- power-supply: as specified in the base binding
++
++Optional properties:
++- backlight: as specified in the base binding
++- enable-gpios: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+-- 
+2.21.0.593.g511ec345e18
+
