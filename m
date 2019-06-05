@@ -2,120 +2,67 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9FEC28CC3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72F9C28CC3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D252520665
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC5C2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 03:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfFEDHb (ORCPT
+        id S1726572AbfFEDLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 23:07:31 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:58278 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726354AbfFEDHa (ORCPT
+        Tue, 4 Jun 2019 23:11:24 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56376 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfFEDLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 23:07:30 -0400
-X-UUID: d82b34dd1cf240488fa82f82a029ae19-20190605
-X-UUID: d82b34dd1cf240488fa82f82a029ae19-20190605
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <leilk.liu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 573484855; Wed, 05 Jun 2019 11:07:24 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 5 Jun 2019 11:07:21 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 5 Jun 2019 11:07:20 +0800
-From:   Leilk Liu <leilk.liu@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-spi@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <fparent@baylibre.com>, Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH] spi: mediatek: add SPI_LSB_FIRST support
-Date:   Wed, 5 Jun 2019 11:07:04 +0800
-Message-ID: <1559704024-5369-1-git-send-email-leilk.liu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Tue, 4 Jun 2019 23:11:24 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3D7E7150477F8;
+        Tue,  4 Jun 2019 20:11:23 -0700 (PDT)
+Date:   Tue, 04 Jun 2019 20:11:22 -0700 (PDT)
+Message-Id: <20190604.201122.810789004477157679.davem@davemloft.net>
+To:     rasmus.villemoes@prevas.dk
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rasmus.Villemoes@prevas.se
+Subject: Re: [PATCH net-next v4 00/10] net: dsa: mv88e6xxx: support for
+ mv88e6250
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190604073412.21743-1-rasmus.villemoes@prevas.dk>
+References: <20190604073412.21743-1-rasmus.villemoes@prevas.dk>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Jun 2019 20:11:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch add SPI_LSB_FIRST feature support.
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Date: Tue, 4 Jun 2019 07:34:22 +0000
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- drivers/spi/spi-mt65xx.c                 |   15 ++++++---------
- include/linux/platform_data/spi-mt65xx.h |    2 --
- 2 files changed, 6 insertions(+), 11 deletions(-)
+> This adds support for the mv88e6250 chip. Initially based on the
+> mv88e6240, this time around, I've been through each ->ops callback and
+> checked that it makes sense, either replacing with a 6250 specific
+> variant or dropping it if no equivalent functionality seems to exist
+> for the 6250. Along the way, I found a few oddities in the existing
+> code, mostly sent as separate patches/questions.
+> 
+> The one relevant to the 6250 is the ieee_pri_map callback, where the
+> existing mv88e6085_g1_ieee_pri_map() is actually wrong for many of the
+> existing users. I've put the mv88e6250_g1_ieee_pri_map() patch first
+> in case some of the existing chips get switched over to use that and
+> it is deemed important enough for -stable.
+ ...
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 0cce6f0..7f4dc18 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -131,8 +131,6 @@ struct mtk_spi {
-  * supplies it.
-  */
- static const struct mtk_chip_config mtk_default_chip_info = {
--	.rx_mlsb = 1,
--	.tx_mlsb = 1,
- 	.cs_pol = 0,
- 	.sample_sel = 0,
- };
-@@ -203,14 +201,13 @@ static int mtk_spi_prepare_message(struct spi_master *master,
- 		reg_val &= ~SPI_CMD_CPOL;
- 
- 	/* set the mlsbx and mlsbtx */
--	if (chip_config->tx_mlsb)
--		reg_val |= SPI_CMD_TXMSBF;
--	else
-+	if (spi->mode & SPI_LSB_FIRST) {
- 		reg_val &= ~SPI_CMD_TXMSBF;
--	if (chip_config->rx_mlsb)
--		reg_val |= SPI_CMD_RXMSBF;
--	else
- 		reg_val &= ~SPI_CMD_RXMSBF;
-+	} else {
-+		reg_val |= SPI_CMD_TXMSBF;
-+		reg_val |= SPI_CMD_RXMSBF;
-+	}
- 
- 	/* set the tx/rx endian */
- #ifdef __LITTLE_ENDIAN
-@@ -607,7 +604,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
- 
- 	master->auto_runtime_pm = true;
- 	master->dev.of_node = pdev->dev.of_node;
--	master->mode_bits = SPI_CPOL | SPI_CPHA;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
- 
- 	master->set_cs = mtk_spi_set_cs;
- 	master->prepare_message = mtk_spi_prepare_message;
-diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
-index ba4e4bb..8d5df58 100644
---- a/include/linux/platform_data/spi-mt65xx.h
-+++ b/include/linux/platform_data/spi-mt65xx.h
-@@ -14,8 +14,6 @@
- 
- /* Board specific platform_data */
- struct mtk_chip_config {
--	u32 tx_mlsb;
--	u32 rx_mlsb;
- 	u32 cs_pol;
- 	u32 sample_sel;
- };
--- 
-1.7.9.5
-
+Series applied, thanks.
