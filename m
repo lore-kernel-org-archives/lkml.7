@@ -2,165 +2,232 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A00C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26570C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D3A20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559755513;
-	bh=rzmHYL7YLb8AbRFg6N+TFvt9ec1brTOwhDQMlinv5W4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OjifruRmQo2J+yxTfPATt9VGvsjL7980Dg5W3tWBArlayuc3NOAjFDZJoNflTTN5M
-	 rQf4AePtLlqZYXe7iSzoLI8jqONZfZewhl7JoBijC7YLF/dWNW8cVDiieSdGkE7wof
-	 j6crem6bkDhbSnR3Wc9sEwMcDzuwXAnzgTi5Oh1E=
+	by mail.kernel.org (Postfix) with ESMTP id 019E620866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfFERZN (ORCPT
+        id S1726660AbfFER0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:25:13 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:44322 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfFERZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:25:11 -0400
-Received: by mail-lj1-f176.google.com with SMTP id k18so2154905ljc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 10:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4dzrfT5QqLGh7VEyZ93DmM/B2JbZO0W27MdQC2tlHrw=;
-        b=FKQTQdRiCtVECI1Ss50LEAri2FoYB4zuECl4MbKr7V1HG+/fgvFHO/XCFc4PclJL0f
-         Wssk8CHwAJzxGg8oxI5A8N0uaT7yA0hPAHDf6vPUxygAINx56WVYQJa7UQsGrz55oPcZ
-         ZbjDGAg20qL59d3Au7EHam6sThq+5CJLZeVEk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4dzrfT5QqLGh7VEyZ93DmM/B2JbZO0W27MdQC2tlHrw=;
-        b=Uj0QBUCITCk7I0B+RjlqF+9z80QUNiTpb1nPU9i6HyjCFtqB5bp3KJLwfROvbKxtcQ
-         0bpMO/iu+xjuXP7UO+7bCRazW6ElPks2zGfWYNDCLO2TBPjJq6MHU2bpM9ytltuQsYxx
-         6KS3lJo7IpIZdNyoiQWf2Yrppvsx5StcQjv0NlFPr8RMBbcn07X5jdgn0swkAGLv55vv
-         MajnmEl3VySXC8rjoimRvBFkPtCDHYdfb++VQwpGGMijkiJIPzQLE55fZ3+s5L6y4HBk
-         XzRHpClTwrS6CSw1T1+rnzfqirn4vgLlESehZUiAZLVW5/eK0bPsgsZ6TivDRrfgC6Dj
-         /sFw==
-X-Gm-Message-State: APjAAAVOChv+UIxuHUbCqyapixbOA4nlNhN+uk/ctaEOHzxEfZvzOoVm
-        CpFA+Cx54+6KbZDV38E6WPQ4LQViQt8=
-X-Google-Smtp-Source: APXvYqyeDfvMIuwIBvNfyGzD7u4IRzgowMa5KJ+tcW+Wd0iIoxVJG4HT1xta7BfqT49j5nAEB1jiAA==
-X-Received: by 2002:a2e:760c:: with SMTP id r12mr6435268ljc.155.1559755508643;
-        Wed, 05 Jun 2019 10:25:08 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id b25sm4278158lff.42.2019.06.05.10.25.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 10:25:04 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id a25so19724150lfg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 10:25:04 -0700 (PDT)
-X-Received: by 2002:ac2:5601:: with SMTP id v1mr7944437lfd.106.1559755503740;
- Wed, 05 Jun 2019 10:25:03 -0700 (PDT)
+        Wed, 5 Jun 2019 13:26:20 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35326 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbfFER0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 13:26:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDC00374;
+        Wed,  5 Jun 2019 10:26:18 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9998B3F5AF;
+        Wed,  5 Jun 2019 10:26:16 -0700 (PDT)
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+To:     Sricharan R <sricharan@codeaurora.org>, robh+dt@kernel.org,
+        sboyd@codeaurora.org, linus.walleij@linaro.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <d313bec5-1115-0ef7-0241-83e20672d2f1@arm.com>
+Date:   Wed, 5 Jun 2019 18:26:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com> <20190605155801.GA25165@redhat.com>
-In-Reply-To: <20190605155801.GA25165@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Jun 2019 10:24:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjkNx8u4Mcm5dfSQKYQmLQAv1Z1yGLDZvty7BVSj4eqBA@mail.gmail.com>
-Message-ID: <CAHk-=wjkNx8u4Mcm5dfSQKYQmLQAv1Z1yGLDZvty7BVSj4eqBA@mail.gmail.com>
-Subject: Re: [PATCH -mm 0/1] signal: simplify set_user_sigmask/restore_user_sigmask
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-aio@kvack.org, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        stable <stable@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: multipart/mixed; boundary="000000000000bcd942058a96e0bf"
+In-Reply-To: <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000bcd942058a96e0bf
-Content-Type: text/plain; charset="UTF-8"
+On 05/06/2019 18:16, Sricharan R wrote:
+> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> CP01 evaluation board.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 21d548f..ac22dbb 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -2,6 +2,7 @@
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> new file mode 100644
+> index 0000000..ac7cb22
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 CP01 board device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "ipq6018.dtsi"
+> +
+> +/ {
+> +	#address-cells = <0x2>;
+> +	#size-cells = <0x2>;
+> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+> +	interrupt-parent = <&intc>;
+> +};
+> +
+> +&tlmm {
+> +	uart_pins: uart_pins {
+> +		mux {
+> +			pins = "gpio44", "gpio45";
+> +			function = "blsp2_uart";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +};
+> +
+> +&blsp1_uart3 {
+> +	pinctrl-0 = <&uart_pins>;
+> +	pinctrl-names = "default";
+> +	status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> new file mode 100644
+> index 0000000..79cccdd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 SoC device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+> +	compatible = "qcom,ipq6018";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		tz:tz@48500000 {
+> +			no-map;
+> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+> +		};
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		dma-ranges;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@b000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x3>;
+> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
 
-On Wed, Jun 5, 2019 at 8:58 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> To simplify the review, please see the code with this patch applied.
-> I am using epoll_pwait() as an example because it looks very simple.
+Where are the rest of the GICv2 MMIO regions, such as GICV and GICH? And
+the maintenance interrupt?
 
-I like it.
+> +		};
+> +
+> +		timer {
+> +			compatible = "arm,armv8-timer";
+> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
 
-However.
+The fact that you expose the EL2 timer interrupt would tend to confirm
+the idea that this system supports virtualization... Hence my questions
+above.
 
-I think I'd like it even more if we just said "we don't need
-restore_saved_sigmask AT ALL".
+Thanks,
 
-Which would be fairly easy to do with something like the attached...
+	M.
 
-(Yes, this only does x86, which is a problem, but I'm bringing this up
-as a RFC..)
-
-Is it worth another TIF flag? This sure would simplify things, and it
-really fits the concept too: this really is a do_signal() issue, and
-fundamentally goes together with TIF_SIGPENDING.
-
-                Linus
-
---000000000000bcd942058a96e0bf
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jwji3ph10>
-X-Attachment-Id: f_jwji3ph10
-
-IGFyY2gveDg2L2VudHJ5L2NvbW1vbi5jICAgICAgICAgICAgfCAyICstCiBhcmNoL3g4Ni9pbmNs
-dWRlL2FzbS90aHJlYWRfaW5mby5oIHwgMiArKwoga2VybmVsL3NpZ25hbC5jICAgICAgICAgICAg
-ICAgICAgICB8IDEgKwogMyBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9lbnRyeS9jb21tb24uYyBiL2FyY2gveDg2L2Vu
-dHJ5L2NvbW1vbi5jCmluZGV4IGE5ODZiM2M4Mjk0Yy4uZWI1MzhlY2Q2NjAzIDEwMDY0NAotLS0g
-YS9hcmNoL3g4Ni9lbnRyeS9jb21tb24uYworKysgYi9hcmNoL3g4Ni9lbnRyeS9jb21tb24uYwpA
-QCAtMTYwLDcgKzE2MCw3IEBAIHN0YXRpYyB2b2lkIGV4aXRfdG9fdXNlcm1vZGVfbG9vcChzdHJ1
-Y3QgcHRfcmVncyAqcmVncywgdTMyIGNhY2hlZF9mbGFncykKIAkJCWtscF91cGRhdGVfcGF0Y2hf
-c3RhdGUoY3VycmVudCk7CiAKIAkJLyogZGVhbCB3aXRoIHBlbmRpbmcgc2lnbmFsIGRlbGl2ZXJ5
-ICovCi0JCWlmIChjYWNoZWRfZmxhZ3MgJiBfVElGX1NJR1BFTkRJTkcpCisJCWlmIChjYWNoZWRf
-ZmxhZ3MgJiAoX1RJRl9TSUdQRU5ESU5HIHwgX1RJRl9SRVNUT1JFX1NJR01BU0spKQogCQkJZG9f
-c2lnbmFsKHJlZ3MpOwogCiAJCWlmIChjYWNoZWRfZmxhZ3MgJiBfVElGX05PVElGWV9SRVNVTUUp
-IHsKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3RocmVhZF9pbmZvLmggYi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS90aHJlYWRfaW5mby5oCmluZGV4IGY5NDUzNTM2ZjliYi4uZDc3YTlm
-ODQxNDU1IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS90aHJlYWRfaW5mby5oCisr
-KyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3RocmVhZF9pbmZvLmgKQEAgLTkyLDYgKzkyLDcgQEAg
-c3RydWN0IHRocmVhZF9pbmZvIHsKICNkZWZpbmUgVElGX05PQ1BVSUQJCTE1CS8qIENQVUlEIGlz
-IG5vdCBhY2Nlc3NpYmxlIGluIHVzZXJsYW5kICovCiAjZGVmaW5lIFRJRl9OT1RTQwkJMTYJLyog
-VFNDIGlzIG5vdCBhY2Nlc3NpYmxlIGluIHVzZXJsYW5kICovCiAjZGVmaW5lIFRJRl9JQTMyCQkx
-NwkvKiBJQTMyIGNvbXBhdGliaWxpdHkgcHJvY2VzcyAqLworI2RlZmluZSBUSUZfUkVTVE9SRV9T
-SUdNQVNLCTE4CS8qIFJlc3RvcmUgc2F2ZWQgc2lnbWFzayBvbiByZXR1cm4gdG8gdXNlciBzcGFj
-ZSAqLwogI2RlZmluZSBUSUZfTk9IWgkJMTkJLyogaW4gYWRhcHRpdmUgbm9oeiBtb2RlICovCiAj
-ZGVmaW5lIFRJRl9NRU1ESUUJCTIwCS8qIGlzIHRlcm1pbmF0aW5nIGR1ZSB0byBPT00ga2lsbGVy
-ICovCiAjZGVmaW5lIFRJRl9QT0xMSU5HX05SRkxBRwkyMQkvKiBpZGxlIGlzIHBvbGxpbmcgZm9y
-IFRJRl9ORUVEX1JFU0NIRUQgKi8KQEAgLTEyMiw2ICsxMjMsNyBAQCBzdHJ1Y3QgdGhyZWFkX2lu
-Zm8gewogI2RlZmluZSBfVElGX05PQ1BVSUQJCSgxIDw8IFRJRl9OT0NQVUlEKQogI2RlZmluZSBf
-VElGX05PVFNDCQkoMSA8PCBUSUZfTk9UU0MpCiAjZGVmaW5lIF9USUZfSUEzMgkJKDEgPDwgVElG
-X0lBMzIpCisjZGVmaW5lIF9USUZfUkVTVE9SRV9TSUdNQVNLCSgxIDw8IFRJRl9SRVNUT1JFX1NJ
-R01BU0spCiAjZGVmaW5lIF9USUZfTk9IWgkJKDEgPDwgVElGX05PSFopCiAjZGVmaW5lIF9USUZf
-UE9MTElOR19OUkZMQUcJKDEgPDwgVElGX1BPTExJTkdfTlJGTEFHKQogI2RlZmluZSBfVElGX0lP
-X0JJVE1BUAkJKDEgPDwgVElGX0lPX0JJVE1BUCkKZGlmZiAtLWdpdCBhL2tlcm5lbC9zaWduYWwu
-YyBiL2tlcm5lbC9zaWduYWwuYwppbmRleCAzMjhhMDFlMWEyZjAuLmEzMzQ2ZGExYTRmNSAxMDA2
-NDQKLS0tIGEva2VybmVsL3NpZ25hbC5jCisrKyBiL2tlcm5lbC9zaWduYWwuYwpAQCAtMjg3Nyw2
-ICsyODc3LDcgQEAgaW50IHNldF91c2VyX3NpZ21hc2soY29uc3Qgc2lnc2V0X3QgX191c2VyICp1
-c2lnbWFzaywgc2lnc2V0X3QgKnNldCwKIAogCSpvbGRzZXQgPSBjdXJyZW50LT5ibG9ja2VkOwog
-CXNldF9jdXJyZW50X2Jsb2NrZWQoc2V0KTsKKwlzZXRfdGhyZWFkX2ZsYWcoVElGX1JFU1RPUkVf
-U0lHTUFTSyk7CiAKIAlyZXR1cm4gMDsKIH0K
---000000000000bcd942058a96e0bf--
+-- 
+Jazz is not dead. It just smells funny...
