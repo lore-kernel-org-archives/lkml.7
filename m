@@ -2,190 +2,99 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1713C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F65AC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E32220866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559725419;
-	bh=7oQg41xcoj3dVt4T0jDLoKl6UKw+TwF7gFJVO8yYM2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x9I0gkqUlJg46iLPcqyTRq2NmcIY7+Zy4a7Wp4bqlCNeo+IHq05johmQhT0Y7cz6c
-	 RNh5ZZ3Rrn6gYzm42qO2jRJqnGMxTynJoSjwffSstbMtFY+PiMjq5Vj/APw6xktBWl
-	 nBdWFL2o4Iotkqr2930sg7zqgoaIzuLOCAe20BGM=
+	by mail.kernel.org (Postfix) with ESMTP id DE60420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 09:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfFEJDi (ORCPT
+        id S1726993AbfFEJFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 05:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33246 "EHLO mail.kernel.org"
+        Wed, 5 Jun 2019 05:05:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53592 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfFEJDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 05:03:38 -0400
-Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1726857AbfFEJFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 05:05:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3040D2075C;
-        Wed,  5 Jun 2019 09:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559725417;
-        bh=7oQg41xcoj3dVt4T0jDLoKl6UKw+TwF7gFJVO8yYM2Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uda6dfzApaEOc6glLrFxNX04FrsXa228DHOmHCZKa5g2jB0yJIgdCfsk3qeKfPJxb
-         DhqgFJc/VX40B205oj92vcNpBHaGWqO53DcrWCY5YUk0D9CkGg8z0KlROlsHjim1m4
-         NuwxUqRx3jlIp0nPlfuFgNDa2ftIs4IT183v+lCM=
-Date:   Wed, 5 Jun 2019 17:03:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v15 0/3] Add support for the Purism Librem5 devkit
-Message-ID: <20190605090315.GJ29853@dragon>
-References: <20190528125747.1047-1-angus@akkea.ca>
+        by mx1.redhat.com (Postfix) with ESMTPS id 42F9630832C9;
+        Wed,  5 Jun 2019 09:04:59 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id F089B5D6A9;
+        Wed,  5 Jun 2019 09:04:55 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  5 Jun 2019 11:04:58 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 11:04:54 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dbueso@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
+        Jason Baron <jbaron@akamai.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-aio@kvack.org, omar.kilani@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        stable <stable@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH] signal: remove the wrong signal_pending() check in
+ restore_user_sigmask()
+Message-ID: <20190605090453.GB32406@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <20190604134117.GA29963@redhat.com>
+ <CAHk-=wjSOh5zmApq2qsNjmY-GMn4CWe9YwdcKPjT+nVoGiDKOQ@mail.gmail.com>
+ <878sugewok.fsf@xmission.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528125747.1047-1-angus@akkea.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <878sugewok.fsf@xmission.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 05 Jun 2019 09:05:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 05:57:44AM -0700, Angus Ainslie (Purism) wrote:
-> The Librem5 devkit is based on the imx8mq from NXP. This is a default
-> devicetree to boot the board to a command prompt.
-> 
-> Changes since v14:
-> 
-> Add regulator-always-on for the SNVS regulators.
-> Added pgc nodes.
-> Fixed charger pre-current.
+On 06/04, Eric W. Biederman wrote:
+>
+> >> -       restore_user_sigmask(ksig.sigmask, &sigsaved);
+> >> -       if (signal_pending(current) && !ret)
+> >> +
+> >> +       interrupted = signal_pending(current);
+> >> +       restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
+> >> +       if (interrupted && !ret)
+> >>                 ret = -ERESTARTNOHAND;
+> >
+> > are wrong to begin with, and we really should aim for an interface
+> > which says "tell me whether you completed the system call, and I'll
+> > give you an error return if not".
+>
+> The pattern you are pointing out is specific to io_pgetevents and it's
+> variations.  It does look buggy to me but not for the reason you point
+> out, but instead because it does not appear to let a pending signal
+> cause io_pgetevents to return early.
+>
+> I suspect we should fix that and have do_io_getevents return
+> -EINTR or -ERESTARTNOHAND like everyone else.
 
-Since Pavel was reviewing your patches, you should copy him on the new
-version.  Has this version addressed all his review comments?
+Exactly. It should not even check signal_pending(). It can rely on
+wait_event_interruptible_hrtimeout().
 
-Shawn
+> So can we please get this fix in and then look at cleaning up and
+> simplifying this code.
 
-> 
-> Changes since v13:
-> 
-> Moved haptic motor from pwm-led to gpio-vibrator.
-> Cleaned up regulator node naming.
-> Whitescpace cleanup.
-> Re-indent pinmux stanzas.
-> Drop pwm2 node.
-> Drop MAINTAINERS patch.
-> 
-> Changes since v12:
-> 
-> Updated patch to vendor-prefixes.yaml.
-> Dropped always on from regulators.
-> 
-> Changes since v11:
-> 
-> Added reviewed-by tags.
-> Fixed subject typo.
-> 
-> Changes since v10:
-> 
-> Moved MAINTAINERS entry to "ARM/FREESCALE IMX" section
-> 
-> Changes since v9:
-> 
-> Added a MAINTAINERS entry for arm64 imx devicetree files.
-> 
-> Changes since v8:
-> 
-> Fixed license comment.
-> Changed regulators to all lower case.
-> Changed clock frequency for NXP errata e7805.
-> Dropped blank line.
-> 
-> Changes since v7:
-> 
-> More regulators always on for USB.
-> Add vbus regulator.
-> Drop vbat regulator.
-> Replace legacy "gpio-key,wakeup" with "wakeup-source".
-> Add vbus-supply to get rid of warning
-> imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found,
-> using dummy regulator
-> 
-> Changes since v6:
-> 
-> Dropped unused regulators.
-> Fix regulator phandles case.
-> Dropped extra whitespace.
-> 
-> Changes since v5:
-> 
-> Added reviewed-by tags.
-> Moved USB port links to USB controller node.
-> 
-> Changes since v4:
-> 
-> Compiled against linux-next next-20190415.
-> Added imx8mq to the arm yaml file.
-> Re-arrange regulator nodes to drop undefined supplies.
-> Additional ordering for aesthetics.
-> Split some long lines.
-> Added lots of blank lines.
-> Moved pinctl muxes to where they are used.
-> Cleaned out reg defintions from regulator nodes.
-> 
-> Changes since v3:
-> 
-> Freshly sorted and pressed nodes.
-> Change the backlight to an interpolated scale.
-> Dropped i2c2.
-> Dropped devkit version number to match debian MR.
-> 
-> Changes since v2:
-> 
-> Fixed incorrect phy-supply for the fsl-fec.
-> Dropped unused regulator property.
-> Fixup Makefile for linux-next.
-> 
-> Changes since v1:
-> 
-> Dropped config file.
-> Updated the board compatible label.
-> Changed node names to follow naming conventions.
-> Added a more complete regulator hierachy.
-> Removed unused nodes.
-> Removed unknown devices.
-> Fixed comment style.
-> Dropped undocumented properties.
-> 
-> Angus Ainslie (Purism) (3):
->   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
->   dt-bindings: Add an entry for Purism SPC
->   dt-bindings: arm: fsl: Add the imx8mq boards
-> 
->  .../devicetree/bindings/arm/fsl.yaml          |   7 +
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 806 ++++++++++++++++++
->  4 files changed, 816 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> 
-> -- 
-> 2.17.1
-> 
+Yes ;)
+
+Oleg.
+
