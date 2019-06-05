@@ -2,138 +2,109 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B22C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21D1C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235C6206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960C82075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xjuWaVGp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njWElEr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfFEKJR (ORCPT
+        id S1727295AbfFEKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:09:17 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:44102 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfFEKJQ (ORCPT
+        Wed, 5 Jun 2019 06:09:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40292 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfFEKJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:09:16 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x55A9Cef010064;
-        Wed, 5 Jun 2019 19:09:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x55A9Cef010064
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559729353;
-        bh=spSyBc2f59SMr1HLkOA0i/JhLd4nLOmABZGZ8e1sX4M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xjuWaVGpdL6WVMegKW6v4TWepAyvjNBR0tbIEOq0MlBZUn1NhqeaOShlvcuiw+t/c
-         2mkgtlpCzkYfW8nTVvXwtsLlXKGlTaiDBtto2PJmMu1zvRGIHcK/WWOMUD/A0V06/w
-         BAzeEr05rGpNZ8RDBvCOW3+hQM78zNiu0vgLsa/Y/JUv5SQ7wWiZz1XpwBUNrf8sRc
-         FwTDgQsP7mEGi0ZWtwIK4AaqcBRN+q9pV263V3jSFnO31XFMefeKYZ0P3GTOXh/dcr
-         dUBHXbDBRtrqeI3sDnevI0M4wUlafjBsBkAm+SqyIrhXovUeP2tUguibp7CbUx9hxC
-         6NEFDqd+CnLBw==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id n2so6971811vso.6;
-        Wed, 05 Jun 2019 03:09:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAUr3Hw6y74pq77w4JI8acLSMzPiDntGnHKYrbmDv3DMjTTaSLNm
-        clqjSs46yOX5DbNttuszi6xOj7YqyofEsiHQslw=
-X-Google-Smtp-Source: APXvYqxA9Vt9o6fNOvyuZTdbKqshJN+/e/D7lSAsZ1MNllAnmcOK/ccaKNZ9XxAj9H4XnzYnhtMNvSXJocyUrFCgYmQ=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr4387671vsn.54.1559729352077;
- Wed, 05 Jun 2019 03:09:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
- <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
- <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
- <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
- <20190604134213.GA26263@kroah.com> <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
- <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
- <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
- <20190605051040.GA22760@kroah.com> <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
- <20190605060205.GA29484@kroah.com>
-In-Reply-To: <20190605060205.GA29484@kroah.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 5 Jun 2019 19:08:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQYOXZTUiQH1opbh3duipvLtQZvwb10STUj4YHZdTfM_A@mail.gmail.com>
-Message-ID: <CAK7LNAQYOXZTUiQH1opbh3duipvLtQZvwb10STUj4YHZdTfM_A@mail.gmail.com>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Jun 2019 06:09:29 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g69so9521965plb.7;
+        Wed, 05 Jun 2019 03:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SwRGVXh44lKdmYRKWlurBpR81QsAEQH5O7el/CbJ7G8=;
+        b=njWElEr4BHGD2lnCKdHnj757ZmfN12mILR99wsFjP0ZKMSfTT4WCiGXjCnSrw7K8NJ
+         0jnOJZRHYaY4uop9++qKAp+kri+uxrInEKYXW08aJibOYJdIQYIIaPNhdbCGY3VyzEtB
+         mZqU3V2TEi33uDBOBazlSANNknDhIRO2+YdFiqSmEyTZrYFCVycEZmyPv6LlYK799PaI
+         ljG+tP9mjUvDzpIrdBn3Bb8/GLwLXO3lgi6GZpPiGEBsFFrJ6s0RBGPJ+2v97lDoHPVP
+         jW8+hIMGQDvMiQTvT7xiYNNucXwvL0y1IMicM8vv8COjA1wgwhd8Vfnw2KJBkel8Ft6T
+         776A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SwRGVXh44lKdmYRKWlurBpR81QsAEQH5O7el/CbJ7G8=;
+        b=bdsD7+hQReBhX3bqeGmwzHKdPicTUo/iMMGx1nNLbCYMDbPrOHj+hgHWy8+oPQ47/W
+         DlPk8mzxYysphdL8sOF0eWVh8N/v5vfqETxoYX1Hvnl8UGE7tscXpBVMyIcW/w3UXG5R
+         LI1+4yu6sxfqU60mm3HYKZHK8gQQQW0SK9clodeXMnuwp0D7VQ1MG8U3xeF/TTjSsO7k
+         CmXPiEey2W24s03qjHCXWg7HN2vwEOyPbSJAAU+a35DZ5kAnMe+E9kUhVwqDmA/V9wG6
+         ZCoRnV4U5EcOXKpBvPXqY8jszl7eFIe5hibw7ymXaBM6NsqCGxX+HjQ7SsXQIcG66CqB
+         v+Ew==
+X-Gm-Message-State: APjAAAX/HQb5onqnzeZP6gDeivPn8OXxQxie1EGzInanOLJIG8sV0zhh
+        bwpts41zndbAWVlOhGSJoG4euRxf
+X-Google-Smtp-Source: APXvYqztn5ikTIqqw7ZL0V712MGDIykZCR8ucmjQJ3+pShyCAYhjQjR7GzdiGqh3w5c9WZOWck0xgg==
+X-Received: by 2002:a17:902:30a3:: with SMTP id v32mr42954648plb.6.1559729368552;
+        Wed, 05 Jun 2019 03:09:28 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id v9sm19030010pfm.34.2019.06.05.03.09.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Jun 2019 03:09:27 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 0/3] KVM: LAPIC: Implement Exitless Timer
+Date:   Wed,  5 Jun 2019 18:09:08 +0800
+Message-Id: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 3:03 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 04, 2019 at 10:22:05PM -0700, Joe Perches wrote:
-> > On Wed, 2019-06-05 at 07:10 +0200, Greg KH wrote:
-> > > On Wed, Jun 05, 2019 at 01:10:41PM +0900, Masahiro Yamada wrote:
-> > > > On Wed, Jun 5, 2019 at 3:21 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > []
-> > > > This means we cannot reliably use uint{8,16,32,64}_t in UAPI headers.
-> > >
-> > > We should not be doing that as they are in the userspace "namespace" of
-> > > variables, not in the kernel namespace.  We've been over this many times
-> > > in the past :(
-> >
-> > Just not very successfully...
-> >
-> > $ git grep -w -P 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
-> > 342
-> >
-> > $ git grep -w -P --name-only 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
-> > 13
-> >
-> > Documentation helps a bit, checkpatch helps as well.
-> > Maintainer knowledge and vigilance probably helps the most.
->
-> Yes, it's not been a dedicated effort at all :(
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit 444969223c8
+("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes 
+lapic timer pinned to the pCPU which vCPU residents, the reason is explained 
+by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these 
+emulated timers can be offload to the housekeeping cpus since APICv 
+is really common in recent years. The guest timer interrupt is injected by 
+posted-interrupt which is delivered by housekeeping cpu once the emulated 
+timer fires. 
 
-I am proposing this series.
-https://lkml.org/lkml/2019/6/4/1379
+This patchset introduces a new kvm module parameter, it is false by default.
+The host admin can enable it after fine tuned, e.g. dedicated instances 
+scenario w/ nohz_full cover the pCPUs which vCPUs resident, several pCPUs 
+surplus for housekeeping, disable mwait/hlt/pause vmexits to occupy the 
+pCPUs, fortunately preemption timer is disabled after mwait is exposed 
+to guest which makes emulated timer offload can be possible. 
+3%~5% redis performance benefit can be observed on Skylake server.
 
+Wanpeng Li (3):
+  KVM: LAPIC: Make lapic timer unpinned when timer is injected by posted-interrupt
+  KVM: LAPIC: lapic timer is injected by posted interrupt
+  KVM: LAPIC: Ignore timer migration when lapic timer is injected by
+    posted-interrupt
 
-When CONFIG_UAPI_HEADER_TEST=y,
-UAPI headers are compile-tested.
-
-0-day bot tests allmodconfig, which enables CONFIG_UAPI_HEADER_TEST,
-so new buggy headers will be blocked.
-
-It will take some time to eliminate existing bugs.
-I just started with low-hanging fruits:
-
-https://lore.kernel.org/patchwork/patch/1083711/
-https://lore.kernel.org/patchwork/patch/1084123/
-
-
-
-Anyway, having a document will be really nice.
-
-Not all maintainers understand the detail.
-Having some evidence in Documentation/
-will help the review process move smoothly.
-
-
-> But it needs to be resolved, if we want people to actually use our
-> kernel headers easily.
->
-> thanks,
->
-> greg k-h
-
-
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++++++++++++++++++------
+ arch/x86/kvm/svm.c              |  5 +++++
+ arch/x86/kvm/vmx/vmx.c          |  9 +++++++++
+ 4 files changed, 54 insertions(+), 6 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
