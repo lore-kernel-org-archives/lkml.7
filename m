@@ -2,97 +2,196 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C78BC28D18
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A07C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262E62067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:12:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ATatBIiB"
+	by mail.kernel.org (Postfix) with ESMTP id B9734206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfFEMML (ORCPT
+        id S1727540AbfFEMOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:12:11 -0400
-Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:5024
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727343AbfFEMML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:12:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x0n5lmzdb+ILPEV62bCBwyWy9NnxFf3sF89ZpPDV5zU=;
- b=ATatBIiBLhOZ7l4GzuIijkyFdt+1fPG/TBdQrxrPMNro2hjuaDkXL9y+OOyyYu+LMQ55FA55CmX7BNgagIqe3Z/g8SjWFXONeyZy5nIfr7+ke0FVAtv40QLsAiTyrN8LXdlPphvFCbPYrMI9A8d2nmGoFwb4ZGM56sYSFp6AWsQ=
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com (52.134.247.150) by
- OSAPR01MB1683.jpnprd01.prod.outlook.com (52.134.232.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Wed, 5 Jun 2019 12:12:08 +0000
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::19ad:b6ce:a287:dc85]) by OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::19ad:b6ce:a287:dc85%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
- 12:12:08 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
-Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
-Thread-Index: AQHVG1qxx9ucB2mLPUSYOHggZ3+zpqaMymmAgAAt5MA=
-Date:   Wed, 5 Jun 2019 12:12:07 +0000
-Message-ID: <OSAPR01MB30897161EF40942B1E561232D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
-References: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
-In-Reply-To: <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df842f99-7a47-4de6-616a-08d6e9af07f1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSAPR01MB1683;
-x-ms-traffictypediagnostic: OSAPR01MB1683:
-x-microsoft-antispam-prvs: <OSAPR01MB1683B170B5E945A57142EBC5D8160@OSAPR01MB1683.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(376002)(396003)(39860400002)(136003)(189003)(199004)(102836004)(86362001)(53936002)(26005)(74316002)(5660300002)(6506007)(66946007)(71200400001)(71190400001)(6916009)(9686003)(52536014)(476003)(66556008)(73956011)(66476007)(64756008)(66446008)(6436002)(305945005)(7736002)(99286004)(486006)(478600001)(76116006)(7696005)(446003)(256004)(14444005)(76176011)(11346002)(55016002)(186003)(68736007)(14454004)(4326008)(4744005)(3846002)(54906003)(66066001)(6116002)(6246003)(81166006)(81156014)(8676002)(8936002)(229853002)(25786009)(33656002)(2906002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB1683;H:OSAPR01MB3089.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LsjFjOahFp796PF8TsgMhAyBu9zp5Ff/ZBEEWKN5qjEfISXFqKgQ1gBY/KHHHGk7Q7XEmimvq414OQKESNUBf7RDYtawZaV3xtsV18DPU/an7a1gn+qKEl5XecREDGI/ZJNxp/aA+hXGVTxQ4XieupZiLoIXIcyNs42EPZMFGbmWkz0+kOqFdKG7261vkFtk0LiYzBr1ieZ0IPsylAARrUw36Q4d+06dNoXPqTYYKCkCcjnAIHnJn6fzsrNNC1mnBLqIBzI2E26NCJGtU53GYSTVg2ceYtIaTBWlCldw90TyMZmVKzKI+IiwTjATXoUl7zIFIMmiRXRvtAc7AbGeG1IQAA67ckkWGZgsJ5Tib9YrmW+nj6DbAuG8pcYudu/uK0lJoo8i6NsiNQeqFvYUaGpz+rzKXg2bsMtHhio+PpI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 5 Jun 2019 08:14:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47812 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727343AbfFEMOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 08:14:37 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x55C3tGI091320
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 08:14:36 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sxbgn5871-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:14:36 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 5 Jun 2019 13:14:34 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Jun 2019 13:14:31 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x55CEUNg58982532
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Jun 2019 12:14:30 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81C0C42042;
+        Wed,  5 Jun 2019 12:14:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47CAC42047;
+        Wed,  5 Jun 2019 12:14:30 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.183])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Jun 2019 12:14:30 +0000 (GMT)
+Subject: Re: [PATCH AUTOSEL 4.4 10/10] KVM: s390: fix memory slot handling for
+ KVM_SET_USER_MEMORY_REGION
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-s390@vger.kernel.org
+References: <20190604232532.7953-1-sashal@kernel.org>
+ <20190604232532.7953-10-sashal@kernel.org>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Wed, 5 Jun 2019 14:14:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df842f99-7a47-4de6-616a-08d6e9af07f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 12:12:07.9942
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1683
+In-Reply-To: <20190604232532.7953-10-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060512-0028-0000-0000-000003764623
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060512-0029-0000-0000-0000243621DE
+Message-Id: <d2c1b279-ba67-bd0e-07ef-1587b4aa77d3@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=990 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906050077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
-ZGF5LCBKdW5lIDUsIDIwMTkgNjoyNSBQTQ0KPHNuaXA+DQo+IFRoYW5rIHlvdSwgdGhpcyBzZWVt
-cyB0byBmaXggdGhlIHdhcm5pbmcsIHNvDQo+IFRlc3RlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVu
-IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmsgeW91IGZvciB0aGUgdGVzdGluZyEN
-Cg0KPiBIb3dldmVyLCB0aGUgb3RoZXIgaW1iYWxhbmNlIChwaHktZWUwODAyMDAudXNiLXBoeS42
-IGVuYWJsaW5nIGl0cw0KPiByZWd1bGF0b3IgZHVyaW5nIGVhY2ggc3lzdGVtIHJlc3VtZSBwaGFz
-ZSwgYnV0IG5ldmVyIHRvdWNoaW5nIGl0DQo+IG90aGVyd2lzZSkgaXMgc3RpbGwgcHJlc2VudC4N
-Cg0KVW1tLCBzaW5jZSBJJ2QgbGlrZSB0byBpbnZlc3RpZ2F0ZSB0aGlzLA0Kd291bGQgeW91IHNo
-YXJlIHlvdXIgZGVidWcgcHJpbnQgcGF0Y2g/DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBT
-aGltb2RhDQoNCg==
+On 05.06.19 01:25, Sasha Levin wrote:
+> From: Christian Borntraeger <borntraeger@de.ibm.com>
+> 
+> [ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
+> 
+> kselftests exposed a problem in the s390 handling for memory slots.
+> Right now we only do proper memory slot handling for creation of new
+> memory slots. Neither MOVE, nor DELETION are handled properly. Let us
+> implement those.
+
+I gave this a quick spin on 4.4.y and it seems to work fine.
+
+
+> 
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
+>  1 file changed, 21 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 5ddb1debba95..23911ecfbad6 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2721,21 +2721,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+>  				const struct kvm_memory_slot *new,
+>  				enum kvm_mr_change change)
+>  {
+> -	int rc;
+> -
+> -	/* If the basics of the memslot do not change, we do not want
+> -	 * to update the gmap. Every update causes several unnecessary
+> -	 * segment translation exceptions. This is usually handled just
+> -	 * fine by the normal fault handler + gmap, but it will also
+> -	 * cause faults on the prefix page of running guest CPUs.
+> -	 */
+> -	if (old->userspace_addr == mem->userspace_addr &&
+> -	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
+> -	    old->npages * PAGE_SIZE == mem->memory_size)
+> -		return;
+> +	int rc = 0;
+>  
+> -	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+> -		mem->guest_phys_addr, mem->memory_size);
+> +	switch (change) {
+> +	case KVM_MR_DELETE:
+> +		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
+> +					old->npages * PAGE_SIZE);
+> +		break;
+> +	case KVM_MR_MOVE:
+> +		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
+> +					old->npages * PAGE_SIZE);
+> +		if (rc)
+> +			break;
+> +		/* FALLTHROUGH */
+> +	case KVM_MR_CREATE:
+> +		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+> +				      mem->guest_phys_addr, mem->memory_size);
+> +		break;
+> +	case KVM_MR_FLAGS_ONLY:
+> +		break;
+> +	default:
+> +		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
+> +	}
+>  	if (rc)
+>  		pr_warn("failed to commit memory region\n");
+>  	return;
+> 
+
