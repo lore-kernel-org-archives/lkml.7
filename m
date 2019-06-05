@@ -6,38 +6,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FBEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE172C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC922067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D332067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfFEPOt (ORCPT
+        id S1728637AbfFEPOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:14:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:33518 "EHLO foss.arm.com"
+        Wed, 5 Jun 2019 11:14:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:33484 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbfFEPOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:14:47 -0400
+        id S1728553AbfFEPOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:14:45 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5306A15A2;
-        Wed,  5 Jun 2019 08:14:47 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 609023F246;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2374915BF;
         Wed,  5 Jun 2019 08:14:45 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2A35A3F246;
+        Wed,  5 Jun 2019 08:14:41 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Elie Morisse <syniurge@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Nehal Shah <nehal-bakulchandra.shah@amd.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Shyam Sundar S K <shyam-sundar.s-k@amd.com>
-Subject: [PATCH 09/13] drivers: Add generic helper to match any device
-Date:   Wed,  5 Jun 2019 16:13:46 +0100
-Message-Id: <1559747630-28065-10-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wpan@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 08/13] drivers: Add generic helper to match by name
+Date:   Wed,  5 Jun 2019 16:13:45 +0100
+Message-Id: <1559747630-28065-9-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
 References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
@@ -46,15 +57,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a generic helper to match any/all devices.
+Add a helper to match the device name
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Elie Morisse <syniurge@gmail.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Nehal Shah <nehal-bakulchandra.shah@amd.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Shyam Sundar S K <shyam-sundar.s-k@amd.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexander Aring <alex.aring@gmail.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Harald Freudenberger <freude@linux.ibm.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: linux-leds@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Cc: linux-wpan@vger.kernel.org
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Stefan Schmidt <stefan@datenfreihafen.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
@@ -64,28 +90,28 @@ Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
  2 files changed, 7 insertions(+)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 5724f93..053ee2e 100644
+index 597095b..5724f93 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -3358,3 +3358,9 @@ int device_match_name(struct device *dev, const void *name)
- 	return sysfs_streq(dev_name(dev), name);
+@@ -3352,3 +3352,9 @@ int device_match_acpi_dev(struct device *dev, const void *adev)
+ 	return ACPI_COMPANION(dev) == adev;
  }
- EXPORT_SYMBOL_GPL(device_match_name);
+ EXPORT_SYMBOL(device_match_acpi_dev);
 +
-+int device_match_any(struct device *dev, const void *unused)
++int device_match_name(struct device *dev, const void *name)
 +{
-+	return 1;
++	return sysfs_streq(dev_name(dev), name);
 +}
-+EXPORT_SYMBOL_GPL(device_match_any);
++EXPORT_SYMBOL_GPL(device_match_name);
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 74dd9c6..8c8727b 100644
+index a03b50d..74dd9c6 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -168,6 +168,7 @@ int device_match_fwnode(struct device *dev, const void *fwnode);
+@@ -167,6 +167,7 @@ int device_match_of_node(struct device *dev, const void *np);
+ int device_match_fwnode(struct device *dev, const void *fwnode);
  int device_match_devt(struct device *dev, const void *pdevt);
  int device_match_acpi_dev(struct device *dev, const void *adev);
- int device_match_name(struct device *dev, const void *name);
-+int device_match_any(struct device *dev, const void *unused);
++int device_match_name(struct device *dev, const void *name);
  
  int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
  		     int (*fn)(struct device *dev, void *data));
