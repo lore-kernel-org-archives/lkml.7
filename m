@@ -2,77 +2,78 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0222C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865A8C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696D920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554702086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 07:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUdmC/bv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5dqH+Tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfFEHFm (ORCPT
+        id S1726867AbfFEHFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 03:05:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46621 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfFEHFj (ORCPT
+        Wed, 5 Jun 2019 03:05:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37302 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfFEHFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:05:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so7608257pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:38 -0700 (PDT)
+        Wed, 5 Jun 2019 03:05:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a23so14309226pff.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 00:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lnLLdVOlusYEYXI+itkoU5Jat5K5TT8w7N1F2rwe390=;
-        b=XUdmC/bvWolT7eI9YQ2cUFGxT2x+UR40fKEvKzQytbCtCbLnVXn60ri7ZaGHoMx0GJ
-         gHZMwaJ6ULtsNFeV3IRzhIAMLH9gi897sX3lZoyKqf1NqL389JgUcjcA938NcnXuyQxg
-         zyy2gu9IBni0w5Y1sX4HSUvJxt+UaZK+svntZSnv0eWIgJyzhbx0Om8SL83kUCQ4dQlM
-         Up5MZamVlHETacU8vcyB6GOrmyLuxwUD4XYMv1fgLBVVM04j8B1RDH1WDRYwyAhFuFo/
-         SWhV8WXS23ZWu4J6clcwGKBzcCm7bZxM8l3G94IId7hQL6GyPWPH7tOkpvtmA06S5xok
-         yZ4A==
+        bh=wEdoucIRvOwXz8lKtgT8K+SiuGv6C9zcqCSBrAPMFTE=;
+        b=I5dqH+TzNTJpgyNOOv9015vJ6/TMkO+Gmn883gqBvMlxT+ruw8egkE0RFMPqfHjE5J
+         Zlg/pZzS3ilmWxi961+ILbRS/x47rDCdqyx9DwVjIAibiFmMug99/LDJP/cIOvVye6m+
+         HqcEfb/OwX/GNSWtkk8qnjnjQdKPi4qXFsGZwothUAkYWWk7M8P7FPrF1ijbcaN+tY4L
+         KLk8R+QW8OXw+egbz7OhQcF/o9P1d2+x478Dn9K1iwnCOeFS84p0uP/XdwTFIDuERx96
+         GCAgff0Dj+Ruh/xDVSjSUdZE9g7E1jArSLwNUgK2Ahcky0taniezp/8IzqSYNwczZ/5R
+         7fwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lnLLdVOlusYEYXI+itkoU5Jat5K5TT8w7N1F2rwe390=;
-        b=s3XfI9oiNNQewZFWgkjZjNYbAvF6h/zcX/5I+Na64FO7FGdQjLKS/TMGRBaeqklyPe
-         Zl39YUBWgg9iUL3hHhUZbxt3hQkJ1Hv39KyA/9zysqBimDAR/xxQ4WBayrnwOL/y7hQ6
-         U0JWRSEHJGtndEaspdCAsFQeCIe7Au7kL2CU3ocYL7JxQ+ZZTmc07zG9yjuXXlAtbOmq
-         0kCq5UhV46pY2dodWYNDMqrCUIRYngQWkmXhdrB4pjJMjxx9tatyPrFcUdAtt7dG0Gze
-         tJcEWk6w960LWlJmFLH4bHksq73JBWTtGVNIaErp1n4u+tIz7HWLbE6sih0qUtT98oop
-         sT4Q==
-X-Gm-Message-State: APjAAAVQb+/KyyAP4e4INcy9ybLuY3Hjty9eRRzRriuaICBbF/P5iPJC
-        2RipCUXolTXXRG8csitVgHQ=
-X-Google-Smtp-Source: APXvYqxosOSGK/X48hpPYA1EtlqllcZl4FXcITFWzaZyuWAPxItNSho0urmjq/AA02M7XKgLnhenPQ==
-X-Received: by 2002:a17:902:988b:: with SMTP id s11mr14564567plp.216.1559718337640;
-        Wed, 05 Jun 2019 00:05:37 -0700 (PDT)
+        bh=wEdoucIRvOwXz8lKtgT8K+SiuGv6C9zcqCSBrAPMFTE=;
+        b=ItrQYUyz/PiQKEXYm8kAn6Lp0+uZ4r9NLgMd6WF9Lg7t4EAfaH3Q+Ck4Serm1OfOUN
+         W4vlZyc7AcRN9iZlgXowfBJYRT31hHMBI9BKtOPZaMAudjejsIi8aeooO26qXMULkU1k
+         QR9GCWROnE8sYWXylxo4ne8vpEGcJ9L4BJlqk8CsER2gUoPVRVkWDo1P4jjEm1tOSSsX
+         Fafei1vyubkeunECi9GIIsTiOp1sHFZSdXAmg03ht7E2dfOcsVCEoV5qeS7GOBdMehKD
+         t9oJ0PeRXySR/Ldw0gkTpuOS5ThMnMq48J1O33Bi7JNhG9/4R2MCpinyifWyh4Tg/Uhp
+         Uw0w==
+X-Gm-Message-State: APjAAAUvsb56CXa39P3PPXTB0fy/wsIbGVNWEycg3krXi3TOgvplJfTW
+        PPjnBokOuJ74Zfoic/oDdz6r3nl9+3A=
+X-Google-Smtp-Source: APXvYqysHjyKNTH4wmvmS0sBKjq4T6J9yXXLxk7wdUG6OpwbwwY5yG4T5uzxamvnGnxUtBrDlp/Fjg==
+X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr28732792pjw.60.1559718339752;
+        Wed, 05 Jun 2019 00:05:39 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.35
+        by smtp.gmail.com with ESMTPSA id d132sm6527348pfd.61.2019.06.05.00.05.37
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 00:05:37 -0700 (PDT)
+        Wed, 05 Jun 2019 00:05:39 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Archit Taneja <architt@codeaurora.org>,
         Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
         Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/15] drm/bridge: tc358767: Add support for address-only I2C transfers
-Date:   Wed,  5 Jun 2019 00:05:02 -0700
-Message-Id: <20190605070507.11417-11-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 11/15] drm/bridge: tc358767: Introduce tc_set_syspllparam()
+Date:   Wed,  5 Jun 2019 00:05:03 -0700
+Message-Id: <20190605070507.11417-12-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190605070507.11417-1-andrew.smirnov@gmail.com>
 References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
@@ -83,96 +84,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Transfer size of zero means a request to do an address-only
-transfer. Since the HW support this, we probably shouldn't be just
-ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
-through, since it is supported by the HW as well.
+Move common code converting clock rate to an appropriate constant and
+configuring SYS_PLLPARAM register into a separate routine and convert
+the rest of the code to use it. No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Archit Taneja <architt@codeaurora.org>
 Cc: Andrzej Hajda <a.hajda@samsung.com>
 Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Cory Tusar <cory.tusar@zii.aero>
 Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
 Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 46 +++++++++++--------------------
+ 1 file changed, 16 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 90ec33caacbc..7b84fbb72973 100644
+index 7b84fbb72973..c58714daa0a1 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -145,6 +145,8 @@
- 
- /* AUX channel */
- #define DP0_AUXCFG0		0x0660
-+#define DP0_AUXCFG0_BSIZE	GENMASK(11, 8)
-+#define DP0_AUXCFG0_ADDR_ONLY	BIT(4)
- #define DP0_AUXCFG1		0x0664
- #define AUX_RX_FILTER_EN		BIT(16)
- 
-@@ -347,6 +349,18 @@ static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
- 	return size;
+@@ -601,35 +601,40 @@ static int tc_stream_clock_calc(struct tc_data *tc)
+ 	return regmap_write(tc->regmap, DP0_VIDMNGEN1, 32768);
  }
  
-+static u32 tc_auxcfg0(struct drm_dp_aux_msg *msg, size_t size)
-+{
-+	u32 auxcfg0 = msg->request;
-+
-+	if (size)
-+		auxcfg0 |= FIELD_PREP(DP0_AUXCFG0_BSIZE, size - 1);
-+	else
-+		auxcfg0 |= DP0_AUXCFG0_ADDR_ONLY;
-+
-+	return auxcfg0;
+-static int tc_aux_link_setup(struct tc_data *tc)
++static int tc_set_syspllparam(struct tc_data *tc)
+ {
+ 	unsigned long rate;
+-	u32 dp0_auxcfg1;
+-	u32 value;
+-	int ret;
++	u32 pllparam = SYSCLK_SEL_LSCLK | LSCLK_DIV_2;
+ 
+ 	rate = clk_get_rate(tc->refclk);
+ 	switch (rate) {
+ 	case 38400000:
+-		value = REF_FREQ_38M4;
++		pllparam |= REF_FREQ_38M4;
+ 		break;
+ 	case 26000000:
+-		value = REF_FREQ_26M;
++		pllparam |= REF_FREQ_26M;
+ 		break;
+ 	case 19200000:
+-		value = REF_FREQ_19M2;
++		pllparam |= REF_FREQ_19M2;
+ 		break;
+ 	case 13000000:
+-		value = REF_FREQ_13M;
++		pllparam |= REF_FREQ_13M;
+ 		break;
+ 	default:
+ 		dev_err(tc->dev, "Invalid refclk rate: %lu Hz\n", rate);
+ 		return -EINVAL;
+ 	}
+ 
++	return regmap_write(tc->regmap, SYS_PLLPARAM, pllparam);
 +}
 +
- static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 			       struct drm_dp_aux_msg *msg)
++static int tc_aux_link_setup(struct tc_data *tc)
++{
++	int ret;
++	u32 dp0_auxcfg1;
++
+ 	/* Setup DP-PHY / PLL */
+-	value |= SYSCLK_SEL_LSCLK | LSCLK_DIV_2;
+-	ret = regmap_write(tc->regmap, SYS_PLLPARAM, value);
++	ret = tc_set_syspllparam(tc);
+ 	if (ret)
+ 		goto err;
+ 
+@@ -887,7 +892,6 @@ static int tc_main_link_enable(struct tc_data *tc)
  {
-@@ -356,9 +370,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	u32 auxstatus;
+ 	struct drm_dp_aux *aux = &tc->aux;
+ 	struct device *dev = tc->dev;
+-	unsigned int rate;
+ 	u32 dp_phy_ctrl;
+ 	u32 value;
  	int ret;
- 
--	if (size == 0)
--		return 0;
--
- 	ret = tc_aux_wait_busy(tc, 100);
- 	if (ret)
- 		return ret;
-@@ -382,8 +393,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	if (ret)
- 		return ret;
- 	/* Start transfer */
--	ret = regmap_write(tc->regmap, DP0_AUXCFG0,
--			   ((size - 1) << 8) | request);
-+	ret = regmap_write(tc->regmap, DP0_AUXCFG0, tc_auxcfg0(msg, size));
+@@ -915,25 +919,7 @@ static int tc_main_link_enable(struct tc_data *tc)
  	if (ret)
  		return ret;
  
-@@ -397,8 +407,14 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+-	rate = clk_get_rate(tc->refclk);
+-	switch (rate) {
+-	case 38400000:
+-		value = REF_FREQ_38M4;
+-		break;
+-	case 26000000:
+-		value = REF_FREQ_26M;
+-		break;
+-	case 19200000:
+-		value = REF_FREQ_19M2;
+-		break;
+-	case 13000000:
+-		value = REF_FREQ_13M;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-	value |= SYSCLK_SEL_LSCLK | LSCLK_DIV_2;
+-	ret = regmap_write(tc->regmap, SYS_PLLPARAM, value);
++	ret = tc_set_syspllparam(tc);
+ 	if (ret)
+ 		return ret;
  
- 	if (auxstatus & AUX_TIMEOUT)
- 		return -ETIMEDOUT;
--
--	size = FIELD_GET(AUX_BYTES, auxstatus);
-+	/*
-+	 * For some reason address-only DP_AUX_I2C_WRITE (MOT), still
-+	 * reports 1 byte transferred in its status. To deal we that
-+	 * we ignore aux_bytes field if we know that this was an
-+	 * address-only transfer
-+	 */
-+	if (size)
-+		size = FIELD_GET(AUX_BYTES, auxstatus);
- 	msg->reply = FIELD_GET(AUX_STATUS, auxstatus);
- 
- 	switch (request) {
 -- 
 2.21.0
 
