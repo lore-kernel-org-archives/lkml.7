@@ -2,82 +2,224 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B8CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A9C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D055D20872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5F02070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VJXJDhnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfFEUPM (ORCPT
+        id S1726604AbfFEUQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 16:15:12 -0400
-Received: from mail-it1-f178.google.com ([209.85.166.178]:52916 "EHLO
-        mail-it1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfFEUPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:15:12 -0400
-Received: by mail-it1-f178.google.com with SMTP id l21so5543740ita.2;
-        Wed, 05 Jun 2019 13:15:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=THJJt/ZPhh8isKdn2NsQHGAKZfNn4iulXXsjjcZVkJk=;
-        b=rWon5Fu4RCmo8tkHAvZ/U7WQ3+Q81pOXAnPrt1ch556o74O+VMy3QtBkWGoFBxmHL1
-         Y7rNKrjSRLbCsDPeG/ZRmAItfj/kEG59qK+LQRrMXrrm6GWbaJm5u8s46UGem9/fXxYm
-         lqgbD9l6Y4JN29WWrArmKQE6OxJeKttndgTl4K3gL5E5BbwEPACNRBK5IWaiALdCDiEv
-         W+uD+T2M4UF63jtUmjE/eTPBKhWbYNgITDwg1oiuuhUrU0nE2TBS18CO9FTBfy20/w7b
-         PbDvTtjV3JMz4KSZqLzFBGy20RjIK53ZmqI2Fqzeot0LYi/fR7Mr4K4X8hv5gLvNLmIc
-         t3cA==
-X-Gm-Message-State: APjAAAUVUIVAjWlvoNmgjVGZSWhl72nxVItqDdRwq7uRx1v/+cxhlD8D
-        raOrElE8qhb60OvO+jbMbGssFQ11QfNApuFfqKA=
-X-Google-Smtp-Source: APXvYqyrpsndryg2pdcv8bRbnFKvQOW5n7ws+8amqaHflUu9NqIphSTk1hfXgnbNdWzwKOBlue4Rts3JPGsdQ7vzs78=
-X-Received: by 2002:a02:a001:: with SMTP id a1mr28751687jah.115.1559765710777;
- Wed, 05 Jun 2019 13:15:10 -0700 (PDT)
+        Wed, 5 Jun 2019 16:16:28 -0400
+Received: from mout.gmx.net ([212.227.15.15]:39527 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfFEUQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 16:16:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1559765745;
+        bh=rijiQSXdFy2isPAAqnaADCu9R9ZY3RJXS+RUCx+UfTs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=VJXJDhnDH3ex3dDL7itq0g4lKdjZcUZbtrGmw9d61c5zy5a8seGbh2HVSwNLRVvn5
+         koMKEj/v+1NXTABfa/sgn9ERg9rSf7dONwUE4mEkp31xzodKqguf7iGnsjyDfGOD4s
+         NXaaHUuBhOCCfD+ibFQy8puryJ8ldsnADt+ABVTA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.160]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MBVwM-1hRR2s3Qv8-00AVYp; Wed, 05
+ Jun 2019 22:15:45 +0200
+Subject: Re: [PATCH 0/4] cpufreq support for the Raspberry Pi
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     f.fainelli@gmail.com, ptesarik@suse.com, sboyd@kernel.org,
+        viresh.kumar@linaro.org, mturquette@baylibre.com,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+References: <20190604173223.4229-1-nsaenzjulienne@suse.de>
+ <2ece3f20-ef8c-c39e-941c-76635ddbe185@gmx.net>
+ <1a86637dad1d2f33450950143a82016beb91bdb6.camel@suse.de>
+ <1c9708c9-a3c9-8a8f-4693-8f29d3e60634@gmx.net>
+ <6f40f43ed32c5c519761879245423f7c371e4ae6.camel@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <008bf9da-b2eb-8858-a58b-4252b7920856@gmx.net>
+Date:   Wed, 5 Jun 2019 22:15:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190412105320.2924-1-kernel@esmil.dk> <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
- <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com> <20190605195511.GX2456@sirena.org.uk>
-In-Reply-To: <20190605195511.GX2456@sirena.org.uk>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Wed, 5 Jun 2019 22:14:59 +0200
-Message-ID: <CANBLGcwE_KfwJ=-FKNJ9RzrH58FVcmyxAR9niWQRubjM0pZgWA@mail.gmail.com>
-Subject: Re: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-spi@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6f40f43ed32c5c519761879245423f7c371e4ae6.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:TijECVh98arPrcmwN3J8EqR3bttBi4JP2mkLKSUCsKLttPAEda6
+ vgUKwT6larHeCrNof/v6AeWluYqdpyICbs1C6QLuSTvT6m6GHgZzHa4efCHhGr+9alKGNgJ
+ kspPB4/jMmsDDi94JiTvMhYqDguCkXj6gxGRHLJcy289xmKFRHqdU4t06wRU9aiAlpkLjYl
+ BeU3PI5fh+IsAUe8cZb2Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wjRpJFh5V5Q=:sXUFJUqTYNiSwsF5XvN/yW
+ w+4gVP272Vh513kJHKFVldzPTVSDiUmTsQRLNaq29uvqusIl8hnEHaimvN7A0Ljfjkpc9+zke
+ aQIPueHWT2506vFI/YBANiZ3RoqyAX3n1wZChg7zfTHmgAq+8bV4cTxgvFCu44prF9/nI/Q3o
+ +Bonq/81uuNf/jPyqIv1+zfUXopiuiLPEqaFstodjh2gfWHf6qgd8lVSZtT8auEJf2x0VTcVQ
+ +iFffj5JbT+/XKMPXYLMJG6sCFs3US+po7KfJN2lxsRn3+r19K+F+XP2/8J06XlC+N/fc58X/
+ 4JtGgAR9Mp8G5FAC65XMTufHkdCBi7c+sdC3FR1e5I4PlN6Cl0Ya8Av2LKapzZ2b8eQRl4APo
+ 7gZsr2iTBVJaCQLhSPPaYbtrVwUm5AlBiAEv9wFOQ8zfbDTHB4ROFp+i1B7cG8MtdM8rFyAf3
+ hbGwv2gWDTxriHf4FpY1yWyDr6j9D7k4PvtQa9yior25PCNrULM0ySc8QC3WDZDowHkmeiRm4
+ z1v6bIalnMiHPdKB0EI+Py4lRynA+GZUnwZdLEPBTi86rnl7ulqmVskitd0HNxS2FPGrUChmx
+ OKE8epnMuizky9pEvj1s0N6bKPQy0497avYNBjaoUhbe7YCfVc2J12KNtdCnUDO5PxP4Bnorj
+ LeXmGuvkyzN3IMz+OPGd3Hm5fUJMCiKvRvIjJZqfAPYqVGaDMh734zPi6a2/2WV++JkcnwByP
+ qrEGHjy+V9CAgRaM0C1y844Sx4eDFvqNVExmvwEPXPH5zc/pOsWAJcZBnFfdTRzNwBvFvJ3jx
+ gRrAZvgjdGEj9/9weEKw67e55BuzZ3QCzkExCxZH/HwJObXxos9uVWk6DmxDEQzC6JjOFG/h5
+ 8vu7jyQII98OflI+C6k1GacIPu9rSFAlYyMv67Y1O8WxaM7P5KSSOew78X8VA6EbJeZeZCl+8
+ KB2n8TZcdCOE3hKQmtAP/97XpogPc9ikz7vkEYlhKYPCvyK1S8/hQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 21:55, Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Jun 05, 2019 at 09:36:44PM +0200, Emil Renner Berthing wrote:
-> > On Wed, 8 May 2019 at 12:34, Mark Brown <broonie@kernel.org> wrote:
->
-> > >    spi: rockchip: turn down tx dma bursts
->
-> > I've tried looking in the for-next and for-5.x branches here, and I
-> > can't seem to find this patch.
-> > Am I missing something?
->
-> > It fixes a problem introduced in 4.19, so it'd be nice if it could
-> > make it to stable trees eventually.
->
-> 47300728fb213486a830565d2af49da967c9d16a is in my tree.  When it reaches
-> Linus' tree send a request to Greg for it to be backported if none of
-> the stable automation picks it up.
+Hi Nicolas,
 
-You're absolutely right, sorry about the noise.
+>> Am 05.06.19 um 13:00 schrieb Nicolas Saenz Julienne:
+>>> Hi Stefan,
+>>> thanks for the review, I took note of your code comments.
+>>>
+>>> On Wed, 2019-06-05 at 11:46 +0200, Stefan Wahren wrote:
+>>>> Hi Nicolas,
+>>>>
+>>>> Am 04.06.19 um 19:32 schrieb Nicolas Saenz Julienne:
+>>>>> Hi all,
+>>>>> this series aims at adding cpufreq support to the Raspberry Pi fami=
+ly of
+>>>>> boards.
+>>>>>
+>>>>> The previous revision can be found at:=20
+>>>>> https://lkml.org/lkml/2019/5/20/431
+>>>>>
+>>>>> The series first factors out 'pllb' from clk-bcm2385 and creates a =
+new
+>>>>> clk driver that operates it over RPi's firmware interface[1]. We ar=
+e
+>>>>> forced to do so as the firmware 'owns' the pll and we're not allowe=
+d to
+>>>>> change through the register interface directly as we might race wit=
+h the
+>>>>> over-temperature and under-voltage protections provided by the firm=
+ware.
+>>>> it would be nice to preserve such design decision in the driver as a=
 
-Thanks.
-/Emil
+>>>> comment, because the cover letter usually get lost.
+>>>>> Next it creates a minimal cpufreq driver that populates the CPU's o=
+pp
+>>>>> table, and registers cpufreq-dt. Which is needed as the firmware
+>>>>> controls the max and min frequencies available.
+>>>> I tested your series on top of Linux 5.2-rc1 with multi_v7_defconfig=
+ and
+>>>> manually enable this drivers. During boot with Raspbian rootfs i'm
+>>>> getting the following:
+>>>>
+>>>> [    1.177009] cpu cpu0: failed to get clock: -2
+>>>> [    1.183643] cpufreq-dt: probe of cpufreq-dt failed with error -2
+>>> This is surprising, who could be creating a platform_device for cpufr=
+eq-dt
+>>> apart from raspberrypi-cpufreq? Just to make things clear, you're usi=
+ng the
+>>> device tree from v5.2-rc1 (as opposed to the Raspbian one)?
+>> sorry my fault, i thought it already has been replaced. The behavior i=
+n
+>> this unexpected case is fine, since it doesn't crash.
+>>
+>> I replaced the the DTB with the mainline one, but now i'm getting this=
+:
+>>
+>> [    4.566068] cpufreq: cpufreq_online: CPU0: Running at unlisted freq=
+:
+>> 600000 KHz
+>> [    4.580690] cpu cpu0: dev_pm_opp_set_rate: Invalid target frequency=
+ 0
+>> [    4.594391] cpufreq: __target_index: Failed to change cpu frequency=
+: -22
+> For the record this fixes it:
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index aa51756fd4d6..edb71eefe9cf 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1293,7 +1293,7 @@ static int clk_core_determine_round_nolock(struct=
+ clk_core
+> *core,
+>         } else if (core->ops->round_rate) {
+>                 rate =3D core->ops->round_rate(core->hw, req->rate,
+>                                              &req->best_parent_rate);
+> -               if (rate < 0)
+> +               if (IS_ERR_VALUE(rate))
+>                         return rate;
+>
+>                 req->rate =3D rate;
+>
+> round_rate() returns a 'long' value, yet 'pllb' in rpi3b+ goes as high =
+as
+> 2.8GHz, which only fits in an 'unsigned long'. This explains why I didn=
+'t see
+> this issue with RPI2b.
+
+Okay, i understand the problem. But the patch doesn't look like the
+proper fix to me.
+
+Maybe the better way is to implement determine_rate instead of
+round_rate in the clock driver. AFAICS this provides the necessary
+unsigned long.
+
+>
+> I'll add the patch to the series.
+>
+> Regards,
+> Nicolas
+
