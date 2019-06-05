@@ -2,125 +2,206 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE26C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B0C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C28120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7457020866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a2p19VFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfFEGQh (ORCPT
+        id S1726682AbfFEGQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:16:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53374 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726050AbfFEGQh (ORCPT
+        Wed, 5 Jun 2019 02:16:40 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43880 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfFEGQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Jun 2019 02:16:37 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x556C6c4087517
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2019 02:16:36 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sx7rqs5vc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 02:16:35 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Wed, 5 Jun 2019 07:16:33 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 5 Jun 2019 07:16:29 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x556GSU860358882
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Jun 2019 06:16:28 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B408A4057;
-        Wed,  5 Jun 2019 06:16:28 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 194CFA405F;
-        Wed,  5 Jun 2019 06:16:28 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Jun 2019 06:16:28 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id DE255A01BD;
-        Wed,  5 Jun 2019 16:16:26 +1000 (AEST)
-Subject: Re: [PATCH] ocxl: do not use C++ style comments in uapi header
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190604111632.22479-1-yamada.masahiro@socionext.com>
- <90aa6d91-7592-17b0-17fd-e33676bd0a46@linux.ibm.com>
- <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Wed, 5 Jun 2019 16:16:23 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Received: by mail-pg1-f196.google.com with SMTP id f25so11803601pgv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 23:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
+        b=a2p19VFRYfiN+slwv4mz43rBb2yISQyrLkTJcMwSA/WWx9l79OZvNlzb0McxQjlz1q
+         V0H85qKfEr5ZtprV5QK9qBTKSV8I1gF9ndrBiqTp2IS+Bz1UAF4xjzJ5ovK8Dbv9obd/
+         E4MAUdbc473B8+RS4fi0cnV5jtQ/pttN9wdLEjbGLZPKISnutmqS1RoLvLUmatV7Sxj4
+         1YpTj26Z25oIhkuyqe73xgLobBxUTtBRWPzTU80HA6shTFVU+iFMdg7A/LeV1fBVQ54j
+         iipbbvvwaXrxFxqY26USW52xFqh7PwiURi/plOK8dz92vePi2swKlawieFKqGfDli8E8
+         zFfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
+        b=n8ueAmDHyMX0qf2CJZlr1VQ5vVsoiQuzUYnv1AtV2cdTU2LhFCy1Veag9MNVSnEgJM
+         X3BBMK3kC0lXxF9iHfS574raISwh9liiQY4sJF4eSQhbl05lShccaTx+KPRjAK7/kmYs
+         qfOWBfBgD3ofeOu5I9z1o6qHuCEHr0lUCxUKVaATNS9WYs1n/fJQnjmz7DNRXRV/dEr+
+         iP9z9X5D9h+qS0qzhdvmNZ0UBcBwWypkKpOZrW6olBySOaooLAw9wYsY6Rf2w8ALBObw
+         fakCaLCtC6v5lYszYQSprSaXG7e+zo8WVzLaANqd4rKYYg7ri0bSc9TWhw0QydRwnL7U
+         jY7A==
+X-Gm-Message-State: APjAAAWfsJloSC6xXQtCHgRCgY7o0sWKvKoTeO5K+u3zJX9QFeLdr4DJ
+        QVLQBiYdrM3EwSU+4vTagFp98A==
+X-Google-Smtp-Source: APXvYqwEJhIs8QubYN0avnbvfixWjIzhGaRnp7YPaFTgZ2Z2O0BG2WDaO37plKfU2MMrMOlw9tyzHw==
+X-Received: by 2002:a62:ea0a:: with SMTP id t10mr43421341pfh.236.1559715396814;
+        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z18sm8987858pgh.88.2019.06.04.23.16.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 23:17:21 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190605061721.GK22737@tuxbook-pro>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-4-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASV9Chjd+o3+2ZbA0WHu=dVBFf2AC1dT=eLSf3_2pe12Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060506-4275-0000-0000-0000033D5779
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060506-4276-0000-0000-0000384D6887
-Message-Id: <ab22b27e-dd07-1c83-af60-19403c98c6a2@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=778 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906050039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604104455.8877-4-lee.jones@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/19 10:12 pm, Masahiro Yamada wrote:
-> On Tue, Jun 4, 2019 at 8:54 PM Frederic Barrat <fbarrat@linux.ibm.com> wrote:
->>
->>
->>
->> Le 04/06/2019 à 13:16, Masahiro Yamada a écrit :
->>> Linux kernel tolerates C++ style comments these days. Actually, the
->>> SPDX License tags for .c files start with //.
->>>
->>> On the other hand, uapi headers are written in more strict C, where
->>> the C++ comment style is forbidden.
->>>
->>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>> ---
->>
->> Thanks!
->> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
->>
+On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+
+> This patch provides basic support for booting with ACPI instead
+> of the currently supported Device Tree.  When doing so there are a
+> couple of differences which we need to taken into consideration.
 > 
-> Please hold on this patch until
-> we get consensus about the C++ comment style.
+> Firstly, the SDM850 ACPI tables omit information pertaining to the
+> 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> initialise any of these lines, the firmware will restart the
+> platform.
 > 
-> Discussion just started here:
-> https://lore.kernel.org/patchwork/patch/1083801/
+> Secondly, when booting with ACPI, it is expected that the firmware
+> will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> their ideal configuration.  Thus, the possible Pin Functions
+> available to this platform are not advertised when providing the
+> higher GPIOD/Pinctrl APIs with pin information.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/Kconfig          |  2 +-
+>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
+>  2 files changed, 35 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index 2e66ab72c10b..aafbe932424f 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -168,7 +168,7 @@ config PINCTRL_SDM660
+>  
+>  config PINCTRL_SDM845
+>         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+> -       depends on GPIOLIB && OF
+> +       depends on GPIOLIB && (OF || ACPI)
+>         select PINCTRL_MSM
+>         help
+>           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> index c97f20fca5fd..7188bee3cf3e 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+>  	UFS_RESET(ufs_reset, 0x99f000),
+>  };
+>  
+> +static const int sdm845_acpi_reserved_gpios[] = {
+> +	0, 1, 2, 3, 81, 82, 83, 84, -1
+> +};
+> +
+>  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+>  	.pins = sdm845_pins,
+>  	.npins = ARRAY_SIZE(sdm845_pins),
+> @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+>  	.nfunctions = ARRAY_SIZE(sdm845_functions),
+>  	.groups = sdm845_groups,
+>  	.ngroups = ARRAY_SIZE(sdm845_groups),
+> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
 
-If you choose to proceed with this patch:
+The reason why put these in DT is because the list is board/firmware
+dependent. E.g. the firmware on db845c does not support the peripherals
+that sits on these 8 pins and as such these are not reserved.
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+But given that the two structs looks identical now, did you perhaps not
+intend to add.reserved_gpios for the non-ACPI case?
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Regards,
+Bjorn
 
+> +	.ngpios = 150,
+> +};
+> +
+> +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
+> +	.pins = sdm845_pins,
+> +	.npins = ARRAY_SIZE(sdm845_pins),
+> +	.groups = sdm845_groups,
+> +	.ngroups = ARRAY_SIZE(sdm845_groups),
+> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
+>  	.ngpios = 150,
+>  };
+>  
+>  static int sdm845_pinctrl_probe(struct platform_device *pdev)
+>  {
+> -	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> +	int ret;
+> +
+> +	if (pdev->dev.of_node) {
+> +		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> +	} else if (ACPI_HANDLE(&pdev->dev)) {
+> +		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
+> +	} else {
+> +		dev_err(&pdev->dev, "DT and ACPI disabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+> +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
+> +	{ "QCOM0217"},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
+> +
+>  static const struct of_device_id sdm845_pinctrl_of_match[] = {
+>  	{ .compatible = "qcom,sdm845-pinctrl", },
+>  	{ },
+> @@ -1302,6 +1334,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+>  		.name = "sdm845-pinctrl",
+>  		.pm = &msm_pinctrl_dev_pm_ops,
+>  		.of_match_table = sdm845_pinctrl_of_match,
+> +		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
+>  	},
+>  	.probe = sdm845_pinctrl_probe,
+>  	.remove = msm_pinctrl_remove,
+> -- 
+> 2.17.1
+> 
