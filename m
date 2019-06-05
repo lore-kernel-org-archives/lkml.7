@@ -2,195 +2,107 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03160C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFA4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB95520866
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aDihaTMg"
+	by mail.kernel.org (Postfix) with ESMTP id E087D206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559764519;
+	bh=Q0pMelW2LSEJjQOw1iitJngkn3QRqI6Tf7dAbF//uaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ARAo03JnB9AsgvINcOtfQZRhKeDd+dSXIc3K9fE/ARABs9IMsuwWVfmsDOBui4nYD
+	 4N4eFGhsn6857SWn3sTTLJyd8v1f0BIreOtEJP1Iif8WCtH+WGU7Of+4FwmLN/SPQs
+	 yvC/yI/dhyduEvPwd8WwS1hG/Kp5vcFMfv2XyCTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfFETxR (ORCPT
+        id S1726593AbfFETzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:53:17 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46382 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFETxR (ORCPT
+        Wed, 5 Jun 2019 15:55:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56140 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFETzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:53:17 -0400
-Received: by mail-yw1-f67.google.com with SMTP id v188so1121598ywb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pq+ABjtf9saoF6dUdDDxsada/8divT9WxU6TICP/hS0=;
-        b=aDihaTMgou/t97G57d7rSXoCcTQDt7cJhZO/VzPbMeLi4sGgyQE/L+c/Xb2mFlIHNc
-         KaML8q353hRhpyMrBy6fUDg55Gbs7i6N+EZcB6tOI30QgIX+8REuTUsVHEh/37+Lr+Ng
-         jNb4ZdmEeXJqM9mhi2gQO2UwqZCUeQx7LvIWYvy9CteXIaZEtI+6ecTcJB/NmyXLcQe0
-         SvWHAspDlFvaNOq04iKRcDFUKaib9HUW1PYlGomdLdDVMiBpKMV/VZMhOW9XL0fTWOt0
-         lK290QFMMxxqOu5DnJfLakjc8YpLtXySQhJ9HWoKAbxNvNX5Hqh7LQbTqWFkyzTPFX2D
-         VT0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pq+ABjtf9saoF6dUdDDxsada/8divT9WxU6TICP/hS0=;
-        b=Nb7k3PPxzrZgLnb+H7Ey0Ft/OOLjdbJ1xBJ0ShtwHTjfdaJMaGGnjZumKK+AOc0zln
-         D2fT35D0oFYiYPUPwAh0Ep8rpd/Xv0cQS+E3GCVnt5wZzHAQdyaysnbfD7tLU09jqR+R
-         B9VLiG3AwdOvj/XyQvrm5kkMAqob8lNDhl08ruP7Ax+gPsMiR6rEILO1aRuNSDnmuQVW
-         tk+iaKHwITo6miyG3HqjNgjoy//x+FKj3KrIydkuFQQ+Lb7SZpoWYt5tkiTcHaGZ9PBG
-         h0Fnjno5bGKTOm3/OtVpJ/1I1P5wxF4b7qoUEQDBb++Rnn0yGqWixu89JMsRtY9SZ0E9
-         ocJw==
-X-Gm-Message-State: APjAAAWD9hmbfW+Wde2XpgDiiFdmt9cP/WKy4ZYjhs25rJ1gfH8wuSz4
-        vAdpnnCRKQKfEAvCgLRZTh8odC5xujriAv7YXoEfWg==
-X-Google-Smtp-Source: APXvYqxIXoHj7TFv4XDBsjG+UUtDEa51VaOVh8r8ws5N3z+MR2V3qHzEtoVcLjgTR69Tnx8hRJ2yOcD2jp2DSjv95tU=
-X-Received: by 2002:a81:5741:: with SMTP id l62mr21598650ywb.4.1559764395811;
- Wed, 05 Jun 2019 12:53:15 -0700 (PDT)
+        Wed, 5 Jun 2019 15:55:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KgTOG/MCFpTyXVOTj1ZuKkvtNmZGpkEpbnA949wWplg=; b=poiGgtvcOkWfzAHuVL95Men3L
+        RyJsJbFdF5jvyHsVDjz+UFH1VX2AFLCeFGFxTcLT7kjna8inPhPEgFcf0DOSnNNim+PkYMgCrol36
+        DXwfUOlPsXCYCu7DZy33rjRGAMDP7O8GtkdpVHMIYq6VWHk8G4ZZw+69OPy4tTmCUTJzk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYc08-0001Q6-5G; Wed, 05 Jun 2019 19:55:12 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 90214440046; Wed,  5 Jun 2019 20:55:11 +0100 (BST)
+Date:   Wed, 5 Jun 2019 20:55:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-spi@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>
+Subject: Re: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
+Message-ID: <20190605195511.GX2456@sirena.org.uk>
+References: <20190412105320.2924-1-kernel@esmil.dk>
+ <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
+ <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190605100630.13293-1-teawaterz@linux.alibaba.com> <20190605100630.13293-2-teawaterz@linux.alibaba.com>
-In-Reply-To: <20190605100630.13293-2-teawaterz@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 5 Jun 2019 12:53:04 -0700
-Message-ID: <CALvZod62+jQjebNVmQHt=T8s7TFiRW-Zcw5kdUU23MZZqgaKYw@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] zswap: Use movable memory if zpool support
- allocate movable memory
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com,
-        Seth Jennings <sjenning@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dkgfGZfPp4OU3Le7"
+Content-Disposition: inline
+In-Reply-To: <CANBLGcxiXR7KqKn4U-2PgefuxpBFX=yR06cw6A5GEALuqa54FA@mail.gmail.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
->
-> This is the third version that was updated according to the comments
-> from Sergey Senozhatsky https://lkml.org/lkml/2019/5/29/73 and
-> Shakeel Butt https://lkml.org/lkml/2019/6/4/973
->
-> zswap compresses swap pages into a dynamically allocated RAM-based
-> memory pool.  The memory pool should be zbud, z3fold or zsmalloc.
-> All of them will allocate unmovable pages.  It will increase the
-> number of unmovable page blocks that will bad for anti-fragment.
->
-> zsmalloc support page migration if request movable page:
->         handle = zs_malloc(zram->mem_pool, comp_len,
->                 GFP_NOIO | __GFP_HIGHMEM |
->                 __GFP_MOVABLE);
->
-> And commit "zpool: Add malloc_support_movable to zpool_driver" add
-> zpool_malloc_support_movable check malloc_support_movable to make
-> sure if a zpool support allocate movable memory.
->
-> This commit let zswap allocate block with gfp
-> __GFP_HIGHMEM | __GFP_MOVABLE if zpool support allocate movable memory.
->
-> Following part is test log in a pc that has 8G memory and 2G swap.
->
-> Without this commit:
-> ~# echo lz4 > /sys/module/zswap/parameters/compressor
-> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
-> ~# echo 1 > /sys/module/zswap/parameters/enabled
-> ~# swapon /swapfile
-> ~# cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 4826062 usecs = 549973 KB/s
-> 2717908992 bytes / 4864201 usecs = 545661 KB/s
-> 2717908992 bytes / 4867015 usecs = 545346 KB/s
-> 2717908992 bytes / 4915485 usecs = 539968 KB/s
-> 397853 usecs to free memory
-> 357820 usecs to free memory
-> 421333 usecs to free memory
-> 420454 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable      6      5      8      6      6      5      4      1      1      1      0
-> Node    0, zone    DMA32, type      Movable     25     20     20     19     22     15     14     11     11      5    767
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   4753   5588   5159   4613   3712   2520   1448    594    188     11      0
-> Node    0, zone   Normal, type      Movable     16      3    457   2648   2143   1435    860    459    223    224    296
-> Node    0, zone   Normal, type  Reclaimable      0      0     44     38     11      2      0      0      0      0      0
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1652            0            0            0            0
-> Node 0, zone   Normal          931         1485           15            0            0            0
->
-> With this commit:
-> ~# echo lz4 > /sys/module/zswap/parameters/compressor
-> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
-> ~# echo 1 > /sys/module/zswap/parameters/enabled
-> ~# swapon /swapfile
-> ~# cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 4689240 usecs = 566020 KB/s
-> 2717908992 bytes / 4760605 usecs = 557535 KB/s
-> 2717908992 bytes / 4803621 usecs = 552543 KB/s
-> 2717908992 bytes / 5069828 usecs = 523530 KB/s
-> 431546 usecs to free memory
-> 383397 usecs to free memory
-> 456454 usecs to free memory
-> 224487 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable     10      8     10      9     10      4      3      2      3      0      0
-> Node    0, zone    DMA32, type      Movable     18     12     14     16     16     11      9      5      5      6    775
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      1
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   2669   1236    452    118     37     14      4      1      2      3      0
-> Node    0, zone   Normal, type      Movable   3850   6086   5274   4327   3510   2494   1520    934    438    220    470
-> Node    0, zone   Normal, type  Reclaimable     56     93    155    124     47     31     17      7      3      0      0
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1650            2            0            0            0
-> Node 0, zone   Normal           79         2326           26            0            0            0
->
-> You can see that the number of unmovable page blocks is decreased
-> when the kernel has this commit.
->
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+--dkgfGZfPp4OU3Le7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 05, 2019 at 09:36:44PM +0200, Emil Renner Berthing wrote:
+> On Wed, 8 May 2019 at 12:34, Mark Brown <broonie@kernel.org> wrote:
+
+> >    spi: rockchip: turn down tx dma bursts
+
+> I've tried looking in the for-next and for-5.x branches here, and I
+> can't seem to find this patch.
+> Am I missing something?
+
+> It fixes a problem introduced in 4.19, so it'd be nice if it could
+> make it to stable trees eventually.
+
+47300728fb213486a830565d2af49da967c9d16a is in my tree.  When it reaches
+Linus' tree send a request to Greg for it to be backported if none of
+the stable automation picks it up.
+
+--dkgfGZfPp4OU3Le7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz4Hh4ACgkQJNaLcl1U
+h9BxQgf+Ljplf8ZxX4pzMeNgr9s/Oik21N9dYZN14eGepFYn3eC2JAJ66qWR5ZDX
+q18JwvA6GyMsvntlko2y2HjEIJltQ06YGplOfVLtKkwtDWSbiBlV1nkkxpZGjmJd
+AC7LI2yRkoD35/DXj4r2x8ZatFl1W+i3isANRYtSFHUeKElyYCQ+fV4YTm8xUHjP
+zpRYGv65CG88hJmzygheI3viO+zlwsUxaJaz/jcNkoyZ4etUpz8FEYjtMeBV3SXX
+MxUncjiMX3d7HlRU4CY03FyMkUJ4d+8Pfw7YMyNbF2SMDqEbApXGhBG4XS1RcE6x
+ujRznnS4Wk9Lc6MdQbWFBAMoYrCUcw==
+=Y9+I
+-----END PGP SIGNATURE-----
+
+--dkgfGZfPp4OU3Le7--
