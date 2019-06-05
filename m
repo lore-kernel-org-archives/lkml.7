@@ -2,555 +2,174 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19121C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE608C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D5B20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:02:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoVo2w4W"
+	by mail.kernel.org (Postfix) with ESMTP id 7E44B20874
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 17:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfFERCY (ORCPT
+        id S1728850AbfFERD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 13:02:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38870 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbfFERCX (ORCPT
+        Wed, 5 Jun 2019 13:03:26 -0400
+Received: from smtprelay0024.hostedemail.com ([216.40.44.24]:37504 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728794AbfFERD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 13:02:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so12723570pgl.5;
-        Wed, 05 Jun 2019 10:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gwq0oyAiNi9hUTrg8K9KARl5Rv2m1zkNF1Qs8OEvG/c=;
-        b=NoVo2w4WN4+BDlTriH2nMiW01Fuo8Rx7e+niflRm6RrNpv5oJeCzu8HdGBCfHe/z4X
-         6szGF5kBBuQLVl48X/4la46ISLFRnaZmmxjSjg5y2dfq4H5Fvfv5Rdtb1dLdIiZe7Mpr
-         dxoUctCvO6rjWZnBojpvbxCtk2kiKbJd6qTH4i5sahs8pUdj0f6d28ei4PREsf0bO6cW
-         n8loJlaQ3pmxvtBfeg+b6D/rkRLlQJZLUjZKPCu69W/h/Sj72+yd24J4VLv9L1UbDm3Z
-         NT/9z7nIV6GFk4p0OcIKgm0YasYPxfCtUtibiOVTMw/LJmP4oHSgAgxuqWsACoATg6D0
-         Y+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gwq0oyAiNi9hUTrg8K9KARl5Rv2m1zkNF1Qs8OEvG/c=;
-        b=SQFe9fxofQv89dZy8wV9hrWEz7LV41HZswfXm/NtFeZsknVPQL4CW66e8c3jJJBuZf
-         vNf6cEQXuoVVINeZmW5do0cyvAzkFHs9ZhErerzg36OimkM1A0bStkyCm8y5XCfiUAyJ
-         KXOyKTq7PvUHyj5kqJC9NOhzhIOxClaLQau5HhYkrhxCDXkrdx9uLuMsJzOtJry6wPlp
-         r9GWAMPKe+pq5oYPS7CTxQxirFRDu96zsRLtx4fNsEcYMSegcv0iisYUJFi0QqeiWqva
-         T578XZjq6sjSY7BHY9EluSldRXvPZFYnKT0c/tCdUW+KdkpCIGiBsBvbXW73q//PKYlS
-         /TGQ==
-X-Gm-Message-State: APjAAAXPCmYHJWhoiiJ0kbLe74G+vhQ+Xdt7LJM3J/YMDKnkOBR5tqP5
-        2w5u9EhVMOOhY/ZBRJFMWdjlHPGHkAbJl75i+DY=
-X-Google-Smtp-Source: APXvYqyfZIo23aK/Mf4i0GZ3P1AvsittF9uLpDMle+PsgxI+/35t62wzoWx5E3xGqHTuWE5Ycsq+5fIj2CW29Btc1DM=
-X-Received: by 2002:a63:fb05:: with SMTP id o5mr6004598pgh.203.1559754142264;
- Wed, 05 Jun 2019 10:02:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190605164651.15991-1-eduval@amazon.com> <20190605164651.15991-3-eduval@amazon.com>
-In-Reply-To: <20190605164651.15991-3-eduval@amazon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Jun 2019 20:02:11 +0300
-Message-ID: <CAHp75Vd2HSB=c_QV0yP33yjrgyd1U7-3P-0FG1Zmp_Wba2AGcg@mail.gmail.com>
-Subject: Re: [PATCHv7 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Wed, 5 Jun 2019 13:03:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8554E8368EE9;
+        Wed,  5 Jun 2019 17:03:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: snail30_1d61b4fc2bc61
+X-Filterd-Recvd-Size: 5807
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  5 Jun 2019 17:03:21 +0000 (UTC)
+Message-ID: <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 05 Jun 2019 10:03:19 -0700
+In-Reply-To: <20190605071413.779bd821@coco.lan>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+         <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+         <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+         <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+         <20190604134213.GA26263@kroah.com>
+         <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+         <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+         <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+         <20190605051040.GA22760@kroah.com>
+         <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+         <20190605071413.779bd821@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 7:48 PM Eduardo Valentin <eduval@amazon.com> wrote:
->
-> From: Haiyue Wang <haiyue.wang@linux.intel.com>
->
-> Some protocols over I2C are designed for bi-directional transferring
-> messages by using I2C Master Write protocol. Like the MCTP (Management
-> Component Transport Protocol) and IPMB (Intelligent Platform Management
-> Bus), they both require that the userspace can receive messages from
-> I2C dirvers under slave mode.
->
-> This new slave mqueue backend is used to receive and queue messages, it
-> will exposes these messages to userspace by sysfs bin file.
->
-> Note: DT interface and a couple of minor fixes here and there
-> by Eduardo, so I kept the original authorship here.
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-though I prefer simple dropping of of_match_ptr(), and by the way,
-#include <of.h> is superfluous and may be changed to
-mod_devicetable.h.
-
-Leave above to Wolfram to judge.
-
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+On Wed, 2019-06-05 at 07:14 -0300, Mauro Carvalho Chehab wrote:
+> Em Tue, 04 Jun 2019 22:22:05 -0700
+> Joe Perches <joe@perches.com> escreveu:
+> 
+> > On Wed, 2019-06-05 at 07:10 +0200, Greg KH wrote:
+> > > On Wed, Jun 05, 2019 at 01:10:41PM +0900, Masahiro Yamada wrote:  
+> > > > On Wed, Jun 5, 2019 at 3:21 AM Arnd Bergmann <arnd@arndb.de> wrote:  
+> > []
+> > > > This means we cannot reliably use uint{8,16,32,64}_t in UAPI headers.  
+> > > 
+> > > We should not be doing that as they are in the userspace "namespace" of
+> > > variables, not in the kernel namespace.  We've been over this many times
+> > > in the past :(  
+> > 
+> > Just not very successfully...
+> > 
+> > $ git grep -w -P 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
+> > 342
+> > $ git grep -w -P --name-only 'u?_?int(?:8|16|32|64)_t' include/uapi | wc -l
+> > 13
+> 
+> Out of curiosity, I decided to check those occurrences...
+> 
+> About half of those 13 files are false-positives:
+> 
+> - bpf.h, pps.h and amdgpu_drm.h use those int types only inside comments;
+> - drm.h and coda.h have their own typedefs for those int types;
+> - vmwgfx_drm.h includes drm.h (which has the typedefs).
+> 
+> So, only 6 headers actually use posix types in a way that it seems that 
+> it would require including stdint.h:
+> 
+> - include/uapi/linux/fuse.h
+> 
+>   This one explicitly includes stdint.h if !__KERNEL__
+> 
+> - include/uapi/linux/netfilter_bridge/ebtables.h,
+>   include/uapi/linux/sctp.h,
+>   include/uapi/scsi/scsi_netlink.h and
+>   include/uapi/scsi/scsi_netlink_fc.h
+> 
+>   They include linux/types.h unconditionally, relying on
+>   scripts/headers_install.sh to remove it;
+> 
+> - include/uapi/scsi/scsi_bsg_fc.h
+> 
+>   It doesn't include anything. In other words, it assumes that the c file 
+>   would include either linux/types.h or stdint.h.
+> 
 > ---
->
-> From V6 -> V7:
-> - fixed compile warm when CONFIG_OF=n by wrapping of table into ifdef
-> - minor changes: kobj_to_dev(), moved BUILD_BUG_ON() to start of function,
-> and flagged DT table sentinel in a more strict way.
-> - Also added a MODULE_DEVICE_TABLE() for the of table.
->
->  Documentation/i2c/slave-mqueue-backend.rst | 124 ++++++++++++
->  MAINTAINERS                                |   8 +
->  drivers/i2c/Kconfig                        |  25 +++
->  drivers/i2c/Makefile                       |   1 +
->  drivers/i2c/i2c-slave-mqueue.c             | 215 +++++++++++++++++++++
->  5 files changed, 373 insertions(+)
->  create mode 100644 Documentation/i2c/slave-mqueue-backend.rst
->  create mode 100644 drivers/i2c/i2c-slave-mqueue.c
->
-> diff --git a/Documentation/i2c/slave-mqueue-backend.rst b/Documentation/i2c/slave-mqueue-backend.rst
-> new file mode 100644
-> index 000000000000..376dff998fa3
-> --- /dev/null
-> +++ b/Documentation/i2c/slave-mqueue-backend.rst
-> @@ -0,0 +1,124 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================================
-> +Linux I2C slave message queue backend
-> +=====================================
-> +
-> +:Author: Haiyue Wang <haiyue.wang@linux.intel.com>
-> +
-> +Some protocols over I2C/SMBus are designed for bi-directional transferring
-> +messages by using I2C Master Write protocol. This requires that both sides
-> +of the communication have slave addresses.
-> +
-> +Like MCTP (Management Component Transport Protocol) and IPMB (Intelligent
-> +Platform Management Bus), they both require that the userspace can receive
-> +messages from i2c drivers under slave mode.
-> +
-> +This I2C slave mqueue (message queue) backend is used to receive and queue
-> +messages from the remote i2c intelligent device; and it will add the target
-> +slave address (with R/W# bit is always 0) into the message at the first byte,
-> +so that userspace can use this byte to dispatch the messages into different
-> +handling modules. Also, like IPMB, the address byte is in its message format,
-> +it needs it to do checksum.
-> +
-> +For messages are time related, so this backend will flush the oldest message
-> +to queue the newest one.
-> +
-> +Link
-> +----
-> +`Intelligent Platform Management Bus
-> +Communications Protocol Specification
-> +<https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmp-spec-v1.0.pdf>`_
-> +
-> +`Management Component Transport Protocol (MCTP)
-> +SMBus/I2C Transport Binding Specification
-> +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_1.1.0.pdf>`_
-> +
-> +How to use
-> +----------
-> +For example, the I2C5 bus has slave address 0x10, the below command will create
-> +the related message queue interface:
-> +
-> +    echo slave-mqueue 0x1010 > /sys/bus/i2c/devices/i2c-5/new_device
-> +
-> +Then you can dump the messages like this:
-> +
-> +    hexdump -C /sys/bus/i2c/devices/5-1010/slave-mqueue
-> +
-> +Code Example
-> +------------
-> +*Note: call 'lseek' before 'read', this is a requirement from kernfs' design.*
-> +
-> +::
-> +
-> +  #include <sys/types.h>
-> +  #include <sys/stat.h>
-> +  #include <unistd.h>
-> +  #include <poll.h>
-> +  #include <time.h>
-> +  #include <fcntl.h>
-> +  #include <stdio.h>
-> +
-> +  int main(int argc, char *argv[])
-> +  {
-> +          int i, r;
-> +          struct pollfd pfd;
-> +          struct timespec ts;
-> +          unsigned char data[256];
-> +
-> +          pfd.fd = open(argv[1], O_RDONLY | O_NONBLOCK);
-> +          if (pfd.fd < 0)
-> +                  return -1;
-> +
-> +          pfd.events = POLLPRI;
-> +
-> +          while (1) {
-> +                  r = poll(&pfd, 1, 5000);
-> +
-> +                  if (r < 0)
-> +                          break;
-> +
-> +                  if (r == 0 || !(pfd.revents & POLLPRI))
-> +                          continue;
-> +
-> +                  lseek(pfd.fd, 0, SEEK_SET);
-> +                  r = read(pfd.fd, data, sizeof(data));
-> +                  if (r <= 0)
-> +                          continue;
-> +
-> +                  clock_gettime(CLOCK_MONOTONIC, &ts);
-> +                  printf("[%ld.%.9ld] :", ts.tv_sec, ts.tv_nsec);
-> +                  for (i = 0; i < r; i++)
-> +                          printf(" %02x", data[i]);
-> +                  printf("\n");
-> +          }
-> +
-> +          close(pfd.fd);
-> +
-> +          return 0;
-> +  }
-> +
-> +Result
-> +------
-> +*./a.out "/sys/bus/i2c/devices/5-1010/slave-mqueue"*
-> +
-> +::
-> +
-> +  [10183.232500449] : 20 18 c8 2c 78 01 5b
-> +  [10183.479358348] : 20 18 c8 2c 78 01 5b
-> +  [10183.726556812] : 20 18 c8 2c 78 01 5b
-> +  [10183.972605863] : 20 18 c8 2c 78 01 5b
-> +  [10184.220124772] : 20 18 c8 2c 78 01 5b
-> +  [10184.467764166] : 20 18 c8 2c 78 01 5b
-> +  [10193.233421784] : 20 18 c8 2c 7c 01 57
-> +  [10193.480273460] : 20 18 c8 2c 7c 01 57
-> +  [10193.726788733] : 20 18 c8 2c 7c 01 57
-> +  [10193.972781945] : 20 18 c8 2c 7c 01 57
-> +  [10194.220487360] : 20 18 c8 2c 7c 01 57
-> +  [10194.468089259] : 20 18 c8 2c 7c 01 57
-> +  [10203.233433099] : 20 18 c8 2c 80 01 53
-> +  [10203.481058715] : 20 18 c8 2c 80 01 53
-> +  [10203.727610472] : 20 18 c8 2c 80 01 53
-> +  [10203.974044856] : 20 18 c8 2c 80 01 53
-> +  [10204.220734634] : 20 18 c8 2c 80 01 53
-> +  [10204.468461664] : 20 18 c8 2c 80 01 53
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6954776a37e..4bfca09a5f68 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7458,6 +7458,14 @@ L:       linux-i2c@vger.kernel.org
->  S:     Maintained
->  F:     drivers/i2c/i2c-stub.c
->
-> +I2C SLAVE MQUEUE DRIVER
-> +M:     Eduardo Valentin <eduval@amazon.com>
-> +L:     linux-i2c@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/i2c/i2c-slave-mqueue.c
-> +F:     Documentation/i2c/slave-mqueue-backend.rst
-> +F:     Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
-> +
->  I3C SUBSYSTEM
->  M:     Boris Brezillon <bbrezillon@kernel.org>
->  L:     linux-i3c@lists.infradead.org
-> diff --git a/drivers/i2c/Kconfig b/drivers/i2c/Kconfig
-> index abedd55a1264..f335924936ae 100644
-> --- a/drivers/i2c/Kconfig
-> +++ b/drivers/i2c/Kconfig
-> @@ -119,6 +119,31 @@ if I2C_SLAVE
->  config I2C_SLAVE_EEPROM
->         tristate "I2C eeprom slave driver"
->
-> +config I2C_SLAVE_MQUEUE
-> +       tristate "I2C mqueue (message queue) slave driver"
-> +       help
-> +         Some protocols over I2C are designed for bi-directional transferring
-> +         messages by using I2C Master Write protocol. This driver is used to
-> +         receive and queue messages from the remote I2C device.
-> +
-> +         Userspace can get the messages by reading sysfs file that this driver
-> +         exposes.
-> +
-> +         This support is also available as a module. If so, the module will be
-> +         called i2c-slave-mqueue.
-> +
-> +config I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> +       int "The message size of I2C mqueue slave"
-> +       depends on I2C_SLAVE_MQUEUE
-> +       default 120
-> +
-> +config I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> +       int "The queue size of I2C mqueue slave"
-> +       depends on I2C_SLAVE_MQUEUE
-> +       default 32
-> +       help
-> +         This number MUST be power of 2.
-> +
->  endif
->
->  config I2C_DEBUG_CORE
-> diff --git a/drivers/i2c/Makefile b/drivers/i2c/Makefile
-> index bed6ba63c983..9a31bc75a446 100644
-> --- a/drivers/i2c/Makefile
-> +++ b/drivers/i2c/Makefile
-> @@ -16,5 +16,6 @@ obj-$(CONFIG_I2C_MUX)         += i2c-mux.o
->  obj-y                          += algos/ busses/ muxes/
->  obj-$(CONFIG_I2C_STUB)         += i2c-stub.o
->  obj-$(CONFIG_I2C_SLAVE_EEPROM) += i2c-slave-eeprom.o
-> +obj-$(CONFIG_I2C_SLAVE_MQUEUE) += i2c-slave-mqueue.o
->
->  ccflags-$(CONFIG_I2C_DEBUG_CORE) := -DDEBUG
-> diff --git a/drivers/i2c/i2c-slave-mqueue.c b/drivers/i2c/i2c-slave-mqueue.c
-> new file mode 100644
-> index 000000000000..c17c4911928f
-> --- /dev/null
-> +++ b/drivers/i2c/i2c-slave-mqueue.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2017 - 2018, Intel Corporation.
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/sysfs.h>
-> +
-> +#define MQ_MSGBUF_SIZE         CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> +#define MQ_QUEUE_SIZE          CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> +#define MQ_QUEUE_NEXT(x)       (((x) + 1) & (MQ_QUEUE_SIZE - 1))
-> +
-> +struct mq_msg {
-> +       int     len;
-> +       u8      *buf;
-> +};
-> +
-> +struct mq_queue {
-> +       struct bin_attribute    bin;
-> +       struct kernfs_node      *kn;
-> +
-> +       spinlock_t              lock; /* spinlock for queue index handling */
-> +       int                     in;
-> +       int                     out;
-> +
-> +       struct mq_msg           *curr;
-> +       int                     truncated; /* drop current if truncated */
-> +       struct mq_msg           queue[MQ_QUEUE_SIZE];
-> +};
-> +
-> +static int i2c_slave_mqueue_callback(struct i2c_client *client,
-> +                                    enum i2c_slave_event event, u8 *val)
-> +{
-> +       struct mq_queue *mq = i2c_get_clientdata(client);
-> +       struct mq_msg *msg = mq->curr;
-> +       int ret = 0;
-> +
-> +       switch (event) {
-> +       case I2C_SLAVE_WRITE_REQUESTED:
-> +               mq->truncated = 0;
-> +
-> +               msg->len = 1;
-> +               msg->buf[0] = client->addr << 1;
-> +               break;
-> +
-> +       case I2C_SLAVE_WRITE_RECEIVED:
-> +               if (msg->len < MQ_MSGBUF_SIZE) {
-> +                       msg->buf[msg->len++] = *val;
-> +               } else {
-> +                       dev_err(&client->dev, "message is truncated!\n");
-> +                       mq->truncated = 1;
-> +                       ret = -EINVAL;
-> +               }
-> +               break;
-> +
-> +       case I2C_SLAVE_STOP:
-> +               if (unlikely(mq->truncated || msg->len < 2))
-> +                       break;
-> +
-> +               spin_lock(&mq->lock);
-> +               mq->in = MQ_QUEUE_NEXT(mq->in);
-> +               mq->curr = &mq->queue[mq->in];
-> +               mq->curr->len = 0;
-> +
-> +               /* Flush the oldest message */
-> +               if (mq->out == mq->in)
-> +                       mq->out = MQ_QUEUE_NEXT(mq->out);
-> +               spin_unlock(&mq->lock);
-> +
-> +               kernfs_notify(mq->kn);
-> +               break;
-> +
-> +       default:
-> +               *val = 0xFF;
-> +               break;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static ssize_t i2c_slave_mqueue_bin_read(struct file *filp,
-> +                                        struct kobject *kobj,
-> +                                        struct bin_attribute *attr,
-> +                                        char *buf, loff_t pos, size_t count)
-> +{
-> +       struct mq_queue *mq;
-> +       struct mq_msg *msg;
-> +       unsigned long flags;
-> +       bool more = false;
-> +       ssize_t ret = 0;
-> +
-> +       mq = dev_get_drvdata(kobj_to_dev(kobj));
-> +
-> +       spin_lock_irqsave(&mq->lock, flags);
-> +       if (mq->out != mq->in) {
-> +               msg = &mq->queue[mq->out];
-> +
-> +               if (msg->len <= count) {
-> +                       ret = msg->len;
-> +                       memcpy(buf, msg->buf, ret);
-> +               } else {
-> +                       ret = -EOVERFLOW; /* Drop this HUGE one. */
-> +               }
-> +
-> +               mq->out = MQ_QUEUE_NEXT(mq->out);
-> +               if (mq->out != mq->in)
-> +                       more = true;
-> +       }
-> +       spin_unlock_irqrestore(&mq->lock, flags);
-> +
-> +       if (more)
-> +               kernfs_notify(mq->kn);
-> +
-> +       return ret;
-> +}
-> +
-> +static int i2c_slave_mqueue_probe(struct i2c_client *client,
-> +                                 const struct i2c_device_id *id)
-> +{
-> +       struct device *dev = &client->dev;
-> +       struct mq_queue *mq;
-> +       int ret, i;
-> +       void *buf;
-> +
-> +       BUILD_BUG_ON(!is_power_of_2(MQ_QUEUE_SIZE));
-> +
-> +       mq = devm_kzalloc(dev, sizeof(*mq), GFP_KERNEL);
-> +       if (!mq)
-> +               return -ENOMEM;
-> +
-> +       buf = devm_kmalloc_array(dev, MQ_QUEUE_SIZE, MQ_MSGBUF_SIZE,
-> +                                GFP_KERNEL);
-> +       if (!buf)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < MQ_QUEUE_SIZE; i++)
-> +               mq->queue[i].buf = buf + i * MQ_MSGBUF_SIZE;
-> +
-> +       i2c_set_clientdata(client, mq);
-> +
-> +       spin_lock_init(&mq->lock);
-> +       mq->curr = &mq->queue[0];
-> +
-> +       sysfs_bin_attr_init(&mq->bin);
-> +       mq->bin.attr.name = "slave-mqueue";
-> +       mq->bin.attr.mode = 0400;
-> +       mq->bin.read = i2c_slave_mqueue_bin_read;
-> +       mq->bin.size = MQ_MSGBUF_SIZE * MQ_QUEUE_SIZE;
-> +
-> +       ret = sysfs_create_bin_file(&dev->kobj, &mq->bin);
-> +       if (ret)
-> +               return ret;
-> +
-> +       mq->kn = kernfs_find_and_get(dev->kobj.sd, mq->bin.attr.name);
-> +       if (!mq->kn) {
-> +               sysfs_remove_bin_file(&dev->kobj, &mq->bin);
-> +               return -EFAULT;
-> +       }
-> +
-> +       ret = i2c_slave_register(client, i2c_slave_mqueue_callback);
-> +       if (ret) {
-> +               kernfs_put(mq->kn);
-> +               sysfs_remove_bin_file(&dev->kobj, &mq->bin);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int i2c_slave_mqueue_remove(struct i2c_client *client)
-> +{
-> +       struct mq_queue *mq = i2c_get_clientdata(client);
-> +
-> +       i2c_slave_unregister(client);
-> +
-> +       kernfs_put(mq->kn);
-> +       sysfs_remove_bin_file(&client->dev.kobj, &mq->bin);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct i2c_device_id i2c_slave_mqueue_id[] = {
-> +       { "slave-mqueue", 0 },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, i2c_slave_mqueue_id);
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> +       {
-> +               .compatible = "i2c-slave-mqueue",
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
-> +#endif
-> +
-> +static struct i2c_driver i2c_slave_mqueue_driver = {
-> +       .driver = {
-> +               .name   = "i2c-slave-mqueue",
-> +               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> +       },
-> +       .probe          = i2c_slave_mqueue_probe,
-> +       .remove         = i2c_slave_mqueue_remove,
-> +       .id_table       = i2c_slave_mqueue_id,
-> +};
-> +module_i2c_driver(i2c_slave_mqueue_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Haiyue Wang <haiyue.wang@linux.intel.com>");
-> +MODULE_DESCRIPTION("I2C slave mode for receiving and queuing messages");
-> --
-> 2.21.0
->
+> 
+> Not saying that this is a good idea, but, as we have already a script that
+> it is meant to sanitize uAPI header files when installing them
+> (scripts/headers_install.sh), one could modify it (or convert to perl/python)
+> in a way that it would be doing something like[1]:
+> 
+> 	sed -E
+> 		...
+> 		-e 's,//(.*),/* \1 */,'
+> 
+> [1] the actual rule should be more complex than that, in order to avoid 
+> replacing // inside /**/ comments.
 
+Perhaps a checkpatch change too:
 
--- 
-With Best Regards,
-Andy Shevchenko
+The first block updates unsigned only bitfields
+The second tests uapi definitions and suggests "__<kernel_types"
+---
+ scripts/checkpatch.pl | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index c33c5002f190..afc4bb05a987 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3747,7 +3747,7 @@ sub process {
+ 		}
+ 
+ # check for declarations of signed or unsigned without int
+-		while ($line =~ m{\b($Declare)\s*(?!char\b|short\b|int\b|long\b)\s*($Ident)?\s*[=,;\[\)\(]}g) {
++		while ($line =~ m{\b($Declare)\s*(?!char\b|short\b|int\b|long\b)\s*($Ident)?\s*[=,;:\[\)\(]}g) {
+ 			my $type = $1;
+ 			my $var = $2;
+ 			$var = "" if (!defined $var);
+@@ -5905,10 +5905,10 @@ sub process {
+ 			      "Using weak declarations can have unintended link defects\n" . $herecurr);
+ 		}
+ 
+-# check for c99 types like uint8_t used outside of uapi/ and tools/
+-		if ($realfile !~ m@\binclude/uapi/@ &&
+-		    $realfile !~ m@\btools/@ &&
+-		    $line =~ /\b($Declare)\s*$Ident\s*[=;,\[]/) {
++# check for c99 types like uint8_t used outside of tools/
++# for uapi, suggest using __<types>, otherwise use <types> like s8, u32, etc...
++		if ($realfile !~ m@\btools/@ &&
++		    $line =~ /\b($Declare)\s*$Ident\s*[=,;:\[]/) {
+ 			my $type = $1;
+ 			if ($type =~ /\b($typeC99Typedefs)\b/) {
+ 				$type = $1;
+@@ -5916,6 +5916,9 @@ sub process {
+ 				$kernel_type = 's' if ($type =~ /^_*[si]/);
+ 				$type =~ /(\d+)/;
+ 				$kernel_type .= $1;
++				if ($realfile =~ m@\binclude/uapi/@) {
++					$kernel_type = "__" . $kernel_type;
++				}
+ 				if (CHK("PREFER_KERNEL_TYPES",
+ 					"Prefer kernel type '$kernel_type' over '$type'\n" . $herecurr) &&
+ 				    $fix) {
+
