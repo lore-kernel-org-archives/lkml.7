@@ -2,93 +2,122 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7079C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78062C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911F320665
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXLvHLvS"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5C72083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfFEP50 (ORCPT
+        id S1728580AbfFEP62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:57:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35297 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFEP50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:57:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m3so4207012wrv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:57:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rA3vsfkqh5egWjaPGw3fMqsipviOktraHdbK2Sevo6Y=;
-        b=oXLvHLvSuyfl/Z/VI+0HDmZgPfI+F4hbIyIsIG8r7tpFLSFtGqk6BbXnPscyq7zpPU
-         R8bR2osq0wXH6QL6oDEfPdCDD4PHsOnJxrsfSMX9Amze/IdsUv2hTcKLf7Ijrdo2sAmY
-         FkIjL1KgCvH7faWhP4fkS8spjRwEIbg8EPUMCBMAoBoMi0vGVEVxgRZb1pQ1fz6NFc2u
-         aAesJiFSkX0+HAdvO9f/6BZF5RwEoWEcBssFQXUDhuEaNa/WMiaiRqHjVSmS+BNdGMtA
-         SEm5jeimDTDsBAkZsc04+khhWfqmc+uvb6AE5Z0UGCCcYoKXjllAu4kSzFnLCS164W2M
-         fCGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rA3vsfkqh5egWjaPGw3fMqsipviOktraHdbK2Sevo6Y=;
-        b=Hc+nyqgMsn1eFCsophheM1DOMIWtbAr4HzmSsypkpdInK49GZER+150t04ncrfOIkD
-         pdfI2/xGsq06IbH60VNDg8qK7SJAMZ2NGhdW5j6ZBfE0cLzHHMlmozdu+ulmOUtaKc1W
-         Q5m1Yd7pqx0D3ysLMePerf7ZnAeNykrxLbTFV+IdEAtgCyZxaE9+ZDWTrGkrikuRQFT2
-         zF/ixM9wt9i3DZBqpAIviOgWgUhmnoqF2mPtaBasjF848ltg4YImTZeK/gFP+IseQIcW
-         XfCIXUn6qddU3nKnEaxsiYe1Uw5boVcRFrXGrMFmmDbpwaxlbIyO9Emev4JcBCvvqljZ
-         zJNg==
-X-Gm-Message-State: APjAAAWtduZJCozG4sYKE/riCgFG0SkE3avKVdNqxdVOTEwGJ96ZvPE9
-        u+zHa6TU4LSSAKb5PRU1SSJyDB32
-X-Google-Smtp-Source: APXvYqxXNHjHrDbXIYSo93UBNPu5T5NR6YJpRDCej4BTK/2kDPXmTy3BCC3tETHUKya5d0J7bosZSQ==
-X-Received: by 2002:a5d:4302:: with SMTP id h2mr731522wrq.137.1559750244732;
-        Wed, 05 Jun 2019 08:57:24 -0700 (PDT)
-Received: from localhost.localdomain (host228-128-static.243-194-b.business.telecomitalia.it. [194.243.128.228])
-        by smtp.googlemail.com with ESMTPSA id j123sm30845556wmb.32.2019.06.05.08.57.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 08:57:24 -0700 (PDT)
-From:   Valerio Genovese <valerio.click@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Valerio Genovese <valerio.click@gmail.com>
-Subject: [PATCH] staging: kpc2000: kpc_dma: fix symbol 'kpc_dma_add_device' was not declared.
-Date:   Wed,  5 Jun 2019 17:57:11 +0200
-Message-Id: <20190605155711.19722-1-valerio.click@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Jun 2019 11:58:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51476 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728386AbfFEP61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:58:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C57F81F0D;
+        Wed,  5 Jun 2019 15:58:12 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B16BA80B9;
+        Wed,  5 Jun 2019 15:58:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  5 Jun 2019 17:58:11 +0200 (CEST)
+Date:   Wed, 5 Jun 2019 17:58:01 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
+        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        omar.kilani@gmail.com, tglx@linutronix.de, stable@vger.kernel.org,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH -mm 0/1] signal: simplify
+ set_user_sigmask/restore_user_sigmask
+Message-ID: <20190605155801.GA25165@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <20190604134117.GA29963@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604134117.GA29963@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 05 Jun 2019 15:58:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was reported by sparse:
-drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c:39:7: warning: symbol 'kpc_dma_add_device
-' was not declared. Should it be static?
+On top of
 
-Signed-off-by: Valerio Genovese <valerio.click@gmail.com>
----
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h | 1 +
- 1 file changed, 1 insertion(+)
+	signal-remove-the-wrong-signal_pending-check-in-restore_user_sigmask.patch
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-index ee47f43e71cf..19e88c3bc13f 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-@@ -56,6 +56,7 @@ struct dev_private_data {
- };
- 
- struct kpc_dma_device *kpc_dma_lookup_device(int minor);
-+void kpc_dma_add_device(struct kpc_dma_device *ldev);
- 
- extern const struct file_operations  kpc_dma_fops;
- 
--- 
-2.17.1
+Let me repeat, every file touched by this patch needs more cleanups,
+fs/aio.c looks wrong with or without the recent changes. Lets discuss
+this later.
+
+To simplify the review, please see the code with this patch applied.
+I am using epoll_pwait() as an example because it looks very simple.
+
+Note that this patch moves WARN_ON(!TIF_SIGPENDING) from set_restore_sigmask()
+to restore_unless().
+
+	int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
+	{
+		sigset_t *kmask;
+
+		if (!umask)
+			return 0;
+		if (sigsetsize != sizeof(sigset_t))
+			return -EINVAL;
+		if (copy_from_user(kmask, umask, sizeof(sigset_t)))
+			return -EFAULT;
+
+		set_restore_sigmask();
+		current->saved_sigmask = current->blocked;
+		set_current_blocked(kmask);
+
+		return 0;
+	}
+
+	static inline void restore_saved_sigmask_unless(bool interrupted)
+	{
+		if (interrupted)
+			WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+		else
+			restore_saved_sigmask();
+	}
+
+	SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+			int, maxevents, int, timeout, const sigset_t __user *, sigmask,
+			size_t, sigsetsize)
+	{
+		int error;
+
+		/*
+		 * If the caller wants a certain signal mask to be set during the wait,
+		 * we apply it here.
+		 */
+		error = set_user_sigmask(sigmask, sigsetsize);
+		if (error)
+			return error;
+
+		error = do_epoll_wait(epfd, events, maxevents, timeout);
+		restore_saved_sigmask_unless(error == -EINTR);
+
+		return error;
+	}
+
+Oleg.
 
