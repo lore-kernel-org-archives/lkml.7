@@ -2,248 +2,136 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8739C46470
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AECC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F112075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559736125;
-	bh=lzUxhHlR6iRocrhJzOQf49xUlR0nCeqor6ncvQFbI/k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=05vyPKOHROBmQssRmddRSUs+V2nCtRXJH15OUGqzLtBLEO8+5JbQywx2hSzhf+rx3
-	 yZuu2xwftS/gUwBbbxV4an6vudQ/JHAuTae6hrfzGka8UZTek/KHUBy82QELX3eLcx
-	 y/IEa3CmXJDnOvPbVGvXL+lUlUvxUhi1y4nlzNJI=
+	by mail.kernel.org (Postfix) with ESMTP id C4A5020657
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 12:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfFEMCE (ORCPT
+        id S1727470AbfFEMCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 08:02:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33642 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFEMCE (ORCPT
+        Wed, 5 Jun 2019 08:02:51 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51057 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFEMCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 08:02:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q186so17995960oia.0;
-        Wed, 05 Jun 2019 05:02:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HdLoeXvGK64UnKYqEfACEboUnaTqdKxgDmgaDBJkjwc=;
-        b=t50Oeu1dzVTMaZbpSeWeBkXcPZwasR7boersmNNro65BoQEG1urFZWdL2sx1W/QDkJ
-         GzrFdI36giqjIvOgOwJ7+jcZ5eeA1nI6aBLxEK0zuDefR0VbCz/WEOGhFsy1Uhn/xPWZ
-         YQE7W1zNK8+5vSwzIA5w3oDcyypFNE+Z+Z2Jsqw478oZC1qberB1UMZeiQtN6SSDoFKI
-         0Kzps9fIjb4f90xJOsXIoexI8KBmofCEDmWZWGQoZaFDmVnJpUNJ6tGEo3ktEbBkjxTg
-         w3Qscjv4O6iY7xEL/UQsggw6x+zBIY7ySUUZZ+bgbP+TbBfd1zmUcBAU7OgPszX0XIKi
-         q3LA==
-X-Gm-Message-State: APjAAAXYzDYqQ8DyAOQpYOKBPG0Zsb1qtgxZTtvFJyB3FC/c2822o1NM
-        b+sKlllKOCZhGQslNWC+uAZLY5syrwfY5/aCHX2F0Q==
-X-Google-Smtp-Source: APXvYqxC3+yS1W3DjhMQWqlDnjo2YLFj0GHQ5scS5vsj+eQyAOThBzuJKuI7PKmnjzcMRqD+2qD413si+w9d0hvOjGw=
-X-Received: by 2002:aca:3256:: with SMTP id y83mr8361607oiy.110.1559736123091;
- Wed, 05 Jun 2019 05:02:03 -0700 (PDT)
+        Wed, 5 Jun 2019 08:02:50 -0400
+X-Originating-IP: 90.88.144.139
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3E9841C0014;
+        Wed,  5 Jun 2019 12:02:38 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 14:02:37 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190605120237.ekmytfxcwbjaqy3x@flea>
+References: <20190604122150.29D6468B05@newverein.lst.de>
+ <20190604122308.98D4868B20@newverein.lst.de>
+ <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+ <20190605101317.GA9345@lst.de>
 MIME-Version: 1.0
-References: <4561083.VtDMOnK5Me@kreacher> <20190531211648.GB58810@google.com>
- <1855172.0PEGphScmv@kreacher> <20190605113635.GD84290@google.com>
-In-Reply-To: <20190605113635.GD84290@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 5 Jun 2019 14:01:52 +0200
-Message-ID: <CAJZ5v0gmisuuzEJYxzMZpr-swSaCByRak1UQV8ttQh9wMXMOZA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Avoid resuming devices in D3hot during system suspend
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qiya5ip3hgidvmzq"
+Content-Disposition: inline
+In-Reply-To: <20190605101317.GA9345@lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 1:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jun 03, 2019 at 12:10:28PM +0200, Rafael J. Wysocki wrote:
-> > On Friday, May 31, 2019 11:16:48 PM CEST Bjorn Helgaas wrote:
-> > > On Fri, May 31, 2019 at 11:49:30AM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > The current code resumes devices in D3hot during system suspend if
-> > > > the target power state for them is D3cold, but that is not necessary
-> > > > in general.  It only is necessary to do that if the platform firmware
-> > > > requires the device to be resumed, but that should be covered by
-> > > > the platform_pci_need_resume() check anyway, so rework
-> > > > pci_dev_keep_suspended() to avoid returning 'false' for devices
-> > > > in D3hot which need not be resumed due to platform firmware
-> > > > requirements.
-> > > >
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  drivers/pci/pci.c |   15 ++++++++++++---
-> > > >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > > >
-> > > > Index: linux-pm/drivers/pci/pci.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/drivers/pci/pci.c
-> > > > +++ linux-pm/drivers/pci/pci.c
-> > > > @@ -2474,10 +2474,19 @@ bool pci_dev_keep_suspended(struct pci_d
-> > > >  {
-> > > >   struct device *dev = &pci_dev->dev;
-> > > >   bool wakeup = device_may_wakeup(dev);
-> > > > + pci_power_t target_state;
-> > > >
-> > > > - if (!pm_runtime_suspended(dev)
-> > > > -     || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
-> > > > -     || platform_pci_need_resume(pci_dev))
-> > > > + if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
-> > > > +         return false;
-> > > > +
-> > > > + target_state = pci_target_state(pci_dev, wakeup);
-> > >
-> > > Nit, add a blank line here.
-> >
-> > OK
-> >
-> > > > + /*
-> > > > +  * If the earlier platform check has not triggered, D3cold is just power
-> > > > +  * removal on top of D3hot, so no need to resume the device in that
-> > > > +  * case.
-> > > > +  */
-> > > > + if (target_state != pci_dev->current_state &&
-> > > > +     target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
-> > > >           return false;
-> > >
-> > > This is more a comment on the existing code than on this particular
-> > > patch, but I find this whole function hard to understand, and I think
-> > > one reason is that there are a lot of negative conditions, both in
-> > > this function and in its callers.  This "target_state != ... &&
-> > > target_state != ...  && current_state != ..." is one example.  Another
-> > > is the function name itself.  It might be easier to read as something
-> > > like this:
-> > >
-> > >   bool pci_dev_need_resume(...)
-> > >   {
-> > >     if (!pm_runtime_suspended(...))
-> > >       return true;
-> > >
-> > >     if (platform_pci_need_resume(...))
-> > >       return true;
-> > >
-> > >     if (target_state != current_state)
-> > >       return true;
-> >
-> > Please see the appended (untested) patch on top of the $subject one.
->
-> I like it a lot, thanks!  I think it makes it a lot more readable.
->
-> > > Another reason I think it's hard to read is that
-> > > "pci_dev_keep_suspended" suggests that this is a pure boolean function
-> > > without side-effects, but in fact it also fiddles with the PME state
-> > > in some cases.  I don't have any ideas for that part.
-> >
-> > Well, I can only propose to put the PME adjustment part into a separate function like
-> > in the patch below.
-> >
-> > ---
-> >  drivers/pci/pci-driver.c |   21 ++++++++++++++++---
-> >  drivers/pci/pci.c        |   50 ++++++++++++++++++++++++-----------------------
-> >  drivers/pci/pci.h        |    3 +-
-> >  3 files changed, 46 insertions(+), 28 deletions(-)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -2459,54 +2459,56 @@ bool pci_dev_run_wake(struct pci_dev *de
-> >  EXPORT_SYMBOL_GPL(pci_dev_run_wake);
-> >
-> >  /**
-> > - * pci_dev_keep_suspended - Check if the device can stay in the suspended state.
-> > + * pci_dev_need_resume - Check if the device can stay in the suspended state.
-> >   * @pci_dev: Device to check.
-> >   *
-> > - * Return 'true' if the device is runtime-suspended, it doesn't have to be
-> > + * Return 'false' if the device is runtime-suspended, it doesn't have to be
-> >   * reconfigured due to wakeup settings difference between system and runtime
-> >   * suspend and the current power state of it is suitable for the upcoming
-> >   * (system) transition.
-> > - *
-> > - * If the device is not configured for system wakeup, disable PME for it before
-> > - * returning 'true' to prevent it from waking up the system unnecessarily.
-> >   */
-> > -bool pci_dev_keep_suspended(struct pci_dev *pci_dev)
-> > +bool pci_dev_need_resume(struct pci_dev *pci_dev)
-> >  {
-> >       struct device *dev = &pci_dev->dev;
-> > -     bool wakeup = device_may_wakeup(dev);
-> >       pci_power_t target_state;
-> >
-> >       if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
-> > -             return false;
-> > +             return true;
-> >
-> > -     target_state = pci_target_state(pci_dev, wakeup);
-> > +     target_state = pci_target_state(pci_dev, device_may_wakeup(dev));
-> >       /*
-> >        * If the earlier platform check has not triggered, D3cold is just power
-> >        * removal on top of D3hot, so no need to resume the device in that
-> >        * case.
-> >        */
-> > -     if (target_state != pci_dev->current_state &&
-> > -         target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
-> > -             return false;
-> > +     return target_state != pci_dev->current_state &&
-> > +             target_state != PCI_D3cold &&
-> > +             pci_dev->current_state != PCI_D3hot;
-> > +}
-> > +
-> > +/**
-> > + * pci_dev_adjust_pme - Adjust PME setting for a suspended device.
-> > + * @pci_dev: Device to check.
-> > + *
-> > + * If the device is not configured for system wakeup, disable PME for it to
-> > + * prevent it from waking up the system unnecessarily.
-> > + */
-> > +void pci_dev_adjust_pme(struct pci_dev *pci_dev)
-> > +{
-> > +     struct device *dev = &pci_dev->dev;
-> >
-> > -     /*
-> > -      * At this point the device is good to go unless it's been configured
-> > -      * to generate PME at the runtime suspend time, but it is not supposed
-> > -      * to wake up the system.  In that case, simply disable PME for it
-> > -      * (it will have to be re-enabled on exit from system resume).
-> > -      *
-> > -      * If the device's power state is D3cold and the platform check above
-> > -      * hasn't triggered, the device's configuration is suitable and we don't
-> > -      * need to manipulate it at all.
-> > -      */
-> >       spin_lock_irq(&dev->power.lock);
-> >
-> > +     /*
-> > +      * If the device's power state is D3cold and the platform check in
-> > +      * pci_dev_need_resume() hasn't triggered, the device's configuration is
-> > +      * suitable and it need not be touched.
->
-> I guess "it need not be touched" == "we don't need to disable PME"?
 
-That's correct.
+--qiya5ip3hgidvmzq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll try to improve the wording in the final version of the patch.
+On Wed, Jun 05, 2019 at 12:13:17PM +0200, Torsten Duwe wrote:
+> On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
+> > On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
+> > >
+> > > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
+> > > the I2C controlling signals are connected to I2C0 bus. eDP output goes
+> > > to an Innolux N116BGE panel.
+> > >
+> > > Enable it in the device tree.
+> > >
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > > ---
+> > >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
+> > >  1 file changed, 61 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > index 0ec46b969a75..a0ad438b037f 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > @@ -65,6 +65,21 @@
+> > >                 };
+> > >         };
+> > >
+> > > +       panel: panel {
+> > > +               compatible ="innolux,n116bge", "simple-panel";
+> >
+> > It's still "simple-panel". I believe I already mentioned that Rob
+> > asked it to be edp-connector.
+>
+> For which there are neither bindings nor drivers.
+>
+> Is anybody seriously proposing to hold back support for existing
+> (open source!) hardware in favour of an *imaginable* *possibly*
+> better solution? Especially when this exact line is already used in
+> some other places?  (there's a space missing btw...)
 
-> > +      */
-> >       if (pm_runtime_suspended(dev) && pci_dev->current_state < PCI_D3cold &&
-> > -         !wakeup)
-> > +         !device_may_wakeup(dev))
-> >               __pci_pme_active(pci_dev, false);
-> >
-> >       spin_unlock_irq(&dev->power.lock);
-> > -     return true;
-> >  }
-> >
-> >  /**
+It's non-existent and imaginable only because you've been ignoring
+everyone that said that you should do it. So it's self-inflicted,
+really.
+
+And the DT is considered an ABI, so yeah, we will witheld everything
+that doesn't fit what we would like. Your point of view is that it's
+more work and for no particular benefit, ours is that it's a
+short-term pain for a long-term gain, and the benefits will be in the
+maintainance cost.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qiya5ip3hgidvmzq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPevXQAKCRDj7w1vZxhR
+xRaUAP4rsNSfzJsmzwtJIlX1UQvArevsqZjEbly5zQoUU26FyAEAsSQVhJt3Xdhr
+y/w4nPyt47sTpjL2pjXHbkTaW+M7hw0=
+=y5GR
+-----END PGP SIGNATURE-----
+
+--qiya5ip3hgidvmzq--
