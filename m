@@ -2,422 +2,121 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560F6C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3696EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180D8206E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBF0206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FaZnmmhU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="oERv5R43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfFEPAG (ORCPT
+        id S1728536AbfFEPEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:00:06 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:32703 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfFEPAF (ORCPT
+        Wed, 5 Jun 2019 11:04:12 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38909 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfFEPEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:00:05 -0400
+        Wed, 5 Jun 2019 11:04:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so9804923plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559746802; x=1591282802;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=jj5/DkQVT3+tS6gmCDx7ut3khFVD59J8Gm8q+gVSvPQ=;
-  b=FaZnmmhUnYL/exKEW0ehN0k0fo3qpvznAaRczPEJmBvpJm43tKUbSnCu
-   crudYU9wCuz6RpwJ3W1KYug5L9p33L/q9WzovYw/Mzbq+4vS3RhJzmUva
-   R2c592XcEvG9XonJH5b4EL6bZ0Z7y3i40mXvqZYObpFq7mKbEG/8YLI++
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="678314135"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Jun 2019 14:59:59 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 251D2A2566;
-        Wed,  5 Jun 2019 14:59:59 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 14:59:57 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.203) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 14:59:48 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
-        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
-        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
-        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>,
-        Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v3 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
-Date:   Wed, 5 Jun 2019 17:59:18 +0300
-Message-ID: <1559746758-20208-3-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559746758-20208-1-git-send-email-talel@amazon.com>
-References: <1559746758-20208-1-git-send-email-talel@amazon.com>
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4r0N0/cqZQsQLzB9riNWHtGeoqNPwixp4EIavL99nJ8=;
+        b=oERv5R43tdTVogKDqW2pbdEh9X3kPQEt8rkO9i+PyA1hnJj546cBlYXzqcNAnkeH2o
+         xDmAZeAaD3jnQjr0VGd/3yJeW9/U0/CoKmRqtd40ETtm22bSXsBnOuB32EKuu31MPb91
+         ZSIW51BWmFZMHfkABF4+vmPS6bIFLD3LSrnjCSMx6330KEtzZiRV2rAVVXuuu5u6ZNF3
+         54Qq+ZfFN/F7mWNAP2jok++5M9n9LfGsg48fbCOmIs1bUlM0G9Lx/jcF9KRHn8EseCjE
+         5m7W7V2GXw5p0rXmC+VRWhzHmSy5HHyIgphZ1oqomuWKlWHVxlDyDSRiGqUbPO44zi0Z
+         IlWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4r0N0/cqZQsQLzB9riNWHtGeoqNPwixp4EIavL99nJ8=;
+        b=JnQAkuwZox6VSYE+E5+cxz0tGyEnHC0TR4ASbgMhCbOFxkg//ap6pAm7kDEW1Z66dG
+         znnkLwLDPO8doAuvU3TAzoyl1DLmCCMfuG2jwP2EHL0l/PSkekNJhFRlXPPFrO9PlPfO
+         0KGpcezwa7pj4gsieJmjOAQvRDNymK6rqN204QDwzpH7B96OU7KC6dnTJgr8E6DFm73W
+         Uu4C/mAg0Zs6jb/d+UAhxdOF5eAGi1YjRe524G2xKQS6hkQRUk2lCsET1B2eD6rliBU/
+         oMcZk48QKpZn9/S0W4DlFO+V17gq1Wwr8M7vseI+KIgJrxIBbdCLpAw+Ec878GYrz5TC
+         F/sg==
+X-Gm-Message-State: APjAAAWp9ZqnQVETdRNlWih4WxrXm4YeWMOtloQYKhGet0SRj4CKqGBq
+        ZwNp5Eb6CVzkww7HODrxoMiiRg1M5pfAxw==
+X-Google-Smtp-Source: APXvYqzBM2bZj69n7MfkaSXw8zh+DTZMgfwk0BMgMehP81PBePSCTHmM2EpXvogAFZyH4IQcEXIAvw==
+X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr44544164plb.155.1559747050554;
+        Wed, 05 Jun 2019 08:04:10 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k1sm4864237pjp.2.2019.06.05.08.04.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 08:04:03 -0700 (PDT)
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+Date:   Wed, 5 Jun 2019 09:04:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.203]
-X-ClientProxiedBy: EX13P01UWA001.ant.amazon.com (10.43.160.213) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+In-Reply-To: <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs
-lines. A FIC (Fabric Interrupt Controller) may be cascaded into another FIC
-or directly to the main CPU Interrupt Controller (e.g. GIC).
+On 6/3/19 6:37 AM, Peter Zijlstra wrote:
+> On Fri, May 31, 2019 at 03:12:13PM -0600, Jens Axboe wrote:
+>> On 5/30/19 2:03 AM, Peter Zijlstra wrote:
+> 
+>>> What is the purpose of that patch ?! The Changelog doesn't mention any
+>>> benefit or performance gain. So why not revert that?
+>>
+>> Yeah that is actually pretty weak. There are substantial performance
+>> gains for small IOs using this trick, the changelog should have
+>> included those. I guess that was left on the list...
+> 
+> OK. I've looked at the try_to_wake_up() path for these exact
+> conditions and we're certainly sub-optimal there, and I think we can put
+> much of this special case in there. Please see below.
+> 
+>> I know it's not super kosher, your patch, but I don't think it's that
+>> bad hidden in a generic helper.
+> 
+> How about the thing that Oleg proposed? That is, not set a waiter when
+> we know the loop is polling? That would avoid the need for this
+> alltogether, it would also avoid any set_current_state() on the wait
+> side of things.
+> 
+> Anyway, Oleg, do you see anything blatantly buggered with this patch?
+> 
+> (the stats were already dodgy for rq-stats, this patch makes them dodgy
+> for task-stats too)
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- MAINTAINERS                  |   6 +
- drivers/irqchip/Kconfig      |   8 ++
- drivers/irqchip/Makefile     |   1 +
- drivers/irqchip/irq-al-fic.c | 278 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 293 insertions(+)
- create mode 100644 drivers/irqchip/irq-al-fic.c
+Tested this patch, looks good to me. Made the trace change to make it
+compile, and also moved the cpu = task_cpu() assignment earlier to
+avoid uninitialized use of that variable.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f485597..b4f5255 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1209,6 +1209,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+AMAZON ANNAPURNA LABS FIC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-+F:	drivers/irqchip/irq-al-fic.c
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will.deacon@arm.com>
- R:	Robin Murphy <robin.murphy@arm.com>
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 51a5ef0..7237892 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -89,6 +89,14 @@ config ALPINE_MSI
- 	select PCI_MSI
- 	select GENERIC_IRQ_CHIP
- 
-+config AL_FIC
-+	bool "Amazon's Annapurna Labs Fabric Interrupt Controller"
-+	depends on OF || COMPILE_TEST
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+	help
-+	  Support Amazon's Annapurna Labs Fabric Interrupt Controller.
-+
- config ATMEL_AIC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 794c13d..a20eba5 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- 
-+obj-$(CONFIG_AL_FIC)			+= irq-al-fic.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-new file mode 100644
-index 0000000..6926583
---- /dev/null
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+/* FIC Registers */
-+#define AL_FIC_CAUSE		0x00
-+#define AL_FIC_MASK		0x10
-+#define AL_FIC_CONTROL		0x28
-+
-+#define CONTROL_TRIGGER_RISING	BIT(3)
-+#define CONTROL_MASK_MSI_X	BIT(5)
-+
-+#define NR_FIC_IRQS 32
-+
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs Interrupt Controller Driver");
-+MODULE_LICENSE("GPL v2");
-+
-+enum al_fic_state {
-+	AL_FIC_UNCONFIGURED = 0,
-+	AL_FIC_CONFIGURED_LEVEL,
-+	AL_FIC_CONFIGURED_RISING_EDGE,
-+};
-+
-+struct al_fic {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	const char *name;
-+	unsigned int parent_irq;
-+	enum al_fic_state state;
-+};
-+
-+static void al_fic_set_trigger(struct al_fic *fic,
-+			       struct irq_chip_generic *gc,
-+			       enum al_fic_state new_state)
-+{
-+	irq_flow_handler_t handler;
-+	u32 control = readl_relaxed(fic->base + AL_FIC_CONTROL);
-+
-+	if (new_state == AL_FIC_CONFIGURED_LEVEL) {
-+		handler = handle_level_irq;
-+		control &= ~CONTROL_TRIGGER_RISING;
-+	} else {
-+		handler = handle_edge_irq;
-+		control |= CONTROL_TRIGGER_RISING;
-+	}
-+	gc->chip_types->handler = handler;
-+	fic->state = new_state;
-+	writel_relaxed(control, fic->base + AL_FIC_CONTROL);
-+}
-+
-+static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct al_fic *fic = gc->private;
-+	enum al_fic_state new_state;
-+	int ret = 0;
-+
-+	irq_gc_lock(gc);
-+
-+	if (!(flow_type & IRQ_TYPE_LEVEL_HIGH) &&
-+	    !(flow_type & IRQ_TYPE_EDGE_RISING)) {
-+		pr_err("fic doesn't support flow type %d\n", flow_type);
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	new_state = (flow_type & IRQ_TYPE_LEVEL_HIGH) ?
-+		AL_FIC_CONFIGURED_LEVEL : AL_FIC_CONFIGURED_RISING_EDGE;
-+
-+	/*
-+	 * A given FIC instance can be either all level or all edge triggered.
-+	 * This is generally fixed depending on what pieces of HW it's wired up
-+	 * to.
-+	 *
-+	 * We configure it based on the sensitivity of the first source
-+	 * being setup, and reject any subsequent attempt at configuring it in a
-+	 * different way.
-+	 */
-+	if (fic->state == AL_FIC_UNCONFIGURED) {
-+		al_fic_set_trigger(fic, gc, new_state);
-+	} else if (fic->state != new_state) {
-+		pr_err("fic %s state already configured to %d\n",
-+		       fic->name, fic->state);
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+err:
-+	irq_gc_unlock(gc);
-+
-+	return ret;
-+}
-+
-+static void al_fic_irq_handler(struct irq_desc *desc)
-+{
-+	struct al_fic *fic = irq_desc_get_handler_data(desc);
-+	struct irq_domain *domain = fic->domain;
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	unsigned long pending;
-+	unsigned int irq;
-+	u32 hwirq;
-+
-+	chained_irq_enter(irqchip, desc);
-+
-+	pending = readl_relaxed(fic->base + AL_FIC_CAUSE);
-+	pending &= ~gc->mask_cache;
-+
-+	for_each_set_bit(hwirq, &pending, NR_FIC_IRQS) {
-+		irq = irq_find_mapping(domain, hwirq);
-+		generic_handle_irq(irq);
-+	}
-+
-+	chained_irq_exit(irqchip, desc);
-+}
-+
-+static int al_fic_register(struct device_node *node,
-+			   struct al_fic *fic)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
-+
-+	fic->domain = irq_domain_add_linear(node,
-+					    NR_FIC_IRQS,
-+					    &irq_generic_chip_ops,
-+					    fic);
-+	if (!fic->domain) {
-+		pr_err("fail to add irq domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(fic->domain,
-+					     NR_FIC_IRQS,
-+					     1, fic->name,
-+					     handle_level_irq,
-+					     0, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("fail to allocate generic chip (%d)\n", ret);
-+		goto err_domain_remove;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(fic->domain, 0);
-+	gc->reg_base = fic->base;
-+	gc->chip_types->regs.mask = AL_FIC_MASK;
-+	gc->chip_types->regs.ack = AL_FIC_CAUSE;
-+	gc->chip_types->chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
-+	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
-+	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
-+	gc->private = fic;
-+
-+	irq_set_chained_handler_and_data(fic->parent_irq,
-+					 al_fic_irq_handler,
-+					 fic);
-+	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(fic->domain);
-+
-+	return ret;
-+}
-+
-+/*
-+ * al_fic_wire_init() - initialize and configure fic in wire mode
-+ * @of_node: optional pointer to interrupt controller's device tree node.
-+ * @base: mmio to fic register
-+ * @name: name of the fic
-+ * @parent_irq: interrupt of parent
-+ *
-+ * This API will configure the fic hardware to to work in wire mode.
-+ * In wire mode, fic hardware is generating a wire ("wired") interrupt.
-+ * Interrupt can be generated based on positive edge or level - configuration is
-+ * to be determined based on connected hardware to this fic.
-+ */
-+static struct al_fic *al_fic_wire_init(struct device_node *node,
-+				       void __iomem *base,
-+				       const char *name,
-+				       unsigned int parent_irq)
-+{
-+	struct al_fic *fic;
-+	int ret;
-+	u32 control = CONTROL_MASK_MSI_X;
-+
-+	fic = kzalloc(sizeof(*fic), GFP_KERNEL);
-+	if (!fic)
-+		return ERR_PTR(-ENOMEM);
-+
-+	fic->base = base;
-+	fic->parent_irq = parent_irq;
-+	fic->name = name;
-+
-+	/* mask out all interrupts */
-+	writel_relaxed(0xFFFFFFFF, fic->base + AL_FIC_MASK);
-+
-+	/* clear any pending interrupt */
-+	writel_relaxed(0, fic->base + AL_FIC_CAUSE);
-+
-+	writel_relaxed(control, fic->base + AL_FIC_CONTROL);
-+
-+	ret = al_fic_register(node, fic);
-+	if (ret) {
-+		pr_err("fail to register irqchip\n");
-+		goto err_free;
-+	}
-+
-+	pr_debug("%s initialized successfully in Legacy mode (parent-irq=%u)\n",
-+		 fic->name, parent_irq);
-+
-+	return fic;
-+
-+err_free:
-+	kfree(fic);
-+	return ERR_PTR(ret);
-+}
-+
-+static int __init al_fic_init_dt(struct device_node *node,
-+				 struct device_node *parent)
-+{
-+	int ret;
-+	void __iomem *base;
-+	unsigned int parent_irq;
-+	struct al_fic *fic;
-+
-+	if (!parent) {
-+		pr_err("%s: unsupported - device require a parent\n",
-+		       node->name);
-+		return -EINVAL;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: fail to map memory\n", node->name);
-+		return -ENOMEM;
-+	}
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq) {
-+		pr_err("%s: fail to map irq\n", node->name);
-+		ret = -EINVAL;
-+		goto err_unmap;
-+	}
-+
-+	fic = al_fic_wire_init(node,
-+			       base,
-+			       node->name,
-+			       parent_irq);
-+	if (IS_ERR(fic)) {
-+		pr_err("%s: fail to initialize irqchip (%lu)\n",
-+		       node->name,
-+		       PTR_ERR(fic));
-+		ret = PTR_ERR(fic);
-+		goto err_irq_dispose;
-+	}
-+
-+	return 0;
-+
-+err_irq_dispose:
-+	irq_dispose_mapping(parent_irq);
-+err_unmap:
-+	iounmap(base);
-+
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(al_fic, "amazon,al-fic", al_fic_init_dt);
+How about the following plan - if folks are happy with this sched patch,
+we can queue it up for 5.3. Once that is in, I'll kill the block change
+that special cases the polled task wakeup. For 5.2, we go with Oleg's
+patch for the swap case.
+
 -- 
-2.7.4
+Jens Axboe
 
