@@ -2,177 +2,128 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D6CC46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9DFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCED20872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONPOG0cr"
+	by mail.kernel.org (Postfix) with ESMTP id 97A93208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 20:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfFET4s (ORCPT
+        id S1726593AbfFEUAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:56:48 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36768 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFET4s (ORCPT
+        Wed, 5 Jun 2019 16:00:32 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38191 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfFEUAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:56:48 -0400
-Received: by mail-yw1-f66.google.com with SMTP id t126so814963ywf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9q4+At4yxP0TO9XKtv623886ZmeIrCw2KxtQ8rIVE+c=;
-        b=ONPOG0criwRaERkMrKHfVu+FHkSVoaWJAe/3Qcz/W7LCrH5/GIScT4HA/6GrL0+9r8
-         o6co8aqwlNSEl7NCQ5sS9tePoeHt4h9GPb68IhajREN/xrsWKcvK3qyMit8mTn0Syc/A
-         7iA0JHtcd+FIK9ODp7RhnjbF13bEpwhQGYCei3mrBE/QI6K5gsvChkA/hORMbZ9/NFwj
-         fOz5k6FisPTLo3cnO2KlMHYBKGSLayATbBhmtiVl0hlN7FVFEeyjwZxp9QJDFViYJ9Fr
-         /8tGYfzZZKKv+lqP9TGaDdXxFpWTov0D05vVZG6KZ2JgmhFAjsoiImnW6hbJ2aiQ0DFz
-         doOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9q4+At4yxP0TO9XKtv623886ZmeIrCw2KxtQ8rIVE+c=;
-        b=gG6+UG7MhEuhOdyvlZsWr9KeajwfJNx31hztEbaBvJ7hsP92CePFjbY5eGKeHwhDaI
-         Op46ttdhHSoiNPtLypdFYLQ+LEQ4o7oje088hIadxjVQscz3224iVGy5x/tm9+5ocyfc
-         9jfZqRfc26lo3sVgM60wZV2ZUxcOmdoqhFfDaIawfvuCaFM7q3ftvz0VRlY7USX5bt7V
-         Kc8dJZ++OkoiTeMZNUy5Kkjduv2DG7qihhuupc+Q50BmJKLCFFdiG19ukGuCKWfTmBiC
-         11LCHOGA5zunj4PxvM3o8HaKMfHE4rVkm1wl0N0l4RWXvQMPguwOq2FnQithVX/e9PPB
-         MfWg==
-X-Gm-Message-State: APjAAAUL6ZOCNMhkUqcmfUpfDjDo/374pvLn2XsyiG+xap4his978FOa
-        1fSPG1fIXUqTSvhGdsmlibb58tIW55+YgtXmdwVX0g==
-X-Google-Smtp-Source: APXvYqyT6u3oJyZE6NCw9GM4C6IEV7j7fkZPEOKpEM78DGOX/BwgTrn0eHFIXgvbs4TMZ9Ae/bo4AwJhPu/gx1keGo4=
-X-Received: by 2002:a81:a6d5:: with SMTP id d204mr22361086ywh.205.1559764607325;
- Wed, 05 Jun 2019 12:56:47 -0700 (PDT)
+        Wed, 5 Jun 2019 16:00:31 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id EA63FC0006;
+        Wed,  5 Jun 2019 20:00:21 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 22:00:20 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
+Message-ID: <20190605200020.tmyom3lg3inu6vvf@flea>
+References: <20190604162959.29199-1-peron.clem@gmail.com>
+ <20190604162959.29199-5-peron.clem@gmail.com>
+ <20190605095141.psrq6mhk63zto77s@flea>
+ <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
-In-Reply-To: <20190605100630.13293-1-teawaterz@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 5 Jun 2019 12:56:36 -0700
-Message-ID: <CALvZod7Ya=mPKryiCxKVguGV-hPEjXD_6gBOFs9zJWc_NQMMBQ@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] zpool: Add malloc_support_movable to zpool_driver
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com,
-        Seth Jennings <sjenning@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+On Wed, Jun 05, 2019 at 02:44:06PM +0200, Clément Péron wrote:
+> Hi Maxime,
 >
-> As a zpool_driver, zsmalloc can allocate movable memory because it
-> support migate pages.
-> But zbud and z3fold cannot allocate movable memory.
+> On Wed, 5 Jun 2019 at 11:51, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, Jun 04, 2019 at 06:29:50PM +0200, Clément Péron wrote:
+> > > We are using RXINT bits definition when looking at RXSTA register.
+> > >
+> > > These bits are equal but it's not really proper.
+> > >
+> > > Introduce the RXSTA bits and use them to have coherency.
+> > >
+> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > ---
+> > >  drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
+> > >  1 file changed, 12 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+> > > index 0504ebfc831f..572bd2257d35 100644
+> > > --- a/drivers/media/rc/sunxi-cir.c
+> > > +++ b/drivers/media/rc/sunxi-cir.c
+> > > @@ -48,11 +48,11 @@
+> > >
+> > >  /* Rx Interrupt Enable */
+> > >  #define SUNXI_IR_RXINT_REG    0x2C
+> > > -/* Rx FIFO Overflow */
+> > > +/* Rx FIFO Overflow Interrupt Enable */
+> > >  #define REG_RXINT_ROI_EN             BIT(0)
+> > > -/* Rx Packet End */
+> > > +/* Rx Packet End Interrupt Enable */
+> > >  #define REG_RXINT_RPEI_EN            BIT(1)
+> > > -/* Rx FIFO Data Available */
+> > > +/* Rx FIFO Data Available Interrupt Enable */
+> > >  #define REG_RXINT_RAI_EN             BIT(4)
+> > >
+> > >  /* Rx FIFO available byte level */
+> > > @@ -60,6 +60,12 @@
+> > >
+> > >  /* Rx Interrupt Status */
+> > >  #define SUNXI_IR_RXSTA_REG    0x30
+> > > +/* Rx FIFO Overflow */
+> > > +#define REG_RXSTA_ROI                        BIT(0)
+> > > +/* Rx Packet End */
+> > > +#define REG_RXSTA_RPE                        BIT(1)
+> > > +/* Rx FIFO Data Available */
+> > > +#define REG_RXSTA_RA                 BIT(4)
+> >
+> > I'm fine with it on principle, but if the consistency needs to be
+> > maintained then we could just reuse the above defines
 >
-> This commit adds malloc_support_movable to zpool_driver.
-> If a zpool_driver support allocate movable memory, set it to true.
-> And add zpool_malloc_support_movable check malloc_support_movable
-> to make sure if a zpool support allocate movable memory.
+> There is no comment why we can reuse them, they can also be some wrong
+> case for example the RXINT_DRQ_EN bit is not present in RXSTA and same
+> for STAT bit present in RXSTA and not present in RXINT.
 >
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+> I have discover and read this code a month ago and this logic is
+> really not obvious nor explain.
+>
+> Maybe this hack could be done when we will introduce a quirks, but for
+> the moment I really think that it's more proper and readable to
+> introduce them properly.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+I don't think we understood each other :)
 
-IMHO no need to block this series on z3fold query.
+I was talking about having something like
 
-> ---
->  include/linux/zpool.h |  3 +++
->  mm/zpool.c            | 16 ++++++++++++++++
->  mm/zsmalloc.c         | 19 ++++++++++---------
->  3 files changed, 29 insertions(+), 9 deletions(-)
->
-> diff --git a/include/linux/zpool.h b/include/linux/zpool.h
-> index 7238865e75b0..51bf43076165 100644
-> --- a/include/linux/zpool.h
-> +++ b/include/linux/zpool.h
-> @@ -46,6 +46,8 @@ const char *zpool_get_type(struct zpool *pool);
->
->  void zpool_destroy_pool(struct zpool *pool);
->
-> +bool zpool_malloc_support_movable(struct zpool *pool);
-> +
->  int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
->                         unsigned long *handle);
->
-> @@ -90,6 +92,7 @@ struct zpool_driver {
->                         struct zpool *zpool);
->         void (*destroy)(void *pool);
->
-> +       bool malloc_support_movable;
->         int (*malloc)(void *pool, size_t size, gfp_t gfp,
->                                 unsigned long *handle);
->         void (*free)(void *pool, unsigned long handle);
-> diff --git a/mm/zpool.c b/mm/zpool.c
-> index a2dd9107857d..863669212070 100644
-> --- a/mm/zpool.c
-> +++ b/mm/zpool.c
-> @@ -238,6 +238,22 @@ const char *zpool_get_type(struct zpool *zpool)
->         return zpool->driver->type;
->  }
->
-> +/**
-> + * zpool_malloc_support_movable() - Check if the zpool support
-> + * allocate movable memory
-> + * @zpool:     The zpool to check
-> + *
-> + * This returns if the zpool support allocate movable memory.
-> + *
-> + * Implementations must guarantee this to be thread-safe.
-> + *
-> + * Returns: true if if the zpool support allocate movable memory, false if not
-> + */
-> +bool zpool_malloc_support_movable(struct zpool *zpool)
-> +{
-> +       return zpool->driver->malloc_support_movable;
-> +}
-> +
->  /**
->   * zpool_malloc() - Allocate memory
->   * @zpool:     The zpool to allocate from.
-> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-> index 0787d33b80d8..8f3d9a4d46f4 100644
-> --- a/mm/zsmalloc.c
-> +++ b/mm/zsmalloc.c
-> @@ -437,15 +437,16 @@ static u64 zs_zpool_total_size(void *pool)
->  }
->
->  static struct zpool_driver zs_zpool_driver = {
-> -       .type =         "zsmalloc",
-> -       .owner =        THIS_MODULE,
-> -       .create =       zs_zpool_create,
-> -       .destroy =      zs_zpool_destroy,
-> -       .malloc =       zs_zpool_malloc,
-> -       .free =         zs_zpool_free,
-> -       .map =          zs_zpool_map,
-> -       .unmap =        zs_zpool_unmap,
-> -       .total_size =   zs_zpool_total_size,
-> +       .type =                   "zsmalloc",
-> +       .owner =                  THIS_MODULE,
-> +       .create =                 zs_zpool_create,
-> +       .destroy =                zs_zpool_destroy,
-> +       .malloc_support_movable = true,
-> +       .malloc =                 zs_zpool_malloc,
-> +       .free =                   zs_zpool_free,
-> +       .map =                    zs_zpool_map,
-> +       .unmap =                  zs_zpool_unmap,
-> +       .total_size =             zs_zpool_total_size,
->  };
->
->  MODULE_ALIAS("zpool-zsmalloc");
-> --
-> 2.21.0 (Apple Git-120)
->
+#define REG_RXSTA_ROI  REG_RXINT_ROI_EN
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
