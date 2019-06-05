@@ -2,183 +2,183 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B44C282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE2C282DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB806206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AQWjnzxa"
+	by mail.kernel.org (Postfix) with ESMTP id DBC33206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 06:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfFEGzM (ORCPT
+        id S1726695AbfFEGzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 02:55:12 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60934 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFEGzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 02:55:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559717709; x=1591253709;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=+jzu3rfqIEsHpAlKj+HQyzKuayZFNSN++n05AsZi5qA=;
-  b=AQWjnzxaymypqVRPlG1VzrCvk8hsU/OUllxCS/Ue95ubmvRkv7jpldDY
-   nuPof28zxQiG5e5yQAf0P/VAddta/QqSkKt60P3pq8CnnzERURshUhVnO
-   de+Ce3ZSU9YN1mPQdWm1ddUs1XJVSuCWXWFpwQfnIdR9jS9N7RWnc9+7i
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.60,550,1549929600"; 
-   d="scan'208";a="803662369"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Jun 2019 06:55:08 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id D8B7EA26C1;
-        Wed,  5 Jun 2019 06:55:04 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 06:55:04 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.160.91) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 5 Jun 2019 06:54:54 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
-        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
-        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
-        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>,
-        Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 3/3] irqchip: al-fic: Introducing support for MSI-X
-Date:   Wed, 5 Jun 2019 09:54:13 +0300
-Message-ID: <1559717653-11258-4-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559717653-11258-1-git-send-email-talel@amazon.com>
-References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+        Wed, 5 Jun 2019 02:55:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:33713 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfFEGzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 02:55:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 23:55:49 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 23:55:45 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v4 7/9] iommu/vt-d: Add trace events for domain map/unmap
+To:     Steven Rostedt <rostedt@goodmis.org>
+References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
+ <20190603011620.31999-8-baolu.lu@linux.intel.com>
+ <20190604050122.4a095569@oasis.local.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <759e5f85-354c-fdf0-f31d-5df90481d75e@linux.intel.com>
+Date:   Wed, 5 Jun 2019 14:48:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.91]
-X-ClientProxiedBy: EX13d09UWC001.ant.amazon.com (10.43.162.60) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+In-Reply-To: <20190604050122.4a095569@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FIC supports either a (single) wired output, or generation of an MSI-X
-interrupt per input (for cases where it is embedded in a PCIe device,
-hence, allowing the PCIe drivers to call this API).
-This patch introduces the support for allowing the configuration of MSI-X
-instead of a wire interrupt.
+Hi Steve,
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- drivers/irqchip/irq-al-fic.c   | 48 +++++++++++++++++++++++++++++++++++++++---
- include/linux/irqchip/al-fic.h |  2 ++
- 2 files changed, 47 insertions(+), 3 deletions(-)
+On 6/4/19 5:01 PM, Steven Rostedt wrote:
+> On Mon,  3 Jun 2019 09:16:18 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+> 
+>> +TRACE_EVENT(bounce_unmap_single,
+>> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
+>> +
+>> +	TP_ARGS(dev, dev_addr, size),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(dev_name, dev_name(dev))
+>> +		__field(dma_addr_t, dev_addr)
+>> +		__field(size_t,	size)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__assign_str(dev_name, dev_name(dev));
+>> +		__entry->dev_addr = dev_addr;
+>> +		__entry->size = size;
+>> +	),
+>> +
+>> +	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
+>> +		  __get_str(dev_name),
+>> +		  (unsigned long long)__entry->dev_addr,
+>> +		  __entry->size)
+>> +);
+>> +
+>> +TRACE_EVENT(bounce_map_sg,
+>> +	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
+>> +		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
+>> +
+>> +	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(dev_name, dev_name(dev))
+>> +		__field(unsigned int, i)
+>> +		__field(unsigned int, last)
+>> +		__field(dma_addr_t, dev_addr)
+>> +		__field(phys_addr_t, phys_addr)
+>> +		__field(size_t,	size)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__assign_str(dev_name, dev_name(dev));
+>> +		__entry->i = i;
+>> +		__entry->last = nelems - 1;
+>> +		__entry->dev_addr = dev_addr;
+>> +		__entry->phys_addr = phys_addr;
+>> +		__entry->size = size;
+>> +	),
+>> +
+>> +	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
+>> +		  __get_str(dev_name), __entry->i, __entry->last,
+>> +		  (unsigned long long)__entry->dev_addr,
+>> +		  (unsigned long long)__entry->phys_addr,
+>> +		  __entry->size)
+>> +);
+>> +
+>> +TRACE_EVENT(bounce_unmap_sg,
+>> +	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
+>> +		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
+>> +
+>> +	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(dev_name, dev_name(dev))
+>> +		__field(unsigned int, i)
+>> +		__field(unsigned int, last)
+>> +		__field(dma_addr_t, dev_addr)
+>> +		__field(phys_addr_t, phys_addr)
+>> +		__field(size_t,	size)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__assign_str(dev_name, dev_name(dev));
+>> +		__entry->i = i;
+>> +		__entry->last = nelems - 1;
+>> +		__entry->dev_addr = dev_addr;
+>> +		__entry->phys_addr = phys_addr;
+>> +		__entry->size = size;
+>> +	),
+>> +
+>> +	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
+>> +		  __get_str(dev_name), __entry->i, __entry->last,
+>> +		  (unsigned long long)__entry->dev_addr,
+>> +		  (unsigned long long)__entry->phys_addr,
+>> +		  __entry->size)
+>> +);
+> 
+> These last two events look identical. Please use the
+> DECLARE_EVENT_CLASS() to describe the event and then DEFINE_EVENT() for
+> the two events.
+> 
+> Each TRACE_EVENT() can add up to 5k of data/text, where as a
+> DEFINE_EVENT() just adds around 250 bytes.
+> 
+> (Note, a TRACE_EVENT() is defined as a
+> DECLARE_EVENT_CLASS()/DEFINE_EVENT() pair)
 
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-index d881d42..e49b912 100644
---- a/drivers/irqchip/irq-al-fic.c
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -19,6 +19,7 @@
- #define AL_FIC_MASK		0x10
- #define AL_FIC_CONTROL		0x28
- 
-+#define CONTROL_AUTO_CLEAR	BIT(2)
- #define CONTROL_TRIGGER_RISING	BIT(3)
- #define CONTROL_MASK_MSI_X	BIT(5)
- 
-@@ -193,9 +194,11 @@ struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic)
- }
- EXPORT_SYMBOL_GPL(al_fic_wire_get_domain);
- 
--static void al_fic_hw_init(struct al_fic *fic)
-+static void al_fic_hw_init(struct al_fic *fic,
-+			   int use_msi)
- {
--	u32 control = CONTROL_MASK_MSI_X;
-+	u32 control = (use_msi ? (CONTROL_AUTO_CLEAR | CONTROL_TRIGGER_RISING) :
-+		       CONTROL_MASK_MSI_X);
- 
- 	/* mask out all interrupts */
- 	writel(0xFFFFFFFF, fic->base + AL_FIC_MASK);
-@@ -240,7 +243,7 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
- 	fic->parent_irq = parent_irq;
- 	fic->name = (name ?: "al-fic-wire");
- 
--	al_fic_hw_init(fic);
-+	al_fic_hw_init(fic, false);
- 
- 	ret = al_fic_register(node, fic);
- 	if (ret) {
-@@ -260,6 +263,45 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
- EXPORT_SYMBOL_GPL(al_fic_wire_init);
- 
- /**
-+ * al_fic_msi_x_init() - initialize and configure fic in msi-x mode
-+ * @base: mmio to fic register
-+ * @name: name of the fic
-+ *
-+ * This API will configure the fic hardware to to work in msi-x mode.
-+ * msi-x fic is to be configured for fics that are embedded inside AL PCIE EP.
-+ * Those kind of fic are aware of the fact that they live inside PCIE and
-+ * familiar with the MSI-X table which is configured as part of
-+ * pci_enable_msix_range() and friends.
-+ * Interrupt can be generated based on a positive edge or level - configuration
-+ * is to be determined based on connected hardware to this fic.
-+ *
-+ * Returns pointer to fic context or ERR_PTR in case of error.
-+ */
-+struct al_fic *al_fic_msi_x_init(void __iomem *base,
-+				 const char *name)
-+{
-+	struct al_fic *fic;
-+
-+	if (!base)
-+		return ERR_PTR(-EINVAL);
-+
-+	fic = kzalloc(sizeof(*fic), GFP_KERNEL);
-+	if (!fic)
-+		return ERR_PTR(-ENOMEM);
-+
-+	fic->base = base;
-+	fic->name = (name ?: "al-fic-full-fledged");
-+
-+	al_fic_hw_init(fic, true);
-+
-+	pr_debug("%s initialized successfully in Full-Fledged mode\n",
-+		 fic->name);
-+
-+	return fic;
-+}
-+EXPORT_SYMBOL_GPL(al_fic_msi_x_init);
-+
-+/**
-  * al_fic_cleanup() - free all resources allocated by fic
-  * @fic: pointer to fic context
-  *
-diff --git a/include/linux/irqchip/al-fic.h b/include/linux/irqchip/al-fic.h
-index 0833749..a2e89ff 100644
---- a/include/linux/irqchip/al-fic.h
-+++ b/include/linux/irqchip/al-fic.h
-@@ -16,6 +16,8 @@ struct al_fic *al_fic_wire_init(struct device_node *node,
- 				void __iomem *base,
- 				const char *name,
- 				unsigned int parent_irq);
-+struct al_fic *al_fic_msi_x_init(void __iomem *base,
-+				 const char *name);
- int al_fic_cleanup(struct al_fic *fic);
- 
- #endif
--- 
-2.7.4
+Thanks for reviewing. I will rework this patch according to your
+comments here.
 
+> 
+> -- Steve
+> 
+
+Best regards,
+Baolu
+
+> 
+>> +#endif /* _TRACE_INTEL_IOMMU_H */
+>> +
+>> +/* This part must be outside protection */
+>> +#include <trace/define_trace.h>
+> 
+> 
