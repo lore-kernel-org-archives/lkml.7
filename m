@@ -2,100 +2,159 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7023AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB21C28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2612086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559749248;
-	bh=CaL45T/bhO5CkVPjPrmO1rscN3Cs8zczhlRrC0/aOJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wbbkk/OAvRGc1MO7SKyqV2mn5WSAJuLa2bwVBFU961zmaUe+RqVIr32WZIddhf9R6
-	 UuFwiP2M8vlm81glsTh5FqlQypxSdYuobyTc1wXHaABepkH5kx2iU+PTA/KqiHWFHf
-	 k7Yh2yu1b8AapL/WnQkgMZqHHVjk+JumFYtuJGM0=
+	by mail.kernel.org (Postfix) with ESMTP id EE30620866
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfFEPkr (ORCPT
+        id S1728589AbfFEPk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfFEPkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:40:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4746E2083E;
-        Wed,  5 Jun 2019 15:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559749246;
-        bh=CaL45T/bhO5CkVPjPrmO1rscN3Cs8zczhlRrC0/aOJM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kpHl2mm2Q4YxQ0xTQ/FgZM+JZWwxSBDaaJ+rgKeyGffZU+Qv+HB9JjnxXam2dXPaq
-         6YFvDLgwbVTgCzdaUoelumjKPPzK2NzerXdiiCpxLOeBTBUOebU2Pvft6vNiJ77/RQ
-         T9n6YOKbvrwqU6IQVye3T8B43+un//Aum9A5wHlY=
-Date:   Wed, 5 Jun 2019 17:40:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Shenhar, Talel" <talel@amazon.com>
-Cc:     nicolas.ferre@microchip.com, jason@lakedaemon.net,
-        marc.zyngier@arm.com, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com,
-        hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com,
-        barakw@amazon.com
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
- Labs Fabric Interrupt Controller Driver
-Message-ID: <20190605154044.GA21923@kroah.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-3-git-send-email-talel@amazon.com>
- <20190605125055.GA3184@kroah.com>
- <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
+        Wed, 5 Jun 2019 11:40:56 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.178]:49951 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726581AbfFEPkz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:40:55 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 4AD4142B70
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2019 10:40:55 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YY23h09ur2qH7YY23hCdYP; Wed, 05 Jun 2019 10:40:55 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=54884 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYY21-001MOH-RR; Wed, 05 Jun 2019 10:40:54 -0500
+Date:   Wed, 5 Jun 2019 10:40:52 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] i40e/i40e_virtchnl_pf: Use struct_size() in kzalloc()
+Message-ID: <20190605154052.GA7571@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYY21-001MOH-RR
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:54884
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 05:51:08PM +0300, Shenhar, Talel wrote:
-> 
-> On 6/5/2019 3:50 PM, Greg KH wrote:
-> > On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
-> > > --- /dev/null
-> > > +++ b/drivers/irqchip/irq-al-fic.c
-> > > @@ -0,0 +1,289 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/**
-> > No need for kernel-doc format style here.
-> done
-> > 
-> > > + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> > "or its affiliates"?  You know the answer to this, don't keep us in
-> > suspense.  Put the proper copyright holder here please, otherwise this
-> > is totally useless.
-> > 
-> > Well, copyright notices are technically useless anyway, but lawyers like
-> > to cargo-cult with the best of them, so it should be correct at the
-> > least.
-> 
-> This is the format we were asked to use and have been using.
-> 
-> I am pinging them with your comment but I am likely not to get immediate
-> response so I'm publishing v3 without changing the "affiliates" for now.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-If that is what your lawyers say to use, that's fine.  Gotta love being
-vague in copyright lines, what could go wrong...
+struct virtchnl_iwarp_qvlist_info {
+	...
+        struct virtchnl_iwarp_qv_info qv_info[1];
+};
 
-good luck!
+size = sizeof(struct virtchnl_iwarp_qvlist_info) + (sizeof(struct virtchnl_iwarp_qv_info) * count;
+instance = kzalloc(size, GFP_KERNEL);
 
-greg k-h
+and
+
+struct virtchnl_vf_resource {
+	...
+        struct virtchnl_vsi_resource vsi_res[1];
+};
+
+size = sizeof(struct virtchnl_vf_resource) + sizeof(struct virtchnl_vsi_resource) * count;
+instance = kzalloc(size, GFP_KERNEL);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(instance, qv_info, count), GFP_KERNEL);
+
+and
+
+instance = kzalloc(struct_size(instance, vsi_res, count), GFP_KERNEL);
+
+Notice that, in the first case above, variable size is not necessary, hence it
+is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ .../net/ethernet/intel/i40e/i40e_virtchnl_pf.c    | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 479bc60c8f71..1d6e65fc8a7e 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -440,7 +440,7 @@ static int i40e_config_iwarp_qvlist(struct i40e_vf *vf,
+ 	struct virtchnl_iwarp_qv_info *qv_info;
+ 	u32 v_idx, i, reg_idx, reg;
+ 	u32 next_q_idx, next_q_type;
+-	u32 msix_vf, size;
++	u32 msix_vf;
+ 	int ret = 0;
+ 
+ 	msix_vf = pf->hw.func_caps.num_msix_vectors_vf;
+@@ -454,11 +454,10 @@ static int i40e_config_iwarp_qvlist(struct i40e_vf *vf,
+ 		goto err_out;
+ 	}
+ 
+-	size = sizeof(struct virtchnl_iwarp_qvlist_info) +
+-	       (sizeof(struct virtchnl_iwarp_qv_info) *
+-						(qvlist_info->num_vectors - 1));
+ 	kfree(vf->qvlist_info);
+-	vf->qvlist_info = kzalloc(size, GFP_KERNEL);
++	vf->qvlist_info = kzalloc(struct_size(vf->qvlist_info, qv_info,
++					      qvlist_info->num_vectors - 1),
++				  GFP_KERNEL);
+ 	if (!vf->qvlist_info) {
+ 		ret = -ENOMEM;
+ 		goto err_out;
+@@ -1845,7 +1844,7 @@ static int i40e_vc_get_vf_resources_msg(struct i40e_vf *vf, u8 *msg)
+ 	i40e_status aq_ret = 0;
+ 	struct i40e_vsi *vsi;
+ 	int num_vsis = 1;
+-	int len = 0;
++	size_t len = 0;
+ 	int ret;
+ 
+ 	if (!test_bit(I40E_VF_STATE_INIT, &vf->vf_states)) {
+@@ -1853,9 +1852,7 @@ static int i40e_vc_get_vf_resources_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto err;
+ 	}
+ 
+-	len = (sizeof(struct virtchnl_vf_resource) +
+-	       sizeof(struct virtchnl_vsi_resource) * num_vsis);
+-
++	len = struct_size(vfres, vsi_res, num_vsis);
+ 	vfres = kzalloc(len, GFP_KERNEL);
+ 	if (!vfres) {
+ 		aq_ret = I40E_ERR_NO_MEMORY;
+-- 
+2.21.0
+
