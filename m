@@ -2,105 +2,162 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88035C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64005C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7DF20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC90206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 01:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nT9boljz"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="bmYuQY2v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gEOn8Xm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFEB1d (ORCPT
+        id S1726541AbfFEBbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 21:27:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46201 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFEB1c (ORCPT
+        Tue, 4 Jun 2019 21:31:17 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46369 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726179AbfFEBbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 21:27:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so13784402pfm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 18:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yJtfhF/jan9MFN0Fy8lkZ8iPN2kyqz+fwLX3VfG1VbE=;
-        b=nT9boljzAsdRdb4xVt+qaiSCFkAJL57bnv8hPY2Cyi3A6FO+premfKjakZH3riLP3j
-         4DSOMSPLXIWfU0XP0Xtg+mH/nOELRbcfFdLZS2g5KUaqi/qiYoS8aF4ffPs0JCAKsyzk
-         fH9nmwUvSnqSYdU9Zy3B8TqAnFtPl2pQ/4AAM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yJtfhF/jan9MFN0Fy8lkZ8iPN2kyqz+fwLX3VfG1VbE=;
-        b=Dw6+lOEVpLT5kfmJschYFs2BHGec5Urj0jp2kqx+UFjPe4qmWv54T/cYw/3A8CPDJh
-         22LJWAUfmVxqq8+61gCa5/UUB87ARQqrSwN+0QekNwAPG9PteGdfz/H4Not7rTmqKVYY
-         ONYQeNZXQO2+3e0mSyjVB7wqCIpQYxAZdxwbm2kmYVdhBhYCL0L8G9XpW9SRoc/U3MSL
-         wlB5JKV8TIRQND++4xu2A8NRaskreculsbEuYditV0JJPLsSPud0DOF11vLNCaDMdzZo
-         US2yiuUx2lp7Ml1SyaM52EXfZjX00LVRCkzabrsQ7op/lg6TVH3slniAo5f4JXX2pd0C
-         wqug==
-X-Gm-Message-State: APjAAAVWQy7trlK+8qc8peDeELBIV4ogqLjhZCovwtoi4o7xvr+VwxHG
-        Eca3IHbBBHeLWV5RJ+Xu2OtW3w==
-X-Google-Smtp-Source: APXvYqymN0aygxYP0wHuBAqqZ1M4aTQmZjzWnNa5+ogxdCIiuIlQn3m8FG8z2ePrhGkSd4ca2YXllQ==
-X-Received: by 2002:a63:5014:: with SMTP id e20mr772739pgb.2.1559698051803;
-        Tue, 04 Jun 2019 18:27:31 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r77sm24391066pgr.93.2019.06.04.18.27.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 18:27:31 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH] dm init: Remove trailing newline from DM*()
-Date:   Tue,  4 Jun 2019 18:27:29 -0700
-Message-Id: <20190605012729.30770-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 4 Jun 2019 21:31:17 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id DECD921B2A;
+        Tue,  4 Jun 2019 21:31:15 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 04 Jun 2019 21:31:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=ZMvsAP7tsZ6FGrkTx8J6BoVyLNN1cS8
+        mg7hACEWmNsQ=; b=bmYuQY2vcOZ8Pqh6ZQ8OOr4sgAlXpREa293b3GnrGtNMkRh
+        w0O7MUyMw8yCoE7wZbwuWWf8j+eagUg0dgnKi0duy4HhwwJ0TVV8K2cO11lKxhYT
+        mU12rQAms3X4NqCQpmaEfWR+BUqtEpEBCMWtgwhoAPszYDlW3DvLALXKgsRi2PIY
+        QWE6YkcIINhMQMkMhHRf95QqILl7C/7g654Yc3V9ljn5r4ekFt3QYODYGs6S8dAY
+        MHYXGe8QXqP3No79MF0wiyS8Km6fBmZHPkhzNWM/WMtzGlB6NekRQgqf2D/hMCxd
+        uPu5y+Q4YpA5zVcdmH0NCx50kNPhlyjP9Z95EPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZMvsAP
+        7tsZ6FGrkTx8J6BoVyLNN1cS8mg7hACEWmNsQ=; b=gEOn8Xm09umzuo1HpkPTyr
+        mt4Uxs74T3eG76Xz1SmX4ZKlo1I6XAEOvlDmO2mVoVr7nQpLfwC7KxG/64Ue6Rvu
+        QqUGh25dnmDCGC1QEjdlWgODFpX23ZIVq/1HMCMRZ8c5ZEIOoOzF71sSy1Z2ppHL
+        2uGjd09wHhgzIMNN6bWFdXD6KeKBpbAUBfSdvaXrwAfuPEl8c7zMyp7iObi+VJ7U
+        5W+NQKH4mJLDGiDucssdGgxDjWXEKjdpYv+fDsrlWcedTcL3T0JGH+Xth6kK5RMQ
+        XvkSCPbn/A3Y3HwjO90Mqa21I9PWNr2GCPpVQF3Qfc7IUWd9Dgh3LfTv2VzE9NsQ
+        ==
+X-ME-Sender: <xms:YRv3XL_PfUlnH_igpi7qRhujQeGDskeviEx-AHKEfevYS-0DJJqaWA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeguddggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:YRv3XKwZkIBuJkrHUczmudGr0toCBoJ0En5RVCrS--VpkhShb_hW8A>
+    <xmx:YRv3XHGaF_r7IdVY6_LTMC6sl2IbAgaVnXEP2RGe9KZgwQPueEb-ig>
+    <xmx:YRv3XK6IQrVBYFTZOkoBPL4M-Jz2g0tBxXpYGVSneNFLHYDbpN4ynQ>
+    <xmx:Yxv3XCf_0V1dbiLxW9uKqENY1uVxxNF_ym6kQUPq33WhCMi9iSzRYQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id CECB5E00A1; Tue,  4 Jun 2019 21:31:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-650-g74f8db0-fmstable-20190604v3
+Mime-Version: 1.0
+Message-Id: <b4ba9af9-9d6d-45fa-8552-3aad5258352a@www.fastmail.com>
+In-Reply-To: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+References: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+Date:   Wed, 05 Jun 2019 11:01:13 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Hongwei Zhang" <hongweiz@ami.com>,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These printing macros already add a trailing newline, so having another
-one here just makes for blank lines when these prints are enabled.
-Remove them to match style of the rest of the uses of the macros.
 
-Cc: Helen Koike <helen.koike@collabora.com>
-Fixes: 6bbc923dfcf5 ("dm: add support to directly boot to a mapped device")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/md/dm-init.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-init.c b/drivers/md/dm-init.c
-index 352e803f566e..54b78c68bf0b 100644
---- a/drivers/md/dm-init.c
-+++ b/drivers/md/dm-init.c
-@@ -272,7 +272,7 @@ static int __init dm_init_init(void)
- 		return 0;
- 
- 	if (strlen(create) >= DM_MAX_STR_SIZE) {
--		DMERR("Argument is too big. Limit is %d\n", DM_MAX_STR_SIZE);
-+		DMERR("Argument is too big. Limit is %d", DM_MAX_STR_SIZE);
- 		return -EINVAL;
- 	}
- 	str = kstrndup(create, GFP_KERNEL, DM_MAX_STR_SIZE);
-@@ -283,7 +283,7 @@ static int __init dm_init_init(void)
- 	if (r)
- 		goto out;
- 
--	DMINFO("waiting for all devices to be available before creating mapped devices\n");
-+	DMINFO("waiting for all devices to be available before creating mapped devices");
- 	wait_for_device_probe();
- 
- 	list_for_each_entry(dev, &devices, list) {
--- 
-Sent by a computer through tubes
+On Wed, 5 Jun 2019, at 07:23, Hongwei Zhang wrote:
+> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
+> supporting SGPIO in AST2500 SoC.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
 
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
+>  drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git 
+> a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt 
+> b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> index 3b7266c..8f1c5c4 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> @@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 
+> NDTR3 NDTR4 NRI1 NRI2
+>  NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 
+> PWM3 PWM4
+>  PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 
+> SALT10
+>  SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 
+> SALT9
+> -SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO 
+> SIOPWREQ
+> +SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO 
+> SIOPWREQ
+>  SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK 
+> SPI2CS0
+>  SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 
+> TXD1 TXD2
+>  TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI 
+> VGABIOSROM VGAHS
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c 
+> b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> index 187abd7..0c89647 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> @@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
+>  SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
+>  SS_PIN_DECL(N4, GPIOJ3, SGPMI);
+>  
+> +FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
+> +
+>  #define N5 76
+>  SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
+>  SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
+> @@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group 
+> aspeed_g5_groups[] = {
+>  	ASPEED_PINCTRL_GROUP(SD2),
+>  	ASPEED_PINCTRL_GROUP(SDA1),
+>  	ASPEED_PINCTRL_GROUP(SDA2),
+> +	ASPEED_PINCTRL_GROUP(SGPM),
+>  	ASPEED_PINCTRL_GROUP(SGPS1),
+>  	ASPEED_PINCTRL_GROUP(SGPS2),
+>  	ASPEED_PINCTRL_GROUP(SIOONCTRL),
+> @@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function 
+> aspeed_g5_functions[] = {
+>  	ASPEED_PINCTRL_FUNC(SD2),
+>  	ASPEED_PINCTRL_FUNC(SDA1),
+>  	ASPEED_PINCTRL_FUNC(SDA2),
+> +	ASPEED_PINCTRL_FUNC(SGPM),
+>  	ASPEED_PINCTRL_FUNC(SGPS1),
+>  	ASPEED_PINCTRL_FUNC(SGPS2),
+>  	ASPEED_PINCTRL_FUNC(SIOONCTRL),
+> -- 
+> 2.7.4
+> 
+>
