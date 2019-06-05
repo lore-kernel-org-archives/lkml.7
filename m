@@ -2,46 +2,45 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2192BC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED09C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CA620717
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6549320717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 05:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="XR47Q+0+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="m1jS+/qW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfFEFHP (ORCPT
+        id S1726537AbfFEFHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 5 Jun 2019 01:07:15 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:26065 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFEFHP (ORCPT
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:11915 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfFEFHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Jun 2019 01:07:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559711232;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Vi8XPkzvs3rsYu99yfQYh/pogLXeP+Q04MJbkT2ESyM=;
-        b=XR47Q+0+US67RLuEE55YWEx0PNlgMKTn7ifN6Wbe90e8qdDqU23RGZAJx8H+6x7+w1
-        9Ll4AOZUqe/3fZd7+brkaHkG/bUE44UsGa5H37peA7uwiSnCrYv5qc3PYOgNhMOCrpHP
-        AIlH+rjwE9oWXr2nM/0LVo+sKUnQBpNSqyPfY69yEDlaDKMmsZ0GPsdXkaWEGUYw0miL
-        nOXKt4rUnwyZ6qi0OqH1ZJg7RmZJtaLsF+7sC1zRgQ2KALmg6FGAHpRdaQf/N/PGk2nK
-        qzsux1vhr97Exj360ZsywlXsJnJQDYlpkjhng79d5JbzEzTODjr6lqD8uf9I0KuVsfpt
-        f6zA==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=9HrfA+nGUIofb4uzcr10lyOFJZGIK/MX9HZYtnlp2N0=;
+        b=m1jS+/qWgsAcKqHLEUoAdRIA0CDHZE3XbS3WSzimXKBSrXaj0dAvnyhz3OFspYAK17
+        jyEgCbMPDTbMg8ksF1tR+45y3k7IaC3YFr48KoPUu5+Y8wASbxgTFPbXGLhOfyM8vZ2O
+        0WZjzF4xM0F5ZaDFaHHU0TF7HuD8mX9bUbZBzx6/2WjnKnctHwvgwLEPWxoho541symj
+        +2uiyzASZ2GLyOLk3HMomN+Ecfq/dI/jqsNQXMLQVPmihiseL4SIqpXbHIHebqz4Ho40
+        U2OPD2pSsOgLslZwlfDguD6aWGJfzCGm5v3qMNAO0h0y23pXW8MfxziDiGTuBpxM0vQa
+        f+ew==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2MzN9Qq6uM="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
-        with ESMTPSA id i01b98v55575A1C
+        with ESMTPSA id i01b98v55573A1A
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Wed, 5 Jun 2019 07:07:05 +0200 (CEST)
+        Wed, 5 Jun 2019 07:07:03 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
@@ -50,12 +49,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 2/2] drm/panel: simple: Add Ortustech COM37H3M panel support
-Date:   Wed,  5 Jun 2019 07:07:03 +0200
-Message-Id: <43b47034b618cff26cea0484591c6deafb7f0685.1559711222.git.hns@goldelico.com>
+Subject: [PATCH v2 0/2] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
+Date:   Wed,  5 Jun 2019 07:07:01 +0200
+Message-Id: <cover.1559711222.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1559711222.git.hns@goldelico.com>
-References: <cover.1559711222.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,66 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change adds support for the Ortustech COM37H3M05DTC/99DTC 3.7" TFT LCD panel.
+V2:
+* fix typo in 99dtc panel compatible string (reported by imirkin@alum.mit.edu)
 
-Tested on Letux3704.
+V1:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Since v5.2-rc1 OMAP is no longer using a special display driver architecture
+for DPI panels, but uses the general drm/panel/panel-simple.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5b27829c5a78..1fb74908a269 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2007,6 +2007,33 @@ static const struct panel_desc ontat_yx700wv03 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
- 
-+static const struct drm_display_mode ortustech_com37h3m_mode  = {
-+	.clock = 22153,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 8,
-+	.hsync_end = 480 + 8 + 10,
-+	.htotal = 480 + 8 + 10 + 10,
-+	.vdisplay = 640,
-+	.vsync_start = 640 + 4,
-+	.vsync_end = 640 + 4 + 3,
-+	.vtotal = 640 + 4 + 3 + 4,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+};
-+
-+static const struct panel_desc ortustech_com37h3m = {
-+	.modes = &ortustech_com37h3m_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 56,	/* 56.16mm */
-+		.height = 75,	/* 74.88mm */
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
-+		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
-+};
-+
- static const struct drm_display_mode ortustech_com43h4m85ulc_mode  = {
- 	.clock = 25000,
- 	.hdisplay = 480,
-@@ -2786,6 +2813,12 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "ontat,yx700wv03",
- 		.data = &ontat_yx700wv03,
-+	}, {
-+		.compatible = "ortustech,com37h3m05dtc",
-+		.data = &ortustech_com37h3m,
-+	}, {
-+		.compatible = "ortustech,com37h3m99dtc",
-+		.data = &ortustech_com37h3m,
- 	}, {
- 		.compatible = "ortustech,com43h4m85ulc",
- 		.data = &ortustech_com43h4m85ulc,
+So we finally can add SoC independent panel definitions for two panel models
+which we already had worked on quite a while ago (before device tree was
+introduced):
+
+	https://patchwork.kernel.org/patch/2851295/
+
+
+
+H. Nikolaus Schaller (2):
+  drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
+  drm/panel: simple: Add Ortustech COM37H3M panel support
+
+ drivers/gpu/drm/panel/panel-simple.c | 63 ++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
 -- 
 2.19.1
 
