@@ -2,117 +2,74 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22DAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A3FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69C2206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E94e8Jwg"
+	by mail.kernel.org (Postfix) with ESMTP id 828F0206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 22:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfFEWEK (ORCPT
+        id S1726738AbfFEWEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 18:04:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43750 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFEWEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 18:04:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so84255pgv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 15:04:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z9pLT8wo4kRTr+gtCA1M1Ly0FQFsqlnRs1HGSmoPjII=;
-        b=E94e8JwgQ1kjzgi3CKj3KO4Qd7M8QoL1kgN7bbFarmoeIjauidKKrEvWajXojiYvQ/
-         mHIfWo89t6E1p1YP5+1JmZD2CGUB6k9L9m6EsRQC1PazIM8rW/MDn7SUjLgIMcuKKHwh
-         I3kjpWYZ5nH/3EkDoehZP0AFenDdcZAi5161Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z9pLT8wo4kRTr+gtCA1M1Ly0FQFsqlnRs1HGSmoPjII=;
-        b=AU3MS9zRnOh2NcoqYIOLeGEOMglbo8SAc+e3yZkqX0QC3uW0WFTezb1QNiVsiAGUsQ
-         66nCfpjKTSDEShWG2WzDXq3QARKAgZAK/vcBCuvjOk9bC/cgOjca3WvW51ZCXyTQTkq5
-         s/8XjmjWoGgh7rZrkYW9tOMS5c3CQLUEjOJWh/Q5hnK9Uj6ydegzenxETvJnF5WRA+2z
-         oQ69x2JHjWHvzb7fFOxP38PPBb3EdtHduZ2/iFNbjcHFEOlLNoZZE5kn2x5kFBvEkdd6
-         TfF9eNobo4UyoxNi2kDiAL+oEXcE6rwMf6eD+lN5H3BPDpEpH0YJDeYuBQW/App/0iAM
-         x6KA==
-X-Gm-Message-State: APjAAAVhev3YKESRXMYAbPlcrjgpCqUz2r+r/wx+rtkhr9Sj5XacWPGd
-        qVoYjTqJcvWihdIQbnuYtbFxTA==
-X-Google-Smtp-Source: APXvYqygxgCCFNGSe8MQ3vUVRmt6rBIiTDwLWg2bJm+/6PKlMLuvNBmD/F/ExTPEkkybIRsB1JGNnA==
-X-Received: by 2002:a63:e358:: with SMTP id o24mr68099pgj.78.1559772249489;
-        Wed, 05 Jun 2019 15:04:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m11sm3969pjv.21.2019.06.05.15.04.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 15:04:08 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 15:04:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] ARM64: trivial: s/TIF_SECOMP/TIF_SECCOMP/ comment
- typo fix
-Message-ID: <201906051503.010FF2AF@keescook>
-References: <1559766612-12178-1-git-send-email-george_davis@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559766612-12178-1-git-send-email-george_davis@mentor.com>
+        Wed, 5 Jun 2019 18:04:37 -0400
+Received: from gate.crashing.org ([63.228.1.57]:33847 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfFEWEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:04:37 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x55M47Xh023780;
+        Wed, 5 Jun 2019 17:04:08 -0500
+Message-ID: <3f29edea9d7989152cec218df1c99db4830267b0.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Date:   Thu, 06 Jun 2019 08:04:06 +1000
+In-Reply-To: <1559746758-20208-2-git-send-email-talel@amazon.com>
+References: <1559746758-20208-1-git-send-email-talel@amazon.com>
+         <1559746758-20208-2-git-send-email-talel@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 04:30:09PM -0400, George G. Davis wrote:
-> Fix a s/TIF_SECOMP/TIF_SECCOMP/ comment typo
-> 
-> Cc: Jiri Kosina <trivial@kernel.org>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-
-Sneaky missing "C"! :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  arch/arm64/include/asm/thread_info.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index eb3ef73e07cf..f1d032be628a 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -75,7 +75,7 @@ void arch_release_task_struct(struct task_struct *tsk);
->   *  TIF_SYSCALL_TRACE	- syscall trace active
->   *  TIF_SYSCALL_TRACEPOINT - syscall tracepoint for ftrace
->   *  TIF_SYSCALL_AUDIT	- syscall auditing
-> - *  TIF_SECOMP		- syscall secure computing
-> + *  TIF_SECCOMP		- syscall secure computing
->   *  TIF_SIGPENDING	- signal pending
->   *  TIF_NEED_RESCHED	- rescheduling necessary
->   *  TIF_NOTIFY_RESUME	- callback before returning to user
-> -- 
-> 2.7.4
+On Wed, 2019-06-05 at 17:59 +0300, Talel Shenhar wrote:
 > 
 
--- 
-Kees Cook
+ ../..
+
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
+> +- interrupt-parent: specifies the parent interrupt controller.
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to.
+> +
+> +Example:
+> +
+> +amazon_fic: interrupt-controller@0xfd8a8500 {
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <1>;
+                            ^ should be 2
+
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+
