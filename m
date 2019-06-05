@@ -2,101 +2,118 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE74C28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFD6C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BD920872
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bc7m2lT8"
+	by mail.kernel.org (Postfix) with ESMTP id 000E020874
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 21:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFEVY3 (ORCPT
+        id S1726581AbfFEV2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 17:24:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43689 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFEVY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 17:24:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so76621pfg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 14:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5JsaaeOZ5jEkTZ+CQbpEkrv4dv3aPXsi9a1U9ZyHnWY=;
-        b=Bc7m2lT8121T8y0BgV5ppFoVa+gTNbe8caW8/6FSqqVnPL3VNfAQQgQPJp3cHpvvjF
-         6r5gPNbwx1Ymku5cSrDwzAdgqoIC2UPtydUfLSsijaxsGBsps5esDIwsGlFZ6C5ln361
-         oJeALyzPlvtZ+vSvFaBd2lmlPimux8u8wYJGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5JsaaeOZ5jEkTZ+CQbpEkrv4dv3aPXsi9a1U9ZyHnWY=;
-        b=sXb0dvirvFzFlvOGm5oG+A5UcJMaa73zTe0iu15UZxsWqMhnP/DDCCZsr8o7wDBps3
-         6tMBAPPBdQQYy9WTdz8CzroFA5b1YkMhUPF9qAB3G0rzrhFyRzTktzzs8K8awu+rDiIU
-         YOUdAK63s7+QRU3iJHCOD9vnoSqdYz46y45Z+nVCjo5FId4B4PPXs0dtH60Im086M+pH
-         YqAjlL//7g/n0F2DulrocETS+vTVrAgLppwd2RjzPDcRJbgJxucS/+S8bT697XWjQKHV
-         NBwTb3DuhfibbS8IYz96pBT1N8UUzU6zJGofJ5qZV0ZK9LJJkRy7mxYNqRhX99+zFlUR
-         Am7g==
-X-Gm-Message-State: APjAAAXysff6Meil73sJJIwXWLsakETBsB+WJvlp4Y7sG190F8KwGwkr
-        AZ/VUKhyTkofCxpddYLyEfDevQ==
-X-Google-Smtp-Source: APXvYqxhvfnBdnZg/Zs5AZJlWFyZ5sCBAfZb9xNeRH8QSl/Dzc/pRaTLtaX+thEqgOMLfVR0DiUjJQ==
-X-Received: by 2002:aa7:8248:: with SMTP id e8mr9797660pfn.155.1559769868467;
-        Wed, 05 Jun 2019 14:24:28 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id h19sm3148232pfn.79.2019.06.05.14.24.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 14:24:27 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 14:24:27 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as
- wake-up signal on veyron
-Message-ID: <20190605212427.GP40515@google.com>
-References: <20190605204320.22343-1-mka@chromium.org>
- <20190605204320.22343-2-mka@chromium.org>
- <3079472.D8Re4Zsj2W@diego>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 5 Jun 2019 17:28:53 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:34676 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfFEV2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 17:28:52 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x55LPbvS022703;
+        Wed, 5 Jun 2019 16:25:37 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x55LPbpR022702;
+        Wed, 5 Jun 2019 16:25:37 -0500
+Date:   Wed, 5 Jun 2019 16:25:37 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
+        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
+        "haitao.huang@intel.com" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kai.svahn@intel.com" <kai.svahn@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kai.huang@intel.com" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190605212536.GA22510@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com> <20190422215831.GL1236@linux.intel.com> <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com> <20190424002653.GB14422@linux.intel.com> <20190604201232.GA7775@linux.intel.com> <20190605142908.GD11331@linux.intel.com> <20190605145219.GC26328@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3079472.D8Re4Zsj2W@diego>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190605145219.GC26328@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 05 Jun 2019 16:25:37 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 11:11:12PM +0200, Heiko Stübner wrote:
-> Am Mittwoch, 5. Juni 2019, 22:43:20 CEST schrieb Matthias Kaehlcke:
-> > This enables wake up on Bluetooth activity when the device is
-> > suspended. The BT_HOST_WAKE signal is only connected on devices
-> > with BT module that are connected through UART.
-> > 
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Wed, Jun 05, 2019 at 07:52:19AM -0700, Sean Christopherson wrote:
+
+Good afternoon to everyone.
+
+> At this point I don't see the access control stuff impacting the LKM
+> decision.
 > 
-> Housekeeping question, with the two Signed-off-by lines, is Doug the
-> original author, or was this Co-developer-by?
+> Irrespetive of the access control thing, there are (at least) two issues
+> with using ACPI to probe the driver:
+> 
+>   - ACPI probing breaks if there are multiple device, i.e. when KVM adds
+>     a raw EPC device.  We could do something like probe the driver via
+>     ACPI but manually load the raw EPC device from core SGX code, but IMO
+>     taking that approach should be a concious decision.
 
-Good question, it's derived from Doug's patch for CrOS 3.14 and
-https://crrev.com/c/1575556 also from Doug. Let's say I did the
-porting to upstream, but I'm pretty sure Doug spent more time on it.
+If that is the case, I assume that ACPI probing will also be
+problematic for kernels that will be running on systems that have the
+SGX accelerator cards that Intel has announced in them.
 
-Maybe I should resend it with Doug as author and include the original
-commit message, which has more information.
+We haven't seen a solid technical description regarding how SGX
+functionality is to be surfaced via these cards.  However, since the
+SDM/SGX specification indicates that multiple PRM/EPC's are supported,
+the logical assumption would be that each card would be surfaced as a
+separate EPC's.
+
+The focus of this driver will be largely cloud based environments and
+the accelerator cards are designed to fill the gap until multi-socket
+SGX support is available, which has been 'real soon now' for about
+three years.  So it would seem to be a requirement for the driver to
+deal with these cards if it is to be relevant.
+
+>   - ACPI probing means core SGX will consume resources for EPC management
+>     even if there is no end consumer, e.g. the driver refuses to load due
+>     to lack of FLC support.
+
+It isn't relevant to these conversations but there will be a version
+of this driver supported that runs on non-FLC platforms and that will
+support full hardware root of trust via launch enclaves.
+
+Have a good evening.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"System Administration is a few hours of boredom followed by several
+ moments of intense fear."
+                                -- Tom ONeil
