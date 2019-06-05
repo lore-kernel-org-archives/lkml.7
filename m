@@ -2,189 +2,288 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B2C28CC3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A462C28CC3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83312070D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:45:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGd6ZJMu"
+	by mail.kernel.org (Postfix) with ESMTP id 0336920717
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 02:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfFECpu (ORCPT
+        id S1726555AbfFECws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Jun 2019 22:45:50 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40611 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfFECpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Jun 2019 22:45:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so1871664qtn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2019 19:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=BQfBVOtXcs0qzMIh6nmcxcUOcBUU3ej7Z8jgcon5kpQ=;
-        b=DGd6ZJMuCw4wWZb+/hxWOpe9FC4seEzDtRiNche1kXONtQmbx5I/TVyogo3MR8MUWg
-         HX6XrIaLRKq5qnBeAO1kziZycNh11yLibk5y5Z6zxNAz8FpGMDO4W8zjHpTOY48uxwh0
-         2yKqYIbwCADSDGxIwSiX7e67IIgsaFx29/f9EbgczyWWZ1017hDufsviKY6l9RCB28BB
-         yg10iQ1Zs85d6jclpSeI8s7DyqFvT0MEh22tb5XTElf2lZM+Z4VU2FdRWd5Q/dP15QjI
-         6AN1fOJ8cyAqtPqmjBSFFa2+GQ1DFLGRfKssCxSb3x/3Sz8OmAip2ggLGaejoPGMjZ3G
-         HksA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=BQfBVOtXcs0qzMIh6nmcxcUOcBUU3ej7Z8jgcon5kpQ=;
-        b=dR6M5dLV4hZ2BWdszf/CcSAHXEqPQTnmRfEQ0SKsnqEoGR3/yDnfFWMM+ZuwFSYE5Z
-         H7ZxT0SEYSTv91zNsrGjiIcIFz28uS8Jb8StfnEAL5YdxVnVkExgLpfcrcYbLTVEJdQw
-         gvxNkjzr6zUbN3Z6TY+1b9X65HlzdIPqQuzo6wr775vz4+7WNMJ2VPPGeRmOaMfMP0UJ
-         iLynGgEidsX/+xb129gwk5elUqrvedXN4zdJli9A57Hdvda0uYiSVzFUOlrjPuKJArYd
-         hP21kA21QPawS9IqvR3vPhc7Hptgme5gUoOBJu++ijEQoWgNx8GNj0hfbhU+z++dnoDH
-         gvWg==
-X-Gm-Message-State: APjAAAXeNb4PQgttlgkbdQuQFnlVFubwisfYAayrOp3ZemaPV+LNr34B
-        tXviXS+yUNhpMgJCRhD1JoqCia9JML4=
-X-Google-Smtp-Source: APXvYqyUU6pz3RkTE8SZvZU5kZk+A62iNXn5Zu4YkGvXgB2qdg6ofbFKPeKy+4/S47uUiSpQ815bRQ==
-X-Received: by 2002:aed:3804:: with SMTP id j4mr31335025qte.361.1559702748899;
-        Tue, 04 Jun 2019 19:45:48 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id k40sm9325569qta.50.2019.06.04.19.45.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 04 Jun 2019 19:45:48 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 23:45:43 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Simon Ser <simon.ser@intel.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        18oliveira.charles@gmail.com
-Subject: [PATCH V2] drm/vkms: Avoid extra discount in the timestamp value
-Message-ID: <20190605024543.pcsnkf74mmgfhtuh@smtp.gmail.com>
+        Tue, 4 Jun 2019 22:52:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1138 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbfFECwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Jun 2019 22:52:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2019 19:52:46 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga004.jf.intel.com with ESMTP; 04 Jun 2019 19:52:44 -0700
+Date:   Wed, 5 Jun 2019 10:51:51 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, pbonzini@redhat.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        yu-cheng.yu@intel.com
+Subject: Re: [PATCH v5 2/8] KVM: x86: Implement CET CPUID support for Guest
+Message-ID: <20190605025151.GC28360@local-michael-cet-test>
+References: <20190522070101.7636-1-weijiang.yang@intel.com>
+ <20190522070101.7636-3-weijiang.yang@intel.com>
+ <20190604195801.GA7476@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fjpgzm34khffs6b6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190604195801.GA7476@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---fjpgzm34khffs6b6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-After the commit def35e7c5926 ("drm/vkms: Bugfix extra vblank frame")
-some of the crc tests started to fail in the vkms with the following
-error:
-
- [drm:drm_crtc_add_crc_entry [drm]] *ERROR* Overflow of CRC buffer,
-    userspace reads too slow.
- [drm] failed to queue vkms_crc_work_handle
- ...
-
-The aforementioned commit fixed the extra vblank added by
-`drm_crtc_arm_vblank_event()` which is invoked inside
-`vkms_crtc_atomic_flush()` if the vblank event count was zero, otherwise
-`drm_crtc_send_vblank_event()` is invoked. The fix was implemented in
-`vkms_get_vblank_timestamp()` by subtracting one period from the current
-timestamp, as the code snippet below illustrates:
-
- if (!in_vblank_irq)
-  *vblank_time -=3D output->period_ns;
-
-The above fix works well when `drm_crtc_arm_vblank_event()` is invoked.
-However, it does not properly work when `drm_crtc_send_vblank_event()`
-executes since it subtracts the correct timestamp, which it shouldn't.
-In this case, the `drm_crtc_accurate_vblank_count()` function will
-returns the wrong frame number, which generates the aforementioned
-error. Such decrease in `get_vblank_timestamp()` produce a negative
-number in the following calculation within `drm_update_vblank_count()`:
-
- u64 diff_ns =3D ktime_to_ns(ktime_sub(t_vblank, vblank->time));
-
-After this operation, the DIV_ROUND_CLOSEST_ULL macro is invoked using
-diff_ns with a negative number, which generates an undefined result;
-therefore, the returned frame is a huge and incorrect number. Finally,
-the code below is part of the `vkms_crc_work_handle()`, note that the
-while loop depends on the returned value from
-`drm_crtc_accurate_vblank_count()` which may cause the loop to take a
-long time to finish in case of huge value.
-
- frame_end =3D drm_crtc_accurate_vblank_count(crtc);
- while (frame_start <=3D frame_end)
-   drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
-
-This commit fixes this issue by checking if the vblank timestamp
-corresponding to the current software vblank counter is equal to the
-current vblank; if they are equal, it means that
-`drm_crtc_send_vblank_event()` was invoked and vkms does not need to
-discount the extra vblank, otherwise, `drm_crtc_arm_vblank_event()` was
-executed and vkms have to discount the extra vblank. This fix made the
-CRC tests work again whereas keep all tests from kms_flip working as
-well.
-
-V2: Update commit message
-
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
----
- drivers/gpu/drm/vkms/vkms_crtc.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_c=
-rtc.c
-index 7508815fac11..3ce60e66673e 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -74,9 +74,13 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, u=
-nsigned int pipe,
- {
- 	struct vkms_device *vkmsdev =3D drm_device_to_vkms_device(dev);
- 	struct vkms_output *output =3D &vkmsdev->output;
-+	struct drm_vblank_crtc *vblank =3D &dev->vblank[pipe];
-=20
- 	*vblank_time =3D output->vblank_hrtimer.node.expires;
-=20
-+	if (*vblank_time =3D=3D vblank->time)
-+		return true;
-+
- 	if (!in_vblank_irq)
- 		*vblank_time -=3D output->period_ns;
-=20
---=20
-2.21.0
-
-
---fjpgzm34khffs6b6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAlz3LNcACgkQWJzP/com
-vP/X4hAApcr5/bEnDAvsOsV2xeueMBVUxkCOy5jyP804U41fgrRvvSmSXL9r4Aha
-6gaKPXNYjxTX/q6NiVLJ0eKd/ghuyjdWEygnVKzslqkdlZPMGLsXW+eh9CVEPpdS
-3ntASLzK+X8SEK0ghEqwIBjibvigKl7m9/Me/5dcF9omezMDYUgdCuip2Bl12S7u
-snxH/0kfZZ4FbpvkzNg19rK7Jy3gQaJhJ2NVokdY3tNsqwRlRC2o25oISFXZCC+T
-/GDKvUs2MlV24b8l+IOECZrAyXa3627IoKGhirNXbNdPipU5/lel5c5uy0u38zVO
-2yH7veHOs45SNrFKayY0M8CsEorBtg4BuYZdLToYZz6+MwuRODj758nVb3zTqPPS
-EpUg1kya5bV9WujDz9oVodf7AwWa+/7G98VSwDCa5ffc6NLODLSwiRzCa380GdS+
-UZGAt6nEMXXwBkYPgLsQuZ/2tZ3ASRdgRbZN7zDCWmGi/ataX1/psdFpDAfTtsVU
-2lJY665DmPvtT1QPNyfZKV+A76RYfdxXYk6ANd65cWFPyQ+15oYYejo8cfBt3gO0
-FayQJzWXgMXkeOkUJJLaeNsQIth1wamo4AYKNrM3cf9bCKG8lQaObkvufjpWbnAF
-XUCj3wDLKxkc0zOpA0nsXI9N5ZagdqHadTFnFlW9IKkBJHEuKzk=
-=5usR
------END PGP SIGNATURE-----
-
---fjpgzm34khffs6b6--
+On Tue, Jun 04, 2019 at 12:58:01PM -0700, Sean Christopherson wrote:
+> On Wed, May 22, 2019 at 03:00:55PM +0800, Yang Weijiang wrote:
+> > CET SHSTK and IBT features are introduced here so that
+> > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] reflect them.
+> > CET xsave components for supervisor and user mode are reported
+> > via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
+> > respectively.
+> > 
+> > To make the code look clean, wrap CPUID(0xD,n>=1) report code in
+> > a helper function now.
+> 
+> Create the helper in a separate patch so that it's introduced without
+> any functional changes.
+OK, will add a new patch to put the helper.
+>  
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/kvm_host.h |  4 +-
+> >  arch/x86/kvm/cpuid.c            | 97 +++++++++++++++++++++------------
+> >  arch/x86/kvm/vmx/vmx.c          |  6 ++
+> >  arch/x86/kvm/x86.h              |  4 ++
+> >  4 files changed, 76 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index a5db4475e72d..8c3f0ddc7676 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -91,7 +91,8 @@
+> >  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+> >  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+> >  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+> > -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
+> > +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
+> > +			  | X86_CR4_CET))
+> 
+> As I mentioned in v4, the patch ordering is wrong.  Features shouldn't be
+> advertised to userspace or exposed to the guest until they're fully
+> supported in KVM, i.e. the bulk of this patch to advertise the CPUID bits
+> and allow CR4.CET=1 belongs at the end of the series.
+> 
+How about merge it to patch 6/8?
+> >  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+> >  
+> > @@ -1192,6 +1193,7 @@ struct kvm_x86_ops {
+> >  	int (*nested_enable_evmcs)(struct kvm_vcpu *vcpu,
+> >  				   uint16_t *vmcs_version);
+> >  	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
+> > +	u64 (*supported_xss)(void);
+> >  };
+> >  
+> >  struct kvm_arch_async_pf {
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index fd3951638ae4..b9fc967fe55a 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -65,6 +65,11 @@ u64 kvm_supported_xcr0(void)
+> >  	return xcr0;
+> >  }
+> >  
+> > +u64 kvm_supported_xss(void)
+> > +{
+> > +	return KVM_SUPPORTED_XSS & kvm_x86_ops->supported_xss();
+> > +}
+> > +
+> >  #define F(x) bit(X86_FEATURE_##x)
+> >  
+> >  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> > @@ -316,6 +321,50 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+> >  	return 0;
+> >  }
+> >  
+> > +static inline int __do_cpuid_dx_leaf(struct kvm_cpuid_entry2 *entry, int *nent,
+> > +				     int maxnent, u64 xss_mask, u64 xcr0_mask,
+> > +				     u32 eax_mask)
+> > +{
+> > +	int idx, i;
+> > +	u64 mask;
+> > +	u64 supported;
+> > +
+> > +	for (idx = 1, i = 1; idx < 64; ++idx) {
+> > +		mask = ((u64)1 << idx);
+> > +		if (*nent >= maxnent)
+> > +			return -EINVAL;
+> > +
+> > +		do_cpuid_1_ent(&entry[i], 0xD, idx);
+> > +		if (idx == 1) {
+> > +			entry[i].eax &= eax_mask;
+> > +			cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+> > +			supported = xcr0_mask | xss_mask;
+> > +			entry[i].ebx = 0;
+> > +			entry[i].edx = 0;
+> > +			entry[i].ecx &= xss_mask;
+> > +			if (entry[i].eax & (F(XSAVES) | F(XSAVEC))) {
+> > +				entry[i].ebx =
+> > +					xstate_required_size(supported,
+> > +							     true);
+> > +			}
+> > +		} else {
+> > +			supported = (entry[i].ecx & 1) ? xss_mask :
+> > +				     xcr0_mask;
+> > +			if (entry[i].eax == 0 || !(supported & mask))
+> > +				continue;
+> > +			entry[i].ecx &= 1;
+> > +			entry[i].edx = 0;
+> > +			if (entry[i].ecx)
+> > +				entry[i].ebx = 0;
+> > +		}
+> > +		entry[i].flags |=
+> > +			KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> > +		++*nent;
+> > +		++i;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >  static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  				 u32 index, int *nent, int maxnent)
+> >  {
+> > @@ -405,12 +454,13 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
+> >  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+> >  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+> > -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B);
+> > +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | F(SHSTK);
+> >  
+> >  	/* cpuid 7.0.edx*/
+> >  	const u32 kvm_cpuid_7_0_edx_x86_features =
+> >  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+> > -		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP);
+> > +		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> > +		F(IBT);
+> >  
+> >  	/* all calls to cpuid_count() should be made on the same cpu */
+> >  	get_cpu();
+> > @@ -565,44 +615,23 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  		break;
+> >  	}
+> >  	case 0xd: {
+> > -		int idx, i;
+> > -		u64 supported = kvm_supported_xcr0();
+> > +		u64 u_supported = kvm_supported_xcr0();
+> > +		u64 s_supported = kvm_supported_xss();
+> > +		u32 eax_mask = kvm_cpuid_D_1_eax_x86_features;
+> >  
+> > -		entry->eax &= supported;
+> > -		entry->ebx = xstate_required_size(supported, false);
+> > +		entry->eax &= u_supported;
+> > +		entry->ebx = xstate_required_size(u_supported, false);
+> >  		entry->ecx = entry->ebx;
+> > -		entry->edx &= supported >> 32;
+> > +		entry->edx &= u_supported >> 32;
+> >  		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> > -		if (!supported)
+> > +
+> > +		if (!u_supported && !s_supported)
+> >  			break;
+> >  
+> > -		for (idx = 1, i = 1; idx < 64; ++idx) {
+> > -			u64 mask = ((u64)1 << idx);
+> > -			if (*nent >= maxnent)
+> > -				goto out;
+> > +		if (__do_cpuid_dx_leaf(entry, nent, maxnent, s_supported,
+> > +				       u_supported, eax_mask) < 0)
+> > +			goto out;
+> >  
+> > -			do_cpuid_1_ent(&entry[i], function, idx);
+> > -			if (idx == 1) {
+> > -				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
+> > -				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+> > -				entry[i].ebx = 0;
+> > -				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
+> > -					entry[i].ebx =
+> > -						xstate_required_size(supported,
+> > -								     true);
+> > -			} else {
+> > -				if (entry[i].eax == 0 || !(supported & mask))
+> > -					continue;
+> > -				if (WARN_ON_ONCE(entry[i].ecx & 1))
+> > -					continue;
+> > -			}
+> > -			entry[i].ecx = 0;
+> > -			entry[i].edx = 0;
+> > -			entry[i].flags |=
+> > -			       KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> > -			++*nent;
+> > -			++i;
+> > -		}
+> >  		break;
+> >  	}
+> >  	/* Intel PT */
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 7c015416fd58..574428375ff9 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1637,6 +1637,11 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
+> >  	return !(val & ~valid_bits);
+> >  }
+> >  
+> > +static __always_inline u64 vmx_supported_xss(void)
+> 
+> This can't be __always_inline since it's invoked indirectly.  Out of
+> curiosity, does the compiler generate a warning of any kind?
+> 
+So what's your suggestion? just remove it?
+> > +{
+> > +	return host_xss;
+> > +}
+> > +
+> >  static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+> >  {
+> >  	switch (msr->index) {
+> > @@ -7711,6 +7716,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+> >  	.set_nested_state = NULL,
+> >  	.get_vmcs12_pages = NULL,
+> >  	.nested_enable_evmcs = NULL,
+> > +	.supported_xss = vmx_supported_xss,
+> >  };
+> >  
+> >  static void vmx_cleanup_l1d_flush(void)
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index 28406aa1136d..e96616149f84 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -288,6 +288,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+> >  				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
+> >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+> >  				| XFEATURE_MASK_PKRU)
+> > +
+> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER \
+> > +				| XFEATURE_MASK_CET_KERNEL)
+> > +
+> >  extern u64 host_xcr0;
+> >  
+> >  extern u64 kvm_supported_xcr0(void);
+> > -- 
+> > 2.17.2
+> > 
