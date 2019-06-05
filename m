@@ -2,196 +2,149 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DBC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BFFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAEEC2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CVYDLx8U"
+	by mail.kernel.org (Postfix) with ESMTP id 8C9C22067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 15:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfFEPQi (ORCPT
+        id S1728476AbfFEPQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 11:16:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41849 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbfFEPQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:16:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so15021276pfq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 08:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wKxYptXoHM6GLEx++P/ndvkvTbITV98BzGUYgtjyNGc=;
-        b=CVYDLx8UXqMmfwpK0WdzUanmOyVxq/pzh3X6mo9qie8IM16VS95h1XZIyJbJPPbCRu
-         V4Nb+3oC39AJ4ksVEyrr9NVGTdSgi6mZGzJz84gJwNja4PgLJrJ+PkHBv6OkoRIktDTF
-         9D0SoWFK2vH6Eavce7El4mvZFDE3h6/2yi5C8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wKxYptXoHM6GLEx++P/ndvkvTbITV98BzGUYgtjyNGc=;
-        b=cr3R5YBI9ZGUe4oG7qiD5KyPLM+FzwjEj+CiuQpdU0+qDQEG6Lrc8ifMboZRtYK/uW
-         lB9o/JyoSLQ7wTsnEx/qmR4N2vrgHPqbsDQbW46VpcBNPJzqku/RFo9lp8DLYgIET3M1
-         Stc/4zQAtCbwY2W1Pe2J+zZe8863gDL6/Sf6LfhKYcxS5R3Tt6xiqnR8b7WH871IHaFb
-         S0pkACvaHVFzhDsFuiv+4IZAcD5u0jrZt3O/YuI7GPWvumG4S8q5U8x2wzwVCnuqcWae
-         FUg4rYgp8bmyltz3YfbQGIaZQ3Q8eCtie7XYcK62F4qHZ7bjpJ9ACf6Ilc0t9d4zCete
-         3JYw==
-X-Gm-Message-State: APjAAAVrMxRIqS0PE9yiJL4eOC6+GAcfB2Wf3M+Iw95NhsGy6bFDzbhE
-        zp0RVA3G5Rqg7ijX7KPwlybINw==
-X-Google-Smtp-Source: APXvYqx/BcpJM8sh9cYQ2wrL9iO1YyX1O4JoNzD/1J9SHaPq34N6/gi+IVDRzJihFHdywreN+IskVg==
-X-Received: by 2002:a17:90a:33c5:: with SMTP id n63mr45425792pjb.16.1559747797184;
-        Wed, 05 Jun 2019 08:16:37 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t5sm16818610pgh.46.2019.06.05.08.16.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 08:16:36 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 11:16:34 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190605151634.GA31515@google.com>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190531074729.GA153831@google.com>
- <3a17724b-f903-bc18-1a35-84efd3ea90c9@redhat.com>
- <20190604110127.60f1a7eb@oasis.local.home>
+        Wed, 5 Jun 2019 11:16:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:33710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728175AbfFEPQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 11:16:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D95C9374;
+        Wed,  5 Jun 2019 08:16:50 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C905A3F246;
+        Wed,  5 Jun 2019 08:16:47 -0700 (PDT)
+Subject: Re: [PATCH v3 0/2] Amazon's Annapurna Labs Fabric Interrupt
+ Controller
+To:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com,
+        hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com
+References: <1559746758-20208-1-git-send-email-talel@amazon.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <67ea073c-3944-14f0-5815-36121d97f8d7@arm.com>
+Date:   Wed, 5 Jun 2019 16:16:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604110127.60f1a7eb@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559746758-20208-1-git-send-email-talel@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 11:01:27AM -0400, Steven Rostedt wrote:
-> On Tue, 4 Jun 2019 12:12:36 +0200
-> Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
+On 05/06/2019 15:59, Talel Shenhar wrote:
+> This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
+> Controller.
 > 
-> > I discussed this with Steve at the Summit on the Summit (the reason why I did
-> > not reply this email earlier is because I was in the conf/traveling), and he
-> > also agrees with peterz, disabling and (mainly) re-enabling IRQs costs too much.
-> > 
-> > We need to find another way to resolve this problem (or mitigate the cost).... :-(.
-> > 
-> > Ideas?
+> The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
+> inputs/sources. This FIC may be cascaded into another FIC or connected
+> directly to the main CPU Interrupt Controller (e.g. GIC).
 > 
-> I thought we talked about using flags in the pc to let us know that we
-> are about to trace the preemption off?
+> Changes since v2:
+> =================
+> - updated dt-bindings to use proper format for entry name
+> - removed kernel-doc format style from Copyright
+> - removed unneeded/misplaced selects from Kconfig
+> - changed used mmio operation to relaxed flavor
+> - changed error return value from EPERM to EINVAL int case of attempting to
+>   reconfigure the FIC after it has been configured
+> - fixed commenting format
+> - used drivers define instead of subsystem internals
+> - moved al_fic_hw_init function to caller
+> - removed al_fic_wire_get_domain from documentation
+> - removed argument validation from al_fic_wire_init
 > 
-> 
-> If an interrupt comes in, we check the flag:
-> 
-> 	irq_enter()
-> 		preempt_count_add(HARDIRQ_OFFSET)
-> 
-> 
-> Then we can have something like:
-> 
-> preempt_count_add(val) {
-> 	int pc = preempt_count();
-> 	int trace_val = TRACE_FLAG;
-> 
-> 	if (val == HARDIRQ_OFFSET && (pc & TRACE_FLAG)) {
-> 		__preempt_count_sub(TRACE_FLAG);
-> 		trace_val |= TRACE_SET;
-> 	}
-> 
-> 	__preempt_count_add(val + trace_val);
-> 	if (!pc)
-> 		trace_preempt_disable();
-> 	__preempt_count_sub(trace_val);
+> Changes since v1:
+> =================
+> - removing unused exported APIs
+> - updating cover letter and commit message accordingly
 > 
 > 
-> And in trace_preempt_enable() we have:
 > 
-> 	if ((preempt_count() & TRACE_SET) && in_irq())
-> 		return;
+> Talel Shenhar (2):
+>   dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+>   irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
+>     Controller Driver
 > 
-> Thus, we wont call the preempt_enable tracing code if we started it due
-> to an interrupt preempting the process of setting the trace.
+>  .../interrupt-controller/amazon,al-fic.txt         |  22 ++
+>  MAINTAINERS                                        |   6 +
+>  drivers/irqchip/Kconfig                            |   8 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-al-fic.c                       | 278 +++++++++++++++++++++
+>  5 files changed, 315 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+>  create mode 100644 drivers/irqchip/irq-al-fic.c
+> 
 
-Hmm, the interrupt handler will not be calling preempt_enable anyway since
-the preempt counter was already set by the interrupted code. The situation
-Daniel describes in patch 2/3 is:
+OK, that's 3 version in about 8 hours, I'm simply going to ignore it
+(you'll need to post a v4 anyway). Please see
+Documentation/process/submitting-patches.rst, specifically points (8)
+and (9).
 
----------------------------- %< ------------------------------
-	THREAD					IRQ
-	   |					 |
-preempt_disable() {
-    __preempt_count_add(1)
-	------->	    smp_apic_timer_interrupt() {
-				preempt_disable()
-				    do not trace (preempt count >= 1)
-				    ....
-				preempt_enable()
-				    do not trace (preempt count >= 1)
-			    }
-    trace_preempt_disable();
-}
----------------------------- >% ------------------------------
-
-Here the preempt_enable in the IRQ will not call tracing. If I understand
-correctly, he *does* want to call tracing since the IRQ's preempt
-disable/enable section could be running for some time, and so
-it would not be nice to miss these events from the traces.
-
-Regarding the preempt count flag idea, I really like your idea. I did not
-fully follow the code snip you shared above though. My understanding of your
-idea initially was, we set a flag in pc, then increment the preempt count,
-call tracing and the reset the pc flag. In between the increment and the call
-to the tracer, if we get interrupted, then we check the flag from IRQ
-context, and still call tracing. If we get interrupted after calling tracing,
-but before resetting the flag, then we may end up with a nested pair of
-preempt enable/disable calls, but that's Ok. At least we wont miss any
-events.
-
-At least I think we only need to modify the preempt disable path, something
-like this in pseudo code in the preempt disable path (of the THREAD context):
-
-set   pc flag
-inc   pc
-		<--- if interrupted here, still trace from IRQ.
-call  tracer
-		<--- if interrupted here, still trace from IRQ.
-reset pc flag
-		<--- if interrupted here, no need to trace from IRQ since
-		     we already recorded at least one preempt disable event.
-
-
-Did I get your idea right?
-
-I need to think about this some more, but got to run to an appointment. Will
-take a look once I'm back.
-
-> Note, I'm writing this while extremely tired (still have yet to get
-> more than 4 hours of sleep) so it may still have bugs, but you should
-> get the idea ;-)
-
-No problem ;-)
-
-thanks,
-
- - Joel
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
