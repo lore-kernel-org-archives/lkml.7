@@ -2,95 +2,130 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0975AC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14389C28CC6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4B72075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C04206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 10:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559729009;
+	bh=u3C13c87086hMiV9w85rPm7zIsQPWFDde0xcEZuXQO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K15zu4sUFYlxgL8CVTu0DQSa3hni8Uy28EIVKmlGHLjweI59DRP94NegawbNTZ8fe
+	 zMg2piYJSn18MVU94d25aldnEIfjwQWT2hEnHgyY2Mv/XJwn/ek1IGheWh1IRSe15Y
+	 yefkC403mSk1wzlvNwq9xukfe/7FJchZfW2YfLkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfFEKCR (ORCPT
+        id S1727236AbfFEKD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 06:02:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36542 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbfFEKCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 06:02:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50645307D90D;
-        Wed,  5 Jun 2019 10:02:12 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6E49A5C225;
-        Wed,  5 Jun 2019 10:02:09 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  5 Jun 2019 12:02:11 +0200 (CEST)
-Date:   Wed, 5 Jun 2019 12:02:07 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com
-Subject: Re: [PATCH uprobe, thp v2 2/5] uprobe: use original page when all
- uprobes are removed
-Message-ID: <20190605100207.GD32406@redhat.com>
-References: <20190604165138.1520916-1-songliubraving@fb.com>
- <20190604165138.1520916-3-songliubraving@fb.com>
+        Wed, 5 Jun 2019 06:03:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50280 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFEKD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 06:03:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u3C13c87086hMiV9w85rPm7zIsQPWFDde0xcEZuXQO4=; b=dorjVI3a+BwPR4KW5H82UKRlg
+        Q9KqAanswJa5R2Wb689KlEmobdDfNHeCIoIrmt5I/PSgctZsHRi60Lg3gnFmHSNLPuQAliaq0R9s2
+        vaYe1Hr5IKUF5PPoEbYIxmcmqmsGkWm/Qs6VhqrIEdJ0/Z6P1uHRVEgDVNJ/doyVFZ37k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYSkO-0008Uv-UU; Wed, 05 Jun 2019 10:02:21 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 7EA0A440046; Wed,  5 Jun 2019 11:02:20 +0100 (BST)
+Date:   Wed, 5 Jun 2019 11:02:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        alsa-devel@alsa-project.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        linux-input@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        linux-pm@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH 06/10] mfd / platform: cros_ec: Reorganize platform and
+ mfd includes
+Message-ID: <20190605100220.GN2456@sirena.org.uk>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-7-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RnxXMyWEPIZsopkG"
 Content-Disposition: inline
-In-Reply-To: <20190604165138.1520916-3-songliubraving@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 05 Jun 2019 10:02:16 +0000 (UTC)
+In-Reply-To: <20190604152019.16100-7-enric.balletbo@collabora.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04, Song Liu wrote:
->
-> Currently, uprobe swaps the target page with a anonymous page in both
-> install_breakpoint() and remove_breakpoint(). When all uprobes on a page
-> are removed, the given mm is still using an anonymous page (not the
-> original page).
 
-Agreed, it would be nice to avoid this,
+--RnxXMyWEPIZsopkG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> @@ -461,9 +471,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  			unsigned long vaddr, uprobe_opcode_t opcode)
->  {
->  	struct uprobe *uprobe;
-> -	struct page *old_page, *new_page;
-> +	struct page *old_page, *new_page, *orig_page = NULL;
->  	struct vm_area_struct *vma;
->  	int ret, is_register, ref_ctr_updated = 0;
-> +	pgoff_t index;
->  
->  	is_register = is_swbp_insn(&opcode);
->  	uprobe = container_of(auprobe, struct uprobe, arch);
-> @@ -501,6 +512,19 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  	copy_highpage(new_page, old_page);
->  	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
->  
-> +	index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
-> +	orig_page = find_get_page(vma->vm_file->f_inode->i_mapping, index);
+On Tue, Jun 04, 2019 at 05:20:15PM +0200, Enric Balletbo i Serra wrote:
+> There is a bit of mess between cros-ec mfd includes and platform
+> includes. For example, we have a linux/mfd/cros_ec.h include that
+> exports the interface implemented in platform/chrome/cros_ec_proto.c. Or
 
-I think you should take is_register into account, if it is true we are going
-to install the breakpoint so we can avoid find_get_page/pages_identical.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-> +	if (orig_page) {
-> +		if (pages_identical(new_page, orig_page)) {
-> +			/* if new_page matches orig_page, use orig_page */
-> +			put_page(new_page);
-> +			new_page = orig_page;
+--RnxXMyWEPIZsopkG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hmm. can't we simply unmap the page in this case?
+-----BEGIN PGP SIGNATURE-----
 
-Oleg.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz3kysACgkQJNaLcl1U
+h9BVMAf+I/I3bNW13EZ789wBAFxmn5KXFbH0t6CdJDgbILW9HMsGSKGbJXJRTRDG
+GGeIfMEYK0lv5boeQbArMfoX/kkuVYHVj/71aQVsgC53JIBFFxHS2zEfzrFzgN+R
+sNsvROQYmO1T5gOySrMN+AsqPwnu3CR2LgMPRqsvguCPduIfXzEM3afJQuRh2lAW
+a5Im4U6GQX5cez1MGDHB3/Mk8fH194coSUTUtH134gpeA5LWemALrlDCRsfdSbw2
+G2oeM++LQIDx2VcKfRKWfqvKhC1Ajp5FdiZw6Z7lo6+BXFHKSVupSjKAhtIdT4gj
+RVhPy7IzR78PM8sLvDnqD6CyTHtuXQ==
+=7p/R
+-----END PGP SIGNATURE-----
 
+--RnxXMyWEPIZsopkG--
