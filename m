@@ -2,149 +2,148 @@ Return-Path: <SRS0=eu/B=UE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A3FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A4C28D18
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951C6206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559762927;
-	bh=da4vdqyz2Yme7cA4V1MHlD7iuvel2OX6wiT4hesZ8Gs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OvC1Ilyih9ik30ON8T2EtTuE1Tuxf6BMJNtSU2X7t8s4GiIkk4x37cnk5jInoLeeV
-	 aAltN7FmgLeRjsOmPrs5IVvvDx8IOU3Q1XeoIfdP5ejWqURKoOAWaYsot9cEcU6Ak3
-	 EbIhcKbr381uOS5ggL56smz3hlwZgVUmPfbk9y4M=
+	by mail.kernel.org (Postfix) with ESMTP id 4DC56206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Jun 2019 19:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4jgD3qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfFET2r (ORCPT
+        id S1726694AbfFET3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 15:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfFET2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:28:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF99206BB;
-        Wed,  5 Jun 2019 19:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559762925;
-        bh=da4vdqyz2Yme7cA4V1MHlD7iuvel2OX6wiT4hesZ8Gs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BnCNWFWZc6WFQpPgq8oWAUJhMFZQWWwmZwy5J37GOO0asHCDGGNyy2OZaScErfCAd
-         +Kpnw5dKlic3ZZPGfuxQ6El1DlNkO5k3ONonLuBknkpHtA+P3W4J7CYNSqJB2Gch3z
-         DBBQPGMWJnTImFLSHJRIibNQIF4Q9Wobgc/MPfow=
-Date:   Wed, 5 Jun 2019 21:28:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications
- [ver #2]
-Message-ID: <20190605192842.GA9590@kroah.com>
-References: <50c2ea19-6ae8-1f42-97ef-ba5c95e40475@schaufler-ca.com>
- <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
- <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
- <20192.1559724094@warthog.procyon.org.uk>
- <e4c19d1b-9827-5949-ecb8-6c3cb4648f58@schaufler-ca.com>
- <CALCETrVSBwHEm-1pgBXxth07PZ0XF6FD+7E25=WbiS7jxUe83A@mail.gmail.com>
- <9a9406ba-eda4-e3ec-2100-9f7cf1d5c130@schaufler-ca.com>
- <15CBE0B8-2797-433B-B9D7-B059FD1B9266@amacapital.net>
- <5dae2a59-1b91-7b35-7578-481d03c677bc@tycho.nsa.gov>
+        Wed, 5 Jun 2019 15:29:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38255 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFET3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 15:29:31 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t5so30462wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 12:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
+        b=U4jgD3qb1TiWPeo0I0EQj9YVlGjsjBiUgv3hdUmrYuJZrUIMq1nNLAiutPQCj8EtAU
+         YcN2wBjP/xTv7tUdThX93VYX+jHZw5o551/dyZ5nHxveozxZb7mV7AnbhOP3Xm1aNcgb
+         zWPwwh4cUFyxAGVJHFgITDfzSo0Fijs3mzurFbu3Dxh9EE16inWaZaO31svsntXTWO+E
+         rfQ2q3CIc3i7jCGmbbwjZpRhYeLhJK8BD9iADSXBK+n0GDyNWmK+SIK+418dbmYGmH2y
+         bIn0iv+CbWqXWwlNmyM/unKrXJcIfcEAv7F48JcipbDFhbKp/iNFt0eUPUWKtO7DjtrJ
+         Jocw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
+        b=AHkoZLCidDRsKK0oi5UB0fN6q5yV258qx7CSwjNLa32xTpHg7nfbCt4FvKhPGgaVpS
+         Gq1USuDaDbvCWHPviz+UG7r+vfrGWY0f/0oeLfTb4a1UmZmMFcC588HRIHRY0Kv7izcz
+         fsoW0jD+Lb5T7xTC59tlc7X65Q/4LH08m8KbjfiRzvEVK1bOg8FzBkI20s+pJA76a/Dv
+         dErANPlfGoBwF2dZBzQGhj+cFc6xnH0DqC7qVK1NR6sARe6WRJknJUiNR2IeOOmOOOSH
+         NXzFXSXNtHDNRfi/cfJj1HI5DR8131tA5g9hRU97ks7vUeVKJ2A4GDUaPYZQF75kyzrK
+         WXwA==
+X-Gm-Message-State: APjAAAXuoysUhE+GjGIx0ocDvBHpGNS3Ycubrb72HyWqcB5G59Z21Juz
+        ce55J4IaH9cz4lMluuTvrW2yaQ==
+X-Google-Smtp-Source: APXvYqz8xLqEZUQ1bW9JTYYNxCZRI9YeEhZeMBTkaYKaXpxE3Ij1iNeqP9qVNZUnCX1dMi5d/0Ok/g==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr23888475wmg.48.1559762968778;
+        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id w185sm20968659wma.39.2019.06.05.12.29.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 20:29:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
+ SDM845
+Message-ID: <20190605192926.GW4797@dell>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-7-lee.jones@linaro.org>
+ <20190605070029.GN22737@tuxbook-pro>
+ <20190605083454.GO4797@dell>
+ <20190605191453.GJ4814@minitux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5dae2a59-1b91-7b35-7578-481d03c677bc@tycho.nsa.gov>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190605191453.GJ4814@minitux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:25:33PM -0400, Stephen Smalley wrote:
-> On 6/5/19 1:47 PM, Andy Lutomirski wrote:
-> > 
-> > > On Jun 5, 2019, at 10:01 AM, Casey Schaufler <casey@schaufler-ca.com> wrote:
-> > > 
-> > > > On 6/5/2019 9:04 AM, Andy Lutomirski wrote:
-> > > > > On Wed, Jun 5, 2019 at 7:51 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> > > > > > On 6/5/2019 1:41 AM, David Howells wrote:
-> > > > > > Casey Schaufler <casey@schaufler-ca.com> wrote:
-> > > > > > 
-> > > > > > > I will try to explain the problem once again. If process A
-> > > > > > > sends a signal (writes information) to process B the kernel
-> > > > > > > checks that either process A has the same UID as process B
-> > > > > > > or that process A has privilege to override that policy.
-> > > > > > > Process B is passive in this access control decision, while
-> > > > > > > process A is active. In the event delivery case, process A
-> > > > > > > does something (e.g. modifies a keyring) that generates an
-> > > > > > > event, which is then sent to process B's event buffer.
-> > > > > > I think this might be the core sticking point here.  It looks like two
-> > > > > > different situations:
-> > > > > > 
-> > > > > > (1) A explicitly sends event to B (eg. signalling, sendmsg, etc.)
-> > > > > > 
-> > > > > > (2) A implicitly and unknowingly sends event to B as a side effect of some
-> > > > > >      other action (eg. B has a watch for the event A did).
-> > > > > > 
-> > > > > > The LSM treats them as the same: that is B must have MAC authorisation to send
-> > > > > > a message to A.
-> > > > > YES!
-> > > > > 
-> > > > > Threat is about what you can do, not what you intend to do.
-> > > > > 
-> > > > > And it would be really great if you put some thought into what
-> > > > > a rational model would be for UID based controls, too.
-> > > > > 
-> > > > > > But there are problems with not sending the event:
-> > > > > > 
-> > > > > > (1) B's internal state is then corrupt (or, at least, unknowingly invalid).
-> > > > > Then B is a badly written program.
-> > > > Either I'm misunderstanding you or I strongly disagree.
-> > > 
-> > > A program needs to be aware of the conditions under
-> > > which it gets event, *including the possibility that
-> > > it may not get an event that it's not allowed*. Do you
-> > > regularly write programs that go into corrupt states
-> > > if an open() fails? Or where read() returns less than
-> > > the amount of data you ask for?
-> > 
-> > I do not regularly write programs that handle read() omitting data in the middle of a TCP stream.  I also don’t write programs that wait for processes to die and need to handle the case where a child is dead, waitid() can see it, but SIGCHLD wasn’t sent because “security”.
-> > 
-> > > 
-> > > >   If B has
-> > > > authority to detect a certain action, and A has authority to perform
-> > > > that action, then refusing to notify B because B is somehow missing
-> > > > some special authorization to be notified by A is nuts.
-> > > 
-> > > You are hand-waving the notion of authority. You are assuming
-> > > that if A can read X and B can read X that A can write B.
-> > 
-> > No, read it again please. I’m assuming that if A can *write* X and B can read X then A can send information to B.
+On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+
+> On Wed 05 Jun 01:34 PDT 2019, Lee Jones wrote:
 > 
-> I guess the questions here are:
+> > On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+> > 
+> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> > > 
+> > > > When booting with Device Tree, the current default boot configuration
+> > > > table option, the request to boot via 'host mode' comes from the
+> > > > "dr_mode" property.
+> > > 
+> > > This has been the default on the MTP, but this is changing as this is
+> > > causing issues when connected downstream from a hub (the typical
+> > > development case for the primary USB port of a phone like device) and
+> > > more importantly we don't have support for the PMIC blocks that control
+> > > VBUS.
+> > 
+> > My point is not about which mode is currently chosen.  It's more about
+> > the capability of choosing which mode is appropriate for a given
+> > system via DT.
+> > 
+> > > Once these issues are resolved the dr_mode would be "otg".
+> > 
+> > OTG doesn't work on this H/W, so we need to specify "host" mode.
 > 
-> 1) How do we handle recursive notification support, since we can't check
-> that B can read everything below a given directory easily?  Perhaps we can
-> argue that if I have watch permission to / then that implies visibility to
-> everything below it but that is rather broad.
+> My objection is that when you say "this H/W" you mean a particular
+> product, but you're making this decision for all SDM845 based products
+> using ACPI.
+> 
+> I don't know if there is a Windows phone based on SDM845, but if there
+> is then I don't think forcing it to host would be correct.
 
-How do you handle fanotify today which I think can do this?
+You mean if someone wanted to boot Linux on a Windows phone?  Not sure
+how likely that is, but even if a) there is an SDM845 based Windows
+phone and b) someone is crazy enough to run Linux on it, it should be
+trivial for them to conduct some device matching and choose a
+different property based on the result.
 
-thanks,
+[...]
 
-greg k-h
+> > > And this driver is used on a range of different Qualcomm platforms, so I
+> > > don't think this is SDM845 specific.
+> > 
+> > ACPI based platforms?
+> > 
+> > All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
+> 
+> MSM8998 (835) has the same controller, so this should affect those
+> laptops as well.
+
+This would also be the correct configuration for them too.  OTG
+doesn't make much sense for a laptop form factor.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
