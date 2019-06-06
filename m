@@ -2,112 +2,186 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84790C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A02CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B3420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YyM3d9F8"
+	by mail.kernel.org (Postfix) with ESMTP id 365C920866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfFFOxF (ORCPT
+        id S1729039AbfFFOxO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:53:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45566 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfFFOxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:53:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j19so2918235qtr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rwk3g2mjO7u8AyfAS8Q2YGcDDqcuXwzQCBazZp8dMOI=;
-        b=YyM3d9F8NpTGqs+6Oz/bFIAwDIb6AMR9dQjZvcG7jugaKFVOss+SFYSKHn5pCRSCYr
-         atqIMgKwQaeWpTsRFv4ZG8QNCX4WZuJuViyRchCJBxcIp5ccRTDkx5hpCWxB+no+ettb
-         KgTLHgA7tq73Brk3UOcybhh2F+vU4epOsvBPlwyl5be3TDs1XrHC8J1Ot6ESqzM7ONv+
-         /ZxelDbLEzGRibnzXWb4cDMn6rSHPXhvSIif/dA92YR0yWnsJ0ZANAG3qcMzVniUszzE
-         rBTQlSurX9TXV5LG5nwdaZUud6L9MPFKhCLVTA4AbEMLQYYGEAuJ9eqFxJDXQDgwHxED
-         7T/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rwk3g2mjO7u8AyfAS8Q2YGcDDqcuXwzQCBazZp8dMOI=;
-        b=ZCtq32Tf8tlCL0NFDU/1VjXLasldy+uan/rsr55JNzew8RV/vm92xjC2CsGxk+RTsf
-         2RRrEF80NllePAoMDzEIOJH3sGirdIqLu2HmEUhiLdOCBS4NGESOLETIDhYtsL7gP+je
-         HWUVdbGjsKnXE6WGHoELu5nvi9idNHjfQgKbE44mlsGug/E9S9/r35SnwoAYS/toGO8V
-         1gK8vufL86T9PR4/DLi7I7cAogwGFHMLIGgf0CRGOuX0YwB7Um3JcNNwdyxI33qmgBXk
-         PneVzWzw2oAg0tl0d63VH9jThOZdk+NAKUTTzWDyYwG4zn6EFiIhMBUHsXMdLEboJlsb
-         onUQ==
-X-Gm-Message-State: APjAAAWkvWgWGyJbp9xY9XCQkElZ7J4h1QKSPxK/vnRwqMo/fBqmsSsf
-        ckzf2pIakfMSaYZaS+QDFH+VjA==
-X-Google-Smtp-Source: APXvYqzogf8+qz/m25zpvUSWX8ZermCY/xWYAkBSXOmj0SwgnGPv1iHRExXEqe+teTmO50fXGzbJuQ==
-X-Received: by 2002:ad4:53c2:: with SMTP id k2mr37787769qvv.15.1559832784348;
-        Thu, 06 Jun 2019 07:53:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id t30sm795128qkm.39.2019.06.06.07.53.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 07:53:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hYtlH-0001FD-GL; Thu, 06 Jun 2019 11:53:03 -0300
-Date:   Thu, 6 Jun 2019 11:53:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rcampbell@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/5] mm/hmm: HMM documentation updates and code fixes
-Message-ID: <20190606145303.GA4698@ziepe.ca>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
+        Thu, 6 Jun 2019 10:53:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54386 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727559AbfFFOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:53:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A5498AFE3;
+        Thu,  6 Jun 2019 14:53:11 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 16:53:09 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
+        Steven Honeyman <stevenhoneyman@gmail.com>,
+        Valdis.Kletnieks@vt.edu,
+        Jochen Eisinger <jochen@penguin-breeder.org>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com,
+        Alex Hung <alex.hung@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] i2c: i801: Register optional lis3lv02d I2C device on
+ Dell machines
+Message-ID: <20190606165309.4a3c81c0@endymion>
+In-Reply-To: <20190604223303.31945-1-pali.rohar@gmail.com>
+References: <20190604223303.31945-1-pali.rohar@gmail.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506232942.12623-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:29:37PM -0700, rcampbell@nvidia.com wrote:
-> From: Ralph Campbell <rcampbell@nvidia.com>
+Hi Pali,
+
+On Wed,  5 Jun 2019 00:33:03 +0200, Pali Rohár wrote:
+> Dell platform team told us that some (DMI whitelisted) Dell Latitude
+> machines have ST microelectronics accelerometer at I2C address 0x29.
 > 
-> I hit a use after free bug in hmm_free() with KASAN and then couldn't
-> stop myself from cleaning up a bunch of documentation and coding style
-> changes. So the first two patches are clean ups, the last three are
-> the fixes.
+> Presence of that ST microelectronics accelerometer is verified by existence
+> of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+> ACPI device does not specify I2C address.
 > 
-> Ralph Campbell (5):
->   mm/hmm: Update HMM documentation
->   mm/hmm: Clean up some coding style and comments
+> This patch registers lis3lv02d device for selected Dell Latitude machines
+> at I2C address 0x29 after detection. And for Dell Vostro V131 machine at
+> I2C address 0x1d which was manually detected.
+> 
+> Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+> conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
+> lis3lv02d correctly initialize accelerometer.
+> 
+> Tested on Dell Latitude E6440.
+> 
+> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> 
+> ---
+> Changes since v3:
+>  * Use char * [] type for list of acpi ids
+>  * Check that SMO88xx acpi device is present, enabled and functioning
+>  * Simplify usage of acpi_get_devices()
+>  * Change i2c to I2C
+>  * Make dell_lis3lv02d_devices const
+> 
+> Changes since v2:
+>  * Use explicit list of SMOxx ACPI devices
+> 
+> Changes since v1:
+>  * Added Dell Vostro V131 based on Michał Kępień testing
+>  * Changed DMI product structure to include also i2c address
+> ---
+>  drivers/i2c/busses/i2c-i801.c       | 123 ++++++++++++++++++++++++++++++++++++
+>  drivers/platform/x86/dell-smo8800.c |   1 +
+>  2 files changed, 124 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index ac7f7817dc89..9060d4b16f4f 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1134,6 +1134,126 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
+>  	}
+>  }
+>  
+> +/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
+> +static const char *const acpi_smo8800_ids[] = {
+> +	"SMO8800",
+> +	"SMO8801",
+> +	"SMO8810",
+> +	"SMO8811",
+> +	"SMO8820",
+> +	"SMO8821",
+> +	"SMO8830",
+> +	"SMO8831",
+> +};
+> +
+> +static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
+> +					     u32 nesting_level,
+> +					     void *context,
+> +					     void **return_value)
+> +{
+> +	struct acpi_device_info *info;
+> +	unsigned long long sta;
+> +	acpi_status status;
+> +	char *hid;
+> +	int i;
+> +
+> +	status = acpi_bus_get_status_handle(obj_handle, &sta);
+> +	if (!ACPI_SUCCESS(status))
+> +		return AE_OK;
+> +	if (!(sta & (ACPI_STA_DEVICE_PRESENT |
+> +		     ACPI_STA_DEVICE_ENABLED |
+> +		     ACPI_STA_DEVICE_FUNCTIONING)))
+> +		return AE_OK;
 
-I applied these two to hmm.git
+This is testing that *either* bit is set. Is it what you intend to
+achieve, or would you rather want to ensure that *all* these bits are
+set?
 
->   mm/hmm: hmm_vma_fault() doesn't always call hmm_range_unregister()
+> +
+> +	status = acpi_get_object_info(obj_handle, &info);
+> +	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
+> +		return AE_OK;
+> +
+> +	hid = info->hardware_id.string;
+> +	if (!hid)
+> +		return AE_OK;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
+> +		if (strcmp(hid, acpi_smo8800_ids[i]) == 0) {
+> +			*((bool *)return_value) = true;
+> +			return AE_CTRL_TERMINATE;
+> +		}
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static bool is_dell_system_with_lis3lv02d(void)
+> +{
+> +	bool found;
+> +	const char *vendor;
+> +
+> +	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
+> +	if (strcmp(vendor, "Dell Inc.") != 0)
+> +		return false;
+> +
+> +	/*
+> +	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
+> +	 * device represent our ST microelectronics lis3lv02d accelerometer but
+> +	 * unfortunately without any other information (like I2C address).
+> +	 */
+> +	found = false;
+> +	acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
+> +				  (void **)&found);
 
-This one needs revision
+Alignment is incorrect now - but don't resend just for this.
 
->   mm/hmm: Use mm_get_hmm() in hmm_range_register()
->   mm/hmm: Fix mm stale reference use in hmm_free()
+> +
+> +	return found;
+> +}
+> (...)
 
-I belive we all agreed that the approach in the RFC series I sent is
-preferred, so these are superseded by that series.
+Everything else looks good to me now. Has the latest version of your
+patch been tested on real hardware?
 
-Thanks,
-Jason
+-- 
+Jean Delvare
+SUSE L3 Support
