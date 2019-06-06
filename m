@@ -2,93 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA27C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B10C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FAE20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A95206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EV/94w61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfFFC5n (ORCPT
+        id S1726638AbfFFDGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:57:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:52297 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfFFC5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:57:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:57:42 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga003.jf.intel.com with ESMTP; 05 Jun 2019 19:57:41 -0700
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 19:57:41 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 19:57:41 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.137]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.10]) with mapi id 14.03.0415.000;
- Thu, 6 Jun 2019 10:57:39 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "kraxel@redhat.com" <kraxel@redhat.com>,
-        "Zhang, Tina" <tina.zhang@intel.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>
-Subject: RE: [RFC PATCH v2 1/3] vfio: Use capability chains to handle device
- specific irq
-Thread-Topic: [RFC PATCH v2 1/3] vfio: Use capability chains to handle
- device specific irq
-Thread-Index: AQHVGrx1ebYylKGK4UKyy6MOQKDPAaaL7AoAgABXwgCAAA40AIABn6Bw
-Date:   Thu, 6 Jun 2019 02:57:38 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19CA6BA5F@SHSMSX104.ccr.corp.intel.com>
-References: <20190604095534.10337-1-tina.zhang@intel.com>
- <20190604095534.10337-2-tina.zhang@intel.com>
- <20190605040446.GW9684@zhen-hp.sh.intel.com>
- <237F54289DF84E4997F34151298ABEBC87646B5C@SHSMSX101.ccr.corp.intel.com>
- <20190605100942.bceke6yqjynuwk3z@sirius.home.kraxel.org>
-In-Reply-To: <20190605100942.bceke6yqjynuwk3z@sirius.home.kraxel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTA5YmFhMzItZDY3My00NDFmLWE1ZjEtYTVhZWE4MmZjZDA4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaSt2cXc2ZVFzOWNxUXE3VlJlNnlwaExza1Z2RWs5dmY1YnlFd1VxS0JGaGIweEtpSWxPOEttXC9PdVY4dFp5M1MifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 5 Jun 2019 23:06:21 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41960 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfFFDGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:06:21 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so597155otj.8;
+        Wed, 05 Jun 2019 20:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NLcc8Hvj4GxnkbZqOSpti57+EMywR1QkzctaKlv9FJA=;
+        b=EV/94w61cJndW/aF09hT2OcRE+FgL4ycdCqgiGCIlPUBHZaw4RCokWfccuZsBTni+H
+         A8hpGC53VKVyXWlsr0ebnvShJizejBIdhp7LqCqlAG7ajtZOIRYcBm1+bt+6ghAjh7mK
+         K9deV8X0D/Yzw2ukIVzanS+6Bnk5MW7PVgjKYJLitlYdSQIP/0bNvrSU8cREls2bq4Oi
+         mTeKWqJbdA0D4u/mmWIuzkmjNyPTKqRjFYdGyjp8KYzcG+jbCAC8tgcVdyjWfVLxxAj+
+         p+L0uioQLYpw4WZI6qD5aBVhGXtbgCDj7aQGGvAc50k2+2qvVLdxflrJgaGmrhdN7OO+
+         SvDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NLcc8Hvj4GxnkbZqOSpti57+EMywR1QkzctaKlv9FJA=;
+        b=PVE0mdoBU+4dFpPAGzhfvjRgiqM9Jvl3D4DhZTrHeIc/64ar4u0WkLP29RkcSPHo1n
+         TTYCYIU+tzzuUF4tUfs4Oe+3ehY1Ief1qQ6EebIN7mGDMkaoLXIWTum25bpx9sudBBIT
+         t4GcM7lLXbN6Cf/yxiljvSVQb2jB6hECzzlGM6HaWcGoQXfSl3jYFI0uchei8y5invHz
+         TtGerZlXZZhsprDgwYtvwzMjTi7xxTAvdxih+0uC28VvaE2CLvp7GGxEwexlgcz2bcqc
+         JyQ66QPqKk9t03URPoPQAjOogAF8/BkfrCoLUcf408EAt5IeUMbZO99NF9NbXIqhesSl
+         zPwA==
+X-Gm-Message-State: APjAAAWmeoXhpXZCihlHRSI3FrbRzelcNX/14qk5hnXT8pn7CgPKi7Pg
+        9M24hi4CF6Cxy7HbS+PAD6g=
+X-Google-Smtp-Source: APXvYqxjGCBhEAui2RBiuztJJeXSwwWM/3JyYC5cgJCRJFtBekZKrRXELpA8QUdY9Iq6B9LmR5hhCg==
+X-Received: by 2002:a9d:6042:: with SMTP id v2mr6290825otj.73.1559790380624;
+        Wed, 05 Jun 2019 20:06:20 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id y4sm245567oiy.56.2019.06.05.20.06.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 20:06:19 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <35b3f09b-b371-e2cc-4436-120c67e2f1fb@lwfinger.net>
+Date:   Wed, 5 Jun 2019 22:06:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBrcmF4ZWxAcmVkaGF0LmNvbQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgNSwgMjAx
-OSA2OjEwIFBNDQo+IA0KPiAgIEhpLA0KPiANCj4gPiA+IFJlYWxseSBuZWVkIHRvIHNwbGl0IGZv
-ciBkaWZmZXJlbnQgcGxhbmVzPyBJJ2QgbGlrZSBhDQo+ID4gPiBWRklPX0lSUV9TVUJUWVBFX0dG
-WF9ESVNQTEFZX0VWRU5UDQo+ID4gPiBzbyB1c2VyIHNwYWNlIGNhbiBwcm9iZSBjaGFuZ2UgZm9y
-IGFsbC4NCj4gDQo+ID4gVXNlciBzcGFjZSBjYW4gY2hvb3NlIHRvIHVzZXIgZGlmZmVyZW50IGhh
-bmRsZXJzIGFjY29yZGluZyB0byB0aGUNCj4gPiBzcGVjaWZpYyBldmVudC4gRm9yIGV4YW1wbGUs
-IHVzZXIgc3BhY2UgbWlnaHQgbm90IHdhbnQgdG8gaGFuZGxlIGV2ZXJ5DQo+ID4gY3Vyc29yIGV2
-ZW50IGR1ZSB0byBwZXJmb3JtYW5jZSBjb25zaWRlcmF0aW9uLiBCZXNpZGVzLCBpdCBjYW4gcmVk
-dWNlDQo+ID4gdGhlIHByb2JlIHRpbWVzLCBhcyB3ZSBkb24ndCBuZWVkIHRvIHByb2JlIHR3aWNl
-IHRvIG1ha2Ugc3VyZSBpZiBib3RoDQo+ID4gY3Vyc29yIHBsYW5lIGFuZCBwcmltYXJ5IHBsYW5l
-IGhhdmUgYmVlbiB1cGRhdGVkLg0KPiANCj4gSSdkIHN1Z2dlc3QgdG8gdXNlIHRoZSB2YWx1ZSBw
-YXNzZWQgdmlhIGV2ZW50ZmQgZm9yIHRoYXQsIGkuZS4gaW5zdGVhZA0KPiBvZiBzZW5kaW5nICIx
-IiB1bmNvbmRpdGlvbmFsbHkgc2VuZCBhIG1hc2sgb2YgY2hhbmdlZCBwbGFuZXMuDQo+IA0KDQpz
-b3VuZHMgcmVhc29uYWJsZS4NCg==
+On 6/5/19 5:50 PM, Aaro Koskinen wrote:
+> Hi,
+> 
+> When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN does
+> not work anymore:
+> 
+> [   42.004303] b43legacy-phy0: Loading firmware version 0x127, patch level 14 (2005-04-18 02:36:27)
+> [   42.184837] b43legacy-phy0 debug: Chip initialized
+> [   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit DMA mask
+> 
+> The same happens with the current mainline.
+> 
+> Bisected to:
+> 
+> 	commit 65a21b71f948406201e4f62e41f06513350ca390
+> 	Author: Christoph Hellwig <hch@lst.de>
+> 	Date:   Wed Feb 13 08:01:26 2019 +0100
+> 
+> 	    powerpc/dma: remove dma_nommu_dma_supported
+> 
+> 	    This function is largely identical to the generic version used
+> 	    everywhere else.  Replace it with the generic version.
+> 
+> 	    Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 	    Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> 	    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+
+Aaro,
+
+First of all, you have my sympathy for the laborious bisection on a PowerBook 
+G4. I have done several myself. Thank you.
+
+I confirm your results.
+
+The ppc code has a maximum DMA size of 31 bits, thus a 32-bit request will fail. 
+Why the 30-bit fallback fails in b43legacy fails while it works in b43 is a mystery.
+
+Although dma_nommu_dma_supported() may be "largely identical" to 
+dma_direct_supported(), they obviously differ. Routine dma_nommu_dma_supported() 
+returns 1 for 32-bit systems, but I do not know what dma_direct_supported() returns.
+
+I am trying to find a patch.
+
+Larry
