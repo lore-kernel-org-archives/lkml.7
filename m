@@ -2,148 +2,82 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244D1C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF5E20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XE2mWnWb"
+	by mail.kernel.org (Postfix) with ESMTP id 0D5CA207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFFHFb (ORCPT
+        id S1726685AbfFFHFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:05:31 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34411 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFHFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 03:05:30 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y198so748700lfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LxUuoqEbUmgmnRX9vLQxQ/tQ09ZsJx159pAs1BZjQQw=;
-        b=XE2mWnWbAi156xacpzGakgxd0XdnPCTjLko9UBbfOxI68vIwEY1UqU3DdVepHT2unK
-         IXFQuljTyQaBE63iTT06aLL+Gabw06PozTCJJyXbmKvvVShYaCMrd+a5URAFB89lEIrU
-         oH3FnL+nYHmx42QzFDxG5r+oZSqRevKAxlp0V/DFV++C/3xPhMUC2Woo4QjnWcxAJlx8
-         I81qqKzeu0gdR3REUvOrz+2QwvtvK3yIaokulPtppIRatORNpAjdXcyB35p+xAEy9RmN
-         y4ND6KqQT11fRSwVqXg03KLBPqqJX4YYaH2X4ZLxkTZKD4Y39fNVQOdJy8bB0sRlmd6C
-         qLgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LxUuoqEbUmgmnRX9vLQxQ/tQ09ZsJx159pAs1BZjQQw=;
-        b=omyWHAenV/r5CRrmGeDM4ebZLG5Vs427NU7vIuKCu0ckeJQmzKh28QgikGA3b+UVFe
-         YTfCO3MQYHpNbENHPzD2ffR+hLV9kjeLBpHyoqXUkN4puYkKvkwdl+UsV7kLL0woAZfX
-         Bz4sUiSjfpAarqXJi3SGRr5tI62jRNIk3fJSF5luiAqCRoLIrSrhOroVEUQapCFzaGru
-         emFjlqtXY2yivkl8Xa4X9rMa43kvqM5wlPQ/hrUZmhwZ6lVoIPcDji+8YOGXh6S5e+4x
-         o0h05/cZiNF09tLmx5h3WhsO65gE98oau7EhyDlMfiTUekNa49rJXJJST61GObrLsn+8
-         4nQw==
-X-Gm-Message-State: APjAAAUUjJIdT86UgcMDPzGN2WMrKGl7J93ht0hoihDke/qzfju0bdLd
-        yVaisEZPyV+mBEdzx4QbVfhYa5QPoLdaWm48bLLw1Q==
-X-Google-Smtp-Source: APXvYqxZCAlDmT5oc8zqUrM9LX+7zRm365sy7bvsFw5heno4p5UQD7LD9oIpvPIgG/H6nUWIJ0qyXLkVoeON3W+U3V8=
-X-Received: by 2002:a19:2892:: with SMTP id o140mr9068556lfo.177.1559804728178;
- Thu, 06 Jun 2019 00:05:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com> <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
-In-Reply-To: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 6 Jun 2019 09:05:16 +0200
-Message-ID: <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
+Received: from gate.crashing.org ([63.228.1.57]:35610 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFFHFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:05:30 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5674w8h020392;
+        Thu, 6 Jun 2019 02:04:59 -0500
+Message-ID: <06384baa09e0f24e0c33f560f461233ef4405799.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Date:   Thu, 06 Jun 2019 17:04:57 +1000
+In-Reply-To: <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+         <1559717653-11258-3-git-send-email-talel@amazon.com>
+         <20190605075927.GA9693@kroah.com>
+         <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
+         <20190606063741.GA23305@kroah.com>
+         <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
+On Thu, 2019-06-06 at 16:47 +1000, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-06-06 at 08:37 +0200, Greg KH wrote:
+> > On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
+> > > On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
+> > > > 
+> > > > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> > > > > +
+> > > > > +struct al_fic *al_fic_wire_init(struct device_node *node,
+> > > > > +				void __iomem *base,
+> > > > > +				const char *name,
+> > > > > +				unsigned int parent_irq);
+> > > > > +int al_fic_cleanup(struct al_fic *fic);
+> > > > 
+> > > > Who is using these new functions?  We don't add new apis that no one
+> > > > uses :(
+> > > 
+> > > They will be used by subsequent driver submissions but those aren't
+> > > quite ready yet, so we can hold onto patch 3 for now until they are.
+> > 
+> > Patch 2 also should have these removed :)
+> 
+> That's a mistake, that export should have been in patch3. Talel, pls
+> fix that in your next spin.
 
-On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
->
-> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> > Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > > (cc'ing Andy's correct email address)
-> > >
-> > > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > > Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > > > > >
-> > > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > > > >
-> > > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > > > > that describes this topology.
-> > > > > >
-> > > > > > This is partly true. There are two groups of gold and silver cores,
-> > > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > > > > is one of the early examples of ARM's Dynamiq architecture.
-> > > > > >
-> > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > >
-> > > > > > I noticed that this patch sneaked through for this merge window but
-> > > > > > perhaps we can whip up a quick fix for -rc2?
-> > > > > >
-> > > > >
-> > > > > And please find attached a patch to fix this up. Andy, since this
-> > > > > hasn't landed yet (can we still squash this into the original patch?),
-> > > > > I couldn't add a Fixes tag.
-> > > > >
-> > > >
-> > > > I had the same concern. Thanks for catching this. I suspect this must
-> > > > cause some problem for IPA given that it can't discern between the big
-> > > > and little "power clusters"?
-> > >
-> > > Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > > the topology.
-> >
-> > And EAS and IPA are OK with the real topology? I'm just curious if
-> > changing the topology to reflect reality will be a problem for those
-> > two.
->
-> FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-> EAS at least (which is used in recent Android kernels -- 4.19+).
->
-> But doing this is still required for other things in the scheduler (the
-> so-called 'capacity-awareness' code). So until we have a better
-> solution, this patch is doing the right thing.
+Actually that's already fixed in v2 of the series. The API have been
+removed for now.
 
-I'm not sure to catch what you mean ?
-Which so-called 'capacity-awareness' code are you speaking about ? and
-what is the problem ?
+Cheers,
+Ben.
 
-Regards,
-Vincent
-
->
-> I hope that helps.
->
-> Thanks,
-> Quentin
