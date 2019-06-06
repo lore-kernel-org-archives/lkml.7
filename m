@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A51C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F19C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC7820665
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DBF20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfFFOWG (ORCPT
+        id S1729090AbfFFOW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:22:06 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41487 "EHLO
+        Thu, 6 Jun 2019 10:22:58 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52387 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbfFFOWC (ORCPT
+        with ESMTP id S1728682AbfFFOV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:22:02 -0400
+        Thu, 6 Jun 2019 10:21:58 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7510520005;
-        Thu,  6 Jun 2019 14:21:58 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0700E20017;
+        Thu,  6 Jun 2019 14:21:49 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
@@ -35,9 +35,9 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Harsha.ManjulaMallikarjun@in.bosch.com,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/20] arm64: dts: renesas: r8a7795: Add CMM units
-Date:   Thu,  6 Jun 2019 16:22:10 +0200
-Message-Id: <20190606142220.1392-11-jacopo+renesas@jmondi.org>
+Subject: [PATCH 07/20] clk: renesas: r8a77990: Add CMM clocks
+Date:   Thu,  6 Jun 2019 16:22:07 +0200
+Message-Id: <20190606142220.1392-8-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
 References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
@@ -48,73 +48,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CMM units to Renesas R-Car H3 device tree and reference them from
-the Display Unit they are connected to.
-
-While at it, re-sort the du device node properties to match the ordering
-found in other SoCs.
+Add clock definitions for CMM units on Renesas R-Car Gen3 E3.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 36 +++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ drivers/clk/renesas/r8a77990-cpg-mssr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index abeac3059383..83edd9f12caa 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -2825,6 +2825,38 @@
- 			renesas,fcp = <&fcpvi1>;
- 		};
+diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+index 9a278c75c918..8cdd0e6fb74f 100644
+--- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+@@ -182,6 +182,8 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
  
-+		cmm0: cmm@fea40000 {
-+			compatible = "renesas,cmm-gen3";
-+			reg = <0 0xfea40000 0 0x1000>;
-+			clocks = <&cpg CPG_MOD 711>;
-+			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 711>;
-+		};
-+
-+		cmm1: cmm@fea50000 {
-+			compatible = "renesas,cmm-gen3";
-+			reg = <0 0xfea50000 0 0x1000>;
-+			clocks = <&cpg CPG_MOD 710>;
-+			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 710>;
-+		};
-+
-+		cmm2: cmm@fea60000 {
-+			compatible = "renesas,cmm-gen3";
-+			reg = <0 0xfea60000 0 0x1000>;
-+			clocks = <&cpg CPG_MOD 709>;
-+			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 709>;
-+		};
-+
-+		cmm3: cmm@fea70000 {
-+			compatible = "renesas,cmm-gen3";
-+			reg = <0 0xfea70000 0 0x1000>;
-+			clocks = <&cpg CPG_MOD 708>;
-+			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 708>;
-+		};
-+
- 		csi20: csi2@fea80000 {
- 			compatible = "renesas,r8a7795-csi2";
- 			reg = <0 0xfea80000 0 0x10000>;
-@@ -3028,9 +3060,11 @@
- 				 <&cpg CPG_MOD 722>,
- 				 <&cpg CPG_MOD 721>;
- 			clock-names = "du.0", "du.1", "du.2", "du.3";
--			vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
- 			status = "disabled";
- 
-+			vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
-+			cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
-+
- 			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+ 	DEF_MOD("ehci0",		 703,	R8A77990_CLK_S3D4),
+ 	DEF_MOD("hsusb",		 704,	R8A77990_CLK_S3D4),
++	DEF_MOD("cmm1",			 710,	R8A77990_CLK_S1D1),
++	DEF_MOD("cmm0",			 711,	R8A77990_CLK_S1D1),
+ 	DEF_MOD("csi40",		 716,	R8A77990_CLK_CSI0),
+ 	DEF_MOD("du1",			 723,	R8A77990_CLK_S1D1),
+ 	DEF_MOD("du0",			 724,	R8A77990_CLK_S1D1),
 -- 
 2.21.0
 
