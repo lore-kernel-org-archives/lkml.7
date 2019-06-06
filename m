@@ -2,213 +2,246 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841B0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C6FC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D09F20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6782720684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+BqiICW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stLElHvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfFFO32 (ORCPT
+        id S1728933AbfFFOaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:29:28 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35883 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfFFO32 (ORCPT
+        Thu, 6 Jun 2019 10:30:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39706 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfFFOaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:29:28 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u12so2886039qth.3;
-        Thu, 06 Jun 2019 07:29:26 -0700 (PDT)
+        Thu, 6 Jun 2019 10:30:19 -0400
+Received: by mail-io1-f66.google.com with SMTP id r185so350931iod.6;
+        Thu, 06 Jun 2019 07:30:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=63js31eXRcU8jBoDG4gjDfHpp/+nRhez2vrjmZ7DH8s=;
-        b=N+BqiICWI+Ly/preMLNFUsTWVrvmB7pZ2S2pX0fRuP3bwaST2oR/3ul2tXyRLcQDwO
-         WUxtl/eWvH5znFerESkUA4R/4figZ7Rh5ZFy9Tp0T1QE21BxiuKYZGczGmFsqckgn+HV
-         SUk+QvQ2QgeQjNaqVivjxV2ywTLrAobGyVSnMFSb7MBbWGwL26x8233I1Rz6EOMS8lwA
-         uWWZhZbixEJnQXBoNEvVSra5Df7EKysq5bAQWnB37IRylyktrj9mGQ9On0MTS0D0OPUj
-         isjDWM5l0KFIkZfqJCjx19ZdlHB+928AVDhZO6sgE76n3QwwElhe5CaBRbtcYSkNkrCA
-         IPXA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m/yj82Fs8PWSimbkwdLXQDVQhsdSqtLP9f1+tIxwZUo=;
+        b=stLElHvgRoUMyr0hBMa1CbvUvZf5YKHWo2RUTNXF7SZCDBZgDoxW6nf8xIvvyRuZBa
+         TgkaVzm+dQfxaku9NSF+M+Ehdw1UOkEiizHchhQEl6lrnErNqrUfJ6tCGD/U9qWjEyKu
+         fT4r9c9YelxyVehL6b3SewA+Jv5ND1v3ff9V0XNDsd4qQ/4vKbGDi5ecIlWI/8VNRswE
+         9No9Vl9LOIEpuBAPV6rTj+Se8VTTL4oouR5ugl3jGaPcaR7jAKcjPUhlXBRwGoyWhpwf
+         mhccwo20cpkCq+rnjEhkVVBitzSO7m2wkNZDhdcKsTZ7zngk+YPvBZ3G+Ev+L7gtaSsR
+         cXOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=63js31eXRcU8jBoDG4gjDfHpp/+nRhez2vrjmZ7DH8s=;
-        b=pvpV4lWLjWiiicy5V6DHC2NeRhxMgj9PEBtcqf4hV/GrP0nDlxcHvwGlHm2rshQMkG
-         CUpxTDqe4ni/vZhXAVV1ZLlC9fU0W9+YI0pBxrEAMZk0ubEYoq08wFssp27i+FjAwVlv
-         3vnpNm7BRs9cVK3Q0xUzW6JUar/NzinbDQN1g0vddxU2bW5Avtba5GxcDIKQEdasthJA
-         G9oviG3t59sdvMzVrgcJYNcCLAQ0fcoEW61KuHPZQ/3RrNmKuToRFAfFI7Rdjvcu3V+J
-         iAUVBuW/VSps0hA/fi6TizOuQsReJlF8wu8QU/HLqB78TIOac0bwUX1fXcBjAncfK00z
-         kKQw==
-X-Gm-Message-State: APjAAAVp357SuQjFH22LDIvBdi85XkGEmSGXSFfgw0Nz9iBLBegzw4c5
-        kT82mprVQNXZBVfBzMTMC40=
-X-Google-Smtp-Source: APXvYqxfxlU94Olww40Y633iAm1vizMCBvBiV5Ut+neykUI6EKz7LtN5/SOLKWWvWDXokvL3OfZ7cg==
-X-Received: by 2002:aed:3f1a:: with SMTP id p26mr40639406qtf.113.1559831366406;
-        Thu, 06 Jun 2019 07:29:26 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.208.82])
-        by smtp.gmail.com with ESMTPSA id q37sm1192622qtj.94.2019.06.06.07.29.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 07:29:25 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 27C9541149; Thu,  6 Jun 2019 11:29:22 -0300 (-03)
-Date:   Thu, 6 Jun 2019 11:29:22 -0300
-To:     ufo19890607 <ufo19890607@gmail.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com,
-        arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com,
-        adrian.hunter@intel.com, wangnan0@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@redhat.com
-Subject: Re: [PATCH] perf record: Add support to collect callchains from
- kernel or user space only.
-Message-ID: <20190606142922.GB21245@kernel.org>
-References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
- <20190606142644.GA21245@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m/yj82Fs8PWSimbkwdLXQDVQhsdSqtLP9f1+tIxwZUo=;
+        b=b96wHpK4A0BVJZkvFEn2y0purMyyBCfJWrF58XsORR6YrPaAVVWn6d28o/I/9SAzTp
+         twQLXslb9Gx33Zpw7icWse86Bx/+9bD5nreQoOtpd3Vm4uzetErIfNUMnGHJSWwq4ue6
+         HMBOSkBYS/qbAdIH3bmv0ioresgJ7pZKS/8XR/otkKHkjgWcoDPl3bCwpxAjiy0E14my
+         RwRgUc/3V+Jm0JNNApE2fn8gzvIWhBYE6xh3fKEXzwm+qNS9KppV32XP/3dye5vVEwy/
+         QT+55A68F1TASxzcqE7oIzC9fBt/6kaFuonuIK5osJU6VOS2Roh96svJ53kVQdjFKJPI
+         Uttw==
+X-Gm-Message-State: APjAAAVclFp9mf3JhUl8OK+6rCm9iZW5LldGp79t3aWOiXiWx+jKcM+b
+        pQW3VQEPLYXoiJHa+eOBMGZjVYujemWDh8va0J8=
+X-Google-Smtp-Source: APXvYqzh3Mjs0+gLbXg8sw4Xqm2kamB9b0jr/4CUBNgTZbP5GpAzpLX9uXSoLYY5ybgkRSDtdfO0R5B4xkIT2BO93dQ=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr22966094ioi.42.1559831418114;
+ Thu, 06 Jun 2019 07:30:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606142644.GA21245@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160605.9970-1-jeffrey.l.hugo@gmail.com> <20190521164324.GA2085@tuxbook-pro>
+ <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com> <CAO-hwJKeS06Tsz8BzbWZw2TW74ZowvRqJue=Od-cMmfNH9N7Tw@mail.gmail.com>
+In-Reply-To: <CAO-hwJKeS06Tsz8BzbWZw2TW74ZowvRqJue=Od-cMmfNH9N7Tw@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 6 Jun 2019 08:30:07 -0600
+Message-ID: <CAOCk7Nr5d_Ox7B7FfMM9+8RF31pk=cwo+sRsa=nBYtifwZQNgQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 escreveu:
-> > From: yuzhoujian <yuzhoujian@didichuxing.com>
-> > 
-> > One can just record callchains in the kernel or user space with
-> > this new options. We can use it together with "--all-kernel" options.
-> > This two options is used just like print_stack(sys) or print_ustack(usr)
-> > for systemtap.
-> > 
-> > Show below is the usage of this new option combined with "--all-kernel"
-> > options.
-> > 	1. Configure all used events to run in kernel space and just
-> > collect kernel callchains.
-> > 	$ perf record -a -g --all-kernel --kernel-callchains
-> > 	2. Configure all used events to run in kernel space and just
-> > collect user callchains.
-> > 	$ perf record -a -g --all-kernel --user-callchains
-> > 
-> > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
-> > ---
-> >  tools/perf/Documentation/perf-record.txt | 6 ++++++
-> >  tools/perf/builtin-record.c              | 4 ++++
-> >  tools/perf/perf.h                        | 2 ++
-> >  tools/perf/util/evsel.c                  | 4 ++++
-> >  4 files changed, 16 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index de269430720a..b647eb3db0c6 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -490,6 +490,12 @@ Configure all used events to run in kernel space.
-> >  --all-user::
-> >  Configure all used events to run in user space.
-> >  
-> > +--kernel-callchains::
-> > +Collect callchains from kernel space.
-> 
-> Ok, changing this to:
-> 
-> Collect callchains only from kernel space. I.e. this option sets
-> perf_event_attr.exclude_callchain_user to 1,
-> perf_event_attr.exclude_callchain_kernel to 0.
-> 
-> > +
-> > +--user-callchains::
-> > +Collect callchains from user space.
-> 
-> And this one to:
-> Collect callchains only from user space. I.e. this option sets
-> 
-> perf_event_attr.exclude_callchain_kernel to 1,
-> perf_event_attr.exclude_callchain_user to 0.
+On Thu, Jun 6, 2019 at 1:07 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Thu, Jun 6, 2019 at 1:25 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > On Tue, May 21, 2019 at 10:42 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
+> > >
+> > > > There needs to be coordination between hid-quirks and the elan_i2c driver
+> > > > about which devices are handled by what drivers.  Currently, both use
+> > > > whitelists, which results in valid devices being unhandled by default,
+> > > > when they should not be rejected by hid-quirks.  This is quickly becoming
+> > > > an issue.
+> > > >
+> > > > Since elan_i2c has a maintained whitelist of what devices it will handle,
+> > > > use that to implement a blacklist in hid-quirks so that only the devices
+> > > > that need to be handled by elan_i2c get rejected by hid-quirks, and
+> > > > everything else is handled by default.  The downside is the whitelist and
+> > > > blacklist need to be kept in sync.
+> > > >
+> > >
+> > > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > Jiri, the two patches in this series doesn't have a build time
+> > > dependency, so if you take this one through your tree I'll take 2/2
+> > > through arm-soc.
+> >
+> > Ping?  Is this good from the HID perspective?  I would really like to
+> > see this queued for 5.3.
+> >
+>
+> Sorry, this felt through the cracks.
 
-Yeah, each of this options just sets the exclude bit for the undesired
-callchains, not setting 0 for the desired, so I'm fixing up the doc I
-suggested accordingly, my comment below remains valid tho:
+No problem.
 
-> 
-> So that the user don't try using:
-> 
->     pref record --user-callchains --kernel-callchains
-> 
-> expecting to get both user and kernel callchains and instead gets
-> nothing.
-> 
-> Ok?
-> 
-> - Arnaldo
-> 
-> > +
-> >  --timestamp-filename
-> >  Append timestamp to output file name.
-> >  
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index e2c3a585a61e..dca55997934e 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -2191,6 +2191,10 @@ static struct option __record_options[] = {
-> >  	OPT_BOOLEAN_FLAG(0, "all-user", &record.opts.all_user,
-> >  			 "Configure all used events to run in user space.",
-> >  			 PARSE_OPT_EXCLUSIVE),
-> > +	OPT_BOOLEAN(0, "kernel-callchains", &record.opts.kernel_callchains,
-> > +		    "collect kernel callchains"),
-> > +	OPT_BOOLEAN(0, "user-callchains", &record.opts.user_callchains,
-> > +		    "collect user callchains"),
-> >  	OPT_STRING(0, "clang-path", &llvm_param.clang_path, "clang path",
-> >  		   "clang binary to use for compiling BPF scriptlets"),
-> >  	OPT_STRING(0, "clang-opt", &llvm_param.clang_opt, "clang options",
-> > diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-> > index d59dee61b64d..711e009381ec 100644
-> > --- a/tools/perf/perf.h
-> > +++ b/tools/perf/perf.h
-> > @@ -61,6 +61,8 @@ struct record_opts {
-> >  	bool	     record_switch_events;
-> >  	bool	     all_kernel;
-> >  	bool	     all_user;
-> > +	bool	     kernel_callchains;
-> > +	bool	     user_callchains;
-> >  	bool	     tail_synthesize;
-> >  	bool	     overwrite;
-> >  	bool	     ignore_missing_thread;
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index a6f572a40deb..a606b2833e27 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -680,6 +680,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
-> >  
-> >  	attr->sample_max_stack = param->max_stack;
-> >  
-> > +	if (opts->kernel_callchains)
-> > +		attr->exclude_callchain_user = 1;
-> > +	if (opts->user_callchains)
-> > +		attr->exclude_callchain_kernel = 1;
-> >  	if (param->record_mode == CALLCHAIN_LBR) {
-> >  		if (!opts->branch_stack) {
-> >  			if (attr->exclude_user) {
-> > -- 
-> > 2.14.1
-> 
-> -- 
-> 
-> - Arnaldo
+>
+> I'm fine with the idea of the patch, but I just realized what bugged me:
+> we should instead have a static array of the various ACPI matches,
+> instead of duplicating the various strncmp.
+>
+> So IMO, we should:
+> - merge patch 2/2 through Bjorn's tree (or with any changes he would request)
+> - have a v5 for the HID/input part with:
+>   * a static array of the names to match against in hid-quirks.c
+>   * separate the elan_i2c trivial change in its separate patch as
+> there are already a few changes committed in the input tree, which is
+> different from the HID tree. I don't expect any conflicts though, so
+> if Dmitry is fine, I can take the whole input/HID part through the HID
+> tree, but a separate patch would be more obvious in case of a
+> conflict.
 
--- 
+Ok.  Will respin today.
 
-- Arnaldo
+>
+> Cheers,
+> Benjamin
+>
+> > >
+> > > Regards,
+> > > Bjorn
+> > >
+> > > > Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > ---
+> > > >  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
+> > > >  drivers/input/mouse/elan_i2c_core.c |  4 ++
+> > > >  2 files changed, 58 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> > > > index 77ffba48cc73..656485e08eb7 100644
+> > > > --- a/drivers/hid/hid-quirks.c
+> > > > +++ b/drivers/hid/hid-quirks.c
+> > > > @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
+> > > >               break;
+> > > >       case USB_VENDOR_ID_ELAN:
+> > > >               /*
+> > > > -              * Many Elan devices have a product id of 0x0401 and are handled
+> > > > -              * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+> > > > -              * is not (and cannot be) handled by that driver ->
+> > > > -              * Ignore all 0x0401 devs except for the ELAN0800 dev.
+> > > > +              * Blacklist of everything that gets handled by the elan_i2c
+> > > > +              * input driver.  This should be kept in sync with the whitelist
+> > > > +              * that exists in that driver.  This avoids disabling valid
+> > > > +              * touchpads and other ELAN devices.
+> > > >                */
+> > > > -             if (hdev->product == 0x0401 &&
+> > > > -                 strncmp(hdev->name, "ELAN0800", 8) != 0)
+> > > > -                     return true;
+> > > > -             /* Same with product id 0x0400 */
+> > > > -             if (hdev->product == 0x0400 &&
+> > > > -                 strncmp(hdev->name, "QTEC0001", 8) != 0)
+> > > > +             if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
+> > > > +                (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0600", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0601", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0602", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0603", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0604", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0605", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0606", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0607", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0608", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0609", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN060B", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN060C", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN060F", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0610", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0611", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0612", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0613", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0614", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0615", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0616", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0617", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0618", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0619", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061A", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061B", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061C", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061D", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061E", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN061F", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0620", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0621", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0622", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0623", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0624", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0625", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0626", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0627", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0628", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0629", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN062A", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN062B", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN062C", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN062D", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0631", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN0632", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "ELAN1000", 8) == 0 ||
+> > > > +                 strncmp(hdev->name, "elan,ekth3000", 13) == 0))
+> > > >                       return true;
+> > > >               break;
+> > > >       }
+> > > > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> > > > index f9525d6f0bfe..3ded19528cd4 100644
+> > > > --- a/drivers/input/mouse/elan_i2c_core.c
+> > > > +++ b/drivers/input/mouse/elan_i2c_core.c
+> > > > @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
+> > > >  };
+> > > >  MODULE_DEVICE_TABLE(i2c, elan_id);
+> > > >
+> > > > +/*
+> > > > + * when these whtielists get updated, the corresponding blacklist in hid-quirks
+> > > > + * needs to be updated to match.
+> > > > + */
+> > > >  #ifdef CONFIG_ACPI
+> > > >  static const struct acpi_device_id elan_acpi_id[] = {
+> > > >       { "ELAN0000", 0 },
+> > > > --
+> > > > 2.17.1
+> > > >
