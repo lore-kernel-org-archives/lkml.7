@@ -2,186 +2,160 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EBEC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC897C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26532070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A062089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C9+6sUZf"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GeGeXRa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfFFLfL (ORCPT
+        id S1727793AbfFFLiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:35:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51826 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfFFLfK (ORCPT
+        Thu, 6 Jun 2019 07:38:01 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:17325 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfFFLiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:35:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BSh8h146272;
-        Thu, 6 Jun 2019 11:35:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=Y2hmulEThShe7yuxn2FDcx828sdufBDLO8yrZJpI96k=;
- b=C9+6sUZfQ7+PaLFXKvcdZ8fP5unf0Hvhk3clst84/Vly+0WEaLItmHwPhVfCpChOcBdn
- 4VHiUXttyiNBfLzvvATxJcIs8G1HQYYUBfcvDmxUEWk2dkY9TsHIuOu4mG9xjvB2GQkA
- kVhHh9qgnrHRNTyg3LbJm3qzUEs2l8ifYAVLPc3ijyo/ohRNs9NIp/Ddj8RVPje3F4TS
- 3qEuBqc2x68nlk+I3VW8LFL39mjIOl3qQdpq2iigQYRlJ+byAOQjIjh3315kC5QXvBBE
- 34GM5dtWdpIlZxhZci4c3NFhE3pIp1aFGYPLiRcAeA1N0jm2H6gH66iftvEt9PcOBvCZ wQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2suj0qqrgc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 11:35:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BZ5hs155775;
-        Thu, 6 Jun 2019 11:35:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2swngmf4a5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 11:35:05 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56BZ2dK028471;
-        Thu, 6 Jun 2019 11:35:03 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 04:35:02 -0700
-Date:   Thu, 6 Jun 2019 14:34:55 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] staging: kpc2000: fix incorrect code comment in
- core.c
-Message-ID: <20190606113455.GM31203@kadam>
-References: <20190603222916.20698-1-simon@nikanor.nu>
- <20190603222916.20698-8-simon@nikanor.nu>
+        Thu, 6 Jun 2019 07:38:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559821080; x=1591357080;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Ce2wemERCNuhe1r8FDKdwgvoDhrRfIiwIFwMCaHmYng=;
+  b=GeGeXRa4xrreIU0xvVwTJV2SqBYxzEbea3CxlpvhLNKaXlHHD/dumdAQ
+   sfY5ogRjdcO/Qx577b1Kra6KVIP8oQLkVWJ1d3J3cwm9cKY3BOyFIVRlf
+   I37zYW6wg9ZaxiZmKPjVnzz7SmlX3k1cRsE3ukPzCExwre157e5J3Tgfn
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.60,559,1549929600"; 
+   d="scan'208";a="769248080"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 06 Jun 2019 11:37:57 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id DB23CA2881;
+        Thu,  6 Jun 2019 11:37:56 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 6 Jun 2019 11:37:56 +0000
+Received: from [10.125.238.52] (10.43.160.177) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 6 Jun
+ 2019 11:37:48 +0000
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+ <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
+Date:   Thu, 6 Jun 2019 14:37:43 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190603222916.20698-8-simon@nikanor.nu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060085
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060085
+In-Reply-To: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.177]
+X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 12:29:16AM +0200, Simon Sandström wrote:
-> Step 11 was removed from kp2000_pcie_probe in a previous commit but the
-> comment was not changed to reflect this, so do it now.
-> 
-> Signed-off-by: Simon Sandström <simon@nikanor.nu>
-> ---
->  drivers/staging/kpc2000/kpc2000/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
-> index 2d8d188624f7..cd3876f1ce17 100644
-> --- a/drivers/staging/kpc2000/kpc2000/core.c
-> +++ b/drivers/staging/kpc2000/kpc2000/core.c
-> @@ -501,7 +501,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
->  		goto out10;
->  
->  	/*
-> -	 * Step 12: Enable IRQs in HW
-> +	 * Step 11: Enable IRQs in HW
 
-I don't have a problem with this patch but for the future these numbers
-don't add any value.  And the numbered out labels are sort of ugly.  The
-label name should say what the label does just like a function name says
-what the function does.  Really a lot of these comments in the probe
-function are very obvious and don't add information (delete them).
+>> Disagree. The various drivers don't depend on each other.
+>> I think we should keep the drivers separated as they are distinct and independent IP blocks.
+> But they don't exist in isolation, they both depend on the integration-choices/firmware
+> that makes up your platform.
+>
+> Other platforms may have exactly the same IP blocks, configured differently, or with
+> different features enabled in firmware. This means we can't just probe the driver based on
+> the presence of the IP block, we need to know the integration choices and firmware
+> settings match what the driver requires.
+>
+> (Case in point, that A57 ECC support is optional, another A57 may not have it)
+>
+> Descriptions of what firmware did don't really belong in the DT. Its not a hardware property.
+>
+> This is why its better to probe this stuff based on the machine-compatible/platform-name,
+> not the presence of the IP block in the DT.
+>
+>
+> Will either of your separate drivers ever run alone? If they're probed from the same
+> machine-compatible this won't happen.
+>
+>
+> How does your memory controller report errors? Does it send back some data with an invalid
+> checksum, or a specific poison/invalid flag? Will the cache report this as a cache error
+> too, if its an extra signal, does the cache know what it is?
+>
+> All these are integration choices between the two IP blocks, done as separate drivers we
+> don't have anywhere to store that information. Even if you don't care about this, making
+> them separate drivers should only be done to make them usable on other platforms, where
+> these choices may have been different.
 
+James,
 
-   491          /*
-   492           * Step 9: Setup sysfs attributes
-   493           */
-   494          err = sysfs_create_files(&(pdev->dev.kobj), kp_attr_list);
+Thanks for the prompt responses.
 
-The comment is probably less informative than the code.
+ From our perspective, l1/l2 has nothing to do with the ddr memory 
+controller.
 
-   495          if (err) {
-   496                  dev_err(&pdev->dev, "Failed to add sysfs files: %d\n", err);
-   497                  goto out9;
+Its right that they both use same edac subsystem but they are using 
+totally different APIs of it.
 
-What does goto out9 do?
+We also even want to have separate control for enabling/disabling l1/l2 
+edac vs memory controller edac.
 
-   498          }
-   499  
-   500          /*
-   501           * Step 10: Probe cores
-   502           */
-   503          err = kp2000_probe_cores(pcard);
-   504          if (err)
-   505                  goto out10;
+Even from technical point-of-view L1/L2 UE collection method is totally 
+different from collecting memory-controller UE. (CPU exception vs actual 
+interrupts).
 
-Hopefully, goto out10 deletes the sysfs files but we don't know because
-the label doesn't give any clues away.  We have to search for it and
-then come back.
+So there is less reason why to combine them vs giving each one its own 
+file, e.g. al_mc_edac, al_l1_l2_edac (I even don't see why Hanna 
+combined l1 and l2...)
 
-   506  
-   507          /*
-   508           * Step 12: Enable IRQs in HW
-   509           */
-   510          writel(KPC_DMA_CARD_IRQ_ENABLE | KPC_DMA_CARD_USER_INTERRUPT_MODE,
-   511                 pcard->dma_common_regs);
-   512  
-   513          dev_dbg(&pcard->pdev->dev, "kp2000_pcie_probe() complete!\n");
-   514          mutex_unlock(&pcard->sem);
-   515          return 0;
-   516  
-   517  out10:
+As we don't have any technical relation between the two we would rather 
+avoid this combination.
 
-err_remove_sysfs:
+Also, Lets assume we have different setups with different memory 
+controllers, having a dt binding to control the difference is super easy 
+and flexible.
 
-   518          sysfs_remove_files(&(pdev->dev.kobj), kp_attr_list);
-   519  out9:
+Would having a dedicated folder for amazon ease the move to separate files?
 
-err_free_irq:
+Thanks,
 
-   520          free_irq(pcard->pdev->irq, pcard);
-   521  out8b:
+Talel.
 
-err_disable_msi:
-
-   522          pci_disable_msi(pcard->pdev);
-   523  out8a:
-   524  out7:
-   525  out6:
-
-err_unmap_dma:
-
-   526          iounmap(pcard->dma_bar_base);
-   527          pci_release_region(pdev, DMA_BAR);
-   528          pcard->dma_bar_base = NULL;
-   529  out5:
-
-err_unmap_regs:
-
-   530          iounmap(pcard->regs_bar_base);
-   531          pci_release_region(pdev, REG_BAR);
-   532          pcard->regs_bar_base = NULL;
-
-Something like that is way more useful because then you don't have to
-scroll back and forth because new the label names are useful.
-
-regards,
-dan carpenter
+>
+> Thanks,
+>
+> James
