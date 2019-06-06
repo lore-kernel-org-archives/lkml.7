@@ -2,180 +2,109 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA32C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AB4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD3020872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8445120872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ptIZ7O3D"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="enaoKJ57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfFFTJU (ORCPT
+        id S1728841AbfFFTKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:09:20 -0400
-Received: from sonic309-27.consmr.mail.gq1.yahoo.com ([98.137.65.153]:38297
-        "EHLO sonic309-27.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728786AbfFFTJT (ORCPT
+        Thu, 6 Jun 2019 15:10:33 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46974 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfFFTKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:09:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559848158; bh=KPinPwVYIStvQmTsZ8fVXryXE8chlEpKVcNaTLUqBkk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=ptIZ7O3DcCuP6w96YCf4TBwwelJOiWXKMueXaWyXXS5Hq4SYnr+yqA27IH0WbMQoPfbRbUAYQs6alr5jVMqntnHFO0+yYMLbtHu07P99vBJBR/ZbfP/q9g/AKfkOdYByqCRzi+YL7ZJCWcaOAIEP7aXHhA+KDM4seVJqvsWL4U6YdwfiAFzsG7yKAAHLbLvLFtIXtgAOEmLhSo7X254jAXTBVLDORGqw7jcx9cMvHyg+LgwOfgJEhz6RBLYq9HcoWq5RwT9x3qkQ5xp1LGAcf5td6F5w5rSU1teFRtvLCtzee7HmPQeoel+4MeK+9HKpsCKhfyBWCLA8zx5soQhZ9w==
-X-YMail-OSG: hwHY0p4VM1kwRqNYlfVs6s8UA1io1Qfjq69S3APVqgYmJdqbzWmf7qM_wuOVZb0
- 44B5oxy_HtlaNFHz1uTJf25C.0moouu50bDEYxg10avFv2azcLT5bO5NUW5OB.7OuBR3w7_Hvj1A
- qRg3JQPakoyrYycrPfyDrpK2jBhxa2Mdf3vI1UQGdWpt6zyg1YDdBr_cw0QZ4Ycor4QVTJWG4INZ
- KCPv4gPoKYY6XYoR3PusfzS66bJlVp3kcjYoAd_GOEcD8a4jxnw0dkJD3MZE_vu36MPjSMDBVbX.
- 3NI8PTxJCV2tvu.v89yCWsiHuXhXDNl2A9TSOZlNEWsPz38IOJNXg4E2ZZLofdgqdcAAQhJg6Blm
- Se8VrP0PeDPtyklbpBV.Rm0xbDt3YbU7duji7YUvhWcJJrNWmEeFk6.fMCjeuKlNRSZls6KmGc0n
- eA.xZmw9ke9PqoPJ46MkZvUOQBBjhHiTbtvcIMOsWtXXQyfpu3yMCzCjNN9.nZazEHY3I6NCBW9Q
- v9KjC5tcfmQzzFOR3dWxL.WUhU7h.c9VomQfQgDtola0.PJobrTTeuUs.F2WZN5ONR7Demk4b9Rd
- K8XJUV0RjdcpPpcCVMrLwC.IzIlM4Pw_ko6TeA8mTH_gvceK_S4WUgnw1GlZACwnTPTP5dPLZ1V2
- BUxvg704FI_grQNcp7zt5Astvviru298J3zooXyAQQ7kADqT0ygNTtkECAolkQk7dJDgb8byXr0a
- kqGxMasgw8.De0uWywq6vWLnb0t91_rXwEZr17HHGAMhtBDk0R7Ri03asoPYZKATX2d4Y778N7H8
- 6EaJ4m8z8TB9ulLUSLa_.ztDkP6Lszm3_ihfLVrD8kp.q8Od.xl99cvIM2MyLj2GDDPdWv_lXGCH
- 1eBPljjZGzXWQHP4VxUcrDfDX2V6pfgGfXySasOB9ZYxN0M2KcpH.yy.CS31YvIcy1_4FPMcxy9J
- LIOJRrDOLIMcSP_55W0mMNvXFTbrF7gWQQ01eYcm.l2.TSh9KZOT5l2OAo_VgT2N2btyTh1sX.Bd
- _7gEkXyp6CFX9W_bT5PeCNVkjUOW2O54CFrvVfd0LW_Gu2wiVocWlWw._qFwB9Iv4.kTi_Fbu3Hn
- .j9mF9JRzytmZ91owEN15vId6q6qPWt7sUkDLojxv16KscbX6Qr7R51Ii6bX1trZZJi2uiRlXjs0
- G1i12exe9mz4FcI3AZza6l2YZfzpacHYfYwUmSjk04_fOIX.Z3QBy36o0qKVPGoKEC1sWVf5Uq8p
- AVaeu2iyQUIXNvUVMcQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 6 Jun 2019 19:09:18 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp416.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b9532036bed4f2064fc104d314331dec;
-          Thu, 06 Jun 2019 19:09:13 +0000 (UTC)
-Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last
- fputter's creds [ver #3]
-To:     Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
- <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
- <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net>
- <11031.1559833574@warthog.procyon.org.uk>
- <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <e434a62a-d92a-c6e2-cda1-309ac99d4d5c@schaufler-ca.com>
-Date:   Thu, 6 Jun 2019 12:09:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+        Thu, 6 Jun 2019 15:10:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 81so829617pfy.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:10:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iq2ZMOKhxG40k3ZjkkAfD8/mhEY6iwy4v663CmYVX5Q=;
+        b=enaoKJ57+AWkQ/VcvXkyxXhGlqXFGFOA4xotHL8PViRCGoywuFOLat/NWbwVKMJRsv
+         /6zQrNaJ/cDsC6+AIUtQfT7+hSekvAbQRzbG+qaghYV1vBxnYVc15Dubhn5p/wGgF9C0
+         qYorLZzRxLxQgeQRYQWkc09mR1WoWRq8CbOmrM88g/lRcS5jm0LYcxiabWtbQHrvNkaM
+         dIxA9UpmM+zdTDic/w9UuUE7kWVNHRKuf0BRjNIM+PHVO3d+u2FGXZ3twojCUvuWkrvx
+         Rk5DdAzQV1rEkUg4pyUMZ3jneiFRWmLJcal3R4IGVvVE8z/g47u+QICQFjAskvWhaAKk
+         mZgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iq2ZMOKhxG40k3ZjkkAfD8/mhEY6iwy4v663CmYVX5Q=;
+        b=FsL49qRuuCbpXrij7fyS5zKY5yUmGTsFtdCl3PeL78T+R+n4D1IpVmmkelkY04s1qT
+         dE5AcLGrbWAYeHI7BxAkq+pR6WkswUM9N7APvx3uBrPWytUPTxd9K0fkZ5vFF1FCQkaU
+         f4Vxi+Ps9/EB4vkIRDsQN9azLstRBRpG1vLowZ5N2ORWllytbh61r3GJFyMApeNxmpAO
+         L6xuG+OQGJHnaUffmsR7aKsHGsEgvCqV+8avmPdqwUIqKP8kUx/Y9hFQsdZ7m+nS5+yG
+         UNkhz4bMlNHqKkC2oKEcqQxlaVH0u22lMkRL2/+hdAVx11ic6tsbkDmr/3A39Y9G1STg
+         i3dg==
+X-Gm-Message-State: APjAAAV+0Kt6Am1oAO8MNEnkfCZctZivMUxomq+U6uPhckLI9SViYlWZ
+        gWFfr64etN8jutOP9BvR83YGHw==
+X-Google-Smtp-Source: APXvYqwd5dsw5v4s6YM7SnjJ88V7ez2g5lofdM2+M1Q+bnvTbwqCj3SskP3oB92MGYpTz2nDFDvQtg==
+X-Received: by 2002:a62:750c:: with SMTP id q12mr33795301pfc.59.1559848232489;
+        Thu, 06 Jun 2019 12:10:32 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id z15sm2307084pge.40.2019.06.06.12.10.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 12:10:31 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 12:10:31 -0700 (PDT)
+X-Google-Original-Date: Thu, 06 Jun 2019 12:09:29 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: Break load reservations during switch_to
+In-Reply-To: <20190606090518.GB1369@infradead.org>
+CC:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+        me@carlosedp.com, joel@sing.id.au, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Message-ID: <mhng-ea7cfd57-8e3a-49e6-8f95-74c009001774@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/2019 10:18 AM, Andy Lutomirski wrote:
-> On Thu, Jun 6, 2019 at 8:06 AM David Howells <dhowells@redhat.com> wrot=
-e:
->> Andy Lutomirski <luto@amacapital.net> wrote:
->>
->>>> So that the LSM can see the credentials of the last process to do an=
- fput()
->>>> on a file object when the file object is being dismantled, do the fo=
-llowing
->>>> steps:
->>>>
->>> I still maintain that this is a giant design error.
->> Yes, I know.  This was primarily a post so that Greg could play with t=
-he USB
->> notifications stuff I added.  The LSM support isn't resolved and is un=
-changed.
->>
->>> Can someone at least come up with a single valid use case that isn't
->>> entirely full of bugs?
->> "Entirely full of bugs"?
-> I can say "hey, I have this policy that the person who triggered an
-> event needs such-and-such permission, otherwise the event gets
-> suppressed".  But this isn't a full use case, and it's buggy.  It's
-> not a full use case because I haven't specified what my actual goal is
-> and why this particular policy achieves my goals.  And it's entirely
-> full of bugs because, as this patch so nicely illustrates, it's not
-> well defined who triggered the event.  For example, if I exec a setuid
-> process, who triggers the close?  What if I send the fd to systemd
-> over a socket and immediately close my copy before systemd gets (and
-> ignores) the message?  Or if I send it to Wayland, or to any other
-> process?
+On Thu, 06 Jun 2019 02:05:18 PDT (-0700), Christoph Hellwig wrote:
+> On Wed, Jun 05, 2019 at 04:17:35PM -0700, Palmer Dabbelt wrote:
+>>  	REG_S ra,  TASK_THREAD_RA_RA(a3)
+>> +	/*
+>> +	 * The Linux ABI allows programs to depend on load reservations being
+>> +	 * broken on context switches, but the ISA doesn't require that the
+>> +	 * hardware ever breaks a load reservation.  The only way to break a
+>> +	 * load reservation is with a store conditional, so we emit one here.
+>> +	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
+>> +	 * know this will always fail, but just to be on the safe side this
+>> +	 * writes the same value that was unconditionally written by the
+>> +	 * previous instruction.
+>> +	 */
+>> +#if (TASK_THREAD_RA_RA != 0)
 >
-> A file is closed when everyone is done with it.  Trying to figure out
-> who the last intentional user of the file was seems little better than
-> random guessing.  Defining a security policy based on it seems like a
-> poor idea.
+> I don't think this check works as intended.  TASK_THREAD_RA_RA is a
+> parameterized macro, thus the above would never evaluate to 0. The
+> error message also is rather odd while we're at it.
+
+OK, I didn't try it.  The resulting number can never be non-zero, which is why
+I couldn't come up with an error message that made sense.  I'm not opposed to
+dropping the check.
+
+>> +#if (__riscv_xlen == 64)
+>> +	sc.d  x0, ra, 0(a3)
+>> +#else
+>> +	sc.w  x0, ra, 0(a3)
+>> +#endif
 >
->> How would you propose I deal with Casey's requirement?  I'm getting th=
-e
->> feeling you're going to nak it if I try to fulfil that and he's going =
-to nak
->> it if I don't.
->>
-> Casey, I think you need to state your requirement in a way that's well
-> defined, and I think you need to make a compelling case that your
-> requirement is indeed worth dictating the design of parts of the
-> kernel outside LSM.
+> I'd rather add an macro ala REG_S to asm.h and distinguish between the
+> xlen variants there:
+>
+> #define REG_SC		__REG_SEL(sc.d, sc.w)
 
-Err, no, I don't believe so. There's a whole lot more
-going on in this discussion than just what's going on
-within the LSMs. Using examples from the LSMs makes it
-easier, because their policies are better defined than
-the "legacy" policies are. The most important part of the
-discussion is about ensuring that the event mechanism
-doesn't circumvent the legacy policies. Yes, I understand
-that you don't know what that means, or has to do with
-anything.
-
-
+Ya, I guess I was just being lazy.  I'll put that in a v2.
