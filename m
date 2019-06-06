@@ -2,131 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03801C46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40787C28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07E220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DD120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzYruU5/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPRtYV37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfFFJBl (ORCPT
+        id S1727688AbfFFJB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:01:41 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37449 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfFFJBk (ORCPT
+        Thu, 6 Jun 2019 05:01:56 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36306 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfFFJB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:01:40 -0400
-Received: by mail-it1-f195.google.com with SMTP id x22so570048itl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:01:40 -0700 (PDT)
+        Thu, 6 Jun 2019 05:01:56 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u8so1556508wmm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dv2WG1P4LjGl9htxi8ki1M85cFA09s4aSi2ztouswF0=;
-        b=zzYruU5/yv3X3MlFghh/z+xye0n/tQWAIaEqAwbUGoDidiM9qML6aHBOgqhV64UbjT
-         RPSYJHLYgx82k45AhD85pqDyd/wsfRBQQGaqe6jJqGAKjdnRiidIdTB8+n7ZRLnpp6Cb
-         004JCYY+4uRtsRlkJClJ+DmEhhfgLjT2NpaD3bxEM54y2NB1NEpwCx/z4igTkr8cOHdZ
-         aCynjpFrCtSVugnDA6MKNsWNgQ8WB9b/w27bzJtgkf75OY8NnK0vPhxTeK2YoYRuqPJj
-         7CW4QZL7KTco3/9La0nnjcaQMuDNIylHUVsg+XqO3xwuMhlQk+H0D8CAdMG05y4FrzRl
-         d2dA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=XsXyUphPtrpmwNj/tQvXOzDyUWyjFiksviUlxn2x1xY=;
+        b=jPRtYV37F5H6T51+0EEEzb6L+y4m15NKpBkJZJFTRiRIciqq9Zm3Hei777tnOIG1ui
+         buu+70/Fry97b2sseowzbUhWgq7BmnBhwG0xgFWfyqMH+ltj8gGdal6SLpwrby+nZSK4
+         8cVBRlsankeY0OaXrBwQq6+T9jzWfRYFE200f4HE/UkI1szgWnPLFwACViFtJhkTD0wx
+         Forwu9djdKm3Oqzmtp8PDZ+SAKYb7NMjoigkxzzXJpg3WgsOq+ejuWI1K4WQCYsSdmwz
+         LahEdWRI3DN6iD+YdqwMLfmkUPMEIVX6msiswuKeSJfm0uhMw6rGjB3VRkojh7AKOxZJ
+         IsnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dv2WG1P4LjGl9htxi8ki1M85cFA09s4aSi2ztouswF0=;
-        b=Jz3zcpy0Lw/GKU63pFru0Bs2OYavvelUM3MUk0g572MYZ5XcaAsKo/IwrbgWVWCHsa
-         5lwY5DaendrRrtTPnweDs0Bv/uQg9e4xg28JFhpdyI6RBnjKhW33RAhp8I9LYKpxqrTs
-         cbaV/Q7KwToiVMPb90JMxIrkp5FYpYseH0O//Vgmk8kuIiFcEDAx/PDcf4EDV2wskFix
-         oantSAq2yG/l1sH3cu7u8d+wK4CGZ5SIe39sip3z6QOFQR+FIArSkq/ILIevMGBZ0y9n
-         /mZA4IFsQEHgCw9x6ghoaKV/gmHuF/loFqlW8eO0WbsckspNC2LCydmExx/YDEisBFnp
-         0e5g==
-X-Gm-Message-State: APjAAAWUygK8YEvFsljfxwyOaa+muDSygQA6AzJ8BjG1p+f6ismCiEsA
-        zwdeKDYicDNXtSPMGVRgi4+0Szc0Ozwb73FG7cMU0w==
-X-Google-Smtp-Source: APXvYqwToJWtoVVGRYuxXLAxq/qFM4S6nRzLQkRyaXZ8ORDXXXZqh/aB/0OMI7vljblumoE5aJmqEm+rvCIjADZ+owU=
-X-Received: by 2002:a05:660c:44a:: with SMTP id d10mr9193730itl.153.1559811699927;
- Thu, 06 Jun 2019 02:01:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XsXyUphPtrpmwNj/tQvXOzDyUWyjFiksviUlxn2x1xY=;
+        b=qnGftnbPJhZV5CRv48yWwGqMt+x48OQQ+p7Eg8iTQ0AXI+h8hRJNRXBbyDxSZGAveG
+         Wrm78D8aOR5BbdfMEivup2TAS4Tv9jlh1WXny1BsmIOG38ObybxdpDN3YvK1G+16a5/R
+         sxPn3VOELx3SvFQY/iBpEtzqFWI3wbkp6P0cJqU/KWn3XSlvJJX6qpbDxYjvi17S/7jC
+         fu1aQE6oAEEMXsXVLnYyQvFmg9yv+4+nVfiNkM5x6FGmshGXa9YFP7Mr2mi87pawMXjz
+         UtdmMPhvNEg0fF6IHcdFpesYC1b5GnxIrl6YV9KDMKPAvesWk5nqE3iSYfUO5STVCWAo
+         Lu/Q==
+X-Gm-Message-State: APjAAAUozqi6gqDCk3rQeLpWl7jugxYUA6S8gdtlY1N2KxKKQb+Um9Sd
+        X2I3aX7DbP+0f3Mwa5kLrj2Y0Q==
+X-Google-Smtp-Source: APXvYqzpjAMsL4kFCIOQCphvdkprJtRfTs+MHBHE8LspKB/dTrHj5S+CowpuwI0kC86fgNpnMMfrvQ==
+X-Received: by 2002:a1c:f408:: with SMTP id z8mr25104651wma.140.1559811714426;
+        Thu, 06 Jun 2019 02:01:54 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id l19sm911488wmj.33.2019.06.06.02.01.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 02:01:53 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 10:01:52 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
+Message-ID: <20190606090152.GC4797@dell>
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
+ <20190606055034.GA4797@dell>
+ <20190606072601.GT22737@tuxbook-pro>
+ <20190606081348.GB4797@dell>
+ <e58a039d-fed4-0636-e17c-86f721ff5785@free.fr>
 MIME-Version: 1.0
-References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
- <8696846.WsthzzWoxp@devpool35> <1993275.kHlTELq40E@devpool35>
-In-Reply-To: <1993275.kHlTELq40E@devpool35>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 6 Jun 2019 11:01:26 +0200
-Message-ID: <CAKv+Gu9oq+LseNvB9h1u+Q7QVOJFJwm_RyE1dMRgeVuL6D9fNQ@mail.gmail.com>
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
- (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-To:     Rolf Eike Beer <eb@emlix.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e58a039d-fed4-0636-e17c-86f721ff5785@free.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 09:50, Rolf Eike Beer <eb@emlix.com> wrote:
->
-> Am Donnerstag, 6. Juni 2019, 09:38:41 CEST schrieb Rolf Eike Beer:
-> > Greg KH wrote:
-> > > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
-> > > > I decided to dig out a toy project which uses a DragonBoard 410c. This
-> > > > has
-> > > > been "running" with kernel 4.9, which I would keep this way for
-> > > > unrelated
-> > > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was
-> > > > buildable, which was good enough.
-> > > >
-> > > > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
-> > > >
-> > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in function
-> > > > `handle_kernel_image':
-> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63
-> > > > :
-> > > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
-> > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocation
-> > > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
-> > > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be
-> > > > used when making a shared object; recompile with -fPIC
-> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63
-> > > > :
-> > > > (.init.text+0xc): dangerous relocation: unsupported relocation
-> > > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux'
-> > > > failed -make[1]: *** [vmlinux] Error 1
-> > > >
-> > > > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
-> > > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be),
-> > > > reverting
-> > > > this commit fixes the build.
-> > > >
-> > > > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.0.
-> > > > See
-> > > > the attached .config for reference.
-> > > >
-> > > > If you have questions or patches just ping me.
-> > >
-> > > Does Linus's latest tree also fail for you (or 5.1)?
-> >
-> > 5.1.7 with the same config as before and "make olddefconfig" builds for me.
->
-> Just for the fun of it: both 4.19 and 4.19.48 also work.
->
+On Thu, 06 Jun 2019, Marc Gonzalez wrote:
 
-Thanks Rolf
+> On 06/06/2019 10:13, Lee Jones wrote:
+> 
+> > On Thu, 06 Jun 2019, Bjorn Andersson wrote:
+> > 
+> >> On Wed 05 Jun 22:50 PDT 2019, Lee Jones wrote:
+> >>
+> >>> On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
+> >>>
+> >>>> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> >>>> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> >>>>
+> >>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >>>> ---
+> >>>>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+> >>>>  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
+> >>>>  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+> >>>
+> >>> What's happening with this patch?
+> >>>
+> >>
+> >> The thermal-zones are wrong, but I'm okay with an incremental patch for
+> >> that...
+> > 
+> > I guess it would take you about 10 seconds to whip those out when
+> > merging?
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/commit/?h=for-next&id=ad480e0149cfc10defe76e88354b977360adb7a1
+> 
+> AFAIU, the fixup is to just drop the thermal-zones section altogether.
 
-Could you please check whether patch
-60f38de7a8d4e816100ceafd1b382df52527bd50 applies cleanly, and whether
-it fixes the problem? Thanks.
+Yes, exactly.  A 10 second job.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
