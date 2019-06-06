@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB85C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92717C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EFB20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A29220872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zh8eNxLV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EK+JXrEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfFFH5B (ORCPT
+        id S1726984AbfFFH5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:57:01 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37108 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfFFH5A (ORCPT
+        Thu, 6 Jun 2019 03:57:10 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46772 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfFFH5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:57:00 -0400
-Received: by mail-yb1-f196.google.com with SMTP id l66so608018ybf.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:56:59 -0700 (PDT)
+        Thu, 6 Jun 2019 03:57:06 -0400
+Received: by mail-yw1-f66.google.com with SMTP id v188so497493ywb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:57:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e2oYBhfvK7ZPiWOEwi/H0aRHGINCuJ9bdzg0oB3t3I8=;
-        b=Zh8eNxLVnPty5J/NWX1zW05wsPNNZWyvKzHuwuWPy86z2xqivWNWZM/j/ppvwdeVuj
-         LHr3pH8+MHJhMqFcaGS+NbuJHQfZhcdzRIJCurDHb7q8kRkGuflNOqzxt/vecFg++PSn
-         lku9coxsyZK+/Fad+hdtdoqKRjenEj9owObNe43aldBYv5qDQacIrU6AIUWtlSgcxm1V
-         ToLzsFz2muoT5Z8TnjBEvend61T5l9DlsUVI8H9NrDbweLlHWqtnAyJxCmrfOjsiWSuB
-         gSsZIDeK80kz4W7cPKSQ3KXiza/hZnKz8+xW0p6i4AWH65z/VmBKL08y5YaV/tPZXqkQ
-         nQ0Q==
+        bh=uI1TPeuSd92UbPS5N8KX6krfL9bLASM56BYU9fb4POc=;
+        b=EK+JXrEb8VZeAve5rLD+Ic/Gr9G7cOKUKRQnt3SOMK+SMmMPKBMI+B0StZwtvAWh1D
+         aBEv5d/DrZVVRllIXm915E2xHNU8V5RG/EiWbcA/AbyqyqyiFJOrT83ecKGDkF7i9tJY
+         GpckMQnpe3QSIqMStsVcUDMErMzwZ4opdg5k7/YHlRovgOSvj9xRCuITR2V/S9RX+FBc
+         U7vAhEqS/GK2I3xjJGUiyIMMXYRGNUY8a4ut5u4Y5q+Hwcvw+ATyrJdCFA1295pinl45
+         lDcxuOjC2Jy+XnANxtciH4TLAqcmexvePomh1YCeWNPFD8cxJmHmXf09mKK+2o9etBYr
+         mVoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=e2oYBhfvK7ZPiWOEwi/H0aRHGINCuJ9bdzg0oB3t3I8=;
-        b=VsbpNsrWpKamMENHl/5C2XOV5XEdO+t1asnJTC0F5VGqiNIa+yawz6UaWxK3HG6mtv
-         5Lz9qFxF1b66G6OTi4hFnaY7Mn3AuTsw7jOUQCPtTN4gNe5BqQcvl3ldEPZ7a4lPFujO
-         U2oI15VlmZuTpgA96kpKaqX8qGqBooE0+w7uHlvE7joyOOBbvBNltB/+lVBZqzI5C82+
-         lOkRBodwl5N8mO2JIOfD5uq3yNtFQt0FPF3R5IR+X+iTEqW3ihI0/VDLv6K0UCLfcP8z
-         PXu+68XxQzs0SuMMcokhJP0cwveIFKEsUGBZ0CO+3kmad7XAcx/ULIvn9N08MU1HgA4R
-         3bnw==
-X-Gm-Message-State: APjAAAXbu8JMhZojyIq54KTs4QTHueN0CNyOkakBjAvZTiiv2opUNJjU
-        0q3Ytv94UbOqaoiceklhJpyqaQ==
-X-Google-Smtp-Source: APXvYqz7Po+W5FooKy6Uj799RsupY9ZIZ6Five50fE4OPPlLJlLdoL5iA5N58AlbdYHCmsOeC9WWmw==
-X-Received: by 2002:a25:6b46:: with SMTP id o6mr14097845ybm.392.1559807819058;
-        Thu, 06 Jun 2019 00:56:59 -0700 (PDT)
+        bh=uI1TPeuSd92UbPS5N8KX6krfL9bLASM56BYU9fb4POc=;
+        b=VwdLyYXD8mJHIjeOmsxbEOkTIZgIg0krY5Rqmgz2ONMXefFCx8szI6wTHR1bQGtSC0
+         t5ZuKIjff7H6TxeTWQNkxaghru2THccJ7Rfbdzaw6/AOAnfkvQZGt4CG+gl0Ojg3H8IM
+         lkxf8AOGOF90O5AhB3gFvJr45OxLJywMzhiYtHeNdXug5BuykitiFqSUBWIVrqVpNr1z
+         fcWorRU1WqENDMyULc26mE9/ZIVBdOeZgUuxYCg6XRu5MgCLE1ql/AeZExRpesZo17f/
+         bbCoNlbeI2CUAB2Xjs1+HDMZU4sGwu9aDjMo/qT9LlBpDeT5EbE8zvUKIoQKMYfo5/HG
+         eL6Q==
+X-Gm-Message-State: APjAAAWZcdLhATE+i2yAjZvWocP/uH3duVPf/tD5qasmv6HSeKuQdQGW
+        h1wyRd38N9F7yJjRxvNc7SKoTw==
+X-Google-Smtp-Source: APXvYqwawStzIwou/O3xsYrAU5aPquQ94myNiyOSNQU3EYzZCpIHUF8OmPh0kwyflIJZ2LrFUHDCEQ==
+X-Received: by 2002:a81:308d:: with SMTP id w135mr5488572yww.110.1559807825644;
+        Thu, 06 Jun 2019 00:57:05 -0700 (PDT)
 Received: from localhost.localdomain (li1322-146.members.linode.com. [45.79.223.146])
-        by smtp.gmail.com with ESMTPSA id 14sm316343yws.16.2019.06.06.00.56.53
+        by smtp.gmail.com with ESMTPSA id 14sm316343yws.16.2019.06.06.00.56.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 00:56:58 -0700 (PDT)
+        Thu, 06 Jun 2019 00:57:05 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -71,9 +71,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 3/4] perf augmented_raw_syscalls: Support arm64 raw syscalls
-Date:   Thu,  6 Jun 2019 15:56:16 +0800
-Message-Id: <20190606075617.14327-4-leo.yan@linaro.org>
+Subject: [PATCH v1 4/4] perf augmented_raw_syscalls: Document clang configuration
+Date:   Thu,  6 Jun 2019 15:56:17 +0800
+Message-Id: <20190606075617.14327-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190606075617.14327-1-leo.yan@linaro.org>
 References: <20190606075617.14327-1-leo.yan@linaro.org>
@@ -82,119 +82,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for arm64 raw syscall numbers so that we can use
-it on arm64 platform.
+To build this program successfully with clang, there have three
+compiler options need to be specified:
 
-After applied this patch, we need to specify macro -D__aarch64__ or
--D__x86_64__ in compilation option so Clang can use the corresponding
-syscall numbers for arm64 or x86_64 respectively, other architectures
-will report failure when compilation.
+  - Header file path: tools/perf/include/bpf;
+  - Specify architecture;
+  - Define macro __NR_CPUS__.
+
+This patch add comments to explain the reasons for building failure and
+give two examples for llvm.clang-opt variable, one is for x86_64
+architecture and another is for aarch64 architecture.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ .../examples/bpf/augmented_raw_syscalls.c     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 5c4a4e715ae6..f4ed101b697d 100644
+index f4ed101b697d..5adc0b3bb351 100644
 --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -45,6 +45,84 @@ struct augmented_filename {
- 	char		value[PATH_MAX];
- };
- 
-+#if defined(__aarch64__)
+@@ -6,6 +6,25 @@
+  *
+  * perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c cat /etc/passwd > /dev/null
+  *
++ * This program include two header files 'unistd.h' and 'pid_filter.h', which
++ * are placed in the folder tools/perf/include/bpf, but this folder is not
++ * included in env $KERNEL_INC_OPTIONS and it leads to compilation failure.
++ * For building this code, we also need to specify architecture and define macro
++ * __NR_CPUS__.  To resolve these issues, variable llvm.clang-opt can be set in
++ * the file ~/.perfconfig:
++ *
++ * E.g. Test on a platform with 8 CPUs with x86_64 architecture:
++ *
++ *   [llvm]
++ *		clang-opt = "-D__NR_CPUS__=8 -D__x86_64__ \
++ *			     -I./tools/perf/include/bpf"
++ *
++ * E.g. Test on a platform with 5 CPUs with aarch64 architecture:
++ *
++ *   [llvm]
++ *		clang-opt = "-D__NR_CPUS__=5 -D__aarch64__ \
++ *			     -I./tools/perf/include/bpf"
 +
-+/* syscalls where the first arg is a string */
-+#define SYS_OPEN               1024
-+#define SYS_STAT               1038
-+#define SYS_LSTAT              1039
-+#define SYS_ACCESS             1033
-+#define SYS_EXECVE             221
-+#define SYS_TRUNCATE           45
-+#define SYS_CHDIR              49
-+#define SYS_RENAME             1034
-+#define SYS_MKDIR              1030
-+#define SYS_RMDIR              1031
-+#define SYS_CREAT              1064
-+#define SYS_LINK               1025
-+#define SYS_UNLINK             1026
-+#define SYS_SYMLINK            1036
-+#define SYS_READLINK           1035
-+#define SYS_CHMOD              1028
-+#define SYS_CHOWN              1029
-+#define SYS_LCHOWN             1032
-+#define SYS_MKNOD              1027
-+#define SYS_STATFS             1056
-+#define SYS_PIVOT_ROOT         41
-+#define SYS_CHROOT             51
-+#define SYS_ACCT               89
-+#define SYS_SWAPON             224
-+#define SYS_SWAPOFF            225
-+#define SYS_DELETE_MODULE      106
-+#define SYS_SETXATTR           5
-+#define SYS_LSETXATTR          6
-+#define SYS_GETXATTR           8
-+#define SYS_LGETXATTR          9
-+#define SYS_LISTXATTR          11
-+#define SYS_LLISTXATTR         12
-+#define SYS_REMOVEXATTR        14
-+#define SYS_LREMOVEXATTR       15
-+#define SYS_MQ_OPEN            180
-+#define SYS_MQ_UNLINK          181
-+#define SYS_ADD_KEY            217
-+#define SYS_REQUEST_KEY        218
-+#define SYS_SYMLINKAT          36
-+#define SYS_MEMFD_CREATE       279
-+
-+/* syscalls where the second arg is a string */
-+#define SYS_PWRITE64           68
-+#define SYS_EXECVE             221
-+#define SYS_RENAME             1034
-+#define SYS_QUOTACTL           60
-+#define SYS_FSETXATTR           7
-+#define SYS_FGETXATTR          10
-+#define SYS_FREMOVEXATTR       16
-+#define SYS_MQ_TIMEDSEND       182
-+#define SYS_REQUEST_KEY        218
-+#define SYS_INOTIFY_ADD_WATCH  27
-+#define SYS_OPENAT             56
-+#define SYS_MKDIRAT            34
-+#define SYS_MKNODAT            33
-+#define SYS_FCHOWNAT           54
-+#define SYS_FUTIMESAT          1066
-+#define SYS_NEWFSTATAT         1054
-+#define SYS_UNLINKAT           35
-+#define SYS_RENAMEAT           38
-+#define SYS_LINKAT             37
-+#define SYS_READLINKAT         78
-+#define SYS_FCHMODAT           53
-+#define SYS_FACCESSAT          48
-+#define SYS_UTIMENSAT          88
-+#define SYS_NAME_TO_HANDLE_AT  264
-+#define SYS_FINIT_MODULE       273
-+#define SYS_RENAMEAT2          276
-+#define SYS_EXECVEAT           281
-+#define SYS_STATX              291
-+#define SYS_MOVE_MOUNT         429
-+#define SYS_FSPICK             433
-+
-+#elif defined(__x86_64__)
-+
- /* syscalls where the first arg is a string */
- #define SYS_OPEN                 2
- #define SYS_STAT                 4
-@@ -119,6 +197,10 @@ struct augmented_filename {
- #define SYS_MOVE_MOUNT         429
- #define SYS_FSPICK             433
- 
-+#else
-+#error "unsupported architecture"
-+#endif
-+
- pid_filter(pids_filtered);
- 
- struct augmented_args_filename {
+  * This exactly matches what is marshalled into the raw_syscall:sys_enter
+  * payload expected by the 'perf trace' beautifiers.
+  *
 -- 
 2.17.1
 
