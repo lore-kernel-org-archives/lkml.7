@@ -2,134 +2,127 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A11BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C26AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02502208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CF3208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbfFFVRS (ORCPT
+        id S1728195AbfFFVRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:17:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44388 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbfFFVRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:17:18 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC70644BC4;
-        Thu,  6 Jun 2019 21:17:15 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 572707838F;
-        Thu,  6 Jun 2019 21:17:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CALCETrVuNRPgEzv-XY4M9m6sEsCiRHxPenN_MpcMYc1h26vVwQ@mail.gmail.com>
-References: <CALCETrVuNRPgEzv-XY4M9m6sEsCiRHxPenN_MpcMYc1h26vVwQ@mail.gmail.com> <b91710d8-cd2d-6b93-8619-130b9d15983d@tycho.nsa.gov> <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk> <3813.1559827003@warthog.procyon.org.uk> <8382af23-548c-f162-0e82-11e308049735@tycho.nsa.gov> <0eb007c5-b4a0-9384-d915-37b0e5a158bf@schaufler-ca.com> <c82052e5-ca11-67b5-965e-8f828081f31c@tycho.nsa.gov> <07e92045-2d80-8573-4d36-643deeaff9ec@schaufler-ca.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [RFC][PATCH 00/10] Mount, FS, Block and Keyrings notifications [ver #3]
+        Thu, 6 Jun 2019 17:17:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727915AbfFFVRo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 17:17:44 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56L7Lfo115217
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 17:17:43 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sy7xef5a2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 17:17:42 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 6 Jun 2019 22:17:41 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Jun 2019 22:17:38 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56LHbXc27066732
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Jun 2019 21:17:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A6B5B2064;
+        Thu,  6 Jun 2019 21:17:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B183B2065;
+        Thu,  6 Jun 2019 21:17:37 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.216.200])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Jun 2019 21:17:36 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D275D16C362C; Thu,  6 Jun 2019 14:17:36 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 14:17:36 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: single copy atomicity for double load/stores on 32-bit systems
+Reply-To: paulmck@linux.ibm.com
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+ <20190531082112.GH2623@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
+ <20190603201324.GN28207@linux.ibm.com>
+ <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
+ <20190606094340.GD28207@linux.ibm.com>
+ <8d1666df180d4d01aaebb5d41370b338@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <23610.1559855827.1@warthog.procyon.org.uk>
-Date:   Thu, 06 Jun 2019 22:17:07 +0100
-Message-ID: <23611.1559855827@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 06 Jun 2019 21:17:17 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d1666df180d4d01aaebb5d41370b338@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060621-2213-0000-0000-0000039B2E67
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011224; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01214223; UDB=6.00638248; IPR=6.00995302;
+ MB=3.00027212; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-06 21:17:40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060621-2214-0000-0000-00005EBF501D
+Message-Id: <20190606211736.GW28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=988 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> wrote:
-
-> > > You are allowing arbitrary information flow between T and W above.  Who
-> > > cares about notifications?
-> >
-> > I do. If Watched object is /dev/null no data flow is possible.
-> > There are many objects on a modern Linux system for which this
-> > is true. Even if it's "just a file" the existence of one path
-> > for data to flow does not justify ignoring the rules for other
-> > data paths.
+On Thu, Jun 06, 2019 at 04:34:52PM +0000, David Laight wrote:
+> From: Paul E. McKenney
+> > Sent: 06 June 2019 10:44
+> ...
+> > But m68k is !SMP-only, correct?  If so, the only issues would be
+> > interactions with interrupt handlers and the like, and doesn't current
+> > m68k hardware use exact interrupts?  Or is it still possible to interrupt
+> > an m68k in the middle of an instruction like it was in the bad old days?
 > 
-> Aha!
-> 
-> Even ignoring security, writes to things like /dev/null should
-> probably not trigger notifications to people who are watching
-> /dev/null.  (There are probably lots of things like this: /dev/zero,
-> /dev/urandom, etc.)
+> Hardware interrupts were always on instruction boundaries, the
+> mid-instruction interrupts would only happen for page faults (etc).
 
-Even writes to /dev/null might generate access notifications; leastways,
-vfs_read() will call fsnotify_access() afterwards on success.
+OK, !SMP should be fine, then.
 
-Whether or not you can set marks on open device files is another matter.
+> There were SMP m68k systems (but I can't remember one).
+> It was important to continue from a mid-instruction trap on the
+> same cpu - unless you could guarantee that all the cpus had
+> exactly the same version of the microcode.
 
-> David, are there any notification types that have this issue in your
-> patchset?  If so, is there a straightforward way to fix it?
+Yuck!  ;-)
 
-I'm not sure what issue you're referring to specifically.  Do you mean whether
-writes to device files generate notifications?
+> In any case you could probably use the 'cmp2' instruction
+> for an atomic 64bit write.
+> OTOH setting that up was such a PITA it was always easier
+> to disable interrupts.
 
-> Generically, it seems like maybe writes to device nodes shouldn't trigger
-> notifications since, despite the fact that different openers of a device
-> node share an inode, there isn't necessarily any connection between them.
+Unless I am forgetting something, given that m68k is a 32-bit system,
+we should be OK without an atomic 64-bit write.
 
-With the notification types I have currently implemented, I don't even notice
-any accesses to a device file unless:
+							Thanx, Paul
 
- (1) Someone mounts over the top of one.
-
- (2) The access triggers an I/O error or device reset or causes the device to
-     be attached or detached.
-
- (3) Wangling the device causes some other superblock event.
-
- (4) The driver calls request_key() and that creates a new key.
-
-> Casey, if this is fixed in general, do you have another case where the
-> right to write and the right to read do not imply the right to
-> communicate?
-> 
-> > An analogy is that two processes with different UIDs can open a file,
-> > but still can't signal each other.
-> 
-> What do you mean "signal"?  If two processes with different UIDs can
-> open the same file for read and write, then they can communicate with
-> each other in many ways.  For example, one can write to the file and
-> the other can read it.  One can take locks and the other can read the
-> lock state.  They can both map it and use any number of memory access
-> side channels to communicate.  But, of course, they can't send each
-> other signals with kill().
-> 
-> If, however, one of these processes is using some fancy mechanism
-> (inotify, dnotify, kqueue, fanotify, whatever) to watch the file, and
-> the other one writes it, then it seems inconsistent to lie to the
-> watching process and say that the file wasn't written because some
-> security policy has decided to allow the write, allow the read, but
-> suppress this particular notification.  Hence my request for a real
-> example: when would it make sense to do this?
-
-Note that fanotify requires CAP_SYS_ADMIN, but inotify and dnotify do not.
-
-dnotify is applied to an open file, so it might be usable on a chardev such as
-/dev/null, say.
-
-David
