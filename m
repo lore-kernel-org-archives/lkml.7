@@ -2,99 +2,114 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C779C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1703D207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F35E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfFFIbT (ORCPT
+        id S1727225AbfFFIdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:31:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44688 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725267AbfFFIbT (ORCPT
+        Thu, 6 Jun 2019 04:33:20 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:42799 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfFFIdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:31:19 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x568S84X068566
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 04:31:18 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sxy8w8d06-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:31:17 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 6 Jun 2019 09:31:15 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Jun 2019 09:31:13 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x568VCln57278506
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Jun 2019 08:31:12 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7842E5204E;
-        Thu,  6 Jun 2019 08:31:12 +0000 (GMT)
-Received: from [9.199.33.95] (unknown [9.199.33.95])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5DC6052051;
-        Thu,  6 Jun 2019 08:31:06 +0000 (GMT)
-Subject: Re: [PATCH] Powerpc/Watchpoint: Restore nvgprs while returning from
- exception
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, benh@kernel.crashing.org, paulus@samba.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        mahesh@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190606072951.32116-1-ravi.bangoria@linux.ibm.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Thu, 6 Jun 2019 14:00:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 04:33:20 -0400
+Received: from localhost (aaubervilliers-681-1-24-139.w90-88.abo.wanadoo.fr [90.88.144.139])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 6C6F510001B;
+        Thu,  6 Jun 2019 08:33:08 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 10:33:07 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] media: cedrus: Add infra for extra buffers connected
+ to capture buffers
+Message-ID: <20190606083307.b5zpk4n6x3w6mtmb@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+ <20190530211516.1891-7-jernej.skrabec@siol.net>
+ <20190603121859.sbphcjy75kmed6oc@flea>
+ <3029072.frl2UAsRGt@jernej-laptop>
 MIME-Version: 1.0
-In-Reply-To: <20190606072951.32116-1-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060608-4275-0000-0000-0000033F4D72
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060608-4276-0000-0000-0000384F512B
-Message-Id: <162079d5-bfc2-0707-5c98-33e196ed5d96@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=826 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060062
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="llwlg2xtnnijika2"
+Content-Disposition: inline
+In-Reply-To: <3029072.frl2UAsRGt@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--llwlg2xtnnijika2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/6/19 12:59 PM, Ravi Bangoria wrote:
-> Powerpc hw triggers watchpoint before executing the instruction.
-> To make trigger-after-execute behavior, kernel emulates the
-> instruction. If the instruction is 'load something into non-
-> volatile register', exception handler should restore emulated
-> register state while returning back, otherwise there will be
-> register state corruption. Ex, Adding a watchpoint on a list
-> can corrput the list:
-> 
->   # cat /proc/kallsyms | grep kthread_create_list
->   c00000000121c8b8 d kthread_create_list
-> 
-> Add watchpoint on kthread_create_list->next:
+On Mon, Jun 03, 2019 at 05:48:25PM +0200, Jernej =C5=A0krabec wrote:
+> Dne ponedeljek, 03. junij 2019 ob 14:18:59 CEST je Maxime Ripard napisal(=
+a):
+> > > +static void cedrus_buf_cleanup(struct vb2_buffer *vb)
+> > > +{
+> > > +	struct vb2_queue *vq =3D vb->vb2_queue;
+> > > +
+> > > +	if (!V4L2_TYPE_IS_OUTPUT(vq->type)) {
+> > > +		struct cedrus_ctx *ctx =3D vb2_get_drv_priv(vq);
+> > > +		struct cedrus_buffer *cedrus_buf;
+> > > +
+> > > +		cedrus_buf =3D vb2_to_cedrus_buffer(vq->bufs[vb->index]);
+> > > +
+> > > +		if (cedrus_buf->extra_buf_size)
+> > > +			dma_free_coherent(ctx->dev->dev,
+> > > +					  cedrus_buf-
+> >extra_buf_size,
+> > > +					  cedrus_buf-
+> >extra_buf,
+> > > +					  cedrus_buf-
+> >extra_buf_dma);
+> > > +	}
+> > > +}
+> > > +
+> >
+> > I'm really not a fan of allocating something somewhere, and freeing it
+> > somewhere else. Making sure you don't leak something is hard enough to
+> > not have some non-trivial allocation scheme.
+>
+> Ok, what about introducing two new optional methods in engine callbacks,
+> buffer_init and buffer_destroy, which would be called from cedrus_buf_ini=
+t() and
+> cedrus_buf_cleanup(), respectively. That way all (de)allocation logic sta=
+ys
+> within the same engine.
 
-s/kthread_create_list->next/kthread_create_list->prev/
+Yep, that would work for me.
 
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--llwlg2xtnnijika2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPjPwwAKCRDj7w1vZxhR
+xfVpAQCOr8fs3rk1qqMT7K32xwhOKrfkpEzeOlKL8hYuHFgkPQEA+ZYtxUfOTSQu
+8EDER1DVGqjSGhBpL356m0j1JSeHNgM=
+=Hz+3
+-----END PGP SIGNATURE-----
+
+--llwlg2xtnnijika2--
