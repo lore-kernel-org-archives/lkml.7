@@ -2,103 +2,153 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4886FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C648C28D19
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A26C2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj5FrsIL"
+	by mail.kernel.org (Postfix) with ESMTP id 1F05020B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFFFcq (ORCPT
+        id S1726701AbfFFFdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:32:46 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45709 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfFFFcq (ORCPT
+        Thu, 6 Jun 2019 01:33:07 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:51133 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfFFFdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:32:46 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m206so696962oib.12;
-        Wed, 05 Jun 2019 22:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xwixYjl7EOcfYmOy8V+Kh6ZtdFLnskr45gzN6k9owSM=;
-        b=Dj5FrsILS33NaAsTT8q/wpah92fIjhC7Lq8xEtZN6DCxVsMfc+QbPshzQ+kocsQ9RS
-         GMPGXtllHMWTaF26VdzxQXiCPwVBZA6c8BgWoKArt3sAgCwfNtxmI3P44dAzA68m1ZWe
-         6yhl+j6QlbJ9KEZYzw0QIHKVWcMU8GSQsgRLK2U89RTgX7ZNUBh83MJVnGKxLDc88bdz
-         y1S15UWZWf04TKa4wZXC1xOKl1H2ebxljFqL44+69fZmZtZ8WF1KS00tQRpMknBMw5GA
-         fypDRz8fnn4kG81qesoY9kOP8mjs6NzjQCRGcSLpc0NA+hj130z+8HmC/W+SdHZ5d3/N
-         BfuA==
+        Thu, 6 Jun 2019 01:33:06 -0400
+Received: by mail-it1-f197.google.com with SMTP id o128so889207ita.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 22:33:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xwixYjl7EOcfYmOy8V+Kh6ZtdFLnskr45gzN6k9owSM=;
-        b=p1+g5l6SCpKf0yJfFt3ZWzoITYB8Z/99VO6FPxZ3YxPG9NoSUuTizhDlBJis8WC1gq
-         b9nkhPeOwgpFWfrrCV1xDP6/AkexvSH9Ze8cFTdX5fCaYQ1EFOBCCtUAFSkRYlC/TWy9
-         kSIU2Lo1dY3aceyeNFj1+BLzwKacvyD8uLSN9x0wX6BthQeqyNnlB+FNp29BGiXjEMXK
-         aUJYo8v4XOedYXykWI9+xUsypIFjFRTZlqzQytbvfrmOc66P/JvnwZJcfEcBPP3YdGi3
-         EFH3d2c23l7O8XoyTBQV6B3fcDJ5ZFbqmYi8zzIEGKifIfD5UuI0gxFtxm5aScV+slQK
-         yEPA==
-X-Gm-Message-State: APjAAAWLk6lAFow3FNKErtEDFDYUPcsDwo2RUbr8armfkI/71Glf4tJ1
-        IgdJguLravm3urouBuytazePpHxoely41uIe8Y4=
-X-Google-Smtp-Source: APXvYqwgRpzFZo9A5G2I8J8KzwmgzxOVaz9cb2wtcByP+yzE4hDJHk8MAF0kjjhy9RJAGNCKqnMEOjylHuboRXdTfMs=
-X-Received: by 2002:aca:544b:: with SMTP id i72mr6013510oib.174.1559799165306;
- Wed, 05 Jun 2019 22:32:45 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=W5FF42zVDo3trtwvrjbtAnVcsXKoMkINuTi+BPyFgek=;
+        b=Hwbx1Axf2UOy6b5pAO7XjQyS4DJjBpGhPMi8vMy+LX6XquuTb3kadne32O5q3Xu6VS
+         I3fOzZEFC1Ot6ClikDuo7jP0Zr+z6Uc+a0fVBpdbtcExW+H2PdIaZRveRD79fUvsx3OR
+         NxGlSjMG2V3u+LyIHEBfrQGGtTWwT51EicmhTBEVelw3g4b8VlBUOsOEHYTNfYqpaAYL
+         EyFRr8oqeyi9LQORUYMgQ+WFC6mapkIpHrf9pHOx6cbge1K45UxJeQ5n8l2O8NphX/Tt
+         ly6fXdOgK7nIO7/AdJwv7cstIS/46NNUGE8qpePzrBrX2r+Bey95QxDgUWeWjuDxFdS8
+         VahA==
+X-Gm-Message-State: APjAAAWCHjhx48WkhEKMRhwprW2f+tLSqBaxwdPJFuSjwQynSm168IyL
+        H6oRqO0ypLNlQ+iVvJQj3V402wWxYwkglGRTLs/6OcrFCW3W
+X-Google-Smtp-Source: APXvYqz9VSUc/8eq6b84tHBQ+U7qjz624v0EGp0dlfT+6ewmxPMDHxVvliMgENV/TnWGADV2fbh3yhNDyGIqQ+am2toYAWdTda+c
 MIME-Version: 1.0
-References: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
- <1559729351-20244-3-git-send-email-wanpengli@tencent.com> <16c54182-7198-f476-080b-5876cd871e42@redhat.com>
-In-Reply-To: <16c54182-7198-f476-080b-5876cd871e42@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 6 Jun 2019 13:33:10 +0800
-Message-ID: <CANRm+Cyzf_P_npJMBDbHN1g+GDfKsNR23bNWXMuUCtFq_caQnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: LAPIC: lapic timer is injected by posted interrupt
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:660c:887:: with SMTP id o7mr5081314itk.159.1559799186165;
+ Wed, 05 Jun 2019 22:33:06 -0700 (PDT)
+Date:   Wed, 05 Jun 2019 22:33:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006994aa058aa10cb8@google.com>
+Subject: WARNING: refcount bug in css_task_iter_next
+From:   syzbot <syzbot+644dc16442b3a35f3629@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
+        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 20:30, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 05/06/19 12:09, Wanpeng Li wrote:
-> > +static void apic_timer_expired_pi(struct kvm_lapic *apic)
-> > +{
-> > +     struct kvm_timer *ktimer = &apic->lapic_timer;
-> > +
-> > +     kvm_apic_local_deliver(apic, APIC_LVTT);
-> > +     if (apic_lvtt_tscdeadline(apic))
-> > +             ktimer->tscdeadline = 0;
-> > +     if (apic_lvtt_oneshot(apic)) {
-> > +             ktimer->tscdeadline = 0;
-> > +             ktimer->target_expiration = 0;
-> > +     }
-> > +}
->
-> Please rename this function to kvm_apic_inject_pending_timer_irqs and
-> call it from kvm_inject_apic_timer_irqs.
->
-> Then apic_timer_expired can just do
->
->         if (atomic_read(&apic->lapic_timer.pending))
->                 return;
->
-> +       if (unlikely(posted_interrupt_inject_timer(apic->vcpu))) {
-> +               kvm_apic_inject_pending_timer_irqs(apic);
-> +               return;
-> +       }
+Hello,
 
-Do it in v2.
+syzbot found the following crash on:
 
-Regards,
-Wanpeng Li
+HEAD commit:    b2924447 Add linux-next specific files for 20190605
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c492d2a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=644dc16442b3a35f3629
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+644dc16442b3a35f3629@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: increment on 0; use-after-free.
+WARNING: CPU: 0 PID: 4184 at lib/refcount.c:156 refcount_inc_checked  
+lib/refcount.c:156 [inline]
+WARNING: CPU: 0 PID: 4184 at lib/refcount.c:156  
+refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 4184 Comm: syz-executor.3 Not tainted 5.2.0-rc3-next-20190605 #9
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
+RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+Code: 1d db 0e 68 06 31 ff 89 de e8 1b c4 3b fe 84 db 75 dd e8 d2 c2 3b fe  
+48 c7 c7 e0 b6 c4 87 c6 05 bb 0e 68 06 01 e8 dd db 0d fe <0f> 0b eb c1 90  
+90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
+RSP: 0018:ffff8882000ef290 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff815b04b6 RDI: ffffed104001de44
+RBP: ffff8882000ef2a0 R08: ffff8882035744c0 R09: ffffed1015d040f1
+R10: ffffed1015d040f0 R11: ffff8880ae820787 R12: ffff88804436a660
+R13: ffff8882000ef368 R14: ffff88804436a640 R15: 1ffff1104001de5d
+  css_task_iter_next+0xf9/0x190 kernel/cgroup/cgroup.c:4568
+  mem_cgroup_scan_tasks+0xbb/0x180 mm/memcontrol.c:1168
+  select_bad_process mm/oom_kill.c:374 [inline]
+  out_of_memory mm/oom_kill.c:1088 [inline]
+  out_of_memory+0x6b2/0x1280 mm/oom_kill.c:1035
+  mem_cgroup_out_of_memory+0x1ca/0x230 mm/memcontrol.c:1573
+  mem_cgroup_oom mm/memcontrol.c:1905 [inline]
+  try_charge+0xfbe/0x1480 mm/memcontrol.c:2468
+  mem_cgroup_try_charge+0x24d/0x5e0 mm/memcontrol.c:6073
+  __add_to_page_cache_locked+0x425/0xe70 mm/filemap.c:839
+  add_to_page_cache_lru+0x1cb/0x760 mm/filemap.c:916
+  pagecache_get_page+0x357/0x850 mm/filemap.c:1655
+  grab_cache_page_write_begin+0x75/0xb0 mm/filemap.c:3157
+  simple_write_begin+0x36/0x2c0 fs/libfs.c:438
+  generic_perform_write+0x22a/0x520 mm/filemap.c:3207
+  __generic_file_write_iter+0x25e/0x630 mm/filemap.c:3336
+  generic_file_write_iter+0x360/0x610 mm/filemap.c:3368
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9a334d9c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
+RDX: 0000000003d3427e RSI: 0000000020000180 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9a334da6d4
+R13: 00000000004c8ee8 R14: 00000000004dfbb0 R15: 00000000ffffffff
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
