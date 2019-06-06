@@ -5,64 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30A9C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93432C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829F820684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5B120872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8oLfhfC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BzxKUUDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfFFOls (ORCPT
+        id S1728888AbfFFOmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:41:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35303 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728806AbfFFOls (ORCPT
+        Thu, 6 Jun 2019 10:42:04 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54645 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbfFFOmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:41:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so400407ioo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:41:48 -0700 (PDT)
+        Thu, 6 Jun 2019 10:42:04 -0400
+Received: by mail-it1-f193.google.com with SMTP id h20so309089itk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:42:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yUBzruiX0poMVnebHkNCtUzf308xan955Nhmvp3Y24o=;
-        b=N8oLfhfCoP/t5PYG52TcjF2tc8yM9MUIV91XTL1dQyRXANlO4TMjLOYVQCRmv8WS6G
-         dPw0BjG98OS26hm3NjvwDU7LkcKsojQNR+HtJHfn0Uu01UYlMw6RpKw5CnAKrKbgERRc
-         2B9n2VfK+C2+t1MKp0rZkCMTUbOPSMd4tw2wsCq3Lq6LQzBNAOEMbAzcOb/PxPAJyKLf
-         028o5J4GgWK6IRAQT6Ab31TogjeE80cmxwOJdjspx80QtGRG9ICcAFNCpapC7hbZ59bs
-         i24iWVXGStx0+mKUkyKF5GE86Vfs3BkmG5/DCWI3rUSsj1jkzj6Gx8qKJK1N71cii1jt
-         8NHw==
+        bh=yI4UXAmfk5AOoLIasiEgCZLXHqdA6sJuFFsoq27RzWo=;
+        b=BzxKUUDwXS3pKhUbyzh0IBg3j0CX/86s/DnYE4HvoU55W1tydocpIKG1IlQOsydUQl
+         huukxirzjW7kJ+AZ+Yxqd5DF19hVyAFq9uzWoSI8V5C+pjT4SW2QTLrvxGBwqP2wEB7n
+         cbu8JiiySU7SgTKKDRD+5f/zYcvoBfqSXiToVcT25u3eP8nCJO72AkALhzAALlQHhXrK
+         sycPgq6obiKeGQz/suhzIERteHkTaB3Rn1bK8aCr+WQ5ykQvHoq0kT4FdEryf4zaXVoR
+         YMo6HytXQhUZ65ymN1q8bNjjEfA6Cug7VlsxiTSf5PwSTjES0DxHY9CxQX5ejXLVmOqu
+         dPpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yUBzruiX0poMVnebHkNCtUzf308xan955Nhmvp3Y24o=;
-        b=INXtSwRAeiRGlV/DJRmUlEGjNHfO+kOEpoMhmYi70CCMUh4I+1fTCSNC0VfqSV4xzD
-         MLUzjdqWZFJA45bwaYGWIFoz7MjwqibKGE/OEwm9hVng09Bhp+NYfY7JhUnVGKzVz/do
-         8MV7QRuZOEtvQ9Nzfc4MN6pwzOgE/OlGp5H2/Fmm5Kl38YLFtDNlT7Iz2rS/AF57rbcn
-         SS0Z3umTRusuGbTzjNQ/ueTzxXKjLgRVQCo6OWrpT47qHsCWYy3YKjIQyc8SXj5UVwRc
-         YH8FxoS41Yu1hOQLl5hIp7J8IAj4sNsZBbIpGHF9oIadJYan2dRzhAIXWG4o6sC8I3Ql
-         gqNw==
-X-Gm-Message-State: APjAAAXZ6U2qIYKKgQ9NRVK5LowY60mvVrPOTkUSaTw7V2bipqCFy7sw
-        wSCAu1RhYF18pFMsARDSh3YDFoELkn+yOUhcxM3/Qg==
-X-Google-Smtp-Source: APXvYqz8hOqO9k3wIdvVxhHX1nxpHAKAeuDw82/eM+fgXI+5jTsEKJYqN9UOwv8HWhW3FUMfi6A1SwZfoXGCqRs3Edg=
-X-Received: by 2002:a6b:8d92:: with SMTP id p140mr28286627iod.144.1559832107426;
- Thu, 06 Jun 2019 07:41:47 -0700 (PDT)
+        bh=yI4UXAmfk5AOoLIasiEgCZLXHqdA6sJuFFsoq27RzWo=;
+        b=Lf7Z4++oKn7ryyj7MEZe0TtFFFYli6YlPuevvOksPDqi+/5DlGscaZR1lj6Rhn0JJG
+         6hlPugjq8AtZalHZk6J4dQGnVBZVnduYTMZmOxwN6K2+wGK0G/yl+S/iG0QQlFOTmKIY
+         N/cPnm/qjmknd0Oi+ecRBeC/fvTU9qXxZZmKAP1bLeI5vhvT3D+Yw3kL8FLc549u2vvq
+         RbiEt+hStzBf/Xl89Sd3qsZMEXCqAA3zCzLnTqky7BacIa/JDtvxAmUek9G37lur5qzi
+         8ePHmyWr+vPf4TfqnNlPRvvWz0L+tPl4cPxZjTE/rsoNzvIoJ4ldvsFc2nyPChfRx2LX
+         G3Vw==
+X-Gm-Message-State: APjAAAX+k5C+vyR/VsYOmQAVnCgS663pk5nLeNaiMTB5iyqbaiCfL+uJ
+        ozngYAGhq7OBKkTcSaFPThjwV8BFJssf6zyH5EymoA==
+X-Google-Smtp-Source: APXvYqxmQaijA2Oe/JJbDNLGyx4jQv3Fek40A4Cze3ibfgIGnUz18m8n3YV+uZHidCOUbrTpckx056z4S7SSrxEKBFI=
+X-Received: by 2002:a02:c7c9:: with SMTP id s9mr30323015jao.82.1559832123120;
+ Thu, 06 Jun 2019 07:42:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000454279058aa80535@google.com>
-In-Reply-To: <000000000000454279058aa80535@google.com>
+References: <0000000000004945f1058aa80556@google.com>
+In-Reply-To: <0000000000004945f1058aa80556@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 6 Jun 2019 16:41:36 +0200
-Message-ID: <CACT4Y+bk4=avQpdiHM7BTRjZ+NahivshytP5-eVU7vDCxR2udA@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in usage_accumulate
-To:     syzbot <syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>
+Date:   Thu, 6 Jun 2019 16:41:51 +0200
+Message-ID: <CACT4Y+aK8U2UG1KjuPx-tiPuRQf-T4YyQe04v5aCdP87ejodWQ@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in corrupted (2)
+To:     syzbot <syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -70,7 +73,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Jun 6, 2019 at 3:52 PM syzbot
-<syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com> wrote:
+<syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
@@ -78,53 +81,39 @@ On Thu, Jun 6, 2019 at 3:52 PM syzbot
 >
 > HEAD commit:    156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
 > git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15f2095aa00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13512d51a00000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b0d730107e2ca6cb952f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9a901acbc447313bfe3e
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a8fb61a00000
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a4b01ea00000
 
 Looks +bpf related from the repro.
 
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com
+> Reported-by: syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com
 >
 > ==================================================================
-> BUG: KASAN: slab-out-of-bounds in usage_accumulate+0x9e/0xb0
-> kernel/locking/lockdep.c:1676
-> Read of size 8 at addr ffff8880a59cfed0 by task syz-executor.1/9366
+> BUG: KASAN: slab-out-of-bounds in vsnprintf+0x1727/0x19a0
+> lib/vsprintf.c:2503
+> Read of size 8 at addr ffff8880a91c7d00 by task syz-executor.0/9821
 >
-> CPU: 1 PID: 9366 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #20
+> CPU: 0 PID: 9821 Comm: syz-executor.0 Not tainted 5.2.0-rc3+ #13
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
 > Call Trace:
 >
-> Allocated by task 0:
+> Allocated by task 1024:
 > (stack is not available)
 >
-> Freed by task 0:
-> (stack is not available)
->
-> The buggy address belongs to the object at ffff8880a59ce6c0
->   which belongs to the cache kmalloc-4k of size 4096
-> The buggy address is located 2064 bytes to the right of
->   4096-byte region [ffff8880a59ce6c0, ffff8880a59cf6c0)
-> The buggy address belongs to the page:
-> page:ffffea0002967380 refcount:1 mapcount:0 mapping:ffff8880aa400dc0
-> index:0x0 compound_mapcount: 0
-> flags: 0x1fffc0000010200(slab|head)
-> raw: 01fffc0000010200 ffffea000296a008 ffffea000233fe08 ffff8880aa400dc0
-> raw: 0000000000000000 ffff8880a59ce6c0 0000000100000001 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8880a59cfd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8880a59cfe00: fc fc fc fc f1 f1 f1 f1 00 f2 f2 f2 00 f2 f2 f2
-> > ffff8880a59cfe80: 00 f2 f2 f2 00 f2 f2 f2 fc fc fc fc 00 00 00 f2
->                                                   ^
->   ffff8880a59cff00: f2 f2 f2 f2 fc fc fc fc 00 00 00 f3 f3 f3 f3 f3
->   ffff8880a59cff80: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
-> ==================================================================
+> Freed by task 2310999008:
+> ------------[ cut here ]------------
+> Bad or missing usercopy whitelist? Kernel memory overwrite attempt detected
+> to SLAB object 'skbuff_head_cache' (offset 24, size 1)!
+> WARNING: CPU: 0 PID: 9821 at mm/usercopy.c:78 usercopy_warn+0xeb/0x110
+> mm/usercopy.c:78
+> Kernel panic - not syncing: panic_on_warn set ...
+> Shutting down cpus with NMI
+> Kernel Offset: disabled
 >
 >
 > ---
@@ -140,5 +129,5 @@ Looks +bpf related from the repro.
 > --
 > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000454279058aa80535%40google.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000004945f1058aa80556%40google.com.
 > For more options, visit https://groups.google.com/d/optout.
