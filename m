@@ -2,139 +2,97 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9525C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C291C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A202520883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA662083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qlYdtrGt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wm/5HuCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfFFR3a (ORCPT
+        id S1730142AbfFFRaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:29:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:52902 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfFFR33 (ORCPT
+        Thu, 6 Jun 2019 13:30:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44111 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfFFRaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:29:29 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56HOuSi079163;
-        Thu, 6 Jun 2019 17:29:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=TDbZF773jSoChjtiU4YTRwsZq9wLcLVh4IoX023ZDqI=;
- b=qlYdtrGtNkq/DGUy1Fy3cE4F0JRT0pOjWdfM8BHHilOnc5DY5/X9rfnKM49nW5kQFteu
- GFiEcgizfyig8KGU+oQpIam15N7jiieMQWzwZ6a6UfacUBZDVSrVAc7QppkbZeXwAvMb
- xNZpbZZ1HZRtZDfKfRRIdtyzCUzgDF9zPea5IGl4UdvQJ5Hbn9fa9uIFo5Iq3CtZupKr
- Jpmw83HtEHf/OcRaVL6deHde9JZhTt1TU+rkW5A+jYhyyNXQYCNf7nZmF/nKdw93sF3q
- PHsmqEEksyw814FM9w7R3BqBMCsY/eNlJtmApp4T37nMOFwu8WP4ZHeyLi9pvJsqOBop dw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2suevdt5eq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 17:29:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56HS4eo085739;
-        Thu, 6 Jun 2019 17:29:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2swngjju6b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 17:29:24 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56HTMoW005092;
-        Thu, 6 Jun 2019 17:29:22 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 10:29:22 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 6EC486A0125; Thu,  6 Jun 2019 13:30:46 -0400 (EDT)
-Date:   Thu, 6 Jun 2019 13:30:46 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Daniel Kiper <daniel.kiper@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        hpa@zytor.com, kanth.ghatraju@oracle.com, ross.philipson@oracle.com
-Subject: Re: [PATCH RFC 0/2] x86/boot: Introduce the setup_header2
-Message-ID: <20190606173046.GI3252@char.us.oracle.com>
-References: <20190524095504.12894-1-daniel.kiper@oracle.com>
- <20190605135031.62grhhxn2pfbkcdg@tomti.i.net-space.pl>
- <20190605140117.GA32106@char.us.oracle.com>
- <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
+        Thu, 6 Jun 2019 13:30:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so1910383pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Er5DZ+jmgl4pACBM9mSuCYlxA1ZXYVy+Ri46ksNsKNU=;
+        b=wm/5HuCV6OCqFPMj5n7IL5mdjhSWRNBQjjf7DDWELSUHyHSEkxAJJUzCUh5K1Q/PrT
+         1rU9XPLawCPwYK34YEcRmd16u3HynW0SaTlCWw1xW/8f0xJXLaJFv5Amj8aU+x3jBRGZ
+         OirbFJ6smfoYmqM4vpdeGuUA2Diiozc28Ql/BUymxNlyCnF3U3NuNesy19sKjTxlBCZ9
+         xYkQgCVNc212j+aq83vwctLQsFzBYDYeCb21vGVD1yCTxbTMQZP9cLHvVL8JSwKlQeP+
+         HhhL48FMk2LjvcQQ5bdf6g41dqIbXtWQEnc9Q7xerefNu0gaXl87goSWT899hImcaaCN
+         b4UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Er5DZ+jmgl4pACBM9mSuCYlxA1ZXYVy+Ri46ksNsKNU=;
+        b=UgtMgYoCuJEpNLWTZ1BTMw87NNIkJnEqYq+TyTNGuJNwwSW/VJnvh9ItuiTilizF7u
+         XgAPsOddBzqKXBXTFWlZMhg4kXPX9OH+OerJsa23yqllc/sACy88YbcnglQboeVAiQqq
+         2uzmBLPS2z5zbOoJP+LXh3iZl+dEPmolhGhB4dTdzqjU0vzio8huuTXWHZjVxMl/a9bb
+         RAgQ0NSOO9atk57gW8zpsC9FcpodZ+bBLpOKJG1Yc1Tb7XMwiaz9Cj2zG88/VTYsuoLd
+         SvU2NCZjuS1LaZ5n3Rkn/N7LOOgjpAfX1NZSYHMKt8/oJ/eotpqJD4mOT/dZTojbwTCf
+         SmYQ==
+X-Gm-Message-State: APjAAAU/N9YNwxl8lP/1vOZrF9XByPzxIGza5hz57DEM7U7UIqC8reWb
+        i5LoYz1giymdVxDQyqlJqVwQEA==
+X-Google-Smtp-Source: APXvYqxcHDkEaPOHT2K2CyUbipGrVEDze7r7eLCeuaNBURmbKlAo/gGUVa+qM337klyNBaUWwbt8aQ==
+X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr924412pjj.13.1559842213424;
+        Thu, 06 Jun 2019 10:30:13 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id o70sm2769938pfo.33.2019.06.06.10.30.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 10:30:12 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/2] drm/meson: fix G12A primary plane disabling
+In-Reply-To: <20190605141253.24165-3-narmstrong@baylibre.com>
+References: <20190605141253.24165-1-narmstrong@baylibre.com> <20190605141253.24165-3-narmstrong@baylibre.com>
+Date:   Thu, 06 Jun 2019 10:30:11 -0700
+Message-ID: <7h1s06ei58.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=723
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=817 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060117
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 01:51:08PM +0200, Daniel Kiper wrote:
-> On Wed, Jun 05, 2019 at 10:01:17AM -0400, Konrad Rzeszutek Wilk wrote:
-> > On Wed, Jun 05, 2019 at 03:50:31PM +0200, Daniel Kiper wrote:
-> > > On Fri, May 24, 2019 at 11:55:02AM +0200, Daniel Kiper wrote:
-> > > > Hi,
-> > > >
-> > > > This change is needed to properly start the Linux kernel in Intel TXT mode and
-> > > > is a part of the TrenchBoot project (https://github.com/TrenchBoot).
-> >
-> > Can you please expand more on this?
-> >
-> > Nice explanation of why, other alternative solutions that didn't work, and so on.
-> 
-> OK.
-> 
-> > > > Daniel
-> > > >
-> > > >  Documentation/x86/boot.txt               | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  arch/x86/Kconfig                         |  7 +++++++
-> > > >  arch/x86/boot/Makefile                   |  2 +-
-> > > >  arch/x86/boot/compressed/Makefile        |  5 +++--
-> > > >  arch/x86/boot/compressed/setup_header2.S | 18 ++++++++++++++++++
-> > > >  arch/x86/boot/compressed/sl_stub.S       | 28 ++++++++++++++++++++++++++++
-> > > >  arch/x86/boot/header.S                   |  3 ++-
-> > > >  arch/x86/boot/tools/build.c              |  8 ++++++++
-> > > >  arch/x86/include/uapi/asm/bootparam.h    |  1 +
-> > > >  9 files changed, 123 insertions(+), 4 deletions(-)
-> > > >
-> > > > Daniel Kiper (2):
-> > > >       x86/boot: Introduce the setup_header2
-> > > >       x86/boot: Introduce dummy MLE header
-> > >
-> > > Ping?
-> >
-> > Can you add Ingo and Thomas to the To: next time please?
-> 
-> OK.
-> 
-> > Also please drop the second patch.
-> 
-> Why? This is an example how to use the setup_header2.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-If you are going to post it as non-RFC (which I suspect you will
-for the next), then why post a patch that is not to be checked in?
+> The G12A Primary plane was disabled by writing in the OSD1 configuration
+> registers, but this caused the plane blender to stall instead of continuing
+> blended only the overlay plane.
 
-It just takes people time up.
+grammar nit: "...instead of continuing to blend only the overlay plane."
 
+> Fix this by disabling the OSD1 plane in the blender registers, and also
+> enabling it back using the same register.
+>
+> Fixes: 490f50c109d1 ("drm/meson: Add G12A support for OSD1 Plane")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> 
-> Daniel
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+
+As noted elsewhere, this driver is also full of magic constants used in
+register writes which makes reviewing this kind of change for
+correctness that much more difficult, but since that's already been
+pointed out elsewhere, and it's already on your TODO list, it should not
+block this important fix.
+
+Kevin
