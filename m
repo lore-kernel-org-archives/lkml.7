@@ -5,264 +5,228 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF14C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0293AC28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF73820673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4F720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EgRoybTa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B7C/+eYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfFFF6L (ORCPT
+        id S1726324AbfFFGBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:58:11 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10498 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFF6L (ORCPT
+        Thu, 6 Jun 2019 02:01:00 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60148 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:58:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8ab700000>; Wed, 05 Jun 2019 22:58:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 22:58:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Jun 2019 22:58:09 -0700
-Received: from [10.24.45.153] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 05:58:07 +0000
-Subject: Re: [PATCH 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-To:     Jon Hunter <jonathanh@nvidia.com>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1557143908-5850-1-git-send-email-spujar@nvidia.com>
- <9f9962fc-a261-aecc-b4c5-408a75ebcb5f@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <490b81d9-2734-bb93-303b-94bb20a4f6a5@nvidia.com>
-Date:   Thu, 6 Jun 2019 11:28:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 02:00:59 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5660oXb078820;
+        Thu, 6 Jun 2019 01:00:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559800850;
+        bh=FSREGiRABJFq74W4rr6M51W3Yk2CPzgfEKsFWNPJA9I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=B7C/+eYQR/5L3PIF9wwHURouG6GdJIeqKkPllBB4+j4CrEAShfaS6oxx2iecVfiR8
+         3xNMh39kzPDq256uL/Vt07rZ27zV7Cf/p94LYqQWInBOi1DR8svnJizB/KNYv/AGqV
+         7910peb5NTsaW9IxuikgQ5cAWSX/gF2LRyTfnd64=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5660ont032539
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Jun 2019 01:00:50 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
+ 2019 01:00:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 6 Jun 2019 01:00:50 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5660gQS102302;
+        Thu, 6 Jun 2019 01:00:44 -0500
+Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
+ ringacc, psi-l and udma
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-2-peter.ujfalusi@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
+Date:   Thu, 6 Jun 2019 11:30:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <9f9962fc-a261-aecc-b4c5-408a75ebcb5f@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190506123456.6777-2-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559800688; bh=x5UYDkq9uzn4vHTOQOT/dowrMC88Ekd21dXparatcy0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=EgRoybTaitAEaJWVEpA68tEwXD/xRE3ZbMp77ryS4Boi3fbRxMNwp87W4AWiUWBKH
-         O/7kvrHq5eO2VOj8wc+jaw32OPUHhjgwvJQsRGq/1j1oybiLe2ghh9rxMUIgl8PV5k
-         ODVjK1n32cQYTRnj7OF8JdWile0QPmlWLjpyvK1LMee7q18dxxbPEmiIZixe15DsYE
-         fhTs5oRppHtv8CkJG6N2JPhz4xzdxwO+HvH9F86OLpK0GwgzgjAXbnbFUkYQuCZzej
-         Sx3cmIGkaRQadOogbs/7us4g2K2FQBhf0uhd2GSQZuVkYxC6cL41DtTluV1nYyPyP8
-         wFnw80h2RU6CA==
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Peter,
 
-On 6/4/2019 2:37 PM, Jon Hunter wrote:
-> On 06/05/2019 12:58, Sameer Pujar wrote:
->> Add DT nodes for following devices on Tegra186 and Tegra194
->>   * ACONNECT
->>   * ADMA
->>   * AGIC
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
->>   2 files changed, 134 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> index 6e2b6ce..2c432c9 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> @@ -1153,4 +1153,71 @@
->>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->>   		interrupt-parent = <&gic>;
->>   	};
->> +
->> +	aconnect@2a41000 {
->> +		compatible = "nvidia,tegra210-aconnect";
->> +		clocks = <&bpmp TEGRA186_CLK_APE>,
->> +			 <&bpmp TEGRA186_CLK_APB2APE>;
->> +		clock-names = "ape", "apb2ape";
->> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
-> My recollection is that non-empty range is preferred from what Rob told
-> me in the past. See the Tegra210 binding.
-I see at various places empty ranges property is used. From DT spec, it 
-means
-there is no translation in the address space between parent/child.
+On 06/05/19 6:04 PM, Peter Ujfalusi wrote:
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Also I looked at Tegra210 binding,
-ranges = <0x702c0000 0x0 0x702c0000 0x00040000>;
-Should it be encoded as a triplet(child addr, parent addr, length)?
->
->> +		status = "disabled";
->> +
->> +		dma@2930000 {
-> Although I did not do this for Tegra210, I think that the preferred
-> convention is 'dma-controller@xxxxxxxxx'.
-done.
->> +			compatible = "nvidia,tegra186-adma";
->> +			reg = <0x0 0x02930000 0x0 0x50000>;
->> +			interrupt-parent = <&agic>;
->> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
->> +			#dma-cells = <1>;
->> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
->> +			clock-names = "d_audio";
->> +			status = "disabled";
->> +		};
->> +
->> +		agic: agic@2a41000 {
->> +			compatible = "nvidia,tegra210-agic";
->> +			#interrupt-cells = <4>;
-> Why 4? This does not match the binding document for the arm-gic.
-will fix.
->> +			interrupt-controller;
->> +			reg = <0x0 0x02a41000 0x0 0x1000>,
->> +			      <0x0 0x02a42000 0x0 0x1000>;
-> I believe that the 2nd address range should have size 0x2000 for the CPU
-> interfaces.
-done
->> +			interrupts = <GIC_SPI 145 (GIC_CPU_MASK_SIMPLE(4) |
->> +					IRQ_TYPE_LEVEL_HIGH)>;
->> +			clocks = <&bpmp TEGRA186_CLK_APE>;
->> +			clock-names = "clk";
->> +			status = "disabled";
->> +		};
->> +	};
->>   };
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> index c77ca21..dcab504 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> @@ -1054,4 +1054,71 @@
->>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->>   		interrupt-parent = <&gic>;
->>   	};
->> +
->> +	aconnect@2a41000 {
->> +		compatible = "nvidia,tegra210-aconnect";
->> +		clocks = <&bpmp TEGRA194_CLK_APE>,
->> +			 <&bpmp TEGRA194_CLK_APB2APE>;
->> +		clock-names = "ape", "apb2ape";
->> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
-> Same as above.
->
->> +		status = "disabled";
->> +
->> +		dma@2930000 {
-> Same as above.
->
->> +			compatible = "nvidia,tegra186-adma";
->> +			reg = <0x0 0x02930000 0x0 0x50000>;
->> +			interrupt-parent = <&agic>;
->> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
->> +			#dma-cells = <1>;
->> +			clocks = <&bpmp TEGRA194_CLK_AHUB>;
->> +			clock-names = "d_audio";
->> +			status = "disabled";
->> +		};
->> +
->> +		agic: agic@2a41000 {
->> +			compatible = "nvidia,tegra210-agic";
->> +			#interrupt-cells = <4>;
-> Same as above.
->
->> +			interrupt-controller;
->> +			reg = <0x0 0x02a41000 0x0 0x1000>,
->> +			      <0x0 0x02a42000 0x0 0x1000>;
-> Same as above.
->
->> +			interrupts = <GIC_SPI 145 (GIC_CPU_MASK_SIMPLE(4) |
->> +					IRQ_TYPE_LEVEL_HIGH)>;
->> +			clocks = <&bpmp TEGRA194_CLK_APE>;
->> +			clock-names = "clk";
->> +			status = "disabled";
->> +		};
->> +	};
->>   };
->>
-> Cheers
-> Jon
->
+Patch has the following checkpatch warnings and checks which can be fixed:
+
+WARNING: Missing commit description - Add an appropriate one
+
+CHECK: Lines should not end with a '('
+#262: FILE: drivers/firmware/ti_sci.c:2286:
++static int ti_sci_cmd_rm_udmap_tx_ch_cfg(
+
+CHECK: Lines should not end with a '('
+#323: FILE: drivers/firmware/ti_sci.c:2347:
++static int ti_sci_cmd_rm_udmap_rx_ch_cfg(
+
+CHECK: Lines should not end with a '('
+#383: FILE: drivers/firmware/ti_sci.c:2407:
++static int ti_sci_cmd_rm_udmap_rx_flow_cfg1(
+
+CHECK: Lines should not end with a '('
+#1414: FILE: include/linux/soc/ti/ti_sci_protocol.h:455:
++	int (*rx_flow_cfg)(
+
+total: 0 errors, 2 warnings, 4 checks, 1399 lines checked
+
+
+
+> ---
+>  drivers/firmware/ti_sci.c              | 439 +++++++++++++++
+>  drivers/firmware/ti_sci.h              | 704 +++++++++++++++++++++++++
+>  include/linux/soc/ti/ti_sci_protocol.h | 216 ++++++++
+>  3 files changed, 1359 insertions(+)
+> 
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index 64d895b80bc3..af3ebcdeab18 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+
+[..snip.]
+
+> +}
+> +
+> +static int ti_sci_cmd_rm_psil_pair(const struct ti_sci_handle *handle,
+> +				   u32 nav_id, u32 src_thread, u32 dst_thread)
+> +{
+
+All the psil ops doesn't have the  kernel-doc function comments. Just be
+consistent with other functions :)
+
+
+> +	struct ti_sci_msg_hdr *resp;
+> +	struct ti_sci_msg_psil_pair *req;
+> +	struct ti_sci_xfer *xfer;
+> +	struct ti_sci_info *info;
+> +	struct device *dev;
+> +	int ret = 0;
+> +
+> +	if (IS_ERR(handle))
+> +		return PTR_ERR(handle);
+> +	if (!handle)
+> +		return -EINVAL;
+> +
+> +	info = handle_to_ti_sci_info(handle);
+> +	dev = info->dev;
+> +
+> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_PSIL_PAIR,
+> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
+> +				   sizeof(*req), sizeof(*resp));
+> +	if (IS_ERR(xfer)) {
+> +		ret = PTR_ERR(xfer);
+> +		dev_err(dev, "RM_PSIL:Message reconfig failed(%d)\n", ret);
+> +		return ret;
+> +	}
+> +	req = (struct ti_sci_msg_psil_pair *)xfer->xfer_buf;
+> +	req->nav_id = nav_id;
+> +	req->src_thread = src_thread;
+> +	req->dst_thread = dst_thread;
+> +
+> +	ret = ti_sci_do_xfer(info, xfer);
+> +	if (ret) {
+> +		dev_err(dev, "RM_PSIL:Mbox send fail %d\n", ret);
+> +		goto fail;
+> +	}
+> +
+> +	resp = (struct ti_sci_msg_hdr *)xfer->xfer_buf;
+> +	ret = ti_sci_is_response_ack(resp) ? 0 : -EINVAL;
+> +
+> +fail:
+> +	ti_sci_put_one_xfer(&info->minfo, xfer);
+> +
+> +	return ret;
+> +}
+> +
+
+[..snip..]
+
+> + */
+> +struct ti_sci_msg_rm_ring_cfg_req {
+> +	struct ti_sci_msg_hdr hdr;
+> +	u32 valid_params;
+> +	u16 nav_id;
+> +	u16 index;
+> +	u32 addr_lo;
+> +	u32 addr_hi;
+> +	u32 count;
+> +	u8 mode;
+> +	u8 size;
+> +	u8 order_id;
+> +} __packed;
+> +
+> +/**
+> + * struct ti_sci_msg_rm_ring_cfg_resp - Response to configuring a ring.
+> + *
+> + * @hdr:	Generic Header
+> + */
+> +struct ti_sci_msg_rm_ring_cfg_resp {
+> +	struct ti_sci_msg_hdr hdr;
+> +} __packed;
+
+If it is a generic ACK, NACK response, just use the header directly.
+
+[..snip..]
+
+> + */
+> +struct ti_sci_msg_rm_udmap_rx_ch_cfg_req {
+> +	struct ti_sci_msg_hdr hdr;
+> +	u32 valid_params;
+> +	u16 nav_id;
+> +	u16 index;
+> +	u16 rx_fetch_size;
+> +	u16 rxcq_qnum;
+> +	u8 rx_priority;
+> +	u8 rx_qos;
+> +	u8 rx_orderid;
+> +	u8 rx_sched_priority;
+> +	u16 flowid_start;
+> +	u16 flowid_cnt;
+> +	u8 rx_pause_on_err;
+> +	u8 rx_atype;
+> +	u8 rx_chan_type;
+> +	u8 rx_ignore_short;
+> +	u8 rx_ignore_long;
+> +	u8 rx_burst_size;
+> +
+
+extra line?
+
+> +} __packed;
+> +
+> +/**
+
+
+Thanks and regards,
+Lokesh
