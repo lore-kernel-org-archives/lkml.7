@@ -2,170 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E10C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83E220868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B555820872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DRtQGgpR"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="epaHTtua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfFFN7B (ORCPT
+        id S1728661AbfFFOAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:59:01 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3899 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfFFN7A (ORCPT
+        Thu, 6 Jun 2019 10:00:11 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:48090 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727961AbfFFOAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:59:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf91c210000>; Thu, 06 Jun 2019 06:58:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 06:58:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 06:58:59 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 13:58:56 +0000
-Subject: Re: [PATCH V2] i2c: busses: tegra: Add suspend-resume support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559800475-5446-1-git-send-email-bbiswas@nvidia.com>
- <bf93e88f-cbed-3bb0-223a-74ad0b08aa9e@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <5871f51b-11d4-8bc9-6f40-4a91f2aab8f8@nvidia.com>
-Date:   Thu, 6 Jun 2019 06:58:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <bf93e88f-cbed-3bb0-223a-74ad0b08aa9e@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559829537; bh=jpr983eo6FR4Yd08yaKIZZG/M2mk3OEaK2jrPUrtJsA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DRtQGgpRwwQvoV1jn1wXUXplwdgLlkbVWodLf/zfqBOa/KxIHCcR0l6tu11B2U97j
-         +lxuv9nPEEhzulbtaYHaT6lVZsmWrZzFcxTSbUIkLa7HYBsC9G+a/KNaA4xMsUkyD9
-         wUFCpw+KClh4n7HLAQzRhJA+kPKi2SXw5JO9fuVYuYsoASDjrq9E4fMuUjzd6J2jYz
-         C0EfeCHve0tNTTPm2vTyu5S6wYrqPyekcT3fG3o0JL3au/+z/A2wOzIpGdxGarlore
-         cfFoyGwgZDrgGbXTTEXZyqtuz6vwOHHnWQvaYwYe9YtC8HwhrDOMImqKIjoCs+AT9a
-         titkOOCvf8bGw==
+        Thu, 6 Jun 2019 10:00:10 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 25C51C0B9F;
+        Thu,  6 Jun 2019 13:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559829589; bh=6XGIkYC8pr3tc2Zq6ZaUBCFOv5OZZX8H6H8+9IoAnSQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=epaHTtuav4+i5QQdICoqbuS0LTHYQ1U93qVfR8Ii2dDtaMGGHImIVNgmzjaljf6d2
+         ngU1+FJEv0DfJBLgjA5c2vJjulpcS8ZLypQHDDoEI2rQXPqSIb9S532y4PL+328Obq
+         2NT7wQBU1Mm4cc5F7lPIN5mboS3jFiL6owHQhVz0m2uK5gJpdz+AlkJ9GN8IrEU+xp
+         vb0wK5s5AaJphx9KC1hYByPt8DXdPbQJ5xlAfLl7ac15AhWrvI86HfW6ansGLtlmQi
+         mMUK4XcBKNj/1PPYzCDvLcJC9sLqswtBQIdbv90f/4VlFURih6f4ACfIzKTpeIcBz7
+         OVIbI/o6MokJg==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id D484EA0057;
+        Thu,  6 Jun 2019 14:00:08 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id C35D43F6D1;
+        Thu,  6 Jun 2019 16:00:08 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-i3c@lists.infradead.org
+Cc:     Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] i3c: add mixed limited bus mode
+Date:   Thu,  6 Jun 2019 16:00:02 +0200
+Message-Id: <47db801ee13bd7a831c1cc24353653ea0ddd3721.1559821228.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1559821227.git.vitor.soares@synopsys.com>
+References: <cover.1559821227.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1559821227.git.vitor.soares@synopsys.com>
+References: <cover.1559821227.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The i3c bus spec defines a bus configuration where i2c devices don't
+have a 50ns filter but support SCL running at SDR max rate (12.5MHz).
 
+This patch introduces the limited bus mode so that users can use
+a higher speed in presence of i2c devices index 1.
 
-On 6/6/19 5:06 AM, Dmitry Osipenko wrote:
-> 06.06.2019 8:54, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Post suspend I2C registers have power on reset values. Before any
->> transfer initialize I2C registers to prevent I2C transfer timeout
->> and implement suspend and resume callbacks needed. Fix below errors
->> post suspend:
->>
->> 1) Tegra I2C transfer timeout during jetson tx2 resume:
->>
->> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, =
-parent: i2c-1
->> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
->> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
->> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
->> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns =
--110
->> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 af=
-ter 127152 usecs
->> [   27.666194] PM: Device 1-0074 failed to resume: error -110
->>
->> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
->>
->> Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_=
-*
->> (suspended-resumed) help ensure i2c core calls from client are not
->> executed before i2c-tegra resume.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index ebaa78d..76b7926 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -1687,7 +1687,30 @@ static int tegra_i2c_remove(struct platform_devic=
-e *pdev)
->>   }
->>  =20
->>   #ifdef CONFIG_PM_SLEEP
->> +static int tegra_i2c_suspend(struct device *dev)
->> +{
->> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
->> +
->> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_i2c_resume(struct device *dev)
->> +{
->> +	struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	ret =3D tegra_i2c_init(i2c_dev, false);
->> +	if (ret)
->> +		return ret;
->=20
-> We're expecting that tegra_i2c_init returns a error code on a failure
-> and nothing else, hence it will be a bit more expressive to name the
-> returned variable as "err". There is nothing wrong with yours variant,
-> this is just a very minor recommendation from me. Please note that a bit
-> more wise choice of the names makes easier to follow the code for other
-> people and hence results in a cleaner code.
-Agreed.
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+---
+Changes in v2:
+  Enhance commit message
 
->=20
->> +
->> +	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->=20
-> Please add a blank line here for a better readability and to make the
-> patch consistent. You added the blank line in a similar case of
-> tegra_i2c_suspend() and this makes it inconsistent.
->=20
-OK.
+ drivers/i3c/master.c       | 5 +++++
+ include/linux/i3c/master.h | 5 +++++
+ 2 files changed, 10 insertions(+)
 
->> +	return 0;
->> +}
->> +
->>   static const struct dev_pm_ops tegra_i2c_pm =3D {
->> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
->>   	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resum=
-e,
->>   			   NULL)
->>   };
->>
-I shall send updated patch with suggested changes.
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 8cd5824..f446c4d 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -470,6 +470,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
+ static const char * const i3c_bus_mode_strings[] = {
+ 	[I3C_BUS_MODE_PURE] = "pure",
+ 	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
++	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
+ 	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
+ };
+ 
+@@ -585,6 +586,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		break;
+ 	case I3C_BUS_MODE_MIXED_FAST:
++	case I3C_BUS_MODE_MIXED_LIMITED:
+ 		if (!i3cbus->scl_rate.i3c)
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		if (!i3cbus->scl_rate.i2c)
+@@ -2490,6 +2492,9 @@ int i3c_master_register(struct i3c_master_controller *master,
+ 				mode = I3C_BUS_MODE_MIXED_FAST;
+ 			break;
+ 		case I3C_LVR_I2C_INDEX(1):
++			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
++				mode = I3C_BUS_MODE_MIXED_LIMITED;
++			break;
+ 		case I3C_LVR_I2C_INDEX(2):
+ 			if (mode < I3C_BUS_MODE_MIXED_SLOW)
+ 				mode = I3C_BUS_MODE_MIXED_SLOW;
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index f13fd8b..89ea461 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -250,12 +250,17 @@ struct i3c_device {
+  *			     the bus. The only impact in this mode is that the
+  *			     high SCL pulse has to stay below 50ns to trick I2C
+  *			     devices when transmitting I3C frames
++ * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
++ *				present on the bus. However they allows
++ *				compliance up to the maximum SDR SCL clock
++ *				frequency.
+  * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
+  *			     on the bus
+  */
+ enum i3c_bus_mode {
+ 	I3C_BUS_MODE_PURE,
+ 	I3C_BUS_MODE_MIXED_FAST,
++	I3C_BUS_MODE_MIXED_LIMITED,
+ 	I3C_BUS_MODE_MIXED_SLOW,
+ };
+ 
+-- 
+2.7.4
 
--thanks,
-  Bitan
