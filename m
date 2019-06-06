@@ -2,205 +2,161 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7503AC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87E8C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419D3207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939FB20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:54:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ayCzE/G8"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="vHtfpIDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfFFLyV (ORCPT
+        id S1728376AbfFFLyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:54:21 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39416 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbfFFLyV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:54:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56BsDCx085147;
-        Thu, 6 Jun 2019 06:54:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559822053;
-        bh=muC3ZVoaXdyRnjntNAZk0RlDaLb2ntCL0f7txF8lLm4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ayCzE/G8bDxPQzfJ+IppvEOurHkIR5wyKGBL6QQIRnvBUuU//LmxNQFdrN8HVYhDC
-         +B2VYr87HQ3+FL9nDFlG3YuTIvhtk3F6E2WcUkD9xbnZXRz3oMNMWhT+X8tgg/x8us
-         fXoMsyuE8YjTT2w+1OXexTGqXUNUv5wmRf46ikqM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56BsDI8054160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 06:54:13 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 06:54:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 06:54:12 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56BsAue056641;
-        Thu, 6 Jun 2019 06:54:10 -0500
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
-Date:   Thu, 6 Jun 2019 14:54:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Jun 2019 07:54:24 -0400
+Received: from mail-eopbgr700081.outbound.protection.outlook.com ([40.107.70.81]:34497
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727537AbfFFLyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:54:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CigFtLuUQ9PMdS2H3K7Ugrp+Y6WbpJ0+5sJ2nBEWUME=;
+ b=vHtfpIDYYEBkZ4oCh9Iox8aFo1mUPgmSg1oZWFToWs6L4zfuirfBrFC1njLLdJWi5fqenYUOQBJ2UT1BTQmejPnlKj8wfS3avIo9TBlRsaZ6ikfw9K9SH0y8v2WypxdQA7QY896wk0w8cNvuHnpof3Lw8HiGpZ7Bw95UqCz/MNI=
+Received: from CH2PR02MB6088.namprd02.prod.outlook.com (52.132.228.94) by
+ CH2PR02MB6357.namprd02.prod.outlook.com (52.132.231.91) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Thu, 6 Jun 2019 11:54:19 +0000
+Received: from CH2PR02MB6088.namprd02.prod.outlook.com
+ ([fe80::3cca:e795:ebe2:b366]) by CH2PR02MB6088.namprd02.prod.outlook.com
+ ([fe80::3cca:e795:ebe2:b366%6]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
+ 11:54:19 +0000
+From:   Vishal Sagar <vsagar@xilinx.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+CC:     Hyun Kwon <hyunk@xilinx.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: RE: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+Thread-Topic: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Thread-Index: AQHVGfMZOW4cFen74Uu6bLLV7F3ehaaL4iYAgAKizUA=
+Date:   Thu, 6 Jun 2019 11:54:19 +0000
+Message-ID: <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
+References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
+In-Reply-To: <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vsagar@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa2ca81c-14e9-431b-0358-08d6ea75b54b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6357;
+x-ms-traffictypediagnostic: CH2PR02MB6357:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CH2PR02MB6357CDA0A231E4FF76B5F3D5A7170@CH2PR02MB6357.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39860400002)(376002)(13464003)(199004)(189003)(86362001)(4326008)(256004)(966005)(229853002)(2906002)(7416002)(76176011)(33656002)(305945005)(6116002)(66556008)(486006)(74316002)(9686003)(71200400001)(68736007)(5660300002)(53936002)(55016002)(6306002)(478600001)(3846002)(71190400001)(316002)(52536014)(14444005)(6636002)(476003)(66946007)(73956011)(76116006)(99286004)(66446008)(6506007)(64756008)(7736002)(7696005)(66476007)(81166006)(446003)(6246003)(66066001)(186003)(11346002)(8676002)(81156014)(26005)(110136005)(54906003)(14454004)(25786009)(6436002)(53546011)(8936002)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6357;H:CH2PR02MB6088.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3Nnk0tja/JXCddA6qkOASzHWTu2cIrisG1jWl3Ge7HdTdboox6VE7hRcTcwwq8okrY9FOgStG1EB79pb+gWVwRJi/INTqv+hBynDFzF+lHNR8ApsATDLyAHwdlrZ5hyjYu6Qq0Rtqyhp3CTZKNcFLHAEHhMvo8xE8fgoDwRvjerhnJ3NxmD/rzo3fxRD6BaKom3N51E649tcrt5jYptzr1LdWXhIxKlU4uA28HWNtdMQcaSsetNF0i9uDXcO7fPYxDJNLe+oA/O4Mig88Zt3tieB2A1O5KRfzUSUAbLmhJaNMq17MQmX3eRsztrBqMvhVsU/SO6ThmHuSRGlPgzt2xU4UFA8J9QP+hWlWHYuM3sYAxxv7b8cVYjlFfib8OPnplV6Qcc2rdS2MWwaoacBT3v7TXhJee4JxYdQmlyptD0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa2ca81c-14e9-431b-0358-08d6ea75b54b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 11:54:19.1969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vsagar@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6357
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari,
 
+> -----Original Message-----
+> From: Sakari Ailus [mailto:sakari.ailus@linux.intel.com]
+> Sent: Wednesday, June 05, 2019 12:54 AM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; hans.verkuil@cisco.com; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Dinesh Kumar
+> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>; Luca Ceresoli
+> <luca@lucaceresoli.net>; Jacopo Mondi <jacopo@jmondi.org>
+> Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx=
+ MIPI
+> CSI-2 Rx Subsystem
+>=20
+> EXTERNAL EMAIL
+>=20
+> Hi Vishal,
+>=20
+> On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
+>=20
+> > +Optional properties:
+> > +--------------------
+> > +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+> > +  Without this property the driver won't be loaded as IP won't be able=
+ to
+> generate
+> > +  media bus format compliant stream output.
+>=20
+> I think we previously concluded that the format will be just different in
+> this case. So the description appears incorrect.
+>=20
 
-On 06/06/2019 13.49, Jon Hunter wrote:
-> 
-> On 06/06/2019 11:22, Peter Ujfalusi wrote:
-> 
-> ...
-> 
->>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>>> well.
->>>> Not exactly equal.
->>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>>> multiples of 16]
->>>
->>> So I think that the key thing to highlight here, is that the as Sameer
->>> highlighted above for the Tegra ADMA there are two values that need to
->>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->>> has register fields for both of these.
->>
->> How does the ADMA uses the 'client FIFO size' and 'max burst size'
->> values and what is the relation of these values to the peripheral side
->> (ADMAIF)?
-> 
-> Per Sameer's previous comment, the FIFO size is used by the ADMA to
-> determine how much space is available in the FIFO. I assume the burst
-> size just limits how much data is transferred per transaction.
-> 
->>> As you can see from the above the FIFO size can be much greater than the
->>> burst size and so ideally both of these values would be passed to the DMA.
->>>
->>> We could get by with just passing the FIFO size (as the max burst size)
->>> and then have the DMA driver set the max burst size depending on this,
->>> but this does feel quite correct for this DMA. Hence, ideally, we would
->>> like to pass both.
->>>
->>> We are also open to other ideas.
->>
->> I can not find public documentation (I think they are walled off by
->> registration), but correct me if I'm wrong:
-> 
-> No unfortunately, you are not wrong here :-(
-> 
->> ADMAIF - peripheral side
->>  - kind of a small DMA for audio preipheral(s)?
-> 
-> Yes this is the interface to the APE (audio processing engine) and data
-> sent to the ADMAIF is then sent across a crossbar to one of many
-> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
-> configurable depending on the use-case.
-> 
->>  - Variable FIFO size
-> 
-> Yes.
-> 
->>  - sends DMA request to ADMA per words
-> 
-> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
-> word, yes.
-> 
->> ADMA - system DMA
->>  - receives the DMA requests from ADMAIF
->>  - counts the requests
->>  - based on some threshold of the counter it will send/read from ADMAIF?
->>   - maxburst number of words probably?
-> 
-> Sounds about right to me.
-> 
->> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
->> managing that FIFO from the outside, making sure that it does not over
->> or underrun?
-> 
-> Yes.
-> 
->> And it is the one who sets the pace (in effect the DMA burst size - how
->> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
-> 
-> Yes.
-> 
-> So currently, if you look at the ADMA driver
-> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
-> for the burst, but the FIFO size is hard-coded (see the
-> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
-> Ideally, we should not hard-code this but pass it.
+Referring to your email https://lkml.org/lkml/2019/3/22/1823 in response to=
+ v6 patches,
+if the video format bridge is not enabled, then the way in which pixels are=
+ transported on
+the bus don't correspond to the existing media bus formats in Linux.
 
-Sure, hardcoding is never good ;)
+If not loading the driver is incorrect way, is it ok for the driver to allo=
+w same media bus format
+for packed and unpacked data type on the sink pad?
 
-> Given that there are no current users of the ADMA upstream, we could
-> change the usage of the src/dst_maxburst, but being able to set the FIFO
-> size as well would be ideal.
+Or is it ok for the driver to not validate the media bus format set on the =
+sink pad?
 
-Looking at the drivers/dma/tegra210-adma.c for the
-TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
-remote FIFO size would fit.
-There are fields for overflow and starvation(?) thresholds and TX/RX
-size (assuming word length, 3 == 32bits?).
-Both threshold is set to one, so I assume currently ADMA is
-pushing/pulling data word by word.
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
 
-Not sure what the burst size is used for, my guess would be that it is
-used on the memory (DDR) side for optimized, more efficient accesses?
+Regards
+Vishal Sagar
 
-My guess is that the threshold values are the counter limits, if the DMA
-request counter reaches it then ADMA would do a threshold limit worth of
-push/pull to ADMAIF.
-Or there is another register where the remote FIFO size can be written
-and ADMA is counting back from there until it reaches the threshold (and
-pushes/pulling again threshold amount of data) so it keeps the FIFO
-filled with at least threshold amount of data?
-
-I think in both cases the threshold would be the maxburst.
-
-I suppose you have the patch for adma on how to use the fifo_size
-parameter? That would help understand what you are trying to achieve better.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
