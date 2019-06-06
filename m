@@ -3,129 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A520BC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A587C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4F3207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31C0207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhHIkf2p"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="npiXQKxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFFHmP (ORCPT
+        id S1726716AbfFFHnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:42:15 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40310 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFHmP (ORCPT
+        Thu, 6 Jun 2019 03:43:12 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38512 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725267AbfFFHnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:42:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id n5so560489ioc.7;
-        Thu, 06 Jun 2019 00:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J2P7+9BrsV7BFobAF6Gcf5hOBXDyVsf7Cw11pqeBfG0=;
-        b=lhHIkf2p/bhc9lWToqafMcafzKV+1jJqbUCG7KNnGqFyzeGt/DTmAF2+xs4d33W5/v
-         7iBI9jnRJGEJ4oFuU42IfmcB1VjOoRLb86BoiUrqPN5UlJ+h1zk5dVfF8Htjh3rcE2yv
-         A89dNT+HybPHVCM0z+ynLI1HEYDQ3s4ZlPXi3gzGp3y+kFW3SKAkMaMtmrxXWbZQbXaB
-         qEDcCsrPo8rcVxCEbcxqpYw5gyTNNnfjI46gezgvpGnRj0lhgO2iQLJjbz2T6Qhyjg/a
-         xtjIzO6o4JywE81qxr5HEgraSdy2BM5Ko6Gx3GzaV6FndQOGynmNEy4negaMR6caGjel
-         24QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J2P7+9BrsV7BFobAF6Gcf5hOBXDyVsf7Cw11pqeBfG0=;
-        b=Bccff4a02kI+fsnSgs544EzMSxo6ipGBq9abL5sc+qL2JqCSjg/+Q+TI3yy6wCOP0m
-         QcuJkQ8V2kazbC/a8JlHzobKFO4Q9OMGp5Yn4K9vlNrayunGLc3CgiL2PEgpO1o4/UCJ
-         2OHGznYFlA6Dtzng7coVsaZzSPFj1MEUnTz/4SINSzWS1GEZjRbZ7NLTD+WhkthktDDz
-         NsA90fwEj3VD8O89XzxOCpAqFmITk8tfBD0IIdzjea1Okjz6JydpG0oRBmtzyWQ3AVXn
-         PQ7ypcnIbdjYXfueBrWH48sd49snCCR8n/gdEpwIw/mwIXO3U7xJ3cY6XX59N2IDBc8r
-         aBHA==
-X-Gm-Message-State: APjAAAV7f0zdp6AD6FoNmhCMi68jhFr9nc+9aa1iSNz3uiCaJMYA5CTN
-        nnM7ngChwULADBagZAbIYqilILF3w7rdhgZ1Uw==
-X-Google-Smtp-Source: APXvYqy6Ko9syXmU0XkEyDc/Q2Tk12TRz8+zmvPobBbovp2+NfN8I44+rRcRfj31jwt3e23eYV98CO+eDjREb/FXK1w=
-X-Received: by 2002:a5d:9251:: with SMTP id e17mr8467626iol.21.1559806934290;
- Thu, 06 Jun 2019 00:42:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190605141253.38554-1-ghung.quanta@gmail.com> <20190605141253.38554-2-ghung.quanta@gmail.com>
-In-Reply-To: <20190605141253.38554-2-ghung.quanta@gmail.com>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Thu, 6 Jun 2019 10:41:46 +0300
-Message-ID: <CAKKbWA71P+afSiWPoth90-Ydq4DBmxSK_yTRWSN+FPw10CqFAQ@mail.gmail.com>
-Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
-To:     George Hung <ghung.quanta@gmail.com>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benjamin Fair <benjaminfair@google.com>, paulmck@linux.ibm.com,
-        Patrick Venture <venture@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
+        Thu, 6 Jun 2019 03:43:12 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x567abQh026873;
+        Thu, 6 Jun 2019 09:42:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=2pnG067CQBsFQ0nrqkBYXv+JxQO9bStpus+oiXJpQJw=;
+ b=npiXQKxLn1F0OQYGfqEjGS3tkWZ32IYOxnz7/JlRGJV+32nW+Duoh2f28aw3XPvV3VGA
+ /hXCI+ald6VWZ9GdEaO9tV8NIthSvQ1Yx22Fx7TUZwdoZ+yACuU4PfPiK0rvv2jzIkyR
+ fHqcnDS2Dq+p4YmZh/gzPbJyYqVXlZCtpFH6GQMpcv4EssZXnzAqWB9tG1KXhxN4DB/R
+ IznH7iJ88saRSQzbqefnIZ+WBF1rS564RZK/Iyf/FLVY5Xmpslu8tV1jpoZ5YMz4JC+2
+ 5F9OyB/kPx31QBHFBdrKHS99RsI9iw/hYMjUpAQ0BfHmeK/ipbeYIZQyL4/NjxS8+wcl gg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sxqycst26-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 06 Jun 2019 09:42:33 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 68DC334;
+        Thu,  6 Jun 2019 07:42:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3A8F714EB;
+        Thu,  6 Jun 2019 07:42:32 +0000 (GMT)
+Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 6 Jun
+ 2019 09:42:31 +0200
+Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
+ SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
+ 15.00.1347.000; Thu, 6 Jun 2019 09:42:31 +0200
+From:   Erwan LE RAY <erwan.leray@st.com>
+To:     Borut Seljak <borut.seljak@t-2.net>
+CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        "William A. Kennington III" <wak@google.com>, davem@davemloft.net,
-        Tomer Maimon <tomer.maimon@nuvoton.com>,
-        Avi Fishman <Avi.Fishman@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Fwd: [PATCH] serial: stm32: fix a recursive locking in
+ stm32_config_rs485
+Thread-Topic: Fwd: [PATCH] serial: stm32: fix a recursive locking in
+ stm32_config_rs485
+Thread-Index: AQHVGr0egfGBr+I5bUuvhxEmcTN9eaaLX30AgAAD5wCAArxlgA==
+Date:   Thu, 6 Jun 2019 07:42:31 +0000
+Message-ID: <78dfdaaf-d855-8913-b8c5-e4ab6774868a@st.com>
+References: <20190604095452.6360-1-borut.seljak@t-2.net>
+ <f2a264ac-e334-63b7-18c9-e45cde7bdf95@st.com>
+ <41dddd5f-5c1c-3346-890a-8018f26ebd49@st.com>
+ <33271a7e-644b-70e3-f84c-d019b394ce77@st.com>
+In-Reply-To: <33271a7e-644b-70e3-f84c-d019b394ce77@st.com>
+Accept-Language: en-US, fr-FR
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C476C30ECEF8184B9CEC2887624968A7@st.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 5:19 PM George Hung <ghung.quanta@gmail.com> wrote:
->
-> Add device tree documentation for Nuvoton BMC ECC
->
-> Signed-off-by: George Hung <ghung.quanta@gmail.com>
+Hi Borut,
 
-Reviewed-by: Avi Fishman <avifishman70@gmail.com>
+Please remove unused "flags" variable declaration.
 
-> ---
->  .../bindings/edac/npcm7xx-sdram-edac.txt        | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
->
-> diff --git a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
-> new file mode 100644
-> index 000000000000..dd4dac59a5bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
-> @@ -0,0 +1,17 @@
-> +Nuvoton NPCM7xx SoC EDAC device driver
-> +
-> +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and the driver
-> +uses the EDAC framework to implement the ECC detection and corrtection.
-> +
-> +Required properties:
-> +- compatible:  should be "nuvoton,npcm7xx-sdram-edac"
-> +- reg:         Memory controller register set should be <0xf0824000 0x1000>
-> +- interrupts:  should be MC interrupt #25
-> +
-> +Example:
-> +
-> +       mc: memory-controller@f0824000 {
-> +               compatible = "nuvoton,npcm7xx-sdram-edac";
-> +               reg = <0xf0824000 0x1000>;
-> +               interrupts = <0 25 4>;
-> +       };
-> --
-> 2.21.0
->
+Erwan.
 
 
--- 
-Regards,
-Avi
+On 6/4/19 3:55 PM, Erwan LE RAY wrote:
+>
+>> Hi Borut,
+>>
+>> Please add the following line in the commit message (before your=20
+>> sign-off) in a V2 of your patch:
+>>
+>> Fixes: 1bcda09d291081 ("serial: stm32: add support for RS485 hardware=20
+>> control mode")
+>>
+>> I'm OK with the patch itself.
+>>
+>> Erwan.
+>>
+>>
+>> Subject: [PATCH] serial: stm32: fix a recursive locking in
+>>> stm32_config_rs485
+>>> Date: Tue,=A0 4 Jun 2019 11:54:51 +0200
+>>> From: Borut Seljak <borut.seljak@t-2.net>
+>>> CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+>>> <alexandre.torgue@st.com>, Greg Kroah-Hartman
+>>> <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+>>> borut.seljak@t-2.net, linux-serial@vger.kernel.org, Jiri Slaby
+>>> <jslaby@suse.com>, linux-stm32@st-md-mailman.stormreply.com,
+>>> linux-arm-kernel@lists.infradead.org
+>>>
+>>> Remove spin_lock_irqsave in stm32_config_rs485, it cause recursive=20
+>>> locking.
+>>> Already locked in uart_set_rs485_config.
+>>>
+>>> Signed-off-by: Borut Seljak <borut.seljak@t-2.net>
+>>> ---
+>>> =A0 drivers/tty/serial/stm32-usart.c | 2 --
+>>> =A0 1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/tty/serial/stm32-usart.c
+>>> b/drivers/tty/serial/stm32-usart.c
+>>> index e8d7a7bb4339..da373a465f51 100644
+>>> --- a/drivers/tty/serial/stm32-usart.c
+>>> +++ b/drivers/tty/serial/stm32-usart.c
+>>> @@ -107,7 +107,6 @@ static int stm32_config_rs485(struct uart_port=20
+>>> *port,
+>>> =A0=A0=A0=A0=A0 bool over8;
+>>> =A0=A0=A0=A0=A0 unsigned long flags;
+- unsigned long flags;
+>>> =A0 - spin_lock_irqsave(&port->lock, flags);
+>>> =A0=A0=A0=A0=A0 stm32_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit=
+));
+>>> =A0=A0=A0=A0=A0=A0 port->rs485 =3D *rs485conf;
+>>> @@ -147,7 +146,6 @@ static int stm32_config_rs485(struct uart_port=20
+>>> *port,
+>>> =A0=A0=A0=A0=A0 }
+>>> =A0=A0=A0=A0=A0=A0 stm32_set_bits(port, ofs->cr1, BIT(cfg->uart_enable_=
+bit));
+>>> -=A0=A0=A0 spin_unlock_irqrestore(&port->lock, flags);
+>>> =A0=A0=A0=A0=A0=A0 return 0;
+>>> =A0 }=
