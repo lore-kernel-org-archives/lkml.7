@@ -2,213 +2,180 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD66C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D39AC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91D320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368152089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DfY0Q040"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfFFSyN (ORCPT
+        id S1728322AbfFFSyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:54:13 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52414 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfFFSyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:54:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A289EA78;
-        Thu,  6 Jun 2019 11:54:12 -0700 (PDT)
-Received: from [10.37.10.101] (unknown [10.37.10.101])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC8583F5AF;
-        Thu,  6 Jun 2019 11:54:07 -0700 (PDT)
-Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Auger Eric <eric.auger@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        Vincent Stehle <Vincent.Stehle@arm.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-27-eric.auger@redhat.com>
- <20190603163139.70fe8839@x1.home>
- <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
- <20190605154553.0d00ad8d@jacob-builder>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
-Date:   Thu, 6 Jun 2019 19:54:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 14:54:37 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39525 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfFFSyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:54:37 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i34so3937142qta.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=vyj+6CVYT6/SclKU5U5COjT2Okh3PlJFjv+2ILDUOlk=;
+        b=DfY0Q040f6zs3YRa631XXmcuTGF55hxDFVU9TX5ARAqwLQq/3wgV4InukzkKOQsiJD
+         e00JNuL2N1GKGqgUZsRFhjvJmYhg067swzJXzPnrrulT9O7ZC+VY/yEUDG4Gcz1CDSse
+         XibMzl1dCihxY+cXKOJlBlUYBUZqfc6aEEWkTBGMAkbRi0Bx79aqUZd2ynN8QALKcChv
+         5tiGwYdoc7zbsXyaHBojClL6aMNCEiZ+iWBcKw8Mjnqh/Dw7dGNUCamZzXT+aNfNcuTS
+         enS+EFqGMlluJLQff6oyqnCrYG8AFObLci2Mt4hw4aRhmwOW0CRlKAkVRKjhpOGlbBHd
+         KALw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vyj+6CVYT6/SclKU5U5COjT2Okh3PlJFjv+2ILDUOlk=;
+        b=XsrT2jzn3CLf1ZuTqsClPCcKBgE7qT1M1F8vEYz/yRYhS5AeG8OeK2hLjc9Qrw3qQ0
+         2vd9OE6YOVEsEZO/s4glS9qiNneaewm9IeID8htxVTuH+T1z1HsAe6hmmYyoY7hQu1gT
+         smW2Y1Neh+zYMDPdUXNYi3kaAzbegomg2d/Fi52K7p4M6BN3ZdH19gzZ5ucKOo/FrJga
+         +40ZQUgnRgqCg9ugA36LYvJA9cUCefVCvwjaAJ+Ht/nthElwfX76W3vkdpL5D4g2RcIF
+         5wRWQVdERNvIRK5VcaMxggTJdq/ynid20Vh70zmP6Xh7JUuFnN0GeQTLVj+mp9DCkuUL
+         I0Ag==
+X-Gm-Message-State: APjAAAWcDr5UjRPOxoMdlbo/SEAw8KLO/uXwpTIQj3SNNb6iX4xx8851
+        dNns6UM5n7FNauIdAqLJHKX16w==
+X-Google-Smtp-Source: APXvYqx+vVETo47tgK43mzzCTdpyn7vjag/ZaU5oAM9JQ6aHmzaMykBxyQ4w64rpkOSnLhOHAqMRRQ==
+X-Received: by 2002:a0c:d4eb:: with SMTP id y40mr21179717qvh.30.1559847275858;
+        Thu, 06 Jun 2019 11:54:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id t80sm1241863qka.87.2019.06.06.11.54.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 11:54:35 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hYxX1-0008Mq-1o; Thu, 06 Jun 2019 15:54:35 -0300
+Date:   Thu, 6 Jun 2019 15:54:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     rcampbell@nvidia.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/5] mm/hmm: Clean up some coding style and comments
+Message-ID: <20190606185435.GC17373@ziepe.ca>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-3-rcampbell@nvidia.com>
+ <20190606141644.GA2876@ziepe.ca>
+ <20190606142743.GA8053@redhat.com>
+ <20190606154129.GB17373@ziepe.ca>
+ <20190606155213.GB8053@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190605154553.0d00ad8d@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606155213.GB8053@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/2019 23:45, Jacob Pan wrote:
-> On Tue, 4 Jun 2019 18:11:08 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
+On Thu, Jun 06, 2019 at 11:52:13AM -0400, Jerome Glisse wrote:
+> On Thu, Jun 06, 2019 at 12:41:29PM -0300, Jason Gunthorpe wrote:
+> > On Thu, Jun 06, 2019 at 10:27:43AM -0400, Jerome Glisse wrote:
+> > > On Thu, Jun 06, 2019 at 11:16:44AM -0300, Jason Gunthorpe wrote:
+> > > > On Mon, May 06, 2019 at 04:29:39PM -0700, rcampbell@nvidia.com wrote:
+> > > > > From: Ralph Campbell <rcampbell@nvidia.com>
+> > > > > 
+> > > > > There are no functional changes, just some coding style clean ups and
+> > > > > minor comment changes.
+> > > > > 
+> > > > > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> > > > > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> > > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > > Cc: Ira Weiny <ira.weiny@intel.com>
+> > > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > > Cc: Balbir Singh <bsingharora@gmail.com>
+> > > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > >  include/linux/hmm.h | 71 +++++++++++++++++++++++----------------------
+> > > > >  mm/hmm.c            | 51 ++++++++++++++++----------------
+> > > > >  2 files changed, 62 insertions(+), 60 deletions(-)
+> > > > 
+> > > > Applied to hmm.git, thanks
+> > > 
+> > > Can you hold off, i was already collecting patches and we will
+> > > be stepping on each other toe ... for instance i had
+> > 
+> > I'd really rather not, I have a lot of work to do for this cycle and
+> > this part needs to start to move forward now. I can't do everything
+> > last minute, sorry.
+> > 
+> > The patches I picked up all look very safe to move ahead.
 > 
->> Hi Alex,
->>
->> On 6/4/19 12:31 AM, Alex Williamson wrote:
->>> On Sun, 26 May 2019 18:10:01 +0200
->>> Eric Auger <eric.auger@redhat.com> wrote:
->>>   
->>>> This patch registers a fault handler which records faults in
->>>> a circular buffer and then signals an eventfd. This buffer is
->>>> exposed within the fault region.
->>>>
->>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>>
->>>> ---
->>>>
->>>> v3 -> v4:
->>>> - move iommu_unregister_device_fault_handler to vfio_pci_release
->>>> ---
->>>>  drivers/vfio/pci/vfio_pci.c         | 49
->>>> +++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_private.h
->>>> |  1 + 2 files changed, 50 insertions(+)
->>>>
->>>> diff --git a/drivers/vfio/pci/vfio_pci.c
->>>> b/drivers/vfio/pci/vfio_pci.c index f75f61127277..520999994ba8
->>>> 100644 --- a/drivers/vfio/pci/vfio_pci.c
->>>> +++ b/drivers/vfio/pci/vfio_pci.c
->>>> @@ -30,6 +30,7 @@
->>>>  #include <linux/vfio.h>
->>>>  #include <linux/vgaarb.h>
->>>>  #include <linux/nospec.h>
->>>> +#include <linux/circ_buf.h>
->>>>  
->>>>  #include "vfio_pci_private.h"
->>>>  
->>>> @@ -296,6 +297,46 @@ static const struct vfio_pci_regops
->>>> vfio_pci_fault_prod_regops = { .add_capability =
->>>> vfio_pci_fault_prod_add_capability, };
->>>>  
->>>> +int vfio_pci_iommu_dev_fault_handler(struct iommu_fault_event
->>>> *evt, void *data) +{
->>>> +	struct vfio_pci_device *vdev = (struct vfio_pci_device *)
->>>> data;
->>>> +	struct vfio_region_fault_prod *prod_region =
->>>> +		(struct vfio_region_fault_prod
->>>> *)vdev->fault_pages;
->>>> +	struct vfio_region_fault_cons *cons_region =
->>>> +		(struct vfio_region_fault_cons
->>>> *)(vdev->fault_pages + 2 * PAGE_SIZE);
->>>> +	struct iommu_fault *new =
->>>> +		(struct iommu_fault *)(vdev->fault_pages +
->>>> prod_region->offset +
->>>> +			prod_region->prod *
->>>> prod_region->entry_size);
->>>> +	int prod, cons, size;
->>>> +
->>>> +	mutex_lock(&vdev->fault_queue_lock);
->>>> +
->>>> +	if (!vdev->fault_abi)
->>>> +		goto unlock;
->>>> +
->>>> +	prod = prod_region->prod;
->>>> +	cons = cons_region->cons;
->>>> +	size = prod_region->nb_entries;
->>>> +
->>>> +	if (CIRC_SPACE(prod, cons, size) < 1)
->>>> +		goto unlock;
->>>> +
->>>> +	*new = evt->fault;
->>>> +	prod = (prod + 1) % size;
->>>> +	prod_region->prod = prod;
->>>> +	mutex_unlock(&vdev->fault_queue_lock);
->>>> +
->>>> +	mutex_lock(&vdev->igate);
->>>> +	if (vdev->dma_fault_trigger)
->>>> +		eventfd_signal(vdev->dma_fault_trigger, 1);
->>>> +	mutex_unlock(&vdev->igate);
->>>> +	return 0;
->>>> +
->>>> +unlock:
->>>> +	mutex_unlock(&vdev->fault_queue_lock);
->>>> +	return -EINVAL;
->>>> +}
->>>> +
->>>>  static int vfio_pci_init_fault_region(struct vfio_pci_device
->>>> *vdev) {
->>>>  	struct vfio_region_fault_prod *header;
->>>> @@ -328,6 +369,13 @@ static int vfio_pci_init_fault_region(struct
->>>> vfio_pci_device *vdev) header = (struct vfio_region_fault_prod
->>>> *)vdev->fault_pages; header->version = -1;
->>>>  	header->offset = PAGE_SIZE;
->>>> +
->>>> +	ret =
->>>> iommu_register_device_fault_handler(&vdev->pdev->dev,
->>>> +
->>>> vfio_pci_iommu_dev_fault_handler,
->>>> +					vdev);
->>>> +	if (ret)
->>>> +		goto out;
->>>> +
->>>>  	return 0;
->>>>  out:
->>>>  	kfree(vdev->fault_pages);
->>>> @@ -570,6 +618,7 @@ static void vfio_pci_release(void *device_data)
->>>>  	if (!(--vdev->refcnt)) {
->>>>  		vfio_spapr_pci_eeh_release(vdev->pdev);
->>>>  		vfio_pci_disable(vdev);
->>>> +
->>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);  
->>>
->>>
->>> But this can fail if there are pending faults which leaves a device
->>> reference and then the system is broken :(  
->> This series only features unrecoverable errors and for those the
->> unregistration cannot fail. Now unrecoverable errors were added I
->> admit this is confusing. We need to sort this out or clean the
->> dependencies.
-> As Alex pointed out in 4/29, we can make
-> iommu_unregister_device_fault_handler() never fail and clean up all the
-> pending faults in the host IOMMU belong to that device. But the problem
-> is that if a fault, such as PRQ, has already been injected into the
-> guest, the page response may come back after handler is unregistered
-> and registered again.
+> I want to post all the patch you need to apply soon, it is really
+> painful because they are lot of different branches
 
-I'm trying to figure out if that would be harmful in any way. I guess it
-can be a bit nasty if we handle the page response right after having
-injected a new page request that uses the same PRGI. In any other case we
-discard the page response, but here we forward it to the endpoint and:
+I've already handled everything in your hmm-5.3, so I don't think
+there is anything for you to do in that regard. Please double check
+though!
 
-* If the response status is success, endpoint retries the translation. The
-guest probably hasn't had time to handle the new page request and
-translation will fail, which may lead the endpoint to give up (two
-unsuccessful translation requests). Or send a new request
+If you have new patches please post them against something sensible
+(and put them in a git branch) and I can usually sort out 'git am'
+conflicts pretty quickly.
 
-* otherwise the endpoint won't retry the access, and could also disable
-PRI if the status is failure.
+> If you hold of i will be posting all the patches in one big set so
+> that you can apply all of them in one go and it will be a _lot_
+> easier for me that way.
 
-> We need a way to reject such page response belong
-> to the previous life of the handler. Perhaps a sync call to the guest
-> with your fault queue eventfd? I am not sure.
+You don't need to repost my patches, I can do that myself, but thanks
+for all the help getting them ready! Please respond to my v2 with more
+review's/ack's/changes/etc so the series can move toward being
+applied.
 
-We could simply expect the device driver not to send any page response
-after unregistering the fault handler. Is there any reason VFIO would need
-to unregister and re-register the fault handler on a live guest?
+> On process thing it would be easier if we ask Dave/Daniel to merge
+> hmm within drm this cycle. 
+
+Yes, I expect we will do this - probably also to the AMD tree judging
+on things in -next. This is the entire point of running a shared tree.
+
+> Merging with Linus will break drm drivers and it seems easier to me
+> to fix all this within the drm tree.
+
+This is the normal process with a shared tree, we merge the tree
+*everywhere it is required* so all trees can run concurrently.
+
+I will *also* send it to Linus early so that Linus reviews the hmm
+patches in the HMM pull request, not in the DRM or RDMA pull
+request. This is best-practice when working across trees like this.
+
+Please just keep me up to date when things conflicting arise and we
+will work out the best solution.
+
+Reminder, I still need patches from you for:
+ - Fix all the kconfig stuff for randconfig failures/etc
+ - Enable ARM64
+ - Remove deprecated APIs from hmm.h
+
+Please send them ASAP so it can be tested.
+
+There shouldn't be any patches held back for 5.4 - send them all now.
 
 Thanks,
-Jean
+Jason
