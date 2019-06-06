@@ -2,114 +2,94 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1ADC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC21BC28EB8
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B08420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1042206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbfFFWaA (ORCPT
+        id S1727358AbfFFWdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:30:00 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:41593 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727297AbfFFW36 (ORCPT
+        Thu, 6 Jun 2019 18:33:14 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47915 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfFFWdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:29:58 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 868484EA85D;
-        Fri,  7 Jun 2019 08:29:50 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hZ0sP-0000g2-35; Fri, 07 Jun 2019 08:28:53 +1000
-Date:   Fri, 7 Jun 2019 08:28:53 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190606222853.GD14308@dread.disaster.area>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+        Thu, 6 Jun 2019 18:33:14 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id f38bd6ae9b979b74; Fri, 7 Jun 2019 00:33:11 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] PCI: PM: Avoid resuming devices in D3hot during system suspend
+Date:   Fri, 07 Jun 2019 00:30:58 +0200
+Message-ID: <3078848.tiz3m2NLmW@kreacher>
+In-Reply-To: <2958812.87Qy2A3tJo@kreacher>
+References: <2958812.87Qy2A3tJo@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=-fIxr7oOWDDygYgkAT8A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 03:03:30PM -0700, Ira Weiny wrote:
-> On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
-> > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
-> > So I'd like to actually mandate that you *must* hold the file lease until
-> > you unpin all pages in the given range (not just that you have an option to
-> > hold a lease). And I believe the kernel should actually enforce this. That
-> > way we maintain a sane state that if someone uses a physical location of
-> > logical file offset on disk, he has a layout lease. Also once this is done,
-> > sysadmin has a reasonably easy way to discover run-away RDMA application
-> > and kill it if he wishes so.
-> 
-> Fair enough.
-> 
-> I was kind of heading that direction but had not thought this far forward.  I
-> was exploring how to have a lease remain on the file even after a "lease
-> break".  But that is incompatible with the current semantics of a "layout"
-> lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
-> out to see what people think of this idea so I did not look at keeping the
-> lease.]
-> 
-> Also hitch is that currently a lease is forcefully broken after
-> <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
-> lease type with the semantics you describe.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-That just requires a flag when gaining the layout lease to say it is
-an "unbreakable layout lease". That gives the kernel the information
-needed to determine whether it should attempt to break the lease on
-truncate or just return ETXTBSY....
+The current code resumes devices in D3hot during system suspend if
+the target power state for them is D3cold, but that is not necessary
+in general.  It only is necessary to do that if the platform firmware
+requires the device to be resumed, but that should be covered by
+the platform_pci_need_resume() check anyway, so rework
+pci_dev_keep_suspended() to avoid returning 'false' for devices
+in D3hot which need not be resumed due to platform firmware
+requirements.
 
-i.e. it allows gup-pinning applications that want to behave nicely
-with other users to drop their gup pins and release the lease when
-something else wants to truncate/hole punch the file rather than
-have truncate return an error. e.g. to allow apps to cleanly interop
-with other breakable layout leases (e.g. pNFS) on the same
-filesystem.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-FWIW, I'd also like to see the "truncate fails when unbreakable
-layout lease is held" behaviour to be common across all
-filesystem/storage types, not be confined to DAX only. i.e. truncate
-should return ETXTBSY when an unbreakable layout lease is held
-by an application, not just when "DAX+gup-pinned" is triggered....
+-> v2: Add an empty line as requested during review.
 
-Whatever we decide, the behaviour of truncate et al needs to be
-predictable, consistent and easily discoverable...
+---
+ drivers/pci/pci.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Cheers,
+Index: linux-pm/drivers/pci/pci.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.c
++++ linux-pm/drivers/pci/pci.c
+@@ -2474,10 +2474,20 @@ bool pci_dev_keep_suspended(struct pci_d
+ {
+ 	struct device *dev = &pci_dev->dev;
+ 	bool wakeup = device_may_wakeup(dev);
++	pci_power_t target_state;
+ 
+-	if (!pm_runtime_suspended(dev)
+-	    || pci_target_state(pci_dev, wakeup) != pci_dev->current_state
+-	    || platform_pci_need_resume(pci_dev))
++	if (!pm_runtime_suspended(dev) || platform_pci_need_resume(pci_dev))
++		return false;
++
++	target_state = pci_target_state(pci_dev, wakeup);
++
++	/*
++	 * If the earlier platform check has not triggered, D3cold is just power
++	 * removal on top of D3hot, so no need to resume the device in that
++	 * case.
++	 */
++	if (target_state != pci_dev->current_state &&
++	    target_state != PCI_D3cold && pci_dev->current_state != PCI_D3hot)
+ 		return false;
+ 
+ 	/*
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+
+
