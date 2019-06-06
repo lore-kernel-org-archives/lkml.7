@@ -2,105 +2,146 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED168C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B798C46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B597D20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EDA20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X2LFSAvI"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ma4J8RKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfFFQxN (ORCPT
+        id S1728486AbfFFQxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:53:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:44928 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbfFFQxN (ORCPT
+        Thu, 6 Jun 2019 12:53:25 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12824 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfFFQxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:53:13 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CBA6333B;
-        Thu,  6 Jun 2019 18:53:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559839991;
-        bh=tOU1DPqgtzYWV6dcVYsaOM6vAbyR5dvopinvYtXfsAU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X2LFSAvI++z6oE1SYWy0VykF2ETXjBbx1dAqkMSKuMzcFxSS1fr2cg1jemYUF9xw0
-         cHALCR3cGZqU3NRl6COU0JK31Avb/TX4XawbfsKvd+svD0jPqSrtIUEi2KidJvW/Qg
-         61MtX4jP/7UQ33TcMCBKjKb894MPF/KiWbQexCAE=
-Date:   Thu, 6 Jun 2019 19:52:57 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/20] dt-bindings: display, renesas,du: Document cmms
- property
-Message-ID: <20190606165257.GJ12825@pendragon.ideasonboard.com>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-3-jacopo+renesas@jmondi.org>
+        Thu, 6 Jun 2019 12:53:24 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf945010001>; Thu, 06 Jun 2019 09:53:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 09:53:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 09:53:23 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 16:53:20 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
+ <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
+ <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
+ <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
+ <e6741e07-be0c-d16b-36d7-77a3288f0500@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a652b103-979d-7910-5e3f-ec4bca3a3a3b@nvidia.com>
+Date:   Thu, 6 Jun 2019 17:53:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190606142220.1392-3-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e6741e07-be0c-d16b-36d7-77a3288f0500@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559840001; bh=I/fuzuK3Yiq+HteMq2fY8VIc2IY2bt5ed0CgfdjuV54=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ma4J8RKDt2lu89e0z0l+xoOop5ExSdljrZj9Fj9i+Op6lYX9er+LJb8yLlx5KeTtE
+         p7B49HuIaunwz1kZX45K3rUwqYnC5VTWDoUInHMruK3a6r5qvS4SfjzW114miL4Lh1
+         EswOf/X8CHcCdbGpgBkmNwCUGUlM6U59cmlwguXVKmepaBsomRPD/B41rVlKeW2+GH
+         BFMBMQDxVX4MNro5LW8ALA2dolOX3cL0i3719k8y/XIOCL7Hj61Ioekomge9nUOo1k
+         ktjLmrDAp1xNQgy2b/+E9t38STr2G3qPExgTq1uW/d/FUNUz5YbzU8iMlVhHNgRQmh
+         OKD4N6SNk0TgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
 
-Thank you for the patch.
+On 06/06/2019 17:44, Dmitry Osipenko wrote:
+> 06.06.2019 19:32, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 06/06/2019 16:18, Dmitry Osipenko wrote:
+>>
+>> ...
+>>
+>>>>> If I understood everything correctly, the FIFO buffer is shared among
+>>>>> all of the ADMA clients and hence it should be up to the ADMA driver =
+to
+>>>>> manage the quotas of the clients. So if there is only one client that
+>>>>> uses ADMA at a time, then this client will get a whole FIFO buffer, b=
+ut
+>>>>> once another client starts to use ADMA, then the ADMA driver will hav=
+e
+>>>>> to reconfigure hardware to split the quotas.
+>>>>
+>>>> The FIFO quotas are managed by the ADMAIF driver (does not exist in
+>>>> mainline currently but we are working to upstream this) because it is
+>>>> this device that owns and needs to configure the FIFOs. So it is reall=
+y
+>>>> a means to pass the information from the ADMAIF to the ADMA.
+>>>
+>>> So you'd want to reserve a larger FIFO for an audio channel that has a
+>>> higher audio rate since it will perform reads more often. You could als=
+o
+>>> prioritize one channel over the others, like in a case of audio call fo=
+r
+>>> example.
+>>>
+>>> Is the shared buffer smaller than may be needed by clients in a worst
+>>> case scenario? If you could split the quotas statically such that each
+>>> client won't ever starve, then seems there is no much need in the
+>>> dynamic configuration.
+>>
+>> Actually, this is still very much relevant for the static case. Even if
+>> we defined a static configuration of the FIFO mapping in the ADMAIF
+>> driver we still need to pass this information to the ADMA. I don't
+>> really like the idea of having it statically defined in two different
+>> drivers.
+>=20
+> Ah, so you need to apply the same configuration in two places. Correct?
+>=20
+> Are ADMAIF and ADMA really two different hardware blocks? Or you
+> artificially decoupled the ADMA driver?
 
-On Thu, Jun 06, 2019 at 04:22:02PM +0200, Jacopo Mondi wrote:
-> Document the newly added 'cmms' property which accepts a list of phandle
-> and channel index pairs that point to the CMM units available for each
-> Display Unit output video channel.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> index aedb22b4d161..100114ef11d5 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> @@ -44,6 +44,10 @@ Required Properties:
->      instance that serves the DU channel, and the channel index identifies the
->      LIF instance in that VSP.
->  
-> +  - cmms: A list of phandles to the CMM instances present in the SoC, one
-> +    for each available DU channel. The property shall not be specified for
-> +    SoCs that does not provide any CMM (such as V3M and V3H).
+These are two different hardware modules with their own register sets.
+Yes otherwise, it would be a lot simpler!
 
-s/does/do/
+Jon
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +
->  Required nodes:
->  
->  The connections to the DU output video ports are modeled using the OF graph
-> @@ -89,6 +93,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
->  			 <&cpg CPG_MOD 721>;
->  		clock-names = "du.0", "du.1", "du.2", "du.3";
->  		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-> +		cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
->  
->  		ports {
->  			#address-cells = <1>;
-
--- 
-Regards,
-
-Laurent Pinchart
+--=20
+nvpublic
