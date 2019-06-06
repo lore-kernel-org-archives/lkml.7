@@ -2,90 +2,67 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42012C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D11C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BADA20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:01:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KWChOf+j"
+	by mail.kernel.org (Postfix) with ESMTP id 2566E20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfFFRBI (ORCPT
+        id S1729875AbfFFRCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:01:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45114 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfFFRBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:01:07 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2AD6A33B;
-        Thu,  6 Jun 2019 19:01:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559840466;
-        bh=MF218gquzWXC4u+to0JZZATVETWWKvUN/hjgtdzhRHA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KWChOf+jAdJEpUYNt3YTObfW+jdZN2XRVZ9iFVcj7KROMxw2+zg4flsuAQ1aU824z
-         wjJdJifzSaxyyctcEACpA5AAHcrVbQgO/ApyWcBefBxXs9Whe78SA74Qr/ceH/IGhA
-         j0LyGRKn8ssxNtqzQCVgjQSnxTYkPTVTEFR9IFQ4=
-Date:   Thu, 6 Jun 2019 20:00:52 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/20] clk: renesas: r8a77995: Add CMM clocks
-Message-ID: <20190606170052.GO12825@pendragon.ideasonboard.com>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-9-jacopo+renesas@jmondi.org>
+        Thu, 6 Jun 2019 13:02:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56414 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726379AbfFFRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:02:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 853E7AD1D;
+        Thu,  6 Jun 2019 17:02:42 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 19:02:39 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 04/12] mm/sparsemem: Convert kmalloc_section_memmap()
+ to populate_section_memmap()
+Message-ID: <20190606170239.GB31194@linux>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606142220.1392-9-jacopo+renesas@jmondi.org>
+In-Reply-To: <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Thu, Jun 06, 2019 at 04:22:08PM +0200, Jacopo Mondi wrote:
-> Add clock definitions for CMM units on Renesas R-Car Gen3 D3.
+On Wed, Jun 05, 2019 at 02:58:21PM -0700, Dan Williams wrote:
+> Allow sub-section sized ranges to be added to the memmap.
+> populate_section_memmap() takes an explict pfn range rather than
+> assuming a full section, and those parameters are plumbed all the way
+> through to vmmemap_populate(). There should be no sub-section usage in
+> current deployments. New warnings are added to clarify which memmap
+> allocation paths are sub-section capable.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/clk/renesas/r8a77995-cpg-mssr.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-> index eee3874865a9..acd5fabb785a 100644
-> --- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
-> +++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-> @@ -146,6 +146,8 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
->  	DEF_MOD("vspbs",		 627,	R8A77995_CLK_S0D1),
->  	DEF_MOD("ehci0",		 703,	R8A77995_CLK_S3D2),
->  	DEF_MOD("hsusb",		 704,	R8A77995_CLK_S3D2),
-> +	DEF_MOD("cmm1",			 710,	R8A77995_CLK_S1D1),
-> +	DEF_MOD("cmm0",			 711,	R8A77995_CLK_S1D1),
->  	DEF_MOD("du1",			 723,	R8A77995_CLK_S1D1),
->  	DEF_MOD("du0",			 724,	R8A77995_CLK_S1D1),
->  	DEF_MOD("lvds",			 727,	R8A77995_CLK_S2D1),
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
 -- 
-Regards,
-
-Laurent Pinchart
+Oscar Salvador
+SUSE L3
