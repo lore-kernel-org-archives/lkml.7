@@ -2,214 +2,221 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32F8C28EB6
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BE3C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA57F206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868B8206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QXtKos/k"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vXOnQFA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfFFK7X (ORCPT
+        id S1727876AbfFFK7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:59:23 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:38272 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFFK7X (ORCPT
+        Thu, 6 Jun 2019 06:59:31 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60549 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfFFK7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:59:23 -0400
-Received: by mail-ua1-f66.google.com with SMTP id j2so692511uaq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 03:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BCQjT/dN+S6PT9bic2mJjb0lJGYLVQpNMvJ1zYghNDc=;
-        b=QXtKos/kTzNpN15u7L22xuMZ+X/tFCdNDCGyhWw3JEmjnGpckmY3Zb26rEOzKhwUHv
-         3TJl3S0bbQrdyx2biZbkTcf3pmj7tvyArojCPmJiBpZOj6UJUAPt/4hZVXyXHPDuJOFP
-         XnI5PBY8mSW3ckXI+YKfEo73RtS6W8u4G8sxCW3rZMzkTMdnXd8NfpAzzII4cr1ZAa6t
-         vDzcfoys+KvDh2DCYEsRAaUO0Uz7fIcasFW7q8aHe1qb+IiNRTyruKmqHGbbBsZXfA9i
-         9TvyeqtcK73tS8KYsHvAKCUKY6LxPaeQwnY/EeDD0QqIwVfmtW64Wx2zBvMnShUiTs35
-         PR+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BCQjT/dN+S6PT9bic2mJjb0lJGYLVQpNMvJ1zYghNDc=;
-        b=cEZv88OwrKyT1b9MbEH6Zqd8ULN9VlsDPEzXNN2wQhwoyHxzrV4x6NihgOayuBVQWo
-         RU2n4vaqcKyFmjYRneK7lYyGohRegvLAfgRMOePm2a6DEVX2VxO/27j8KLmIgkdwNC8E
-         ogcSqSi7NcpORMctmPXwAUC+MKow/92hV8O6/AyzphUSe7nXc+FzEOBwxjp2bTgiGmn+
-         AaPIQvrK/zaku56TKZOt1xDmQBbuUs0Ej4nsqceULZ2RAmUaWhHZuszpUyT9VNyGolp7
-         Rc3eMc0iAA7aIy25zDtMHWaRv2wvyXd9FndwKhp26Wn3Yi0Obhg4b6ozP+wVXWOPWMQ/
-         93qA==
-X-Gm-Message-State: APjAAAV/wITc8CIy7ommyrZACfuUtpAa+65avnDtA6pD8GXFju8HVuUF
-        84GSDQUojzQ3NxoT2jqElYXVHTTCDigQQBS8baXnng==
-X-Google-Smtp-Source: APXvYqxIqsPCf+QjrfA+yoMATC25AYnBEKSnSLTLpDgMldaWwYiUA0Otk95MzrliXpVNkDVeZpPEawnhtSpG+00cfWQ=
-X-Received: by 2002:ab0:64cc:: with SMTP id j12mr11087480uaq.110.1559818761644;
- Thu, 06 Jun 2019 03:59:21 -0700 (PDT)
+        Thu, 6 Jun 2019 06:59:30 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190606105928euoutp01b388cc1b9a2ec560c76f0634500fd814~llufdCmQD0167201672euoutp01B
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 10:59:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190606105928euoutp01b388cc1b9a2ec560c76f0634500fd814~llufdCmQD0167201672euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559818768;
+        bh=v865NwK69lmWWiFDGUwndz3M24HjP/DKAiXeTb9R+XY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=vXOnQFA6eivxdFqvIdMpY2L9vdZR0latyl4V5W2qLPKTLtil6U9q3OvLyz5D84mdu
+         LjaDwmK3spZp1mSeSVi9k7U+SgAfHmUTI9D8APG3CA+cMj7KGchGWv0OgxSdNJtRd4
+         iqVcGedVchJCuioVdyM9izcWDbp3UrUBUZTRBuSs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190606105927eucas1p207368fec01de0de674da641c99c17c43~lluedOQor1211012110eucas1p2D;
+        Thu,  6 Jun 2019 10:59:27 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C9.06.04325.F02F8FC5; Thu,  6
+        Jun 2019 11:59:27 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190606105926eucas1p2e613ca3e2c9c6537877273c2cca2c3fd~lluduH-sm1527315273eucas1p2e;
+        Thu,  6 Jun 2019 10:59:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190606105926eusmtrp24bf3dc59fa000e86ce44dd1d377cc89e~lludejPW10645406454eusmtrp2D;
+        Thu,  6 Jun 2019 10:59:26 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-87-5cf8f20f72b7
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id AB.69.04140.E02F8FC5; Thu,  6
+        Jun 2019 11:59:26 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190606105925eusmtip20b1887ab1b662bf9c2940fda64356a1d~lluctXinr2753927539eusmtip2H;
+        Thu,  6 Jun 2019 10:59:25 +0000 (GMT)
+Subject: Re: [PATCH v3 06/15] drm/bridge: tc358767: Simplify AUX data read
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     Archit Taneja <architt@codeaurora.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <28ddfb42-db9a-f095-9230-d324db5ee483@samsung.com>
+Date:   Thu, 6 Jun 2019 12:59:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <000000000000cf6a70058aa48695@google.com>
-In-Reply-To: <000000000000cf6a70058aa48695@google.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 6 Jun 2019 12:59:10 +0200
-Message-ID: <CAG_fn=Vk-7VH74e=E6fssHP25Jf84RDaJX_0z77xRNsnZquhvw@mail.gmail.com>
-Subject: Re: KMSAN: uninit-value in rt2500usb_bbp_read
-To:     syzbot <syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>, helmut.schaa@googlemail.com,
-        kvalo@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, sgruszka@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190605070507.11417-7-andrew.smirnov@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjtvffu7jqbXaflg0XSMEjLL4q6ZIlBxC36EQUSNbCll6m5GZuu
+        LKg5JaeVtlKW07JAaVSizY+cpOUEV+h0+VEm2STsh8WIMlMxM7er5L/DOc95zznwUrjEJQil
+        0lXZnFolz5SSIqKle64/at3PWVmsftKfyTfsZ/R2nYDRGzwCZnaoi2A6XzgwZmj6O8mM3/uA
+        MUXGGiEz2FZFMmOfXhNMffUomejPDpbcxNjx8kWMtZnHhGyloULAuq87MLZ0IZZ1jDzH2Cnr
+        Zrav3Ikd8zsl2pfKZaZrOXVMwhlR2tjUADo/tuGi8dUkrkPfAouRHwX0LtC/a8OLkYiS0BYE
+        rSUWzCtI6F8I7swn88IUggLTALHiqHeWIV54hKDR04d4hweB6ckhLw6ij4AzbxD34mD6GPzU
+        20ivAaenMXg1YPRFkHQELDR+IL1YTCdAo+uez0DQ4TD8vt3Hr6dPgru7QcDfBMKbiglfC7+l
+        +6df6nzBOB0G+c2VOI9DYHSiGvOGAe0RQvvdESFf+yAMzxsRj4Pgq6Npmd8Ei7ZqjMdXwW0p
+        wHmzAUFzgw3nhXjocrxdakEtJURAfVsMTx+A3uFewksDHQAjnkC+QwDcbjHhPC0GwzUJf70F
+        3M7m5QdDoNY1Td5CUvOqZeZVa8yr1pj/5z5AxGMUwuVolApOs1PFXYjWyJWaHJUiOiVLaUVL
+        /6znr2O6FXX8OWtHNIWka8XwbEYmEci1mlylHQGFS4PFWtesTCJOlede4tRZyeqcTE5jRxsp
+        Qhoivrxm/LSEVsizuXMcd55Tr6gY5ReqQ8qy2B7X7tGo43ZhylY6+eHLxJqmz1Ym+ejej7dO
+        DJknf2dHBmzQKV7Gb2oLcxzd06es7evstZWJeoocdVr068rWOpupoSljW1IVXlQVPZ/ExFp2
+        lFqCreE3avDCH8Thwjpth4nhVD8i+pnteXFm0czc0ykh2e2uyLjfIouPkxKaNHlcJK7WyP8B
+        yolaOWMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7p8n37EGNydLW7R3GFr0XSogdWi
+        qeMtq8WPK4dZLA7uOc5kceXrezaLB3NvMll0TlzCbnF51xw2i7v3TrBYrJ9/i82B2+NyXy+T
+        x4Op/5k8ds66y+4xu2Mmq8f97uNMHv1/DTyO39jO5PF5k5zHualnmQI4o/RsivJLS1IVMvKL
+        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQy7n6+xFhwV6xi4oGXzA2M
+        rwW7GDk5JARMJNafncLYxcjFISSwlFFix7bpTBAJcYnd898yQ9jCEn+udbFBFL0GKtq+lxUk
+        ISzgJXG28TJYkYiAn0TXvANMIEXMAt+ZJCYu38sC0XGUUWL/5V0sIFVsApoSfzffZAOxeQXs
+        JDZfmAvWzSKgInH1+l6wuKhAhMSZ9ytYIGoEJU7OfAJmcwLVr3m6lhHEZhZQl/gz7xIzhC0v
+        0bx1NpQtLnHryXymCYxCs5C0z0LSMgtJyywkLQsYWVYxiqSWFuem5xYb6RUn5haX5qXrJefn
+        bmIERvG2Yz+37GDsehd8iFGAg1GJh1di4/cYIdbEsuLK3EOMEhzMSiK8ZRd+xAjxpiRWVqUW
+        5ccXleakFh9iNAV6biKzlGhyPjDB5JXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0t
+        SC2C6WPi4JRqYDyiLF0p0BnsedB3e6nnnu8TlSqjkj55zNYSYJG5FK3JdeD9lWyW2S8feK2I
+        Xly8oKR+n/jFnz/VxY/xxqcdDts949B+5le7a/4GGR/l254S4/b81zaRq8lBC6zLfzQ6eagd
+        3SkR1Xyd4/y2nfc4npbcdL+8MMi0i5VT5tmeTl/JR+vnqa038lBiKc5INNRiLipOBACvrHZ6
+        +AIAAA==
+X-CMS-MailID: 20190606105926eucas1p2e613ca3e2c9c6537877273c2cca2c3fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605070535epcas2p36fee13315966e45d425c073162aa1aae
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605070535epcas2p36fee13315966e45d425c073162aa1aae
+References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
+        <CGME20190605070535epcas2p36fee13315966e45d425c073162aa1aae@epcas2p3.samsung.com>
+        <20190605070507.11417-7-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 11:42 AM syzbot
-<syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com> wrote:
+On 05.06.2019 09:04, Andrey Smirnov wrote:
+> Simplify AUX data read by removing index arithmetic and shifting with
+> a helper functions that does three things:
 >
-> Hello,
+>     1. Fetch data from up to 4 32-bit registers from the chip
+>     2. Optionally fix data endianness (not needed on LE hosts)
+>     3. Copy read data into user provided array.
 >
-> syzbot found the following crash on:
->
-> HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-> git tree:       kmsan
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D12f8b01ea0000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D602468164ccdc=
-30a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Da106a5b084a6890=
-d2607
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14f746f2a00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D153072d2a0000=
-0
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit=
-:
-> Reported-by: syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com
->
-> usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
-> usb 1-1: config 0 descriptor??
-> usb 1-1: reset high-speed USB device number 2 using dummy_hcd
-> usb 1-1: device descriptor read/64, error -71
-> ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x09
-> failed for offset 0x0000 with error -71
-> ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x07
-As this line suggests:
-> failed for offset 0x04d0 with error -71
-, rt2x00usb_vendor_req_buff_lock() fails with error -71, which means
-it doesn't initialize the buffer.
-But rt2500usb_register_read_lock() ignores that status code and just
-assumes the data is always initialized.
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KMSAN: uninit-value in rt2500usb_regbusy_read
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:116 [inline]
-> BUG: KMSAN: uninit-value in rt2500usb_bbp_read+0x174/0x640
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
-> CPU: 1 PID: 4943 Comm: kworker/1:2 Not tainted 5.1.0+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
->   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
->   rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1=
-16
-> [inline]
->   rt2500usb_bbp_read+0x174/0x640
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
->   rt2500usb_validate_eeprom
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
->   rt2500usb_probe_hw+0x3b1/0x2230
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
->   rt2x00lib_probe_dev+0xb81/0x3090
-> drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1427
->   rt2x00usb_probe+0x7c7/0xf70
-> drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:837
->   rt2500usb_probe+0x50/0x60
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1977
->   usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
->   really_probe+0xdae/0x1d80 drivers/base/dd.c:513
->   driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
->   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
->   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
->   __device_attach+0x454/0x730 drivers/base/dd.c:844
->   device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
->   bus_probe_device+0x137/0x390 drivers/base/bus.c:514
->   device_add+0x288d/0x30e0 drivers/base/core.c:2106
->   usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
->   generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
->   usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
->   really_probe+0xdae/0x1d80 drivers/base/dd.c:513
->   driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
->   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
->   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
->   __device_attach+0x454/0x730 drivers/base/dd.c:844
->   device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
->   bus_probe_device+0x137/0x390 drivers/base/bus.c:514
->   device_add+0x288d/0x30e0 drivers/base/core.c:2106
->   usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
->   process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
->   worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
->   kthread+0x4b5/0x4f0 kernel/kthread.c:254
->   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
->
-> Local variable description: ----reg.i.i@rt2500usb_bbp_read
-> Variable was created at:
->   rt2500usb_register_read_lock
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:72 [inline]
->   rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1=
-15
-> [inline]
->   rt2500usb_bbp_read+0xa4/0x640
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
->   rt2500usb_validate_eeprom
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
->   rt2500usb_probe_hw+0x3b1/0x2230
-> drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Archit Taneja <architt@codeaurora.org>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  drivers/gpu/drm/bridge/tc358767.c | 40 +++++++++++++++++++++----------
+>  1 file changed, 27 insertions(+), 13 deletions(-)
 >
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> index e197ce0fb166..da47d81e7109 100644
+> --- a/drivers/gpu/drm/bridge/tc358767.c
+> +++ b/drivers/gpu/drm/bridge/tc358767.c
+> @@ -321,6 +321,29 @@ static int tc_aux_get_status(struct tc_data *tc, u8 *reply)
+>  	return 0;
+>  }
+>  
+> +static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
+> +{
+> +	u32 auxrdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)];
+> +	int ret, i, count = DIV_ROUND_UP(size, sizeof(u32));
+> +
+> +	ret = regmap_bulk_read(tc->regmap, DP0_AUXRDATA(0), auxrdata, count);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		/*
+> +		 * Our regmap is configured as LE for register data,
+> +		 * so we need undo any byte swapping that might have
+> +		 * happened to preserve original byte order.
+> +		 */
+> +		le32_to_cpus(&auxrdata[i]);
+> +	}
+> +
+> +	memcpy(data, auxrdata, size);
+> +
+> +	return size;
+> +}
+> +
+
+
+Hmm, cannot we just use regmap_raw_read?
+
+Beside this:
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
 
 
 
---=20
-Alexander Potapenko
-Software Engineer
+>  static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+>  			       struct drm_dp_aux_msg *msg)
+>  {
+> @@ -379,19 +402,10 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (request == DP_AUX_I2C_READ || request == DP_AUX_NATIVE_READ) {
+> -		/* Read data */
+> -		while (i < size) {
+> -			if ((i % 4) == 0) {
+> -				ret = regmap_read(tc->regmap,
+> -						  DP0_AUXRDATA(i >> 2), &tmp);
+> -				if (ret)
+> -					return ret;
+> -			}
+> -			buf[i] = tmp & 0xff;
+> -			tmp = tmp >> 8;
+> -			i++;
+> -		}
+> +	switch (request) {
+> +	case DP_AUX_NATIVE_READ:
+> +	case DP_AUX_I2C_READ:
+> +		return tc_aux_read_data(tc, msg->buffer, size);
+>  	}
+>  
+>  	return size;
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
