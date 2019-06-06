@@ -2,241 +2,121 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263D8C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F52BC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA52C2067C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E2C2067C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ac0gkbVk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHOrwfS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfFFNpY (ORCPT
+        id S1728635AbfFFNqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:45:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37837 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfFFNpX (ORCPT
+        Thu, 6 Jun 2019 09:46:30 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33288 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFFNqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:45:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m15so210380lfh.4;
-        Thu, 06 Jun 2019 06:45:21 -0700 (PDT)
+        Thu, 6 Jun 2019 09:46:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 14so2717331qtf.0;
+        Thu, 06 Jun 2019 06:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N9FXYf9GpqwRa74VNnvDOcwiC8SgM19NN51vAX+BRDA=;
-        b=Ac0gkbVkOaiQ9tZEyyDw6LZzO6TBmb8BeKt1LP+lGBDc0htpS47qYQ5RpXOaFveNkU
-         6RWqvvsNAls3Lk4SbAG6doDO+Nm4qiFYHpW1q9XOrOcZkymblw3Ceq6nchMGhZQEJ6Gb
-         ONiL7doYbWY/O1C3OQxg23Okyo5ikgyivpLRUtbYpXnX++dpmA8oKizcdxffi+c9tOBY
-         FNOsKFv3O+FKh+T5mk4odCdfHOrnFVUqp4DpRZJ1RlCmEAfikZLlGxmkpVaHcfDNYMQX
-         cNQqM7QkZiEROKVEXDM5JC+xdBUsrtOnGi8YK4HVeNJehvuQ+/tqDS08xtYJuxkWNmXM
-         u7gA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sxuZRg/a5BwwLpOXc2E8P4g4IXtD5jAKIRcm5GraeZs=;
+        b=XHOrwfS8/mtrMMyB0x5R2qAgNUAIbmokPuEjYslAfmR42hmTwX6mUmvqN0qJVubtIA
+         apBbNQEYjXPml15lz6BHEJTV10xXUF5a6sDyMzyaiyne5WyQLcBKqZPkonlIeHJsVGeM
+         m7wlYApzbK9DFyYGaWuyjgPUexcb9gM9Z78ysaRPD5M+FgS52C8hZJ85gec5f0OUj1Q1
+         IODc0tO8cks0OwbkxIrpk1JLV8DGd0RTdzDZW7beSOlIe6BEMRk9LukdwPPTrpWmbjVh
+         XKBQfQNgo+jLan7eW+FMPE3CY69AggrgnhF2KWAH2HBjK7a15UvDrlnFSJoQNGGeekgW
+         RdEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N9FXYf9GpqwRa74VNnvDOcwiC8SgM19NN51vAX+BRDA=;
-        b=WM8wjuhPFLpKG5Bz//24yQGH4fiJYnU/EmUM1QXshrnlf0xDZ3zPDHEq21O51Q9eQy
-         ydHGgRlH2veXGtzA2Ge6JHdo/1/baH65luby6foD4bVUNwWvRB2xzLYHEtiGexnNQcmi
-         tgWbjm54t7xOAGYz3Ud0pci0NtLct38YaK19SdJlEzt5O+mvK65m2FYTGf+2/4Qh8POs
-         F5FjAgCJhbx4zRs0whvi9Xu8CybGreMFCuZUu9gnJ5aVjBQ4FGixiQGo1rBk23ibCmWA
-         /1WluezNUNniKgjQhamsWS0hmJJfXfJKZ31+rmMLNabIwdG480xmUSTV0hCUcaI+7XRY
-         iQhQ==
-X-Gm-Message-State: APjAAAX10tw/t8BwdpbcMB9ECcSPEjkAeu6GCmWN/q+1LA0OSb9okBLP
-        ZHjZo0R50bZufBq3a4Qwy5oX50Wg
-X-Google-Smtp-Source: APXvYqwr/W5dtZzxKDImfntzoLRb7IZrxMdCWG+eVkjYSkuH443erGdlxsXYyfIYVaqp3vWF/L7XhQ==
-X-Received: by 2002:ac2:48a5:: with SMTP id u5mr17688706lfg.62.1559828720120;
-        Thu, 06 Jun 2019 06:45:20 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id c5sm307714lfm.7.2019.06.06.06.45.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 06:45:18 -0700 (PDT)
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
-Date:   Thu, 6 Jun 2019 16:45:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sxuZRg/a5BwwLpOXc2E8P4g4IXtD5jAKIRcm5GraeZs=;
+        b=oelqLTW1K7m53dxWmCWg1ZGiFuJ11gOzPgnirEc7Aw7yacMZ7z+JpDr82iAVum/i/B
+         RWqv/7MNKk4SJzJTM61manXDTSEpjPTFepGAD85KaxWzfQ890X9T5EYwmv0Yk02GAoHA
+         KwzaWEhRF8//CegcFoYH2oLUXkYdOAbbKbUREfezGJ8yMjNbCXP2S53aCymH1/7/GYnV
+         M0QLC6ohokP47Z5p+CRVdUaTI8oYuLrYFb7pUcPDL1auQyeHkriz/MOwGYPj4JWjRnkd
+         pWYlA1h+Yf+9iNrz/CyXpCqc3oPVTeEFekovRjuda8fJQ682keN1ia3F9mccmY5SeR1b
+         O0RQ==
+X-Gm-Message-State: APjAAAXNjo7Kdvq3B8YH2Z7W8iXNc5hibQFfCAokE53vc7yMdrtzNtXj
+        oefYbCwIvmJRKp3PzR8rJDI=
+X-Google-Smtp-Source: APXvYqzvYPqMM+pY1ADNXKjLo3mWNDAGhRI7ulZ41cG+60iOZwW/XVjlNwg0XL5s/YODyp1GiDnkwg==
+X-Received: by 2002:a0c:99d8:: with SMTP id y24mr38959520qve.74.1559828789107;
+        Thu, 06 Jun 2019 06:46:29 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.208.82])
+        by smtp.gmail.com with ESMTPSA id d38sm1344329qtb.95.2019.06.06.06.46.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 06:46:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 41B7441149; Thu,  6 Jun 2019 10:46:24 -0300 (-03)
+Date:   Thu, 6 Jun 2019 10:46:24 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
+ syscalls
+Message-ID: <20190606134624.GD30166@kernel.org>
+References: <20190606094845.4800-1-leo.yan@linaro.org>
+ <20190606094845.4800-4-leo.yan@linaro.org>
+ <20190606133838.GC30166@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606133838.GC30166@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 15:37, Jon Hunter пишет:
+Em Thu, Jun 06, 2019 at 10:38:38AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Jun 06, 2019 at 05:48:44PM +0800, Leo Yan escreveu:
+> > This patch adds support for arm64 raw syscall numbers so that we can use
+> > it on arm64 platform.
+> > 
+> > After applied this patch, we need to specify macro -D__aarch64__ or
+> > -D__x86_64__ in compilation option so Clang can use the corresponding
+> > syscall numbers for arm64 or x86_64 respectively, other architectures
+> > will report failure when compilation.
 > 
-> On 06/06/2019 12:54, Peter Ujfalusi wrote:
->>
->>
->> On 06/06/2019 13.49, Jon Hunter wrote:
->>>
->>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
->>>
->>> ...
->>>
->>>>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>>>>> well.
->>>>>> Not exactly equal.
->>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>>>>> multiples of 16]
->>>>>
->>>>> So I think that the key thing to highlight here, is that the as Sameer
->>>>> highlighted above for the Tegra ADMA there are two values that need to
->>>>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->>>>> has register fields for both of these.
->>>>
->>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
->>>> values and what is the relation of these values to the peripheral side
->>>> (ADMAIF)?
->>>
->>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
->>> determine how much space is available in the FIFO. I assume the burst
->>> size just limits how much data is transferred per transaction.
->>>
->>>>> As you can see from the above the FIFO size can be much greater than the
->>>>> burst size and so ideally both of these values would be passed to the DMA.
->>>>>
->>>>> We could get by with just passing the FIFO size (as the max burst size)
->>>>> and then have the DMA driver set the max burst size depending on this,
->>>>> but this does feel quite correct for this DMA. Hence, ideally, we would
->>>>> like to pass both.
->>>>>
->>>>> We are also open to other ideas.
->>>>
->>>> I can not find public documentation (I think they are walled off by
->>>> registration), but correct me if I'm wrong:
->>>
->>> No unfortunately, you are not wrong here :-(
->>>
->>>> ADMAIF - peripheral side
->>>>  - kind of a small DMA for audio preipheral(s)?
->>>
->>> Yes this is the interface to the APE (audio processing engine) and data
->>> sent to the ADMAIF is then sent across a crossbar to one of many
->>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
->>> configurable depending on the use-case.
->>>
->>>>  - Variable FIFO size
->>>
->>> Yes.
->>>
->>>>  - sends DMA request to ADMA per words
->>>
->>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
->>> word, yes.
->>>
->>>> ADMA - system DMA
->>>>  - receives the DMA requests from ADMAIF
->>>>  - counts the requests
->>>>  - based on some threshold of the counter it will send/read from ADMAIF?
->>>>   - maxburst number of words probably?
->>>
->>> Sounds about right to me.
->>>
->>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
->>>> managing that FIFO from the outside, making sure that it does not over
->>>> or underrun?
->>>
->>> Yes.
->>>
->>>> And it is the one who sets the pace (in effect the DMA burst size - how
->>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
->>>
->>> Yes.
->>>
->>> So currently, if you look at the ADMA driver
->>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
->>> for the burst, but the FIFO size is hard-coded (see the
->>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
->>> Ideally, we should not hard-code this but pass it.
->>
->> Sure, hardcoding is never good ;)
->>
->>> Given that there are no current users of the ADMA upstream, we could
->>> change the usage of the src/dst_maxburst, but being able to set the FIFO
->>> size as well would be ideal.
->>
->> Looking at the drivers/dma/tegra210-adma.c for the
->> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
->> remote FIFO size would fit.
->> There are fields for overflow and starvation(?) thresholds and TX/RX
->> size (assuming word length, 3 == 32bits?).
+> So, please check what I have in my perf/core branch, I've completely
+> removed arch specific stuff from augmented_raw_syscalls.c.
 > 
-> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
-> bytes.
+> What is done now is use a map to specify what to copy, that same map
+> that is used to state which syscalls should be traced.
 > 
->> Both threshold is set to one, so I assume currently ADMA is
->> pushing/pulling data word by word.
-> 
-> That's different. That indicates thresholds when transfers start.
-> 
->> Not sure what the burst size is used for, my guess would be that it is
->> used on the memory (DDR) side for optimized, more efficient accesses?
-> 
-> That is the actual burst size.
-> 
->> My guess is that the threshold values are the counter limits, if the DMA
->> request counter reaches it then ADMA would do a threshold limit worth of
->> push/pull to ADMAIF.
->> Or there is another register where the remote FIFO size can be written
->> and ADMA is counting back from there until it reaches the threshold (and
->> pushes/pulling again threshold amount of data) so it keeps the FIFO
->> filled with at least threshold amount of data?
->>
->> I think in both cases the threshold would be the maxburst.
->>
->> I suppose you have the patch for adma on how to use the fifo_size
->> parameter? That would help understand what you are trying to achieve better.
-> 
-> Its quite simple, we would just use the FIFO size to set the fields
-> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
-> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
-> 
-> Jon
-> 
+> It uses that tools/perf/arch/arm64/entry/syscalls/mksyscalltbl to figure
+> out the mapping of syscall names to ids, just like is done for x86_64
+> and other arches, falling back to audit-libs when that syscalltbl thing
+> is not present.
 
-Hi,
+Also added:
 
-If I understood everything correctly, the FIFO buffer is shared among
-all of the ADMA clients and hence it should be up to the ADMA driver to
-manage the quotas of the clients. So if there is only one client that
-uses ADMA at a time, then this client will get a whole FIFO buffer, but
-once another client starts to use ADMA, then the ADMA driver will have
-to reconfigure hardware to split the quotas.
+Fixes: ac96287cae08 ("perf trace: Allow specifying a set of events to add in perfconfig")
 
--- 
-Dmitry
+For the stable@kernel.org folks to automagically pick this.
+
+- Arnaldo
