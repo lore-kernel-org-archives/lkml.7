@@ -7,71 +7,75 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79514C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8854EC28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CD5207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567F820872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z4+/xa5I"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="00LRxlmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfFFIaV (ORCPT
+        id S1727303AbfFFIaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:30:21 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54438 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFIaU (ORCPT
+        Thu, 6 Jun 2019 04:30:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37150 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFIai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:30:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g135so1451228wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:30:18 -0700 (PDT)
+        Thu, 6 Jun 2019 04:30:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 22so1448279wmg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:30:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:cc:references:to:from:openpgp:autocrypt:organization
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=pk4TP3jkzutsV/3BYmS7awVOTNmUuRDjlf79Ih7MWMY=;
-        b=z4+/xa5IUfyD3bpXieodfLwEeIVow8eIo9NeAx0ycCcILxxu/LBMb6sHNelSYIcuCf
-         HsxA39jCaziqR5chUnmnLyEiP3mosu6PRSZ/sdU7jRq2kJKCsQAsHj2EkFDX1o1gLA0p
-         eYAXllH486rM3q+Rx+7qyiyB2Py3cuUX1sylyi9a8YO8OxC3k7xUvYbwUwnoAUcuHnGZ
-         lsQhbfA5vg/02qFHDyFtqitqITTROFU9JvWaNbN3Yh+JFBF92DyL16uuuXZzCzXcIyiP
-         WEyjE3WzZLjlsQvRoukoWGo6egHSSLAGi07pL/N+Il1qLwSG+GlHcNXZ6m07OS2viULZ
-         RwzQ==
+        bh=lWkUIrodvhUR/Vu7PHVp17sBkIpYVtPnDIFzBj/hJa4=;
+        b=00LRxlmYV1saOU1Wl+JG9Lh6z68v/R9ZBc0Qow4LifAGc8PTrHqiS4LvyImbrv9ier
+         dVYhf0Wp47+lUZXOS0VpMS2smtIfussoTY2W/RCQ30TyrGNig2zg9o814oFFCfAuzz91
+         O1oPdrnfJCazrGXtlXaHEF0Ll0nXNOm+XxJM/TSJoztf/6eEBu45Hh0W7EGovMu2pxYK
+         Y8F6jMKkqPb8Ck2xpfo5VuJ68RKm/hHS4Z3Y2hOXd4dpV6FFRWuuOQO2I2wgJbaXX7Zk
+         LQ/maBaafdeqBlGeaX7xrmeqbc7MYbf0kRIAIbZVsMzYbrNSk7AvnpbgJpT+p0d/pi4D
+         IKsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:to:from:openpgp:autocrypt
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=pk4TP3jkzutsV/3BYmS7awVOTNmUuRDjlf79Ih7MWMY=;
-        b=GLFVYExsm1FdZx7MFYWqdMEoph9GEMHeTOvgTZzmbPaqWhJYo3IIokIvraxw1b8bwP
-         XZL/4ixepAC+zaq0wl0ugRsVYNMkxUPLpr5uh1h/paeoSRN79LrD21uwHOcVv9GAyJYf
-         +rARc11CSD3w1mYVBWMd3iiUMhuhFGFjjF6vmA37GZTh6uEoCQPM/tb53zSBtqg7GJLp
-         fdWDbSq61ZMviE1cO6V5AKLqS8X8vR4TI1X9qEbrYMEyqtIxo6znB9lxToricOl233Ax
-         CW9GjxJlN0jvZoi9AGiOuKE7Bq8WewUlV+AczASyj1zjTmORe0oMf6uL9yPgyZMU5hLB
-         FKCw==
-X-Gm-Message-State: APjAAAV+ooxQ9drW3MNwGzWC8PO7zbA+j3bwubcpxjfhG8Vv04TUiOci
-        dQc6K2befUvym1z4UMcXyrhSpw==
-X-Google-Smtp-Source: APXvYqzxhPHRm9++LnrexnxMr+PCPOW8aedrYUC4UmGtHedAFoF3unj4c8hp8FhONjydpohRGLayUQ==
-X-Received: by 2002:a1c:5f09:: with SMTP id t9mr26835150wmb.112.1559809817207;
-        Thu, 06 Jun 2019 01:30:17 -0700 (PDT)
+        bh=lWkUIrodvhUR/Vu7PHVp17sBkIpYVtPnDIFzBj/hJa4=;
+        b=QpOzTZO7p2B9BwrOQJmzl/XP11YibbcxUgqKWFjnInAeJESaJJ89zxVA+eWd2Thfy3
+         K4dck0Gui433YO8OvgM0dEqvFlogYmhEs/Sp8RTlCg+KgZt/SbX8vFZh0SJsMt0UvCFU
+         Ndk4u8x41fjYcVp5TbFe0tUhXVRCukLK/uRnRdFK3wV5/v8lzDLIL1nSUm5pcLcQcKhd
+         ZT46bE2SfHw3EJt6wGm2jbMnaW3NAx8fpOmDKuBpA8WdveFalEOncRRIBSmm5EhiW3b1
+         v2Q0rSbILei5/dGJokEdQKmT3huFgOCnde3jI+5COzvps4l7262j0zhCFRh/Lrd65pWO
+         baOQ==
+X-Gm-Message-State: APjAAAVBl26t07E6P8tA4TIoa81GMX0LfvZu/hdaOCBPVD6KMq0vLSwJ
+        qWOPjZ44ZkMbdxPhGOuKdbywfw==
+X-Google-Smtp-Source: APXvYqwN6hJbyp1511FI8B8Q3PkkmydpA7jPINjcdqP5BhjvAFpiMsOkzpXyxyNWDfzl3wJzNQnGfA==
+X-Received: by 2002:a7b:cbc6:: with SMTP id n6mr8465443wmi.14.1559809836133;
+        Thu, 06 Jun 2019 01:30:36 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l12sm836614wmj.22.2019.06.06.01.30.16
+        by smtp.gmail.com with ESMTPSA id f197sm1134357wme.39.2019.06.06.01.30.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:30:16 -0700 (PDT)
-Subject: Re: [PATCH 1/2] ARM: multi_v7_defconfig: add Panfrost driver
+        Thu, 06 Jun 2019 01:30:35 -0700 (PDT)
+Subject: Re: [PATCH 2/2] arm64: defconfig: add Panfrost driver
+To:     arm@kernel.org
 Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
         linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Olof Johansson <olof@lixom.net>,
         Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+        "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 References: <20190604112003.31813-1-tomeu.vizoso@collabora.com>
-To:     arm@kernel.org
+ <20190604112003.31813-2-tomeu.vizoso@collabora.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -124,12 +128,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <baffe48d-5228-55f5-694f-1d4d899a41be@baylibre.com>
-Date:   Thu, 6 Jun 2019 10:30:15 +0200
+Message-ID: <45509c02-2efc-3027-ff8f-1f47d224eaa2@baylibre.com>
+Date:   Thu, 6 Jun 2019 10:30:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604112003.31813-1-tomeu.vizoso@collabora.com>
+In-Reply-To: <20190604112003.31813-2-tomeu.vizoso@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,35 +142,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof, Arnd,
-
-Could you take these directly or an arm soc maintainer should take them in their trees ?
-
-Thanks,
-Neil
-
 On 04/06/2019 13:20, Tomeu Vizoso wrote:
 > With the goal of making it easier for CI services such as KernelCI to
 > run tests for it.
 > 
 > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 > ---
->  arch/arm/configs/multi_v7_defconfig | 1 +
+>  arch/arm64/configs/defconfig | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 6b748f214eae..952dff9d39f2 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -656,6 +656,7 @@ CONFIG_DRM_VC4=m
->  CONFIG_DRM_ETNAVIV=m
->  CONFIG_DRM_MXSFB=m
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4d583514258c..d588ceb9aa3c 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -505,6 +505,7 @@ CONFIG_DRM_HISI_HIBMC=m
+>  CONFIG_DRM_HISI_KIRIN=m
+>  CONFIG_DRM_MESON=m
 >  CONFIG_DRM_PL111=m
 > +CONFIG_DRM_PANFROST=m
->  CONFIG_FB_EFI=y
->  CONFIG_FB_WM8505=y
->  CONFIG_FB_SH_MOBILE_LCDC=y
+>  CONFIG_FB=y
+>  CONFIG_FB_MODE_HELPERS=y
+>  CONFIG_BACKLIGHT_GENERIC=m
 > 
 
-And BTW :
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
