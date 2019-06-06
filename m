@@ -2,125 +2,140 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762F8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90122C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB2420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FtwT/aVY"
+	by mail.kernel.org (Postfix) with ESMTP id 62635208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfFFXNR (ORCPT
+        id S1727616AbfFFXOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:13:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:55483 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfFFXNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:13:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45KhKQ2MJfz9s7h;
-        Fri,  7 Jun 2019 09:13:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559862794;
-        bh=5t2oQc6s+V43RQb10WwGr/fOTSIUUuBYwks8rlJztTU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FtwT/aVYHwYEVJjH/XYZAn+00QxuGkmS6g9kGAYH5ObQBfZcgzSaW85LBI7n22Q66
-         zmBpd7bCyJ6Edx49ZHGW27v64TpDwZFtoRrbGyyNrGAxJC8JQLihv3m07ffwjzONOU
-         ijcIBCRwSkga7RYZWZQxIdstoqPKd6tdN4K62EtZkIMlXiCfYvAH1QTkM0ZhT0LAtg
-         my82gMJ/6u/FaAQ2Mjxa2AGTRKmJGObYmpiNrK9HVO4WkoGppb74FoyESxJ61NWsbn
-         4pXOerOWoJfqYugUFa4CmsTAKnTyKp5+OMp+GchTV4ouATt6VGPc2Qbf5pQhwW1qTE
-         5VQrkr/CUkS3w==
-Date:   Fri, 7 Jun 2019 09:13:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: linux-next: manual merge of the clk tree with Linus' tree
-Message-ID: <20190607091309.7410c584@canb.auug.org.au>
+        Thu, 6 Jun 2019 19:14:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:41715 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfFFXOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 19:14:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id x17so16326iog.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 16:14:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=l9pinidd/tGKCpjMseqDc7ZTsfhvn4wdVbMaTBOdGOM=;
+        b=U0bn/lMlURv0dc/2LUTCA9exkK2izD1lGhNIm009mNUbexPrTf3DRb8qirmxhsfYmZ
+         iKsxj/fSfUJpnLtzFqoC7y5Z2u5mojPeiVLJjon8dfje4I62M1WHhGRZUYn6Yn02I9I4
+         pA9pF4/5VdTBRWWY/JdiVyAqVOoRcFUWVnMidZsLj/3e1FOOK/yrtcX/FGVPx3mJ7g8V
+         i5o2y3oRqK5oTKooiC1iyFCa9DJKKFjdt5PfJql4+8tShfVxC5I/xndEWFvr7beWTRfj
+         UcAB9PLoJDx8XdtCnNvSyHJKpJn5Yg4meDfDcTV+hI7oGD/MStnAzt/Hi4OjLK4SSUJa
+         DJ3A==
+X-Gm-Message-State: APjAAAWb55Q7QsqmYnItVJjWCTC6zckc8f2KLp3hp2CwQAmsSNjEFEbM
+        TXIt+aHlGV4/RdBaa7ri4AY7ehC3ykIRQkDJMuMkqW2UlHsd
+X-Google-Smtp-Source: APXvYqxXzf2VfP3HezFCUmwxAxPbzY6848/Uvr4YiHxacLFlLIXnL5YVIpNhLVk/FcFtL6Fq36VBeprvCc22BZWMQ22t5eaKQNia
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/93V4mXoVrrmFNr+q3NtUspS"; protocol="application/pgp-signature"
+X-Received: by 2002:a5e:c705:: with SMTP id f5mr33202129iop.113.1559862846161;
+ Thu, 06 Jun 2019 16:14:06 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 16:14:06 -0700
+In-Reply-To: <0000000000006b30f30587a5b569@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d810c9058aafdeb9@google.com>
+Subject: Re: general protection fault in ip6_dst_lookup_tail (2)
+From:   syzbot <syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, dvyukov@google.com, edumazet@google.com,
+        kafai@fb.com, kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/93V4mXoVrrmFNr+q3NtUspS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+syzbot has found a reproducer for the following crash on:
 
-Hi all,
+HEAD commit:    07c3bbdb samples: bpf: print a warning about headers_install
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14424e2ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7b54c66298f8420
+dashboard link: https://syzkaller.appspot.com/bug?extid=58d8f704b86e4e3fb4d3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f50e1a00000
 
-Today's linux-next merge of the clk tree got a conflict in:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com
 
-  drivers/clk/bcm/Kconfig
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 14003 Comm: syz-executor.4 Not tainted 5.2.0-rc2+ #14
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:ip6_route_get_saddr include/net/ip6_route.h:120 [inline]
+RIP: 0010:ip6_dst_lookup_tail+0xf0e/0x1b30 net/ipv6/ip6_output.c:1032
+Code: e6 07 e8 75 66 55 fb 48 85 db 0f 84 83 08 00 00 e8 67 66 55 fb 48 8d  
+7b 7c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
+89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 07
+RSP: 0018:ffff888079027480 EFLAGS: 00010a07
+RAX: dffffc0000000000 RBX: ff8880990716c000 RCX: 0000000000000000
+RDX: 1ff1101320e2d80f RSI: ffffffff861b3f59 RDI: ff8880990716c07c
+RBP: ffff8880790275d8 R08: ffff8880855b43c0 R09: ffffed1015d26be8
+R10: ffffed1015d26be7 R11: ffff8880ae935f3b R12: ffff888079027740
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff888079027768
+FS:  00007f7158009700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd85cf4eb8 CR3: 00000000a96aa000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  ip6_dst_lookup_flow+0xa8/0x220 net/ipv6/ip6_output.c:1155
+  tcp_v6_connect+0xda3/0x20a0 net/ipv6/tcp_ipv6.c:282
+  __inet_stream_connect+0x834/0xe90 net/ipv4/af_inet.c:659
+  tcp_sendmsg_fastopen net/ipv4/tcp.c:1143 [inline]
+  tcp_sendmsg_locked+0x2318/0x3920 net/ipv4/tcp.c:1185
+  tcp_sendmsg+0x30/0x50 net/ipv4/tcp.c:1419
+  inet_sendmsg+0x141/0x5d0 net/ipv4/af_inet.c:802
+  sock_sendmsg_nosec net/socket.c:652 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:671
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
+  __do_sys_sendmsg net/socket.c:2339 [inline]
+  __se_sys_sendmsg net/socket.c:2337 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2337
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7158008c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
+RDX: 0000000020008844 RSI: 0000000020000240 RDI: 0000000000000005
+RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f71580096d4
+R13: 00000000004c6ccc R14: 00000000004dbb30 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace c968f232eacd4c70 ]---
+RIP: 0010:ip6_route_get_saddr include/net/ip6_route.h:120 [inline]
+RIP: 0010:ip6_dst_lookup_tail+0xf0e/0x1b30 net/ipv6/ip6_output.c:1032
+Code: e6 07 e8 75 66 55 fb 48 85 db 0f 84 83 08 00 00 e8 67 66 55 fb 48 8d  
+7b 7c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
+89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 07
+RSP: 0018:ffff888079027480 EFLAGS: 00010a07
+RAX: dffffc0000000000 RBX: ff8880990716c000 RCX: 0000000000000000
+RDX: 1ff1101320e2d80f RSI: ffffffff861b3f59 RDI: ff8880990716c07c
+RBP: ffff8880790275d8 R08: ffff8880855b43c0 R09: ffffed1015d26be8
+R10: ffffed1015d26be7 R11: ffff8880ae935f3b R12: ffff888079027740
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff888079027768
+FS:  00007f7158009700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000015523b8 CR3: 00000000a96aa000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-between commit:
-
-  ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
-
-from Linus' tree and commit:
-
-  5d59f12a19e6 ("clk: bcm: Make BCM2835 clock drivers selectable")
-
-from the clk tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/clk/bcm/Kconfig
-index 29ee7b776cd4,0eb281d597fc..000000000000
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@@ -1,4 -1,12 +1,14 @@@
- +# SPDX-License-Identifier: GPL-2.0-only
-++
-+ config CLK_BCM2835
-+ 	bool "Broadcom BCM2835 clock support"
-+ 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-+ 	depends on COMMON_CLK
-+ 	default ARCH_BCM2835 || ARCH_BRCMSTB
-+ 	help
-+ 	  Enable common clock framework support for Broadcom BCM2835
-+ 	  SoCs.
-+=20
-  config CLK_BCM_63XX
-  	bool "Broadcom BCM63xx clock support"
-  	depends on ARCH_BCM_63XX || COMPILE_TEST
-
---Sig_/93V4mXoVrrmFNr+q3NtUspS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz5ngUACgkQAVBC80lX
-0GyQDgf+LGuzQdp70VRYdrIcUfsg5dDLlS6YY4xflac7gVJXy3w+W+P4XGCxF+nB
-eP6fYlHmATP5yJMA2nmukpX/2unUHcDhrbKKo0hMZenhrkJsjRevNuHG/GuerjbJ
-gicOJR80/VtaFy7fIFPKp2eUfppPqL5MSV7MFZ3k+4/ITT9qcZHCuECxLVVOdZ30
-NAlqNEfKJbA+VGDZ5nt437kMdqy7IoLVJQt1OaVI0ecHambPCCHQrFP/N4Vx6/3d
-+XkWRvQSJNzRl7yUNWdHtcLEPtpqtvQW3bN69Cyp2JnQlrzHrs5i+U2S/KnoLekG
-XoN0VqiOa1pZK7StmVf14E5aq/2LRA==
-=q05B
------END PGP SIGNATURE-----
-
---Sig_/93V4mXoVrrmFNr+q3NtUspS--
