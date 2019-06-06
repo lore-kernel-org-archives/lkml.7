@@ -2,121 +2,129 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F52BC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B389C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E2C2067C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHOrwfS8"
+	by mail.kernel.org (Postfix) with ESMTP id 7AA182070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfFFNqa (ORCPT
+        id S1728456AbfFFNtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:46:30 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33288 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfFFNqa (ORCPT
+        Thu, 6 Jun 2019 09:49:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51656 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726877AbfFFNtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:46:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 14so2717331qtf.0;
-        Thu, 06 Jun 2019 06:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sxuZRg/a5BwwLpOXc2E8P4g4IXtD5jAKIRcm5GraeZs=;
-        b=XHOrwfS8/mtrMMyB0x5R2qAgNUAIbmokPuEjYslAfmR42hmTwX6mUmvqN0qJVubtIA
-         apBbNQEYjXPml15lz6BHEJTV10xXUF5a6sDyMzyaiyne5WyQLcBKqZPkonlIeHJsVGeM
-         m7wlYApzbK9DFyYGaWuyjgPUexcb9gM9Z78ysaRPD5M+FgS52C8hZJ85gec5f0OUj1Q1
-         IODc0tO8cks0OwbkxIrpk1JLV8DGd0RTdzDZW7beSOlIe6BEMRk9LukdwPPTrpWmbjVh
-         XKBQfQNgo+jLan7eW+FMPE3CY69AggrgnhF2KWAH2HBjK7a15UvDrlnFSJoQNGGeekgW
-         RdEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sxuZRg/a5BwwLpOXc2E8P4g4IXtD5jAKIRcm5GraeZs=;
-        b=oelqLTW1K7m53dxWmCWg1ZGiFuJ11gOzPgnirEc7Aw7yacMZ7z+JpDr82iAVum/i/B
-         RWqv/7MNKk4SJzJTM61manXDTSEpjPTFepGAD85KaxWzfQ890X9T5EYwmv0Yk02GAoHA
-         KwzaWEhRF8//CegcFoYH2oLUXkYdOAbbKbUREfezGJ8yMjNbCXP2S53aCymH1/7/GYnV
-         M0QLC6ohokP47Z5p+CRVdUaTI8oYuLrYFb7pUcPDL1auQyeHkriz/MOwGYPj4JWjRnkd
-         pWYlA1h+Yf+9iNrz/CyXpCqc3oPVTeEFekovRjuda8fJQ682keN1ia3F9mccmY5SeR1b
-         O0RQ==
-X-Gm-Message-State: APjAAAXNjo7Kdvq3B8YH2Z7W8iXNc5hibQFfCAokE53vc7yMdrtzNtXj
-        oefYbCwIvmJRKp3PzR8rJDI=
-X-Google-Smtp-Source: APXvYqzvYPqMM+pY1ADNXKjLo3mWNDAGhRI7ulZ41cG+60iOZwW/XVjlNwg0XL5s/YODyp1GiDnkwg==
-X-Received: by 2002:a0c:99d8:: with SMTP id y24mr38959520qve.74.1559828789107;
-        Thu, 06 Jun 2019 06:46:29 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.208.82])
-        by smtp.gmail.com with ESMTPSA id d38sm1344329qtb.95.2019.06.06.06.46.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 06:46:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 41B7441149; Thu,  6 Jun 2019 10:46:24 -0300 (-03)
-Date:   Thu, 6 Jun 2019 10:46:24 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
- syscalls
-Message-ID: <20190606134624.GD30166@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-4-leo.yan@linaro.org>
- <20190606133838.GC30166@kernel.org>
+        Thu, 6 Jun 2019 09:49:04 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56DgIo4068662
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 09:49:03 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sy1yypyrq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 09:49:02 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 6 Jun 2019 14:49:01 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Jun 2019 14:48:58 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56DmvcR37683528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Jun 2019 13:48:57 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E4DCB2067;
+        Thu,  6 Jun 2019 13:48:57 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0D3AB2064;
+        Thu,  6 Jun 2019 13:48:56 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.209.205])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Jun 2019 13:48:56 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6315916C3783; Thu,  6 Jun 2019 06:48:56 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 06:48:56 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Reply-To: paulmck@linux.ibm.com
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <20190606045109.zjfxxbkzq4wb64bj@gondor.apana.org.au>
+ <20190606060511.GA28207@linux.ibm.com>
+ <20190606061438.nyzaeppdbqjt3jbp@gondor.apana.org.au>
+ <20190606090619.GC28207@linux.ibm.com>
+ <20190606092855.dfeuvyk5lbvm4zbf@gondor.apana.org.au>
+ <20190606105817.GE28207@linux.ibm.com>
+ <20190606133824.aibysezb5qdo3x27@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606133838.GC30166@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190606133824.aibysezb5qdo3x27@gondor.apana.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060613-0052-0000-0000-000003CC3C7F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011223; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01214073; UDB=6.00638158; IPR=6.00995153;
+ MB=3.00027206; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-06 13:49:01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060613-0053-0000-0000-00006135265B
+Message-Id: <20190606134856.GL28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 06, 2019 at 10:38:38AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Jun 06, 2019 at 05:48:44PM +0800, Leo Yan escreveu:
-> > This patch adds support for arm64 raw syscall numbers so that we can use
-> > it on arm64 platform.
+On Thu, Jun 06, 2019 at 09:38:24PM +0800, Herbert Xu wrote:
+> On Thu, Jun 06, 2019 at 03:58:17AM -0700, Paul E. McKenney wrote:
+> >
+> > I cannot immediately think of a way that the compiler could get this
+> > wrong even in theory, but similar code sequences can be messed up.
+> > The reason for this is that in theory, the compiler could use the
+> > stored-to location as temporary storage, like this:
 > > 
-> > After applied this patch, we need to specify macro -D__aarch64__ or
-> > -D__x86_64__ in compilation option so Clang can use the corresponding
-> > syscall numbers for arm64 or x86_64 respectively, other architectures
-> > will report failure when compilation.
+> > 	a = whatever;	// Compiler uses "a" as a temporary
+> > 	do_something();
+> > 	whatever = a;
+> > 	a = 1;		// Intended store
 > 
-> So, please check what I have in my perf/core branch, I've completely
-> removed arch specific stuff from augmented_raw_syscalls.c.
-> 
-> What is done now is use a map to specify what to copy, that same map
-> that is used to state which syscalls should be traced.
-> 
-> It uses that tools/perf/arch/arm64/entry/syscalls/mksyscalltbl to figure
-> out the mapping of syscall names to ids, just like is done for x86_64
-> and other arches, falling back to audit-libs when that syscalltbl thing
-> is not present.
+> Well if the compiler is going to do this then surely it would
+> continue to do this even if you used WRITE_ONCE.  Remember a is
+> not volatile, only the access of a through WRITE_ONCE is volatile.
 
-Also added:
+I disagree.  Given a volatile store, the compiler cannot assume that the
+stored-to location is normal memory at that point in time, and therefore
+cannot assume that it is safe to invent a store to that location (as
+shown above).  Thus far, the C++ standards committee seems on-board with
+this, though time will tell.
 
-Fixes: ac96287cae08 ("perf trace: Allow specifying a set of events to add in perfconfig")
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1382r1.pdf
 
-For the stable@kernel.org folks to automagically pick this.
+							Thanx, Paul
 
-- Arnaldo
