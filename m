@@ -2,197 +2,197 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6833FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D4BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA71206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="P/sKyPeQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB96206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfFFUOa (ORCPT
+        id S1728800AbfFFUPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:14:30 -0400
-Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:33090
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727082AbfFFUO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:14:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B0E1HjKonCXrDe+jQccFfs3o6VLpAeGk115hcbiJ6RA=;
- b=P/sKyPeQd8+u0095tKNbmGYczgZzYfHTXRhvj//J9+jI1W27r0v87NNNAZeGwdU53HEOLmSmbdiPt7fTRJ1Dd3JRy0PxQHyFtJ8v39L1P80lNipcXPVMPWd3NR8Hcf0ptw0skl16Sx4vbTEo9TZYpumBwJoChZnESFvQbn7zR5E=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5214.eurprd05.prod.outlook.com (20.178.12.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 20:14:24 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 20:14:24 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHVHKRvaslonjpP+0u/K3AsBbZRRw==
-Date:   Thu, 6 Jun 2019 20:14:24 +0000
-Message-ID: <20190606201420.GA9763@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR13CA0013.namprd13.prod.outlook.com
- (2603:10b6:208:160::26) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ae9ddb0-5a1c-493a-339b-08d6eabb9195
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB5214;
-x-ms-traffictypediagnostic: VI1PR05MB5214:
-x-microsoft-antispam-prvs: <VI1PR05MB52142C352E2145DE879C1890CF170@VI1PR05MB5214.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39840400004)(346002)(366004)(199004)(189003)(66616009)(14454004)(478600001)(68736007)(1076003)(256004)(36756003)(14444005)(6116002)(3846002)(486006)(99936001)(476003)(2906002)(54906003)(8936002)(4326008)(64756008)(66946007)(66556008)(66446008)(7736002)(53936002)(8676002)(81156014)(66476007)(186003)(305945005)(26005)(9686003)(6512007)(102836004)(73956011)(71200400001)(6486002)(6436002)(386003)(25786009)(6506007)(5660300002)(52116002)(66066001)(316002)(99286004)(81166006)(110136005)(86362001)(33656002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5214;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4IAviXQAa+A1qZ9TDNaNlZ7WS04mYsGZm7BlHFHVo89214R1FgLx+yCrB208Ky2Z1zNPI5j4eQqtfyz8Iv2WXY4cj7163z+ICwTfZVHNurWMWs06AzsYMg4KhS5yM+3Fp/km1s9+sRTUGasrjnxCZvKpQxnmpbR9PrjJhBVq5daEAzgCYmREZLXpBvxeMlCJC7XaeV0JGtPTLAFQiTaqFmlm6zw9u3Es+BsYLXuQlp1StlXWxSI6j3nz7QXNLAAc8ukRfXa+QJ5KnlJEbU8lbt7oU7IqiexjNRq/hoyhsifn867yK2JOUuBBpviPCOSK/mEVo6rzq5Q/6y783S4s+c52VcZfJ9kigiaAO5rmRKoggEzpBGEl+Q3y9+BzQmrjAMHPRXYQYdBvo9MLY2+x/DApzJcyJN6MGCUsuWlh+tQ=
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae9ddb0-5a1c-493a-339b-08d6eabb9195
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 20:14:24.4610
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5214
+        Thu, 6 Jun 2019 16:15:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:47825 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbfFFUPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:15:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:15:08 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2019 13:15:07 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v7 00/27] Control-flow Enforcement: Shadow Stack
+Date:   Thu,  6 Jun 2019 13:06:19 -0700
+Message-Id: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Intel has published Control-flow Enforcement (CET) in the Architecture
+Instruction Set Extensions Programming Reference:
 
-Hi Linus,
+  https://software.intel.com/en-us/download/intel-architecture-instruction-set-
+  extensions-programming-reference
 
-Things are looking pretty quiet here in RDMA, not too many bug fixes rolling
-in right now. Here is the first batch of proposed rc fixes.
+The previous version (v6) of CET Shadow Stack patches is here:
+
+  https://lkml.org/lkml/2018/11/20/225
+
+Summary of changes from v6:
+
+  Rebase to v5.2-rc3.
+
+  Adapt XSAVES system state changes to the recent FPU changes:
+    - Add modify_fpu_regs_begin(), modify_fpu_regs_end() to protect
+      CET MSR changes.
+    - Update signal handling.
+
+  Move ELF header-parsing out of x86.
+
+  Other small fixes in response to comments.
+
+This version passed GLIBC built-in tests.
+
+Hi Maintainers,
+
+What else is needed before this series can be merged?
 
 Thanks,
-Jason
+Yu-cheng
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+Yu-cheng Yu (27):
+  Documentation/x86: Add CET description
+  x86/cpufeatures: Add CET CPU feature flags for Control-flow
+    Enforcement Technology (CET)
+  x86/fpu/xstate: Change names to separate XSAVES system and user states
+  x86/fpu/xstate: Introduce XSAVES system states
+  x86/fpu/xstate: Add XSAVES system states for shadow stack
+  x86/cet: Add control protection exception handler
+  x86/cet/shstk: Add Kconfig option for user-mode shadow stack
+  mm: Introduce VM_SHSTK for shadow stack memory
+  mm/mmap: Prevent Shadow Stack VMA merges
+  x86/mm: Change _PAGE_DIRTY to _PAGE_DIRTY_HW
+  x86/mm: Introduce _PAGE_DIRTY_SW
+  drm/i915/gvt: Update _PAGE_DIRTY to _PAGE_DIRTY_BITS
+  x86/mm: Modify ptep_set_wrprotect and pmdp_set_wrprotect for
+    _PAGE_DIRTY_SW
+  x86/mm: Shadow stack page fault error checking
+  mm: Handle shadow stack page fault
+  mm: Handle THP/HugeTLB shadow stack page fault
+  mm: Update can_follow_write_pte/pmd for shadow stack
+  mm: Introduce do_mmap_locked()
+  x86/cet/shstk: User-mode shadow stack support
+  x86/cet/shstk: Introduce WRUSS instruction
+  x86/cet/shstk: Handle signals for shadow stack
+  binfmt_elf: Extract .note.gnu.property from an ELF file
+  x86/cet/shstk: ELF header parsing of Shadow Stack
+  x86/cet/shstk: Handle thread shadow stack
+  mm/mmap: Add Shadow stack pages to memory accounting
+  x86/cet/shstk: Add arch_prctl functions for Shadow Stack
+  x86/cet/shstk: Add Shadow Stack instructions to opcode map
 
-are available in the Git repository at:
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ Documentation/x86/index.rst                   |   1 +
+ Documentation/x86/intel_cet.rst               | 268 +++++++++++++
+ arch/x86/Kconfig                              |  26 ++
+ arch/x86/Makefile                             |   7 +
+ arch/x86/entry/entry_64.S                     |   2 +-
+ arch/x86/ia32/ia32_signal.c                   |   8 +
+ arch/x86/include/asm/cet.h                    |  48 +++
+ arch/x86/include/asm/cpufeatures.h            |   2 +
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/asm/fpu/internal.h           |  25 +-
+ arch/x86/include/asm/fpu/signal.h             |   2 +
+ arch/x86/include/asm/fpu/types.h              |  22 ++
+ arch/x86/include/asm/fpu/xstate.h             |  26 +-
+ arch/x86/include/asm/mmu_context.h            |   3 +
+ arch/x86/include/asm/msr-index.h              |  18 +
+ arch/x86/include/asm/pgtable.h                | 191 ++++++++--
+ arch/x86/include/asm/pgtable_types.h          |  38 +-
+ arch/x86/include/asm/processor.h              |   5 +
+ arch/x86/include/asm/special_insns.h          |  32 ++
+ arch/x86/include/asm/traps.h                  |   5 +
+ arch/x86/include/uapi/asm/prctl.h             |   5 +
+ arch/x86/include/uapi/asm/processor-flags.h   |   2 +
+ arch/x86/include/uapi/asm/sigcontext.h        |  15 +
+ arch/x86/kernel/Makefile                      |   2 +
+ arch/x86/kernel/cet.c                         | 327 ++++++++++++++++
+ arch/x86/kernel/cet_prctl.c                   |  85 +++++
+ arch/x86/kernel/cpu/common.c                  |  25 ++
+ arch/x86/kernel/cpu/cpuid-deps.c              |   2 +
+ arch/x86/kernel/fpu/core.c                    |  26 +-
+ arch/x86/kernel/fpu/init.c                    |  10 -
+ arch/x86/kernel/fpu/signal.c                  |  81 +++-
+ arch/x86/kernel/fpu/xstate.c                  | 156 +++++---
+ arch/x86/kernel/idt.c                         |   4 +
+ arch/x86/kernel/process.c                     |   8 +-
+ arch/x86/kernel/process_64.c                  |  31 ++
+ arch/x86/kernel/relocate_kernel_64.S          |   2 +-
+ arch/x86/kernel/signal.c                      |  10 +-
+ arch/x86/kernel/signal_compat.c               |   2 +-
+ arch/x86/kernel/traps.c                       |  57 +++
+ arch/x86/kvm/vmx/vmx.c                        |   2 +-
+ arch/x86/lib/x86-opcode-map.txt               |  26 +-
+ arch/x86/mm/fault.c                           |  18 +
+ arch/x86/mm/pgtable.c                         |  41 ++
+ drivers/gpu/drm/i915/gvt/gtt.c                |   2 +-
+ fs/Kconfig.binfmt                             |   3 +
+ fs/Makefile                                   |   1 +
+ fs/binfmt_elf.c                               |  13 +
+ fs/gnu_property.c                             | 351 ++++++++++++++++++
+ fs/proc/task_mmu.c                            |   3 +
+ include/asm-generic/pgtable.h                 |  14 +
+ include/linux/elf.h                           |  12 +
+ include/linux/mm.h                            |  26 ++
+ include/uapi/asm-generic/siginfo.h            |   3 +-
+ include/uapi/linux/elf.h                      |  14 +
+ mm/gup.c                                      |   8 +-
+ mm/huge_memory.c                              |  12 +-
+ mm/memory.c                                   |   7 +-
+ mm/mmap.c                                     |  11 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ tools/objtool/arch/x86/lib/x86-opcode-map.txt |  26 +-
+ 61 files changed, 2029 insertions(+), 165 deletions(-)
+ create mode 100644 Documentation/x86/intel_cet.rst
+ create mode 100644 arch/x86/include/asm/cet.h
+ create mode 100644 arch/x86/kernel/cet.c
+ create mode 100644 arch/x86/kernel/cet_prctl.c
+ create mode 100644 fs/gnu_property.c
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+-- 
+2.17.1
 
-for you to fetch changes up to 4f240dfec6bcc852b124ea7c419fb590949fbd4c:
-
-  RDMA/efa: Remove MAYEXEC flag check from mmap flow (2019-05-29 13:13:03 -0300)
-
-----------------------------------------------------------------
-5.2 First rc pull request
-
-The usual driver bug fixes and fixes for a couple of regressions introduced in
-5.2:
-
-- Fix a race on bootup with RDMA device renaming and srp. SRP also needs to
-  rename its internal sys files
-
-- Fix a memory leak in hns
-
-- Don't leak resources in efa on certain error unwinds
-
-- Don't panic in certain error unwinds in ib_register_device
-
-- Various small user visible bug fix patches for the hfi and efa drivers
-
-- Fix the 32 bit compilation break
-
-----------------------------------------------------------------
-Gal Pressman (2):
-      RDMA/uverbs: Pass udata on uverbs error unwind
-      RDMA/efa: Remove MAYEXEC flag check from mmap flow
-
-Jason Gunthorpe (1):
-      RDMA/core: Clear out the udata before error unwind
-
-Kamal Heib (1):
-      RDMA/core: Fix panic when port_data isn't initialized
-
-Kamenee Arumugam (1):
-      IB/hfi1: Validate page aligned for a given virtual address
-
-Leon Romanovsky (2):
-      RDMA/srp: Rename SRP sysfs name after IB device rename trigger
-      RDMA/hns: Fix PD memory leak for internal allocation
-
-Michal Kubecek (1):
-      mlx5: avoid 64-bit division
-
-Mike Marciniszyn (3):
-      IB/rdmavt: Fix alloc_qpn() WARN_ON()
-      IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
-      IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
-
- drivers/infiniband/core/device.c              | 49 +++++++++++++++++++--------
- drivers/infiniband/core/rdma_core.h           |  2 ++
- drivers/infiniband/core/uverbs_cmd.c          | 30 +++++++++++-----
- drivers/infiniband/core/uverbs_std_types_cq.c |  2 +-
- drivers/infiniband/core/uverbs_std_types_mr.c |  2 +-
- drivers/infiniband/hw/efa/efa_verbs.c         |  1 -
- drivers/infiniband/hw/hfi1/chip.c             |  1 +
- drivers/infiniband/hw/hfi1/user_exp_rcv.c     |  3 ++
- drivers/infiniband/hw/hfi1/verbs.c            |  2 --
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c    |  1 +
- drivers/infiniband/hw/mlx5/cmd.c              |  9 +++--
- drivers/infiniband/hw/mlx5/main.c             |  2 +-
- drivers/infiniband/hw/qib/qib_verbs.c         |  2 --
- drivers/infiniband/sw/rdmavt/mr.c             |  2 ++
- drivers/infiniband/sw/rdmavt/qp.c             |  3 +-
- drivers/infiniband/ulp/srp/ib_srp.c           | 18 +++++++++-
- include/rdma/ib_verbs.h                       |  1 +
- 17 files changed, 95 insertions(+), 35 deletions(-)
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAlz5dBkACgkQOG33FX4g
-mxqKzA/6A4oEKSMyJt3TMx2Z6sJoHYWqibV/AZsra4wgA0rzGPdV3cpIwg7qeccD
-dMAecHl6GILXs3dCZVKs/C5cLL9YDBBpwFWlVR4eu4BppeDA9dKt66rI2a+JFbUb
-taSjmTnNUAiBWG9HhZAy2KQMARgNcvwQ+4z5USMzUXclDTTQ3w2s4hjtxDrxOb2V
-24Xnep5VGS7ca0wNocypa1SwbilRR0Z+3axHbKvMFXT0LsJsDf52VRcX2JaxMNXG
-7L/HKI78PVQLiz0Y8qJjTiiHeM8RDpgrf8pEIa+XnUKXvTn5YoVDI8RwOyZ3qC9G
-5dLVOXOAvvJ8pLRXGwsAwvxwqHkV2EbbsODXqwXx8tqlvID7ENVMn3sZDIc9l9cp
-j3aEuh1mL3iQLxuLz9Ye2cWgUEEzrQkpIGfI25lV5VFZ/G1h77aUIANkB561jWM+
-TiVMo3/2qbY/KBQ8M7chYCx+EgrCisd6Yw4l7ghbVR5q69RMWdhNT7QP9frblva4
-p1kRW2FyQcstLol87jQJn5eSngU9lF9W4C+o28mG97Nn6pIFX7pivTwrRFi9A6LE
-5OvTvYjB7kuJNNtGmG/H1DWLBv7TIw/0Xp9X/bJs2ULG9tjYuS17gNhmH0YnX2NK
-tY59L6/d849+9Nn+28uOOoB76cugQHG6qFe2e5TzuqZMAFmxKbI=
-=FV44
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
