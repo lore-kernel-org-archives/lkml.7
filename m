@@ -2,161 +2,191 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E77C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE649C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E77F20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F01B20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8Np/LZT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uYmVkKuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFFCv5 (ORCPT
+        id S1726691AbfFFCwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:51:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46756 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfFFCv4 (ORCPT
+        Wed, 5 Jun 2019 22:52:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41490 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfFFCwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:51:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so428011pgr.13;
-        Wed, 05 Jun 2019 19:51:56 -0700 (PDT)
+        Wed, 5 Jun 2019 22:52:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q17so530388pfq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 19:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wq0lK3Zs3odh/+c4J9zbeW7G1JU08TzCFECFGMK2fpY=;
-        b=e8Np/LZTxQzD/6Uh6Q79/22rjVc7dtqAMeruis+e24ETjCOyOqY6ecBisx2Z8W1unm
-         k47XZpTffFxMkYmLaPOeqvqbYTalqof6nyRnL8dpP7zRX+eYI4aZ/re3P9Ca7In5beUf
-         ilh7VWBJie9rqLtFkT2NJSAPQR7bN5mSIkDXcY8aS8qTBXQ3ldecMPKcZBKBILi2uxUa
-         r6KUo3ctYg0jlbq1FO46N7WaoJLY2mDq90Uc4gWae88xE/9rJrxz/LgJ6kdZFzFTRyBg
-         qcanDnpm4YxMpfNZNBwzIUb4Uo57RYsD8T/xOsM2Z4zoCULBgJBsRSQEj7hjN9db2z5W
-         1FjQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MuJrLKq3f8R6SA2gbKnAdIV2BIlVwoZY7490xsEPP08=;
+        b=uYmVkKuhwcbANYnBr6B2uIgMzAVRUGKggE3YuQOteX9cRZ3/MYu2dsdKF3jnwQDUYm
+         D+ukL0++ZQEVfZy4gM0IjEYrZrifZmJvcNMbU3tK3dEvzSXxMNpBtyZlO4nEAWkG5nuD
+         qoK0F8AdpfAgM+wjubvszGA6KPry2IJ8qZ7+Nv9l96u4aaL9OLcRffpgFdtVxXp4GfFD
+         5zuSDNCrtcbsPIYnnfH1gFc5YfoPcxm67FU1rSWJJXJyEhcmiU54BIS8geWtNPC2keZH
+         SeDFTERBIkaUif4psQfyAKfKrF+YhA8N8UK/lVc05iCGCpUkUVQ62nSLM3Qrdn9U/8Ig
+         6g+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wq0lK3Zs3odh/+c4J9zbeW7G1JU08TzCFECFGMK2fpY=;
-        b=ZPxxClnIgLjt2tD4uBEde8UtZYR8O61WJqoBiVtPcam+YOPEQN/3DBBefWVsn2zHc0
-         tePbGsZTigqvIdqjMd6QS2yYVBZi1XXyvImqchd+TmY60v6X+NTcsHt1k1kA7smUbgNf
-         peCNuh/FclzbZ/2rtcUZZID92iJnS68Hvi+PeiajT9YxlikSSnCwgDLrzp/DE/puyYoe
-         7UJt1NPT8pfVPYEtP5NMc4l+ezb2+lo7Hp2za0zKswNbZtiSzymnNSsUh+aA8ootiprH
-         9tG2iRJ+ezOI9rFFUlDeZlcDlQXQ/K1skWKIyovL2ZYKub6vXS3+j/xcCbdDM6r3ITO5
-         g0sQ==
-X-Gm-Message-State: APjAAAW2SefQXyaNHojSlTpSi4BivryDkv65lcXycoYsizy8eBlWC2Nf
-        80IePzOExPqA9bv5M6wtRI8=
-X-Google-Smtp-Source: APXvYqzHvWobJ+2GneUHS2Wl7McaI0UKtgaYOo1NjVHeXyz1XitFnoDHRCR0oSuvRLB3klf2hfefAg==
-X-Received: by 2002:a17:90a:cf0b:: with SMTP id h11mr41868070pju.90.1559789515484;
-        Wed, 05 Jun 2019 19:51:55 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id h14sm242352pgj.8.2019.06.05.19.51.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MuJrLKq3f8R6SA2gbKnAdIV2BIlVwoZY7490xsEPP08=;
+        b=Dk3ReKSdVamOORHq3LSDwXFgTZmk7nRpfCQmJ4MIvK6UZj9HurZGpRnvihZyzOOCJz
+         ZwtN5pZcAC0gav1+/yblWFqWXckNWQ/62ys/LmDxqU19IALNQflYiYAsf+ogQ3P83bTo
+         3R1JvSF3ZbiKfPrjeJblQOlSjygx6H6Ye7AqzI2ZvMSETOpM0fkjphkNjk+iexOfCkmJ
+         P31aT2YPZDua7RTNJU+QqIrt3csXJVXfBh4l96ylKqd+Ci0xjd30ozUq+7ySBr05wbWn
+         GrGUT7oHDlAj5i9kIdJXSzoo3mRZQsObcwUEOapGS3f7qFRaOrBh6hsgx8YakPcryxmM
+         So1A==
+X-Gm-Message-State: APjAAAUy0oraCX2VZX9Cs70AlYm+z26zPiMmQDsMMMPu9J+59IOAzZGQ
+        Hz/A1Ov9lWjVjf0lp8pTiDcL/Cf+ElM=
+X-Google-Smtp-Source: APXvYqxma+G6RG+3HIzgQjjFHpzIJCpFBl5+/wmtP6ArQg9sdUJ1dTJk5T80TXEuQCCd+DYc8J3DYA==
+X-Received: by 2002:a17:90a:ba81:: with SMTP id t1mr42998175pjr.139.1559789528005;
+        Wed, 05 Jun 2019 19:52:08 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id j37sm245914pgj.58.2019.06.05.19.52.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 19:51:54 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-To:     Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        shawnguo@kernel.org, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, van.freenix@gmail.com
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-2-peng.fan@nxp.com>
- <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
- <20190603165651.GA12196@e107155-lin>
- <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <19931084-8b12-c510-8856-5cc869e4f9ff@gmail.com>
-Date:   Wed, 5 Jun 2019 19:51:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 05 Jun 2019 19:52:07 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:22:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] sched/fair: Introduce fits_capacity()
+Message-ID: <20190606025204.qe5v7j6fysjkgxc6@vireshk-i7>
+References: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
+ <20190605091644.w3g7hc7r3eiscz4f@queper01-lin>
 MIME-Version: 1.0
-In-Reply-To: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605091644.w3g7hc7r3eiscz4f@queper01-lin>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05-06-19, 10:16, Quentin Perret wrote:
+> Hi Viresh,
+> 
+> On Tuesday 04 Jun 2019 at 12:31:52 (+0530), Viresh Kumar wrote:
+> > The same formula to check utilization against capacity (after
+> > considering capacity_margin) is already used at 5 different locations.
+> > 
+> > This patch creates a new macro, fits_capacity(), which can be used from
+> > all these locations without exposing the details of it and hence
+> > simplify code.
+> > 
+> > All the 5 code locations are updated as well to use it..
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  kernel/sched/fair.c | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 7f8d477f90fe..db3a218b7928 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -102,6 +102,8 @@ int __weak arch_asym_cpu_priority(int cpu)
+> >   * (default: ~20%)
+> >   */
+> >  static unsigned int capacity_margin			= 1280;
+> > +
+> > +#define fits_capacity(cap, max)	((cap) * capacity_margin < (max) * 1024)
+> >  #endif
+> >  
+> >  #ifdef CONFIG_CFS_BANDWIDTH
+> > @@ -3727,7 +3729,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+> >  
+> >  static inline int task_fits_capacity(struct task_struct *p, long capacity)
+> >  {
+> > -	return capacity * 1024 > task_util_est(p) * capacity_margin;
+> > +	return fits_capacity(task_util_est(p), capacity);
+> >  }
+> >  
+> >  static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+> > @@ -5143,7 +5145,7 @@ static inline unsigned long cpu_util(int cpu);
+> >  
+> >  static inline bool cpu_overutilized(int cpu)
+> >  {
+> > -	return (capacity_of(cpu) * 1024) < (cpu_util(cpu) * capacity_margin);
+> > +	return !fits_capacity(cpu_util(cpu), capacity_of(cpu));
+> 
+> This ...
+> 
+> >  }
+> >  
+> >  static inline void update_overutilized_status(struct rq *rq)
+> > @@ -6304,7 +6306,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+> >  			/* Skip CPUs that will be overutilized. */
+> >  			util = cpu_util_next(cpu, p, cpu);
+> >  			cpu_cap = capacity_of(cpu);
+> > -			if (cpu_cap * 1024 < util * capacity_margin)
+> > +			if (!fits_capacity(util, cpu_cap))
+> 
+> ... and this isn't _strictly_ equivalent to the existing code but I
+> guess we can live with the difference :-)
 
+Yes, I missed the == part it seems. Good catch. Though as you said,
+maybe we don't need to take that into account and can live with the
+new macro :)
 
-On 6/3/2019 10:18 AM, Andre Przywara wrote:
-> On Mon, 3 Jun 2019 17:56:51 +0100
-> Sudeep Holla <sudeep.holla@arm.com> wrote:
 > 
-> Hi,
+> >  				continue;
+> >  
+> >  			/* Always use prev_cpu as a candidate. */
+> > @@ -7853,8 +7855,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
+> >  static inline bool
+> >  group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+> >  {
+> > -	return sg->sgc->min_capacity * capacity_margin <
+> > -						ref->sgc->min_capacity * 1024;
+> > +	return fits_capacity(sg->sgc->min_capacity, ref->sgc->min_capacity);
+> >  }
+> >  
+> >  /*
+> > @@ -7864,8 +7865,7 @@ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+> >  static inline bool
+> >  group_smaller_max_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
+> >  {
+> > -	return sg->sgc->max_capacity * capacity_margin <
+> > -						ref->sgc->max_capacity * 1024;
+> > +	return fits_capacity(sg->sgc->max_capacity, ref->sgc->max_capacity);
+> >  }
+> >  
+> >  static inline enum
+> > -- 
+> > 2.21.0.rc0.269.g1a574e7a288b
+> > 
 > 
->> On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
->>> On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:  
->>>> From: Peng Fan <peng.fan@nxp.com>
->>>>
->>>> The ARM SMC mailbox binding describes a firmware interface to trigger
->>>> actions in software layers running in the EL2 or EL3 exception levels.
->>>> The term "ARM" here relates to the SMC instruction as part of the ARM
->>>> instruction set, not as a standard endorsed by ARM Ltd.
->>>>
->>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->>>> ---
->>>>
->>>> V2:
->>>> Introduce interrupts as a property.
->>>>
->>>> V1:
->>>> arm,func-ids is still kept as an optional property, because there is no
->>>> defined SMC funciton id passed from SCMI. So in my test, I still use
->>>> arm,func-ids for ARM SIP service.
->>>>
->>>>  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
->>>>  1 file changed, 101 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>> new file mode 100644
->>>> index 000000000000..401887118c09
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>> @@ -0,0 +1,101 @@  
->>
->> [...]
->>
->>>> +Optional properties:
->>>> +- arm,func-ids		An array of 32-bit values specifying the function
->>>> +			IDs used by each mailbox channel. Those function IDs
->>>> +			follow the ARM SMC calling convention standard [1].
->>>> +			There is one identifier per channel and the number
->>>> +			of supported channels is determined by the length
->>>> +			of this array.
->>>> +- interrupts		SPI interrupts may be listed for notification,
->>>> +			each channel should use a dedicated interrupt
->>>> +			line.  
->>>
->>> I would not go about defining a specific kind of interrupt, since SPI is
->>> a GIC terminology, this firmware interface could be used in premise with
->>> any parent interrupt controller, for which the concept of a SPI/PPI/SGI
->>> may not be relevant.
->>>  
->>
->> While I agree the binding document may not contain specifics, I still
->> don't see how to use SGI with this. Also note it's generally reserved
->> for OS future use(IPC) and using this for other than IPC may be bit
->> challenging IMO. It opens up lots of questions.
+> Also, since we're talking about making the capacity_margin code more
+> consistent, one small thing I had in mind: we have a capacity margin
+> in sugov too, which happens to be 1.25 has well (see map_util_freq()).
+> Conceptually, capacity_margin in fair.c and the sugov margin are both
+> about answering: "do I have enough CPU capacity to serve X of util, or
+> do I need more ?"
 > 
-> Well, a PPI might be possible to use, although it's somewhat dodgy to hijack the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to ask Marc about his feelings towards this. But it's definitely possible from a hypervisor to inject arbitrary interrupts into a guest.
-> 
-> But more importantly: is there any actual reason this needs to be a GIC interrupt? If I understand the code correctly, this could just be any interrupt, including one of an interrupt combiner or a GPIO chip. So why not just use the standard wording of: "exactly one interrupt specifier for each channel"?
+> So perhaps we should factorize the capacity_margin code some more to use
+> it in both places in a consistent way ? This could be done in a separate
+> patch, though.
 
-That was my point, I am not stuck on using an SGI, or PPI, or anything
-(even if that's what we have been using at the moment), any interrupt
-would/should do here so the wording should be exactly as you indicated.
+Hmm, even if the values are same currently I am not sure if we want
+the same for ever. I will write a patch for it though, if Peter/Rafael
+feel the same as you.
+
+Thanks Quentin.
+
 -- 
-Florian
+viresh
