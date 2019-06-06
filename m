@@ -2,254 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F373C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32720C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D37A20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EDA2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TW406TlW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HrlMr375"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfFFFwQ (ORCPT
+        id S1726522AbfFFFyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:52:16 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10322 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFFFwP (ORCPT
+        Thu, 6 Jun 2019 01:54:44 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13063 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFFyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:52:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8aa0b0001>; Wed, 05 Jun 2019 22:52:11 -0700
+        Thu, 6 Jun 2019 01:54:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8aa930000>; Wed, 05 Jun 2019 22:54:28 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 22:52:13 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 22:54:42 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 22:52:13 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 05:52:12 +0000
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-To:     <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>
-CC:     Matthew Wilcox <willy@infradead.org>, <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
-Date:   Wed, 5 Jun 2019 22:52:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by hqpgpgate101.nvidia.com on Wed, 05 Jun 2019 22:54:42 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 05:54:41 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 6 Jun 2019 05:54:41 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cf8aa9f0001>; Wed, 05 Jun 2019 22:54:41 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+Subject: [PATCH V2] i2c: busses: tegra: Add suspend-resume support
+Date:   Wed, 5 Jun 2019 22:54:35 -0700
+Message-ID: <1559800475-5446-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20190606014544.8339-1-ira.weiny@intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559800331; bh=Gp2g3b03DgFtDGUPs5KjcyAYE0tK8DWBS3G4Sguhlos=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=TW406TlWPfq1+txQJKeJk28J1JWSrmzZBUVeqHD3lW0hwmrqL+i5fmSoZOx4n4lWy
-         Hmav7hC+Dg2NnnU5/CKwGJdLiRg333XopPd8PNY/+OwsQjn4q9eA0uKBcQ18GF9GA7
-         bYorekfcWSMtASfx9atYR+4f1F8QwG+zlW9PqvxXVvqn3XJTcUDuvIUXPM8aJLM+s1
-         n0mI8czwPnoQSbO7wH92BWoJ5ljhc5QN8KOrfC7Etg4R98qDMovGb1D5yAPWIzIDso
-         ICscXJ9Im6L2nwKphSDu/r7hHPF3XN6orU2ooI7jJgoOKQuUSz25kWcKOJRt+HaqXq
-         PVtJjo3M2HZOA==
+        t=1559800468; bh=Ql18WqF5DlKTmuF9A6ySKjZp8fdZDrnvE3SqNnzlawE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=HrlMr375rplGGrTwZAMBPbEiWKXvAb6on7iK2T+rPQz2OO7AbLocC3HCdyFdgzXw+
+         Urc1zmcD/z27n703dwJepbKzj97ru1mcf/YvPubtz2PKRzCaCKQ9ojHu/D7SHcLtEF
+         llhlan2uG0/xsmEEOzloW0pXsTpl4Cd0C1qSy8CzOnlC2yGgMYa2BPGnwURUH05RpF
+         VOYuYD9Nid5mbrTig/Z2lurtoO0/kP8HBTIuuU6gddbzUm0JT80dOaQZqhIcfGboVq
+         3tKXxCJopWv5wnXy+H99CDKPpvLBSLwhCx3mqJczX8bY6AeJLl5DRxOzcuXP/hYWqD
+         yTp9HVCc2yahQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 6:45 PM, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> ... V1,000,000   ;-)
-> 
-> Pre-requisites:
-> 	John Hubbard's put_user_pages() patch series.[1]
-> 	Jan Kara's ext4_break_layouts() fixes[2]
-> 
-> Based on the feedback from LSFmm and the LWN article which resulted.  I've
-> decided to take a slightly different tack on this problem.
-> 
-> The real issue is that there is no use case for a user to have RDMA pinn'ed
-> memory which is then truncated.  So really any solution we present which:
-> 
-> A) Prevents file system corruption or data leaks
-> ...and...
-> B) Informs the user that they did something wrong
-> 
-> Should be an acceptable solution.
-> 
-> Because this is slightly new behavior.  And because this is gonig to be
-> specific to DAX (because of the lack of a page cache) we have made the user
-> "opt in" to this behavior.
-> 
-> The following patches implement the following solution.
-> 
-> 1) The user has to opt in to allowing GUP pins on a file with a layout lease
->    (now made visible).
-> 2) GUP will fail (EPERM) if a layout lease is not taken
-> 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
-> 4) The user has the option of holding the layout lease to receive a SIGIO for
->    notification to the original thread that another thread has tried to delete
->    their data.  Furthermore this indicates that if the user needs to GUP the
->    file again they will need to retake the Layout lease before doing so.
-> 
-> 
-> NOTE: If the user releases the layout lease or if it has been broken by another
-> operation further GUP operations on the file will fail without re-taking the
-> lease.  This means that if a user would like to register pieces of a file and
-> continue to register other pieces later they would be advised to keep the
-> layout lease, get a SIGIO notification, and retake the lease.
-> 
-> NOTE2: Truncation of pages which are not actively pinned will succeed.  Similar
-> to accessing an mmap to this area GUP pins of that memory may fail.
-> 
+Post suspend I2C registers have power on reset values. Before any
+transfer initialize I2C registers to prevent I2C transfer timeout
+and implement suspend and resume callbacks needed. Fix below errors
+post suspend:
 
-Hi Ira,
+1) Tegra I2C transfer timeout during jetson tx2 resume:
 
-Wow, great to see this. This looks like basically the right behavior, IMHO.
+[   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
+[   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+[   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+[   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+[   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
+[   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
+[   27.666194] PM: Device 1-0074 failed to resume: error -110
 
-1. We'll need man page additions, to explain it. In fact, even after a quick first
-pass through, I'm vague on two points:
+2) Tegra I2C transfer timeout error on jetson Xavier post resume.
 
-a) I'm not sure how this actually provides "opt-in to new behavior", because I 
-don't see any CONFIG_* or boot time choices, and it looks like the new behavior 
-just is there. That is, if user space doesn't set F_LAYOUT on a range, 
-GUP FOLL_LONGTERM will now fail, which is new behavior. (Did I get that right?)
+Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
+(suspended-resumed) help ensure i2c core calls from client are not
+executed before i2c-tegra resume.
 
-b) Truncate and hole punch behavior, with and without user space having a SIGIO
-handler. (I'm sure this is obvious after another look through, but it might go
-nicely in a man page.)
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-2. It *seems* like ext4, xfs are taken care of here, not just for the DAX case,
-but for general RDMA on them? Or is there more that must be done?
-
-3. Christophe Hellwig's unified gup patchset wreaks havoc in gup.c, and will
-conflict violently, as I'm sure you noticed. :)
-
-
-thanks,
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index ebaa78d..76b7926 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1687,7 +1687,30 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static int tegra_i2c_suspend(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++
++	i2c_mark_adapter_suspended(&i2c_dev->adapter);
++
++	return 0;
++}
++
++static int tegra_i2c_resume(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++	int ret;
++
++	ret = tegra_i2c_init(i2c_dev, false);
++	if (ret)
++		return ret;
++
++	i2c_mark_adapter_resumed(&i2c_dev->adapter);
++	return 0;
++}
++
+ static const struct dev_pm_ops tegra_i2c_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+ 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+ 			   NULL)
+ };
 -- 
-John Hubbard
-NVIDIA
+2.7.4
 
-> 
-> A general overview follows for background.
-> 
-> It should be noted that one solution for this problem is to use RDMA's On
-> Demand Paging (ODP).  There are 2 big reasons this may not work.
-> 
-> 	1) The hardware being used for RDMA may not support ODP
-> 	2) ODP may be detrimental to the over all network (cluster or cloud)
-> 	   performance
-> 
-> Therefore, in order to support RDMA to File system pages without On Demand
-> Paging (ODP) a number of things need to be done.
-> 
-> 1) GUP "longterm" users need to inform the other subsystems that they have
->    taken a pin on a page which may remain pinned for a very "long time".[3]
-> 
-> 2) Any page which is "controlled" by a file system needs to have special
->    handling.  The details of the handling depends on if the page is page cache
->    fronted or not.
-> 
->    2a) A page cache fronted page which has been pinned by GUP long term can use a
->    bounce buffer to allow the file system to write back snap shots of the page.
->    This is handled by the FS recognizing the GUP long term pin and making a copy
->    of the page to be written back.
-> 	NOTE: this patch set does not address this path.
-> 
->    2b) A FS "controlled" page which is not page cache fronted is either easier
->    to deal with or harder depending on the operation the filesystem is trying
->    to do.
-> 
-> 	2ba) [Hard case] If the FS operation _is_ a truncate or hole punch the
-> 	FS can no longer use the pages in question until the pin has been
-> 	removed.  This patch set presents a solution to this by introducing
-> 	some reasonable restrictions on user space applications.
-> 
-> 	2bb) [Easy case] If the FS operation is _not_ a truncate or hole punch
-> 	then there is nothing which need be done.  Data is Read or Written
-> 	directly to the page.  This is an easy case which would currently work
-> 	if not for GUP long term pins being disabled.  Therefore this patch set
-> 	need not change access to the file data but does allow for GUP pins
-> 	after 2ba above is dealt with.
-> 
-> 
-> This patch series and presents a solution for problem 2ba)
-> 
-> [1] https://github.com/johnhubbard/linux/tree/gup_dma_core
-> 
-> [2] ext4/dev branch:
-> 
-> - https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/log/?h=dev
-> 
-> 	Specific patches:
-> 
-> 	[2a] ext4: wait for outstanding dio during truncate in nojournal mode
-> 
-> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=82a25b027ca48d7ef197295846b352345853dfa8
-> 
-> 	[2b] ext4: do not delete unlinked inode from orphan list on failed truncate
-> 
-> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=ee0ed02ca93ef1ecf8963ad96638795d55af2c14
-> 
-> 	[2c] ext4: gracefully handle ext4_break_layouts() failure during truncate
-> 
-> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=b9c1c26739ec2d4b4fb70207a0a9ad6747e43f4c
-> 
-> [3] The definition of long time is debatable but it has been established
-> that RDMAs use of pages, minutes or hours after the pin is the extreme case
-> which makes this problem most severe.
-> 
-> 
-> Ira Weiny (10):
->   fs/locks: Add trace_leases_conflict
->   fs/locks: Export F_LAYOUT lease to user space
->   mm/gup: Pass flags down to __gup_device_huge* calls
->   mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
->   fs/ext4: Teach ext4 to break layout leases
->   fs/ext4: Teach dax_layout_busy_page() to operate on a sub-range
->   fs/ext4: Fail truncate if pages are GUP pinned
->   fs/xfs: Teach xfs to use new dax_layout_busy_page()
->   fs/xfs: Fail truncate if pages are GUP pinned
->   mm/gup: Remove FOLL_LONGTERM DAX exclusion
-> 
->  fs/Kconfig                       |   1 +
->  fs/dax.c                         |  38 ++++++---
->  fs/ext4/ext4.h                   |   2 +-
->  fs/ext4/extents.c                |   6 +-
->  fs/ext4/inode.c                  |  26 +++++--
->  fs/locks.c                       |  97 ++++++++++++++++++++---
->  fs/xfs/xfs_file.c                |  24 ++++--
->  fs/xfs/xfs_inode.h               |   5 +-
->  fs/xfs/xfs_ioctl.c               |  15 +++-
->  fs/xfs/xfs_iops.c                |  14 +++-
->  fs/xfs/xfs_pnfs.c                |  14 ++--
->  include/linux/dax.h              |   9 ++-
->  include/linux/fs.h               |   2 +-
->  include/linux/mm.h               |   2 +
->  include/trace/events/filelock.h  |  35 +++++++++
->  include/uapi/asm-generic/fcntl.h |   3 +
->  mm/gup.c                         | 129 ++++++++++++-------------------
->  mm/huge_memory.c                 |  12 +++
->  18 files changed, 299 insertions(+), 135 deletions(-)
-> 
