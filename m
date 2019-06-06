@@ -2,91 +2,94 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F855C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E184C28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431A020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7590C20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfFFGsc (ORCPT
+        id S1726379AbfFFGu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:48:32 -0400
-Received: from gate.crashing.org ([63.228.1.57]:39155 "EHLO gate.crashing.org"
+        Thu, 6 Jun 2019 02:50:57 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:38686 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:48:32 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x566lscw019648;
-        Thu, 6 Jun 2019 01:47:55 -0500
-Message-ID: <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
- Fabric Interrupt Controller Driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
-        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
-        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
-Date:   Thu, 06 Jun 2019 16:47:54 +1000
-In-Reply-To: <20190606063741.GA23305@kroah.com>
-References: <1559717653-11258-1-git-send-email-talel@amazon.com>
-         <1559717653-11258-3-git-send-email-talel@amazon.com>
-         <20190605075927.GA9693@kroah.com>
-         <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
-         <20190606063741.GA23305@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725267AbfFFGu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:50:57 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hYmEh-0006rY-LI; Thu, 06 Jun 2019 14:50:55 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hYmEd-0006gi-I4; Thu, 06 Jun 2019 14:50:51 +0800
+Date:   Thu, 6 Jun 2019 14:50:51 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        maxime.chevallier@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, igall@marvell.com
+Subject: Re: [PATCH 00/14] crypto: inside-secure - self-test fixes
+Message-ID: <20190606065051.kc7nfpwx2tt5gw2d@gondor.apana.org.au>
+References: <20190527145106.8693-1-antoine.tenart@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527145106.8693-1-antoine.tenart@bootlin.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 08:37 +0200, Greg KH wrote:
-> On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
-> > On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
-> > > 
-> > > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
-> > > > +
-> > > > +struct al_fic *al_fic_wire_init(struct device_node *node,
-> > > > +				void __iomem *base,
-> > > > +				const char *name,
-> > > > +				unsigned int parent_irq);
-> > > > +int al_fic_cleanup(struct al_fic *fic);
-> > > 
-> > > Who is using these new functions?  We don't add new apis that no one
-> > > uses :(
-> > 
-> > They will be used by subsequent driver submissions but those aren't
-> > quite ready yet, so we can hold onto patch 3 for now until they are.
+On Mon, May 27, 2019 at 04:50:52PM +0200, Antoine Tenart wrote:
+> Hello,
 > 
-> Patch 2 also should have these removed :)
-
-That's a mistake, that export should have been in patch3. Talel, pls
-fix that in your next spin.
-
-> You know we don't add new apis until we have a real, in-kernel user for
-> them...
-
-Yup, the user are going to be drivers in other subsystems, so
-coordination is a bit tricky, which is I think why Talel wanted to
-submit that now, but the patches for those other drivers aren't quite
-ready yet so we can hold onto that one for the time being.
-
-It's nothing nefarious :-) Just coordination issues.
-
-Cheers,
-Ben.
-
-> thanks,
+> The crypto runtime self-tests were improved and thanks to this we
+> spotted new issues within the Inside Secure SafeXcel cryptographic
+> engine driver:
+> - Intermediate IV were not retrieved from the hardware nor copied to the
+>   quest IV buffer for cbc(aes/des).
+> - HMAC updates wasn't supported.
+> - We spotted issues with the use of the SG lists.
+> - There was an issue with the use of result buffers.
 > 
-> greg k-h
+> The series fixes all those issues, and includes other small changes
+> found while doing this work.
+> 
+> Thanks!
+> Antoine
+> 
+> Antoine Tenart (14):
+>   crypto: inside-secure - remove empty line
+>   crypto: inside-secure - move comment
+>   crypto: inside-secure - fix coding style for a condition
+>   crypto: inside-secure - remove useless check
+>   crypto: inside-secure - improve the result error format when displayed
+>   crypto: inside-secure - change returned error when a descriptor
+>     reports an error
+>   crypto: inside-secure - enable context reuse
+>   crypto: inside-secure - unify cache reset
+>   crypto: inside-secure - fix zeroing of the request in ahash_exit_inv
+>   crypto: inside-secure - fix queued len computation
+>   crypto: inside-secure - implement IV retrieval
+>   crypto: inside-secure - add support for HMAC updates
+>   crypto: inside-secure - fix use of the SG list
+>   crypto: inside-secure - do not rely on the hardware last bit for
+>     result descriptors
+> 
+>  drivers/crypto/inside-secure/safexcel.c       |  13 +-
+>  drivers/crypto/inside-secure/safexcel.h       |  17 ++-
+>  .../crypto/inside-secure/safexcel_cipher.c    | 116 +++++++++++-------
+>  drivers/crypto/inside-secure/safexcel_hash.c  |  92 ++++++++------
+>  drivers/crypto/inside-secure/safexcel_ring.c  |   3 +
+>  5 files changed, 157 insertions(+), 84 deletions(-)
 
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
