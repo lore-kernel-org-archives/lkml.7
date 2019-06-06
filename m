@@ -2,120 +2,151 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47220C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B873C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2127620866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559833793;
-	bh=SXQbPAaM9RvZp3lW3NXitKVEdsSpDOda2A6XmXtgK9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oQO+TRzW7dDdTiky+tZiwFH6215p+yBViV2e7evgI9MqNZeGdQ6JAA8P3pv/p+fpd
-	 sRj9tTVAJjmy5LfDLTKGgefSZZM11XZoFBpMAoXPnowiS/PyIZxV95auWarttaOiCd
-	 lWbfAkAzNR8qHEfuv9S4g00YRT1oKWgGfiK6cO4k=
+	by mail.kernel.org (Postfix) with ESMTP id CD6A020673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrI7P5Ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfFFPJw (ORCPT
+        id S1729139AbfFFPLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727309AbfFFPJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:09:52 -0400
-Received: from linux-8ccs (ip5f5ade8c.dynamic.kabel-deutschland.de [95.90.222.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E293F2083E;
-        Thu,  6 Jun 2019 15:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559833791;
-        bh=SXQbPAaM9RvZp3lW3NXitKVEdsSpDOda2A6XmXtgK9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m8AchtX68ZQEgL43k9PKAyaIxr1puxpZjBpfXaJsM3G9UTVi4Ft5mQBKClINjsF7f
-         /ojTk+8Da4VDAsJvPi5rbkfU5CMy32hmzLpjxaXv6GYYMnzJH7SKeqT4oSt1fRGlAf
-         ablifYRY+8cU+hXFTvzyKkX6LywgYOcx8DdAj2CY=
-Date:   Thu, 6 Jun 2019 17:09:46 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org
-Subject: Re: [PATCH modules 1/2] module: allow arch overrides for .exit
- section names
-Message-ID: <20190606150946.GA27669@linux-8ccs>
-References: <20190603105726.22436-1-matthias.schiffer@ew.tq-group.com>
- <20190603105726.22436-2-matthias.schiffer@ew.tq-group.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190603105726.22436-2-matthias.schiffer@ew.tq-group.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 6 Jun 2019 11:11:22 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:56215 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFPLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:11:21 -0400
+Received: by mail-it1-f195.google.com with SMTP id i21so471773ita.5;
+        Thu, 06 Jun 2019 08:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=5SPGUHVlJick6kceIZSXGPsmfdklx5MdvZ8RjbvntVc=;
+        b=lrI7P5Rot6lc2fVWBsIJrP4Oypa0f7ksHYaGart8/4oMRbKAZ2QnW6yv6fWzYSzna+
+         bPqb54q+fRid7mgfDhoJBC3fqu2PrIYkGOAdWpZkfGxnGLYSDb8+5Zp09oi7+kmYEuH4
+         ZBsvk1iXBaM74qdc+uH4NmU3uI0DmXHNg47/AlznzNrrAj98WXRYGqsQDKKVedHK57Bm
+         0yaFXrgbbYzIEmwfXSKaYaDsPGYBo0GKs4tG7UwwnuqEd4XaeC9kbhM359vmo3kIiqK8
+         s8oBNuVJHpxUM302ThOTM0AIIe1qWd1wdNU0teQMdhiFsbDpDfxh5rWQTbbTeN3laSED
+         dmvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=5SPGUHVlJick6kceIZSXGPsmfdklx5MdvZ8RjbvntVc=;
+        b=aMt11uBmS2Fa/8BZnjb2xgnIo+7mZHUw1yyOtWf+Gh4CBMOKVhSkkjr8KQWfknlfP9
+         rSHsV7vbq8GPkzZZAFlaZHqTHcBsFcxMa9Sdlg8bVZ8/XOZ268be8J4+R5AbvWzG4I8c
+         9iXgEfeK0gg2KBw51R9eQ6fP0yM0/Y/cpkZRzIHol64zjhqMFjASAy/y1Ta2P+Eovg5T
+         OMdZLuDI3Ygrmnes9RfwDu1q/vq4xb3RDCq5Gltu/SXDl5rxt3oMqG1ftIyTciJOgwq3
+         Hkw6noWFDBqP8/s3b0j6VX1TFwv1Y2zXMA9Vm05e6dpc8MDuwsOPOr5gTCW+IDI4lD+/
+         z8aA==
+X-Gm-Message-State: APjAAAVl9BxTqHzmDlZCVDiXVYWDEUW6/hnbyDLb42f71QlW0uoKhDKZ
+        mWa/nR4TSRBj4wv31HDPGmg=
+X-Google-Smtp-Source: APXvYqwlXsCpqRur+5Jt8bSFc2RmTw8rvQOpzXBiESeYlHmvIFZOWZwtUO04WsLUlQcc9h9YymsDfQ==
+X-Received: by 2002:a24:fcc7:: with SMTP id b190mr478252ith.122.1559833880661;
+        Thu, 06 Jun 2019 08:11:20 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id b196sm1028238itb.30.2019.06.06.08.11.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 08:11:20 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
+Date:   Thu,  6 Jun 2019 11:11:11 -0400
+Message-Id: <20190606151111.14237-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Schiffer [03/06/19 12:57 +0200]:
->Some archs like ARM store unwind information for .exit.text in sections
->with unusual names. As this unwind information refers to .exit.text, it
->must not be loaded when .exit.text is not loaded (when CONFIG_MODULE_UNLOAD
->is unset); otherwise, loading a module can fail due to relocation failures.
->
->Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
->---
-> include/linux/moduleloader.h | 8 ++++++++
-> kernel/module.c              | 2 +-
-> 2 files changed, 9 insertions(+), 1 deletion(-)
->
->diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
->index 31013c2effd3..cddbd85fb659 100644
->--- a/include/linux/moduleloader.h
->+++ b/include/linux/moduleloader.h
->@@ -5,6 +5,7 @@
->
-> #include <linux/module.h>
-> #include <linux/elf.h>
->+#include <linux/string.h>
->
-> /* These may be implemented by architectures that need to hook into the
->  * module loader code.  Architectures that don't need to do anything special
->@@ -93,4 +94,11 @@ void module_arch_freeing_init(struct module *mod);
-> #define MODULE_ALIGN PAGE_SIZE
-> #endif
->
->+#ifndef HAVE_ARCH_MODULE_EXIT_SECTION
->+static inline bool module_exit_section(const char *name)
->+{
->+	return strstarts(name, ".exit");
->+}
->+#endif
->+
+I was able to test the patch [1] exclusion mechanism without access to actual
+hardware - by giving it a dummy regmap. See patch below.
 
-Hi Matthias,
+Test cases (all via sysfs):
+1. verify requested pwm cannot be requested as gpio
+2. verify requested gpio cannot be requested as pwm
+3. verify pwm "all LEDs" cannot be used if pwms/gpios in use
+4. verify pwms/gpios cannot be requested if pwm "all LEDs" in use
 
-For sake of consistency, could we implement this as an arch-overridable
-__weak symbol like the rest of the module arch-overrides in moduleloader.h?
+All test cases ok.
+ Obviously, I could not test multi-threaded correctness.
 
-> #endif
->diff --git a/kernel/module.c b/kernel/module.c
->index 6e6712b3aaf5..e8e4cd0a471f 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -2924,7 +2924,7 @@ static int rewrite_section_headers(struct load_info *info, int flags)
->
-> #ifndef CONFIG_MODULE_UNLOAD
-> 		/* Don't load .exit sections */
->-		if (strstarts(info->secstrings+shdr->sh_name, ".exit"))
->+		if (module_exit_section(info->secstrings+shdr->sh_name))
-> 			shdr->sh_flags &= ~(unsigned long)SHF_ALLOC;
-> #endif
-> 	}
->-- 
->2.17.1
->
+[1] https://lkml.org/lkml/2019/6/4/1039
+
+---
+ drivers/pwm/pwm-pca9685.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 259fd58812ae..c059da5f86f4 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -83,6 +83,7 @@ struct pca9685 {
+ 	struct regmap *regmap;
+ 	int duty_ns;
+ 	int period_ns;
++	u8 regs[PCA9685_NUMREGS];
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
+@@ -446,11 +447,31 @@ static const struct pwm_ops pca9685_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static int read_reg_dummy(void *context, unsigned int reg,
++			unsigned int *val)
++{
++	struct pca9685 *pca = context;
++
++	*val = pca->regs[reg];
++	return 0;
++}
++
++static int write_reg_dummy(void *context, unsigned int reg,
++			 unsigned int val)
++{
++	struct pca9685 *pca = context;
++
++	pca->regs[reg] = val;
++	return 0;
++}
++
+ static const struct regmap_config pca9685_regmap_i2c_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+ 	.max_register = PCA9685_NUMREGS,
+ 	.cache_type = REGCACHE_NONE,
++	.reg_read = read_reg_dummy,
++	.reg_write = write_reg_dummy,
+ };
+ 
+ static int pca9685_pwm_probe(struct i2c_client *client,
+@@ -464,7 +485,8 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+ 	if (!pca)
+ 		return -ENOMEM;
+ 
+-	pca->regmap = devm_regmap_init_i2c(client, &pca9685_regmap_i2c_config);
++	pca->regmap = devm_regmap_init(&client->dev, NULL, pca,
++					&pca9685_regmap_i2c_config);
+ 	if (IS_ERR(pca->regmap)) {
+ 		ret = PTR_ERR(pca->regmap);
+ 		dev_err(&client->dev, "Failed to initialize register map: %d\n",
+-- 
+2.17.1
+
