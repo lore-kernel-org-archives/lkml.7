@@ -2,245 +2,197 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1E6C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5325C28EB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CBE206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A397A206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eG1gJbBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfFFKVT (ORCPT
+        id S1728248AbfFFKVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:21:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57174 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbfFFKVS (ORCPT
+        Thu, 6 Jun 2019 06:21:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37692 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfFFKVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:21:18 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 069DA263967
-Subject: Re: [PATCH v2] platform/chrome: wilco_ec: Add version sysfs entries
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>
-References: <20190603181649.143640-1-rrangel@chromium.org>
- <073e1600-18fe-84ea-03df-7b53b9b7c690@collabora.com>
- <CAHX4x8558sa8WX2n9ar94bJn6YsejqNgFFouY+3piT4jExF1DA@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <41d712b3-331f-f346-8e4a-68c358d1f295@collabora.com>
-Date:   Thu, 6 Jun 2019 12:21:14 +0200
+        Thu, 6 Jun 2019 06:21:46 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56ALcRA125801;
+        Thu, 6 Jun 2019 05:21:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559816498;
+        bh=1x+gSBPFfyrVYhSU5AsOgKF2OaPXUOvGBBRT9+Ix9To=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eG1gJbBZ1j92N0drtKBmLkis6wa5jdD3C3zeF2LudOk+795/t6lF7+RBaCBgOiaM+
+         Nnr83FDsFJRPT6zxRgwOr5jrIZmKb57y9wC/f9rV10NhoGVG7jdjOEDxPNlAibui0m
+         47CoH+P9WRUVPUvkBX8iG5qsXJoni5TP2BAWC7Do=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56ALc79085945
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Jun 2019 05:21:38 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
+ 2019 05:21:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 6 Jun 2019 05:21:37 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56ALZqB072566;
+        Thu, 6 Jun 2019 05:21:35 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+Date:   Thu, 6 Jun 2019 13:22:03 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAHX4x8558sa8WX2n9ar94bJn6YsejqNgFFouY+3piT4jExF1DA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jon, Sameer,
 
-On 5/6/19 17:12, Nick Crews wrote:
-> Thanks Raul and Enric, this looks good to me.
+On 06/06/2019 10.14, Jon Hunter wrote:
 > 
-> On Mon, Jun 3, 2019 at 2:40 PM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
+> On 06/06/2019 07:41, Sameer Pujar wrote:
 >>
->> Nick,
->>
->> On 3/6/19 20:16, Raul E Rangel wrote:
->>> Add the ability to extract version information from the EC.
+>> On 6/6/2019 11:30 AM, Peter Ujfalusi wrote:
+>>> Hi Sameer,
 >>>
->>> Example Output:
->>> $ cd /sys/bus/platform/devices/GOOG000C:00
->>> $ tail build_date build_revision version model_number
->>> ==> build_date <==
->>> 04/25/19
+>>> On 06/06/2019 6.49, Sameer Pujar wrote:
+>>>> Sorry for late reply.
+>>>> [Resending the reply since delivery failed for few recipients]
+>>>> I discussed this internally with HW folks and below is the reason why
+>>>> DMA needs
+>>>> to know FIFO size.
+>>>>
+>>>> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface
+>>>> to the audio sub-system.
+>>>> - ADMAIF has multiple channels and share FIFO buffer for individual
+>>>> operations. There is a provision
+>>>>    to allocate specific fifo size for each individual ADMAIF channel
+>>>> from
+>>>> the shared buffer.
+>>>> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
+>>>> engines, which you described earlier.
+>>> It is not really different than what other DMAs are doing.
 >>>
->>> ==> build_revision <==
->>> d2592cae0
+>>>> - The flow control logic is placed inside ADMA. Slave peripheral
+>>>> device(ADMAIF) signals ADMA whenever a
+>>>>    read or write happens on the FIFO(per WORD basis). Please note that
+>>>> the signaling is per channel. There is
+>>>>    no other signaling present from ADMAIF to ADMA.
+>>>> - ADMA keeps a counter related to above signaling. Whenever a sufficient
+>>>> space is available, it initiates a transfer.
+>>>>    But the question is, how does it know when to transfer. This is the
+>>>> reason, why ADMA has to be aware of FIFO
+>>>>    depth of ADMAIF channel. Depending on the counters and FIFO depth, it
+>>>> knows exactly when a free space is available
+>>>>    in the context of a specific channel. On ADMA, FIFO_SIZE is just a
+>>>> value which should match to actual FIFO_DEPTH/SIZE
+>>>>    of ADMAIF channel.
+>>>> - Now consider two cases based on above logic,
+>>>>    * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
+>>>>      In this case, ADMA thinks that there is enough space available for
+>>>> transfer, when actually the FIFO data
+>>>>      on slave is not consumed yet. It would result in OVERRUN.
+>>>>    * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
+>>>>      This is case where ADMA won’t transfer, even though sufficient
+>>>> space
+>>>> is available, resulting in UNDERRUN.
+>>>> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
+>>>> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
+>>>>    way to communicate fifo size info to ADMA.
+>>> The src_maxburst / dst_maxburst is exactly for this reason. To
+>>> communicate how much data should be transferred per DMA request to/from
+>>> peripheral.
 >>>
->>> ==> version <==
->>> 00.00.14
+>>> In TI land we have now 3 DMA engines servicing McASP. McASP has FIFO
+>>> which is dynamically configured (you can see the AFIFO of McASP as a
+>>> small DMA: on McASP side it services the peripheral, on the other side
+>>> it interacts with the given system DMA used by the SoC - EDMA, sDMA or
+>>> UDMAP). All DMAs needs a bit different configuration, but the AFIFO
+>>> depth on the McASP side is coming in via the src/dst_maxburst and the
+>>> drivers just need to interpret it correctly.
 >>>
->>> ==> model_number <==
->>> 08B6
->>>
->>> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
+>>> well.
+>> Not exactly equal.
+>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
+>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
+>> multiples of 16]
 > 
-> Reviewed-by: Nick Crews <ncrews@chromium.org>
+> So I think that the key thing to highlight here, is that the as Sameer
+> highlighted above for the Tegra ADMA there are two values that need to
+> be programmed; the DMA client FIFO size and the max burst size. The ADMA
+> has register fields for both of these.
 
-applied for 5.3
+How does the ADMA uses the 'client FIFO size' and 'max burst size'
+values and what is the relation of these values to the peripheral side
+(ADMAIF)?
 
-Thanks,
- Enric
-
+> As you can see from the above the FIFO size can be much greater than the
+> burst size and so ideally both of these values would be passed to the DMA.
 > 
->>
->> Can I get your rb here?
->>
->> Thanks,
->>  Enric
->>
->>> ---
->>> This patch is rebased on chromeos-platform/for-next. It was originally
->>> developed on the chromiumos 4.19 kernel which has the following patch
->>> applied: https://lore.kernel.org/patchwork/patch/1062995/. That patch is
->>> not currently upstream.
->>>
->>> Changes in v2:
->>> - Removed version directory
->>> - Renamed label to version
->>> - Sorted documentation
->>>
->>>  .../ABI/testing/sysfs-platform-wilco-ec       | 31 ++++++++
->>>  drivers/platform/chrome/wilco_ec/sysfs.c      | 79 +++++++++++++++++++
->>>  2 files changed, 110 insertions(+)
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
->>> index 8e5d6eee44db2..8827a734f9331 100644
->>> --- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
->>> +++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
->>> @@ -7,3 +7,34 @@ Description:
->>>               want to run their device headless or with a dock.
->>>
->>>               Input should be parseable by kstrtou8() to 0 or 1.
->>> +
->>> +What:          /sys/bus/platform/devices/GOOG000C\:00/build_date
->>> +Date:          May 2019
->>> +KernelVersion: 5.3
->>> +Description:
->>> +               Display Wilco Embedded Controller firmware build date.
->>> +               Output will a MM/DD/YY string.
->>> +
->>> +What:          /sys/bus/platform/devices/GOOG000C\:00/build_revision
->>> +Date:          May 2019
->>> +KernelVersion: 5.3
->>> +Description:
->>> +               Display Wilco Embedded Controller build revision.
->>> +               Output will a version string be similar to the example below:
->>> +               d2592cae0
->>> +
->>> +What:          /sys/bus/platform/devices/GOOG000C\:00/model_number
->>> +Date:          May 2019
->>> +KernelVersion: 5.3
->>> +Description:
->>> +               Display Wilco Embedded Controller model number.
->>> +               Output will a version string be similar to the example below:
->>> +               08B6
->>> +
->>> +What:          /sys/bus/platform/devices/GOOG000C\:00/version
->>> +Date:          May 2019
->>> +KernelVersion: 5.3
->>> +Description:
->>> +               Display Wilco Embedded Controller firmware version.
->>> +               The format of the string is x.y.z. Where x is major, y is minor
->>> +               and z is the build number. For example: 95.00.06
->>> diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
->>> index f84f0480460ae..3b86a21005d3e 100644
->>> --- a/drivers/platform/chrome/wilco_ec/sysfs.c
->>> +++ b/drivers/platform/chrome/wilco_ec/sysfs.c
->>> @@ -23,6 +23,25 @@ struct boot_on_ac_request {
->>>       u8 reserved7;
->>>  } __packed;
->>>
->>> +#define CMD_EC_INFO                  0x38
->>> +enum get_ec_info_op {
->>> +     CMD_GET_EC_LABEL        = 0,
->>> +     CMD_GET_EC_REV          = 1,
->>> +     CMD_GET_EC_MODEL        = 2,
->>> +     CMD_GET_EC_BUILD_DATE   = 3,
->>> +};
->>> +
->>> +struct get_ec_info_req {
->>> +     u8 cmd;                 /* Always CMD_EC_INFO */
->>> +     u8 reserved;
->>> +     u8 op;                  /* One of enum get_ec_info_op */
->>> +} __packed;
->>> +
->>> +struct get_ec_info_resp {
->>> +     u8 reserved[2];
->>> +     char value[9]; /* __nonstring: might not be null terminated */
->>> +} __packed;
->>> +
->>>  static ssize_t boot_on_ac_store(struct device *dev,
->>>                               struct device_attribute *attr,
->>>                               const char *buf, size_t count)
->>> @@ -57,8 +76,68 @@ static ssize_t boot_on_ac_store(struct device *dev,
->>>
->>>  static DEVICE_ATTR_WO(boot_on_ac);
->>>
->>> +static ssize_t get_info(struct device *dev, char *buf, enum get_ec_info_op op)
->>> +{
->>> +     struct wilco_ec_device *ec = dev_get_drvdata(dev);
->>> +     struct get_ec_info_req req = { .cmd = CMD_EC_INFO, .op = op };
->>> +     struct get_ec_info_resp resp;
->>> +     int ret;
->>> +
->>> +     struct wilco_ec_message msg = {
->>> +             .type = WILCO_EC_MSG_LEGACY,
->>> +             .request_data = &req,
->>> +             .request_size = sizeof(req),
->>> +             .response_data = &resp,
->>> +             .response_size = sizeof(resp),
->>> +     };
->>> +
->>> +     ret = wilco_ec_mailbox(ec, &msg);
->>> +     if (ret < 0)
->>> +             return ret;
->>> +
->>> +     return scnprintf(buf, PAGE_SIZE, "%.*s\n", (int)sizeof(resp.value),
->>> +                      (char *)&resp.value);
->>> +}
->>> +
->>> +static ssize_t version_show(struct device *dev, struct device_attribute *attr,
->>> +                       char *buf)
->>> +{
->>> +     return get_info(dev, buf, CMD_GET_EC_LABEL);
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(version);
->>> +
->>> +static ssize_t build_revision_show(struct device *dev,
->>> +                                struct device_attribute *attr, char *buf)
->>> +{
->>> +     return get_info(dev, buf, CMD_GET_EC_REV);
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(build_revision);
->>> +
->>> +static ssize_t build_date_show(struct device *dev,
->>> +                            struct device_attribute *attr, char *buf)
->>> +{
->>> +     return get_info(dev, buf, CMD_GET_EC_BUILD_DATE);
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(build_date);
->>> +
->>> +static ssize_t model_number_show(struct device *dev,
->>> +                              struct device_attribute *attr, char *buf)
->>> +{
->>> +     return get_info(dev, buf, CMD_GET_EC_MODEL);
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(model_number);
->>> +
->>> +
->>>  static struct attribute *wilco_dev_attrs[] = {
->>>       &dev_attr_boot_on_ac.attr,
->>> +     &dev_attr_build_date.attr,
->>> +     &dev_attr_build_revision.attr,
->>> +     &dev_attr_model_number.attr,
->>> +     &dev_attr_version.attr,
->>>       NULL,
->>>  };
->>>
->>>
+> We could get by with just passing the FIFO size (as the max burst size)
+> and then have the DMA driver set the max burst size depending on this,
+> but this does feel quite correct for this DMA. Hence, ideally, we would
+> like to pass both.
+> 
+> We are also open to other ideas.
+
+I can not find public documentation (I think they are walled off by
+registration), but correct me if I'm wrong:
+ADMAIF - peripheral side
+ - kind of a small DMA for audio preipheral(s)?
+ - Variable FIFO size
+ - sends DMA request to ADMA per words
+ADMA - system DMA
+ - receives the DMA requests from ADMAIF
+ - counts the requests
+ - based on some threshold of the counter it will send/read from ADMAIF?
+  - maxburst number of words probably?
+
+ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
+managing that FIFO from the outside, making sure that it does not over
+or underrun?
+And it is the one who sets the pace (in effect the DMA burst size - how
+many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
