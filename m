@@ -2,110 +2,132 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629A3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D50C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AEF206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C8720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y+l5C+N4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Zf957eeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfFFIO5 (ORCPT
+        id S1727092AbfFFIPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Jun 2019 04:15:00 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:53222 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726924AbfFFIO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 04:14:57 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45830 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFFIO4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:14:56 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x568EmdQ109788;
-        Thu, 6 Jun 2019 03:14:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559808888;
-        bh=9CGWmFPZFkM4haIpdXdnS/PW2KTAvEhGOsht3nl69aM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=y+l5C+N4UN7JgoiVx59rl13K3WiR027/sCRxaNhTaB7T9zYa7z/2W5NI0ZsOWYoIc
-         7gUcCAVrbcfm9+6fAvSUt2QMEFFt3Oa6wTRyGMtDSBG3DGYBsNSh/XsvkFTj/2l6I/
-         l1boUF1Q/ytOH3TdHNrPIR+ZSqSgIrW3oby9FFKk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x568EmfC109386
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 03:14:48 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 03:14:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 03:14:48 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x568Ejh5008241;
-        Thu, 6 Jun 2019 03:14:46 -0500
-Subject: Re: [PATCH -next] phy: ti: am654-serdes: Make serdes_am654_xlate()
- static
-To:     Yue Haibing <yuehaibing@huawei.com>, <kishon@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <hulkci@huawei.com>
-References: <20190418133633.3908-1-yuehaibing@huawei.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <659d9904-fa9a-a03b-b609-0ac053520c9a@ti.com>
-Date:   Thu, 6 Jun 2019 11:14:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190418133633.3908-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+X-IronPort-AV: E=Sophos;i="5.60,558,1549926000"; 
+   d="scan'208";a="7719743"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 06 Jun 2019 10:14:55 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 06 Jun 2019 10:14:55 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 06 Jun 2019 10:14:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1559808895; x=1591344895;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gidmcEXWd6Fs9Jm1YrLEtSu1pDj6rxSgxAoUC5x632M=;
+  b=Zf957eeRwDVqFX58P4ouQ+lHOtr5F0uv+gAZpioj0rzkycSca9xzfIfv
+   qHpfpUq+bjV/HpJ1JtvAG8riB7JQql2EBVGc3o4qNXwn3Zs3+NCYhVJ+0
+   lPF9us9u+JD5RL1xCY860HkUIa9HI5RxWbYWODoWSez3hJ+nQvTHr8QHa
+   HUfoeamWPtbDjHvC7fywDx77ERXMfrnD7q2tEaihI4nWV/IbvUpVJXA9N
+   DEBOKU7FnisGp9yUiKV5tOsd9VmEq+bxEz8SDYR5rUUvwELpfVdCpQf1z
+   bIRAcKu/byIfTXKZJA1w0pg6YgGTLJL8ZbJwlliIT1GXfhgNlpyrPo9Y8
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,558,1549926000"; 
+   d="scan'208";a="7719742"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 06 Jun 2019 10:14:55 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 9F20E280074;
+        Thu,  6 Jun 2019 10:15:01 +0200 (CEST)
+Message-ID: <61f233518ba863f9d5783dd10e468ee5bf22b69a.camel@ew.tq-group.com>
+Subject: Re: [PATCH modules 0/2] Fix handling of exit unwinding sections (on
+ ARM)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Russell King <linux@armlinux.org.uk>, Jessica Yu <jeyu@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org
+Date:   Thu, 06 Jun 2019 10:14:44 +0200
+In-Reply-To: <20190603105726.22436-1-matthias.schiffer@ew.tq-group.com>
+References: <20190603105726.22436-1-matthias.schiffer@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-06-03 at 12:57 +0200, Matthias Schiffer wrote:
+> For some time (050d18d1c651 "ARM: 8650/1: module: handle negative
+> R_ARM_PREL31 addends correctly", v4.11+), building a kernel without
+> CONFIG_MODULE_UNLOAD would lead to module loads failing on ARM
+> systems with
+> certain memory layouts, with messages like:
+> 
+>   imx_sdma: section 16 reloc 0 sym '': relocation 42 out of range
+>   (0x7f015260 -> 0xc0f5a5e8)
+> 
+> (0x7f015260 is in the module load area, 0xc0f5a5e8 a regular vmalloc
+> address; relocation 42 is R_ARM_PREL31)
+> 
+> This is caused by relocatiosn in the .ARM.extab.exit.text and
+> .ARM.exidx.exit.text sections referencing the .exit.text section. As
+> the
+> module loader will omit loading .exit.text without
+> CONFIG_MODULE_UNLOAD,
+> there will be relocations from loaded to unloaded sections; the
+> resulting
+> huge offsets trigger the sanity checks added in 050d18d1c651.
+> 
+> IA64 might be affected by a similar issue - sections with names like
+> .IA_64.unwind.exit.text and .IA_64.unwind_info.exit.text appear in
+> the ld
+> script - but I don't know much about that arch.
+> 
+> Also, I'm not sure if this is stable-worthy - just enabling
+> CONFIG_MODULE_UNLOAD should be a viable workaround on affected
+> kernels.
+> 
+> 
+> Kind regards,
+> Matthias
 
-On 18/04/2019 16:36, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> drivers/phy/ti/phy-am654-serdes.c:250:12: warning:
->  symbol 'serdes_am654_xlate' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Acked-by: Roger Quadros <rogerq@ti.com>
+Hi,
+any comments on these patches? If not, who is going to take them in
+their tree?
 
-> ---
->  drivers/phy/ti/phy-am654-serdes.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Note that I'll be out of office for the next week, and I won't be able
+to read my mail during this period.
+
+
+Kind regards,
+Matthias
+
+
+
+
 > 
-> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-> index d376920..f8edd08 100644
-> --- a/drivers/phy/ti/phy-am654-serdes.c
-> +++ b/drivers/phy/ti/phy-am654-serdes.c
-> @@ -247,8 +247,8 @@ static void serdes_am654_release(struct phy *x)
->  	mux_control_deselect(phy->control);
->  }
->  
-> -struct phy *serdes_am654_xlate(struct device *dev, struct of_phandle_args
-> -				 *args)
-> +static struct phy *serdes_am654_xlate(struct device *dev,
-> +				      struct of_phandle_args *args)
->  {
->  	struct serdes_am654 *am654_phy;
->  	struct phy *phy;
+> 
+> Matthias Schiffer (2):
+>   module: allow arch overrides for .exit section names
+>   ARM: module: recognize unwind exit sections
+> 
+>  arch/arm/include/asm/module.h | 11 +++++++++++
+>  include/linux/moduleloader.h  |  8 ++++++++
+>  kernel/module.c               |  2 +-
+>  3 files changed, 20 insertions(+), 1 deletion(-)
 > 
 
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
