@@ -2,114 +2,95 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D5DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1C2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DA520684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EF0206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="b7m3H/Xg"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AFDD/k2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfFFPhN (ORCPT
+        id S1729499AbfFFPhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:37:13 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:41264 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729448AbfFFPhK (ORCPT
+        Thu, 6 Jun 2019 11:37:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41045 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729191AbfFFPha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:37:10 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 96018C0B81;
-        Thu,  6 Jun 2019 15:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559835440; bh=evCeM7m+wEZrH4vGhwpv02k3yRyahFmlmUvNVtGsfDc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b7m3H/XgkC/+WU1sEjD6eDOgADERYI7a3JYqP+b3Kb8pEDYNuWSR3NAw1yBJO+QTD
-         Q7FbnUfzEt+yTVkMCi8lEUmMMNWwr5P1CCjTwuiZh4HuI7F38Nsi9NbdJcpJisdtbK
-         J3lsWkoBGJzcdWJdr5E/0Py9nUUcMuUsQfMTTr8/jHaU+QFrBgzgiHh1hz0D5vPIEH
-         E74qVrIv4M0BzOpLmGwwcLoiGK4J5SO4IQiGHp97hQEvHPqh8HfG+isK7KGTUXB905
-         v9+DaYcK0h1Cs04DKPsc52NZzLp9Te8NJky5A8O9jbK6NlxOQYiMz4lLJp96JYnRhW
-         1z7dD48lVkd1A==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 813B9A005C;
-        Thu,  6 Jun 2019 15:37:07 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 65A4D3F204;
-        Thu,  6 Jun 2019 17:37:07 +0200 (CEST)
-From:   Luis Oliveira <Luis.Oliveira@synopsys.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Joao.Pinto@synopsys.com,
-        Luis Oliveira <Luis.Oliveira@synopsys.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset bindings
-Date:   Thu,  6 Jun 2019 17:36:28 +0200
-Message-Id: <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
-References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
+        Thu, 6 Jun 2019 11:37:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id w25so530169ioc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
+        b=AFDD/k2/le52Hdd/TKthmiFLkpxwsE8wgwm+ToBDcTp5nk5LpKOXg2c5jC8eyqSr8U
+         PbQa5dsh5SDeL6j0empaIJIbULAJcPWpVBbqfwPg+RIvS/9Z4t7qTgc+J2TnzpXamk2f
+         Jk2clgGQMDirG2oKq3gaszEI2ZXgq2nzh2D7A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
+        b=TbtncAjVFYrMzBFoH6Aro2yrhA9baHmYyyIs7Gwov7/ol6Nmh4EHCXdclUPpDkXbdd
+         hRx9hemEy49k6ONC52g7SuOME80ur7CTy7TLvqVUWe/4PhhibD67OdBWlk/0Z4AtANmb
+         ByhBGd+f65iKHpa157JVtN6voxAOrz84xDBT6ylZjnnX4+ZcIoLKx2BtSoTmdp2sNI8n
+         tLBODGSKpV1xr2E2tIhrPvuEyQiJs7cx6hoaAiodILr02RUSqWnlA2rL4kJRf6RSNIN+
+         s5JDk2FaDhI/67LswaES9fEWc4Lt7LCkoInuxjZJO13YF1S7oFZg3ZsgHPcAoFCWq8lt
+         ziAg==
+X-Gm-Message-State: APjAAAXRhGMk90OSvHNQHqwIO1SAY3qhPhWpIQst8fyzo7oU+x7NPfv4
+        ULTPgz8fqJYMBWllemnQc1aCP/7at1hnRht/ZQmoWA==
+X-Google-Smtp-Source: APXvYqxuIiFVwwy3SZOPoMV5d6L9mjSBqLBwyeJYTl2PURpa5yAIPkIYD/4gZiMQyRghGYi7pdemfpa8qFQTyevPY6Q=
+X-Received: by 2002:a5d:9502:: with SMTP id d2mr14353761iom.2.1559835449946;
+ Thu, 06 Jun 2019 08:37:29 -0700 (PDT)
+From:   Kashyap Desai <kashyap.desai@broadcom.com>
+References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de>
+In-Reply-To: <20190605190836.32354-11-hch@lst.de>
+MIME-Version: 1.0
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQNLjZIO2zMn7N+9xPobnDbFSu4o5gI2RJdJo5AtPRA=
+Date:   Thu, 6 Jun 2019 21:07:27 +0530
+Message-ID: <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
+Subject: RE: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds documentation of device tree bindings for the
-DesignWare IP reset controller.
+>
+> This ensures all proper DMA layer handling is taken care of by the SCSI
+> midlayer.  Note that the effect is global, as the IOMMU merging is based
+> off a
+> paramters in struct device.  We could still turn if off if no PCIe devices
+> are
+> present, but I don't know how to find that out.
+>
+> Also remove the bogus nomerges flag, merges do take the virt_boundary into
+> account.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
----
-Changelog
-- Add active low configuration example
-- Fix compatible string in the active high example
+Hi Christoph, Changes for <megaraid_sas> and <mpt3sas> looks good. We want
+to confirm few sanity before ACK. BTW, what benefit we will see moving
+virt_boundry setting to SCSI mid layer ? Is it just modular approach OR any
+functional fix ?
 
- .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-
-diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-new file mode 100644
-index 0000000..85f3301
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-@@ -0,0 +1,30 @@
-+Synopsys DesignWare Reset controller
-+=======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+
-+- compatible: should be one of the following.
-+	"snps,dw-high-reset" - for active high configuration
-+	"snps,dw-low-reset" - for active low configuration
-+
-+- reg: physical base address of the controller and length of memory mapped
-+	region.
-+
-+- #reset-cells: must be 1.
-+
-+example:
-+
-+	dw_rst_1: reset-controller@0000 {
-+		  compatible = "snps,dw-high-reset";
-+	 	  reg = <0x0000 0x4>;
-+		  #reset-cells = <1>;
-+	};
-+
-+	dw_rst_2: reset-controller@1000 {i
-+		  compatible = "snps,dw-low-reset";
-+		  reg = <0x1000 0x8>;
-+		  #reset-cells = <1>;
-+	};
--- 
-2.7.4
-
+Kashyap
