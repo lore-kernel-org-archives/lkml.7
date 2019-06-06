@@ -2,141 +2,144 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1171DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA408C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81AB20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26A520684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eebNRqHI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AN2CNz7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfFFJef (ORCPT
+        id S1727931AbfFFJfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:34:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbfFFJef (ORCPT
+        Thu, 6 Jun 2019 05:35:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40624 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfFFJfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:34:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4hDUHDwdfh0H6xMbYh/4yZykXYafNHG4mu0Yi4qQQpg=; b=eebNRqHIKhoC5jWzk2x+U2z6gO
-        7vIZkjaiuKl8PY0CS2g56qegQL9fAHC/z1DziUm9c7dFocLFNR+n4pzffbeckDNjVrlzBTHUtan+L
-        fat2KQqTpt2h5/nXTaMoKEUwWphLmX85xreod4bhGmTlpY8KO/zyf2WJ7Lf1WbHOEEeSasVxZGcfa
-        TMmgcdPQFTlroEvIeCtg5UIDEoN7wWPfkst/FmGWrG3bD8ryxUk1WMNVuyfv3keVhq3mclJAzpegV
-        DG9X7A6iLJriZzPxtgBdEAeMduFXZXCKDUimdkHUaldydBpYr58Nvmh2UpuuWUafLtxod8A79TLFJ
-        8+Fr5o1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYon0-0000J8-Dr; Thu, 06 Jun 2019 09:34:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9E8D02022711B; Thu,  6 Jun 2019 11:34:28 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 11:34:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, will.deacon@arm.com, arnd@arndb.de,
-        jhansen@vmware.com, vdasa@vmware.com, aditr@vmware.com,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] VMCI: Fixup atomic64_t abuse
-Message-ID: <20190606093428.GF3402@hirez.programming.kicks-ass.net>
+        Thu, 6 Jun 2019 05:35:16 -0400
+Received: by mail-io1-f65.google.com with SMTP id n5so138529ioc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHp49uQlU5yIys64xH4zvS9Cue2SVr3RQK/YgKDpiRc=;
+        b=AN2CNz7CPqZzivrS99g5nvwP/o/SgLHBsg/4sHt3Gs4l8ZE8woyNIea7FNZ+ZLVBs9
+         10My5n58np8Mog6V4seZA5WseaRXJL42mH3XFJho3fx5KAEGrLvh/B3CRxP75+hoXCZs
+         yutgAOz6DZfYnD+C1SCiox4cawVPPNLBMCf9t8dwKI04O4kGiCd7c2Jjr/n8fqgzSIiS
+         H1/AVWlWmtVtxOGX+Qm4cp0uMl8cAUWzNzyeVJwTJsegYoFIkG0U2hJ8qyVYHuOjZlDV
+         WqbmmgQgR4GOiTE/hNEAD0H0E1uqB+MqNjm+3CN5fKeF1BIthAwuYe+Q8cxB4XWQ0DyS
+         PWVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHp49uQlU5yIys64xH4zvS9Cue2SVr3RQK/YgKDpiRc=;
+        b=DBlfNdRUQRrkM9TgYxkwdptbJTYFN5XZKbyNsBOHnSJuEe8tySF4q3df3v2bgy+50x
+         u1LxLYf8GBVNvbUwRnASN+OEWm7GpxIPCx/1zDUFfFe1Kr+PtZuFVZvKhYW4qwUiteJX
+         v2ggUFuXfRVwcweT/PWpk5nquymPzA/M3mZPhiGtxe7VOLFI6nBzIN6RIeHv47jE1iVz
+         bVmy51hpxue5sk43EzBGHMO1W99K23+99+1D2yx19HPkr/45nKX1wCy02VSOvgdKI+ZN
+         AiILPYBG6bDomPCDnb9dHvZV6SG/vqx1pe0g5CzC3gf0hqpBsXrrILrddbRgLj64GZen
+         0YSQ==
+X-Gm-Message-State: APjAAAU32IYQoQwTuLUj62Hk7R28AVgFy0SOmpEDLdYFshZ4UtR+BSDp
+        iJ8dGYAzOvtuXjyXYingrU63141+Si3KuyFfv385e/j5EBeaRw==
+X-Google-Smtp-Source: APXvYqwYiF7FPCLPAO+cIFA18Sip3ZuB6prYvOwBxGiLac3826Dt6ufVgilOW70nYctUeU+5al9/Hx5B739dM7xe0tI=
+X-Received: by 2002:a6b:e608:: with SMTP id g8mr5429025ioh.88.1559813714855;
+ Thu, 06 Jun 2019 02:35:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+ <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com>
+ <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
+ <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com>
+ <20190606070807.GA17985@kroah.com> <CAKv+Gu_=aUmN76Wzy5kokgP6hcZPWAwW_7=ekqOawkfg7LPE3g@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_=aUmN76Wzy5kokgP6hcZPWAwW_7=ekqOawkfg7LPE3g@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 6 Jun 2019 11:34:54 +0200
+Message-ID: <CAKv+Gu9qg0K44hWtKH9vycxhUF4e2zB87kLqw33Jt+Shc1+9HQ@mail.gmail.com>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
+ (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Rolf Eike Beer <eb@emlix.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 6 Jun 2019 at 10:58, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On Thu, 6 Jun 2019 at 09:08, Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Jun 06, 2019 at 08:55:29AM +0200, Ard Biesheuvel wrote:
+> > > On Wed, 5 Jun 2019 at 22:48, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > > >
+> > > > On Wed, Jun 5, 2019 at 11:42 AM Ard Biesheuvel
+> > > > <ard.biesheuvel@linaro.org> wrote:
+> > > > > For the record, this is an example of why I think backporting those
+> > > > > clang enablement patches is a bad idea.
+> > > >
+> > > > There's always a risk involved with backports of any kind; more CI
+> > > > coverage can help us mitigate some of these risks in an automated
+> > > > fashion before we get user reports like this.  I meet with the
+> > > > KernelCI folks weekly, so I'll double check on the coverage of the
+> > > > stable tree's branches.  The 0day folks are also very responsive and
+> > > > I've spoken with them a few times, so I'll try to get to the bottom of
+> > > > why this wasn't reported by either of those.
+> > > >
+> > > > Also, these patches help keep Android, CrOS, and Google internal
+> > > > production kernels closer to their upstream sources.
+> > > >
+> > > > > We can't actually build those
+> > > > > kernels with clang, can we? So what is the point? </grumpy>
+> > > >
+> > > > Here's last night's build:
+> > > > https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/114388434
+> > > >
+> > >
+> > > If you are saying that plain upstream 4.9-stable defconfig can be
+> > > built with Clang, then I am pleasantly surprised.
+> >
+> > I know some specific configs can, there's no rule that I know of that
+> > 'defconfig' support is required.  But then again, it might also work,
+> > try it and see :)
+> >
+>
+> Well, it is the rule that the arm64 maintainers use.
+>
+> > > > Also, Android and CrOS have shipped X million devices w/ 4.9 kernels
+> > > > built with Clang.  I think this number will grow at least one order of
+> > > > magnitude imminently.
+> > > >
+> > >
+> > > I know that (since you keep reminding me :-)), but obviously, Google
+> > > does not care about changes that regress GCC support.
+> >
+> > What are you talking about?  Bugs happen all the time, what specifically
+> > did "Google" do to break gcc support?  If you are referring to this
+> > patch, and it is a regression, of course I will revert it.  But note
+> > that gcc and 4.9 works just fine for all of the other users right now,
+> > remember we do do a lot of testing of these releases.
+> >
+>
+> Don't get me wrong: I am not blaming Google for this. But having
+> strict Documented/ stable-rules, violating them by backporting patches
+> that are clearly not bug fixes, and *then* saying 'bugs happen all the
+> time' makes no sense to me at all.
 
-The VMCI driver is abusing atomic64_t and atomic_t, there is no actual
-atomic RmW operations around.
-
-Rewrite the code to use a regular u64 with READ_ONCE() and
-WRITE_ONCE() and a cast to 'unsigned long'. This fully preserves
-whatever broken there was (it's not endian-safe for starters, and also
-looks to be missing ordering).
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/vmw_vmci_defs.h |   30 ++++++++++--------------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
-
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -438,8 +438,8 @@ enum {
- struct vmci_queue_header {
- 	/* All fields are 64bit and aligned. */
- 	struct vmci_handle handle;	/* Identifier. */
--	atomic64_t producer_tail;	/* Offset in this queue. */
--	atomic64_t consumer_head;	/* Offset in peer queue. */
-+	u64 producer_tail;	/* Offset in this queue. */
-+	u64 consumer_head;	/* Offset in peer queue. */
- };
- 
- /*
-@@ -740,13 +740,9 @@ static inline void *vmci_event_data_payl
-  * prefix will be used, so correctness isn't an issue, but using a
-  * 64bit operation still adds unnecessary overhead.
-  */
--static inline u64 vmci_q_read_pointer(atomic64_t *var)
-+static inline u64 vmci_q_read_pointer(u64 *var)
- {
--#if defined(CONFIG_X86_32)
--	return atomic_read((atomic_t *)var);
--#else
--	return atomic64_read(var);
--#endif
-+	return READ_ONCE(*(unsigned long *)var);
- }
- 
- /*
-@@ -755,23 +751,17 @@ static inline u64 vmci_q_read_pointer(at
-  * never exceeds a 32bit value in this case. On 32bit SMP, using a
-  * locked cmpxchg8b adds unnecessary overhead.
-  */
--static inline void vmci_q_set_pointer(atomic64_t *var,
--				      u64 new_val)
-+static inline void vmci_q_set_pointer(u64 *var, u64 new_val)
- {
--#if defined(CONFIG_X86_32)
--	return atomic_set((atomic_t *)var, (u32)new_val);
--#else
--	return atomic64_set(var, new_val);
--#endif
-+	/* XXX buggered on big-endian */
-+	WRITE_ONCE(*(unsigned long *)var, (unsigned long)new_val);
- }
- 
- /*
-  * Helper to add a given offset to a head or tail pointer. Wraps the
-  * value of the pointer around the max size of the queue.
-  */
--static inline void vmci_qp_add_pointer(atomic64_t *var,
--				       size_t add,
--				       u64 size)
-+static inline void vmci_qp_add_pointer(u64 *var, size_t add, u64 size)
- {
- 	u64 new_val = vmci_q_read_pointer(var);
- 
-@@ -848,8 +838,8 @@ static inline void vmci_q_header_init(st
- 				      const struct vmci_handle handle)
- {
- 	q_header->handle = handle;
--	atomic64_set(&q_header->producer_tail, 0);
--	atomic64_set(&q_header->consumer_head, 0);
-+	q_header->producer_tail = 0;
-+	q_header->consumer_head = 0;
- }
- 
- /*
+BTW I hit the same issue immediately building 4.9.180 defconfig +
+CONFIG_RANDOMIZE_BASE=y, using my distro GCC (6.3.0), so I'd say the
+testing coverage is not sufficient.
