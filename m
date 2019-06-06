@@ -2,120 +2,117 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E66CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328AA20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64EE20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YU740Z7r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKAuMwAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfFFPXe (ORCPT
+        id S1729308AbfFFPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:23:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36368 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfFFPXe (ORCPT
+        Thu, 6 Jun 2019 11:24:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39920 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfFFPYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:23:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56F8dwU141560;
-        Thu, 6 Jun 2019 15:22:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=ketKTVwbtklQIJXqAbX+H6nxp1mYN2KsNnWPbZLX+qw=;
- b=YU740Z7r5N9HPgb5jCMJGJJWLnq7dSsMg5QxEXG0zQCxJcR7gw8s1v6LJfzQbwYEbjXC
- 2QL7hJTBixRhxTYbEXatWnvAlC5kz5Y6xlDf8NbEDayqlICWqzF8zPWRoXu2ZAEbdCN1
- oKRHmUUruLaY3qONu64FgBq98cOi7l/RcCgBW0jmNfjOkGeUrHAji/AWDVhYNg9nM/I/
- wvohiWVeAYfvCdQql/iinBNGVsDJmjZY3dxYQEL3g9esS/9Sj2PwkGi7oGO8UTV+Oihc
- bWnqx4nhAdQDqTZpXXr4xCMzKR5zG/0q4a1bplhhUK4C2EtuKZ9lvX66MWobqI40ytRl 6Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2suj0qs2uc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 15:22:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56FKgBb070053;
-        Thu, 6 Jun 2019 15:22:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2swnhcrbhx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 15:22:09 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56FLnw4008838;
-        Thu, 6 Jun 2019 15:21:49 GMT
-Received: from [10.11.111.157] (/10.11.111.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 08:21:48 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20190605204003.GC3402@hirez.programming.kicks-ass.net>
-Date:   Thu, 6 Jun 2019 11:21:48 -0400
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6426D627-77EE-471C-B02A-A85271B666E9@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
- <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
- <20190605204003.GC3402@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060104
+        Thu, 6 Jun 2019 11:24:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so2872856wrt.6;
+        Thu, 06 Jun 2019 08:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=Dw7cSZKWSMHArIj0WE4OX73VU5F8NKFc8iS3jVX8wfA=;
+        b=JKAuMwAUtM3lwNbrNBHRPimCVUS7ar4ByI57V4EzbX/Yl+nxMc+cj4EW6kxdUNL0XZ
+         koDvgghquI7tWBrEXpkXr5BkMB48j7Mz5qjcW1y6Hhhyw9AIBphuIczkzVebcLGUKCyS
+         rOov1wQwEvqn/t8EpnmkRxgpT9/hijreNwX3ZPqH9yRv7SQnW3gIeepx7uDDLmzn6uRK
+         0ao42nX69iIc9qsm3Y3euGD5NRg1NsBccVjjG6uxeQ4xEWfKiIx3MZrLwz72/850tX4d
+         cg3Thxon0hTleGfB1bflvY/mmsYrhlq1rqj3XSBk+m36E9mK4d75S+qJMlf1NCnYDc6q
+         bhjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=Dw7cSZKWSMHArIj0WE4OX73VU5F8NKFc8iS3jVX8wfA=;
+        b=ryaJ373XuayjGFgHr2Idk2OEoEMx/Ek+NEA936v+dtalPym3bIVjmI+cLKCf6ACgCh
+         EPmTUMSbXkc6weWGWw6wu3X8Em38Rqg76m4rZ9vMp42j6jz5nqLEhcU4dJo/WSZFDojQ
+         JiL0dB1SnOXTDT05PDg/p1/FPZYuQ+x5HIrUi4kAmXp3ET876pj3+aZpFSj3UYrEeDKF
+         20fy0/EAUjvOJo66pR1S09PNopr4LFZ2g3Yl0lyYMs+Ksz5Mf6ojwC3j6OfrpFPeNgV+
+         Fad2r27NmRJSE94gD4864uCu8jRFhyMv8evTySp8ms+qcNjHMRIWOcCTiyHiKIYuVhOi
+         7ERA==
+X-Gm-Message-State: APjAAAVfxxc/T/kqZJzuRsCKE73IadZFsAN9gv2P561yu5au4ZAZWMIj
+        dCvsgbJYKz1Wl2nJQi6TL5Z4MD2u
+X-Google-Smtp-Source: APXvYqzpZkC5OsC1ZQmgT2sTgOXps5WBuf7vaWyQ4c6fyFaFBRLWWCveFz57MNXev4TGtkn/W1/4Lg==
+X-Received: by 2002:a5d:518c:: with SMTP id k12mr30501567wrv.322.1559834655328;
+        Thu, 06 Jun 2019 08:24:15 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id j132sm2641937wmj.21.2019.06.06.08.24.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 08:24:13 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to prepare_vmcs02_*_extra
+Date:   Thu,  6 Jun 2019 17:24:12 +0200
+Message-Id: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Also, the paravirt code is under arch/x86, while CNA is generic (not
->> x86-specific).  Do you still want to see CNA-related patching =
-residing
->> under arch/x86?
->>=20
->> We still need a config option (something like NUMA_AWARE_SPINLOCKS) =
-to
->> enable CNA patching under this config only, correct?
->=20
-> There is the static_call() stuff that could be generic; I posted a new
-> version of that today (x86 only for now, but IIRC there's arm64 =
-patches
-> for that around somewhere too).
+These function do not prepare the entire state of the vmcs02, only the
+rarely needed parts.  Rename them to make this clearer.
 
-The static_call technique appears as the more desirable long-term =
-approach, but I think it would be prudent to keep the patches decoupled =
-for now so we can move forward with less entanglements.
-So unless anyone objects, we will work on plugging into the existing =
-patching for pv.
-And we will keep that code under arch/x86, but will be open for any =
-suggestion to move it elsewhere.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks!
-=E2=80=94 Alex
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 84438cf23d37..fd8150ef6cce 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1955,7 +1955,7 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
+ 	vmx_set_constant_host_state(vmx);
+ }
+ 
+-static void prepare_vmcs02_early_full(struct vcpu_vmx *vmx,
++static void prepare_vmcs02_early_extra(struct vcpu_vmx *vmx,
+ 				      struct vmcs12 *vmcs12)
+ {
+ 	prepare_vmcs02_constant_state(vmx);
+@@ -1976,7 +1976,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	u64 guest_efer = nested_vmx_calc_efer(vmx, vmcs12);
+ 
+ 	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs)
+-		prepare_vmcs02_early_full(vmx, vmcs12);
++		prepare_vmcs02_early_extra(vmx, vmcs12);
+ 
+ 	/*
+ 	 * PIN CONTROLS
+@@ -2130,7 +2130,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	}
+ }
+ 
+-static void prepare_vmcs02_full(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
++static void prepare_vmcs02_extra(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ {
+ 	struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
+ 
+@@ -2254,7 +2254,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+ 	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs) {
+-		prepare_vmcs02_full(vmx, vmcs12);
++		prepare_vmcs02_extra(vmx, vmcs12);
+ 		vmx->nested.dirty_vmcs12 = false;
+ 	}
+ 
+-- 
+1.8.3.1
 
