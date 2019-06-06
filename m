@@ -2,160 +2,193 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F72C28D1C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD92C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8207420872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265A0207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559809800;
+	bh=ESeaKWLmpng3Q+aBMJkSJpHbp1Q/R2v4Qfz1ZOHm59o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DRrhFyJRAaTwFsXnqMJx818CzkDGUGb1BlusaEeBe//pp1bYWa/F6tvH9I1pF5kwk
+	 YAVy5MP0h+DwQKEZzGMojD5qC7WoSHrT04FwNVT8pNxXmYLIX/MYX9wk2syakBOyT5
+	 qfev706iX2MPCm77RBoViHzdD+YowPFmI6wSEyWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfFFI3a (ORCPT
+        id S1727271AbfFFI37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:29:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42604 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFI33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:29:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E8DA341;
-        Thu,  6 Jun 2019 01:29:29 -0700 (PDT)
-Received: from queper01-ThinkPad-T460s (unknown [10.37.8.11])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ED423F690;
-        Thu,  6 Jun 2019 01:29:26 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 09:29:24 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        morten.rasmussen@arm.com
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Message-ID: <20190606082922.3q2lnn2jeu72nipx@queper01-ThinkPad-T460s>
-References: <20190114184255.258318-1-mka@chromium.org>
- <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
- <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
- <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
- <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s>
- <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
+        Thu, 6 Jun 2019 04:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFFI37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:29:59 -0400
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 653E420872;
+        Thu,  6 Jun 2019 08:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559809797;
+        bh=ESeaKWLmpng3Q+aBMJkSJpHbp1Q/R2v4Qfz1ZOHm59o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x9R2XeSmj0RxSVJrxG06per4Q4E/B42sZuKBfMBYKb0C3wnqBFLjltp02lP7WLnZ7
+         hjcAUZreGW0UznvPtDNZJTJ1Q+wjp6oCDJsDKJPyZm2ziGcyU9oZHIDPP8ASZIJKy8
+         4vVJ2mgsERIMnB0c7zxXW/zpUv9aNJNhrDymvsfc=
+Received: by mail-lf1-f44.google.com with SMTP id 136so897075lfa.8;
+        Thu, 06 Jun 2019 01:29:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAXDQR5tc61eZvHiNS6psdXb2SR6qnbRnuahVme7Kwh5pFXIuChg
+        CFUY02LE1K2fYWKSrfaRPrfH8WzrV9UhmGzmSjc=
+X-Google-Smtp-Source: APXvYqymdIkWpecNwmxAyH50GinjhOiyhS6qt2bWxoVqqnSWRehZB24PEim8kWmV0V0gLE4yV7FLcVSzw8vFnVCmzfE=
+X-Received: by 2002:a19:4f50:: with SMTP id a16mr22487584lfk.24.1559809795620;
+ Thu, 06 Jun 2019 01:29:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+References: <CGME20190605165433eucas1p1214f65106df03ae74bbdc95e3eee71f1@eucas1p1.samsung.com>
+ <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-8-l.luba@partner.samsung.com>
+In-Reply-To: <20190605165410.14606-8-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 6 Jun 2019 10:29:44 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdg9Fr2Y16RJ4gbRnL6PiyWw2J3e46ybkRWTKOEd28GJA@mail.gmail.com>
+Message-ID: <CAJKOXPdg9Fr2Y16RJ4gbRnL6PiyWw2J3e46ybkRWTKOEd28GJA@mail.gmail.com>
+Subject: Re: [PATCH v8 07/13] dt-bindings: memory-controllers: add Exynos5422
+ DMC device description
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC Morten who had an interest in this
+On Wed, 5 Jun 2019 at 18:54, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../memory-controllers/exynos5422-dmc.txt     | 84 +++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> new file mode 100644
+> index 000000000000..989ee0839fdf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -0,0 +1,84 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> +
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC and memory frequency.
+> +
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-dmc".
+> +- clocks : list of clock specifiers, must contain an entry for each
+> +  required entry in clock-names for CLK_FOUT_SPLL, CLK_MOUT_SCLK_SPLL,
+> +  CLK_FF_DOUT_SPLL2, CLK_FOUT_BPLL, CLK_MOUT_BPLL, CLK_SCLK_BPLL,
+> +  CLK_MOUT_MX_MSPLL_CCORE, CLK_MOUT_MX_MSPLL_CCORE_PHY, CLK_MOUT_MCLK_CDREX,
+> +  CLK_DOUT_CLK2X_PHY0, CLK_CLKM_PHY0, CLK_CLKM_PHY1
+> +- clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+> +  "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+> +  "mout_mx_mspll_ccore_phy", "mout_mclk_cdrex", "dout_clk2x_phy0", "clkm_phy0",
+> +  "clkm_phy1" entries
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- vdd-supply : phandle for voltage regulator which is connected.
+> +- reg : registers of two CDREX controllers.
+> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+> +- device-handle : phandle of the connected DRAM memory device. For more
+> +       information please refer to documentation file:
+> +       Documentation/devicetree/bindings/ddr/lpddr3.txt
+> +- devfreq-events : phandles of the PPMU events used by the controller.
+> +- samsung,syscon-clk : phandle of the clock register set used by the controller,
+> +       these registers are used for enabling a 'pause' feature and are not
+> +       exposed by clock framework but they must be used in a safe way.
+> +       The register offsets are in the driver code and specyfic for this SoC
+> +       type.
+> +
+> +Example:
+> +
+> +       ppmu_dmc0_0: ppmu@10d00000 {
+> +               compatible = "samsung,exynos-ppmu";
+> +               reg = <0x10d00000 0x2000>;
+> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +               clock-names = "ppmu";
+> +               events {
+> +                       ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +                               event-name = "ppmu-event3-dmc0_0";
+> +                       };
+> +               };
+> +       };
+> +
+> +       dmc: memory-controller@10c20000 {
+> +               compatible = "samsung,exynos5422-dmc";
+> +               reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
+> +               clocks =        <&clock CLK_FOUT_SPLL>,
 
-On Thursday 06 Jun 2019 at 10:20:12 (+0200), Vincent Guittot wrote:
-> On Thu, 6 Jun 2019 at 09:49, Quentin Perret <quentin.perret@arm.com> wrote:
-> >
-> > Hi Vincent,
-> >
-> > On Thursday 06 Jun 2019 at 09:05:16 (+0200), Vincent Guittot wrote:
-> > > Hi Quentin,
-> > >
-> > > On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
-> > > >
-> > > > On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> > > > > Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > > > > > (cc'ing Andy's correct email address)
-> > > > > >
-> > > > > > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > > > > >
-> > > > > > > Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > > > > > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > > > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > > > > > > > that describes this topology.
-> > > > > > > > >
-> > > > > > > > > This is partly true. There are two groups of gold and silver cores,
-> > > > > > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > > > > > > > is one of the early examples of ARM's Dynamiq architecture.
-> > > > > > > > >
-> > > > > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > > > > >
-> > > > > > > > > I noticed that this patch sneaked through for this merge window but
-> > > > > > > > > perhaps we can whip up a quick fix for -rc2?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > And please find attached a patch to fix this up. Andy, since this
-> > > > > > > > hasn't landed yet (can we still squash this into the original patch?),
-> > > > > > > > I couldn't add a Fixes tag.
-> > > > > > > >
-> > > > > > >
-> > > > > > > I had the same concern. Thanks for catching this. I suspect this must
-> > > > > > > cause some problem for IPA given that it can't discern between the big
-> > > > > > > and little "power clusters"?
-> > > > > >
-> > > > > > Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > > > > > the topology.
-> > > > >
-> > > > > And EAS and IPA are OK with the real topology? I'm just curious if
-> > > > > changing the topology to reflect reality will be a problem for those
-> > > > > two.
-> > > >
-> > > > FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-> > > > EAS at least (which is used in recent Android kernels -- 4.19+).
-> > > >
-> > > > But doing this is still required for other things in the scheduler (the
-> > > > so-called 'capacity-awareness' code). So until we have a better
-> > > > solution, this patch is doing the right thing.
-> > >
-> > > I'm not sure to catch what you mean ?
-> > > Which so-called 'capacity-awareness' code are you speaking about ? and
-> > > what is the problem ?
-> >
-> > I'm talking about the wake-up path. ATM select_idle_sibling() is totally
-> > unaware of capacity differences. In its current form, this function
-> > basically assumes that all CPUs in a given sd_llc have the same
-> > capacity, which would be wrong if we had a single MC level for SDM845.
-> > So, until select_idle_sibling() is 'fixed' to be capacity-aware, we need
-> > two levels of sd for asymetric systems (including DynamIQ) so the
-> > wake_cap() story actually works.
-> >
-> > I hope that clarifies it :)
-> 
-> hmm... does this justifies this wrong topology ?
-> select_idle_sibling() is called only when system is overloaded and
-> scheduler disables the EAS path
-> In this case, the scheduler looks either for an idle cpu or for evenly
-> spreading the loads
+I think you should not have tab after '='. Instead align consecutive
+lines with the first one.
 
-Yeah but a big task can end up being placed on a little CPU even if a
-big CPU is idle. So, it's definitely sub-optimal.
+> +                               <&clock CLK_MOUT_SCLK_SPLL>,
+> +                               <&clock CLK_FF_DOUT_SPLL2>,
+> +                               <&clock CLK_FOUT_BPLL>,
+> +                               <&clock CLK_MOUT_BPLL>,
+> +                               <&clock CLK_SCLK_BPLL>,
+> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +                               <&clock CLK_MOUT_MCLK_CDREX>,
+> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
+> +                               <&clock CLK_CLKM_PHY0>,
+> +                               <&clock CLK_CLKM_PHY1>;
+> +               clock-names =   "fout_spll",
+> +                               "mout_sclk_spll",
+> +                               "ff_dout_spll2",
+> +                               "fout_bpll",
+> +                               "mout_bpll",
+> +                               "sclk_bpll",
+> +                               "mout_mx_mspll_ccore",
+> +                               "mout_mx_mspll_ccore_phy",
+> +                               "mout_mclk_cdrex",
+> +                               "dout_clk2x_phy0",
+> +                               "clkm_phy0",
+> +                               "clkm_phy1";
+> +               operating-points-v2 = <&dmc_opp_table>;
+> +               devfreq-events = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+> +                               <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+> +               operating-points-v2 = <&dmc_opp_table>;
 
-> This is maybe not always optimal and should probably be fixed but
-> doesn't justifies a wrong topology description IMHO
+Duplicated property.
 
-I totally agree, the proper fix is to get select_idle_sibling() capacity
-aware. And actually, it is true the DT should represent the HW, so
-perhaps Amit's fix is the right thing to do so we don't let those hacky
-topologies creep into mainline ... I just want to make sure we are fully
-aware and OK with the fact that the performance on this platform might
-be a little inconsistent until select_idle_sibling() is fixed.
+Beside that:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Thanks,
-Quentin
+Best regards,
+Krzysztof
+
+> +               device-handle = <&samsung_K3QF2F20DB>;
+> +               vdd-supply = <&buck1_reg>;
+> +               samsung,syscon-clk = <&clock>;
+> +       };
+> --
+> 2.17.1
+>
