@@ -2,126 +2,82 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC98C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D6AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516C22064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A642083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hh3vfV36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfFFGPj (ORCPT
+        id S1726616AbfFFGSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:15:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43094 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725769AbfFFGPj (ORCPT
+        Thu, 6 Jun 2019 02:18:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44600 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:15:39 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5667IjB028166
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 02:15:37 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sxtk2pyhu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:15:37 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 6 Jun 2019 07:15:35 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Jun 2019 07:15:30 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x566FTuV17432996
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Jun 2019 06:15:29 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 402574207B;
-        Thu,  6 Jun 2019 06:15:29 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F234B4205E;
-        Thu,  6 Jun 2019 06:15:27 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.53])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  6 Jun 2019 06:15:27 +0000 (GMT)
-Date:   Thu, 6 Jun 2019 09:15:26 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, hannes@cmpxchg.org,
-        jiangshanlai@gmail.com, lizefan@huawei.com, bsd@redhat.com,
-        dan.j.williams@intel.com, dave.hansen@intel.com,
-        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
-        steven.sistare@oracle.com, tglx@linutronix.de,
-        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 6 Jun 2019 02:18:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U8rF1uP19dnET207DcY9H/fsoaYvyqbT8DVHn5K5oRM=; b=hh3vfV36YrLiF3AZvb2T4/Qsm
+        ZGpgeScpxKnNf0aS2baD3ki47trw/uHctB3wKBpv6V6SbCMpk2PfbKUk/5XgM8HNDjclepJ9Zdbz6
+        2GcqhtFfRtwgOlRsLz0gTHbH/QD8c0RD1Nwv73lkSzrx4ZW4CsWVtPnTSaYKb7q2DM4NJWtdmuwyk
+        Ib935aW8MHP3OauCGnonYIxkH5L3VSyJFRXG0U2YAfTuXHF11OiwL/C6RfAmS9J4JPPN67De362rW
+        nJke29YpqUQ+h0Q/HmV6zGVwwZQCpJPnOD1sInPHpqtie3EXgVS+P5THX1FahoL367+4HTT4+qz1H
+        qcJ4t2xpQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYljA-0005QG-0s; Thu, 06 Jun 2019 06:18:20 +0000
+Date:   Wed, 5 Jun 2019 23:18:19 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
         linux-mm@kvack.org
-Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
-References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
- <20190605135319.GK374014@devbig004.ftw2.facebook.com>
+Subject: Re: [PATCH RFC 03/10] mm/gup: Pass flags down to __gup_device_huge*
+ calls
+Message-ID: <20190606061819.GA20520@infradead.org>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606014544.8339-4-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605135319.GK374014@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19060606-0020-0000-0000-00000346FEB7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060606-0021-0000-0000-0000219A1108
-Message-Id: <20190606061525.GD23056@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060046
+In-Reply-To: <20190606014544.8339-4-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+On Wed, Jun 05, 2019 at 06:45:36PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> In order to support checking for a layout lease on a FS DAX inode these
+> calls need to know if FOLL_LONGTERM was specified.
+> 
+> Prepare for this with this patch.
 
-On Wed, Jun 05, 2019 at 06:53:19AM -0700, Tejun Heo wrote:
-> Hello, Daniel.
-> 
-> On Wed, Jun 05, 2019 at 09:36:45AM -0400, Daniel Jordan wrote:
-> > My use case for this work is kernel multithreading, the series formerly known
-> > as ktask[2] that I'm now trying to combine with padata according to feedback
-> > from the last post.  Helper threads in a multithreaded job may consume lots of
-> > resources that aren't properly accounted to the cgroup of the task that started
-> > the job.
-> 
-> Can you please go into more details on the use cases?
+The GUP fast argument passing is a mess.  That is why I've come up
+with this as part of the (not ready) get_user_pages_fast_bvec
+implementation:
 
-If I remember correctly, the original Bandan's work was about using
-workqueues instead of kthreads in vhost. 
- 
-> For memory and io, we're generally going for remote charging, where a
-> kthread explicitly says who the specific io or allocation is for,
-> combined with selective back-charging, where the resource is charged
-> and consumed unconditionally even if that would put the usage above
-> the current limits temporarily.  From what I've been seeing recently,
-> combination of the two give us really good control quality without
-> being too invasive across the stack.
-> 
-> CPU doesn't have a backcharging mechanism yet and depending on the use
-> case, we *might* need to put kthreads in different cgroups.  However,
-> such use cases might not be that abundant and there may be gotaches
-> which require them to be force-executed and back-charged (e.g. fs
-> compression from global reclaim).
-> 
-> Thanks.
-> 
-> -- 
-> tejun
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+http://git.infradead.org/users/hch/misc.git/commitdiff/c3d019802dbde5a4cc4160e7ec8ccba479b19f97
