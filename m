@@ -2,159 +2,311 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B263EC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A270CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F92120684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E62120684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="iKCdZuFe"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="WEx1hidF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfFFPZy (ORCPT
+        id S1729332AbfFFP0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:25:54 -0400
-Received: from mail-eopbgr140071.outbound.protection.outlook.com ([40.107.14.71]:29819
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729077AbfFFPZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:25:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWcAHdRQnqzHGJAKFZ2q4k/hoMaigFKEFslTi5hvcF0=;
- b=iKCdZuFeCZfsiVUojWwWi4mal8IjuxvXWQpE5dHU4Rmio4RRjWH/hAOHy/xB7P66oIaBEaAY+rfYQIBHwaq+CyJkyPxjGEQS50Kva4mCMadlJ550q3Au751OvJlyAlL4BbcmppOjnRGuN8051tv8c+GP+c5HlPds9xqx8wqOvJA=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6333.eurprd05.prod.outlook.com (20.179.25.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 15:25:49 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 15:25:49 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
+        Thu, 6 Jun 2019 11:26:50 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44219 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729077AbfFFP0u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:26:50 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w187so1671767qkb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7IPeRG+XRH2ia6q2FaZ0+0nEBCt2oXJyyHCFUpk0wYA=;
+        b=WEx1hidFm1qwEHyuxngLYoJZ+Y5p+ZlwoQBCUqQ8ulFW6uIj3mTnFkHiOO+ZCE5N61
+         GhUcqJPHpwVVV5Unadw2n36NCegtBzOaGm1tc1or/fhdB2wc3bJtDnG2W0JYZj3awzFD
+         8ju6VjanD1VfQnfLPehzeTbyTtZqS01JExW98=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7IPeRG+XRH2ia6q2FaZ0+0nEBCt2oXJyyHCFUpk0wYA=;
+        b=oKktuY1VSr5xjZ02A6sr7sQdU54698oehriekNYyj/YQZvn9AiIDmncRF53LzFyjow
+         hqYSSTtj4yo95tJZSLquH8b205ShuP428VXC1eGMXMmrP7TvQY+Aig1cGHU/FEZP7PTW
+         3V8BuazGkFrV2Qd3m+lNXiZndgYZ8cjhmIFJwpMrRXTSOFeude2H2CD/EjB8PAWi9dCG
+         Gf/FaPknFVPQp6eSZNpCVXmUMJnyJXAwrTZVWvO8vliaww2VSau90kWFAbV+c5iSyzBh
+         9NjZPCExnJ2/PLvfZb+6hK8upbs9T8KT1AnoDZS2IihnrudxDOQCN4iefrK5iB3JN92i
+         um0w==
+X-Gm-Message-State: APjAAAVB+E5Hn7xZfHeADFHA49zF2Ja4ZkyRTN9M3NPD7DpxLieF+nPw
+        eyvQpfnB7ht7dt4RhudXo3zyGA==
+X-Google-Smtp-Source: APXvYqzyePlqJ2Iu0FnmME3n9lINkPRUyBrYIR+hvHrRLMQDa1WupuW4KF0tBTjwA730hT/h5mLx0Q==
+X-Received: by 2002:a05:620a:1285:: with SMTP id w5mr29816790qki.302.1559834808895;
+        Thu, 06 Jun 2019 08:26:48 -0700 (PDT)
+Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id j26sm1325248qtj.70.2019.06.06.08.26.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 08:26:47 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 11:26:37 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: RFC: Run a dedicated hmm.git for 5.3
-Thread-Topic: RFC: Run a dedicated hmm.git for 5.3
-Thread-Index: AQHVHHwepzoj9aeiT0uMK+ZOBPXi0w==
-Date:   Thu, 6 Jun 2019 15:25:49 +0000
-Message-ID: <20190606152543.GE17392@mellanox.com>
-References: <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca> <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca> <20190523182458.GA3571@redhat.com>
- <20190523191038.GG12159@ziepe.ca> <20190524064051.GA28855@infradead.org>
- <20190524124455.GB16845@ziepe.ca>
- <20190525155210.8a9a66385ac8169d0e144225@linux-foundation.org>
- <20190527191247.GA12540@ziepe.ca>
-In-Reply-To: <20190527191247.GA12540@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR01CA0022.prod.exchangelabs.com (2603:10b6:208:10c::35)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a638c50-562c-4409-f22b-08d6ea9340bd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6333;
-x-ms-traffictypediagnostic: VI1PR05MB6333:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR05MB6333E902FD50A38DF264B3ABCF170@VI1PR05MB6333.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(376002)(39860400002)(366004)(199004)(189003)(43544003)(446003)(26005)(2616005)(476003)(11346002)(36756003)(186003)(486006)(6436002)(966005)(76176011)(14454004)(102836004)(6506007)(5660300002)(478600001)(1076003)(6306002)(386003)(52116002)(99286004)(54906003)(110136005)(86362001)(316002)(33656002)(8936002)(3846002)(6116002)(6246003)(66066001)(68736007)(305945005)(229853002)(6512007)(6486002)(66946007)(2906002)(53936002)(73956011)(66476007)(256004)(66556008)(71200400001)(71190400001)(7416002)(81156014)(8676002)(66446008)(4326008)(81166006)(64756008)(7736002)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6333;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AbJMCQcRGx9GTjWdfJZrJkodaWaHU/JEUcYmTQNuI1w1hmmo5HaPZy3bzn+RxLTsmKB0jVP1VQbc+d43iYsdABOBAIMEr+PtjtaBEvdAFdcPsDKQ+6DO9h2ebIQvO8hoR4BKKkEZkMXy0rXbyC8ttg3Btv1bAaeJRHu/eIqndvUulVfqWVvMIuAqQV325AsIPDHoQ1kOg7lazgufEpym7HhgzStKIDX4uVCOppK7EqQi8i03qsmqDwP/KNXZIj6r8Zh69frCkB4cLPnFQJpdxt4YjyUOe8bQTlatVlvhDKh9pjNZ7QrqohJdoXaTko913JGpSQSiX7hy+90BxykxTKbQX76IpD9XiKwGq1gnczsUXNsnegLddEcBdPVmZ+em85ZXCNwb/HKkYmU/3+qr78ma9nsCxBm9GB4q0qvHXeY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <994523D7B122E1489B649951953089FD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190606152637.GA5703@sinkpad>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
+ <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+ <20190531210816.GA24027@sinkpad>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a638c50-562c-4409-f22b-08d6ea9340bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 15:25:49.2982
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6333
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531210816.GA24027@sinkpad>
+X-Mailer: Mutt 1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 04:12:47PM -0300, Jason Gunthorpe wrote:
-> On Sat, May 25, 2019 at 03:52:10PM -0700, Andrew Morton wrote:
-> > On Fri, 24 May 2019 09:44:55 -0300 Jason Gunthorpe <jgg@ziepe.ca> wrote=
-:
-> >=20
-> > > Now that -mm merged the basic hmm API skeleton I think running like
-> > > this would get us quickly to the place we all want: comprehensive in =
-tree
-> > > users of hmm.
-> > >=20
-> > > Andrew, would this be acceptable to you?
-> >=20
-> > Sure.  Please take care not to permit this to reduce the amount of
-> > exposure and review which the core HMM pieces get.
->=20
-> Certainly, thanks all
->=20
-> Jerome: I started a HMM branch on v5.2-rc2 in the rdma.git here:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
-> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=3Dhm=
-m
+On 31-May-2019 05:08:16 PM, Julien Desfossez wrote:
+> > My first reaction is: when shell wakes up from sleep, it will
+> > fork date. If the script is untagged and those workloads are
+> > tagged and all available cores are already running workload
+> > threads, the forked date can lose to the running workload
+> > threads due to __prio_less() can't properly do vruntime comparison
+> > for tasks on different CPUs. So those idle siblings can't run
+> > date and are idled instead. See my previous post on this:
+> > 
+> > https://lore.kernel.org/lkml/20190429033620.GA128241@aaronlu/
+> > (Now that I re-read my post, I see that I didn't make it clear
+> > that se_bash and se_hog are assigned different tags(e.g. hog is
+> > tagged and bash is untagged).
+> > 
+> > Siblings being forced idle is expected due to the nature of core
+> > scheduling, but when two tasks belonging to two siblings are
+> > fighting for schedule, we should let the higher priority one win.
+> > 
+> > It used to work on v2 is probably due to we mistakenly
+> > allow different tagged tasks to schedule on the same core at
+> > the same time, but that is fixed in v3.
+> 
+> I confirm this is indeed what is happening, we reproduced it with a
+> simple script that only uses one core (cpu 2 and 38 are sibling on this
+> machine):
+> 
+> setup:
+> cgcreate -g cpu,cpuset:test
+> cgcreate -g cpu,cpuset:test/set1
+> cgcreate -g cpu,cpuset:test/set2
+> echo 2,38 > /sys/fs/cgroup/cpuset/test/cpuset.cpus
+> echo 0 > /sys/fs/cgroup/cpuset/test/cpuset.mems
+> echo 2,38 > /sys/fs/cgroup/cpuset/test/set1/cpuset.cpus
+> echo 2,38 > /sys/fs/cgroup/cpuset/test/set2/cpuset.cpus
+> echo 0 > /sys/fs/cgroup/cpuset/test/set1/cpuset.mems
+> echo 0 > /sys/fs/cgroup/cpuset/test/set2/cpuset.mems
+> echo 1 > /sys/fs/cgroup/cpu,cpuacct/test/set1/cpu.tag
+> 
+> In one terminal:
+> sudo cgexec -g cpu,cpuset:test/set1 sysbench --threads=1 --time=30
+> --test=cpu run
+> 
+> In another one:
+> sudo cgexec -g cpu,cpuset:test/set2 date
+> 
+> It's very clear that 'date' hangs until sysbench is done.
+> 
+> We started experimenting with marking a task on the forced idle sibling
+> if normalized vruntimes are equal. That way, at the next compare, if the
+> normalized vruntimes are still equal, it prefers the task on the forced
+> idle sibling. It still needs more work, but in our early tests it helps.
 
-I did a first round of collecting patches for hmm.git
+As mentioned above, we have come up with a fix for the long starvation
+of untagged interactive threads competing for the same core with tagged
+threads at the same priority. The idea is to detect the stall and boost
+the stalling threads priority so that it gets a chance next time.
+Boosting is done by a new counter(min_vruntime_boost) for every task
+which we subtract from vruntime before comparison. The new logic looks
+like this:
 
-Andrew, I'm checking linux-next and to stay co-ordinated, I see the
-patches below are in your tree and now also in hmm.git. Can you please
-drop them from your tree?=20
+If we see that normalized runtimes are equal, we check the min_vruntimes
+of their runqueues and give a chance for the task in the runqueue with
+less min_vruntime. That will help it to progress its vruntime. While
+doing this, we boost the priority of the task in the sibling so that, we
+don’t starve the task in the sibling until the min_vruntime of this
+runqueue catches up.
 
-5b693741de2ace mm/hmm.c: suppress compilation warnings when CONFIG_HUGETLB_=
-PAGE is not set
-b2870fb882599a mm/hmm.c: only set FAULT_FLAG_ALLOW_RETRY for non-blocking
-dff7babf8ae9f1 mm/hmm.c: support automatic NUMA balancing
+If min_vruntimes are also equal, we do as before and consider the task
+‘a’ of higher priority. Here we boost the task ‘b’ so that it gets to
+run next time.
 
-I checked that the other two patches in -next also touching hmm.c are
-best suited to go through your tree:
+The min_vruntime_boost is reset to zero once the task in on cpu. So only
+waiting tasks will have a non-zero value if it is starved while matching
+a task on the other sibling.
 
-a76b9b318a7180 mm/devm_memremap_pages: fix final page put race
-fc64c058d01b98 mm/memremap: rename and consolidate SECTION_SIZE
+The attached patch has a sched_feature to enable the above feature so
+that you can compare the results with and without this feature.
 
-StephenR: Can you pick up the hmm branch from rdma.git for linux-next for
-this cycle? As above we are moving the patches from -mm to hmm.git, so
-there will be a conflict in -next until Andrew adjusts his tree,
-thanks!
+What we observe with this patch is that it helps for untagged
+interactive tasks and fairness in general, but this increases the
+overhead of core scheduling when there is contention for the CPU with
+tasks of varying cpu usage. The general trend we see is that if there is
+a cpu intensive thread and multiple relatively idle threads in different
+tags, the cpu intensive tasks continuously yields to be fair to the
+relatively idle threads when it becomes runnable. And if the relatively
+idle threads make up for most of the tasks in a system and are tagged,
+the cpu intensive tasks sees a considerable drop in performance.
 
-Regards,
-Jason
-(hashes are from today's linux-next)
+If you have any feedback or creative ideas to help improve, let us
+know !
+
+Thanks
+
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1a309e8..56cad0e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -642,6 +642,7 @@ struct task_struct {
+ 	struct rb_node			core_node;
+ 	unsigned long			core_cookie;
+ 	unsigned int			core_occupation;
++	unsigned int			core_vruntime_boost;
+ #endif
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 73329da..c302853 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -92,6 +92,10 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
+ 
+ 	int pa = __task_prio(a), pb = __task_prio(b);
+ 
++	trace_printk("(%s/%d;%d,%Lu,%Lu) ?< (%s/%d;%d,%Lu,%Lu)\n",
++		     a->comm, a->pid, pa, a->se.vruntime, a->dl.deadline,
++		     b->comm, b->pid, pb, b->se.vruntime, b->dl.deadline);
++
+ 	if (-pa < -pb)
+ 		return true;
+ 
+@@ -102,21 +106,36 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
+ 		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+ 
+ 	if (pa == MAX_RT_PRIO + MAX_NICE)  { /* fair */
+-		u64 vruntime = b->se.vruntime;
+-
+-		trace_printk("(%s/%d;%d,%Lu,%Lu) ?< (%s/%d;%d,%Lu,%Lu)\n",
+-		     a->comm, a->pid, pa, a->se.vruntime, task_cfs_rq(a)->min_vruntime,
+-		     b->comm, b->pid, pb, b->se.vruntime, task_cfs_rq(b)->min_vruntime);
++		u64 a_vruntime = a->se.vruntime - a->core_vruntime_boost;
++		u64 b_vruntime = b->se.vruntime - b->core_vruntime_boost;
+ 
+ 		/*
+ 		 * Normalize the vruntime if tasks are in different cpus.
+ 		 */
+ 		if (task_cpu(a) != task_cpu(b)) {
+-			vruntime -= task_cfs_rq(b)->min_vruntime;
+-			vruntime += task_cfs_rq(a)->min_vruntime;
++			s64 min_vruntime_diff = task_cfs_rq(a)->min_vruntime -
++						 task_cfs_rq(b)->min_vruntime;
++			b_vruntime += min_vruntime_diff;
++
++			trace_printk("(%d:%Lu,%Lu,%Lu) <> (%d:%Lu,%Lu,%Lu)\n",
++				     a->pid, a_vruntime, a->se.vruntime, task_cfs_rq(a)->min_vruntime,
++				     b->pid, b_vruntime, b->se.vruntime, task_cfs_rq(b)->min_vruntime);
++
++			if (sched_feat(CORESCHED_STALL_FIX) &&
++			    a_vruntime == b_vruntime) {
++				bool less_prio = min_vruntime_diff > 0;
++
++				if (less_prio)
++					a->core_vruntime_boost++;
++				else
++					b->core_vruntime_boost++;
++
++				return less_prio;
++
++			}
+ 		}
+ 
+-		return !((s64)(a->se.vruntime - vruntime) <= 0);
++		return !((s64)(a_vruntime - b_vruntime) <= 0);
+ 	}
+ 
+ 	return false;
+@@ -2456,6 +2475,9 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ #ifdef CONFIG_COMPACTION
+ 	p->capture_control = NULL;
+ #endif
++#ifdef CONFIG_SCHED_CORE
++	p->core_vruntime_boost = 0UL;
++#endif
+ 	init_numa_balancing(clone_flags, p);
+ }
+ 
+@@ -3723,6 +3745,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 			     next->comm, next->pid,
+ 			     next->core_cookie);
+ 
++		next->core_vruntime_boost = 0UL;
+ 		return next;
+ 	}
+ 
+@@ -3835,6 +3858,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 				trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
+ 
+ 				if (old_max) {
++					if (old_max->core_vruntime_boost)
++						old_max->core_vruntime_boost--;
++
+ 					for_each_cpu(j, smt_mask) {
+ 						if (j == i)
+ 							continue;
+@@ -3905,6 +3931,7 @@ next_class:;
+ 
+ done:
+ 	set_next_task(rq, next);
++	next->core_vruntime_boost = 0UL;
+ 	return next;
+ }
+ 
+diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+index 858589b..332a092 100644
+--- a/kernel/sched/features.h
++++ b/kernel/sched/features.h
+@@ -90,3 +90,9 @@ SCHED_FEAT(WA_BIAS, true)
+  * UtilEstimation. Use estimated CPU utilization.
+  */
+ SCHED_FEAT(UTIL_EST, true)
++
++/*
++ * Prevent task stall due to vruntime comparison limitation across
++ * cpus.
++ */
++SCHED_FEAT(CORESCHED_STALL_FIX, false)
