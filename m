@@ -2,105 +2,195 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3B8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68911C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFC220717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4T1oZGmT"
+	by mail.kernel.org (Postfix) with ESMTP id 3B05B204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfFFV5b (ORCPT
+        id S1728879AbfFFWAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:57:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60584 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfFFV5a (ORCPT
+        Thu, 6 Jun 2019 18:00:12 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58688 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfFFWAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:57:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56LrwEP083818;
-        Thu, 6 Jun 2019 21:57:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=ugG8dGBQaOC/IxUQonaZpN9nBlakgdaPO7yxwAulV0M=;
- b=4T1oZGmTae2n1+WDy5u/NhpuHLbJz3WRy8xZZtko29BFgkSakpNdcZp2LlTqZRnoe1b5
- Raao/yqVI2EMt/WCUNm1WWkyvfREOPIrRe/8negi8fBxpYmolqe7ADb7XI1ePbx6Kx2u
- eJedgPSOOP7CS3+hs0JXoubCOTVKPGVPYiOVBlWX9JuPDSyAagHtA71lnym4CRUpcSqk
- YJze1pyuYCpNqZsob/oJdGc7LX/M9y0mnJxe1cUNw9gM39A9dsg7O+bZXkSkhhBndHpk
- sTSe5qtPRnl1jG+EfsYnp6nJwaBmQwKCJi/YT7pbFRcY0ejspzGCp6m+8acMRbu0UKvM Qg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2suj0qu1x9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 21:57:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Lt85f151089;
-        Thu, 6 Jun 2019 21:55:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2swngmrn83-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 21:55:21 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56LtJBr020167;
-        Thu, 6 Jun 2019 21:55:19 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 14:55:18 -0700
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH] scsi: lpfc: Avoid unused function warnings
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190606052421.103469-1-natechancellor@gmail.com>
-Date:   Thu, 06 Jun 2019 17:55:16 -0400
-In-Reply-To: <20190606052421.103469-1-natechancellor@gmail.com> (Nathan
-        Chancellor's message of "Wed, 5 Jun 2019 22:24:21 -0700")
-Message-ID: <yq1sgsmmla3.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=986
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060148
+        Thu, 6 Jun 2019 18:00:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8AF3714DA8187;
+        Thu,  6 Jun 2019 15:00:11 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 15:00:10 -0700 (PDT)
+Message-Id: <20190606.150010.895828876779567389.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 06 Jun 2019 15:00:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Nathan,
+1) Free AF_PACKET po->rollover properly, from Willem de Bruijn.
 
-> When building powerpc pseries_defconfig or powernv_defconfig:
->
-> drivers/scsi/lpfc/lpfc_nvmet.c:224:1: error: unused function
-> 'lpfc_nvmet_get_ctx_for_xri' [-Werror,-Wunused-function]
-> drivers/scsi/lpfc/lpfc_nvmet.c:246:1: error: unused function
-> 'lpfc_nvmet_get_ctx_for_oxid' [-Werror,-Wunused-function]
->
-> These functions are only compiled when CONFIG_NVME_TARGET_FC is enabled.
-> Use that same condition so there is no more warning. While the fixes
-> commit did not introduce these functions, it caused these warnings.
+2) Read SFP eeprom in max 16 byte increments to avoid problems with
+   some SFP modules, from Russell King.
 
-Applied to 5.3/scsi-queue, thanks!
+3) Fix UDP socket lookup wrt. VRF, from Tim Beale.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+4) Handle route invalidation properly in s390 qeth driver, from Julian
+   Wiedmann.
+
+5) Memory leak on unload in RDS, from Zhu Yanjun.
+
+6) sctp_process_init leak, from Neil HOrman.
+
+7) Fix fib_rules rule insertion semantic change that broke Android,
+   from Hangbin Liu.
+
+Please pull, thank you!
+
+The following changes since commit 036e34310931e64ce4f1edead435708cd517db10:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-05-30 21:11:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
+
+for you to fetch changes up to 720f1de4021f09898b8c8443f3b3e995991b6e3a:
+
+  pktgen: do not sleep with the thread lock held. (2019-06-06 11:31:35 -0700)
+
+----------------------------------------------------------------
+Alexandra Winter (1):
+      s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
+
+David S. Miller (3):
+      Merge branch 'net-tls-redo-the-RX-resync-locking'
+      Merge branch 's390-qeth-fixes'
+      Merge branch 'ipv6-fix-EFAULT-on-sendto-with-icmpv6-and-hdrincl'
+
+Hangbin Liu (1):
+      Revert "fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied"
+
+Ivan Khoronzhuk (1):
+      net: ethernet: ti: cpsw_ethtool: fix ethtool ring param set
+
+Jakub Kicinski (2):
+      Revert "net/tls: avoid NULL-deref on resync during device removal"
+      net/tls: replace the sleeping lock around RX resync with a bit lock
+
+Julian Wiedmann (3):
+      s390/qeth: handle limited IPv4 broadcast in L3 TX path
+      s390/qeth: check dst entry before use
+      s390/qeth: handle error when updating TX queue count
+
+Maxime Chevallier (1):
+      net: mvpp2: Use strscpy to handle stat strings
+
+Miaohe Lin (1):
+      net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is set
+
+Neil Horman (1):
+      Fix memory leak in sctp_process_init
+
+Nikita Danilov (1):
+      net: aquantia: fix wol configuration not applied sometimes
+
+Nikita Yushchenko (1):
+      net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+
+Olivier Matz (2):
+      ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
+      ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
+
+Paolo Abeni (2):
+      net: fix indirect calls helpers for ptype list hooks.
+      pktgen: do not sleep with the thread lock held.
+
+Russell King (2):
+      net: sfp: read eeprom in maximum 16 byte increments
+      net: phylink: avoid reducing support mask
+
+Sean Wang (2):
+      net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
+      net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+
+Tim Beale (1):
+      udp: only choose unbound UDP socket for multicast when not in a VRF
+
+Vivien Didelot (1):
+      ethtool: fix potential userspace buffer overflow
+
+Vladimir Oltean (2):
+      net: dsa: sja1105: Don't store frame type in skb->cb
+      net: dsa: sja1105: Fix link speed not working at 100 Mbps and below
+
+Wei Liu (1):
+      Update my email address
+
+Willem de Bruijn (1):
+      packet: unconditionally free po->rollover
+
+Xin Long (3):
+      selftests: set sysctl bc_forwarding properly in router_broadcast.sh
+      ipv4: not do cache for local delivery if bc_forwarding is enabled
+      ipv6: fix the check before getting the cookie in rt6_get_cookie
+
+Yonglong Liu (1):
+      net: hns: Fix loopback test failed at copper ports
+
+Zhu Yanjun (2):
+      net: rds: fix memory leak when unload rds_rdma
+      net: rds: fix memory leak in rds_ib_flush_mr_pool
+
+ MAINTAINERS                                                       |  2 +-
+ drivers/net/dsa/mv88e6xxx/chip.c                                  |  2 +-
+ drivers/net/dsa/sja1105/sja1105_main.c                            | 32 ++++++++++++++++----------------
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c      | 14 +++++++-------
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c |  4 +++-
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c                  |  4 ++++
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c                   |  4 ++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c                       | 15 ++++++++-------
+ drivers/net/ethernet/ti/cpsw_ethtool.c                            |  2 +-
+ drivers/net/ipvlan/ipvlan_main.c                                  |  2 +-
+ drivers/net/phy/phylink.c                                         | 13 +++++++++----
+ drivers/net/phy/sfp.c                                             | 24 ++++++++++++++++++++----
+ drivers/s390/net/qeth_core_main.c                                 | 22 ++++++++++++++++------
+ drivers/s390/net/qeth_l2_main.c                                   |  2 +-
+ drivers/s390/net/qeth_l3_main.c                                   | 32 +++++++++++++++++++++++++++-----
+ include/linux/dsa/sja1105.h                                       | 12 ------------
+ include/net/ip6_fib.h                                             |  3 +--
+ include/net/tls.h                                                 |  4 ++++
+ net/core/dev.c                                                    |  6 +++---
+ net/core/ethtool.c                                                |  5 ++++-
+ net/core/fib_rules.c                                              |  6 +++---
+ net/core/pktgen.c                                                 | 11 +++++++++++
+ net/dsa/tag_sja1105.c                                             | 10 +++-------
+ net/ipv4/route.c                                                  | 24 ++++++++++++------------
+ net/ipv4/udp.c                                                    |  3 +--
+ net/ipv6/raw.c                                                    | 25 ++++++++++++++++++-------
+ net/packet/af_packet.c                                            |  2 +-
+ net/rds/ib.c                                                      |  2 +-
+ net/rds/ib_rdma.c                                                 | 10 ++++++----
+ net/rds/ib_recv.c                                                 |  3 +++
+ net/sctp/sm_make_chunk.c                                          | 13 +++----------
+ net/sctp/sm_sideeffect.c                                          |  5 +++++
+ net/tls/tls_device.c                                              | 26 ++++++++++++++++++--------
+ tools/testing/selftests/net/forwarding/router_broadcast.sh        |  5 ++++-
+ 34 files changed, 218 insertions(+), 131 deletions(-)
