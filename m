@@ -2,204 +2,672 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63EFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABCF207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65095207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="DxQ81WoJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDYfnsLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfFFEiS (ORCPT
+        id S1726626AbfFFEi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 00:38:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40235 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfFFEiR (ORCPT
+        Thu, 6 Jun 2019 00:38:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34971 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFFEiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 00:38:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so390517pla.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 21:38:17 -0700 (PDT)
+        Thu, 6 Jun 2019 00:38:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so602292pgl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 21:38:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k9POxzvTuCrZ+enrNQN+pbwE+rLfYidPI5IQ3H4IybQ=;
-        b=DxQ81WoJJRwFltIJPOx3DxA47Z45N8YuWHOiGvp6aMC7rlaWVmUBEY0Zs/pM5uJI8f
-         lgiqbPPLV1jI0QJ0EjOmo9r7mDA5EEk3BGH4eF7KZ3syIuzXDR56C2yab4FaTK5uBAqV
-         jsXcO/nrRwG8v00nSNw3tvZAaWZZc9t4AKpdHAouG5g098hOuoWPHRh7HTi2d37O9eCb
-         Thmt7pe333N29mqsglh51LVXL6xT2ke5hZaJSXiDsai8ar5iaBc2F3Uh1gqFfuwHbiuR
-         etOzC9uLFOv2JQhPYzzsklaa/Cutlgdh088UT1LmvALeEidN2KP9YYbMWbIqrz4wf0Ss
-         nM1A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=k/jkFt1zc7ESMc19IP/d2k7/2fePC1dkqisp3zYhod8=;
+        b=qDYfnsLzbmLu+8VO1pfvqaJb7TwIJ7/uLeN/zlypa7xU3YyVY0usDeLf7OESjSsCCR
+         tE9WzAyqHmUdB9LmEdMkwOk8HC82JZg7MXRQ5HeIRehuV9Q8XEFM2qfXVoNtrp/PoYCy
+         9kwVk8Lw1v8Gw528wAAUl4sqz4zy9S44egmBTaskwBhDHQzoaMsDjFrCxm8ZCyJFEt8P
+         r0Em+2dm+uRauaTlJOrbenMUSaRoEWiUETamjilQBS33n3MEsqq8n9X2ns1JYzKJ4G6W
+         0NHJQx7NGXNrA6phLryUgt9DptU9LtZZjrZxHln0KKoR1KMdyipMLUpWGxL3yUJGZjOF
+         +zsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=k9POxzvTuCrZ+enrNQN+pbwE+rLfYidPI5IQ3H4IybQ=;
-        b=pNrELXuq/W8ATUYKRb+BuOyboKczXcCOU5ppWelHyckfcBRUIXiNzwM83XTrrw3rfj
-         NvPmXgO3dOA9uPpe3oItAq/DwhW5sW4ZYLHt79YDStzarinuTxyzPBVUHx1l1t/yanY9
-         knqOOs+bCIlYV8VJpfzRU50jl+FK6ixa1xlirBpa5BF8wzy/14AKsraY9KTlkJhx0mUI
-         Q+dSRwIupOAuGi+q9Kjak/spw9xa/z1kvFU2+iNs6Nr1tDPNJbb84/9dkjrVRWvCVCzD
-         ELDq+zJ1mRWzQsiXgwf5/IbYSU5wc8fJWM4N0sgQgsDXPm1EpF5za4scr21n8MBdtVxB
-         tZlA==
-X-Gm-Message-State: APjAAAWrG36u/vKynr6WFDQwditpb+ZpE6/6zBEVEXvkxgYYWg9BstAh
-        /bDjUSCfBNbhX8m9L0P0zJ8wyg==
-X-Google-Smtp-Source: APXvYqxF+04SgUxWpV24dmypb9bfV0Z5kLQ1j/tlM43ThrZnKrvhJ+muT+JVqCMEakxZuH4l1dFxwg==
-X-Received: by 2002:a17:902:67:: with SMTP id 94mr49073790pla.64.1559795896724;
-        Wed, 05 Jun 2019 21:38:16 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id x8sm514794pfa.46.2019.06.05.21.38.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k/jkFt1zc7ESMc19IP/d2k7/2fePC1dkqisp3zYhod8=;
+        b=XLNbolsNfsHAmhuWTmJzRLQxXMCSYrXXAlSJu3yNTOhrdTA8T8zZ/GDsp6vtwO8s3Q
+         0VmXCb88HFJkL0C04CXtX6o7f2cDixK8h0SAHEP8Ei9NvQ9xGLYungs9WBUN1/5MI/OP
+         KdXa1qQvTjsmqW8330jtRnERPmOrlc9/kAt92yZP2f/uNklhSsZuLBYiIEAJLtKAqCkG
+         8ZhnSYOWpu07R8BxN2O06iHfeqqDp2V2C2VeZPnpMr4qBTTL6AXKsAzRKa6xvnOc9PmH
+         /tTNzR6oxWiM/4eRHQp3iyrIk6k6AMhXnerHmEE3dCcuMtU3057Y7pdnwCJRjLBmV1Yo
+         JgIg==
+X-Gm-Message-State: APjAAAV2VU3jyVeGn7Dw66loqOI+h/wDoGobJe6wHnt/20NEclD/BptW
+        JXJ57Pj7/Gz74n+Pg+e/MGJnTw==
+X-Google-Smtp-Source: APXvYqzAV7sOqc4nktio8ZQ4iBxC8wy5LE93UtYQMJf7EcGiGaUPaIygLVMXM7JqCckx8ahKn1QZ2Q==
+X-Received: by 2002:a62:e119:: with SMTP id q25mr14879172pfh.148.1559795934808;
+        Wed, 05 Jun 2019 21:38:54 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 22sm740599pje.15.2019.06.05.21.38.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 21:38:16 -0700 (PDT)
-Subject: Re: PCI: Correct the resource_alignment parameter example
-To:     linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20190606032557.107542-1-aik@ozlabs.ru>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <2994f354-29d4-b6cc-4ebd-d25fd0b2cad4@ozlabs.ru>
-Date:   Thu, 6 Jun 2019 14:38:12 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190606032557.107542-1-aik@ozlabs.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 05 Jun 2019 21:38:54 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: qcom: Add Dragonboard 845c
+Date:   Wed,  5 Jun 2019 21:38:51 -0700
+Message-Id: <20190606043851.18050-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argh, it should have had "PATCH" in the subject, I broke my scripts so
-they run git format-patch --subject-prefix="". Sorry. Repost?
+This adds an initial dts for the Dragonboard 845. Supported
+functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+(host), microSD-card and Bluetooth.
 
+Initializing the SMMU is clearing the mapping used for the splash screen
+framebuffer, which causes the board to reboot. This can be worked around
+using:
 
-On 06/06/2019 13:25, Alexey Kardashevskiy wrote:
-> The option description requires an order and so does the option
-> parsing code, however the example uses a size, fix this.
-> 
-> Fixes: 8b078c603249 ("PCI: Update "pci=resource_alignment" documentation")
-> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 2b8ee90bb644..dcb53d64ad74 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3340,27 +3340,28 @@
->  		resource_alignment=
->  				Format:
->  				[<order of align>@]<pci_dev>[; ...]
->  				Specifies alignment and device to reassign
->  				aligned memory resources. How to
->  				specify the device is described above.
->  				If <order of align> is not specified,
->  				PAGE_SIZE is used as alignment.
->  				PCI-PCI bridge can be specified, if resource
->  				windows need to be expanded.
->  				To specify the alignment for several
->  				instances of a device, the PCI vendor,
->  				device, subvendor, and subdevice may be
-> -				specified, e.g., 4096@pci:8086:9c22:103c:198f
-> +				specified, e.g., 12@pci:8086:9c22:103c:198f
-> +				for the 4096 alignment.
->  		ecrc=		Enable/disable PCIe ECRC (transaction layer
->  				end-to-end CRC checking).
->  				bios: Use BIOS/firmware settings. This is the
->  				the default.
->  				off: Turn ECRC off
->  				on: Turn ECRC on.
->  		hpiosize=nn[KMG]	The fixed amount of bus space which is
->  				reserved for hotplug bridge's IO window.
->  				Default size is 256 bytes.
->  		hpmemsize=nn[KMG]	The fixed amount of bus space which is
->  				reserved for hotplug bridge's memory window.
->  				Default size is 2 megabytes.
->  		hpbussize=nn	The minimum amount of additional bus numbers
-> 
+  fastboot oem select-display-panel none
 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v1:
+- Dropped PCIe as this hasn't landed
+- Added adsp_pas and cdsp_pas
+- Added regulators for wifi
+- Updated LED labels to match 96boards specification
+
+ arch/arm64/boot/dts/qcom/Makefile          |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 556 +++++++++++++++++++++
+ 2 files changed, 557 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 21d548f02d39..b3fe72ff2955 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+new file mode 100644
+index 000000000000..0424227f0c96
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -0,0 +1,556 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
++#include "pmi8998.dtsi"
++
++/ {
++	model = "Thundercomm Dragonboard 845c";
++	compatible = "thundercomm,db845c", "qcom,sdm845";
++
++	aliases {
++		serial0 = &uart9;
++		hsuart0 = &uart6;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	dc12v: dc12v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "DC12V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++	};
++
++	lt9611_1v8: lt9611-vdd18-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_1V8";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	lt9611_3v3: lt9611-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_3V3";
++
++		vin-supply = <&vdc_3v3>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_1p05v: pcie-0-1p05v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "PCIE0_1.05V";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1050000>;
++		regulator-max-microvolt = <1050000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_3p3v_dual: vldo-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VLDO_3V3";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie0_pwren_state>;
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&vol_up_pin_a>;
++
++		vol-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		user4 {
++			label = "green:user4";
++			gpios = <&pm8998_gpio 13 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "panic-indicator";
++			default-state = "off";
++		};
++
++		wlan {
++			label = "yellow:wlan";
++			gpios = <&pm8998_gpio 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt {
++			label = "blue:bt";
++			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "bluetooth-power";
++			default-state = "off";
++		};
++	};
++
++	v5p0_hdmiout: v5p0-hdmiout-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "V5P0_HDMIOUT";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	vbat: vbat-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vbat_som: vbat-som-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT_SOM";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vdc_3v3: vdc-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_3V3";
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vdc_5v: vdc-5v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_5V";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++		regulator-always-on;
++	};
++
++	vreg_s4a_1p8: vreg-s4a-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vreg_s4a_1p8";
++
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++
++		vin-supply = <&vbat_som>;
++	};
++};
++
++&adsp_pas {
++	status = "okay";
++
++	firmware-name = "qcom/db845c/adsp.mdt";
++};
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++		vdd-s7-supply = <&vph_pwr>;
++		vdd-s8-supply = <&vph_pwr>;
++		vdd-s9-supply = <&vph_pwr>;
++		vdd-s10-supply = <&vph_pwr>;
++		vdd-s11-supply = <&vph_pwr>;
++		vdd-s12-supply = <&vph_pwr>;
++		vdd-s13-supply = <&vph_pwr>;
++		vdd-l1-l27-supply = <&vreg_s7a_1p025>;
++		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
++		vdd-l3-l11-supply = <&vreg_s7a_1p025>;
++		vdd-l4-l5-supply = <&vreg_s7a_1p025>;
++		vdd-l6-supply = <&vph_pwr>;
++		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
++		vdd-l9-supply = <&vreg_bob>;
++		vdd-l10-l23-l25-supply = <&vreg_bob>;
++		vdd-l13-l19-l21-supply = <&vreg_bob>;
++		vdd-l16-l28-supply = <&vreg_bob>;
++		vdd-l18-l22-supply = <&vreg_bob>;
++		vdd-l20-l24-supply = <&vreg_bob>;
++		vdd-l26-supply = <&vreg_s3a_1p35>;
++		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
++
++		vreg_s3a_1p35: smps3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++		};
++
++		vreg_s5a_2p04: smps5 {
++			regulator-min-microvolt = <1904000>;
++			regulator-max-microvolt = <2040000>;
++		};
++
++		vreg_s7a_1p025: smps7 {
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <1028000>;
++		};
++
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l5a_0p8: ldo5 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l13a_2p95: ldo13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3088000>;
++			regulator-max-microvolt = <3088000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3312000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	pmi8998-rpmh-regulators {
++		compatible = "qcom,pmi8998-rpmh-regulators";
++		qcom,pmic-id = "b";
++
++		vdd-bob-supply = <&vph_pwr>;
++
++		vreg_bob: bob {
++			regulator-min-microvolt = <3312000>;
++			regulator-max-microvolt = <3600000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
++			regulator-allow-bypass;
++		};
++	};
++};
++
++&cdsp_pas {
++	status = "okay";
++	firmware-name = "qcom/db845c/cdsp.mdt";
++};
++
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
++};
++
++&pm8998_gpio {
++	vol_up_pin_a: vol-up-active {
++		pins = "gpio6";
++		function = "normal";
++		input-enable;
++		bias-pull-up;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++	};
++};
++
++&pm8998_pon {
++	resin {
++		compatible = "qcom,pm8941-resin";
++		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++		debounce = <15625>;
++		bias-pull-up;
++		linux,code = <KEY_VOLUMEDOWN>;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	bus-width = <4>;
++	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
++};
++
++&tlmm {
++	pcie0_pwren_state: pcie0-pwren {
++		pins = "gpio90";
++		function = "gpio";
++
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	sdc2_default_state: sdc2-default {
++		clk {
++			pins = "sdc2_clk";
++			bias-disable;
++
++			/*
++			 * It seems that mmc_test reports errors if drive
++			 * strength is not 16 on clk, cmd, and data pins.
++			 */
++			drive-strength = <16>;
++		};
++
++		cmd {
++			pins = "sdc2_cmd";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++
++		data {
++			pins = "sdc2_data";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++	};
++
++	sdc2_card_det_n: sd-card-det-n {
++		pins = "gpio126";
++		function = "gpio";
++		bias-pull-up;
++	};
++};
++
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
++&uart9 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <800000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l26a_1p2>;
++};
++
++&wifi {
++	status = "okay";
++
++	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
++	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
++	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
++	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qup_uart6_default {
++	pinmux {
++		pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		function = "qup6";
++	};
++
++	cts {
++		pins = "gpio45";
++		bias-disable;
++	};
++
++	rts-tx {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rx {
++		pins = "gpio48";
++		bias-pull-up;
++	};
++};
++
++&qup_uart9_default {
++	pinconf-tx {
++		pins = "gpio4";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		pins = "gpio5";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++};
 -- 
-Alexey
+2.18.0
+
