@@ -2,103 +2,65 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B8EC28D1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776E6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A462089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WM7kXsdm"
+	by mail.kernel.org (Postfix) with ESMTP id 4129B20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFFHan (ORCPT
+        id S1726777AbfFFHbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:30:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34387 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfFFHan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:30:43 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e16so1262145wrn.1;
-        Thu, 06 Jun 2019 00:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Qkp/lfM7R4/9VFytqPJOWBgUswxzuDafgwHDd1VibeQ=;
-        b=WM7kXsdm2IIbvcKh7Z43WuKK927dq/t9c1pAayHXiNqiGiEKN1/YGCLmo/j7+JvgUk
-         Wpp24mhcJAwa+3PQSNpA0BQ+EurXUl4K56KLUqkb3MRB7jqybjz/5/4iKiTWom//4ZnO
-         y18oF5vZiIhWR4uEQn2+fmVojUqWJXhQ1PlNnVUyuOKE+Wwh/Se/Slh3vHQyaOxOhZJM
-         Bt5ch+FJNsWpH16pYW2B5hhIDrFu2r5miwCSSPRR3k8L6qHZ3rBl3noqESoNWAVTrjlh
-         vj+yKFPkR91Hkp3OiCpepQkXrnzEnXFXZhU/vB1p7FK95eXu63IuIl6cVYBzZ7qBJ3Kf
-         2aRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Qkp/lfM7R4/9VFytqPJOWBgUswxzuDafgwHDd1VibeQ=;
-        b=F4o7rXH1ppXYbPbK7+8CaIdYTeKR19WMG2WpeDtWs1szpcqSdXeWCKzRWzC20T1AZc
-         mbFqgQ5Bp4HiXPZEBfp6tmjO8maOGUQpMaMzBO/Gk98X3W1+ary6rTgPhrETHhaDcLks
-         Y1mZgzykHLsFsArNCgQEZWQAHasQgQQ9r3g6PBs/SXpuhYRRB2KwXzFI/KocLSknsJib
-         p9Lay3hmAXun978Y8Br6UX0Wlo2qZhERoo5PCDEI+j+TxxRjdYv4Ps4VR0f9kr0F3Q2y
-         dMUNeO1kkqKeFtEp7BhIN7nlwu8MtHvy5egJEIoVIcWCUQPIoLvRh6mmbBbUp8SPynAo
-         iQaA==
-X-Gm-Message-State: APjAAAWb9AspnvbCFsr184BPJHdv0JzJem+p/RxcnRVNh4d2+lo2YQwM
-        P+M12xILc1AnDMQlP6vWOHvBooF8hXeuBejCL3I=
-X-Google-Smtp-Source: APXvYqzDQF9AtA/eA6w8ELmIHnhcOffQB0KRrcdedaPzSfFcPn1FEaxo7KqBd8kEnLy5p7QPH1sq+nK/AaRqyKPAnAQ=
-X-Received: by 2002:adf:f78d:: with SMTP id q13mr28930531wrp.220.1559806241260;
- Thu, 06 Jun 2019 00:30:41 -0700 (PDT)
+        Thu, 6 Jun 2019 03:31:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48979 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfFFHbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:31:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 00:31:09 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2019 00:31:08 -0700
+Message-ID: <5CF8C272.7050808@intel.com>
+Date:   Thu, 06 Jun 2019 15:36:18 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
- <20190605155801.GA25165@redhat.com> <20190605155833.GB25165@redhat.com> <20190606072559.GA27021@redhat.com>
-In-Reply-To: <20190606072559.GA27021@redhat.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 6 Jun 2019 09:30:29 +0200
-Message-ID: <CA+icZUUr5Oma-HEeKOP+2M9SwCEwpeaFkanktp5eCLqkg0O67Q@mail.gmail.com>
-Subject: Re: [PATCH -mm 1/1] signal: simplify set_user_sigmask/restore_user_sigmask
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        dbueso@suse.de, axboe@kernel.dk, dave@stgolabs.net, e@80x24.org,
-        jbaron@akamai.com, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, omar.kilani@gmail.com, tglx@linutronix.de,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Eric Hankland <ehankland@google.com>
+CC:     Cfir Cohen <cfir@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+        rkrcmar@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com> <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com> <5CF2599B.3030001@intel.com> <CAOyeoRWuHyhoy6NB=O+ekQMhBFngozKoanWzArxgBk4DH2hdtg@mail.gmail.com> <5CF5F6AE.90706@intel.com> <CAOyeoRW5wx0F=9B24h29KkhUrbaORXVSoJufb4d-XzKiAsz+NQ@mail.gmail.com> <CAEU=KTHsVmrAHXUKdHu_OwcrZoy-hgV7pk4UymtchGE5bGdUGA@mail.gmail.com> <CAOyeoRXFAQNNWRiHNtK3n17V0owBVNyKdv75xjt08Q_pC+XOXg@mail.gmail.com>
+In-Reply-To: <CAOyeoRXFAQNNWRiHNtK3n17V0owBVNyKdv75xjt08Q_pC+XOXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 9:28 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 06/05, Oleg Nesterov wrote:
-> >
-> > +int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
-> >  {
-> > -     if (!usigmask)
-> > -             return 0;
-> > +     sigset_t *kmask;
->
-> Typo, this obviously should be
->
->         sigset_t kmask;
->
-> I'll send v2.
->
->
-> Dear Kbuild Test Robot, thank you very much,
+On 06/06/2019 05:35 AM, Eric Hankland wrote:
+>>> Right - I'm aware there are other ways of detecting this - it's still
+>>> a class of events that some people don't want to surface. I'll ask if
+>>> there are any better examples.
+> I asked and it sounds like we are treating all events as potentially
+> insecure until they've been reviewed. If Intel were to publish
+> official (reasonably substantiated) guidance stating that the PMU is
+> secure, then I think we'd be happy without such a safeguard in place,
+> but short of that I think we want to err on the side of caution.
 >
 
-Machines have emotions, too.
+I'm not aware of any vendors who'd published statements like that.
 
-- sed@ -
+Anyway, are you ready to share your QEMU patches or the events you want 
+to be on the whitelists?
+
+
+Best,
+Wei
