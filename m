@@ -2,77 +2,163 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5178C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAA4C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9890020868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4477F20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfFFJl6 (ORCPT
+        id S1728048AbfFFJmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:41:58 -0400
-Received: from foss.arm.com ([217.140.101.70]:44012 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfFFJl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:41:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5C26341;
-        Thu,  6 Jun 2019 02:41:57 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E2E53F690;
-        Thu,  6 Jun 2019 02:41:56 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 10:41:54 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Jan Glauber <jglauber@marvell.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Glauber <jglauber@cavium.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Subject: Re: [PATCH] lockref: Limit number of cmpxchg loop retries
-Message-ID: <20190606094154.GB6795@fuggles.cambridge.arm.com>
-References: <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
- <20190605134849.28108-1-jglauber@marvell.com>
- <CAHk-=whPbMBGWiTdC3wqXMGMaCCHQ4WQh5ObB5iwa9gk-nCtzA@mail.gmail.com>
- <20190606080317.GA10606@hc>
+        Thu, 6 Jun 2019 05:42:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38035 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfFFJmF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:42:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id h4so1166191iol.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:42:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=C/QbVAlBAgg/UuzgwU/C8xKEj8HudJCp6V+oPIiI0Pw=;
+        b=izXWIHk7M5s0gYegUSzzsaqmPr3uZQ5OolUw7kLiLzuCj1hFMnfxsXXdxOn4Tjlqf2
+         1aLxIPTHxbgLIGuHDrUIaJt9N7gT+Og5Ppc3KAEWjqqW7FYWz0qXqxfuD8eCsDNnn7ar
+         fLX5y+fAm7FJOkbnOUe78/hCmXcZPzFwxOx5ZxcA2zDuo9LKo3H46HwiqzvitIExIiyL
+         q8E9LWVhoH5T26y3ApCCNy1kHU1oDOsSjydlorapXGrTmAm85mNfYO1JLt3ku9qR8KCZ
+         t4N0rCJDZ8nlrHS3J5MCD6XZiYvKgskW161e4bQnGN9EFQaxoxIpkI3vtwb3GpQ0/Zxq
+         Xatw==
+X-Gm-Message-State: APjAAAUFT1VwboGOOf/DHQJEzFaf71M60Wafg+uKhejvPNBOjLF5LfWk
+        CIVMXWrq5k6xkn0uRRJcRy2VaiARC7LS4b8+9EKJ0swoNpg4
+X-Google-Smtp-Source: APXvYqwOJhbXNCC7cvoLr6vQcA/kxUlviAaQhZZvu32rd1jGFllr0Y6eLPIl4tji7avmxMkEpWSCCnddXjEUxekPkABZErr6e8LK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606080317.GA10606@hc>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+X-Received: by 2002:a05:660c:8f:: with SMTP id t15mr12219147itj.107.1559814124560;
+ Thu, 06 Jun 2019 02:42:04 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 02:42:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cf6a70058aa48695@google.com>
+Subject: KMSAN: uninit-value in rt2500usb_bbp_read
+From:   syzbot <syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        helmut.schaa@googlemail.com, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, sgruszka@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 08:03:27AM +0000, Jan Glauber wrote:
-> On Wed, Jun 05, 2019 at 01:16:46PM -0700, Linus Torvalds wrote:
-> > On Wed, Jun 5, 2019 at 6:49 AM Jan Glauber <jglauber@cavium.com> wrote:
-> > >
-> > > Add an upper bound to the loop to force the fallback to spinlocks
-> > > after some time. A retry value of 100 should not impact any hardware
-> > > that does not have this issue.
-> > >
-> > > With the retry limit the performance of an open-close testcase
-> > > improved between 60-70% on ThunderX2.
-> > 
-> > Btw, did you do any kind of performance analysis across different
-> > retry limit values?
-> 
-> I tried 15/50/100/200/500, results were largely identical up to 100.
-> For SMT=4 a higher retry value might be better, but unless we can add a
-> sysctl value 100 looked like a good compromise to me.
+Hello,
 
-Perhaps I'm just getting confused pre-morning-coffee, but I thought the
-original complaint (and the reason for this patch even existing) was that
-when many CPUs were hammering the lockref then performance tanked? In which
-case, increasing the threshold as the number of CPUs increases seems
-counter-intuitive to me because it suggests that the larger the system,
-the harder we should try to make the cmpxchg work.
+syzbot found the following crash on:
 
-Will
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f8b01ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=a106a5b084a6890d2607
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f746f2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153072d2a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com
+
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+usb 1-1: reset high-speed USB device number 2 using dummy_hcd
+usb 1-1: device descriptor read/64, error -71
+ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x09  
+failed for offset 0x0000 with error -71
+ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x07  
+failed for offset 0x04d0 with error -71
+==================================================================
+BUG: KMSAN: uninit-value in rt2500usb_regbusy_read  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:116 [inline]
+BUG: KMSAN: uninit-value in rt2500usb_bbp_read+0x174/0x640  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
+CPU: 1 PID: 4943 Comm: kworker/1:2 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:116  
+[inline]
+  rt2500usb_bbp_read+0x174/0x640  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
+  rt2500usb_validate_eeprom  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
+  rt2500usb_probe_hw+0x3b1/0x2230  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
+  rt2x00lib_probe_dev+0xb81/0x3090  
+drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1427
+  rt2x00usb_probe+0x7c7/0xf70  
+drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:837
+  rt2500usb_probe+0x50/0x60  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1977
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----reg.i.i@rt2500usb_bbp_read
+Variable was created at:
+  rt2500usb_register_read_lock  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:72 [inline]
+  rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:115  
+[inline]
+  rt2500usb_bbp_read+0xa4/0x640  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
+  rt2500usb_validate_eeprom  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
+  rt2500usb_probe_hw+0x3b1/0x2230  
+drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
