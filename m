@@ -2,70 +2,49 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92745C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E924C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43550207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rePiZNLa"
+	by mail.kernel.org (Postfix) with ESMTP id 2B464207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFFEEx (ORCPT
+        id S1726567AbfFFEGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 00:04:53 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59726 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFFEEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 00:04:52 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5644enS120824;
-        Wed, 5 Jun 2019 23:04:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559793880;
-        bh=4fHc2Mo2WVYaNY/IPFZvIalNX/KXN1zPhDV9b/E4gqM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rePiZNLap2N4Y+J9EexLWVsOCssIBHOiUw2FYAHHIkVi75X6F5HIJ2WgM6Hz5AJmC
-         B02T1SQSho7o16I6QPMO91lJTo+jAqdhkIbELYs3F/yZKZ82t2+LKTZjpM+1Ss7iHI
-         l/fFF3ePoYGEdS64jz68sxizbJz9cFnPnE+YtHnQ=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5644ePC100464
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 23:04:40 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 23:04:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 23:04:39 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5644aMN044392;
-        Wed, 5 Jun 2019 23:04:37 -0500
-Subject: Re: [PATCH] firmware: ti_sci: Add support for processor control
-To:     Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190605223334.30428-1-s-anna@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <af0da0f1-5381-d212-74a0-9ab19730dc55@ti.com>
-Date:   Thu, 6 Jun 2019 09:34:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 6 Jun 2019 00:06:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38644 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbfFFEGw (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 00:06:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 21:06:51 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2019 21:06:49 -0700
+Subject: Re: [PATCH v2 6/7] perf diff: Print the basic block cycles diff
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+ <1559572577-25436-7-git-send-email-yao.jin@linux.intel.com>
+ <20190605114408.GA5868@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <703e4f0d-a32e-df8b-41de-89bcb890e0a5@linux.intel.com>
+Date:   Thu, 6 Jun 2019 12:06:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190605223334.30428-1-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190605114408.GA5868@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,619 +52,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 06/06/19 4:03 AM, Suman Anna wrote:
-> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
-> is used in Texas Instrument's System on Chip (SoC) such as those
-> in K3 family AM654 SoC to communicate between various compute
-> processors with a central system controller entity.
+On 6/5/2019 7:44 PM, Jiri Olsa wrote:
+> On Mon, Jun 03, 2019 at 10:36:16PM +0800, Jin Yao wrote:
+>> perf record -b ./div
+>> perf record -b ./div
+>>
+>> Following is the default perf diff output
+>>
+>>   # perf diff
+>>
+>>   # Event 'cycles'
+>>   #
+>>   # Baseline  Delta Abs  Shared Object     Symbol
+>>   # ........  .........  ................  ....................................
+>>   #
+>>       49.03%     +0.30%  div               [.] main
+>>       16.29%     -0.20%  libc-2.23.so      [.] __random
+>>       18.82%     -0.07%  libc-2.23.so      [.] __random_r
+>>        8.11%     -0.04%  div               [.] compute_flag
+>>        2.25%     +0.01%  div               [.] rand@plt
+>>        0.00%     +0.01%  [kernel.vmlinux]  [k] task_tick_fair
+>>        5.46%     +0.01%  libc-2.23.so      [.] rand
+>>        0.01%     -0.01%  [kernel.vmlinux]  [k] native_irq_return_iret
+>>        0.00%     -0.00%  [kernel.vmlinux]  [k] interrupt_entry
+>>
+>> This patch creates a new computation selection 'cycles'.
+>>
+>>   # perf diff -c cycles
+>>
+>>   # Event 'cycles'
+>>   #
+>>   # Baseline         Block cycles diff [start:end]  Shared Object     Symbol
+>>   # ........  ....................................  ................  ....................................
+>>   #
+>>       49.03%        -9 [         4ef:         520]  div               [.] main
+>>       49.03%         0 [         4e8:         4ea]  div               [.] main
+>>       49.03%         0 [         4ef:         500]  div               [.] main
+>>       49.03%         0 [         4ef:         51c]  div               [.] main
+>>       49.03%         0 [         4ef:         535]  div               [.] main
+>>       18.82%         0 [       3ac40:       3ac4d]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac5c]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac76]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac88]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac90:       3ac9c]  libc-2.23.so      [.] __random_r
+>>       16.29%        -8 [       3aac0:       3aac0]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3aac0:       3aad2]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3aae0:       3aae7]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab03:       3ab0f]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab14:       3ab1b]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab28:       3ab2e]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab4a:       3ab53]  libc-2.23.so      [.] __random
+>>        8.11%         0 [         640:         644]  div               [.] compute_flag
+>>        8.11%         0 [         649:         659]  div               [.] compute_flag
+>>        5.46%         0 [       3af60:       3af60]  libc-2.23.so      [.] rand
+>>        5.46%         0 [       3af60:       3af64]  libc-2.23.so      [.] rand
+>>        2.25%         0 [         490:         490]  div               [.] rand@plt
+>>        0.01%        26 [      c00a27:      c00a27]  [kernel.vmlinux]  [k] native_irq_return_iret
+>>        0.00%      -157 [      2bf9f2:      2bfa63]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%       -56 [      2bf980:      2bf9d3]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%        48 [      2bf934:      2bf942]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%         3 [      2bfb38:      2bfb67]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%         0 [      2bf968:      2bf97b]  [kernel.vmlinux]  [k] update_blocked_averages
+>>
 > 
-> The system controller provides various services including the control
-> of other compute processors within the SoC. Extend the TI-SCI protocol
-> support to add various TI-SCI commands to invoke services associated
-> with power and reset control, and boot vector management of the
-> various compute processors from the Linux kernel.
+> so what I'd expect would be Baseline column with cycles and another
+> column showing the differrence (in cycles) for given symbol
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> "[start:end]" indicates the basic block range. The output is sorted
+>> by "Baseline" and the basic blocks in the same function are sorted
+>> by cycles diff.
+> 
+> hum, why is there multiple basic blocks [start:end] for a symbol?
+> 
+> thanks,
+> jirka
+> 
 
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+The basic block is the code between 2 branches (for one branch, for 
+example, jmp, call, ret, interrupt, ...). So it's expected that one 
+function (symbol is function) may contain multiple basic blocks.
 
-Thanks and regards,
-Lokesh
+The idea is, sorting by baseline to display the hottest functions and 
+the second column shows the cycles diff of blocks in this function 
+(comparing between different perf data files). This would allow to 
+identify performance changes in specific code accurately and effectively.
 
-> ---
-> Hi Santosh, Nishanth, Tero,
-> 
-> Appreciate it if this patch can be picked up for the 5.3 merge window.
-> This is a dependency patch for my various remoteproc drivers on TI K3
-> SoCs. Patch is on top of v5.2-rc1.
-> 
-> regards
-> Suman
-> 
->  drivers/firmware/ti_sci.c              | 350 +++++++++++++++++++++++++
->  drivers/firmware/ti_sci.h              | 135 ++++++++++
->  include/linux/soc/ti/ti_sci_protocol.h |  31 +++
->  3 files changed, 516 insertions(+)
-> 
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index 36ce11a67235..596acad89e86 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
-> @@ -2004,6 +2004,348 @@ static int ti_sci_cmd_free_event_map(const struct ti_sci_handle *handle,
->  			       ia_id, vint, global_event, vint_status_bit, 0);
->  }
->  
-> +/**
-> + * ti_sci_cmd_proc_request() - Command to request a physical processor control
-> + * @handle:	Pointer to TI SCI handle
-> + * @proc_id:	Processor ID this request is for
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_request(const struct ti_sci_handle *handle,
-> +				   u8 proc_id)
-> +{
-> +	struct ti_sci_msg_req_proc_request *req;
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_PROC_REQUEST,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_proc_request *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
-> +
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ti_sci_cmd_proc_release() - Command to release a physical processor control
-> + * @handle:	Pointer to TI SCI handle
-> + * @proc_id:	Processor ID this request is for
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_release(const struct ti_sci_handle *handle,
-> +				   u8 proc_id)
-> +{
-> +	struct ti_sci_msg_req_proc_release *req;
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_PROC_RELEASE,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_proc_release *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
-> +
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ti_sci_cmd_proc_handover() - Command to handover a physical processor
-> + *				control to a host in the processor's access
-> + *				control list.
-> + * @handle:	Pointer to TI SCI handle
-> + * @proc_id:	Processor ID this request is for
-> + * @host_id:	Host ID to get the control of the processor
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_handover(const struct ti_sci_handle *handle,
-> +				    u8 proc_id, u8 host_id)
-> +{
-> +	struct ti_sci_msg_req_proc_handover *req;
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_PROC_HANDOVER,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_proc_handover *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +	req->host_id = host_id;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
-> +
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ti_sci_cmd_proc_set_config() - Command to set the processor boot
-> + *				    configuration flags
-> + * @handle:		Pointer to TI SCI handle
-> + * @proc_id:		Processor ID this request is for
-> + * @config_flags_set:	Configuration flags to be set
-> + * @config_flags_clear:	Configuration flags to be cleared.
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_set_config(const struct ti_sci_handle *handle,
-> +				      u8 proc_id, u64 bootvector,
-> +				      u32 config_flags_set,
-> +				      u32 config_flags_clear)
-> +{
-> +	struct ti_sci_msg_req_set_config *req;
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_SET_CONFIG,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_set_config *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +	req->bootvector_low = bootvector & TI_SCI_ADDR_LOW_MASK;
-> +	req->bootvector_high = (bootvector & TI_SCI_ADDR_HIGH_MASK) >>
-> +				TI_SCI_ADDR_HIGH_SHIFT;
-> +	req->config_flags_set = config_flags_set;
-> +	req->config_flags_clear = config_flags_clear;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
-> +
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ti_sci_cmd_proc_set_control() - Command to set the processor boot
-> + *				     control flags
-> + * @handle:			Pointer to TI SCI handle
-> + * @proc_id:			Processor ID this request is for
-> + * @control_flags_set:		Control flags to be set
-> + * @control_flags_clear:	Control flags to be cleared
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_set_control(const struct ti_sci_handle *handle,
-> +				       u8 proc_id, u32 control_flags_set,
-> +				       u32 control_flags_clear)
-> +{
-> +	struct ti_sci_msg_req_set_ctrl *req;
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_SET_CTRL,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_set_ctrl *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +	req->control_flags_set = control_flags_set;
-> +	req->control_flags_clear = control_flags_clear;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
-> +
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ti_sci_cmd_get_boot_status() - Command to get the processor boot status
-> + * @handle:	Pointer to TI SCI handle
-> + * @proc_id:	Processor ID this request is for
-> + *
-> + * Return: 0 if all went well, else returns appropriate error value.
-> + */
-> +static int ti_sci_cmd_proc_get_status(const struct ti_sci_handle *handle,
-> +				      u8 proc_id, u64 *bv, u32 *cfg_flags,
-> +				      u32 *ctrl_flags, u32 *sts_flags)
-> +{
-> +	struct ti_sci_msg_resp_get_status *resp;
-> +	struct ti_sci_msg_req_get_status *req;
-> +	struct ti_sci_info *info;
-> +	struct ti_sci_xfer *xfer;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (!handle)
-> +		return -EINVAL;
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_GET_STATUS,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "Message alloc failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_req_get_status *)xfer->xfer_buf;
-> +	req->processor_id = proc_id;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_resp_get_status *)xfer->tx_message.buf;
-> +
-> +	if (!ti_sci_is_response_ack(resp)) {
-> +		ret = -ENODEV;
-> +	} else {
-> +		*bv = (resp->bootvector_low & TI_SCI_ADDR_LOW_MASK) |
-> +		      (((u64)resp->bootvector_high << TI_SCI_ADDR_HIGH_SHIFT) &
-> +		       TI_SCI_ADDR_HIGH_MASK);
-> +		*cfg_flags = resp->config_flags;
-> +		*ctrl_flags = resp->control_flags;
-> +		*sts_flags = resp->status_flags;
-> +	}
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
->  /*
->   * ti_sci_setup_ops() - Setup the operations structures
->   * @info:	pointer to TISCI pointer
-> @@ -2016,6 +2358,7 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
->  	struct ti_sci_clk_ops *cops = &ops->clk_ops;
->  	struct ti_sci_rm_core_ops *rm_core_ops = &ops->rm_core_ops;
->  	struct ti_sci_rm_irq_ops *iops = &ops->rm_irq_ops;
-> +	struct ti_sci_proc_ops *pops = &ops->proc_ops;
->  
->  	core_ops->reboot_device = ti_sci_cmd_core_reboot;
->  
-> @@ -2055,6 +2398,13 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
->  	iops->set_event_map = ti_sci_cmd_set_event_map;
->  	iops->free_irq = ti_sci_cmd_free_irq;
->  	iops->free_event_map = ti_sci_cmd_free_event_map;
-> +
-> +	pops->request = ti_sci_cmd_proc_request;
-> +	pops->release = ti_sci_cmd_proc_release;
-> +	pops->handover = ti_sci_cmd_proc_handover;
-> +	pops->set_config = ti_sci_cmd_proc_set_config;
-> +	pops->set_control = ti_sci_cmd_proc_set_control;
-> +	pops->get_status = ti_sci_cmd_proc_get_status;
->  }
->  
->  /**
-> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
-> index 4983827151bf..557b17fea902 100644
-> --- a/drivers/firmware/ti_sci.h
-> +++ b/drivers/firmware/ti_sci.h
-> @@ -42,6 +42,14 @@
->  #define TI_SCI_MSG_SET_IRQ		0x1000
->  #define TI_SCI_MSG_FREE_IRQ		0x1001
->  
-> +/* Processor Control requests */
-> +#define TI_SCI_MSG_PROC_REQUEST		0xc000
-> +#define TI_SCI_MSG_PROC_RELEASE		0xc001
-> +#define TI_SCI_MSG_PROC_HANDOVER	0xc005
-> +#define TI_SCI_MSG_SET_CONFIG		0xc100
-> +#define TI_SCI_MSG_SET_CTRL		0xc101
-> +#define TI_SCI_MSG_GET_STATUS		0xc400
-> +
->  /**
->   * struct ti_sci_msg_hdr - Generic Message Header for All messages and responses
->   * @type:	Type of messages: One of TI_SCI_MSG* values
-> @@ -563,4 +571,131 @@ struct ti_sci_msg_req_manage_irq {
->  	u8 secondary_host;
->  } __packed;
->  
-> +/**
-> + * struct ti_sci_msg_req_proc_request - Request a processor
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor being requested
-> + *
-> + * Request type is TI_SCI_MSG_PROC_REQUEST, response is a generic ACK/NACK
-> + * message.
-> + */
-> +struct ti_sci_msg_req_proc_request {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_req_proc_release - Release a processor
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor being released
-> + *
-> + * Request type is TI_SCI_MSG_PROC_RELEASE, response is a generic ACK/NACK
-> + * message.
-> + */
-> +struct ti_sci_msg_req_proc_release {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_req_proc_handover - Handover a processor to a host
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor being handed over
-> + * @host_id:		Host ID the control needs to be transferred to
-> + *
-> + * Request type is TI_SCI_MSG_PROC_HANDOVER, response is a generic ACK/NACK
-> + * message.
-> + */
-> +struct ti_sci_msg_req_proc_handover {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +	u8 host_id;
-> +} __packed;
-> +
-> +/* Boot Vector masks */
-> +#define TI_SCI_ADDR_LOW_MASK			GENMASK_ULL(31, 0)
-> +#define TI_SCI_ADDR_HIGH_MASK			GENMASK_ULL(63, 32)
-> +#define TI_SCI_ADDR_HIGH_SHIFT			32
-> +
-> +/**
-> + * struct ti_sci_msg_req_set_config - Set Processor boot configuration
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor being configured
-> + * @bootvector_low:	Lower 32 bit address (Little Endian) of boot vector
-> + * @bootvector_high:	Higher 32 bit address (Little Endian) of boot vector
-> + * @config_flags_set:	Optional Processor specific Config Flags to set.
-> + *			Setting a bit here implies the corresponding mode
-> + *			will be set
-> + * @config_flags_clear:	Optional Processor specific Config Flags to clear.
-> + *			Setting a bit here implies the corresponding mode
-> + *			will be cleared
-> + *
-> + * Request type is TI_SCI_MSG_PROC_HANDOVER, response is a generic ACK/NACK
-> + * message.
-> + */
-> +struct ti_sci_msg_req_set_config {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +	u32 bootvector_low;
-> +	u32 bootvector_high;
-> +	u32 config_flags_set;
-> +	u32 config_flags_clear;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_req_set_ctrl - Set Processor boot control flags
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor being configured
-> + * @control_flags_set:	Optional Processor specific Control Flags to set.
-> + *			Setting a bit here implies the corresponding mode
-> + *			will be set
-> + * @control_flags_clear:Optional Processor specific Control Flags to clear.
-> + *			Setting a bit here implies the corresponding mode
-> + *			will be cleared
-> + *
-> + * Request type is TI_SCI_MSG_SET_CTRL, response is a generic ACK/NACK
-> + * message.
-> + */
-> +struct ti_sci_msg_req_set_ctrl {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +	u32 control_flags_set;
-> +	u32 control_flags_clear;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_req_get_status - Processor boot status request
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor whose status is being requested
-> + *
-> + * Request type is TI_SCI_MSG_GET_STATUS, response is an appropriate
-> + * message, or NACK in case of inability to satisfy request.
-> + */
-> +struct ti_sci_msg_req_get_status {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_resp_get_status - Processor boot status response
-> + * @hdr:		Generic Header
-> + * @processor_id:	ID of processor whose status is returned
-> + * @bootvector_low:	Lower 32 bit address (Little Endian) of boot vector
-> + * @bootvector_high:	Higher 32 bit address (Little Endian) of boot vector
-> + * @config_flags:	Optional Processor specific Config Flags set currently
-> + * @control_flags:	Optional Processor specific Control Flags set currently
-> + * @status_flags:	Optional Processor specific Status Flags set currently
-> + *
-> + * Response structure to a TI_SCI_MSG_GET_STATUS request.
-> + */
-> +struct ti_sci_msg_resp_get_status {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u8 processor_id;
-> +	u32 bootvector_low;
-> +	u32 bootvector_high;
-> +	u32 config_flags;
-> +	u32 control_flags;
-> +	u32 status_flags;
-> +} __packed;
-> +
->  #endif /* __TI_SCI_H */
-> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-> index 568722a041bf..0e3cd739add5 100644
-> --- a/include/linux/soc/ti/ti_sci_protocol.h
-> +++ b/include/linux/soc/ti/ti_sci_protocol.h
-> @@ -241,12 +241,42 @@ struct ti_sci_rm_irq_ops {
->  			      u16 global_event, u8 vint_status_bit);
->  };
->  
-> +/**
-> + * struct ti_sci_proc_ops - Processor Control operations
-> + * @request:	Request to control a physical processor. The requesting host
-> + *		should be in the processor access list
-> + * @release:	Relinquish a physical processor control
-> + * @handover:	Handover a physical processor control to another host
-> + *		in the permitted list
-> + * @set_config:	Set base configuration of a processor
-> + * @set_control: Setup limited control flags in specific cases
-> + * @get_status: Get the state of physical processor
-> + *
-> + * NOTE: The following paramteres are generic in nature for all these ops,
-> + * -handle:	Pointer to TI SCI handle as retrieved by *ti_sci_get_handle
-> + * -pid:	Processor ID
-> + * -hid:	Host ID
-> + */
-> +struct ti_sci_proc_ops {
-> +	int (*request)(const struct ti_sci_handle *handle, u8 pid);
-> +	int (*release)(const struct ti_sci_handle *handle, u8 pid);
-> +	int (*handover)(const struct ti_sci_handle *handle, u8 pid, u8 hid);
-> +	int (*set_config)(const struct ti_sci_handle *handle, u8 pid,
-> +			  u64 boot_vector, u32 cfg_set, u32 cfg_clr);
-> +	int (*set_control)(const struct ti_sci_handle *handle, u8 pid,
-> +			   u32 ctrl_set, u32 ctrl_clr);
-> +	int (*get_status)(const struct ti_sci_handle *handle, u8 pid,
-> +			  u64 *boot_vector, u32 *cfg_flags, u32 *ctrl_flags,
-> +			  u32 *status_flags);
-> +};
-> +
->  /**
->   * struct ti_sci_ops - Function support for TI SCI
->   * @dev_ops:	Device specific operations
->   * @clk_ops:	Clock specific operations
->   * @rm_core_ops:	Resource management core operations.
->   * @rm_irq_ops:		IRQ management specific operations
-> + * @proc_ops:	Processor Control specific operations
->   */
->  struct ti_sci_ops {
->  	struct ti_sci_core_ops core_ops;
-> @@ -254,6 +284,7 @@ struct ti_sci_ops {
->  	struct ti_sci_clk_ops clk_ops;
->  	struct ti_sci_rm_core_ops rm_core_ops;
->  	struct ti_sci_rm_irq_ops rm_irq_ops;
-> +	struct ti_sci_proc_ops proc_ops;
->  };
->  
->  /**
-> 
+Thanks
+Jin Yao
+
+
