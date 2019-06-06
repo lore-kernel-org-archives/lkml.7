@@ -2,112 +2,159 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B7C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B86C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360A22083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="V/UdCPxN"
+	by mail.kernel.org (Postfix) with ESMTP id 0D679208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFFS7R (ORCPT
+        id S1728380AbfFFS7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:59:17 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:59534 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726762AbfFFS7Q (ORCPT
+        Thu, 6 Jun 2019 14:59:31 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50388 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726863AbfFFS7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:59:16 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56ImXUo006416
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 11:59:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=bYqo/eKrf3Ocv2LivjDpADlZygx+fChjmeNZSWE8V/Y=;
- b=V/UdCPxNihvBEPMt56NRxdzPLBD9jMDWjKtcp8VLxCvBwyeQTU8l6nxBT9e2z7oVjv0v
- 865pXeUDpCL3mB5TJ4LJptONdUgoNwUjqnKvdKL0HCR4TjdFxU51LvOey4n/JNPwlVLj
- 2ml3IXysA1l9X/9UgaWMHgcBwRfQRJ7zQ9o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sy1quhngn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:59:15 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Jun 2019 11:59:14 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 821D412D781C4; Thu,  6 Jun 2019 11:59:12 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <bpf@vger.kernel.org>
-CC:     <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>, Yonghong Song <yhs@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use bpf_get_current_cgroup_id() helper
-Date:   Thu, 6 Jun 2019 11:59:11 -0700
-Message-ID: <20190606185911.4089151-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 6 Jun 2019 14:59:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TTau0rq_1559847565;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TTau0rq_1559847565)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 07 Jun 2019 02:59:28 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+ <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
+ <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
+ <20190507104709.GP31017@dhcp22.suse.cz>
+ <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
+Message-ID: <217fc290-5800-31de-7d46-aa5c0f7b1c75@linux.alibaba.com>
+Date:   Thu, 6 Jun 2019 11:59:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060127
-X-FB-Internal: deliver
+In-Reply-To: <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently bpf_get_current_cgroup_id() is not supported for
-CGROUP_SKB programs. An attempt to load such a program generates an
-error like this:
-    libbpf:
-    0: (b7) r6 = 0
-    ...
-    8: (63) *(u32 *)(r10 -28) = r6
-    9: (85) call bpf_get_current_cgroup_id#80
-    unknown func bpf_get_current_cgroup_id#80
 
-There are no particular reasons for denying it,
-and we have some use cases where it might be useful.
 
-So let's add it to the list of allowed helpers.
+On 5/7/19 10:10 AM, Yang Shi wrote:
+>
+>
+> On 5/7/19 3:47 AM, Michal Hocko wrote:
+>> [Hmm, I thought, Hugh was CCed]
+>>
+>> On Mon 06-05-19 16:37:42, Yang Shi wrote:
+>>>
+>>> On 4/28/19 12:13 PM, Yang Shi wrote:
+>>>>
+>>>> On 4/23/19 10:52 AM, Michal Hocko wrote:
+>>>>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>>>>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
+>>>>>> for each
+>>>>>> vma") introduced THPeligible bit for processes' smaps. But, when
+>>>>>> checking
+>>>>>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>>>>>> called to override the result from shmem_huge_enabled().  It may 
+>>>>>> result
+>>>>>> in the anonymous vma's THP flag override shmem's.  For example,
+>>>>>> running a
+>>>>>> simple test which create THP for shmem, but with anonymous THP
+>>>>>> disabled,
+>>>>>> when reading the process's smaps, it may show:
+>>>>>>
+>>>>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>>>>>> Size:               4096 kB
+>>>>>> ...
+>>>>>> [snip]
+>>>>>> ...
+>>>>>> ShmemPmdMapped:     4096 kB
+>>>>>> ...
+>>>>>> [snip]
+>>>>>> ...
+>>>>>> THPeligible:    0
+>>>>>>
+>>>>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>>>>>
+>>>>>> ShmemHugePages:     4096 kB
+>>>>>> ShmemPmdMapped:     4096 kB
+>>>>>>
+>>>>>> This doesn't make too much sense.  The anonymous THP flag should not
+>>>>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>>>>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>>>>>> dax vma check since we already checked if the vma is shmem already.
+>>>>> Kirill, can we get a confirmation that this is really intended 
+>>>>> behavior
+>>>>> rather than an omission please? Is this documented? What is a global
+>>>>> knob to simply disable THP system wise?
+>>>> Hi Kirill,
+>>>>
+>>>> Ping. Any comment?
+>>> Talked with Kirill at LSFMM, it sounds this is kind of intended 
+>>> behavior
+>>> according to him. But, we all agree it looks inconsistent.
+>>>
+>>> So, we may have two options:
+>>>      - Just fix the false negative issue as what the patch does
+>>>      - Change the behavior to make it more consistent
+>>>
+>>> I'm not sure whether anyone relies on the behavior explicitly or 
+>>> implicitly
+>>> or not.
+>> Well, I would be certainly more happy with a more consistent behavior.
+>> Talked to Hugh at LSFMM about this and he finds treating shmem objects
+>> separately from the anonymous memory. And that is already the case
+>> partially when each mount point might have its own setup. So the primary
+>> question is whether we need a one global knob to controll all THP
+>> allocations. One argument to have that is that it might be helpful to
+>> for an admin to simply disable source of THP at a single place rather
+>> than crawling over all shmem mount points and remount them. Especially
+>> in environments where shmem points are mounted in a container by a
+>> non-root. Why would somebody wanted something like that? One example
+>> would be to temporarily workaround high order allocations issues which
+>> we have seen non trivial amount of in the past and we are likely not at
+>> the end of the tunel.
+>
+> Shmem has a global control for such use. Setting shmem_enabled to 
+> "force" or "deny" would enable or disable THP for shmem globally, 
+> including non-fs objects, i.e. memfd, SYS V shmem, etc.
+>
+>>
+>> That being said I would be in favor of treating the global sysfs knob to
+>> be global for all THP allocations. I will not push back on that if there
+>> is a general consensus that shmem and fs in general are a different
+>> class of objects and a single global control is not desirable for
+>> whatever reasons.
+>
+> OK, we need more inputs from Kirill, Hugh and other folks.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
----
- net/core/filter.c | 4 ++++
- 1 file changed, 4 insertions(+)
+[Forgot cc to mailing lists]
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 55bfc941d17a..19724bb1860d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5919,6 +5919,10 @@ cg_skb_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_sk_storage_get_proto;
- 	case BPF_FUNC_sk_storage_delete:
- 		return &bpf_sk_storage_delete_proto;
-+#ifdef CONFIG_CGROUPS
-+	case BPF_FUNC_get_current_cgroup_id:
-+		return &bpf_get_current_cgroup_id_proto;
-+#endif
- #ifdef CONFIG_INET
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
--- 
-2.20.1
+Hi guys,
+
+How should we move forward for this one? Make the sysfs knob 
+(/sys/kernel/mm/transparent_hugepage/enabled) to be global for both 
+anonymous and tmpfs? Or just treat shmem objects separately from anon 
+memory then fix the false-negative of THP eligibility by this patch?
+
+>
+>>
+>> Kirill, Hugh othe folks?
+>
 
