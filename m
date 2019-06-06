@@ -2,248 +2,106 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65976C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D18C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3973421019
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96C520868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfFFSGZ (ORCPT
+        id S1730425AbfFFSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:06:25 -0400
-Received: from 15.mo1.mail-out.ovh.net ([188.165.38.232]:39919 "EHLO
-        15.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfFFSGY (ORCPT
+        Thu, 6 Jun 2019 14:06:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40556 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFSGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:06:24 -0400
-X-Greylist: delayed 4200 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 14:06:22 EDT
-Received: from player697.ha.ovh.net (unknown [10.109.146.32])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id B87E317B22F
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 17:39:19 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player697.ha.ovh.net (Postfix) with ESMTPSA id D6299697A73E;
-        Thu,  6 Jun 2019 15:38:59 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
-Date:   Thu,  6 Jun 2019 17:38:24 +0200
-Message-Id: <20190606153825.8183-2-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
-References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
+        Thu, 6 Jun 2019 14:06:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a9so837592lff.7;
+        Thu, 06 Jun 2019 11:06:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UEd66WheiI8yyTRsEa+z8oLhtOyljtbH2T2dZCHUna8=;
+        b=s5Wv1Fb7WHdpwRtST/K+oqN85JaYjOiLZAeQI5877b1aZeORAslVYsdZssg9Y4HYjN
+         lszdFGdIlpTUzV4NGuRrHUfUzog4ZdkwYI8S8CwV76roAly5envW3I4LMm+Lg5iWznEA
+         blYhmeQp1O7kZaGZBwyO2dZSnLN3tCpss8JsEbG95rWWNeeGz/JhCE0mUgscizXrZJG7
+         GArP1emPG2QI96blnaErB7qBkj8XSARSpy4pUTJr3YbpfCPRLyz8ciHXqHg8XZKiXi6Z
+         SpW/EqxpJ0mksibx0bZNSsKjsG+1YccnltFpDBOwtLmZf0RaTt3LFzz+7naU/OQdKuJD
+         OWmQ==
+X-Gm-Message-State: APjAAAWaAi+2IZcQYKktRk3ZflY/7imRVmdYQK+DEHEoofXhzDUoBOgV
+        u5Vpus1+7ijdJOjGkvkDqp2l1+NfQgKnG8Y2yuo=
+X-Google-Smtp-Source: APXvYqw2DQ1hkk9NGbrMoCpxPWvvSrGluX46vvZioEEIXVAu80TMiNPQs4dgaO2PEUOJN7DoCJlk4qvMl+vqvSMGZvQ=
+X-Received: by 2002:ac2:597c:: with SMTP id h28mr414494lfp.90.1559844400270;
+ Thu, 06 Jun 2019 11:06:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 3721943620884780228
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggedgledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org> <20190606142220.1392-2-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190606142220.1392-2-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 6 Jun 2019 20:06:28 +0200
+Message-ID: <CAMuHMdXcsxnqxpQLundZq9rCTHBTN4bP4gSpUrYBCOP8NN7TXQ@mail.gmail.com>
+Subject: Re: [PATCH 01/20] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
-to imx7-media-csi driver.
+Hi Jacopo,
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
+On Thu, Jun 6, 2019 at 4:21 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
+>
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on Gen2 and Gen3 SoCs (V3H and V3M excluded).
 
-Changes for v2:
- - rebase on top of linuxtv/master
- - mention i.MX6UL/L in header and Kconfig help text
- - rename csi_type to csi_soc_id
+R-Car Gen2 ...
 
- drivers/staging/media/imx/Kconfig          |  4 +-
- drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
- 2 files changed, 49 insertions(+), 17 deletions(-)
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
-index ad3d7df6bb3c..8b6dc42c39e0 100644
---- a/drivers/staging/media/imx/Kconfig
-+++ b/drivers/staging/media/imx/Kconfig
-@@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
- 	  A video4linux camera sensor interface driver for i.MX5/6.
- 
- config VIDEO_IMX7_CSI
--	tristate "i.MX7 Camera Sensor Interface driver"
-+	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
- 	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
- 	default y
- 	help
- 	  Enable support for video4linux camera sensor interface driver for
--	  i.MX7.
-+	  i.MX6UL/L or i.MX7.
- endmenu
- endif
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index 9101566f3f67..902bdce594cf 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
-+ * V4L2 Capture CSI Subdev for Freescale i.MX6UL/L / i.MX7 SOC
-  *
-  * Copyright (c) 2019 Linaro Ltd
-  *
-@@ -152,6 +152,11 @@
- #define CSI_CSICR18		0x48
- #define CSI_CSICR19		0x4c
- 
-+enum csi_soc_id {
-+	IMX7,
-+	IMX6UL
-+};
-+
- struct imx7_csi {
- 	struct device *dev;
- 	struct v4l2_subdev sd;
-@@ -191,6 +196,7 @@ struct imx7_csi {
- 	bool is_init;
- 	bool is_streaming;
- 	bool is_csi2;
-+	enum csi_soc_id soc_id;
- 
- 	struct completion last_eof_completion;
- };
-@@ -548,6 +554,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
- 	if (ret)
- 		return ret;
- 
-+	if (csi->soc_id == IMX6UL) {
-+		mutex_lock(&csi->lock);
-+		csi->is_csi2 = false;
-+		mutex_unlock(&csi->lock);
-+
-+		return 0;
-+	}
-+
- 	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
- 	if (ret) {
- 		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
-@@ -757,6 +771,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
- 	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
- 	__u32 in_code = csi->format_mbus[IMX7_CSI_PAD_SINK].code;
- 	u32 cr1, cr18;
-+	int width = out_pix->width;
- 
- 	if (out_pix->field == V4L2_FIELD_INTERLACED) {
- 		imx7_csi_deinterlace_enable(csi, true);
-@@ -766,15 +781,27 @@ static int imx7_csi_configure(struct imx7_csi *csi)
- 		imx7_csi_buf_stride_set(csi, 0);
- 	}
- 
--	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
-+	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
-+
-+	if (!csi->is_csi2) {
-+		if (out_pix->pixelformat == V4L2_PIX_FMT_UYVY ||
-+		    out_pix->pixelformat == V4L2_PIX_FMT_YUYV)
-+			width *= 2;
-+
-+		imx7_csi_set_imagpara(csi, width, out_pix->height);
-+
-+		cr18 |= (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
-+			BIT_BASEADDR_CHG_ERR_EN);
-+		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
- 
--	if (!csi->is_csi2)
- 		return 0;
-+	}
-+
-+	imx7_csi_set_imagpara(csi, width, out_pix->height);
- 
- 	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
- 	cr1 &= ~BIT_GCLK_MODE;
- 
--	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
- 	cr18 &= BIT_MIPI_DATA_FORMAT_MASK;
- 	cr18 |= BIT_DATA_FROM_MIPI;
- 
-@@ -809,11 +836,9 @@ static void imx7_csi_enable(struct imx7_csi *csi)
- {
- 	imx7_csi_sw_reset(csi);
- 
--	if (csi->is_csi2) {
--		imx7_csi_dmareq_rff_enable(csi);
--		imx7_csi_hw_enable_irq(csi);
--		imx7_csi_hw_enable(csi);
--	}
-+	imx7_csi_dmareq_rff_enable(csi);
-+	imx7_csi_hw_enable_irq(csi);
-+	imx7_csi_hw_enable(csi);
- }
- 
- static void imx7_csi_disable(struct imx7_csi *csi)
-@@ -1166,19 +1191,32 @@ static int imx7_csi_parse_endpoint(struct device *dev,
- 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
- }
- 
-+static const struct of_device_id imx7_csi_of_match[] = {
-+	{ .compatible = "fsl,imx7-csi", .data = (void *)IMX7 },
-+	{ .compatible = "fsl,imx6ul-csi", .data = (void *)IMX6UL },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
-+
- static int imx7_csi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct imx_media_dev *imxmd;
- 	struct imx7_csi *csi;
-+	const struct of_device_id *of_id;
- 	int ret;
- 
-+	of_id = of_match_node(imx7_csi_of_match, node);
-+	if (!of_id)
-+		return -ENODEV;
-+
- 	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
- 	if (!csi)
- 		return -ENOMEM;
- 
- 	csi->dev = dev;
-+	csi->soc_id = (enum csi_soc_id)of_id->data;
- 
- 	csi->mclk = devm_clk_get(&pdev->dev, "mclk");
- 	if (IS_ERR(csi->mclk)) {
-@@ -1294,12 +1332,6 @@ static int imx7_csi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id imx7_csi_of_match[] = {
--	{ .compatible = "fsl,imx7-csi" },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
--
- static struct platform_driver imx7_csi_driver = {
- 	.probe = imx7_csi_probe,
- 	.remove = imx7_csi_remove,
+Thanks for your patch!
+
+> index 000000000000..d8d3cf9ce2ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> @@ -0,0 +1,25 @@
+> +* Renesas R-Car Color Management Module (CMM)
+> +
+> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> +
+> +Required properties:
+> + - compatible: shall be one of:
+> +   - "renesas,cmm-gen3"
+> +   - "renesas,cmm-gen2"
+
+"gen3" and "gen2" don't carry much meaning on their own (SH2 is gen2 of
+SuperH?). Furthermore, revision info should immediately follow the comma.
+
+"renesas,rcar-gen3-cmm" and "renesas,rcar-gen2-cmm"?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.19.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
