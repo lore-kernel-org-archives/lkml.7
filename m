@@ -2,194 +2,152 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1FEC28D1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DA6C28D1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB0420693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KyuiZ5xR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mcN0LhTU"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9D120868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfFFJkm (ORCPT
+        id S1727964AbfFFJlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:40:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54536 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfFFJkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:40:42 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A85A260255; Thu,  6 Jun 2019 09:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559814040;
-        bh=rU0t5RwiWywQmmpKFOVVHDpMxEFOcbC7Tl57m2Sd1TQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KyuiZ5xRgJDS/p/VT/bIem9IZCtN6GKm+aFqiRTFygSTy4AaNeapiV1RKUm+EUb4i
-         7naYLW5hqm/KlPRl2C+mtYGVYYDPm4S64shIEW3BvRFAoiP4aGVP5BHQBce0Cbz5Ny
-         Tbf2hMOuDiC7Mp2o0KkoHI6KDbgwB1j53C8IiNH4=
-Received: from rocky-HP-EliteBook-8460p.wlan.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 6 Jun 2019 05:41:02 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:36146 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727359AbfFFJlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:41:02 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rjliao@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FCCD60850;
-        Thu,  6 Jun 2019 09:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559814039;
-        bh=rU0t5RwiWywQmmpKFOVVHDpMxEFOcbC7Tl57m2Sd1TQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcN0LhTU2ZJcitqVqgU6eio1E6DbzWelfbTBMemyU1TMquYeGV9/01j1dhhZPNkX2
-         vy1qkH6CvEmZtS7LZlN5NSVD7AjTVwGSuPY5cd8pZR+hzd0fiXeyb3pQSXP/P7b3xc
-         2KQ10gaydNRSKSEODQ0nH3Zj6i3ESlncuTpp8EbA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5FCCD60850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
-        johan.hedberg@gmail.com, thierry.escande@linaro.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v6 1/2] Bluetooth: hci_qca: Load customized NVM based on the device property
-Date:   Thu,  6 Jun 2019 17:40:30 +0800
-Message-Id: <1559814030-13833-1-git-send-email-rjliao@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
-References: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
+        by mx1.emlix.com (Postfix) with ESMTPS id 6503E600A1;
+        Thu,  6 Jun 2019 11:40:59 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+Date:   Thu, 06 Jun 2019 11:40:55 +0200
+Message-ID: <2433398.iiuBUrR0On@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <CAKv+Gu9oq+LseNvB9h1u+Q7QVOJFJwm_RyE1dMRgeVuL6D9fNQ@mail.gmail.com>
+References: <779905244.a0lJJiZRjM@devpool35> <1993275.kHlTELq40E@devpool35> <CAKv+Gu9oq+LseNvB9h1u+Q7QVOJFJwm_RyE1dMRgeVuL6D9fNQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1867592.6WJ3IrGa0d"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA BTSOC NVM is a customized firmware file and different vendors may
-want to have different BTSOC configuration (e.g. Configure SCO over PCM
-or I2S, Setting Tx power, etc.) via this file. This patch will allow
-vendors to download different NVM firmware file by reading a device
-property "firmware-name".
+--nextPart1867592.6WJ3IrGa0d
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
----
-Changes in v6:
-  * Added read firmware-name property for both QCA6174 and WCN399X
----
- drivers/bluetooth/btqca.c   |  8 ++++++--
- drivers/bluetooth/btqca.h   |  6 ++++--
- drivers/bluetooth/hci_qca.c | 18 +++++++++++++++++-
- 3 files changed, 27 insertions(+), 5 deletions(-)
+Ard Biesheuvel wrote:
+> On Thu, 6 Jun 2019 at 09:50, Rolf Eike Beer <eb@emlix.com> wrote:
+> > Am Donnerstag, 6. Juni 2019, 09:38:41 CEST schrieb Rolf Eike Beer:
+> > > Greg KH wrote:
+> > > > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
+> > > > > I decided to dig out a toy project which uses a DragonBoard 410c.
+> > > > > This
+> > > > > has
+> > > > > been "running" with kernel 4.9, which I would keep this way for
+> > > > > unrelated
+> > > > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it
+> > > > > was
+> > > > > buildable, which was good enough.
+> > > > >=20
+> > > > > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> > > > >=20
+> > > > > aarch64-unknown-linux-gnueabi-ld:
+> > > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in
+> > > > > function
+> > > > > `handle_kernel_image':
+> > > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-st=
+ub.
+> > > > > c:63
+> > > > >=20
+> > > > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
+> > > > > aarch64-unknown-linux-gnueabi-ld:
+> > > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocat=
+ion
+> > > > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
+> > > > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can n=
+ot
+> > > > > be
+> > > > > used when making a shared object; recompile with -fPIC
+> > > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-st=
+ub.
+> > > > > c:63
+> > > > >=20
+> > > > > (.init.text+0xc): dangerous relocation: unsupported relocation
+> > > > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target
+> > > > > 'vmlinux'
+> > > > > failed -make[1]: *** [vmlinux] Error 1
+> > > > >=20
+> > > > > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca
+> > > > > from
+> > > > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be),
+> > > > > reverting
+> > > > > this commit fixes the build.
+> > > > >=20
+> > > > > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as
+> > > > > 9.1.0.
+> > > > > See
+> > > > > the attached .config for reference.
+> > > > >=20
+> > > > > If you have questions or patches just ping me.
+> > > >=20
+> > > > Does Linus's latest tree also fail for you (or 5.1)?
+> > >=20
+> > > 5.1.7 with the same config as before and "make olddefconfig" builds f=
+or
+> > > me.
+> >=20
+> > Just for the fun of it: both 4.19 and 4.19.48 also work.
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index cc12eec..a78b80e 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
- EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
- 
- int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--		   enum qca_btsoc_type soc_type, u32 soc_ver)
-+		   enum qca_btsoc_type soc_type, u32 soc_ver,
-+		   const char *firmware_name)
- {
- 	struct rome_config config;
- 	int err;
-@@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
- 
- 	/* Download NVM configuration */
- 	config.type = TLV_TYPE_NVM;
--	if (qca_is_wcn399x(soc_type))
-+	if (firmware_name)
-+		snprintf(config.fwname, sizeof(config.fwname),
-+			 "qca/%s", firmware_name);
-+	else if (qca_is_wcn399x(soc_type))
- 		snprintf(config.fwname, sizeof(config.fwname),
- 			 "qca/crnv%02x.bin", rom_ver);
- 	else
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index 4c4fe2b..8c037bb 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -140,7 +140,8 @@ enum qca_btsoc_type {
- 
- int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
- int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--		   enum qca_btsoc_type soc_type, u32 soc_ver);
-+		   enum qca_btsoc_type soc_type, u32 soc_ver,
-+		   const char *firmware_name);
- int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
- int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
- static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-@@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
- }
- 
- static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--				 enum qca_btsoc_type soc_type, u32 soc_ver)
-+				 enum qca_btsoc_type soc_type, u32 soc_ver,
-+				 const char *firmware_name)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 57322c4..05ee0a1 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -169,6 +169,7 @@ struct qca_serdev {
- 	struct qca_power *bt_power;
- 	u32 init_speed;
- 	u32 oper_speed;
-+	const char *firmware_name;
- };
- 
- static int qca_power_setup(struct hci_uart *hu, bool on);
-@@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
- 	return soc_type;
- }
- 
-+static const char *qca_get_firmware_name(struct hci_uart *hu)
-+{
-+	if (hu->serdev) {
-+		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
-+
-+		return qsd->firmware_name;
-+	} else {
-+		return NULL;
-+	}
-+}
-+
- static void __serial_clock_on(struct tty_struct *tty)
- {
- 	/* TODO: Some chipset requires to enable UART clock on client
-@@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
- 	struct qca_data *qca = hu->priv;
- 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
- 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-+	const char *firmware_name = qca_get_firmware_name(hu);
- 	int ret;
- 	int soc_ver = 0;
- 
-@@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
- 
- 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
- 	/* Setup patch / NVM configurations */
--	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
-+	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
-+			firmware_name);
- 	if (!ret) {
- 		set_bit(QCA_IBS_ENABLED, &qca->flags);
- 		qca_debugfs_init(hdev);
-@@ -1439,6 +1453,8 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 	qcadev->serdev_hu.serdev = serdev;
- 	data = of_device_get_match_data(&serdev->dev);
- 	serdev_device_set_drvdata(serdev, qcadev);
-+	device_property_read_string(&serdev->dev, "firmware-name",
-+					 &qcadev->firmware_name);
- 	if (data && qca_is_wcn399x(data->soc_type)) {
- 		qcadev->btsoc_type = data->soc_type;
- 		qcadev->bt_power = devm_kzalloc(&serdev->dev,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> Could you please check whether patch
+> 60f38de7a8d4e816100ceafd1b382df52527bd50 applies cleanly, and whether
+> it fixes the problem? Thanks.
+
+The part in drivers/firmware/efi/libstub/arm-stub.c needs to be applied by=
+=20
+hand, but afterwards things build fine.
+
+Eike
+=2D-=20
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+=46on +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
+Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
+Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
+=2E: DE 205 198 055
+
+emlix - smart embedded open source
+--nextPart1867592.6WJ3IrGa0d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXPjfpwAKCRCr5FH7Xu2t
+/BzjA/9Pd3USy15vnfffsX50V3lfJ/gubyNSje0W25gGCPDqVoehWg/KfXRZea1s
+0fPwkDaZ36+B1eQxa9PBqmYOm3+XcuM+/rOp1/7EBagM6SXZxlPzuIMgM4+i3+CG
+eq/Xgow6Dpz7ewh/OLubSZFoCN57J8e/VQTl2lTRMpDZh1+8dQ==
+=yAuE
+-----END PGP SIGNATURE-----
+
+--nextPart1867592.6WJ3IrGa0d--
+
+
 
