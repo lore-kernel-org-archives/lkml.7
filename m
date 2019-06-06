@@ -2,112 +2,110 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6F8C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA26C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B44208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fJa5lNfP"
+	by mail.kernel.org (Postfix) with ESMTP id 6A68E2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfFFUaS (ORCPT
+        id S1727446AbfFFUd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:30:18 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57112 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727110AbfFFUaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:30:17 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56KS6Tj008004
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 13:30:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=WaRncLNa5iOBqAfSuQNbHoUAXYAn7sJ/19EdHwQN+UY=;
- b=fJa5lNfPK2c5Ex7hs1h+7cbnuC5aOgPEhlhpDZ5TVRwFSfq/t8aBFFFEuF8RZkaQkys8
- Feog9FTPaJex259RzmCtofa4sYhmIjQHEgNKQI0yqnFzzpKCHVSqj0IXfGY9z47DZwfx
- 0zyhSD3RW9Z4z+kalqTX4GKQJ/irq/HamOU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sy5hk161t-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:30:17 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 6 Jun 2019 13:30:15 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 5F97512D8C6E4; Thu,  6 Jun 2019 13:30:15 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Daniel Borkmann <daniel@iogearbox.net>, <bpf@vger.kernel.org>
-CC:     Alexei Starovoitov <ast@kernel.org>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
-        Yonghong Song <yhs@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use bpf_skb_cgroup_id() helper
-Date:   Thu, 6 Jun 2019 13:30:12 -0700
-Message-ID: <20190606203012.130071-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 6 Jun 2019 16:33:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13330 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfFFUd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:33:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:33:26 -0700
+X-ExtLoop1: 1
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Jun 2019 13:33:27 -0700
+Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 6 Jun 2019 13:33:27 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.133]) by
+ ORSMSX160.amr.corp.intel.com ([169.254.13.124]) with mapi id 14.03.0415.000;
+ Thu, 6 Jun 2019 13:33:27 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Colin King <colin.king@canonical.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH][next] ixgbe: fix potential u32 overflow on shift
+Thread-Topic: [PATCH][next] ixgbe: fix potential u32 overflow on shift
+Thread-Index: AQHVHGlIFzjSo2T24EekWjY0GDeFv6aPFTkQ
+Date:   Thu, 6 Jun 2019 20:33:26 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB5896745DEE@ORSMSX121.amr.corp.intel.com>
+References: <20190606131053.25103-1-colin.king@canonical.com>
+In-Reply-To: <20190606131053.25103-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmMwMjZiNzItNjY5ZS00ZjI4LWE3ZTktODlhNzVjN2FkZDViIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiS2l5ZlhmeUtkUG9kYUNhZFJlZEU0K1ArK2N4aEIzQTFvc3ZCc3hOMmlTVzBCbitDWHVsUnd3TjNcL2t2VnBJMWMifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060138
-X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently bpf_skb_cgroup_id() is not supported for CGROUP_SKB
-programs. An attempt to load such a program generates an error
-like this:
-
-    libbpf:
-    0: (b7) r6 = 0
-    ...
-    9: (85) call bpf_skb_cgroup_id#79
-    unknown func bpf_skb_cgroup_id#79
-
-There are no particular reasons for denying it, and we have some
-use cases where it might be useful.
-
-So let's add it to the list of allowed helpers.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
----
- net/core/filter.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 55bfc941d17a..f2777dc0b624 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5919,6 +5919,10 @@ cg_skb_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_sk_storage_get_proto;
- 	case BPF_FUNC_sk_storage_delete:
- 		return &bpf_sk_storage_delete_proto;
-+#ifdef CONFIG_SOCK_CGROUP_DATA
-+	case BPF_FUNC_skb_cgroup_id:
-+		return &bpf_skb_cgroup_id_proto;
-+#endif
- #ifdef CONFIG_INET
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
--- 
-2.20.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb2xpbiBLaW5nIFttYWlsdG86
+Y29saW4ua2luZ0BjYW5vbmljYWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAwNiwgMjAx
+OSA2OjExIEFNDQo+IFRvOiBLZWxsZXIsIEphY29iIEUgPGphY29iLmUua2VsbGVyQGludGVsLmNv
+bT47IEtpcnNoZXIsIEplZmZyZXkgVA0KPiA8amVmZnJleS50LmtpcnNoZXJAaW50ZWwuY29tPjsg
+RGF2aWQgUyAuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IGludGVsLXdpcmVkLQ0KPiBs
+YW5AbGlzdHMub3N1b3NsLm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0KPiBDYzoga2VybmVs
+LWphbml0b3JzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0K
+PiBTdWJqZWN0OiBbUEFUQ0hdW25leHRdIGl4Z2JlOiBmaXggcG90ZW50aWFsIHUzMiBvdmVyZmxv
+dyBvbiBzaGlmdA0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25p
+Y2FsLmNvbT4NCj4gDQo+IFRoZSB1MzIgdmFyaWFibGUgcmVtIGlzIGJlaW5nIHNoaWZ0ZWQgdXNp
+bmcgdTMyIGFyaXRobWV0aWMgaG93ZXZlcg0KPiBpdCBpcyBiZWluZyBwYXNzZWQgdG8gZGl2X3U2
+NCB0aGF0IGV4cGVjdHMgdGhlIGV4cHJlc3Npb24gdG8gYmUgYSB1NjQuDQo+IFRoZSAzMiBiaXQg
+c2hpZnQgbWF5IHBvdGVudGlhbGx5IG92ZXJmbG93LCBzbyBjYXN0IHJlbSB0byBhIHU2NCBiZWZv
+cmUNCj4gc2hpZnRpbmcgdG8gYXZvaWQgdGhpcy4NCj4gDQoNCkFoLCB5ZXAuIFRoYW5rcyBmb3Ig
+dGhlIGZpeCENCg0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiVW5pbnRlbnRpb25hbCBpbnRlZ2Vy
+IG92ZXJmbG93IikNCj4gRml4ZXM6IGNkNDU4MzIwNjk5MCAoIml4Z2JlOiBpbXBsZW1lbnQgc3Vw
+cG9ydCBmb3IgU0RQL1BQUyBvdXRwdXQgb24gWDU1MA0KPiBoYXJkd2FyZSIpDQo+IEZpeGVzOiA2
+OGQ5Njc2ZmMwNGUgKCJpeGdiZTogZml4IFBUUCBTRFAgcGluIHNldHVwIG9uIFg1NDAgaGFyZHdh
+cmUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
+YWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2l4Z2JlL2l4Z2Jl
+X3B0cC5jIHwgNCArKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVs
+L2l4Z2JlL2l4Z2JlX3B0cC5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhnYmUv
+aXhnYmVfcHRwLmMNCj4gaW5kZXggMmM0ZDMyN2ZjYzJlLi5mZjIyOWQwZTkxNDYgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2l4Z2JlL2l4Z2JlX3B0cC5jDQo+ICsr
+KyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2l4Z2JlL2l4Z2JlX3B0cC5jDQo+IEBAIC0y
+MDksNyArMjA5LDcgQEAgc3RhdGljIHZvaWQgaXhnYmVfcHRwX3NldHVwX3NkcF9YNTQwKHN0cnVj
+dCBpeGdiZV9hZGFwdGVyDQo+ICphZGFwdGVyKQ0KPiAgCSAqIGFzc3VtZXMgdGhhdCB0aGUgY3lj
+bGUgY291bnRlciBzaGlmdCBpcyBzbWFsbCBlbm91Z2ggdG8gYXZvaWQNCj4gIAkgKiBvdmVyZmxv
+d2luZyB3aGVuIHNoaWZ0aW5nIHRoZSByZW1haW5kZXIuDQo+ICAJICovDQo+IC0JY2xvY2tfZWRn
+ZSArPSBkaXZfdTY0KChyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0KPiArCWNsb2NrX2Vk
+Z2UgKz0gZGl2X3U2NCgoKHU2NClyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0KPiAgCXRy
+Z3R0aW1sID0gKHUzMiljbG9ja19lZGdlOw0KPiAgCXRyZ3R0aW1oID0gKHUzMikoY2xvY2tfZWRn
+ZSA+PiAzMik7DQo+IA0KDQpUaGlzIG1ha2VzIHNlbnNlIHRvIG1lLg0KDQpSZWdhcmRzLA0KSmFr
+ZQ0KDQo+IEBAIC0yOTUsNyArMjk1LDcgQEAgc3RhdGljIHZvaWQgaXhnYmVfcHRwX3NldHVwX3Nk
+cF9YNTUwKHN0cnVjdCBpeGdiZV9hZGFwdGVyDQo+ICphZGFwdGVyKQ0KPiAgCSAqIGFzc3VtZXMg
+dGhhdCB0aGUgY3ljbGUgY291bnRlciBzaGlmdCBpcyBzbWFsbCBlbm91Z2ggdG8gYXZvaWQNCj4g
+IAkgKiBvdmVyZmxvd2luZyB3aGVuIHNoaWZ0aW5nIHRoZSByZW1haW5kZXIuDQo+ICAJICovDQo+
+IC0JY2xvY2tfZWRnZSArPSBkaXZfdTY0KChyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0K
+PiArCWNsb2NrX2VkZ2UgKz0gZGl2X3U2NCgoKHU2NClyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11
+bHQpOw0KPiANCj4gIAkvKiBYNTUwIGhhcmR3YXJlIHN0b3JlcyB0aGUgdGltZSBpbiAzMmJpdHMg
+b2YgJ2JpbGxpb25zIG9mIGN5Y2xlcycgYW5kDQo+ICAJICogMzJiaXRzIG9mICdjeWNsZXMnLiBU
+aGVyZSdzIG5vIGd1YXJhbnRlZSB0aGF0IGN5Y2xlcyByZXByZXNlbnRzDQo+IC0tDQo+IDIuMjAu
+MQ0KDQo=
