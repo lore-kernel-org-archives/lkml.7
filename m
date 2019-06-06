@@ -2,121 +2,161 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B0AC28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6FBC28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE7C20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559804891;
-	bh=sOq1aIPwoGF1dlKwf8g6qXJnPdLXODwo9qjIaiPRjr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tFQEcZodkv/yHIt7dnPC0t2brjiDMtQMNDqmUCaid9MW4dzf8IbIa93VC/oxLQBgC
-	 UFF1ygUS86iArngn/gCNY/gD6SO34eZBEuAgRuqqoDeiFBsShsGP5AFC+mHCKghDhz
-	 t57rQSHeixk3BMahwVbKTEtkzTN1AH9dRdK7panI=
+	by mail.kernel.org (Postfix) with ESMTP id 41BEB2083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cVgCr6vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfFFHIL (ORCPT
+        id S1726713AbfFFHJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFHIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:08:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CDA2083D;
-        Thu,  6 Jun 2019 07:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559804889;
-        bh=sOq1aIPwoGF1dlKwf8g6qXJnPdLXODwo9qjIaiPRjr4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VmXsfdmVy+fYk40zwh0ypfxRSF+bHgzmqyKHAiM+pwFTnrkAYrmCy4z6OTf5t0zFp
-         +i6i3PMpxynsI4LQIarHQz/erzaloaH+NgO6vu4I8GL0Ug4OinVxnYitknMlGd1KDv
-         5OIG5iFXvxUcXdZFqCU1PpD43K9Fp16HZ8wVeVgo=
-Date:   Thu, 6 Jun 2019 09:08:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Rolf Eike Beer <eb@emlix.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
- (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-Message-ID: <20190606070807.GA17985@kroah.com>
-References: <779905244.a0lJJiZRjM@devpool35>
- <20190605162626.GA31164@kroah.com>
- <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com>
- <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
- <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com>
+        Thu, 6 Jun 2019 03:09:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37872 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFFHJL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:09:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 20so820739pgr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=puIXzR2Own0cbDgtZ/rESXOOL8scU6F9mL+QrFjp0g8=;
+        b=cVgCr6vnkGfjbhGXEObW1I3eyaTZzs4e6YbdY6IpyHvoRC/cyQjHSlt0gxIth7Hdeu
+         eN5d1Xq7g1lwpP9OqdHss8u059osQZKuNhLLZQDMfVeXEnwdfWXX/9x5wMPNmTf8vdMp
+         edojQQ/rLLAz+Ma+B+VExLG44vHl79i9L+21ZSA3+/M+XhdLiyrhJh7bfmceA5yyn+O5
+         F5U1b3PO/PE12bohPtUqnSdgMu8VX6VQP1ZbADi89a+bsmYX1ZeVg1c7YZy4XHTXQyR+
+         K85N7Y+nqqCSKG8JWtn16z8k9ZHBXM5Z3X6Q26+9a4Pz7Z+zIOWyj13pD8cU9hReymQe
+         EVpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=puIXzR2Own0cbDgtZ/rESXOOL8scU6F9mL+QrFjp0g8=;
+        b=KP8/rYX7yu3TOWbUQlLbPOydExiSKS4udInbELtvwpGR5VOuwFVOIiYP5L7+OMxqAx
+         nkM9YINImBAAZ2lgX1MbBL+LwKlYNs0GK9OoYgyChygWsVtCZ4m/NbRkA0Pp/PclRPwh
+         wLYezN95yycLzDPWf1G+H0v8FtP/uKzfY5AmjL9IAu9LqulLaDE1iYCOKUQL/J4D9MQ6
+         8naZ/rxK7FvEPm9O3kWuWCu7R1j1DF+eZPM7RSq054mMf1aV7KMIgYFiYgtke0y7Lw9H
+         48+URPEAZsupPagMXgU1pq+fRqX682gkaIzzVe4AbHdNCTatJE+G++V+x5xqU56+h1Hp
+         SPFw==
+X-Gm-Message-State: APjAAAWHwuvRDSh/KUPvJuvnjcinpFQeVKW70YsVbJZ8qNMirOc3oqyJ
+        /pgimpQeqj8nlsMDI5PMb4UX8Q==
+X-Google-Smtp-Source: APXvYqx349qBmplwQGOq+Bk/EBJps0gB+WxTpibAF0E4c9G3e41oIpAGmhaSWsAhZzds2x83VVRXrg==
+X-Received: by 2002:a62:63c6:: with SMTP id x189mr39479895pfb.31.1559804950625;
+        Thu, 06 Jun 2019 00:09:10 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x128sm1376557pfd.186.2019.06.06.00.09.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 00:09:10 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 00:09:55 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Message-ID: <20190606070955.GR22737@tuxbook-pro>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
+ <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190606003959.GM4814@minitux>
+ <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 08:55:29AM +0200, Ard Biesheuvel wrote:
-> On Wed, 5 Jun 2019 at 22:48, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > On Wed, Jun 5, 2019 at 11:42 AM Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org> wrote:
-> > > For the record, this is an example of why I think backporting those
-> > > clang enablement patches is a bad idea.
-> >
-> > There's always a risk involved with backports of any kind; more CI
-> > coverage can help us mitigate some of these risks in an automated
-> > fashion before we get user reports like this.  I meet with the
-> > KernelCI folks weekly, so I'll double check on the coverage of the
-> > stable tree's branches.  The 0day folks are also very responsive and
-> > I've spoken with them a few times, so I'll try to get to the bottom of
-> > why this wasn't reported by either of those.
-> >
-> > Also, these patches help keep Android, CrOS, and Google internal
-> > production kernels closer to their upstream sources.
-> >
-> > > We can't actually build those
-> > > kernels with clang, can we? So what is the point? </grumpy>
-> >
-> > Here's last night's build:
-> > https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/114388434
-> >
+On Wed 05 Jun 23:32 PDT 2019, Avri Altman wrote:
+
+> > 
+> > On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
+> > 
+> > > >
+> > > > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+> > > >
+> > > > > Hi,
+> > > > >
+> > > > > >
+> > > > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > > > > <bjorn.andersson@linaro.org> wrote:
+> > > > > > >
+> > > > > > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd
+> > to
+> > > > > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > > > > >
+> > > > > > > Bjorn Andersson (3):
+> > > > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > > > > >   scsi: ufs: Allow resetting the UFS device
+> > > > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > > > > >
+> > > > > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > > > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > > > > >
+> > > > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > > > > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> > > > >
+> > > >
+> > > > Are you saying that these memories only need a reset when they are
+> > > > paired with the Qualcomm host controller?
+> > > ufs_hba_variant_ops is for vendors to implement their own vops,
+> > > and as you can see, many of them do.
+> > > Adding hw_reset to that template seems like the proper way
+> > > to do what you are doing.
+> > >
+> > 
+> > Right, but the vops is operations related to the UFS controller, this
+> > property relates to the memory connected.
+> This is not entirely accurate. Those are vendor/board specific,
+> As the original commit log indicates:
+> " vendor/board specific and hence determined with
+>  the help of compatible property in device tree."
 > 
-> If you are saying that plain upstream 4.9-stable defconfig can be
-> built with Clang, then I am pleasantly surprised.
-
-I know some specific configs can, there's no rule that I know of that
-'defconfig' support is required.  But then again, it might also work,
-try it and see :)
-
-> > Also, Android and CrOS have shipped X million devices w/ 4.9 kernels
-> > built with Clang.  I think this number will grow at least one order of
-> > magnitude imminently.
-> >
+> I would rather have this new vop:
+> void    (*device_reset)(struct ufs_hba *), Or whatever, 
+> actively set in ufs_hba_variant_ops, rather than ufshcd_init_device_reset
+> failing as part of the default init flow.
 > 
-> I know that (since you keep reminding me :-)), but obviously, Google
-> does not care about changes that regress GCC support.
 
-What are you talking about?  Bugs happen all the time, what specifically
-did "Google" do to break gcc support?  If you are referring to this
-patch, and it is a regression, of course I will revert it.  But note
-that gcc and 4.9 works just fine for all of the other users right now,
-remember we do do a lot of testing of these releases.
+But such an vops would allow me to provide a Qualcomm-specific way of
+toggling the GPIO that is connected to the UFS_RESET pin on the
+Hynix/Micron memory.
 
-thanks,
+But acquiring and toggling GPIOs is not a Qualcomm thing, it's a
+completely generic thing, and as it's not a chip-internal line it is a
+GPIO and not a reset - regardless of SoC vendor.
+Further more, it's optional so boards that does not have this pin
+connected will just omit the property in their hardware description
+(DeviceTree).
 
-greg k-h
+
+So I think the halting part here is that we don't have a representation
+of the memory device's resources, because this is really a matter of
+toggling the reset pin on the memory device.
+
+Regards,
+Bjorn
