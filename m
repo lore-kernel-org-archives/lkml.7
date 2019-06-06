@@ -2,80 +2,99 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4EFC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435CFC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEBB206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SD1fhWau"
+	by mail.kernel.org (Postfix) with ESMTP id 1775A206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfFFT5H (ORCPT
+        id S1728171AbfFFT7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:57:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35159 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfFFT5G (ORCPT
+        Thu, 6 Jun 2019 15:59:18 -0400
+Received: from www62.your-server.de ([213.133.104.62]:53858 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFFT7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:57:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so3169709otq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M3lsHhmjhpNKOZxIxhHlrNdlPeU2n5HAjTzLl7Wh06g=;
-        b=SD1fhWauXkc9V9EOEpK6A+zOyK9nmCipJqTTSXXhCfXaNOCmq5QX716zkpJacPJ7tm
-         uxS76fdR2z0Gm0kjFYP4+v5tSPc9Ft1WPb/CD/7p1Ajri1LT5gs/O2Vo0mZPkERnLScx
-         LcS/5Gjv6UkmVa5cOAGui+89+iyzltsgtEcYv0R+EWwi/4WB65eiIgk6ufajiKInfBn2
-         nNjDf20yFe07Yc7JvUN6XWw467ZkIxAH9R/xUfPeqagPIYWbgbFDaj1D4ecy+kYiLl0Y
-         FyKqNQx1exHR9kIiHUHbX5tu0tpnyD1zobxuUom11uGEY1KbADSrPIGzDdyteOKdW7Fk
-         CsCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M3lsHhmjhpNKOZxIxhHlrNdlPeU2n5HAjTzLl7Wh06g=;
-        b=PFMuNmMIZu/CffKngK3Y5wb6Oz4E7Y8x1J4dST7/QDHfTlr0h+UFcDHm2KYLWCl3/M
-         GUIasM/2g7FR7gpOTGyNzpqOny9ns619YtnywD3WcQ049EIy7PwvrqdN+KsJ0If1qpnV
-         GWkBHmQk1ntEKcEKgD6FMMuJu35LX97tZmmcZZDSR1ZbBqYknk+g6S+UAYhLlmD6NNxE
-         CPhWipBJxILT6clkz+ZOA71+B83tqxnPqojJ0daMw//QtfUPnjBdNUef96i7aTgBVS5E
-         TlLk/kw9u/h6tMaN4d8AHTokjXEF4fJvvLOw7XFN9Edqos6JL5JOturmfaZa78mW32dR
-         AEGA==
-X-Gm-Message-State: APjAAAW4QkKtGoDz7HfXJgvzCubEg3Ucyr+5x7FXZ78ADVFb+BirrmIT
-        +4bt+YkIs+vb0gaU3XG4zkyJ5X7ICRLoEkV8Fahyaw4f
-X-Google-Smtp-Source: APXvYqxlFxwKjyzQ3FMcMwqoXbCExfbLfeX6ekhBTjoxZ58lba6psbc/9xJJ4+PN7DvuxdCB9t/KgYhNVtrP5cb/2Po=
-X-Received: by 2002:a9d:32a6:: with SMTP id u35mr16585007otb.81.1559851026166;
- Thu, 06 Jun 2019 12:57:06 -0700 (PDT)
+        Thu, 6 Jun 2019 15:59:18 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYyXa-0003SN-8P; Thu, 06 Jun 2019 21:59:14 +0200
+Received: from [178.197.249.21] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYyXa-000UzF-0V; Thu, 06 Jun 2019 21:59:14 +0200
+Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
+ bpf_get_current_cgroup_id() helper
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>
+References: <20190606185911.4089151-1-guro@fb.com>
+ <20190606190752.GA28743@tower.DHCP.thefacebook.com>
+ <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
+ <20190606195317.GA22965@tower.DHCP.thefacebook.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <ff3b1419-6692-7db4-d2d5-b8a94e9fe422@iogearbox.net>
+Date:   Thu, 6 Jun 2019 21:59:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190603100357.16799-1-narmstrong@baylibre.com> <20190603100357.16799-3-narmstrong@baylibre.com>
-In-Reply-To: <20190603100357.16799-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:56:55 +0200
-Message-ID: <CAFBinCC66zaf2KhSbgDdTxynOVeOOVajoOqk0GxiQW0MSXiG_A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] arm64: dts: meson-g12a-x96-max: add support for
- sdcard and emmc
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190606195317.GA22965@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25472/Thu Jun  6 10:09:59 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 12:04 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> From: Guillaume La Roque <glaroque@baylibre.com>
->
-> Add nodes to support SDCard and onboard eMMC on the X96 Max.
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On 06/06/2019 09:53 PM, Roman Gushchin wrote:
+> On Thu, Jun 06, 2019 at 09:39:35PM +0200, Daniel Borkmann wrote:
+>> On 06/06/2019 09:08 PM, Roman Gushchin wrote:
+>>> On Thu, Jun 06, 2019 at 11:59:11AM -0700, Roman Gushchin wrote:
+>>>> Currently bpf_get_current_cgroup_id() is not supported for
+>>>> CGROUP_SKB programs. An attempt to load such a program generates an
+>>>> error like this:
+>>>>     libbpf:
+>>>>     0: (b7) r6 = 0
+>>>>     ...
+>>>>     8: (63) *(u32 *)(r10 -28) = r6
+>>>>     9: (85) call bpf_get_current_cgroup_id#80
+>>>>     unknown func bpf_get_current_cgroup_id#80
+>>>>
+>>>> There are no particular reasons for denying it,
+>>>> and we have some use cases where it might be useful.
+>>>
+>>> Ah, sorry, it's not so simple, as we probably need to take
+>>> the cgroup pointer from the socket, not from current.
+>>>
+>>> So the implementation of the helper should be different
+>>> for this type of programs.
+>>>
+>>> So I wonder if it's better to introduce a new helper
+>>> bpf_get_sock_cgroup_id()?
+>>>
+>>> What do you think?
+>>
+>> We do have bpf_skb_cgroup_id(), did you give that a try?
+> 
+> It also isn't supported for CGROUP_SKB, but other than that looks
+> exactly what I need.
+> 
+> Thank you for pointing at it!
+
+Yes, the helper would need to be enabled there.
+
+Cheers,
+Daniel
